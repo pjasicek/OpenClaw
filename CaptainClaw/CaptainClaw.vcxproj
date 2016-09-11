@@ -73,18 +73,37 @@
   <ItemGroup>
     <ClCompile Include="Audio\AudioMgr.cpp" />
     <ClCompile Include="Audio\midiproc_c.c" />
-    <ClCompile Include="ConfigMgr.cpp" />
+    <ClCompile Include="Collision\CollisionWorld.cpp" />
+    <ClCompile Include="Config\ConfigMgr.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="Level\Camera.cpp" />
+    <ClCompile Include="Level\Level.cpp" />
+    <ClCompile Include="Level\Plane.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="States\CinematicState.cpp" />
+    <ClCompile Include="States\GameState.cpp" />
+    <ClCompile Include="States\MenuState.cpp" />
+    <ClCompile Include="States\ScoreboardState.cpp" />
+    <ClCompile Include="Util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioMgr.h" />
-    <ClInclude Include="ConfigMgr.h" />
+    <ClInclude Include="Collision\CollisionWorld.h" />
+    <ClInclude Include="Config\ConfigMgr.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Level.h" />
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="Level\Camera.h" />
+    <ClInclude Include="Level\Level.h" />
+    <ClInclude Include="Level\Plane.h" />
+    <ClInclude Include="States\CinematicState.h" />
+    <ClInclude Include="States\GameState.h" />
+    <ClInclude Include="States\MenuState.h" />
+    <ClInclude Include="States\ScoreboardState.h" />
+    <ClInclude Include="States\State.h" />
+    <ClInclude Include="Util\Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
