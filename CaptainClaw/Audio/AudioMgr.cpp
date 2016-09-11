@@ -30,8 +30,6 @@ bool AudioMgr::Initialize()
     _isAudioInitialized = false;
     _rpcBindingString = NULL;
 
-    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "-------- Initializing Audio subsystem --------");
-
     if (!SDL_WasInit(SDL_INIT_AUDIO))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Attempted to initialize Audio subsystem before SDL2 was initialized");

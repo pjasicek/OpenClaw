@@ -1,5 +1,6 @@
 #include "Console.h"
 #include <algorithm>
+#include <assert.h>
 
 #include <iostream>
 #include <sstream>
@@ -133,6 +134,8 @@ private:
 
 ConsoleText::ConsoleText(TTF_Font* font, std::string text, SDL_Color color, int16_t x, int16_t y)
 {
+    assert(font != NULL);
+
     _text = text;
     _color = color;
     _font = font;
@@ -201,6 +204,8 @@ private:
 
 ConsoleLine::ConsoleLine(TTF_Font* font, uint16_t lineNumber, int16_t leftOffset)
 {
+    assert(font != NULL);
+
     _font = font;
     _lineNumber = lineNumber;
 
@@ -284,6 +289,8 @@ void ConsoleLine::Commit()
 
 Console::Console(uint16_t width, uint16_t height, TTF_Font* font, SDL_Texture* backgroundTexture)
 {
+    assert(font != NULL);
+
     _width = width;
     _height = height;
     _font = font;
@@ -371,8 +378,14 @@ void Console::AddLine(std::string text, SDL_Color color)
 
 void Console::ProcessEvents(SDL_Event& event)
 {
+    // If console is inactive then only check tilde for activation
     if (!_isActive)
     {
+        if (event.type == SDL_KEYDOWN && event.key.repeat == 0 &&
+            SDL_GetScancodeFromKey(event.key.keysym.sym) == SDL_SCANCODE_GRAVE)
+        {
+            _isActive = true;
+        }
         return;
     }
 
@@ -390,6 +403,13 @@ void Console::ProcessEvents(SDL_Event& event)
         else if (event.type == SDL_KEYDOWN && (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER))
         {
             CommitCurrentCommand();
+        }
+        // Toggle console
+        else if (event.type == SDL_KEYDOWN && event.key.repeat == 0 &&
+            SDL_GetScancodeFromKey(event.key.keysym.sym) == SDL_SCANCODE_GRAVE)
+        {
+            _isActive = false;
+            return;
         }
         // UP - move console up
         else if (event.type == SDL_KEYDOWN && (event.key.keysym.sym == SDLK_UP))
