@@ -11,19 +11,46 @@ public:
     Camera(SDL_Window* window, SDL_Renderer* renderer);
     ~Camera();
 
-    inline void MoveX(int32_t delta) { _x += delta; }
-    inline void MoveY(int32_t delta) { _y += delta; }
+    inline void MoveX(double delta) { SetX(_x + delta); }
+    inline void MoveY(double delta) { SetY(_y + delta); }
 
-    inline int32_t GetX() { return _x; }
-    inline int32_t GetY() { return _y; }
+    int32_t GetX() { return (int32_t)_x; }
+    int32_t GetY() { return (int32_t)_y; }
 
-    inline void SetX(int32_t x) { _x = x; }
-    inline void SetY(int32_t y) { _y = y; }
+    // Critical performance functions - need to be inlined
+    inline void SetX(double x)
+    { 
+        if (_clampViewport)
+        {
+            if (x < 0) { _x = 0; }
+            else if (x >(_maxX - GetCameraWidth())) { _x = _maxX - GetCameraWidth(); }
+            else { _x = x; }
+        }
+        else
+        {
+            _x = x;
+        }
+    }
+    inline void SetY(double y)
+    { 
+        if (_clampViewport)
+        {
+            if (y < 0) { _y = 0; }
+            else if (y >(_maxY - GetCameraHeight())) { _y = _maxY - GetCameraHeight(); }
+            else { _y = y; }
+        }
+        else
+        {
+            _y = y;
+        }
+    }
 
-    inline void SetPosition(uint32_t x, uint32_t y) { _x = x; _y = y; }
+    inline void SetPosition(int32_t x, int32_t y) { SetX(x); SetY(y); }
+    void SetPositionCentered(int32_t centerX, int32_t centerY);
 
-    uint32_t GetCameraWidth();
-    uint32_t GetCameraHeight();
+    int32_t GetCameraWidth();
+    int32_t GetCameraHeight();
+    void GetCameraSize(uint32_t* width, uint32_t* height);
 
     float GetScaleX();
     float GetScaleY();
@@ -37,14 +64,20 @@ public:
 
     bool IsCheckRectVisible(SDL_Rect* rect);
 
+    void ClampViewport(int32_t maxX, int32_t maxY);
+
 private:
-    int32_t _x;
-    int32_t _y;
+    double _x;
+    double _y;
 
     int32_t _padding;
 
     SDL_Window* _gameWindow;
     SDL_Renderer* _gameRenderer;
+
+    bool _clampViewport;
+    int32_t _maxX;
+    int32_t _maxY;
 };
 
 #endif

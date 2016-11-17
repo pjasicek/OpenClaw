@@ -38,7 +38,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)Build_$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Build_$(Configuration)\$(ProjectName)_obj\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -59,51 +62,140 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\SDL2\include;C:\Users\Petr\Documents\Visual Studio 2013\Projects\libwap\libwap;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\SDL2\include;$(SolutionDir)\libwap;$(SolutionDir)\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\libwap\DLL_Release;D:\SDL2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2_ttf.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;libwap.lib;rpcrt4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\SDL2\lib\x86;$(SolutionDir)Build_$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2_ttf.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;libwap.lib;rpcrt4.lib;tinyxml.lib;Box2D.lib;SDL2_gfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Audio\AudioMgr.cpp" />
-    <ClCompile Include="Audio\midiproc_c.c" />
-    <ClCompile Include="Collision\CollisionWorld.cpp" />
-    <ClCompile Include="Config\ConfigMgr.cpp" />
-    <ClCompile Include="Console.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Image.cpp" />
-    <ClCompile Include="Level\Camera.cpp" />
-    <ClCompile Include="Level\Level.cpp" />
-    <ClCompile Include="Level\Plane.cpp" />
+    <ClCompile Include="ActorController.cpp" />
+    <ClCompile Include="ClawEvents.cpp" />
+    <ClCompile Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\KinematicComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\TriggerComponents\BaseTriggerComponent.cpp" />
+    <ClCompile Include="Engine\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Audio\midiproc_c.c" />
+    <ClCompile Include="ClawGameApp.cpp" />
+    <ClCompile Include="ClawGameLogic.cpp" />
+    <ClCompile Include="ClawHumanView.cpp" />
+    <ClCompile Include="Engine\Physics\ClawPhysics.cpp" />
+    <ClCompile Include="Engine\Physics\CollisionBody.cpp" />
+    <ClCompile Include="Engine\Physics\PhysicsContactListener.cpp" />
+    <ClCompile Include="Engine\Physics\PhysicsDebugDrawer.cpp" />
+    <ClCompile Include="Engine\UserInterface\Console.cpp" />
+    <ClCompile Include="Engine\Actor\Actor.cpp" />
+    <ClCompile Include="Engine\Actor\ActorFactory.cpp" />
+    <ClCompile Include="Engine\Actor\Components\AnimationComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\CollisionComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\ControllableComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PhysicsComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PositionComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\RenderComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\SoundComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\Template.cpp" />
+    <ClCompile Include="Engine\Events\Events.cpp" />
+    <ClCompile Include="Engine\GameApp\BaseGameApp.cpp" />
+    <ClCompile Include="Engine\GameApp\BaseGameLogic.cpp" />
+    <ClCompile Include="Engine\GameApp\MainLoop.cpp" />
+    <ClCompile Include="Engine\Scene\ActorSceneNode.cpp" />
+    <ClCompile Include="Engine\Scene\TilePlaneSceneNode.cpp" />
+    <ClCompile Include="Engine\Logger\Logger.cpp" />
+    <ClCompile Include="Engine\Process\Process.cpp" />
+    <ClCompile Include="Engine\Process\ProcessMgr.cpp" />
+    <ClCompile Include="Engine\Resource\Loaders\AniLoader.cpp" />
+    <ClCompile Include="Engine\Resource\Loaders\PalLoader.cpp" />
+    <ClCompile Include="Engine\Resource\Loaders\PidLoader.cpp" />
+    <ClCompile Include="Engine\Resource\Loaders\WavLoader.cpp" />
+    <ClCompile Include="Engine\Resource\Loaders\WwdLoader.cpp" />
+    <ClCompile Include="Engine\Resource\Loaders\XmlLoader.cpp" />
+    <ClCompile Include="Engine\Resource\ResourceCache.cpp" />
+    <ClCompile Include="Engine\Scene\Scene.cpp" />
+    <ClCompile Include="Engine\Scene\SceneNodes.cpp" />
+    <ClCompile Include="Engine\UserInterface\HumanView.cpp" />
+    <ClCompile Include="Engine\UserInterface\MovementController.cpp" />
+    <ClCompile Include="Engine\UserInterface\UserInterface.cpp" />
+    <ClCompile Include="Engine\Events\EventMgr.cpp" />
+    <ClCompile Include="Engine\Events\EventMgrImpl.cpp" />
+    <ClCompile Include="Engine\Graphics2D\Image.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="States\CinematicState.cpp" />
-    <ClCompile Include="States\GameState.cpp" />
-    <ClCompile Include="States\MenuState.cpp" />
-    <ClCompile Include="States\ScoreboardState.cpp" />
-    <ClCompile Include="Util\Util.cpp" />
+    <ClCompile Include="Engine\Actor\Components\Animation.cpp" />
+    <ClCompile Include="Engine\Util\Profilers.cpp" />
+    <ClCompile Include="Engine\Util\StringUtil.cpp" />
+    <ClCompile Include="Engine\Util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Audio\AudioMgr.h" />
-    <ClInclude Include="Collision\CollisionWorld.h" />
-    <ClInclude Include="Config\ConfigMgr.h" />
-    <ClInclude Include="Console.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="Image.h" />
-    <ClInclude Include="Level\Camera.h" />
-    <ClInclude Include="Level\Level.h" />
-    <ClInclude Include="Level\Plane.h" />
-    <ClInclude Include="States\CinematicState.h" />
-    <ClInclude Include="States\GameState.h" />
-    <ClInclude Include="States\MenuState.h" />
-    <ClInclude Include="States\ScoreboardState.h" />
-    <ClInclude Include="States\State.h" />
-    <ClInclude Include="Util\Util.h" />
+    <ClInclude Include="ActorController.h" />
+    <ClInclude Include="ClawEvents.h" />
+    <ClInclude Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\KinematicComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\TriggerComponents\BaseTriggerComponent.h" />
+    <ClInclude Include="Engine\Audio\Audio.h" />
+    <ClInclude Include="ClawGameLogic.h" />
+    <ClInclude Include="ClawHumanView.h" />
+    <ClInclude Include="Engine\Converters.h" />
+    <ClInclude Include="Engine\Physics\ClawPhysics.h" />
+    <ClInclude Include="Engine\Physics\CollisionBody.h" />
+    <ClInclude Include="Engine\Physics\PhysicsContactListener.h" />
+    <ClInclude Include="Engine\Physics\PhysicsDebugDrawer.h" />
+    <ClInclude Include="Engine\UserInterface\Console.h" />
+    <ClInclude Include="Engine\Actor\Actor.h" />
+    <ClInclude Include="Engine\Actor\ActorComponent.h" />
+    <ClInclude Include="Engine\Actor\ActorFactory.h" />
+    <ClInclude Include="Engine\Actor\Components\AnimationComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\CollisionComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\ControllableComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PhysicsComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\RenderComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\RenderComponentInterface.h" />
+    <ClInclude Include="Engine\Actor\Components\SoundComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\Template.h" />
+    <ClInclude Include="Engine\Actor\Components\PositionComponent.h" />
+    <ClInclude Include="Engine\Events\Events.h" />
+    <ClInclude Include="Engine\GameApp\BaseGameApp.h" />
+    <ClInclude Include="Engine\GameApp\BaseGameLogic.h" />
+    <ClInclude Include="Engine\GameApp\MainLoop.h" />
+    <ClInclude Include="Engine\Interfaces.h" />
+    <ClInclude Include="Engine\Scene\ActorSceneNode.h" />
+    <ClInclude Include="Engine\Scene\TilePlaneSceneNode.h" />
+    <ClInclude Include="Engine\Logger\Logger.h" />
+    <ClInclude Include="Engine\Resource\Loaders\AniLoader.h" />
+    <ClInclude Include="Engine\Resource\Loaders\DefaultLoader.h" />
+    <ClInclude Include="Engine\Resource\Loaders\MidiLoader.h" />
+    <ClInclude Include="Engine\Resource\Loaders\PalLoader.h" />
+    <ClInclude Include="Engine\Resource\Loaders\PcxLoader.h" />
+    <ClInclude Include="Engine\Resource\Loaders\PidLoader.h" />
+    <ClInclude Include="Engine\Resource\Loaders\WavLoader.h" />
+    <ClInclude Include="Engine\Resource\Loaders\WwdLoader.h" />
+    <ClInclude Include="Engine\Resource\Loaders\XmlLoader.h" />
+    <ClInclude Include="Engine\Resource\ResourceCache.h" />
+    <ClInclude Include="Engine\Scene\Scene.h" />
+    <ClInclude Include="Engine\Scene\SceneNodes.h" />
+    <ClInclude Include="Engine\UserInterface\HumanView.h" />
+    <ClInclude Include="Engine\UserInterface\MovementController.h" />
+    <ClInclude Include="Engine\UserInterface\UserInterface.h" />
+    <ClInclude Include="Engine\Events\EventMgr.h" />
+    <ClInclude Include="Engine\Events\EventMgrImpl.h" />
+    <ClInclude Include="Engine\Actor\Components\Animation.h" />
+    <ClInclude Include="Engine\SharedDefines.h" />
+    <ClInclude Include="Engine\Process\Process.h" />
+    <ClInclude Include="Engine\Process\ProcessMgr.h" />
+    <ClInclude Include="Engine\Graphics2D\Image.h" />
+    <ClInclude Include="Engine\Util\Profilers.h" />
+    <ClInclude Include="Engine\Util\Singleton.h" />
+    <ClInclude Include="Engine\Util\StringUtil.h" />
+    <ClInclude Include="Engine\Util\Util.h" />
+    <ClInclude Include="Engine\XmlMacros.h" />
+    <ClInclude Include="ClawGameApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

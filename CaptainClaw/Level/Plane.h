@@ -3,12 +3,18 @@
 
 #include <SDL.h>
 #include <libwap.h>
+#include <map>
 #include "Level.h"
 
+#include "../SharedDefines.h"
+
+class GameObject;
+
+class Image;
 class Plane
 {
 public:
-    Plane(Level* level, WwdPlane* wwdPlane, uint32_t planeId, SDL_Renderer* renderer);
+    Plane(Level* level, WwdPlane* wwdPlane, uint32_t planeId, std::string& tileBaseDirectoryPath, SDL_Renderer* renderer);
     ~Plane();
 
     void Render(SDL_Renderer* renderer, Camera* camera);
@@ -21,6 +27,7 @@ public:
     inline uint32_t GetTilePixelWidth() { return _tilePixelWidth; }
     inline uint32_t GetTilePixelHeight() { return _tilePixelHeight; }
 
+    // TODO: These values are swapped, modify libwap
     inline uint32_t GetPlanePixelWidth() { return _planePixelWidth; }
     inline uint32_t GetPlanePixelHeight() { return _planePixelHeight; }
 
@@ -43,7 +50,7 @@ public:
 
 private:
     void RenderTiles(SDL_Renderer* renderer, Camera* camera);
-    void RenderObjects(SDL_Renderer*, Camera* camera);
+    void RenderObjects(SDL_Renderer* renderer, Camera* camera);
 
     uint32_t _planeId;
 
@@ -69,6 +76,10 @@ private:
 
     std::vector<int32_t> _tiles;
     std::vector<SDL_Texture*> _tileTextures;
+    std::map<int32_t, shared_ptr<Image>> _tileImageMap;
+
+    std::vector<GameObject*> _staticObjects;
+    std::vector<GameObject*> _dynamicObjects;
 };
 
 

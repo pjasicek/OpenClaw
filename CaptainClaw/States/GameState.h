@@ -5,16 +5,18 @@
 
 class Level;
 
-class GameState final : public State
+class GameState final : public IState
 {
 public:
-    GameState(LoadLevelInfo* loadLevelInfo, Game* game);
+    GameState(LoadLevelInfo* loadLevelInfo);
     ~GameState();
 
-    virtual State* HandleEvent(SDL_Event* event);
+    virtual IState* HandleEvent(SDL_Event* event);
     virtual void Update(uint32_t msDiff);
 
 private:
+    double CalculateMoveStep(uint32_t msDiff);
+
     LoadLevelInfo* _loadLevelInfo;
     Level* _currentLevel;
 };

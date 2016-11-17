@@ -1,0 +1,127 @@
+#include <Tinyxml\tinyxml.h>
+#include "CrumblingPegAIComponent.h"
+#include "../../../GameApp/BaseGameApp.h"
+#include "../../../GameApp/BaseGameLogic.h"
+
+#include "../../../Graphics2D/Image.h"
+#include "../RenderComponent.h"
+#include "../PositionComponent.h"
+#include "../AnimationComponent.h"
+#include "../Animation.h"
+#include "../../../Physics/ClawPhysics.h"
+
+#include "../../../Events/EventMgr.h"
+#include "../../../Events/Events.h"
+
+const char* CrumblingPegAIComponent::g_Name = "CrumblingPegAIComponent";
+
+CrumblingPegAIComponent::CrumblingPegAIComponent()
+    :
+    m_Size(Point(0, 0)),
+    m_pAnimationComponent(NULL),
+    m_pPhysics(nullptr),
+    m_PrevAnimframeIdx(0)
+{
+
+}
+
+CrumblingPegAIComponent::~CrumblingPegAIComponent()
+{
+
+}
+
+bool CrumblingPegAIComponent::VInit(TiXmlElement* data)
+{
+    assert(data != NULL);
+
+    m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
+    if (!m_pPhysics)
+    {
+        LOG_WARNING("Attemtping to create physics component without valid physics");
+        return false;
+    }
+
+    if (TiXmlElement* pElem = data->FirstChildElement("Size"))
+    {
+        pElem->Attribute("width", &m_Size.x);
+        pElem->Attribute("height", &m_Size.y);
+    }
+
+    return true;
+}
+
+void CrumblingPegAIComponent::VPostInit()
+{
+    // Set size from current image if necessary
+    if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
+    {
+        shared_ptr<ActorRenderComponent> pRenderComponent =
+            MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+        assert(pRenderComponent);
+
+        shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
+
+        m_Size.x = pImage->GetWidth();
+        m_Size.y = pImage->GetHeight();
+    }
+
+    shared_ptr<AnimationComponent> pAnimationComponent =
+        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+    assert(pAnimationComponent);
+
+    m_pAnimationComponent = pAnimationComponent.get();
+    m_pAnimationComponent->SetReverseAnimation(true);
+    m_pAnimationComponent->PauseAnimation();
+
+    // Set size from current image if necessary
+    if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
+    {
+        shared_ptr<ActorRenderComponent> pRenderComponent =
+            MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+        assert(pRenderComponent);
+
+        shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
+
+        m_Size.x = pImage->GetWidth();
+        m_Size.y = pImage->GetHeight();
+    }
+
+    m_pPhysics->VAddStaticBody(_owner, m_Size, CollisionType_Ground);
+}
+
+TiXmlElement* CrumblingPegAIComponent::VGenerateXml()
+{
+    TiXmlElement* baseElement = new TiXmlElement(VGetName());
+
+    //
+
+    return baseElement;
+}
+
+void CrumblingPegAIComponent::VUpdate(uint32 msDiff)
+{
+    // TODO: HACK: This is polling, drains cpu for no reason, should be event based
+    if (Animation* pAnimation = m_pAnimationComponent->GetCurrentAnimation())
+    {
+        if (m_PrevAnimframeIdx != pAnimation->GetCurrentAnimationFrame()->idx)
+        {
+            if (pAnimation->GetCurrentAnimationFrame()->idx == 9)
+            {
+                m_pPhysics->VRemoveActor(_owner->GetGUID());
+            }
+
+            if (pAnimation->IsAtLastAnimFrame())
+            {
+                shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+                IEventMgr::Get()->VQueueEvent(pEvent);
+            }
+
+            m_PrevAnimframeIdx = pAnimation->GetCurrentAnimationFrame()->idx;
+        }
+    }
+}
+
+void CrumblingPegAIComponent::OnContact(b2Body* pBody)
+{
+    m_pAnimationComponent->ResumeAnimation();
+}
