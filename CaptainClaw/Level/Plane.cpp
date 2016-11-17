@@ -1,11 +1,22 @@
+#include <assert.h>
+#include <algorithm>
+
 #include "Plane.h"
 #include "../Util/Util.h"
+#include "../Image.h"
+#include "../GameApplication.h"
+
+#include "../Engine/Resource/Loaders/PidLoader.h"
 
 #include <iostream>
 using namespace std;
 
-Plane::Plane(Level* level, WwdPlane* wwdPlane, uint32_t planeId, SDL_Renderer* renderer)
+Plane::Plane(Level* level, WwdPlane* wwdPlane, uint32_t planeId, std::string& tileBaseDirectoryPath, SDL_Renderer* renderer)
 {
+    assert(level != NULL);
+    assert(wwdPlane != NULL);
+    assert(renderer != NULL);
+
     //------ Plane properties
 
     _planeId = planeId;
@@ -35,30 +46,71 @@ Plane::Plane(Level* level, WwdPlane* wwdPlane, uint32_t planeId, SDL_Renderer* r
     uint32_t tilesCount = wwdPlane->tilesCount;
     _tiles.reserve(tilesCount);
     _tileTextures.reserve(tilesCount);
+
+    // Load tile textures
     for (uint32_t tileIdx = 0; tileIdx < tilesCount; tileIdx++)
     {
         _tiles.push_back(wwdPlane->tiles[tileIdx]);
-        
-        // Empty tiles are marked with tileId == -1, they dont have any tile prototype therefore no texture
-        TilePrototype* tilePrototype = level->GetTilePrototype(wwdPlane->tiles[tileIdx]);
-        if (tilePrototype)
+    }
+
+    //-------- Load tile textures
+
+    std::vector<int32_t> uniqueTilesVector = _tiles;
+    std::sort(uniqueTilesVector.begin(), uniqueTilesVector.end());
+    uniqueTilesVector.erase(std::unique(uniqueTilesVector.begin(), uniqueTilesVector.end()), uniqueTilesVector.end());
+
+    // Plane's tile subfolder name is expected to be first entry in wwdPlane->imageSets[0]
+    // So for highest flexibility use that
+    assert(wwdPlane->imageSetsCount > 0);
+    std::string pathToTileDirectory = tileBaseDirectoryPath + "/" + std::string(wwdPlane->imageSets[0]);
+
+    WapPal* palette = level->GetPalette();
+    assert(palette != NULL);
+
+    for (int32_t tileId : uniqueTilesVector)
+    {
+        // Tiles with id == -1 have no textures, these are empty clear spaces
+        if (tileId < 0)
         {
-            SDL_Texture* tileTexture = tilePrototype->texture;
-            _tileTextures.push_back(tileTexture);
+            continue;
+        }
+
+        std::string tileIdStr = Util::ConvertToThreeDigitsString(tileId);
+        std::string tileFileName = tileIdStr + ".PID";
+        // This is hack, monolith made some mistake in lvl1
+        if ((level->GetLevelNumber() == 1) && (tileId == 74))
+        {
+            tileFileName.erase(0, 1);
+        }
+
+        
+        std::string tileFullFilePath = pathToTileDirectory + "/" + tileFileName;
+        shared_ptr<Image> tileImage = PidResourceLoader::LoadAndReturnImage(tileFullFilePath.c_str(), palette);
+        assert(tileImage != nullptr);
+
+        _tileImageMap.insert(std::pair<int32_t, shared_ptr<Image>>(tileId, tileImage));
+    }
+
+    //--------- Make texture map
+    // We dont need any other information about general tile but its texture
+
+    for (int32_t tileId : _tiles)
+    {
+        // Not all tiles need to have a texture - they can be empty
+        SDL_Texture* tileTexture = NULL;
+        if (_tileImageMap.count(tileId) == 0)
+        {
+            tileTexture = NULL;
         }
         else
         {
-            _tileTextures.push_back(NULL);
+            tileTexture = _tileImageMap[tileId]->GetTexture();
         }
+
+        _tileTextures.push_back(tileTexture);
     }
 
     //-------- Objects
-
-    /*for (int i = 0; i < wwdPlane->imageSetsCount; i++)
-    {
-        cout << "IMAGE SET: " << wwdPlane->imageSets[i] << endl;
-    }
-    exit(0);*/
 }
 
 Plane::~Plane()
@@ -75,7 +127,7 @@ void Plane::Render(SDL_Renderer* renderer, Camera* camera)
 void Plane::RenderTiles(SDL_Renderer* renderer, Camera* camera)
 {
     float scaleX, scaleY;
-    camera->GetScale(&scaleX, &scaleY);
+    camera->GetScale(&scaleX, &scaleY); 
 
     int32_t renderPadding = camera->GetPadding();
 
@@ -119,6 +171,7 @@ void Plane::RenderTiles(SDL_Renderer* renderer, Camera* camera)
             // Dont render anything out of bounds
             if ((col < minTileIdxX) || (col > maxTileIdxX) ||
                 (row < minTileIdxY) || (row > maxTileIdxY))
+
             {
                 continue;
             }

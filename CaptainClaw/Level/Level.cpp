@@ -4,134 +4,189 @@
 
 #include "Level.h"
 #include "../Util/Util.h"
-#include "../Game.h"
+#include "../GameApplication.h"
 #include "../Image.h"
+#include "../Collision/CollisionWorld.h"
 #include "Plane.h"
+
+#include "..\Engine\Resource\Loaders\WwdLoader.h"
+#include "..\Engine\Resource\Loaders\PalLoader.h"
+
+#include "../Engine/Actor/Actor.h"
+#include "../Engine/Actor/ActorFactory.h"
+
+#include "../Engine/Actor/Components/RenderComponent.h"
+#include "../Engine/Actor/Components/PositionComponent.h"
+
+#include "../Image.h"
+
+#include "../Engine/Scene/Scene.h"
 
 #include <iostream>
 using namespace std;
 
-Level::Level(LoadLevelInfo* loadLevelInfo, Game* game)
+Level::Level(LoadLevelInfo* loadLevelInfo)
 {
     assert(loadLevelInfo != NULL);
-    assert(game != NULL);
     assert((loadLevelInfo->levelNumber > 0) && 
         (loadLevelInfo->levelNumber <= MAXIMUM_LEVEL));
 
-    _game = game;
-
     _levelNumber = loadLevelInfo->levelNumber;
 
-    RezArchive* clawRezArchive = game->GetRezArchive();
-    SDL_Renderer* renderer = game->GetRenderer();
+    //RezArchive* clawRezArchive = sGameApplication->GetRezArchive();
+    SDL_Renderer* renderer = sGameApplication->GetRenderer();
     LevelResourcePaths paths = GetResourcePaths(loadLevelInfo->levelNumber);
 
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Loading level %u ...", loadLevelInfo->levelNumber);
 
-    WapWwd* wwd = WAP_WwdLoadFromRezArchive(clawRezArchive, paths.wwdPath.c_str());
-    WapPal* palette = WAP_PalLoadFromRezArchive(clawRezArchive, paths.palettePath.c_str());
+    WapWwd* wwd = WwdResourceLoader::LoadAndReturnWwd(paths.wwdPath.c_str());
+    _palette = PalResourceLoader::LoadAndReturnPal(paths.palettePath.c_str());
+    sGameApplication->SetCurrentPalette(_palette);
 
     assert(wwd != NULL);
-    assert(palette != NULL);
+    assert(_palette != NULL);
 
     _levelName = std::string(wwd->properties.levelName);
 
-    //---------- Tile prototypes
+    //---------- Planes
 
+    // Get base directory containing tile subfolders for separate planes, e.g. /LEVEL1/TILES
     char rezDirDelim = WAP_GetDirectorySeparator();
     std::string tileBaseDirPath(wwd->properties.imageDirectoryPath);
     std::replace(tileBaseDirPath.begin(), tileBaseDirPath.end(), '\\', rezDirDelim);
-    cout << "path: " << tileBaseDirPath << endl;
-
-    RezDirectory* tileBaseDir = WAP_GetRezDirectoryFromRezArchive(clawRezArchive, tileBaseDirPath.c_str());
-    assert(tileBaseDir != NULL);
-
-    uint32_t tileDescCount = wwd->tileDescriptionsCount;
-    for (uint32_t tileId = 0; tileId <= tileDescCount; tileId++)
-    {
-        std::string tileIdStr = Util::ConvertToThreeDigitsString(tileId);
-        std::string tileFileName = tileIdStr + ".PID";
-        // This is hack, monolith made some mistake in lvl1
-        if (tileId == 74)
-        {
-            tileFileName.erase(0, 1);
-        }
-
-        RezFile* tileFile = FindTileFile(tileBaseDir, tileFileName);
-        if (tileFile)
-        {
-            WapPid* tilePid = WAP_PidLoadFromRezFile(tileFile, palette);
-            assert(tilePid != NULL);
-
-            TilePrototype* tilePrototype = CreateTilePrototype(&wwd->tileDescriptions[tileId], tileId, tilePid, renderer);
-            assert(tilePrototype != NULL);
-
-            _tilePrototypeMap.insert(std::pair<int32_t, TilePrototype*>(tileId, tilePrototype));
-        }
-    }
 
     for (uint32_t planeIdx = 0; planeIdx < wwd->planesCount; planeIdx++)
     {
-        Plane* plane = new Plane(this, &wwd->planes[planeIdx], planeIdx, renderer);
+        Plane* plane = new Plane(this, &wwd->planes[planeIdx], planeIdx, tileBaseDirPath, renderer);
         _planesVector.push_back(plane);
+
+        if (plane->IsMainPlane())
+        {
+            _mainPlane = plane;
+        }
     }
 
-    // Create camera
-    SDL_Window* window = game->GetWindow();
-    _camera = new Camera(window, renderer);
+    //--------- Tile collision prototypes
 
-    _camera->SetPosition(wwd->properties.startX, wwd->properties.startY);
+    uint32_t tileDescCount = wwd->tileDescriptionsCount;
+    for (uint32_t tileId = 0; tileId < tileDescCount; tileId++)
+    {
+        TileCollisionPrototype* proto = CreateTilePrototype(&wwd->tileDescriptions[tileId], tileId);
+        _tilePrototypeMap.insert(std::pair<int32_t, TileCollisionPrototype*>(tileId, proto));
+    }
+
+    //--------- Camera
+    SDL_Window* window = sGameApplication->GetWindow();
+    _camera = new Camera(window, renderer);
+    // Clamp camera
+    int32_t worldPixelWidth = _mainPlane->GetPlanePixelHeight();
+    int32_t worldPixelHeight = _mainPlane->GetPlanePixelWidth();
+    _camera->ClampViewport(worldPixelWidth, worldPixelHeight);
+
+    _camera->SetScale(1.0f, 1.0f);
+    //_camera->SetScale(0.2f, 0.2f);
+    _camera->SetPositionCentered(wwd->properties.startX, wwd->properties.startY);
+
+    _collisionWorld = new CollisionWorld(this);
+
+    ActorFactory factory;
+    
+
+    m_pScene = shared_ptr<Scene>(new Scene(renderer));
+    
+    m_pCamera.reset(new CameraNode({ _camera->GetX(), _camera->GetY() }, _camera->GetCameraWidth(), _camera->GetCameraHeight()));
+    m_pScene->SetCamera(m_pCamera);
+
+    for (int i = 0; i < 10; i++)
+    {
+        //PROFILE_CPU("ACTOR CREATION");
+
+        StrongActorPtr actor = factory.CreateActor("Actors/Claw.xml", NULL);
+
+        shared_ptr<PositionComponent> posComp =
+            Util::MakeStrongPtr(actor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        posComp->SetPosition(posComp->GetX() + i * 6, posComp->GetY() - i * 6);
+
+        shared_ptr<ActorRenderComponent> renderComponent =
+            Util::MakeStrongPtr(actor->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+        if (!renderComponent)
+        {
+            exit(1);
+        }
+        m_pScene->AddChild(actor->GetGUID(), renderComponent->GetScneNodePublicTest());
+        _actorMap.insert(make_pair(actor->GetGUID(), actor));
+    }
 }
 
 Level::~Level()
 {
-
+    sGameApplication->SetCurrentPalette(NULL);
 }
 
 void Level::Update(uint32_t msDiff)
 {
     //START_QUERY_PERFORMANCE_TIMER
-    SDL_Renderer* renderer = _game->GetRenderer();
+    SDL_Renderer* renderer = sGameApplication->GetRenderer();
 
     for (Plane* plane : _planesVector)
     {
         plane->Render(renderer, _camera);
     }
+    
+    _collisionWorld->DebugRender(renderer, _camera);
+    
+    {
+        //LOG("Profiling actor update loop");
+        START_QUERY_PERFORMANCE_TIMER
+        for (auto actorIter : _actorMap)
+        {
+            
+            StrongActorPtr actor = actorIter.second;
+
+            actor->Update(msDiff);
+            
+            /*shared_ptr<RenderComponent> renderComponent =
+                Util::MakeStrongPtr(actor->GetComponent<RenderComponent>(RenderComponent::g_Name));
+                shared_ptr<PositionComponent> positionComponent =
+                Util::MakeStrongPtr(actor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+                if (positionComponent && renderComponent)
+                {
+                shared_ptr<Image> actorImage = Util::MakeStrongPtr(renderComponent->GetCurrentImage());
+                if (actorImage)
+                {
+                //actorImage->
+                SDL_Rect renderRect =
+                {
+
+                positionComponent->GetX() - _camera->GetX() + actorImage->GetOffsetX(),
+                positionComponent->GetY() - _camera->GetY() + actorImage->GetOffsetY(),
+                actorImage->GetWidth(),
+                actorImage->GetHeight()
+                };
+                SDL_RenderCopy(renderer, actorImage->GetTexture(), NULL, &renderRect);
+                }
+                }*/
+        }
+        //END_QUERY_PERFORMANCE_TIMER
+    }
+
+    
+    //LOG("Profiling render loop");
+    //START_QUERY_PERFORMANCE_TIMER
+    m_pScene->OnUpdate(msDiff);
+    m_pScene->OnRender();
     //END_QUERY_PERFORMANCE_TIMER
 }
 
-TilePrototype* Level::CreateTilePrototype(WwdTileDescription* tileDescription, uint32_t tileId, WapPid* pid, SDL_Renderer* renderer)
+TileCollisionPrototype* Level::CreateTilePrototype(WwdTileDescription* tileDescription, uint32_t tileId)
 {
-    TilePrototype* tilePrototype = new TilePrototype;
+    TileCollisionPrototype* tilePrototype = new TileCollisionPrototype;
     tilePrototype->id = tileId;
     tilePrototype->width = tileDescription->width;
     tilePrototype->height = tileDescription->height;
-    //Util::ParseCollisionRectanglesFromTile(tilePrototype, tileDescription, tileId);
-    tilePrototype->texture = Image::GetTextureFromPid(pid, renderer);
+    Util::ParseCollisionRectanglesFromTile(tilePrototype, tileDescription, tileId);
 
     return tilePrototype;
-}
-
-RezFile* Level::FindTileFile(RezDirectory* tileDirectory, std::string fileName)
-{
-    assert(tileDirectory != NULL);
-    assert(tileDirectory->directoryContents != NULL);
-    assert(tileDirectory->directoryContents->rezDirectoriesCount > 0);
-
-    // Search in every tile folder
-    uint32_t tileSubdirs = tileDirectory->directoryContents->rezDirectoriesCount;
-    
-    for (uint32_t subdirIdx = 0; subdirIdx < tileSubdirs; subdirIdx++)
-    {
-        std::string tilePath = tileDirectory->directoryContents->rezDirectories[subdirIdx]->name + std::string("/") + fileName;
-        RezFile* rezFile = WAP_GetRezFileFromRezDirectory(tileDirectory, tilePath.c_str());
-        if (rezFile != NULL)
-        {
-            return rezFile;
-        }
-    }
-
-    return NULL;
 }
 
 LevelResourcePaths Level::GetResourcePaths(uint32_t levelNumber)
