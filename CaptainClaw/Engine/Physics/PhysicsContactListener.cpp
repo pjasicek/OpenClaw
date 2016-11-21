@@ -5,6 +5,7 @@
 #include "../Actor/Components/PhysicsComponent.h"
 #include "../Actor/Components/KinematicComponent.h"
 #include "../Actor/Components/AIComponents/CrumblingPegAIComponent.h"
+#include "../Actor/Components/TriggerComponents/TriggerComponent.h"
 
 int numFootContacts = 0;
 
@@ -97,6 +98,28 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
             }
         }
     }
+    // Trigger contact
+    {
+        if (pFixtureB->GetUserData() == (void*)FixtureType_Trigger)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_Trigger)
+        {
+            if (pFixtureB->GetBody()->GetType() == b2_dynamicBody)
+            {
+                Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                assert(pActor);
+
+                shared_ptr<TriggerComponent> pTriggerComponent = GetTriggerComponentFromB2Body(pFixtureA->GetBody());
+                if (pTriggerComponent)
+                {
+                    pTriggerComponent->OnActorEntered(pActor);
+                }
+            }
+        }
+    }
 }
 
 //=====================================================================================================================
@@ -180,6 +203,28 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                 {
                     pFixtureA->SetSensor(true);
                 }*/
+            }
+        }
+    }
+    // Trigger contact
+    {
+        if (pFixtureB->GetUserData() == (void*)FixtureType_Trigger)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_Trigger)
+        {
+            if (pFixtureB->GetBody()->GetType() == b2_dynamicBody)
+            {
+                Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                assert(pActor);
+
+                shared_ptr<TriggerComponent> pTriggerComponent = GetTriggerComponentFromB2Body(pFixtureA->GetBody());
+                if (pTriggerComponent)
+                {
+                    pTriggerComponent->OnActorLeft(pActor);
+                }
             }
         }
     }

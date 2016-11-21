@@ -59,10 +59,12 @@ public:
     virtual void VRenderDiagnostics(SDL_Renderer* pRenderer, std::shared_ptr<CameraNode> pCamera) = 0;
 
     // Physics world modifiers
-    virtual void VCreateTrigger(WeakActorPtr pActor, const Point& pos, Point& size) = 0;
+    virtual void VCreateTrigger(WeakActorPtr pActor, const Point& pos, Point& size, bool isStatic) = 0;
     virtual void VApplyForce(uint32_t actorId, const Point& impulse) = 0;
     virtual void VApplyLinearImpulse(uint32_t actorId, const Point& impulse) = 0;
     virtual bool VKinematicMove(const Point& pos, uint32_t actorId) = 0;
+
+    virtual Point GetGravity() const = 0;
 
     // Physics actor states
     virtual void VStopActor(uint32_t actorId) = 0;

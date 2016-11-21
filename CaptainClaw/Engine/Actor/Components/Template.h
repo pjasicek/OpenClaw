@@ -12,7 +12,7 @@ public:
     static const char* g_Name;
     virtual const char* VGetName() const { return g_Name; }
 
-    virtual bool VInit(TiXmlElement* data) override;
+    virtual bool VInit(TiXmlElement* pData) override;
     virtual TiXmlElement* VGenerateXml() override;
 
 private:

@@ -51,10 +51,12 @@ public:
     virtual void VRenderDiagnostics(SDL_Renderer* pRenderer, shared_ptr<CameraNode> pCamera) override;
 
     // Physics world modifiers
-    virtual void VCreateTrigger(WeakActorPtr pActor, const Point& pos, Point& size) override;
+    virtual void VCreateTrigger(WeakActorPtr pActor, const Point& pos, Point& size, bool isStatic) override;
     virtual void VApplyForce(uint32_t actorId, const Point& force) override;
     virtual void VApplyLinearImpulse(uint32_t actorId, const Point& impulse) override;
     virtual bool VKinematicMove(const Point& pos, uint32_t actorId) override;
+
+    virtual Point GetGravity() const override;
 
     // Physics actor states
     virtual void VStopActor(uint32_t actorId) override;
@@ -75,12 +77,15 @@ private:
     TiXmlDocument LoadPhysicsXmlConfig();
     b2Body* FindBox2DBody(uint32 actorId);
     uint32 FindActorId(b2Body* pBody);
+    void ScheduleActorForRemoval(uint32 actorId) { m_ActorsToBeDestroyed.push_back(actorId); }
     
     unique_ptr<b2World> m_pWorld;
     unique_ptr<PhysicsDebugDrawer> m_pDebugDrawer;
     unique_ptr<PhysicsContactListener> m_pPhysicsContactListener;
 
     b2Body* m_pTiles;
+
+    std::vector<uint32> m_ActorsToBeDestroyed;
     
     ActorIDToBox2DBodyMap m_ActorToBodyMap;
     Box2DBodyToActorIDMap m_BodyToActorMap;
@@ -88,6 +93,7 @@ private:
 
 class KinematicComponent;
 class PhysicsComponent;
+class TriggerComponent;
 
 extern b2Vec2 PixelsToMeters(b2Vec2& pixels);
 extern float PixelsToMeters(float pixels);
@@ -97,6 +103,7 @@ extern Point b2Vec2ToPoint(b2Vec2& vec);
 extern b2Vec2 PointToB2Vec2(const Point& point);
 extern shared_ptr<PhysicsComponent> GetPhysicsComponentFromB2Body(const b2Body* pBody);
 extern shared_ptr<KinematicComponent> GetKinematicComponentFromB2Body(const b2Body* pBody);
+extern shared_ptr<TriggerComponent> GetTriggerComponentFromB2Body(const b2Body* pBody);
 extern b2AABB GetBodyAABB(b2Body* pBody);
 
 extern IGamePhysics* CreateClawPhysics();

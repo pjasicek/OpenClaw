@@ -81,11 +81,24 @@ void ClawControllableComponent::VPostInit()
     m_pClawAnimationComponent = MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
     assert(m_pClawAnimationComponent);
     assert(m_pRenderComponent);
+    m_pClawAnimationComponent->AddObserver(this);
+
+    m_pPhysicsComponent = MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
+}
+
+void ClawControllableComponent::VUpdate(uint32 msDiff)
+{
+
 }
 
 // Interface for subclasses
 void ClawControllableComponent::VOnStartFalling()
 {
+    if (m_State == ClawState_JumpShooting ||
+        m_State == ClawState_JumpAttacking)
+    {
+        return;
+    }
     m_pClawAnimationComponent->SetAnimation("fall");
     m_State = ClawState_Falling;
 }
@@ -98,7 +111,13 @@ void ClawControllableComponent::VOnLandOnGround()
 
 void ClawControllableComponent::VOnStartJumping()
 {
+    if (m_State == ClawState_JumpShooting ||
+        m_State == ClawState_JumpAttacking)
+    {
+        return;
+    }
     m_pClawAnimationComponent->SetAnimation("jump");
+    m_State = ClawState_Jumping;
 }
 
 void ClawControllableComponent::VOnDirectionChange(Direction direction)
@@ -108,23 +127,94 @@ void ClawControllableComponent::VOnDirectionChange(Direction direction)
 
 void ClawControllableComponent::VOnStopMoving()
 {
+    if (m_State == ClawState_Shooting)
+    {
+        return;
+    }
     m_pClawAnimationComponent->SetAnimation("stand");
+    m_State = ClawState_Standing;
 }
 
 void ClawControllableComponent::VOnRun()
 {
+    if (m_State == ClawState_Shooting)
+    {
+        return;
+    }
     m_pClawAnimationComponent->SetAnimation("walk");
+    m_State = ClawState_Walking;
 }
 
 void ClawControllableComponent::VOnClimb()
 {
     m_pClawAnimationComponent->ResumeAnimation();
     m_pClawAnimationComponent->SetAnimation("climb");
+    m_State = ClawState_Climbing;
 }
 
 void ClawControllableComponent::VOnStopClimbing()
 {
     m_pClawAnimationComponent->PauseAnimation();
+}
+
+void ClawControllableComponent::OnAttack()
+{
+    if (IsAttackingOrShooting() ||
+        m_State == ClawState_Climbing)
+    {
+        return;
+    }
+
+    if (m_State == ClawState_Falling ||
+        m_State == ClawState_Jumping)
+    {
+        m_pClawAnimationComponent->SetAnimation("jumpswipe");
+        m_State = ClawState_JumpAttacking;
+    }
+    else
+    {
+        int attackType = rand() % 5;
+        if (attackType == 0)
+        {
+            m_pClawAnimationComponent->SetAnimation("kick");
+        }
+        else if (attackType == 1)
+        {
+            m_pClawAnimationComponent->SetAnimation("uppercut");
+        }
+        else
+        {
+            m_pClawAnimationComponent->SetAnimation("swipe");
+        }
+        
+        m_State = ClawState_Attacking;
+    }
+}
+
+void ClawControllableComponent::OnFire(bool outOfAmmo)
+{
+    if (IsAttackingOrShooting() ||
+        m_State == ClawState_Climbing)
+    {
+        return;
+    }
+
+    if (m_State == ClawState_Falling ||
+        m_State == ClawState_Jumping)
+    {
+        m_pClawAnimationComponent->SetAnimation("jumppistol");
+        m_State = ClawState_JumpShooting;
+    }
+    else
+    {
+        m_pClawAnimationComponent->SetAnimation("pistol");
+        m_State = ClawState_Shooting;
+    }
+}
+
+void ClawControllableComponent::OnDuck()
+{
+
 }
 
 bool ClawControllableComponent::CanMove()
@@ -137,4 +227,63 @@ bool ClawControllableComponent::CanMove()
     }
 
     return true;
+}
+
+void ClawControllableComponent::SetCurrentPhysicsState()
+{
+    if (m_pPhysicsComponent->IsFalling())
+    {
+        m_pClawAnimationComponent->SetAnimation("fall");
+        m_State = ClawState_Falling;
+    }
+    else if (m_pPhysicsComponent->IsJumping())
+    {
+        m_pClawAnimationComponent->SetAnimation("jump");
+        m_State = ClawState_Jumping;
+    }
+    else if (m_pPhysicsComponent->IsOnGround())
+    {
+        m_pClawAnimationComponent->SetAnimation("stand");
+        m_State = ClawState_Standing;
+    }
+    else
+    {
+        m_pClawAnimationComponent->SetAnimation("stand");
+        m_State = ClawState_Standing;
+        LOG_ERROR("Unknown physics state. Assume standing");
+    }
+}
+
+void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
+{
+    std::string animName = pAnimation->GetName();
+    if ((animName.find("pistol") != std::string::npos)
+        && pAnimation->IsAtLastAnimFrame())
+    {
+        SetCurrentPhysicsState();
+    }
+    else if ((animName == "swipe" ||
+            animName == "kick" ||
+            animName == "uppercut" ||
+            animName == "jumpswipe" ||
+            animName == "duckswipe")
+            && pAnimation->IsAtLastAnimFrame())
+    {
+        SetCurrentPhysicsState();
+    }
+}
+
+bool ClawControllableComponent::IsAttackingOrShooting()
+{
+    if (m_State == ClawState_Shooting ||
+        m_State == ClawState_JumpShooting ||
+        m_State == ClawState_DuckShooting ||
+        m_State == ClawState_Attacking ||
+        m_State == ClawState_DuckAttacking ||
+        m_State == ClawState_JumpAttacking)
+    {
+        return true;
+    }
+
+    return false;
 }

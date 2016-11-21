@@ -6,6 +6,7 @@
 #include "../GameApp/BaseGameApp.h"
 #include "../Process/ProcessMgr.h"
 #include "Console.h"
+#include "GameHUD.h"
 
 #include "UserInterface.h"
 
@@ -44,7 +45,11 @@ public:
     bool LoadGame(TiXmlElement* pLevelData);
 
 protected:
-    virtual bool VLoadGameDelegate(TiXmlElement* levelData) { LOG("------------"); VPushElement(m_pScene); return true; }
+    virtual bool VLoadGameDelegate(TiXmlElement* levelData) { VPushElement(m_pScene); return true; }
+
+    // Delegates
+    void NewHUDElementDelegate(IEventDataPtr pEventData);
+    void UpdateScoreDelegate(IEventDataPtr pEventData);
 
     uint32 m_ViewId;
     uint32 m_ActorId;
@@ -56,6 +61,7 @@ protected:
     bool m_RunFullSpeed;
 
     shared_ptr<ScreenElementScene> m_pScene;
+    shared_ptr<ScreenElementHUD> m_pHUD;
     shared_ptr<CameraNode> m_pCamera;
     unique_ptr<Console> m_pConsole;
 

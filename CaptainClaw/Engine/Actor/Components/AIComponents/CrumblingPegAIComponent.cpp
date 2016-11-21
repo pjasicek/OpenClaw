@@ -18,12 +18,8 @@ const char* CrumblingPegAIComponent::g_Name = "CrumblingPegAIComponent";
 CrumblingPegAIComponent::CrumblingPegAIComponent()
     :
     m_Size(Point(0, 0)),
-    m_pAnimationComponent(NULL),
-    m_pPhysics(nullptr),
-    m_PrevAnimframeIdx(0)
-{
-
-}
+    m_pPhysics(nullptr)
+{ }
 
 CrumblingPegAIComponent::~CrumblingPegAIComponent()
 {
@@ -67,11 +63,9 @@ void CrumblingPegAIComponent::VPostInit()
 
     shared_ptr<AnimationComponent> pAnimationComponent =
         MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
-    assert(pAnimationComponent);
-
-    m_pAnimationComponent = pAnimationComponent.get();
-    m_pAnimationComponent->SetReverseAnimation(true);
-    m_pAnimationComponent->PauseAnimation();
+    assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
+    pAnimationComponent->PauseAnimation();
+    pAnimationComponent->AddObserver(this);
 
     // Set size from current image if necessary
     if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
@@ -98,7 +92,7 @@ TiXmlElement* CrumblingPegAIComponent::VGenerateXml()
     return baseElement;
 }
 
-void CrumblingPegAIComponent::VUpdate(uint32 msDiff)
+/*void CrumblingPegAIComponent::VUpdate(uint32 msDiff)
 {
     // TODO: HACK: This is polling, drains cpu for no reason, should be event based
     if (Animation* pAnimation = m_pAnimationComponent->GetCurrentAnimation())
@@ -119,9 +113,26 @@ void CrumblingPegAIComponent::VUpdate(uint32 msDiff)
             m_PrevAnimframeIdx = pAnimation->GetCurrentAnimationFrame()->idx;
         }
     }
+}*/
+
+void CrumblingPegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
+{
+    if (pNewFrame->idx == 9)
+    {
+        m_pPhysics->VRemoveActor(_owner->GetGUID());
+    }
+}
+
+void CrumblingPegAIComponent::VOnAnimationLooped(Animation* pAnimation)
+{
+    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+    IEventMgr::Get()->VQueueEvent(pEvent);
 }
 
 void CrumblingPegAIComponent::OnContact(b2Body* pBody)
 {
-    m_pAnimationComponent->ResumeAnimation();
+    shared_ptr<AnimationComponent> pAnimationComponent =
+        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+    assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
+    pAnimationComponent->ResumeAnimation();
 }

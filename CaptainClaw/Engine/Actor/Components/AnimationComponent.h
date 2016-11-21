@@ -7,13 +7,40 @@
 #include "../ActorComponent.h"
 #include "Animation.h"
 
-class Image;
 class Animation;
+class AnimationObserver;
+class AnimationSubject
+{
+public:
+    void NotifyAnimationLooped(Animation* pAnimation);
+    void NotifyAnimationStarted(Animation* pAnimation);
+    void NotifyAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame);
+    void NotifyAnimationPaused(Animation* pAnimation);
+    void NotifyAnimationResumed(Animation* pAnimation);
+    void AddObserver(AnimationObserver* pObserver);
+    void RemoveObserver(AnimationObserver* pObserver);
+
+private:
+    std::vector<AnimationObserver*> m_AnimationObservers;
+};
+
+class AnimationObserver
+{
+public:
+    virtual void VOnAnimationLooped(Animation* pAnimation) { }
+    virtual void VOnAnimationStarted(Animation* pAnimation) { }
+    virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) { }
+    virtual void VOnAnimationPaused(Animation* pAnimation) { }
+    virtual void VOnAnimationResumed(Animation* pAnimation) { }
+};
 
 typedef std::map<std::string, Animation*> AnimationMap;
 
-class AnimationComponent : public ActorComponent
+class Image;
+class AnimationComponent : public ActorComponent, public AnimationSubject
 {
+    friend class Animation;
+
 public:
     AnimationComponent() { _currentAnimation = NULL; }
     virtual ~AnimationComponent();
@@ -39,12 +66,16 @@ public:
     Animation* GetCurrentAnimation() const { return _currentAnimation; }
     std::string GetCurrentAnimationName() const;
 
-    // Events
+private:
+
+    // Animation events
     void OnAnimationFrameFinished(AnimationFrame* frame);
     void OnAnimationFrameStarted(AnimationFrame* frame);
     void OnAnimationFinished();
+    void OnAnimationFrameChanged(AnimationFrame* pLastFrame, AnimationFrame* pNewFrame);
+    void OnAnimationLooped();
 
-private:
+
     AnimationMap _animationMap;
     Animation* _currentAnimation;
 

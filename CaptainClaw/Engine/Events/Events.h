@@ -3,6 +3,7 @@
 
 #include "../SharedDefines.h"
 #include "../Scene/SceneNodes.h"
+#include "../Scene/HUDSceneNode.h"
 
 #include "EventMgr.h"
 
@@ -1088,6 +1089,239 @@ public:
 private:
     uint32 m_ActorId;
     Point m_ClimbMovement;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Actor_Fire - Sent when Fire button is pressed. Fires projectile like pellet / magic
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Actor_Fire : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Actor_Fire(void)
+    {
+        m_ActorId = INVALID_ACTOR_ID;
+    }
+
+    EventData_Actor_Fire(uint32 actorId)
+    {
+        m_ActorId = actorId;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Actor_Fire(m_ActorId));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_ActorId;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_ActorId;
+    }
+
+    uint32 GetActorId(void) const
+    {
+        return m_ActorId;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Actor_Fire";
+    }
+
+private:
+    uint32 m_ActorId;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Actor_Attack - Sent when attack button is pressed.
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Actor_Attack : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Actor_Attack(void)
+    {
+        m_ActorId = INVALID_ACTOR_ID;
+    }
+
+    EventData_Actor_Attack(uint32 actorId)
+    {
+        m_ActorId = actorId;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Actor_Attack(m_ActorId));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_ActorId;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_ActorId;
+    }
+
+    uint32 GetActorId(void) const
+    {
+        return m_ActorId;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Actor_Attack";
+    }
+
+private:
+    uint32 m_ActorId;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_New_HUD_Element
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_New_HUD_Element : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_New_HUD_Element(void)
+    {
+        m_ActorId = INVALID_ACTOR_ID;
+    }
+
+    EventData_New_HUD_Element(uint32 actorId, std::string key, shared_ptr<SDL2HUDSceneNode> pHUDSceneNode)
+    {
+        m_ActorId = actorId;
+        m_pHUDSceneNode = pHUDSceneNode;
+        m_pKey = key;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_New_HUD_Element(m_ActorId, m_pKey, m_pHUDSceneNode));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        LOG_ERROR(GetName() + std::string(" should not be serialzied!"));
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        LOG_ERROR(GetName() + std::string(" should not be serialzied!"));
+    }
+
+    uint32 GetActorId(void) const
+    {
+        return m_ActorId;
+    }
+
+    shared_ptr<SDL2HUDSceneNode> GetHUDElement()
+    {
+        return m_pHUDSceneNode;
+    }
+
+    std::string GetHUDKey() { return m_pKey; }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_New_HUD_Element";
+    }
+
+private:
+    uint32 m_ActorId;
+    shared_ptr<SDL2HUDSceneNode> m_pHUDSceneNode;
+    std::string m_pKey;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Update_Score
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Update_Score : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Update_Score(void)
+    {
+        m_NewScore = INVALID_ACTOR_ID;
+    }
+
+    EventData_Update_Score(uint32 oldScore, uint32 newScore, bool isInitialScore)
+    {
+        m_OldScore = oldScore;
+        m_NewScore = newScore;
+        m_IsInitialScore = isInitialScore;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Update_Score(m_OldScore, m_NewScore, m_IsInitialScore));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_NewScore;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_NewScore;
+    }
+
+    uint32 GetNewScore(void) const
+    {
+        return m_NewScore;
+    }
+
+    uint32 GetOldScore(void) const
+    {
+        return m_OldScore;
+    }
+
+    bool IsInitialScore(void) const
+    {
+        return m_IsInitialScore;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Update_Score";
+    }
+
+private:
+    uint32 m_OldScore;
+    uint32 m_NewScore;
+    bool m_IsInitialScore;
 };
 
 #endif

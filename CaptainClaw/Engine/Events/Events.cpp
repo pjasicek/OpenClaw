@@ -22,6 +22,10 @@ const EventType EventData_PlaySound::sk_EventType(0x3d8118ee);
 const EventType EventData_Attach_Actor::sk_EventType(0x3dac18ee);
 const EventType EventData_Collideable_Tile_Created::sk_EventType(0x8cac18ee);
 const EventType EventData_Start_Climb::sk_EventType(0x8bab18ee);
+const EventType EventData_Actor_Fire::sk_EventType(0x123418ee);
+const EventType EventData_Actor_Attack::sk_EventType(0x567818ee);
+const EventType EventData_New_HUD_Element::sk_EventType(0x5678abce);
+const EventType EventData_Update_Score::sk_EventType(0x5a1f78ce);
 
 /*bool EventData_PlaySound::VBuildEventFromScript(void)
 {

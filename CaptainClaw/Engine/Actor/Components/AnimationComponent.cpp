@@ -84,8 +84,11 @@ void AnimationComponent::VPostInit()
             cycleDurationStr.erase(0, 5);
             int cycleDuration = std::stoi(cycleDurationStr);
 
-            shared_ptr<ActorRenderComponent> pRenderComponent =
-                MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+            shared_ptr<ActorRenderComponent> pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+            if (!pRenderComponent)
+            {
+                pRenderComponent = MakeStrongPtr(_owner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name));
+            }
             if (!pRenderComponent)
             {
                 LOG_ERROR("Actor has existing animation component but not render component. Actor: " + _owner->GetName());
@@ -99,8 +102,8 @@ void AnimationComponent::VPostInit()
                 continue;
             }
 
-            Animation* cycle150 = Animation::CreateAnimation(pRenderComponent->GetImagesCount(), cycleDuration, animType.c_str(), this);
-            if (!cycle150)
+            Animation* pCycleAnim = Animation::CreateAnimation(pRenderComponent->GetImagesCount(), cycleDuration, animType.c_str(), this);
+            if (!pCycleAnim)
             {
                 LOG_ERROR("Failed to create " + animType + " animation.");
                 continue;
@@ -121,10 +124,10 @@ void AnimationComponent::VPostInit()
             if (cycleDuration != 75 && cycleDuration != 50)
             {
                 srand(pPositionComponent->GetX());
-                cycle150->SetDelay(rand() % 1000);
+                pCycleAnim->SetDelay(rand() % 1000);
             }
 
-            _animationMap.insert(std::make_pair(animType, cycle150));
+            _animationMap.insert(std::make_pair(animType, pCycleAnim));
         }
         else
         {
@@ -189,11 +192,13 @@ bool AnimationComponent::HasAnimation(std::string& animName)
 void AnimationComponent::PauseAnimation()
 {
     _currentAnimation->Pause();
+    NotifyAnimationPaused(_currentAnimation);
 }
 
 void AnimationComponent::ResumeAnimation()
 {
     _currentAnimation->Resume();
+    NotifyAnimationResumed(_currentAnimation);
 }
 
 void AnimationComponent::ResetAnimation()
@@ -232,11 +237,29 @@ void AnimationComponent::OnAnimationFrameStarted(AnimationFrame* frame)
     {
         renderComponent->SetImage(frame->imageName);
     }
+    else if (renderComponent = MakeStrongPtr(_owner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name)))
+    {
+        renderComponent->SetImage(frame->imageName);
+    }
+    else
+    {
+        LOG_WARNING("Could not find render component for actor: " + _owner->GetName());
+    }
 }
 
 void AnimationComponent::OnAnimationFinished()
 {
 
+}
+
+void AnimationComponent::OnAnimationFrameChanged(AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
+{
+    NotifyAnimationFrameChanged(_currentAnimation, pLastFrame, pNewFrame);
+}
+
+void AnimationComponent::OnAnimationLooped()
+{
+    NotifyAnimationLooped(_currentAnimation);
 }
 
 void AnimationComponent::SetDelay(uint32 msDelay)
@@ -247,4 +270,58 @@ void AnimationComponent::SetDelay(uint32 msDelay)
 void AnimationComponent::SetReverseAnimation(bool reverse)
 {
     _currentAnimation->SetReverseAnim(reverse);
+}
+
+//=====================================================================================================================
+// AnimationSubject implementation
+//=====================================================================================================================
+
+void AnimationSubject::NotifyAnimationLooped(Animation* pAnimation)
+{
+    for (AnimationObserver* pSubject : m_AnimationObservers)
+    {
+        pSubject->VOnAnimationLooped(pAnimation);
+    }
+}
+
+void AnimationSubject::NotifyAnimationStarted(Animation* pAnimation)
+{
+    for (AnimationObserver* pSubject : m_AnimationObservers)
+    {
+        pSubject->VOnAnimationStarted(pAnimation);
+    }
+}
+
+void AnimationSubject::NotifyAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
+{
+    for (AnimationObserver* pSubject : m_AnimationObservers)
+    {
+        pSubject->VOnAnimationFrameChanged(pAnimation, pLastFrame, pNewFrame);
+    }
+}
+
+void AnimationSubject::NotifyAnimationPaused(Animation* pAnimation)
+{
+    for (AnimationObserver* pSubject : m_AnimationObservers)
+    {
+        pSubject->VOnAnimationPaused(pAnimation);
+    }
+}
+
+void AnimationSubject::NotifyAnimationResumed(Animation* pAnimation)
+{
+    for (AnimationObserver* pSubject : m_AnimationObservers)
+    {
+        pSubject->VOnAnimationResumed(pAnimation);
+    }
+}
+
+void AnimationSubject::AddObserver(AnimationObserver* pObserver)
+{
+    m_AnimationObservers.push_back(pObserver);
+}
+
+void AnimationSubject::RemoveObserver(AnimationObserver* pObserver)
+{
+    m_AnimationObservers.erase(std::remove(m_AnimationObservers.begin(), m_AnimationObservers.end(), pObserver), m_AnimationObservers.end());
 }

@@ -436,6 +436,8 @@ void BaseGameApp::RegisterEngineEvents()
     REGISTER_EVENT(EventData_Attach_Actor);
     REGISTER_EVENT(EventData_Collideable_Tile_Created);
     REGISTER_EVENT(EventData_Start_Climb);
+    REGISTER_EVENT(EventData_Actor_Fire);
+    REGISTER_EVENT(EventData_Actor_Attack);
 }
 
 //---------------------------------------------------------------------------------------------------------------------

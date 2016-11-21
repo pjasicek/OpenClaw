@@ -154,6 +154,9 @@ RootNode::RootNode() : SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_0, { 0, 0 })
     shared_ptr<SceneNode> foregroundGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_Foreground, { 0, 0 }));
     m_ChildrenList.push_back(foregroundGroup);
 
+    shared_ptr<SceneNode> HUDGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_HUD, { 0, 0 }));
+    m_ChildrenList.push_back(HUDGroup); 
+
     shared_ptr<SceneNode> invisibleGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_NotRendered, { 0, 0 }));
     m_ChildrenList.push_back(invisibleGroup);
 }
@@ -200,6 +203,10 @@ void RootNode::VRenderChildren(Scene* pScene)
                 break;
 
             case RenderPass_Actor:
+                m_ChildrenList[pass]->VRenderChildren(pScene);
+                break;
+
+            case RenderPass_HUD:
                 m_ChildrenList[pass]->VRenderChildren(pScene);
                 break;
         }

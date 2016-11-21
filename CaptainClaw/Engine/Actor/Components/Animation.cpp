@@ -171,23 +171,40 @@ void Animation::SetNextFrame()
 {
     uint32 countAnimationFrames = _animationFrames.size();
 
+    bool looped = false;
     // Certain animations play in loop while being reversed - e.g.: 0,1,2,3,4,3,2,1,0,1,....
     if (_reversed)
     {
         if ((_currentAnimationFrame.idx == _animationFrames.size() - 1))
         {
             _isBeingReversed = true;
+            looped = true;
         }
         else if (_isBeingReversed && _currentAnimationFrame.idx == 0)
         {
             _isBeingReversed = false;
+            looped = true;
+        }
+    }
+    else
+    {
+        if (IsAtLastAnimFrame())
+        {
+            looped = true;
         }
     }
 
     int32 delta = 0;
     _isBeingReversed ? delta-- : delta++;
 
-    _currentAnimationFrame = _animationFrames[(_currentAnimationFrame.idx + delta) % countAnimationFrames];
+    AnimationFrame* lastAnimFrame = &_animationFrames[_currentAnimationFrame.idx];
+    _currentAnimationFrame = _animationFrames[(_currentAnimationFrame.idx + delta) % countAnimationFrames];    
 
     _owner->OnAnimationFrameStarted(&_currentAnimationFrame);
+
+    _owner->OnAnimationFrameChanged(lastAnimFrame, &_currentAnimationFrame);
+    if (looped)
+    {
+        _owner->OnAnimationLooped();
+    }
 }

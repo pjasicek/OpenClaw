@@ -9,6 +9,7 @@
 
 #include "../../Scene/ActorSceneNode.h"
 #include "../../Scene/TilePlaneSceneNode.h"
+#include "../../Scene/HUDSceneNode.h"
 
 #include "../../Events/Events.h"
 
@@ -17,6 +18,7 @@
 
 const char* ActorRenderComponent::g_Name = "ActorRenderComponent";
 const char* TilePlaneRenderComponent::g_Name = "TilePlaneRenderComponent";
+const char* HUDRenderComponent::g_Name = "HUDRenderComponent";
 
 //=================================================================================================
 // BaseRenderComponent Implementation
@@ -90,6 +92,33 @@ bool BaseRenderComponent::VInit(TiXmlElement* pXmlData)
                 continue;
             }
 
+            // HACK: all animation frames should be in format frameXXX
+            /*if (imageNameKey.find("chest") != std::string::npos)
+            {
+                imageNameKey.replace(0, 5, "frame");
+            }
+            // HACK: all animation frames should be in format frameXXX (length = 8)
+            if (imageNameKey.find("frame") != std::string::npos && imageNameKey.length() != 8)
+            {
+                int imageNameNumStr = std::stoi(std::string(imageNameKey).erase(0, 5));
+                imageNameKey = "frame" + Util::ConvertToThreeDigitsString(imageNameNumStr);
+            }*/
+            // Just reconstruct it...
+            if (imageNameKey.length() > 3)
+            {
+                std::string tmp = imageNameKey;
+                tmp.erase(std::remove_if(tmp.begin(), tmp.end(), (int(*)(int))std::isalpha), tmp.end());
+                if (!tmp.empty())
+                {
+                    int imageNum = std::stoi(tmp);
+                    imageNameKey = "frame" + Util::ConvertToThreeDigitsString(imageNum);
+                }
+                else
+                {
+                    //LOG(imagePath);
+                }
+            }
+
             m_ImageMap.insert(std::make_pair(imageNameKey, image));
         }
     }
@@ -115,8 +144,11 @@ TiXmlElement* BaseRenderComponent::VGenerateXml()
 void BaseRenderComponent::VPostInit()
 {
     shared_ptr<SceneNode> pNode = GetSceneNode();
-    shared_ptr<EventData_New_Render_Component> pEvent(new EventData_New_Render_Component(_owner->GetGUID(), pNode));
-    IEventMgr::Get()->VTriggerEvent(pEvent);
+    if (pNode)
+    {
+        shared_ptr<EventData_New_Render_Component> pEvent(new EventData_New_Render_Component(_owner->GetGUID(), pNode));
+        IEventMgr::Get()->VTriggerEvent(pEvent);
+    }
 }
 
 void BaseRenderComponent::VOnChanged()
@@ -173,18 +205,24 @@ bool BaseRenderComponent::HasImage(int32 imageId)
 
 ActorRenderComponent::ActorRenderComponent()
 {
-    // Assume nothing, everything should be explicitly defined in data
-    m_IsVisible = false;
+    // Everything is visible by default, should be explicitly stated that its not visible
+    m_IsVisible = true;
     m_IsMirrored = false;
     m_IsInverted = false;
 }
 
 bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
 {
-    if (pXmlData->FirstChildElement("Visible") && 
-        std::string(pXmlData->FirstChildElement("Visible")->GetText()) == "true")
+    if (TiXmlElement* pElem = pXmlData->FirstChildElement("Visible"))
     {
-        m_IsVisible = true;
+        if (std::string(pElem->GetText()) == "true")
+        {
+            m_IsVisible = true;
+        }
+        else
+        {
+            m_IsVisible = false;
+        }
     }
     if (pXmlData->FirstChildElement("Mirrored") &&
         std::string(pXmlData->FirstChildElement("Mirrored")->GetText()) == "true")
@@ -261,11 +299,15 @@ void ActorRenderComponent::SetImage(std::string imageName)
 {
     if (m_ImageMap.count(imageName) > 0)
     {
-        //LOG(_owner->GetName() + ": Setting image: " + imageName);
         m_CurrentImage = m_ImageMap[imageName];
     }
     else
     {
+        // Known... Treasure chest HUD
+        if (imageName == "frame000")
+        {
+            return;
+        }
         LOG_ERROR("Trying to set nonexistant image: " + imageName + " to render component of actor: " +
             _owner->GetName());
     }
@@ -459,6 +501,72 @@ shared_ptr<SceneNode> TilePlaneRenderComponent::VCreateSceneNode()
 }
 
 void TilePlaneRenderComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement)
+{
+
+}
+
+//=================================================================================================
+// [ActorComponent::BaseRenderComponent::ActorRenderComponent::HUDRenderComponent]
+// 
+//      HUDRenderComponent Implementation
+//
+//=================================================================================================
+
+HUDRenderComponent::HUDRenderComponent()
+    :
+    m_IsAnchoredRight(false),
+    m_IsAnchoredBottom(false)
+{ }
+
+bool HUDRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
+{
+    if (!ActorRenderComponent::VDelegateInit(pXmlData))
+    {
+        return false;
+    }
+
+    if (TiXmlElement* pElem = pXmlData->FirstChildElement("AnchorRight"))
+    {
+        m_IsAnchoredRight = std::string(pElem->GetText()) == "true";
+    }
+    if (TiXmlElement* pElem = pXmlData->FirstChildElement("AnchorBottom"))
+    {
+        m_IsAnchoredBottom = std::string(pElem->GetText()) == "true";
+    }
+    if (TiXmlElement* pElem = pXmlData->FirstChildElement("HUDElementKey"))
+    {
+        m_HUDElementKey = pElem->GetText();
+    }
+
+    return true;
+}
+
+SDL_Rect HUDRenderComponent::VGetPositionRect() const
+{
+    // HACK: Always visible
+    return { 0, 0, 1000000, 1000000 };
+}
+
+shared_ptr<SceneNode> HUDRenderComponent::VCreateSceneNode()
+{
+    shared_ptr<PositionComponent> pPositionComponent =
+        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    if (!pPositionComponent)
+    {
+        // can't render without a transform
+        return shared_ptr<SceneNode>();
+    }
+
+    Point pos(pPositionComponent->GetX(), pPositionComponent->GetY());
+    shared_ptr<SDL2HUDSceneNode> pHUDNode(new SDL2HUDSceneNode(_owner->GetGUID(), this, RenderPass_HUD, pos, IsVisible()));
+
+    shared_ptr<EventData_New_HUD_Element> pEvent(new EventData_New_HUD_Element(_owner->GetGUID(), m_HUDElementKey, pHUDNode));
+    IEventMgr::Get()->VTriggerEvent(pEvent);
+
+    return pHUDNode;
+}
+
+void HUDRenderComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement)
 {
 
 }

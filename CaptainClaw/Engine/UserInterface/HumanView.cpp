@@ -1,6 +1,8 @@
 #include "HumanView.h"
 #include "../GameApp/BaseGameApp.h"
 #include "../GameApp/BaseGameLogic.h"
+#include "../Events/EventMgr.h"
+#include "../Events/Events.h"
 
 const uint32 g_InvalidGameViewId = 0xFFFFFFFF;
 
@@ -16,6 +18,7 @@ HumanView::HumanView(SDL_Renderer* renderer)
     {
         m_pScene.reset(new ScreenElementScene(renderer));
         m_pCamera.reset(new CameraNode(Point(0, 0), 0, 0));
+        m_pHUD.reset(new ScreenElementHUD());
 
         m_pScene->AddChild(INVALID_ACTOR_ID, m_pCamera);
         m_pScene->SetCamera(m_pCamera);
@@ -111,11 +114,17 @@ bool HumanView::VOnEvent(SDL_Event& evt)
     {
         case SDL_KEYDOWN:
         {
-            return m_pKeyboardHandler->VOnKeyDown(evt.key.keysym.sym);
+            if (evt.key.repeat == 0)
+            {
+                return m_pKeyboardHandler->VOnKeyDown(evt.key.keysym.sym);
+            }
         }
         case SDL_KEYUP:
         {
-            return m_pKeyboardHandler->VOnKeyUp(evt.key.keysym.sym);
+            if (evt.key.repeat == 0)
+            {
+                return m_pKeyboardHandler->VOnKeyUp(evt.key.keysym.sym);
+            }
         }
 
         case SDL_MOUSEMOTION:
@@ -171,10 +180,51 @@ void HumanView::VSetCameraOffset(int32 offsetX, int32 offsetY)
 
 void HumanView::RegisterAllDelegates()
 {
-
+    IEventMgr* pEventMgr = IEventMgr::Get();
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::NewHUDElementDelegate), EventData_New_HUD_Element::sk_EventType);
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::UpdateScoreDelegate), EventData_Update_Score::sk_EventType);
 }
 
 void HumanView::RemoveAllDelegates()
 {
+    IEventMgr* pEventMgr = IEventMgr::Get();
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::NewHUDElementDelegate), EventData_New_HUD_Element::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::UpdateScoreDelegate), EventData_Update_Score::sk_EventType);
+}
 
+//=====================================================================================================================
+// Delegates
+//=====================================================================================================================
+
+void HumanView::NewHUDElementDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_New_HUD_Element> pCastEventData = static_pointer_cast<EventData_New_HUD_Element>(pEventData);
+    if (m_pHUD)
+    {
+        m_pHUD->AddHUDElement(pCastEventData->GetHUDKey(), pCastEventData->GetHUDElement());
+    }
+    else
+    {
+        LOG_ERROR("HUD is unitialized");
+    }
+}
+
+void HumanView::UpdateScoreDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Update_Score> pCastEventData = static_pointer_cast<EventData_Update_Score>(pEventData);
+    if (m_pHUD)
+    {
+        m_pHUD->UpdateScore(pCastEventData->GetNewScore());
+        if (!pCastEventData->IsInitialScore())
+        {
+            if ((pCastEventData->GetOldScore() / 1000000) != (pCastEventData->GetNewScore() / 1000000))
+            {
+                // Add new life
+            }
+        }
+    }
+    else
+    {
+        LOG_ERROR("HUD is unitialized");
+    }
 }

@@ -20,7 +20,7 @@ struct AnimationFrame
 // AnimationComponent and Animation are tightly coupled together
 class AnimationComponent;
 class Animation
- {
+{
 public:
     Animation();
     ~Animation();

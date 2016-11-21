@@ -31,6 +31,11 @@ void SDL2ActorSceneNode::VRender(Scene* pScene)
         return;
     }
 
+    if (!arc->IsVisible())
+    {
+        return;
+    }
+
     shared_ptr<CameraNode> pCamera = pScene->GetCamera();
     if (!pCamera)
     {
