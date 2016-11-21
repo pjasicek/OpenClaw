@@ -4,8 +4,10 @@
 #include "../../../SharedDefines.h"
 #include "../../ActorComponent.h"
 
+#include "../AnimationComponent.h"
+
 class AnimationComponent;
-class TogglePegAIComponent : public ActorComponent
+class TogglePegAIComponent : public ActorComponent, public AnimationObserver
 {
 public:
     TogglePegAIComponent();
@@ -18,6 +20,10 @@ public:
 
     virtual bool VInit(TiXmlElement* data) override;
     virtual TiXmlElement* VGenerateXml() override;
+
+    // AnimationObserver API
+    virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
+    virtual void VOnAnimationLooped(Animation* pAnimation) override;
 
 private:
     Point m_Size;

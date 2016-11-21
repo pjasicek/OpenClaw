@@ -76,6 +76,18 @@ void ActorController::OnUpdate(uint32 msDiff)
 
 bool ActorController::VOnKeyDown(SDL_Keycode key)
 {
+    if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LALT)
+    {
+        shared_ptr<EventData_Actor_Fire> pClimbEvent(new EventData_Actor_Fire(m_pControlledObject->VGetProperties()->GetActorId()));
+        IEventMgr::Get()->VTriggerEvent(pClimbEvent);
+    }
+    else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LCTRL)
+    {
+        LOG(".");
+        shared_ptr<EventData_Actor_Attack> pClimbEvent(new EventData_Actor_Attack(m_pControlledObject->VGetProperties()->GetActorId()));
+        IEventMgr::Get()->VTriggerEvent(pClimbEvent);
+    }
+
     return false;
 }
 

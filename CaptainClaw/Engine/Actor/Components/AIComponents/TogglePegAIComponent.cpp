@@ -86,10 +86,16 @@ void TogglePegAIComponent::VPostInit()
         MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     assert(pAnimationComponent);
 
-    m_pAnimationComponent = pAnimationComponent.get();
-    m_pAnimationComponent->SetReverseAnimation(true);
-
-    m_pAnimationComponent->SetDelay(m_Delay);
+    if (m_IsAlwaysActive)
+    {
+        pAnimationComponent->PauseAnimation();
+    }
+    else
+    {
+        pAnimationComponent->SetReverseAnimation(true);
+        pAnimationComponent->SetDelay(m_Delay);
+        pAnimationComponent->AddObserver(this);
+    }
 
     // Set size from current image if necessary
     if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
@@ -118,7 +124,7 @@ TiXmlElement* TogglePegAIComponent::VGenerateXml()
 
 void TogglePegAIComponent::VUpdate(uint32 msDiff)
 {
-    if (m_IsAlwaysActive)
+    /*if (m_IsAlwaysActive)
     {
         m_pAnimationComponent->PauseAnimation();
         return;
@@ -149,5 +155,32 @@ void TogglePegAIComponent::VUpdate(uint32 msDiff)
         {
             m_pPhysics->VActivate(_owner->GetGUID());
         }
+    }*/
+}
+
+void TogglePegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
+{
+    /*LOG(ToStr(_owner->GetGUID()));
+    LOG(ToStr(pLastFrame->idx) + " - " + ToStr(pNewFrame->idx));*/
+    if (pLastFrame->idx == 8 && pNewFrame->idx == 9)
+    {
+        m_pPhysics->VDeactivate(_owner->GetGUID());
     }
+    else if (pLastFrame->idx == 9 && pNewFrame->idx == 8)
+    {
+        m_pPhysics->VActivate(_owner->GetGUID());
+    }
+    else if (pAnimation->IsAtLastAnimFrame())
+    {
+        pAnimation->SetDelay(m_TimeOff - 500);
+    }
+    else if (pAnimation->IsAtFirstAnimFrame())
+    {
+        pAnimation->SetDelay(m_TimeOn - 500);
+    }
+}
+
+void TogglePegAIComponent::VOnAnimationLooped(Animation* pAnimation)
+{
+
 }

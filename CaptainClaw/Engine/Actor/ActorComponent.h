@@ -18,7 +18,7 @@ class ActorComponent
 public:
     virtual ~ActorComponent() { _owner.reset(); }
 
-    // These functions are meant to be overriden by the implementation classe sof the components
+    // These functions are meant to be overriden by the implementation classes of the components
     virtual bool VInit(TiXmlElement* data) = 0;
     virtual void VPostInit() { }
     virtual void VUpdate(uint32 msDiff) { }

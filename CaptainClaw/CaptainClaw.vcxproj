@@ -78,9 +78,17 @@
     <ClCompile Include="ClawEvents.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\ControllerComponents\ScoreComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PickupComponents\AmmoPickupComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PickupComponents\LivesPickupComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PickupComponents\PickupComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PickupComponents\PowerupPickupComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PickupComponents\TreasurePickupComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\HealthComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\KinematicComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PickupComponents\WarpPickupComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.cpp" />
-    <ClCompile Include="Engine\Actor\Components\TriggerComponents\BaseTriggerComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Audio\midiproc_c.c" />
     <ClCompile Include="ClawGameApp.cpp" />
@@ -90,6 +98,7 @@
     <ClCompile Include="Engine\Physics\CollisionBody.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsContactListener.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsDebugDrawer.cpp" />
+    <ClCompile Include="Engine\Scene\HUDSceneNode.cpp" />
     <ClCompile Include="Engine\UserInterface\Console.cpp" />
     <ClCompile Include="Engine\Actor\Actor.cpp" />
     <ClCompile Include="Engine\Actor\ActorFactory.cpp" />
@@ -119,6 +128,7 @@
     <ClCompile Include="Engine\Resource\ResourceCache.cpp" />
     <ClCompile Include="Engine\Scene\Scene.cpp" />
     <ClCompile Include="Engine\Scene\SceneNodes.cpp" />
+    <ClCompile Include="Engine\UserInterface\GameHUD.cpp" />
     <ClCompile Include="Engine\UserInterface\HumanView.cpp" />
     <ClCompile Include="Engine\UserInterface\MovementController.cpp" />
     <ClCompile Include="Engine\UserInterface\UserInterface.cpp" />
@@ -136,9 +146,17 @@
     <ClInclude Include="ClawEvents.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\ControllerComponents\ScoreComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PickupComponents\AmmoPickupComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PickupComponents\LivesPickupComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PickupComponents\PickupComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PickupComponents\PowerupPickupComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PickupComponents\TreasurePickupComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\HealthComponent.h" />
     <ClInclude Include="Engine\Actor\Components\KinematicComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PickupComponents\WarpPickupComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.h" />
-    <ClInclude Include="Engine\Actor\Components\TriggerComponents\BaseTriggerComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />
     <ClInclude Include="ClawGameLogic.h" />
     <ClInclude Include="ClawHumanView.h" />
@@ -147,6 +165,7 @@
     <ClInclude Include="Engine\Physics\CollisionBody.h" />
     <ClInclude Include="Engine\Physics\PhysicsContactListener.h" />
     <ClInclude Include="Engine\Physics\PhysicsDebugDrawer.h" />
+    <ClInclude Include="Engine\Scene\HUDSceneNode.h" />
     <ClInclude Include="Engine\UserInterface\Console.h" />
     <ClInclude Include="Engine\Actor\Actor.h" />
     <ClInclude Include="Engine\Actor\ActorComponent.h" />
@@ -180,6 +199,7 @@
     <ClInclude Include="Engine\Resource\ResourceCache.h" />
     <ClInclude Include="Engine\Scene\Scene.h" />
     <ClInclude Include="Engine\Scene\SceneNodes.h" />
+    <ClInclude Include="Engine\UserInterface\GameHUD.h" />
     <ClInclude Include="Engine\UserInterface\HumanView.h" />
     <ClInclude Include="Engine\UserInterface\MovementController.h" />
     <ClInclude Include="Engine\UserInterface\UserInterface.h" />
@@ -190,6 +210,7 @@
     <ClInclude Include="Engine\Process\Process.h" />
     <ClInclude Include="Engine\Process\ProcessMgr.h" />
     <ClInclude Include="Engine\Graphics2D\Image.h" />
+    <ClInclude Include="Engine\Util\Subject.h" />
     <ClInclude Include="Engine\Util\Profilers.h" />
     <ClInclude Include="Engine\Util\Singleton.h" />
     <ClInclude Include="Engine\Util\StringUtil.h" />

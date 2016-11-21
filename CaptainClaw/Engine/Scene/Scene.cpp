@@ -21,9 +21,9 @@ Scene::Scene(SDL_Renderer* renderer)
 Scene::~Scene()
 {
     IEventMgr* pEventMgr = IEventMgr::Get();
-    pEventMgr->VAddListener(MakeDelegate(this, &Scene::NewRenderComponentDelegate), EventData_New_Render_Component::sk_EventType);
-    pEventMgr->VAddListener(MakeDelegate(this, &Scene::DestroyActorDelegate), EventData_Destroy_Actor::sk_EventType);
-    pEventMgr->VAddListener(MakeDelegate(this, &Scene::MoveActorDelegate), EventData_Move_Actor::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &Scene::NewRenderComponentDelegate), EventData_New_Render_Component::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &Scene::DestroyActorDelegate), EventData_Destroy_Actor::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &Scene::MoveActorDelegate), EventData_Move_Actor::sk_EventType);
 }
 
 void Scene::OnUpdate(uint32 msDiff)

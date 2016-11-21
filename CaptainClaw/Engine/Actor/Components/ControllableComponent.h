@@ -3,6 +3,7 @@
 
 #include "../../SharedDefines.h"
 #include "../ActorComponent.h"
+#include "AnimationComponent.h"
 
 // Goal is to not hard bind claw to be the only controllable character
 // It is solved by accessing this partially interface class
@@ -32,6 +33,9 @@ public:
     virtual void VOnRun() = 0;
     virtual void VOnClimb() = 0;
     virtual void VOnStopClimbing() = 0;
+    virtual void OnAttack() = 0;
+    virtual void OnFire(bool outOfAmmo = false) = 0;
+    virtual void OnDuck() = 0;
 
     virtual bool CanMove() = 0;
 
@@ -49,12 +53,18 @@ enum ClawState
     ClawState_Climbing,
     ClawState_Ducking,
     ClawState_Shooting,
+    ClawState_DuckShooting,
+    ClawState_JumpShooting,
     ClawState_Attacking,
+    ClawState_DuckAttacking,
+    ClawState_JumpAttacking,
+    ClawState_TakingDamage,
 };
 
+class PhysicsComponent;
 class ActorRenderComponent;
 class AnimationComponent;
-class ClawControllableComponent : public ControllableComponent
+class ClawControllableComponent : public ControllableComponent, public AnimationObserver
 {
 public:
     ClawControllableComponent();
@@ -65,6 +75,7 @@ public:
 
     virtual bool VInitDelegate(TiXmlElement* data) override;
     virtual void VPostInit() override; 
+    virtual void VUpdate(uint32 msDiff) override;
 
     // Interface for subclasses
     virtual void VOnStartFalling() override;
@@ -75,12 +86,22 @@ public:
     virtual void VOnRun() override;
     virtual void VOnClimb() override;
     virtual void VOnStopClimbing() override;
+    virtual void OnAttack() override;
+    virtual void OnFire(bool outOfAmmo = false) override;
+    virtual void OnDuck() override;
 
     virtual bool CanMove() override;
 
+    // AnimationObserver API
+    virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
+
 private:
+    void SetCurrentPhysicsState();
+    bool IsAttackingOrShooting();
+
     ClawState m_State;
 
+    PhysicsComponent* m_pPhysicsComponent;
     AnimationComponent* m_pClawAnimationComponent;
     ActorRenderComponent* m_pRenderComponent;
 };

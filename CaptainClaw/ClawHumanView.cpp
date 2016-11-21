@@ -1,5 +1,6 @@
 #include "ClawHumanView.h"
 #include "ActorController.h"
+#include "Engine/UserInterface/GameHUD.h"
 
 //---------------------------------------------------------------------------------------------------------------------
 // ClawHumanView
@@ -85,6 +86,14 @@ bool ClawHumanView::VLoadGameDelegate(TiXmlElement* pLoadData)
     {
         return false;
     }
+
+    if (!m_pHUD->Initialize(g_pApp->GetRenderer(), m_pCamera))
+    {
+        LOG_ERROR("Failed to create in-game HUD");
+        return false;
+    }
+
+    m_ScreenElements.push_back(m_pHUD);
 
     return true;
 }

@@ -77,6 +77,7 @@ public:
 
     void SetMirrored(bool mirrored) { m_IsMirrored = mirrored; }
 
+    void SetVisible(bool visible) { m_IsVisible = visible; }
     inline bool IsVisible() { return m_IsVisible; }
     inline bool IsMirrored() { return m_IsMirrored; }
     inline bool IsInverted() { return m_IsInverted; }
@@ -170,6 +171,38 @@ private:
 
     // How far does this plane span
     SDL_Rect m_PositionRect;
+};
+
+//=================================================================================================
+
+//=================================================================================================
+// HUDRenderComponent Declaration
+//
+
+class HUDRenderComponent : public ActorRenderComponent
+{
+public:
+    HUDRenderComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const { return g_Name; }
+    virtual bool VDelegateInit(TiXmlElement* pXmlData) override;
+
+    virtual SDL_Rect VGetPositionRect() const override;
+
+    bool IsAnchoredRight() { return m_IsAnchoredRight; }
+    bool IsAnchoredBottom() { return m_IsAnchoredBottom; }
+
+protected:
+    virtual shared_ptr<SceneNode> VCreateSceneNode() override;
+
+    // Editor stuff
+    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
+
+private:
+    bool m_IsAnchoredRight;
+    bool m_IsAnchoredBottom;
+    std::string m_HUDElementKey;
 };
 
 //=================================================================================================

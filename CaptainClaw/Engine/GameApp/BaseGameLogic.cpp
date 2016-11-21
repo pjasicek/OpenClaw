@@ -311,6 +311,7 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
             
             if (m_pPhysics)
             {
+                //PROFILE_CPU("PHYSICS");
                 m_pPhysics->VOnUpdate(msDiff);
                 m_pPhysics->VSyncVisibleScene();
                 break;

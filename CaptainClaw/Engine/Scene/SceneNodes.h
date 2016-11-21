@@ -10,6 +10,7 @@ enum RenderPass
     RenderPass_Action,
     RenderPass_Actor,
     RenderPass_Foreground,
+    RenderPass_HUD,
     RenderPass_NotRendered,
     RenderPass_Last
 };

@@ -20,7 +20,9 @@
 #include "Components\KinematicComponent.h"
 #include "Components\AIComponents\TogglePegAIComponent.h"
 #include "Components\AIComponents\CrumblingPegAIComponent.h"
-
+#include "Components\TriggerComponents\TriggerComponent.h"
+#include "Components\PickupComponents\PickupComponent.h"
+#include "Components\ControllerComponents\ScoreComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -34,10 +36,14 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<SoundComponent>(SoundComponent::GetIdFromName(SoundComponent::g_Name));
     _componentFactory.Register<ActorRenderComponent>(ActorRenderComponent::GetIdFromName(ActorRenderComponent::g_Name));
     _componentFactory.Register<TilePlaneRenderComponent>(TilePlaneRenderComponent::GetIdFromName(TilePlaneRenderComponent::g_Name));
+    _componentFactory.Register<HUDRenderComponent>(HUDRenderComponent::GetIdFromName(HUDRenderComponent::g_Name));
     _componentFactory.Register<ClawControllableComponent>(ClawControllableComponent::GetIdFromName(ClawControllableComponent::g_Name));
     _componentFactory.Register<KinematicComponent>(KinematicComponent::GetIdFromName(KinematicComponent::g_Name));
     _componentFactory.Register<TogglePegAIComponent>(TogglePegAIComponent::GetIdFromName(TogglePegAIComponent::g_Name));
     _componentFactory.Register<CrumblingPegAIComponent>(CrumblingPegAIComponent::GetIdFromName(CrumblingPegAIComponent::g_Name));
+    _componentFactory.Register<TriggerComponent>(TriggerComponent::GetIdFromName(TriggerComponent::g_Name));
+    _componentFactory.Register<TreasurePickupComponent>(TreasurePickupComponent::GetIdFromName(TreasurePickupComponent::g_Name));
+    _componentFactory.Register<ScoreComponent>(ScoreComponent::GetIdFromName(ScoreComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

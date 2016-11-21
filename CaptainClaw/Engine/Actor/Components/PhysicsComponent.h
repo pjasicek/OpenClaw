@@ -58,8 +58,8 @@ public:
     bool IsFalling() { return m_IsFalling; }
     bool IsJumping() { return m_IsJumping; }
 
-    void SetFalling(bool falling);// { m_IsFalling = falling; }
-    void SetJumping(bool jumping);// { m_IsJumping = jumping; }
+    void SetFalling(bool falling);
+    void SetJumping(bool jumping);
 
     void AddJumpHeight(float deltaHeight) { m_HeightInAir += deltaHeight; }
 
@@ -67,7 +67,7 @@ public:
 
     // Communication with IGamePhysics
     Point GetVelocity() { return m_pPhysics->VGetVelocity(_owner->GetGUID()); }
-    void AddVelocity(Point velocity) { m_CurrentSpeed += velocity; }
+    void SetVelocity(Point velocity) { m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), velocity); }
     
     void ApplyLinearImpulse(Point impulse) { m_pPhysics->VApplyLinearImpulse(_owner->GetGUID(), impulse); }
     void ApplyForce(Point force) { m_pPhysics->VApplyForce(_owner->GetGUID(), force); }

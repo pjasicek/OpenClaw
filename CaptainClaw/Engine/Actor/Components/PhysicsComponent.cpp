@@ -128,6 +128,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     
     if (m_pControllableComponent && !m_pControllableComponent->CanMove())
     {
+        SetVelocity(Point(0, 0));
         m_CurrentSpeed = Point(0, 0);
         return;
     }
@@ -212,7 +213,43 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             m_CurrentSpeed.y = 0;
         }
 
-        m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), m_CurrentSpeed);
+        // Set velocity here
+        //=====================================================================
+        Point velocity = GetVelocity();
+
+        double ySpeed = m_CurrentSpeed.y;
+        if (ySpeed < 0)
+        {
+            SetVelocity(Point(velocity.x, -8.8));
+        }
+        else if (velocity.y < -2 && ySpeed >= 0)
+        {
+            SetVelocity(Point(velocity.x, -2));
+        }
+        velocity = GetVelocity();
+
+        if (fabs(m_CurrentSpeed.x) > DBL_EPSILON)
+        {
+            SetVelocity(Point(m_CurrentSpeed.x < 0 ? -5 : 5, velocity.y));
+        }
+        else
+        {
+            SetVelocity(Point(0, velocity.y));
+        }
+
+        ApplyForce(m_pPhysics->GetGravity());
+
+        velocity = GetVelocity();
+        if (velocity.y < -8.8)
+        {
+            SetVelocity(Point(velocity.x, -8.8));
+        }
+        if (velocity.y > 14)
+        {
+            SetVelocity(Point(velocity.x, 14));
+        }
+
+        //=====================================================================
 
         if (m_IsJumping || m_IsFalling)
         {
@@ -224,7 +261,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         bool wasStopped = m_IsStopped;
         Direction prevDirection = m_Direction;
 
-        Point velocity = GetVelocity();
+        velocity = GetVelocity();
         if (fabs(velocity.x) > DBL_EPSILON)
         {
             m_Direction = velocity.x < 0 ? Direction_Left : Direction_Right;
@@ -262,10 +299,10 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         
     }
 
-    if (m_HasConstantSpeed)
+    /*if (m_HasConstantSpeed)
     {
         m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), m_ConstantSpeed);
-    }
+    }*/
 
     m_CurrentSpeed.Set(0, 0);
     m_ClimbingSpeed = Point(0, 0);

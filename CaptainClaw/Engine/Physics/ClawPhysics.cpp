@@ -9,6 +9,7 @@
 #include "../Actor/Components/CollisionComponent.h"
 #include "../Actor/Components/PhysicsComponent.h"
 #include "../Actor/Components/KinematicComponent.h"
+#include "../Actor/Components/TriggerComponents/TriggerComponent.h"
 
 #include "PhysicsDebugDrawer.h"
 #include "PhysicsContactListener.h"
@@ -76,6 +77,20 @@ shared_ptr<KinematicComponent> GetKinematicComponentFromB2Body(const b2Body* pBo
     assert(pKinematicComponent);
 
     return pKinematicComponent;
+}
+
+shared_ptr<TriggerComponent> GetTriggerComponentFromB2Body(const b2Body* pBody)
+{
+    assert(pBody);
+
+    Actor* pActor = static_cast<Actor*>(pBody->GetUserData());
+    assert(pActor);
+
+    // May no longer be valid, calling methods have to check it
+    shared_ptr<TriggerComponent> pTriggerComponent =
+        MakeStrongPtr(pActor->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
+
+    return pTriggerComponent;
 }
 
 b2AABB GetBodyAABB(b2Body* pBody)
@@ -259,6 +274,20 @@ void ClawPhysics::VOnUpdate(const uint32 msDiff)
     //PROFILE_CPU("ClawPhysics::VOnUpdate");
 
     m_pWorld->Step(msDiff / 1000.0f, 8, 3);
+
+    // Remove actors form physics simulation which are scheduled to be destroyed
+    for (uint32 actorId : m_ActorsToBeDestroyed)
+    {
+        if (b2Body* pBody = FindBox2DBody(actorId))
+        {
+            pBody->SetActive(false);
+            pBody->SetUserData(NULL);
+            m_pWorld->DestroyBody(pBody);
+            m_ActorToBodyMap.erase(actorId);
+            m_BodyToActorMap.erase(pBody);
+        }
+    }
+    m_ActorsToBeDestroyed.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -509,12 +538,7 @@ void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionT
 //
 void ClawPhysics::VRemoveActor(uint32_t actorId)
 {
-    if (b2Body* pBody = FindBox2DBody(actorId))
-    {
-        m_pWorld->DestroyBody(pBody);
-        m_ActorToBodyMap.erase(actorId);
-        m_BodyToActorMap.erase(pBody);
-    }
+    ScheduleActorForRemoval(actorId);
 }
 
 //-----------------------------------------------------------------------------
@@ -548,9 +572,43 @@ void ClawPhysics::VRenderDiagnostics(SDL_Renderer* pRenderer, shared_ptr<CameraN
 //
 //    Creates a trigger from given actor.
 //
-void ClawPhysics::VCreateTrigger(WeakActorPtr pActor, const Point& pos, Point& size)
+void ClawPhysics::VCreateTrigger(WeakActorPtr pActor, const Point& pos, Point& size, bool isStatic)
 {
+    StrongActorPtr pStrongActor = MakeStrongPtr(pActor);
+    if (!pStrongActor)
+    {
+        return;
+    }
 
+    // Convert pixel position and size to Box2D meters
+    b2Vec2 b2Position = PixelsToMeters(PointToB2Vec2(pos));
+    b2Vec2 b2BodySize = PixelsToMeters(PointToB2Vec2(size));
+
+    b2BodyDef bodyDef;
+    if (isStatic)
+    {
+        bodyDef.type = b2_staticBody;
+    }
+    else
+    {
+        bodyDef.type = b2_dynamicBody;
+    }
+    bodyDef.position.Set(b2Position.x, b2Position.y);
+    bodyDef.fixedRotation = true;
+    b2Body* pBody = m_pWorld->CreateBody(&bodyDef);
+    pBody->SetUserData(pStrongActor.get());
+
+    b2PolygonShape bodyShape;
+    bodyShape.SetAsBox(b2BodySize.x / 2, b2BodySize.y / 2);
+
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &bodyShape;
+    fixtureDef.userData = (void*)FixtureType_Trigger;
+    fixtureDef.isSensor = true;
+    pBody->CreateFixture(&fixtureDef);
+
+    m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
+    m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
 }
 
 //-----------------------------------------------------------------------------
@@ -644,7 +702,8 @@ void ClawPhysics::VSetLinearSpeed(uint32_t actorId, const Point& speed)
 {
     if (b2Body* pBody = FindBox2DBody(actorId))
     {
-        shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pBody);
+        pBody->SetLinearVelocity(b2Vec2(speed.x, speed.y));
+        /*shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pBody);
         if (pPhysicsComponent->HasConstantSpeed())
         {
             pBody->SetLinearVelocity(PointToB2Vec2(speed));
@@ -653,7 +712,7 @@ void ClawPhysics::VSetLinearSpeed(uint32_t actorId, const Point& speed)
         {
             b2Vec2 grav = pBody->GetLinearVelocity();
             double ySpeed = speed.y;
-            if (/*grav.y >= 0 && */speed.y < 0)
+            if (speed.y < 0)
             {
                 pBody->SetLinearVelocity(b2Vec2(grav.x, -8.8));
             }
@@ -684,7 +743,7 @@ void ClawPhysics::VSetLinearSpeed(uint32_t actorId, const Point& speed)
             {
                 pBody->SetLinearVelocity(b2Vec2(grav.x, 14));
             }
-        }
+        }*/
     }
 }
 
@@ -790,4 +849,9 @@ void ClawPhysics::VSetGravityScale(uint32_t actorId, const float gravityScale)
     {
         pBody->SetGravityScale(gravityScale);
     }
+}
+
+Point ClawPhysics::GetGravity() const
+{
+    return b2Vec2ToPoint(m_pWorld->GetGravity());
 }
