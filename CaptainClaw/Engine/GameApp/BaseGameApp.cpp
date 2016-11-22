@@ -236,7 +236,18 @@ std::string BaseGameApp::GetString(std::string stringId)
 
 HumanView* BaseGameApp::GetHumanView() const
 {
-    return NULL;
+    HumanView *pView = NULL;
+    for (GameViewList::iterator i = m_pGame->m_GameViews.begin(); i != m_pGame->m_GameViews.end(); ++i)
+    {
+        if ((*i)->VGetType() == GameView_Human)
+        {
+            shared_ptr<IGameView> pIGameView(*i);
+            pView = static_cast<HumanView *>(&*pIGameView);
+            break;
+        }
+    }
+
+    return pView;
 }
 
 bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
@@ -464,7 +475,7 @@ bool BaseGameApp::InitializeDisplay(GameOptions& gameOptions)
     }
 
     m_WindowSize.Set(gameOptions.windowWidth, gameOptions.windowHeight);
-
+    SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN);
     uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
     if (gameOptions.useVerticalSync)
     {

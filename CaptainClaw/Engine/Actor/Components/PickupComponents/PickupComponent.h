@@ -4,6 +4,8 @@
 #include "../../ActorComponent.h"
 #include "../TriggerComponents/TriggerComponent.h"
 
+class PositionComponent;
+class ActorRenderComponent;
 class PickupComponent : public ActorComponent, public TriggerObserver
 {
 public:
@@ -30,6 +32,7 @@ public:
     static const char* g_Name;
     virtual const char* VGetName() const { return g_Name; }
     virtual void VUpdate(uint32 msDiff);
+    virtual void VPostInit() override;
 
     virtual bool VOnApply(Actor* pActorWhoPickedThis);
 
@@ -40,6 +43,9 @@ protected:
 private:
     int32 m_ScorePoints;
     bool m_IsPickedUp;
+
+    shared_ptr<PositionComponent> m_pPositionComponent;
+    shared_ptr<ActorRenderComponent> m_pRenderComponent;
 };
 
 #endif

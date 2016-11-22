@@ -2,9 +2,11 @@
 #include "../TriggerComponents/TriggerComponent.h"
 #include "../ControllerComponents/ScoreComponent.h"
 #include "../RenderComponent.h"
+#include "../PositionComponent.h"
 
 #include "../../../GameApp/BaseGameApp.h"
 #include "../../../UserInterface/HumanView.h"
+#include "../../../Scene/SceneNodes.h"
 
 #include "../../../Events/EventMgr.h"
 #include "../../../Events/Events.h"
@@ -20,8 +22,6 @@ const char* TreasurePickupComponent::g_Name = "TreasurePickupComponent";
 
 bool PickupComponent::VInit(TiXmlElement* data)
 {
-    
-
     if (!VDelegateInit(data))
     {
         return false;
@@ -92,6 +92,16 @@ bool TreasurePickupComponent::VDelegateInit(TiXmlElement* data)
     return true;
 }
 
+void TreasurePickupComponent::VPostInit()
+{
+    PickupComponent::VPostInit();
+
+    m_pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+    m_pPositionComponent = MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    assert(m_pRenderComponent);
+    assert(m_pPositionComponent);
+}
+
 void TreasurePickupComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement)
 {
 
@@ -118,14 +128,32 @@ void TreasurePickupComponent::VUpdate(uint32 msDiff)
 {
     if (m_IsPickedUp)
     {
-        // TODO: Make it fly towards the left corner
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
-        IEventMgr::Get()->VQueueEvent(pEvent);
+        // I want it to disappear after ~900ms
+        Point moveDelta(-(800 / 900.0 * msDiff), -(800 / 900.0f * msDiff));
+        m_pPositionComponent->SetPosition(m_pPositionComponent->GetX() + moveDelta.x, m_pPositionComponent->GetY() + moveDelta.y);
 
         // This feels like a hack
-        /*if (shared_ptr<CameraNode> pCamera = g_pApp->GetHumanView()->GetCamera())
+        if (HumanView* pHumanView = g_pApp->GetHumanView())
         {
+            shared_ptr<CameraNode> pCamera = pHumanView->GetCamera();
+            if (pCamera)
+            {
+                shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(_owner->GetGUID(), m_pPositionComponent->GetPosition()));
+                IEventMgr::Get()->VTriggerEvent(pEvent);
 
-        }*/
+                SDL_Rect dummy;
+                SDL_Rect renderRect = m_pRenderComponent->VGetPositionRect();
+                SDL_Rect cameraRect = pCamera->GetCameraRect();
+                if (!SDL_IntersectRect(&renderRect, &cameraRect, &dummy))
+                {
+                    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+                    IEventMgr::Get()->VQueueEvent(pEvent);
+                }
+            }
+            else
+            {
+                LOG_ERROR("Could not retrieve camera");
+            }
+        }
     }
 }

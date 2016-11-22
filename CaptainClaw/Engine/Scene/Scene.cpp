@@ -122,7 +122,6 @@ void Scene::MoveActorDelegate(IEventDataPtr pEventData)
     shared_ptr<ISceneNode> pNode = FindActor(pCastEventData->GetActorId());
     if (pNode)
     {
-        
         pNode->VSetPosition(pCastEventData->GetMove());
     }
 }
