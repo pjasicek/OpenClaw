@@ -102,6 +102,11 @@ namespace ActorTemplates
         }
         else
         {
+            LOG_WARNING("Conflicting image set: " + imageSet);
+            LOG_WARNING("Assuming you know what you doing - be careful");
+
+            return;
+
             assert(false && "Not implemented image set");
         }
 
@@ -239,12 +244,13 @@ namespace ActorTemplates
         return pAnimElem;
     }
 
-    TiXmlElement* CreateCycleAnimationComponent(uint32 cycleTime)
+    TiXmlElement* CreateCycleAnimationComponent(uint32 cycleTime, bool pauseOnStart = false)
     {
         TiXmlElement* pAnimElem = new TiXmlElement("AnimationComponent");
         std::string cycleStr = "cycle" + ToStr(cycleTime);
         XML_ADD_1_PARAM_ELEMENT("Animation", "type", cycleStr.c_str(), pAnimElem);
-        
+        XML_ADD_TEXT_ELEMENT("PauseOnStart", ToStr(pauseOnStart).c_str(), pAnimElem);
+
         return pAnimElem;
     }
 
@@ -306,6 +312,41 @@ namespace ActorTemplates
         XML_ADD_TEXT_ELEMENT("PrefabType", prefabType.c_str(), pPhysicsComponent);
 
         return pPhysicsComponent;
+    }
+
+    TiXmlElement* CreateLootComponent(const std::vector<PickupType>& loot)
+    {
+        TiXmlElement* pLootComponent = new TiXmlElement("LootComponent");
+        
+        for (auto item : loot)
+        {
+            XML_ADD_TEXT_ELEMENT("Item", ToStr(item).c_str(), pLootComponent);
+        }
+
+        return pLootComponent;
+    }
+
+    TiXmlElement* CreateDestroyableComponent(bool deleteOnDestruction, const std::vector<std::string>& deathSounds)
+    {
+        TiXmlElement* pDestroyableComponent = new TiXmlElement("DestroyableComponent");
+
+        XML_ADD_TEXT_ELEMENT("DeleteOnDestruction", ToStr(deleteOnDestruction).c_str(), pDestroyableComponent);
+        for (auto deathSound : deathSounds)
+        {
+            XML_ADD_TEXT_ELEMENT("DeathSound", deathSound.c_str(), pDestroyableComponent);
+        }
+
+        return pDestroyableComponent;
+    }
+
+    TiXmlElement* CreateHealthComponent(int currentHealth, int maxHealth)
+    {
+        TiXmlElement* pHealthComponent = new TiXmlElement("HealthComponent");
+
+        XML_ADD_TEXT_ELEMENT("Health", ToStr(currentHealth).c_str(), pHealthComponent);
+        XML_ADD_TEXT_ELEMENT("MaxHealth", ToStr(maxHealth).c_str(), pHealthComponent);
+
+        return pHealthComponent;
     }
 
     //=====================================================================================================================
@@ -403,21 +444,21 @@ namespace ActorTemplates
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
         pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), 5000));
         pActor->LinkEndChild(CreatePhysicsComponent(
-            "Dynamic", 
-            false, 
-            false, 
-            true, 
-            true,
-            "Projectile", 
-            position, 
-            Point(0, 0), 
-            0.0f, 
-            true, 
-            Point(speed, 0),
-            CollisionFlag_Bullet, 
-            (CollisionFlag_Controller | CollisionFlag_Crate | CollisionFlag_Barel | CollisionFlag_DynamicActor | CollisionFlag_Solid), 
-            0.0f, 
-            0.0f));
+            "Dynamic",  // Type - "Dynamic", "Kinematic", "Static"
+            false,      // Has foot sensor ?
+            false,      // Has capsule shape ?
+            true,       // Has bullet behaviour ?
+            true,       // Has sensor behaviour ?
+            "Projectile",  // Fixture type
+            position,      // Position
+            Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
+            0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
+            true,          // Has any initial speed ?
+            Point(speed, 0), // If it does, specify it here
+            CollisionFlag_Bullet,  // Collision flag - e.g. What is this actor ?
+            (CollisionFlag_Controller | CollisionFlag_Crate | CollisionFlag_Barel | CollisionFlag_DynamicActor | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
+            0.0f,  // Density - determines if this character bounces
+            0.0f)); // Friction - with floor and so
 
         if (ammoType == AmmoType_Magic)
         {
@@ -436,6 +477,38 @@ namespace ActorTemplates
         XML_ADD_TEXT_ELEMENT("ProjectileType", projectileTypeStr.c_str(), pProjectileAIComponent);
         XML_ADD_2_PARAM_ELEMENT("Speed", "x", ToStr(speed).c_str(), "y", "0", pProjectileAIComponent);
         pActor->LinkEndChild(pProjectileAIComponent);
+
+        return pActor;
+    }
+
+    TiXmlElement* CreateXmlData_CrateActor(std::string imageSet, Point position, const std::vector<PickupType>& loot, uint32 health, int32 zCoord)
+    {
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", imageSet.c_str());
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), zCoord));
+        pActor->LinkEndChild(CreatePhysicsComponent(
+            "Dynamic",  // Type - "Dynamic", "Kinematic", "Static"
+            false,      // Has foot sensor ?
+            false,      // Has capsule shape ?
+            true,       // Has bullet behaviour ?
+            true,       // Has sensor behaviour ?
+            "Crate",    // Fixture type
+            position,      // Position
+            Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
+            0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
+            true,          // Has any initial speed ?
+            Point(0, 0), // If it does, specify it here
+            CollisionFlag_Crate,  // Collision flag - e.g. What is this actor ?
+            (CollisionFlag_Crate | CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Bullet | CollisionFlag_Magic),  // Collision mask - e.g. With what does this actor collide with ?
+            0.0f,  // Density - determines if this character bounces
+            0.0f)); // Friction - with floor and so
+
+        pActor->LinkEndChild(CreateCycleAnimationComponent(75, true));
+        pActor->LinkEndChild(CreateLootComponent(loot));
+        pActor->LinkEndChild(CreateDestroyableComponent(true, {}));
+        pActor->LinkEndChild(CreateHealthComponent(health, health));
 
         return pActor;
     }

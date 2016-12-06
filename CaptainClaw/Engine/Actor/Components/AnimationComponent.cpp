@@ -9,6 +9,12 @@
 
 const char* AnimationComponent::g_Name = "AnimationComponent";
 
+AnimationComponent::AnimationComponent()
+    :
+    _currentAnimation(NULL),
+    m_PauseOnStart(false)
+{ }
+
 AnimationComponent::~AnimationComponent()
 {
     _animationMap.clear();
@@ -64,6 +70,11 @@ bool AnimationComponent::VInit(TiXmlElement* data)
         std::string animType = animElem->Attribute("type");
         
         m_SpecialAnimationRequestList.push_back(animType);
+    }
+
+    if (TiXmlElement* pElem = data->FirstChildElement("PauseOnStart"))
+    {
+        m_PauseOnStart = std::string(pElem->GetText()) == "true";
     }
 
     if (_animationMap.empty() && m_SpecialAnimationRequestList.empty())
@@ -139,6 +150,12 @@ void AnimationComponent::VPostInit()
     {
         _currentAnimation = _animationMap.begin()->second;
     }
+
+    if (m_PauseOnStart)
+    {
+        _currentAnimation->Pause();
+    }
+
     /*else
     {
         assert(false && "Animation component is without any animation");

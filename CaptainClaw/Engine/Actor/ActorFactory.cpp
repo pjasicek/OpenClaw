@@ -29,6 +29,8 @@
 #include "Components\ControllerComponents\PowerupComponent.h"
 #include "Components\PowerupSparkleAIComponent.h"
 #include "Components\AIComponents\ProjectileAIComponent.h"
+#include "Components\LootComponent.h"
+#include "Components\DestroyableComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -60,6 +62,8 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<PowerupPickupComponent>(PowerupPickupComponent::GetIdFromName(PowerupPickupComponent::g_Name));
     _componentFactory.Register<PowerupSparkleAIComponent>(PowerupSparkleAIComponent::GetIdFromName(PowerupSparkleAIComponent::g_Name));
     _componentFactory.Register<ProjectileAIComponent>(ProjectileAIComponent::GetIdFromName(ProjectileAIComponent::g_Name));
+    _componentFactory.Register<LootComponent>(LootComponent::GetIdFromName(LootComponent::g_Name));
+    _componentFactory.Register<DestroyableComponent>(DestroyableComponent::GetIdFromName(DestroyableComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

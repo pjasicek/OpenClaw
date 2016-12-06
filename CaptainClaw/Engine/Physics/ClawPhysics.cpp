@@ -568,6 +568,8 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
     assert(actorBodyDef->collisionFlag != 0x0);
     assert(actorBodyDef->fixtureType != FixtureType_None);
 
+    //LOG("Creating actor body..");
+
     StrongActorPtr pStrongActor = MakeStrongPtr(actorBodyDef->pActor);
     if (!pStrongActor)
     {

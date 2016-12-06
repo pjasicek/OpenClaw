@@ -12,11 +12,12 @@ public:
 
     static const char* g_Name;
     virtual const char* VGetName() const { return g_Name; }
+    virtual void VPostInit();
 
     virtual bool VInit(TiXmlElement* pData) override;
     virtual TiXmlElement* VGenerateXml() override;
 
-    virtual void VOnHealthBelowZero();
+    virtual void VOnHealthBelowZero() override;
 
 private:
     std::vector<PickupType> m_Loot;

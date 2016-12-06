@@ -1,4 +1,5 @@
 #include "HealthComponent.h"
+#include "../ControllableComponent.h"
 
 #include "../../../Events/EventMgr.h"
 #include "../../../Events/Events.h"
@@ -8,7 +9,8 @@ const char* HealthComponent::g_Name = "HealthComponent";
 HealthComponent::HealthComponent()
     :
     m_CurrentHealth(0),
-    m_MaxHealth(10)
+    m_MaxHealth(10),
+    m_IsController(false)
 { }
 
 bool HealthComponent::VInit(TiXmlElement* pData)
@@ -28,6 +30,11 @@ bool HealthComponent::VInit(TiXmlElement* pData)
 
 void HealthComponent::VPostInit()
 {
+    if (MakeStrongPtr(_owner->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name)))
+    {
+        m_IsController = true;
+    }
+
     BroadcastHealthChanged(0, m_CurrentHealth, true);
 }
 
@@ -37,9 +44,9 @@ TiXmlElement* HealthComponent::VGenerateXml()
     return NULL;
 }
 
-void HealthComponent::AddHealth(uint32 health)
+void HealthComponent::AddHealth(int32 health)
 {
-    uint32 oldHealth = m_CurrentHealth;
+    int32 oldHealth = m_CurrentHealth;
     m_CurrentHealth += health;
     if (m_CurrentHealth > m_MaxHealth)
     {
@@ -52,9 +59,9 @@ void HealthComponent::AddHealth(uint32 health)
     }
 }
 
-void HealthComponent::SetCurrentHealth(uint32 health)
+void HealthComponent::SetCurrentHealth(int32 health)
 {
-    uint32 oldHealth = m_CurrentHealth;
+    int32 oldHealth = m_CurrentHealth;
     m_CurrentHealth = health;
     if (m_CurrentHealth > m_MaxHealth)
     {
@@ -67,16 +74,21 @@ void HealthComponent::SetCurrentHealth(uint32 health)
     }
 }
 
-void HealthComponent::BroadcastHealthChanged(uint32 oldHealth, uint32 newHealth, bool isInitial)
+void HealthComponent::BroadcastHealthChanged(int32 oldHealth, int32 newHealth, bool isInitial)
 {
+    LOG("Old health: " + ToStr(oldHealth) + ", newHealth: " + ToStr(newHealth));
     NotifyHealthChanged(oldHealth, newHealth);
     if (newHealth <= 0)
     {
         NotifyHealthBelowZero();
     }
 
-    shared_ptr<EventData_Updated_Health> pEvent(new EventData_Updated_Health(oldHealth, newHealth, isInitial));
-    IEventMgr::Get()->VQueueEvent(pEvent);
+    // Only broadcast controllers health. this is abit hacky
+    if (m_IsController)
+    {
+        shared_ptr<EventData_Updated_Health> pEvent(new EventData_Updated_Health(oldHealth, newHealth, isInitial));
+        IEventMgr::Get()->VQueueEvent(pEvent);
+    }
 }
 
 //=====================================================================================================================
@@ -95,6 +107,7 @@ void HealthSubject::NotifyHealthBelowZero()
 {
     for (HealthObserver* pObserver : m_Observers)
     {
+        LOG("Some actor should die!");
         pObserver->VOnHealthBelowZero();
     }
 }

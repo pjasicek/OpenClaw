@@ -20,6 +20,19 @@ bool LootComponent::VInit(TiXmlElement* pData)
     return true;
 }
 
+void LootComponent::VPostInit()
+{
+    shared_ptr<HealthComponent> pHealthComponent = MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name));
+    if (pHealthComponent)
+    {
+        pHealthComponent->AddObserver(this);
+    }
+    else
+    {
+        assert(false && "Loot component without health component. Is this intentional ?");
+    }
+}
+
 TiXmlElement* LootComponent::VGenerateXml()
 {
     TiXmlElement* baseElement = new TiXmlElement(VGetName());
@@ -37,8 +50,8 @@ void LootComponent::VOnHealthBelowZero()
             MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
         assert(pPositionComponent);
 
-        ActorTemplates::CreateActorPickup(item, pPositionComponent->GetPosition(), false);
+        //ActorTemplates::CreateActorPickup(item, pPositionComponent->GetPosition(), false);
     }
 
     m_Loot.clear();
-}
+};

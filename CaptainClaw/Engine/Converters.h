@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <libwap.h>
 #include "SharedDefines.h"
+#include "Actor/ActorTemplates.h"
 
 #define INSERT_POSITION_COMPONENT(x, y, rootElem) \
 { \
@@ -551,7 +552,13 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
     }
     else if (logic.find("Crate") != std::string::npos)
     {
-        //pActorElem->LinkEndChild(CrateToXml(wwdObject));
+        std::vector<PickupType> loot;
+        if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
+        if (wwdObject->userRect1.left > 0) { loot.push_back(PickupType(wwdObject->userRect1.left)); }
+        if (wwdObject->userRect1.right > 0) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
+        if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
+        if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
+        return ActorTemplates::CreateXmlData_CrateActor(tmpImageSet, Point(wwdObject->x, wwdObject->y), loot, 5, wwdObject->z);
     }
     else if (logic.find("Candy") != std::string::npos)
     {

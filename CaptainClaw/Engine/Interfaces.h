@@ -65,7 +65,8 @@ enum FixtureType
     FixtureType_FootSensor,
     FixtureType_AmbientTrigger,
     FixtureType_Trigger,
-    FixtureType_Projectile
+    FixtureType_Projectile,
+    FixtureType_Crate
 };
 
 enum AmmoType
