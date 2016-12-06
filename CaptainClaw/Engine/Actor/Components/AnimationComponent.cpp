@@ -131,7 +131,7 @@ void AnimationComponent::VPostInit()
         }
         else
         {
-            LOG_WARNING("Unknown special animatio type: " + animType);
+            LOG_WARNING("Unknown special animation type: " + animType);
         }
     }
 

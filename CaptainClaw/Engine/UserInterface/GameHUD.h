@@ -11,13 +11,6 @@ const uint32 AMMO_NUMBERS_COUNT = 2;
 const uint32 LIVES_NUMBERS_COUNT = 1;
 const uint32 STOPWATCH_NUMBERS_COUNT = 3;
 
-enum AmmoType
-{
-    AmmoType_Pistol,
-    AmmoType_Magic,
-    AmmoType_Dynamity
-};
-
 typedef std::map<std::string, shared_ptr<SDL2HUDSceneNode>> HUDElementsMap;
 
 class Image;
@@ -43,6 +36,9 @@ public:
 
     void AddHUDElement(std::string key, shared_ptr<SDL2HUDSceneNode> pHUDSceneNode) { m_HUDElementsMap[key] = pHUDSceneNode; }
 
+    bool SetElementVisible(std::string element, bool visible);
+    bool IsElementVisible(std::string element);
+
     void UpdateScore(uint32 newScore);
     void UpdateHealth(uint32 newHealth);
     void ChangeAmmoType(AmmoType newAmmoType);
@@ -58,6 +54,7 @@ private:
     shared_ptr<Image> m_HealthNumbers[HEALTH_NUMBERS_COUNT];
     shared_ptr<Image> m_AmmoNumbers[AMMO_NUMBERS_COUNT];
     shared_ptr<Image> m_LivesNumbers[LIVES_NUMBERS_COUNT];
+    shared_ptr<Image> m_StopwatchNumbers[STOPWATCH_NUMBERS_COUNT];
 
     SDL_Renderer* m_pRenderer;
     shared_ptr<CameraNode> m_pCamera;

@@ -61,9 +61,12 @@ enum ClawState
     ClawState_TakingDamage,
 };
 
+class PositionComponent;
 class PhysicsComponent;
 class ActorRenderComponent;
 class AnimationComponent;
+class AmmoComponent;
+class PowerupComponent;
 class ClawControllableComponent : public ControllableComponent, public AnimationObserver
 {
 public:
@@ -101,9 +104,13 @@ private:
 
     ClawState m_State;
 
+    Direction m_Direction;
     PhysicsComponent* m_pPhysicsComponent;
     AnimationComponent* m_pClawAnimationComponent;
     ActorRenderComponent* m_pRenderComponent;
+    PositionComponent* m_pPositionComponent;
+    AmmoComponent* m_pAmmoComponent;
+    PowerupComponent* m_pPowerupComponent;
 };
 
 #endif

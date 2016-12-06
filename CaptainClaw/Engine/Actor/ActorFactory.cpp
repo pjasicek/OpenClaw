@@ -23,6 +23,12 @@
 #include "Components\TriggerComponents\TriggerComponent.h"
 #include "Components\PickupComponents\PickupComponent.h"
 #include "Components\ControllerComponents\ScoreComponent.h"
+#include "Components\ControllerComponents\LifeComponent.h"
+#include "Components\ControllerComponents\HealthComponent.h"
+#include "Components\ControllerComponents\AmmoComponent.h"
+#include "Components\ControllerComponents\PowerupComponent.h"
+#include "Components\PowerupSparkleAIComponent.h"
+#include "Components\AIComponents\ProjectileAIComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -43,7 +49,17 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<CrumblingPegAIComponent>(CrumblingPegAIComponent::GetIdFromName(CrumblingPegAIComponent::g_Name));
     _componentFactory.Register<TriggerComponent>(TriggerComponent::GetIdFromName(TriggerComponent::g_Name));
     _componentFactory.Register<TreasurePickupComponent>(TreasurePickupComponent::GetIdFromName(TreasurePickupComponent::g_Name));
+    _componentFactory.Register<LifePickupComponent>(LifePickupComponent::GetIdFromName(LifePickupComponent::g_Name));
+    _componentFactory.Register<HealthPickupComponent>(HealthPickupComponent::GetIdFromName(HealthPickupComponent::g_Name));
     _componentFactory.Register<ScoreComponent>(ScoreComponent::GetIdFromName(ScoreComponent::g_Name));
+    _componentFactory.Register<LifeComponent>(LifeComponent::GetIdFromName(LifeComponent::g_Name));
+    _componentFactory.Register<HealthComponent>(HealthComponent::GetIdFromName(HealthComponent::g_Name));
+    _componentFactory.Register<TeleportPickupComponent>(TeleportPickupComponent::GetIdFromName(TeleportPickupComponent::g_Name));
+    _componentFactory.Register<AmmoComponent>(AmmoComponent::GetIdFromName(AmmoComponent::g_Name));
+    _componentFactory.Register<PowerupComponent>(PowerupComponent::GetIdFromName(PowerupComponent::g_Name));
+    _componentFactory.Register<PowerupPickupComponent>(PowerupPickupComponent::GetIdFromName(PowerupPickupComponent::g_Name));
+    _componentFactory.Register<PowerupSparkleAIComponent>(PowerupSparkleAIComponent::GetIdFromName(PowerupSparkleAIComponent::g_Name));
+    _componentFactory.Register<ProjectileAIComponent>(ProjectileAIComponent::GetIdFromName(ProjectileAIComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

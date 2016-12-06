@@ -45,7 +45,7 @@ public:
 private:
     bool HasOverlappingActor(Actor* pActor);
     void AddOverlappingActor(Actor* pActor);
-    void RemoveOverlappingActor(Actor* pACtor);
+    void RemoveOverlappingActor(Actor* pActor);
 
     bool m_IsTriggerUnlimited;
     bool m_IsTriggerOnce;

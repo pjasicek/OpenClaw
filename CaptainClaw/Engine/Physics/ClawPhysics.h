@@ -6,20 +6,6 @@
 
 #include <Box2D/Box2D.h>
 
-enum FixtureType
-{
-    FixtureType_None = 0,
-    // Tiles
-    FixtureType_Solid,
-    FixtureType_Ground,
-    FixtureType_Climb,
-    FixtureType_Death,
-    // Sensors
-    FixtureType_FootSensor,
-    FixtureType_AmbientTrigger,
-    FixtureType_Trigger
-};
-
 typedef std::map<uint32, b2Body*> ActorIDToBox2DBodyMap;
 typedef std::map<b2Body*, uint32> Box2DBodyToActorIDMap;
 
@@ -46,6 +32,8 @@ public:
     virtual void VAddKinematicBody(WeakActorPtr pActor) override;
     virtual void VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType) override;
     virtual void VRemoveActor(uint32_t actorId) override;
+
+    virtual void VAddActorBody(const ActorBodyDef* actorBodyDef) override;
 
     // Debugging
     virtual void VRenderDiagnostics(SDL_Renderer* pRenderer, shared_ptr<CameraNode> pCamera) override;
@@ -94,6 +82,7 @@ private:
 class KinematicComponent;
 class PhysicsComponent;
 class TriggerComponent;
+class ProjectileAIComponent;
 
 extern b2Vec2 PixelsToMeters(b2Vec2& pixels);
 extern float PixelsToMeters(float pixels);
@@ -104,6 +93,7 @@ extern b2Vec2 PointToB2Vec2(const Point& point);
 extern shared_ptr<PhysicsComponent> GetPhysicsComponentFromB2Body(const b2Body* pBody);
 extern shared_ptr<KinematicComponent> GetKinematicComponentFromB2Body(const b2Body* pBody);
 extern shared_ptr<TriggerComponent> GetTriggerComponentFromB2Body(const b2Body* pBody);
+extern shared_ptr<ProjectileAIComponent> GetProjectileAIComponentFromB2Body(const b2Body* pBody);
 extern b2AABB GetBodyAABB(b2Body* pBody);
 
 extern IGamePhysics* CreateClawPhysics();

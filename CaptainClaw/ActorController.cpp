@@ -80,12 +80,19 @@ bool ActorController::VOnKeyDown(SDL_Keycode key)
     {
         shared_ptr<EventData_Actor_Fire> pClimbEvent(new EventData_Actor_Fire(m_pControlledObject->VGetProperties()->GetActorId()));
         IEventMgr::Get()->VTriggerEvent(pClimbEvent);
+        return true;
     }
     else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LCTRL)
     {
-        LOG(".");
         shared_ptr<EventData_Actor_Attack> pClimbEvent(new EventData_Actor_Attack(m_pControlledObject->VGetProperties()->GetActorId()));
         IEventMgr::Get()->VTriggerEvent(pClimbEvent);
+        return true;
+    }
+    else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LSHIFT)
+    {
+        shared_ptr<EventData_Request_Change_Ammo_Type> pEvent(new EventData_Request_Change_Ammo_Type(m_pControlledObject->VGetProperties()->GetActorId()));
+        IEventMgr::Get()->VTriggerEvent(pEvent);
+        return true;
     }
 
     return false;

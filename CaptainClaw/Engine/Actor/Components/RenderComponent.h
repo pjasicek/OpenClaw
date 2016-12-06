@@ -94,6 +94,7 @@ private:
     bool m_IsVisible;
     bool m_IsMirrored;
     bool m_IsInverted;
+    int32 m_ZCoord;
 };
 
 //=================================================================================================

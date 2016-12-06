@@ -9,7 +9,7 @@ SDL2HUDSceneNode::SDL2HUDSceneNode(const uint32 actorId,
     RenderPass renderPass,
     Point position,
     bool visible)
-    : SceneNode(actorId, pRenderComponent, renderPass, position)
+    : SceneNode(actorId, pRenderComponent, renderPass, position, 0)
 {
     m_IsActive = visible;
 }
@@ -49,8 +49,12 @@ void SDL2HUDSceneNode::VRender(Scene* pScene)
         y += pScene->GetCamera()->GetHeight();
     }
 
-    // HACK: Pistol first frame has incorrect offset...
+    // HACK: Pistol and magic first frame has incorrect offset...
     if (hrc->IsAnchoredRight() && actorImage->GetWidth() == 52 && actorImage->GetHeight() == 14 && actorImage->GetOffsetY() == 1)
+    {
+        y += 2;
+    }
+    else if (hrc->IsAnchoredRight() && actorImage->GetWidth() == 52 && actorImage->GetHeight() == 21 && actorImage->GetOffsetY() == -2)
     {
         y += 2;
     }

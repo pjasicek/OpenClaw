@@ -209,6 +209,7 @@ ActorRenderComponent::ActorRenderComponent()
     m_IsVisible = true;
     m_IsMirrored = false;
     m_IsInverted = false;
+    m_ZCoord = 0;
 }
 
 bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
@@ -234,6 +235,10 @@ bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
     {
         m_IsInverted = true;
     }
+    if (TiXmlElement* pElem = pXmlData->FirstChildElement("ZCoord"))
+    {
+        m_ZCoord = std::stoi(pElem->GetText());
+    }
 
     if (m_IsVisible)
     {
@@ -251,6 +256,11 @@ bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
 SDL_Rect ActorRenderComponent::VGetPositionRect() const
 {
     SDL_Rect positionRect = { 0 };
+
+    if (!m_IsVisible)
+    {
+        return positionRect;
+    }
 
     shared_ptr<PositionComponent> pPositionComponent =
         MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
@@ -285,7 +295,7 @@ shared_ptr<SceneNode> ActorRenderComponent::VCreateSceneNode()
     }
 
     Point pos(pPositionComponent->GetX(), pPositionComponent->GetY());
-    shared_ptr<SceneNode> pActorNode(new SDL2ActorSceneNode(_owner->GetGUID(), this, RenderPass_Actor, pos));
+    shared_ptr<SceneNode> pActorNode(new SDL2ActorSceneNode(_owner->GetGUID(), this, RenderPass_Actor, pos, m_ZCoord));
 
     return pActorNode;
 }

@@ -35,6 +35,125 @@ enum CollisionType
     CollisionType_Death
 };
 
+enum CollisionFlag
+{
+    CollisionFlag_None          = 0x0,
+    CollisionFlag_Controller    = 0x2,
+    CollisionFlag_DynamicActor  = 0x4,
+    CollisionFlag_Bullet        = 0x8,
+    CollisionFlag_Dynamite      = 0x10,
+    CollisionFlag_Magic         = 0x20,
+    CollisionFlag_Crate         = 0x40,
+    CollisionFlag_Rope          = 0x80,
+    CollisionFlag_Solid         = 0x100,
+    CollisionFlag_Ground        = 0x200,
+    CollisionFlag_Death         = 0x400,
+    CollisionFlag_Ladder        = 0x800,
+    CollisionFlag_Barel         = 0x1000,
+    CollisionFlag_Trigger       = 0x2000
+};
+
+enum FixtureType
+{
+    FixtureType_None = 0,
+    // Tiles
+    FixtureType_Solid,
+    FixtureType_Ground,
+    FixtureType_Climb,
+    FixtureType_Death,
+    // Sensors
+    FixtureType_FootSensor,
+    FixtureType_AmbientTrigger,
+    FixtureType_Trigger,
+    FixtureType_Projectile
+};
+
+enum AmmoType
+{
+    AmmoType_Pistol,
+    AmmoType_Magic,
+    AmmoType_Dynamite,
+    //-----
+    AmmoType_Max
+};
+
+enum PowerupType
+{
+    PowerupType_None = -1,
+    PowerupType_Catnip,
+    PowerupType_Invulnerability,
+    PowerupType_Invisibility,
+    PowerupType_FireSword,
+    PowerupType_IceSword,
+    PowerupType_LightningSword,
+    PowerupType_Max
+};
+
+enum PickupType
+{
+    PickupType_Default = 0,
+    PickupType_Treasure_Goldbars,
+    PickupType_Treasure_Rings_Red,
+    PickupType_Treasure_Rings_Green,
+    PickupType_Treasure_Rings_Blue,
+    PickupType_Treasure_Rings_Purple,
+    PickupType_Treasure_Necklace,
+    PickupType_Treasure_Crosses_Red,
+    PickupType_Treasure_Crosses_Green,
+    PickupType_Treasure_Crosses_Blue,
+    PickupType_Treasure_Crosses_Purple,
+    PickupType_Treasure_Scepters_Red,
+    PickupType_Treasure_Scepters_Green,
+    PickupType_Treasure_Scepters_Blue,
+    PickupType_Treasure_Scepters_Purple,
+    PickupType_Treasure_Geckos_Red,
+    PickupType_Treasure_Geckos_Green,
+    PickupType_Treasure_Geckos_Blue,
+    PickupType_Treasure_Geckos_Purple,
+    PickupType_Ammo_Deathbag,
+    PickupType_Ammo_Shot,
+    PickupType_Ammo_Shotbag,
+    PickupType_Powerup_Catnip_1,
+    PickupType_Powerup_Catnip_2,
+    PickupType_Health_Breadwater,
+    PickupType_Health_25,
+    PickupType_Health_10,
+    PickupType_Health_15,
+    PickupType_Ammo_Magic_5,
+    PickupType_Ammo_Magic_10,
+    PickupType_Ammo_Magic_25,
+    PickupType_Mappiece,
+    PickupType_Warp,
+    PickupType_Treasure_Coins,
+    PickupType_Ammo_Dynamite,
+    PickupType_Curse_Ammo,
+    PickupType_Curse_Magic,
+    PickupType_Curse_Health,
+    PickupType_Curse_Death,
+    PickupType_Curse_Treasure,
+    PickupType_Curse_Freeze,
+    PickupType_Treasure_Chalices_Red,
+    PickupType_Treasure_Chalices_Green,
+    PickupType_Treasure_Chalices_Blue,
+    PickupType_Treasure_Chalices_Purple,
+    PickupType_Treasure_Crowns_Red,
+    PickupType_Treasure_Crowns_Green,
+    PickupType_Treasure_Crowns_Blue,
+    PickupType_Treasure_Crowns_Purple,
+    PickupType_Treasure_Skull_Red,
+    PickupType_Treasure_Skull_Green,
+    PickupType_Treasure_Skull_Blue,
+    PickupType_Treasure_Skull_Purple,
+    PickupType_Powerup_Invisibility,
+    PickupType_Powerup_Invincibility,
+    PickupType_Powerup_Life,
+    PickupType_Powerup_FireSword,
+    PickupType_Powerup_LightningSword,
+    PickupType_Powerup_IceSword,
+    PickupType_Max
+};
+
+struct ActorBodyDef;
 class CameraNode;
 class Point;
 class IGamePhysics
@@ -54,6 +173,8 @@ public:
     virtual void VAddKinematicBody(WeakActorPtr pActor) = 0;
     virtual void VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType) = 0;
     virtual void VRemoveActor(uint32_t actorId) = 0;
+
+    virtual void VAddActorBody(const ActorBodyDef* actorBodyDef) = 0;
 
     // Debugging
     virtual void VRenderDiagnostics(SDL_Renderer* pRenderer, std::shared_ptr<CameraNode> pCamera) = 0;

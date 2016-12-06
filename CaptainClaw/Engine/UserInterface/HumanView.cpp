@@ -153,6 +153,8 @@ void HumanView::VOnLostDevice()
 
 bool HumanView::LoadGame(TiXmlElement* pLevelData)
 {
+    m_pScene->SortSceneNodesByZCoord();
+
     return VLoadGameDelegate(pLevelData);
 }
 
@@ -182,14 +184,26 @@ void HumanView::RegisterAllDelegates()
 {
     IEventMgr* pEventMgr = IEventMgr::Get();
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::NewHUDElementDelegate), EventData_New_HUD_Element::sk_EventType);
-    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::UpdateScoreDelegate), EventData_Update_Score::sk_EventType);
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::ScoreUpdatedDelegate), EventData_Updated_Score::sk_EventType);
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::LivesUpdatedDelegate), EventData_Updated_Lives::sk_EventType);
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::HealthUpdatedDelegate), EventData_Updated_Health::sk_EventType);
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::AmmoUpdatedDelegate), EventData_Updated_Ammo::sk_EventType);
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::AmmoTypeUpdatedDelegate), EventData_Updated_Ammo_Type::sk_EventType);
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::PowerupUpdatedTimeDelegate), EventData_Updated_Powerup_Time::sk_EventType);
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::PowerupUpdatedStatusDelegate), EventData_Updated_Powerup_Status::sk_EventType);
 }
 
 void HumanView::RemoveAllDelegates()
 {
     IEventMgr* pEventMgr = IEventMgr::Get();
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::NewHUDElementDelegate), EventData_New_HUD_Element::sk_EventType);
-    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::UpdateScoreDelegate), EventData_Update_Score::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::ScoreUpdatedDelegate), EventData_Updated_Score::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::LivesUpdatedDelegate), EventData_Updated_Lives::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::HealthUpdatedDelegate), EventData_Updated_Health::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::AmmoUpdatedDelegate), EventData_Updated_Ammo::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::AmmoTypeUpdatedDelegate), EventData_Updated_Ammo_Type::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::PowerupUpdatedTimeDelegate), EventData_Updated_Powerup_Time::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::PowerupUpdatedStatusDelegate), EventData_Updated_Powerup_Status::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -209,9 +223,9 @@ void HumanView::NewHUDElementDelegate(IEventDataPtr pEventData)
     }
 }
 
-void HumanView::UpdateScoreDelegate(IEventDataPtr pEventData)
+void HumanView::ScoreUpdatedDelegate(IEventDataPtr pEventData)
 {
-    shared_ptr<EventData_Update_Score> pCastEventData = static_pointer_cast<EventData_Update_Score>(pEventData);
+    shared_ptr<EventData_Updated_Score> pCastEventData = static_pointer_cast<EventData_Updated_Score>(pEventData);
     if (m_pHUD)
     {
         m_pHUD->UpdateScore(pCastEventData->GetNewScore());
@@ -219,8 +233,118 @@ void HumanView::UpdateScoreDelegate(IEventDataPtr pEventData)
         {
             if ((pCastEventData->GetOldScore() / 1000000) != (pCastEventData->GetNewScore() / 1000000))
             {
-                // Add new life
+                shared_ptr<EventData_New_Life> pEvent(new EventData_New_Life(pCastEventData->GetActorId(), 1));
+                IEventMgr::Get()->VQueueEvent(pEvent);
             }
+        }
+    }
+    else
+    {
+        LOG_ERROR("HUD is unitialized");
+    }
+}
+
+void HumanView::LivesUpdatedDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Updated_Lives> pCastEventData = static_pointer_cast<EventData_Updated_Lives>(pEventData);
+    if (m_pHUD)
+    {
+        m_pHUD->UpdateLives(pCastEventData->GetNewLivesCount());
+    }
+    else
+    {
+        LOG_ERROR("HUD is unitialized");
+    }
+}
+
+void HumanView::HealthUpdatedDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Updated_Health> pCastEventData = static_pointer_cast<EventData_Updated_Health>(pEventData);
+    if (m_pHUD)
+    {
+        m_pHUD->UpdateHealth(pCastEventData->GetNewHealth());
+    }
+    else
+    {
+        LOG_ERROR("HUD is unitialized");
+    }
+}
+
+void HumanView::AmmoUpdatedDelegate(IEventDataPtr pEventData)
+{
+    if (m_pHUD)
+    {
+        shared_ptr<EventData_Updated_Ammo> pCastEventData = static_pointer_cast<EventData_Updated_Ammo>(pEventData);
+
+        // TODO: This should be more generic
+        if ((pCastEventData->GetAmmoType() == AmmoType_Pistol && m_pHUD->IsElementVisible("pistol")) ||
+            (pCastEventData->GetAmmoType() == AmmoType_Magic && m_pHUD->IsElementVisible("magic")) ||
+            (pCastEventData->GetAmmoType() == AmmoType_Dynamite && m_pHUD->IsElementVisible("dynamite")))
+        { 
+            m_pHUD->UpdateAmmo(pCastEventData->GetAmmoCount());
+        }
+        else
+        {
+            LOG_ERROR("Unknown ammo type: " + ToStr(pCastEventData->GetAmmoType()));
+        }
+    }
+    else
+    {
+        LOG_ERROR("HUD is unitialized");
+    }
+}
+
+void HumanView::AmmoTypeUpdatedDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Updated_Ammo_Type> pCastEventData = static_pointer_cast<EventData_Updated_Ammo_Type>(pEventData);
+    if (pCastEventData->GetAmmoType() >= AmmoType_Max)
+    {
+        return;
+    }
+
+    if (m_pHUD)
+    {
+        // TODO: Redo this to be more general
+        m_pHUD->SetElementVisible("pistol", false);
+        m_pHUD->SetElementVisible("magic", false);
+        m_pHUD->SetElementVisible("dynamite", false);
+
+        if (pCastEventData->GetAmmoType() == AmmoType_Pistol) { m_pHUD->SetElementVisible("pistol", true); }
+        else if (pCastEventData->GetAmmoType() == AmmoType_Magic) { m_pHUD->SetElementVisible("magic", true); }
+        else if (pCastEventData->GetAmmoType() == AmmoType_Dynamite) { m_pHUD->SetElementVisible("dynamite", true); }
+        else
+        {
+            LOG_ERROR("Unknown ammo type: " + ToStr(pCastEventData->GetAmmoType()));
+        }
+    }
+    else
+    {
+        LOG_ERROR("HUD is unitialized");
+    }
+}
+
+void HumanView::PowerupUpdatedTimeDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Updated_Powerup_Time> pCastEventData = static_pointer_cast<EventData_Updated_Powerup_Time>(pEventData);
+    if (m_pHUD)
+    {
+        m_pHUD->UpdateStopwatchTime(pCastEventData->GetSecondsRemaining());
+    }
+    else
+    {
+        LOG_ERROR("HUD is unitialized");
+    }
+}
+
+
+void HumanView::PowerupUpdatedStatusDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Updated_Powerup_Status> pCastEventData = static_pointer_cast<EventData_Updated_Powerup_Status>(pEventData);
+    if (m_pHUD)
+    {
+        if (!m_pHUD->SetElementVisible("stopwatch", !pCastEventData->IsPowerupFinished()))
+        {
+            LOG_ERROR("Could not set visibility to HUD element \"stopwatch\"");
         }
     }
     else

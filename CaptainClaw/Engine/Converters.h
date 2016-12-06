@@ -78,11 +78,12 @@ inline TiXmlElement* CreateSoundComponent(const char* soundPath)
     return elem;
 }
 
-inline TiXmlElement* CreateActorRenderComponent(const char* imagesPath, bool visible = true)
+inline TiXmlElement* CreateActorRenderComponent(const char* imagesPath, int32 zCoord, bool visible = true)
 {
     TiXmlElement* elem = new TiXmlElement("ActorRenderComponent");
 
     XML_ADD_TEXT_ELEMENT("ImagePath", imagesPath, elem);
+    XML_ADD_TEXT_ELEMENT("ZCoord", ToStr(zCoord).c_str(), elem);
 
     return elem;
 }
@@ -456,6 +457,7 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
     pActorElem->SetAttribute("Type", wwdObject->logic);
 
     std::string logic = wwdObject->logic;
+    std::string imageSet = wwdObject->imageSet;
 
     // Common components for all actors
 
@@ -473,6 +475,7 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
     XML_ADD_TEXT_ELEMENT("Visible", ToStr(true).c_str(), actorRenderComponent);
     XML_ADD_TEXT_ELEMENT("Mirrored", ToStr((wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR) != 0).c_str(), actorRenderComponent);
     XML_ADD_TEXT_ELEMENT("Inverted", ToStr((wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_INVERT) != 0).c_str(), actorRenderComponent);
+    XML_ADD_TEXT_ELEMENT("ZCoord", ToStr(wwdObject->z).c_str(), actorRenderComponent);
 
     std::string tmpImagesRootPath = imagesRootPath;
     std::string tmpImageSet = wwdObject->imageSet;
@@ -606,9 +609,75 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
     {
         //pActorElem->LinkEndChild(AmmoToXml(wwdObject));
     }
-    else if (logic.find("SpecialPowerup") != std::string::npos)
+    else if (logic.find("SpecialPowerup") != std::string::npos ||
+        imageSet.find("CATNIPS") != std::string::npos)
     {
         //pActorElem->LinkEndChild(SpecialPowerupToXml(wwdObject));
+
+#define CREATE_POWERUP_COMPONENT(name, duration) \
+    TiXmlElement* pPowerupPickupComponent = new TiXmlElement("PowerupPickupComponent"); \
+    XML_ADD_TEXT_ELEMENT("Type", name, pPowerupPickupComponent); \
+    XML_ADD_TEXT_ELEMENT("Duration", duration, pPowerupPickupComponent); \
+    pActorElem->LinkEndChild(pPowerupPickupComponent); \
+
+        // All powerups should have trigger
+        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
+
+        std::string imageSet = wwdObject->imageSet;
+        if (imageSet == "GAME_WARP")
+        {
+            TiXmlElement* pTeleportPickupComponent = new TiXmlElement("TeleportPickupComponent");
+            XML_ADD_2_PARAM_ELEMENT("Destination", "x", ToStr(wwdObject->speedX).c_str(), "y", ToStr(wwdObject->speedY).c_str(), pTeleportPickupComponent);
+            pActorElem->LinkEndChild(pTeleportPickupComponent);
+
+            TiXmlElement* pAnimCompElem = new TiXmlElement("AnimationComponent");
+            pAnimCompElem->LinkEndChild(CreateCycleAnimation(125));
+            pActorElem->LinkEndChild(pAnimCompElem);
+        }
+        else if (imageSet == "GAME_POWERUPS_INVULNERABLE")
+        {
+            CREATE_POWERUP_COMPONENT("Invulnerability", "30000");
+        }
+        else if (imageSet == "GAME_POWERUPS_GHOST")
+        {
+            CREATE_POWERUP_COMPONENT("Invisibility", "30000");
+        }
+        else if (imageSet == "GAME_CATNIPS_NIP1")
+        {
+            int duration = 15000;
+            if (wwdObject->smarts > 0)
+            {
+                duration = wwdObject->smarts;
+            }
+
+            CREATE_POWERUP_COMPONENT("Catnip", ToStr(duration).c_str());
+        }
+        else if (imageSet == "GAME_CATNIPS_NIP2")
+        {
+            int duration = 30000;
+            if (wwdObject->smarts > 0)
+            {
+                duration = wwdObject->smarts;
+            }
+
+            CREATE_POWERUP_COMPONENT("Catnip", ToStr(duration).c_str());
+        }
+        else if (imageSet == "GAME_POWERUPS_FIRESWORD")
+        {
+            CREATE_POWERUP_COMPONENT("FireSword", "30000");
+        }
+        else if (imageSet == "GAME_POWERUPS_ICESWORD")
+        {
+            CREATE_POWERUP_COMPONENT("IceSword", "30000");
+        }
+        else if (imageSet == "GAME_POWERUPS_LIGHTNINGSWORD")
+        {
+            CREATE_POWERUP_COMPONENT("LightningSword", "30000");
+        }
+        else
+        {
+            LOG_ERROR("Unknown special powerup: " + imageSet);
+        }
     }
     else if (logic == "TreasurePowerup" ||
              logic == "GlitterlessPowerup")
@@ -640,6 +709,35 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
             pActorElem->LinkEndChild(elem);
         }
     }
+    else if (logic == "HealthPowerup" && imageSet.find("CATNIPS") == std::string::npos)
+    {
+        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
+
+        TiXmlElement* healthPickupComponent = new TiXmlElement("HealthPickupComponent");
+        pActorElem->LinkEndChild(healthPickupComponent);
+
+        std::string imageSet = wwdObject->imageSet;
+        if (imageSet == "LEVEL_HEALTH")
+        {
+            XML_ADD_TEXT_ELEMENT("Health", "5", healthPickupComponent);
+        }
+        else if (imageSet == "GAME_HEALTH_POTION1")
+        {
+            XML_ADD_TEXT_ELEMENT("Health", "10", healthPickupComponent);
+        }
+        else if (imageSet == "GAME_HEALTH_POTION2")
+        {
+            XML_ADD_TEXT_ELEMENT("Health", "20", healthPickupComponent);
+        }
+        else if (imageSet == "GAME_HEALTH_POTION3")
+        {
+            XML_ADD_TEXT_ELEMENT("Health", "35", healthPickupComponent);
+        }
+        else
+        {
+            LOG_WARNING("Trying to parse unknown HealthPickupComponent" + imageSet);
+        }
+    }
     else
     {
         //LOG_WARNING("Unknown logic: " + logic);
@@ -659,17 +757,35 @@ TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
     pClawActor->SetAttribute("resource", "created");
 
     //pClawActor->LinkEndChild(CreatePositionComponent(pWapWwd->properties.startX, pWapWwd->properties.startY));
-    pClawActor->LinkEndChild(CreatePositionComponent(12400, 1950));
+    pClawActor->LinkEndChild(CreatePositionComponent(4850, 4100));
     pClawActor->LinkEndChild(CreateCollisionComponent(40, 110));
     pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, 1500, 40, 110, 4.0, 0.0, 0.5));
     pClawActor->LinkEndChild(CreateControllableComponent(true));
     pClawActor->LinkEndChild(CreateAnimationComponent("/CLAW/ANIS/*"));
     pClawActor->LinkEndChild(CreateSoundComponent("/CLAW/SOUNDS/*"));
-    pClawActor->LinkEndChild(CreateActorRenderComponent("/CLAW/IMAGES/*"));
+    pClawActor->LinkEndChild(CreateActorRenderComponent("/CLAW/IMAGES/*", 4000));
 
     TiXmlElement* pScoreComponent = new TiXmlElement("ScoreComponent");
     XML_ADD_TEXT_ELEMENT("Score", "0", pScoreComponent);
     pClawActor->LinkEndChild(pScoreComponent);
+
+    TiXmlElement* pLifeComponent = new TiXmlElement("LifeComponent");
+    XML_ADD_TEXT_ELEMENT("Lives", "1", pLifeComponent);
+    pClawActor->LinkEndChild(pLifeComponent);
+
+    TiXmlElement* pHealthComponent = new TiXmlElement("HealthComponent");
+    XML_ADD_TEXT_ELEMENT("Health", "80", pHealthComponent);
+    XML_ADD_TEXT_ELEMENT("MaxHealth", "150", pHealthComponent);
+    pClawActor->LinkEndChild(pHealthComponent);
+
+    TiXmlElement* pAmmoComponent = new TiXmlElement("AmmoComponent");
+    XML_ADD_TEXT_ELEMENT("Pistol", "15", pAmmoComponent);
+    XML_ADD_TEXT_ELEMENT("Magic", "10", pAmmoComponent);
+    XML_ADD_TEXT_ELEMENT("Dynamite", "5", pAmmoComponent);
+    pClawActor->LinkEndChild(pAmmoComponent);
+
+    TiXmlElement* pPowerupComponent = new TiXmlElement("PowerupComponent");
+    pClawActor->LinkEndChild(pPowerupComponent);
 
     return pClawActor;
 }
@@ -1243,7 +1359,9 @@ void WwdToXml(WapWwd* wapWwd)
     root->LinkEndChild(CreateHUDElement("/GAME/IMAGES/INTERFACE/TREASURECHEST/*", 150, "/GAME/ANIS/INTERFACE/CHEST.ANI", Point(20, 20), false, false, "score"));
     root->LinkEndChild(CreateHUDElement("/GAME/IMAGES/INTERFACE/STOPWATCH/*", 125, "", Point(20, 60), false, false, "stopwatch", false));
     root->LinkEndChild(CreateHUDElement("/GAME/IMAGES/INTERFACE/HEALTHHEART/*", 125, "", Point(-33, 15), true, false, "health"));
-    root->LinkEndChild(CreateHUDElement("/GAME/IMAGES/INTERFACE/WEAPONS/PISTOL/*", 0, "/GAME/ANIS/INTERFACE/PISTOL.ANI", Point(-26, 45), true, false, "ammo"));
+    root->LinkEndChild(CreateHUDElement("/GAME/IMAGES/INTERFACE/WEAPONS/PISTOL/*", 0, "/GAME/ANIS/INTERFACE/PISTOL.ANI", Point(-26, 45), true, false, "pistol", true));
+    root->LinkEndChild(CreateHUDElement("/GAME/IMAGES/INTERFACE/WEAPONS/MAGIC/*", 0, "/GAME/ANIS/INTERFACE/MAGIC.ANI", Point(-26, 45), true, false, "magic", false));
+    root->LinkEndChild(CreateHUDElement("/GAME/IMAGES/INTERFACE/WEAPONS/DYNAMITE/*", 0, "/GAME/ANIS/INTERFACE/DYNAMITE.ANI", Point(-26, 45), true, false, "dynamite", false));
     root->LinkEndChild(CreateHUDElement("/GAME/IMAGES/INTERFACE/LIVESHEAD/*", 0, "/GAME/ANIS/INTERFACE/LIVES.ANI", Point(-18, 75), true, false, "lives"));
 
     //xmlDoc.Print();

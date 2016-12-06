@@ -1259,20 +1259,16 @@ private:
 };
 
 //---------------------------------------------------------------------------------------------------------------------
-// EventData_Update_Score
+// EventData_Updated_Score
 //---------------------------------------------------------------------------------------------------------------------
-class EventData_Update_Score : public BaseEventData
+class EventData_Updated_Score : public BaseEventData
 {
 public:
     static const EventType sk_EventType;
 
-    EventData_Update_Score(void)
+    EventData_Updated_Score(uint32 actorId, uint32 oldScore, uint32 newScore, bool isInitialScore)
     {
-        m_NewScore = INVALID_ACTOR_ID;
-    }
-
-    EventData_Update_Score(uint32 oldScore, uint32 newScore, bool isInitialScore)
-    {
+        m_ActorId = actorId;
         m_OldScore = oldScore;
         m_NewScore = newScore;
         m_IsInitialScore = isInitialScore;
@@ -1285,17 +1281,22 @@ public:
 
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Update_Score(m_OldScore, m_NewScore, m_IsInitialScore));
+        return IEventDataPtr(new EventData_Updated_Score(m_ActorId, m_OldScore, m_NewScore, m_IsInitialScore));
     }
 
     virtual void VSerialize(std::ostrstream& out) const
     {
-        out << m_NewScore;
+        out << m_ActorId << m_NewScore << m_OldScore << m_IsInitialScore;
     }
 
     virtual void VDeserialize(std::istrstream& in)
     {
-        in >> m_NewScore;
+        in >> m_ActorId >> m_NewScore >> m_OldScore >> m_IsInitialScore;
+    }
+
+    uint32 GetActorId(void) const
+    {
+        return m_ActorId;
     }
 
     uint32 GetNewScore(void) const
@@ -1315,13 +1316,548 @@ public:
 
     virtual const char* GetName(void) const
     {
-        return "EventData_Update_Score";
+        return "EventData_Updated_Score";
     }
 
 private:
+    uint32 m_ActorId;
     uint32 m_OldScore;
     uint32 m_NewScore;
     bool m_IsInitialScore;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_New_Life
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_New_Life : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_New_Life(void)
+    {
+        m_ActorId = INVALID_ACTOR_ID;
+        m_NumNewLives = 1;
+    }
+
+    EventData_New_Life(uint32 actorId, int numNewLives)
+    {
+        m_ActorId = actorId;
+        m_NumNewLives = numNewLives;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_New_Life(m_ActorId, m_NumNewLives));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_NumNewLives;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_NumNewLives;
+    }
+
+    uint32 GetActorId() const
+    {
+        return m_ActorId;
+    }
+
+    int GetNumNewLives(void) const
+    {
+        return m_NumNewLives;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_New_Life";
+    }
+
+private:
+    uint32 m_ActorId;
+    int m_NumNewLives;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Updated_Lives
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Updated_Lives : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Updated_Lives(void)
+    {
+        m_OldLivesCount = 0;
+    }
+
+    EventData_Updated_Lives(uint32 oldLives, uint32 newLives, bool isInitialLives)
+    {
+        m_OldLivesCount = oldLives;
+        m_NewLivesCount = newLives;
+        m_IsInitialLives = isInitialLives;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Updated_Lives(m_OldLivesCount, m_NewLivesCount, m_IsInitialLives));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_OldLivesCount << m_NewLivesCount << m_IsInitialLives;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_OldLivesCount >> m_NewLivesCount >> m_IsInitialLives;
+    }
+
+    uint32 GetNewLivesCount(void) const
+    {
+        return m_NewLivesCount;
+    }
+
+    uint32 GetOldLivesCount(void) const
+    {
+        return m_OldLivesCount;
+    }
+
+    bool IsInitialLives(void) const
+    {
+        return m_IsInitialLives;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Updated_Lives";
+    }
+
+private:
+    uint32 m_OldLivesCount;
+    uint32 m_NewLivesCount;
+    bool m_IsInitialLives;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Updated_Health
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Updated_Health : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Updated_Health(uint32 oldHealth, uint32 newHealth, bool isInitialHealth)
+    {
+        m_OldHealth = oldHealth;
+        m_NewHealth = newHealth;
+        m_IsInitialHealth = isInitialHealth;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Updated_Health(m_OldHealth, m_NewHealth, m_IsInitialHealth));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_OldHealth << m_NewHealth << m_IsInitialHealth;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_OldHealth >> m_NewHealth >> m_IsInitialHealth;
+    }
+
+    uint32 GetNewHealth(void) const
+    {
+        return m_NewHealth;
+    }
+
+    uint32 GetOldHealth(void) const
+    {
+        return m_OldHealth;
+    }
+
+    bool IsInitialHealth(void) const
+    {
+        return m_IsInitialHealth;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Updated_Health";
+    }
+
+private:
+    uint32 m_OldHealth;
+    uint32 m_NewHealth;
+    bool m_IsInitialHealth;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Update_Ammo
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Updated_Ammo : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Updated_Ammo(uint32 ammoType, uint32 ammoCount)
+    {
+        m_AmmoType = ammoType;
+        m_AmmoCount = ammoCount;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Updated_Ammo(m_AmmoType, m_AmmoCount));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_AmmoType << m_AmmoCount;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_AmmoType >> m_AmmoCount;
+    }
+
+    uint32 GetAmmoType(void) const
+    {
+        return m_AmmoType;
+    }
+
+    uint32 GetAmmoCount(void) const
+    {
+        return m_AmmoCount;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Updated_Ammo";
+    }
+
+private:
+    uint32 m_AmmoType;
+    uint32 m_AmmoCount;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Request_Change_Ammo_Type
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Request_Change_Ammo_Type : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Request_Change_Ammo_Type(uint32 actorId, uint32 ammoType = AmmoType_Max)
+    {
+        m_ActorId = actorId;
+        m_AmmoType = ammoType;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Request_Change_Ammo_Type(m_ActorId, m_AmmoType));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_ActorId << m_AmmoType;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_ActorId >> m_AmmoType;
+    }
+
+    uint32 GetAmmoType(void) const
+    {
+        return m_AmmoType;
+    }
+
+    uint32 GetActorId(void) const
+    {
+        return m_ActorId;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Request_Change_Ammo_Type";
+    }
+
+private:
+    uint32 m_AmmoType;
+    uint32 m_ActorId;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Updated_Ammo_Type
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Updated_Ammo_Type : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Updated_Ammo_Type(uint32 actorId, uint32 ammoType)
+    {
+        m_ActorId = actorId;
+        m_AmmoType = ammoType;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Updated_Ammo_Type(m_ActorId, m_AmmoType));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_ActorId << m_AmmoType;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_ActorId >> m_AmmoType;
+    }
+
+    uint32 GetAmmoType(void) const
+    {
+        return m_AmmoType;
+    }
+
+    uint32 GetActorId(void) const
+    {
+        return m_ActorId;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Updated_Ammo_Type";
+    }
+
+private:
+    uint32 m_AmmoType;
+    uint32 m_ActorId;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Teleport_Actor
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Teleport_Actor : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Teleport_Actor(uint32 actorId, const Point& destination)
+    {
+        m_ActorId = actorId;
+        m_Destination = destination;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Teleport_Actor(m_ActorId, m_Destination));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_ActorId << m_Destination.x << m_Destination.y;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_ActorId >> m_Destination.x >> m_Destination.y;
+    }
+
+    uint32 GetActorId(void) const
+    {
+        return m_ActorId;
+    }
+
+    Point GetDestination(void) const
+    {
+        return m_Destination;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Teleport_Actor";
+    }
+
+private:
+    uint32 m_ActorId;
+    Point m_Destination;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Updated_Powerup_Time
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Updated_Powerup_Time : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Updated_Powerup_Time()
+    {
+        m_ActorId = INVALID_ACTOR_ID;
+        m_PowerupType = PowerupType_None;
+        m_SecondsRemaining = 0;
+    }
+
+    EventData_Updated_Powerup_Time(uint32 actorId, uint32 powerupType, int32 secondsRemaining)
+    {
+        m_ActorId = actorId;
+        m_PowerupType = powerupType;
+        m_SecondsRemaining = secondsRemaining;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Updated_Powerup_Time(m_ActorId, m_PowerupType, m_SecondsRemaining));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_ActorId << m_PowerupType << m_SecondsRemaining;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_ActorId >> m_PowerupType >> m_SecondsRemaining;
+    }
+
+    uint32 GetPowerupType(void) const
+    {
+        return m_PowerupType;
+    }
+
+    uint32 GetActorId(void) const
+    {
+        return m_ActorId;
+    }
+
+    int32 GetSecondsRemaining() const
+    {
+        return m_SecondsRemaining;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Updated_Powerup_Time";
+    }
+
+private:
+    uint32 m_ActorId;
+    uint32 m_PowerupType;
+    int32 m_SecondsRemaining;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Updated_Powerup_Status
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Updated_Powerup_Status : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Updated_Powerup_Status()
+    {
+        m_ActorId = INVALID_ACTOR_ID;
+        m_PowerupType = PowerupType_None;
+        m_IsPowerupFinished = false;
+    }
+
+    EventData_Updated_Powerup_Status(uint32 actorId, PowerupType powerupType, bool isPowerupFinished)
+    {
+        m_ActorId = actorId;
+        m_PowerupType = powerupType;
+        m_IsPowerupFinished = isPowerupFinished;
+    }
+
+    virtual const EventType& VGetEventType(void) const
+    {
+        return sk_EventType;
+    }
+
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Updated_Powerup_Status(m_ActorId, PowerupType(m_PowerupType), m_IsPowerupFinished));
+    }
+
+    virtual void VSerialize(std::ostrstream& out) const
+    {
+        out << m_ActorId << m_PowerupType << m_IsPowerupFinished;
+    }
+
+    virtual void VDeserialize(std::istrstream& in)
+    {
+        in >> m_ActorId >> m_PowerupType >> m_IsPowerupFinished;
+    }
+
+    uint32 GetActorId(void) const
+    {
+        return m_ActorId;
+    }
+
+    bool IsPowerupFinished() const
+    {
+        return m_IsPowerupFinished;
+    }
+
+    virtual const char* GetName(void) const
+    {
+        return "EventData_Updated_Powerup_Status";
+    }
+
+private:
+    uint32 m_ActorId;
+    uint32 m_PowerupType;
+    bool m_IsPowerupFinished;
 };
 
 #endif

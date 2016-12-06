@@ -49,6 +49,6 @@ void ScoreComponent::SetCurrentScore(uint32 newScore)
 
 void ScoreComponent::BroadcastScoreChanged(uint32 oldScore, uint32 newScore, bool isInitial)
 {
-    shared_ptr<EventData_Update_Score> pEvent(new EventData_Update_Score(oldScore, newScore, isInitial));
+    shared_ptr<EventData_Updated_Score> pEvent(new EventData_Updated_Score(_owner->GetGUID(), oldScore, newScore, isInitial));
     IEventMgr::Get()->VQueueEvent(pEvent);
 }

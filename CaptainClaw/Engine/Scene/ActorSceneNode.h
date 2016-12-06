@@ -10,7 +10,8 @@ public:
     SDL2ActorSceneNode(const uint32 actorId,
         BaseRenderComponent* pRenderComponent,
         RenderPass renderPass,
-        Point position);
+        Point position,
+        int32 zCoord);
 
     virtual ~SDL2ActorSceneNode();
 

@@ -9,6 +9,7 @@
 #include <list>
 #include <map>
 #include <Tinyxml/tinyxml.h>
+#include <Box2D/Box2D.h>
 #include <algorithm>
 
 #include "Logger/Logger.h"
@@ -18,6 +19,7 @@
 #include "Interfaces.h"
 #include "Events/EventMgr.h"
 #include "XmlMacros.h"
+#include "Interfaces.h"
 
 using std::shared_ptr;
 using std::unique_ptr;
@@ -130,9 +132,79 @@ public:
 
     // somewhat hacky vector emulation (maybe I should just write my own vector class)
     float Length() const { return sqrt((float)(x*x + y*y)); }
+
+    bool IsZero() { return (std::fabs(x) < DBL_EPSILON || std::fabs(y) < DBL_EPSILON); }
 };
 
 inline Point operator-(const Point& left, const Point& right) { Point temp(left); temp -= right; return temp; }
+
+struct ActorBodyDef
+{
+    ActorBodyDef()
+    {
+        bodyType = b2_dynamicBody;
+        addFootSensor = false;
+        makeCapsule = false;
+        makeBullet = false;
+        makeSensor = true;
+        fixtureType = FixtureType_None;
+        position = Point(0, 0);
+        size = Point(0, 0);
+        gravityScale = 1.0f;
+        setInitialSpeed = false;
+        initialSpeed = Point(0, 0);
+        collisionFlag = CollisionFlag_None;
+        collisionMask = 0x0;
+        prefabType = "";
+
+        friction = 0.0f;
+        density = 0.0f;
+    }
+
+    void MakeAsStaticTriggerObject(WeakActorPtr actor, Point pos, Point collisionSize)
+    {
+        pActor = actor;
+        bodyType = b2_staticBody;
+        fixtureType = FixtureType_Trigger;
+        position = pos;
+        size = collisionSize;
+        gravityScale = 0.0f;
+        collisionFlag = CollisionFlag_Trigger;
+        collisionMask = CollisionFlag_Controller | CollisionFlag_DynamicActor;
+    }
+
+    // TODO
+    void MakeAsDynamicTriggerObject()
+    {
+        
+    }
+
+    // TODO
+    void MakeAsEnemyAIObject()
+    {
+
+    }
+
+
+
+    WeakActorPtr pActor;
+    b2BodyType bodyType;
+    bool addFootSensor;
+    bool makeCapsule;
+    bool makeBullet;
+    bool makeSensor;
+    FixtureType fixtureType;
+    Point position;
+    Point size;
+    float gravityScale;
+    bool setInitialSpeed;
+    Point initialSpeed;
+    CollisionFlag collisionFlag;
+    uint32 collisionMask;
+    float friction;
+    float density;
+    std::string prefabType;
+};
 
 #define NOMINMAX
 #include <Windows.h>

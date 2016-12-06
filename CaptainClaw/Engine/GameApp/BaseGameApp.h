@@ -17,6 +17,8 @@ struct GameOptions
         windowHeight = 780;
         scale = 1.0f;
         useVerticalSync = true;
+        isFullscreen = false;
+        isFullscreenDesktop = false;
 
         frequency = 44100;
         channels = 2;
@@ -36,6 +38,8 @@ struct GameOptions
     int windowHeight;
     double scale;
     bool useVerticalSync;
+    bool isFullscreen;
+    bool isFullscreenDesktop;
 
     // Audio
     int frequency;

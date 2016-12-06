@@ -7,8 +7,9 @@
 SDL2ActorSceneNode::SDL2ActorSceneNode(const uint32 actorId,
     BaseRenderComponent* pRenderComponent,
     RenderPass renderPass,
-    Point position)
-    : SceneNode(actorId, pRenderComponent, renderPass, position)
+    Point position,
+    int32 zCoord)
+    : SceneNode(actorId, pRenderComponent, renderPass, position, zCoord)
 {
     
 }

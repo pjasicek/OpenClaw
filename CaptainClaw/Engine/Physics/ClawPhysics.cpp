@@ -10,6 +10,7 @@
 #include "../Actor/Components/PhysicsComponent.h"
 #include "../Actor/Components/KinematicComponent.h"
 #include "../Actor/Components/TriggerComponents/TriggerComponent.h"
+#include "../Actor/Components/AIComponents/ProjectileAIComponent.h"
 
 #include "PhysicsDebugDrawer.h"
 #include "PhysicsContactListener.h"
@@ -91,6 +92,20 @@ shared_ptr<TriggerComponent> GetTriggerComponentFromB2Body(const b2Body* pBody)
         MakeStrongPtr(pActor->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
 
     return pTriggerComponent;
+}
+
+shared_ptr<ProjectileAIComponent> GetProjectileAIComponentFromB2Body(const b2Body* pBody)
+{
+    assert(pBody);
+
+    Actor* pActor = static_cast<Actor*>(pBody->GetUserData());
+    assert(pActor);
+
+    // May no longer be valid, calling methods have to check it
+    shared_ptr<ProjectileAIComponent> pComponent =
+        MakeStrongPtr(pActor->GetComponent<ProjectileAIComponent>(ProjectileAIComponent::g_Name));
+
+    return pComponent;
 }
 
 b2AABB GetBodyAABB(b2Body* pBody)
@@ -345,11 +360,30 @@ void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType c
     fixtureDef.friction = 0.0f;
 
     // Assign static geometry type (= tile type)
-    if (collisionType == CollisionType_Solid) { fixtureDef.userData = (void*)FixtureType_Solid; }
-    else if (collisionType == CollisionType_Ground) { fixtureDef.userData = (void*)FixtureType_Ground; }
-    else if (collisionType == CollisionType_Climb) { fixtureDef.userData = (void*)FixtureType_Climb; }
-    else if (collisionType == CollisionType_Death) { fixtureDef.userData = (void*)FixtureType_Death; }
-    else { fixtureDef.userData = (void*)FixtureType_None; }
+    if (collisionType == CollisionType_Solid) 
+    { 
+        fixtureDef.filter.categoryBits = CollisionFlag_Solid;
+        fixtureDef.userData = (void*)FixtureType_Solid; 
+    }
+    else if (collisionType == CollisionType_Ground) 
+    { 
+        fixtureDef.filter.categoryBits = CollisionFlag_Ground;
+        fixtureDef.userData = (void*)FixtureType_Ground; 
+    }
+    else if (collisionType == CollisionType_Climb) 
+    { 
+        fixtureDef.filter.categoryBits = CollisionFlag_Ladder;
+        fixtureDef.userData = (void*)FixtureType_Climb; 
+    }
+    else if (collisionType == CollisionType_Death) 
+    { 
+        fixtureDef.filter.categoryBits = CollisionFlag_Death;
+        fixtureDef.userData = (void*)FixtureType_Death; 
+    }
+    else 
+    { 
+        fixtureDef.userData = (void*)FixtureType_None; 
+    }
 
     if ((int)fixtureDef.userData != FixtureType_Solid) { fixtureDef.isSensor = true; }
 
@@ -393,9 +427,6 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
     b2Body* pBody = m_pWorld->CreateBody(&bodyDef);
     pBody->SetUserData(pStrongActor.get());
     pBody->SetGravityScale(pPhysicsComponent->GetGravityScale());
-
-    b2PolygonShape bodyShape2;
-    bodyShape2.SetAsBox(b2BodySize.x / 2, b2BodySize.y / 2);
 
     b2CircleShape bodyShape;
     bodyShape.m_p.Set(0, b2BodySize.x / 2 - b2BodySize.y / 2);
@@ -529,6 +560,94 @@ void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionT
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+}
+
+void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
+{
+    assert(actorBodyDef->collisionMask != 0x0);
+    assert(actorBodyDef->collisionFlag != 0x0);
+    assert(actorBodyDef->fixtureType != FixtureType_None);
+
+    StrongActorPtr pStrongActor = MakeStrongPtr(actorBodyDef->pActor);
+    if (!pStrongActor)
+    {
+        assert(false && "Supplied invalid actor to create physics body from");
+        return;
+    }
+
+    // Convert pixel position and size to Box2D meters
+    b2Vec2 b2Position = PixelsToMeters(PointToB2Vec2(actorBodyDef->position));
+    b2Vec2 b2BodySize = PixelsToMeters(PointToB2Vec2(actorBodyDef->size));
+
+    b2BodyDef bodyDef;
+    bodyDef.type = actorBodyDef->bodyType;
+    bodyDef.position.Set(b2Position.x, b2Position.y);
+    bodyDef.fixedRotation = true;
+    b2Body* pBody = m_pWorld->CreateBody(&bodyDef);
+    pBody->SetUserData(pStrongActor.get());
+    pBody->SetBullet(actorBodyDef->makeBullet);
+    pBody->SetGravityScale(actorBodyDef->gravityScale);
+
+    if (actorBodyDef->makeCapsule)
+    {
+        assert((b2BodySize.x < b2BodySize.y) && "Making capsule shape for body with width bigger than height not yet supported.");
+
+        b2CircleShape bodyShape;
+        bodyShape.m_p.Set(0, b2BodySize.x / 2 - b2BodySize.y / 2);
+        bodyShape.m_radius = b2BodySize.x / 2;
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &bodyShape;
+        fixtureDef.density = actorBodyDef->density;
+        fixtureDef.friction = actorBodyDef->friction;
+        fixtureDef.isSensor = actorBodyDef->makeSensor;
+        pBody->CreateFixture(&fixtureDef);
+
+        bodyShape.m_p.Set(0, b2BodySize.y / 2 - b2BodySize.x / 2);
+        fixtureDef.shape = &bodyShape;
+        pBody->CreateFixture(&fixtureDef);
+
+        b2PolygonShape polygonShape;
+        polygonShape.SetAsBox((b2BodySize.x / 2) - PixelsToMeters(2), (b2BodySize.y - b2BodySize.x) / 2);
+        fixtureDef.shape = &polygonShape;
+        pBody->CreateFixture(&fixtureDef);
+    }
+    else
+    {
+        b2PolygonShape bodyShape;
+        bodyShape.SetAsBox(b2BodySize.x / 2, b2BodySize.y / 2);
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &bodyShape;
+        fixtureDef.friction = 0.0f;
+        fixtureDef.userData = (void*)actorBodyDef->fixtureType;
+        fixtureDef.isSensor = actorBodyDef->makeSensor;
+        fixtureDef.filter.categoryBits = actorBodyDef->collisionFlag;
+        fixtureDef.filter.maskBits = actorBodyDef->collisionMask;
+        pBody->CreateFixture(&fixtureDef);
+    }
+
+    if (actorBodyDef->addFootSensor)
+    {
+        // Add foot sensor
+        b2PolygonShape polygonShape;
+        b2FixtureDef fixtureDef;
+
+        float sensorHeight = PixelsToMeters(24);
+        polygonShape.SetAsBox(b2BodySize.x / 2 - PixelsToMeters(2), sensorHeight / 2, b2Vec2(0, b2BodySize.y / 2), 0);
+        fixtureDef.shape = &polygonShape;
+        fixtureDef.isSensor = true;
+        fixtureDef.userData = (void*)FixtureType_FootSensor;
+        pBody->CreateFixture(&fixtureDef);
+    }
+
+    m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
+    m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+
+    if (actorBodyDef->setInitialSpeed)
+    {
+        VSetLinearSpeed(pStrongActor->GetGUID(), actorBodyDef->initialSpeed);
+    }
 }
 
 //-----------------------------------------------------------------------------

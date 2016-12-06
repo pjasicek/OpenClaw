@@ -36,9 +36,9 @@ public:
     float GetFriction() { return m_Friction; }
     float GetDensity() { return m_Density; }
 
-    Point GetBodySize() const { return m_BodySize; }
-    double GetBodyWidth() const { return m_BodySize.x; }
-    double GetBodyHeight() const { return m_BodySize.y; }
+    Point GetBodySize() const { return m_ActorBodyDef.size; }
+    double GetBodyWidth() const { return m_ActorBodyDef.size.x; }
+    double GetBodyHeight() const { return m_ActorBodyDef.size.y; }
 
     void SetCurrentSpeed(Point speed) { m_CurrentSpeed = speed; }
     void SetConstantSpeed(Point speed) { m_ConstantSpeed = speed; }
@@ -116,6 +116,9 @@ private:
     ControllableComponent* m_pControllableComponent;
 
     shared_ptr<IGamePhysics> m_pPhysics;
+
+    // Actor body definition for physics body creation
+    ActorBodyDef m_ActorBodyDef;
 
     std::vector<const b2Body*> m_OverlappingKinematicBodiesList;
     std::vector<const b2Fixture*> m_OverlappingLaddersList;

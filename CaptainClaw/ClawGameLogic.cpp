@@ -7,7 +7,10 @@
 
 #include "Engine/Actor/Components/PhysicsComponent.h"
 #include "Engine/Actor/Components/ControllableComponent.h"
+#include "Engine/Actor/Components/ControllerComponents/LifeComponent.h"
+#include "Engine/Actor/Components/ControllerComponents/AmmoComponent.h"
 #include "Engine/Physics/ClawPhysics.h"
+
 
 ClawGameLogic::ClawGameLogic()
 {
@@ -49,6 +52,9 @@ void ClawGameLogic::RegisterAllDelegates()
     pGlobalEventManager->VAddListener(MakeDelegate(this, &ClawGameLogic::ControlledActorStartClimbDelegate), EventData_Start_Climb::sk_EventType);
     pGlobalEventManager->VAddListener(MakeDelegate(this, &ClawGameLogic::ActorFireDelegate), EventData_Actor_Fire::sk_EventType);
     pGlobalEventManager->VAddListener(MakeDelegate(this, &ClawGameLogic::ActorAttackDelegate), EventData_Actor_Attack::sk_EventType);
+    pGlobalEventManager->VAddListener(MakeDelegate(this, &ClawGameLogic::NewLifeDelegate), EventData_New_Life::sk_EventType);
+    pGlobalEventManager->VAddListener(MakeDelegate(this, &ClawGameLogic::TeleportActorDelegate), EventData_Teleport_Actor::sk_EventType);
+    pGlobalEventManager->VAddListener(MakeDelegate(this, &ClawGameLogic::RequestChangeAmmoTypeDelegate), EventData_Request_Change_Ammo_Type::sk_EventType);
 }
 
 void ClawGameLogic::RemoveAllDelegates()
@@ -59,6 +65,9 @@ void ClawGameLogic::RemoveAllDelegates()
     pGlobalEventManager->VRemoveListener(MakeDelegate(this, &ClawGameLogic::ControlledActorStartClimbDelegate), EventData_Start_Climb::sk_EventType);
     pGlobalEventManager->VRemoveListener(MakeDelegate(this, &ClawGameLogic::ActorFireDelegate), EventData_Actor_Fire::sk_EventType);
     pGlobalEventManager->VRemoveListener(MakeDelegate(this, &ClawGameLogic::ActorAttackDelegate), EventData_Actor_Attack::sk_EventType);
+    pGlobalEventManager->VRemoveListener(MakeDelegate(this, &ClawGameLogic::NewLifeDelegate), EventData_New_Life::sk_EventType);
+    pGlobalEventManager->VRemoveListener(MakeDelegate(this, &ClawGameLogic::TeleportActorDelegate), EventData_Teleport_Actor::sk_EventType);
+    pGlobalEventManager->VRemoveListener(MakeDelegate(this, &ClawGameLogic::RequestChangeAmmoTypeDelegate), EventData_Request_Change_Ammo_Type::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -160,4 +169,60 @@ void ClawGameLogic::ActorAttackDelegate(IEventDataPtr pEventData)
         return;
     }
     pControllableComponent->OnAttack();
+}
+
+void ClawGameLogic::NewLifeDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_New_Life> pCastEventData = static_pointer_cast<EventData_New_Life>(pEventData);
+
+    StrongActorPtr pActor = MakeStrongPtr(VGetActor(pCastEventData->GetActorId()));
+    if (!pActor)
+    {
+        return;
+    }
+
+    shared_ptr<LifeComponent> pLifeComponent = MakeStrongPtr(pActor->GetComponent<LifeComponent>(LifeComponent::g_Name));
+    if (!pLifeComponent)
+    {
+        LOG_WARNING("Life component not present in actor: " + pActor->GetName());
+        return;
+    }
+    pLifeComponent->AddLives(pCastEventData->GetNumNewLives());
+}
+
+void ClawGameLogic::TeleportActorDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Teleport_Actor> pCastEventData = static_pointer_cast<EventData_Teleport_Actor>(pEventData);
+
+    StrongActorPtr pActor = MakeStrongPtr(VGetActor(pCastEventData->GetActorId()));
+    if (!pActor)
+    {
+        return;
+    }
+
+    m_pPhysics->VSetPosition(pCastEventData->GetActorId(), pCastEventData->GetDestination());
+}
+
+void ClawGameLogic::RequestChangeAmmoTypeDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Request_Change_Ammo_Type> pCastEventData = static_pointer_cast<EventData_Request_Change_Ammo_Type>(pEventData);
+
+    StrongActorPtr pActor = MakeStrongPtr(VGetActor(pCastEventData->GetActorId()));
+    if (!pActor)
+    {
+        return;
+    }
+
+    shared_ptr<AmmoComponent> pAmmoComponent =
+        MakeStrongPtr(pActor->GetComponent<AmmoComponent>(AmmoComponent::g_Name));
+    if (!pAmmoComponent)
+    {
+        return;
+    }
+
+    AmmoType newAmmoType = AmmoType((pAmmoComponent->GetActiveAmmoType() + 1) % AmmoType_Max);
+    pAmmoComponent->SetActiveAmmo(newAmmoType);
+
+    shared_ptr<EventData_Updated_Ammo_Type> pEvent(new EventData_Updated_Ammo_Type(pCastEventData->GetActorId(), newAmmoType));
+    IEventMgr::Get()->VTriggerEvent(pEvent);
 }
