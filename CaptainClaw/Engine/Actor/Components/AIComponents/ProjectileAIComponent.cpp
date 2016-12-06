@@ -10,6 +10,7 @@
 #include "../PowerupSparkleAIComponent.h"
 #include "../PhysicsComponent.h"
 #include "../../ActorTemplates.h"
+#include "../ControllerComponents/HealthComponent.h"
 
 #include "../../../Events/EventMgr.h"
 #include "../../../Events/Events.h"
@@ -109,5 +110,10 @@ void ProjectileAIComponent::OnCollidedWithSolidTile()
 
 void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)
 {
-
+    shared_ptr<HealthComponent> pHealthComponent =
+        MakeStrongPtr(pActorWhoWasShot->GetComponent<HealthComponent>(HealthComponent::g_Name));
+    if (pHealthComponent)
+    {
+        pHealthComponent->AddHealth(-m_Damage);
+    }
 }

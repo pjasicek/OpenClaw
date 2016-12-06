@@ -38,6 +38,7 @@ void Actor::PostInit()
 
 void Actor::Destroy()
 {
+    //LOG("Destroying actor: " + _name);
     _components.clear();
 }
 

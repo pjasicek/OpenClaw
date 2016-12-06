@@ -129,6 +129,7 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
         else if (fixtureTypeStr == "Death") { m_ActorBodyDef.fixtureType = FixtureType_Death; }
         else if (fixtureTypeStr == "Trigger") { m_ActorBodyDef.fixtureType = FixtureType_Trigger; }
         else if (fixtureTypeStr == "Projectile") { m_ActorBodyDef.fixtureType = FixtureType_Projectile; }
+        else if (fixtureTypeStr == "Crate") { m_ActorBodyDef.fixtureType = FixtureType_Crate; }
         else
         {
             assert(false && "Unknown body type");
@@ -161,7 +162,7 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
     }
     if (TiXmlElement* pElem = data->FirstChildElement("PrefabType"))
     {
-        m_ActorBodyDef.prefabType = pElem->GetText();
+        //m_ActorBodyDef.prefabType = pElem->GetText();
     }
 
     return true;

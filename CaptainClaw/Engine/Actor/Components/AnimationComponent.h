@@ -42,7 +42,7 @@ class AnimationComponent : public ActorComponent, public AnimationSubject
     friend class Animation;
 
 public:
-    AnimationComponent() { _currentAnimation = NULL; }
+    AnimationComponent();
     virtual ~AnimationComponent();
 
     static const char* g_Name;
@@ -67,6 +67,8 @@ public:
     std::string GetCurrentAnimationName() const;
 
 private:
+
+    bool m_PauseOnStart;
 
     // Animation events
     void OnAnimationFrameFinished(AnimationFrame* frame);

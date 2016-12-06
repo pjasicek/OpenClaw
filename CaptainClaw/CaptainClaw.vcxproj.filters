@@ -222,7 +222,7 @@
     <ClCompile Include="Engine\Actor\Components\LootComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actor\Components\AIComponents\DestroyableContainerAIComponent.cpp">
+    <ClCompile Include="Engine\Actor\Components\DestroyableComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -461,7 +461,7 @@
     <ClInclude Include="Engine\Actor\Components\LootComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actor\Components\AIComponents\DestroyableContainerAIComponent.h">
+    <ClInclude Include="Engine\Actor\Components\DestroyableComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

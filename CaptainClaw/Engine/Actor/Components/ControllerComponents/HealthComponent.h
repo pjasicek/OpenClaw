@@ -31,13 +31,15 @@ public:
     virtual void VPostInit() override;
     virtual TiXmlElement* VGenerateXml() override;
 
-    void AddHealth(uint32 health);
-    void SetCurrentHealth(uint32 health);
+    void AddHealth(int32 health);
+    void SetCurrentHealth(int32 health);
     int32 GetCurrentHealth() { return m_CurrentHealth; }
     bool HasMaxHealth() { return m_CurrentHealth >= m_MaxHealth; }
 
 private:
-    void BroadcastHealthChanged(uint32 oldHealth, uint32 newHealth, bool isInitial = false);
+    void BroadcastHealthChanged(int32 oldHealth, int32 newHealth, bool isInitial = false);
+
+    bool m_IsController;
 
     int32 m_MaxHealth;
     int32 m_CurrentHealth;
