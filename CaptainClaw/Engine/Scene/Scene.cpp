@@ -89,6 +89,11 @@ bool Scene::RemoveChild(uint32 actorId)
     return m_pRoot->VRemoveChild(actorId);
 }
 
+void Scene::SortSceneNodesByZCoord()
+{
+    m_pRoot->SortChildrenByZCoord();
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 // Event delegates
 //---------------------------------------------------------------------------------------------------------------------

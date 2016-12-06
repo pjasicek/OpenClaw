@@ -25,6 +25,8 @@ public:
 
     SDL_Renderer* GetRenderer() { return m_pRenderer; }
 
+    void SortSceneNodesByZCoord();
+
     // Event delegates
     void NewRenderComponentDelegate(IEventDataPtr pEventData);
     void ModifiedRenderComponentDelegate(IEventDataPtr pEventData);

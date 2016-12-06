@@ -11,13 +11,14 @@ SceneNodeProperties::SceneNodeProperties()
 {
     m_ActorId = INVALID_ACTOR_ID;
     m_RenderPass = RenderPass_0;
+    m_ZCoord = 0;
 }
 
 //=================================================================================================
 // SceneNode Implementation
 //
 
-SceneNode::SceneNode(uint32 actorId, BaseRenderComponent* renderComponent, RenderPass renderPass, Point position)
+SceneNode::SceneNode(uint32 actorId, BaseRenderComponent* renderComponent, RenderPass renderPass, Point position, int32 zCoord)
 {
     m_pParent = NULL;
     m_Properties.m_ActorId = actorId;
@@ -25,6 +26,7 @@ SceneNode::SceneNode(uint32 actorId, BaseRenderComponent* renderComponent, Rende
     m_Properties.m_Name = ""; // TODO
     m_Properties.m_Position = position;
     m_Properties.m_RenderPass = renderPass;
+    m_Properties.m_ZCoord = zCoord;
     m_pRenderComponent = renderComponent;
 
     /*if (m_Properties.m_Width == 0 || m_Properties.m_Height == 0)
@@ -132,6 +134,20 @@ bool SceneNode::VRemoveChild(uint32 actorId)
     }
 
     return false;
+}
+
+void SceneNode::SortChildrenByZCoord()
+{
+    for (auto pChildNode : m_ChildrenList)
+    {
+        pChildNode->SortChildrenByZCoord();
+    }
+
+    std::sort(m_ChildrenList.begin(), m_ChildrenList.end(), 
+        [](const shared_ptr<ISceneNode>& lhs, const shared_ptr<ISceneNode>& rhs)
+    {
+        return lhs->GetZCoord() < rhs->GetZCoord();
+    });
 }
 
 //=================================================================================================

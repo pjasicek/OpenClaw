@@ -76,7 +76,6 @@ void PhysicsDebugDrawer::DrawTransform(const b2Transform& xf)
 
 void PhysicsDebugDrawer::DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)
 {
-    LOG_WARNING(".");
     SDL_SetRenderDrawColor(m_pRenderer, color.r * 255, color.g, color.b * 255, color.a * 255);
 
     SDL_RenderDrawPoint(m_pRenderer, p.x, p.y);

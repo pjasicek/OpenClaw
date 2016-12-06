@@ -120,7 +120,7 @@ int32 BaseGameApp::Run()
             // Update game
             {
                 //PROFILE_CPU("ONLY GAME UPDATE");
-                IEventMgr::Get()->VUpdate(15); // Allow event queue to process for up to 15 ms
+                IEventMgr::Get()->VUpdate(20); // Allow event queue to process for up to 20 ms
                 m_pGame->VOnUpdate(elapsedTime);
             }
 
@@ -304,6 +304,15 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
         m_GameOptions.useVerticalSync = true;
     }
 
+    if (TiXmlElement* pElem = displayElem->FirstChildElement("IsFullscreen"))
+    {
+        m_GameOptions.isFullscreen = std::string(pElem->GetText()) == "true";
+    }
+    if (TiXmlElement* pElem = displayElem->FirstChildElement("IsFullscreenDesktop"))
+    {
+        m_GameOptions.isFullscreenDesktop = std::string(pElem->GetText()) == "true";
+    }
+
     //-------------------------------------------------------------------------
     // Audio
     //-------------------------------------------------------------------------
@@ -438,7 +447,7 @@ void BaseGameApp::SaveGameOptions(const char* outConfigFile)
 //---------------------------------------------------------------------------------------------------------------------
 void BaseGameApp::RegisterEngineEvents()
 {
-    REGISTER_EVENT(EventData_Environment_Loaded);
+    /*REGISTER_EVENT(EventData_Environment_Loaded);
     REGISTER_EVENT(EventData_New_Actor);
     REGISTER_EVENT(EventData_Move_Actor);
     REGISTER_EVENT(EventData_Destroy_Actor);
@@ -449,6 +458,15 @@ void BaseGameApp::RegisterEngineEvents()
     REGISTER_EVENT(EventData_Start_Climb);
     REGISTER_EVENT(EventData_Actor_Fire);
     REGISTER_EVENT(EventData_Actor_Attack);
+    REGISTER_EVENT(EventData_New_HUD_Element);
+    REGISTER_EVENT(EventData_New_Life);
+    REGISTER_EVENT(EventData_Updated_Score);
+    REGISTER_EVENT(EventData_Updated_Lives);
+    REGISTER_EVENT(EventData_Updated_Health);
+    REGISTER_EVENT(EventData_Updated_Ammo);
+    REGISTER_EVENT(EventData_Updated_Ammo_Type);
+    REGISTER_EVENT(EventData_Request_Change_Ammo_Type);
+    REGISTER_EVENT(EventData_Teleport_Actor);*/
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -473,9 +491,20 @@ bool BaseGameApp::InitializeDisplay(GameOptions& gameOptions)
         LOG_ERROR("Failed to create main window");
         return false;
     }
+    
+    if (gameOptions.isFullscreen)
+    {
+        SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN);
+        SDL_GetWindowSize(m_pWindow, &m_GameOptions.windowWidth, &m_GameOptions.windowHeight);
+    }
+    else if (gameOptions.isFullscreenDesktop)
+    {
+        SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        SDL_GetWindowSize(m_pWindow, &m_GameOptions.windowWidth, &m_GameOptions.windowHeight);
+    }
 
     m_WindowSize.Set(gameOptions.windowWidth, gameOptions.windowHeight);
-    SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN);
+
     uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
     if (gameOptions.useVerticalSync)
     {
@@ -612,6 +641,8 @@ TiXmlElement* CreateDefaultDisplayConfig()
     XML_ADD_2_PARAM_ELEMENT("Size", "width", ToStr(1280).c_str(), "height", ToStr(768).c_str(), display);
     XML_ADD_TEXT_ELEMENT("Scale", "1", display);
     XML_ADD_TEXT_ELEMENT("UseVerticalSync", "true", display);
+    XML_ADD_TEXT_ELEMENT("IsFullscreen", "false", display);
+    XML_ADD_TEXT_ELEMENT("IsFullscreenDesktop", "false", display);
 
     return display;
 }

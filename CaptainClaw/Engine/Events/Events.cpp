@@ -25,7 +25,16 @@ const EventType EventData_Start_Climb::sk_EventType(0x8bab18ee);
 const EventType EventData_Actor_Fire::sk_EventType(0x123418ee);
 const EventType EventData_Actor_Attack::sk_EventType(0x567818ee);
 const EventType EventData_New_HUD_Element::sk_EventType(0x5678abce);
-const EventType EventData_Update_Score::sk_EventType(0x5a1f78ce);
+const EventType EventData_New_Life::sk_EventType(0x4b83b7fb);
+const EventType EventData_Updated_Score::sk_EventType(0x5a1f78ce);
+const EventType EventData_Updated_Lives::sk_EventType(0xf671afe8);
+const EventType EventData_Updated_Health::sk_EventType(0xe7eb8dba);
+const EventType EventData_Updated_Ammo::sk_EventType(0xa2ba516);
+const EventType EventData_Updated_Ammo_Type::sk_EventType(0x60169d12);
+const EventType EventData_Request_Change_Ammo_Type::sk_EventType(0xe4c6edd7);
+const EventType EventData_Teleport_Actor::sk_EventType(0x1f3bc45);
+const EventType EventData_Updated_Powerup_Time::sk_EventType(0xadb6bd74);
+const EventType EventData_Updated_Powerup_Status::sk_EventType(0xe0b1d14d);
 
 /*bool EventData_PlaySound::VBuildEventFromScript(void)
 {

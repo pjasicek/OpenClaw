@@ -6,6 +6,7 @@
 #include "../Actor/Components/KinematicComponent.h"
 #include "../Actor/Components/AIComponents/CrumblingPegAIComponent.h"
 #include "../Actor/Components/TriggerComponents/TriggerComponent.h"
+#include "../Actor/Components/AIComponents/ProjectileAIComponent.h"
 
 int numFootContacts = 0;
 
@@ -116,6 +117,45 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                 if (pTriggerComponent)
                 {
                     pTriggerComponent->OnActorEntered(pActor);
+                }
+            }
+            // Trigger landed on death tile
+            else if (pFixtureB->GetBody()->GetType() == b2_staticBody && 
+                 pFixtureB->GetUserData() == (void*)FixtureType_Death)
+            {
+
+            }
+        }
+    }
+    // Projectile contact
+    {
+        if (pFixtureB->GetUserData() == (void*)FixtureType_Projectile)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_Projectile)
+        {
+            // Collided with some actor
+            if (pFixtureB->GetBody()->GetUserData() != (void*)NULL)
+            {
+                Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                assert(pActor);
+
+                shared_ptr<ProjectileAIComponent> pProjectileComponent = GetProjectileAIComponentFromB2Body(pFixtureA->GetBody());
+                if (pProjectileComponent)
+                {
+                    pProjectileComponent->OnCollidedWithActor(pActor);
+                }
+            }
+            // Projectile collided with solid tile
+            else if (pFixtureB->GetBody()->GetType() == b2_staticBody &&
+                pFixtureB->GetUserData() == (void*)FixtureType_Solid)
+            {
+                shared_ptr<ProjectileAIComponent> pProjectileComponent = GetProjectileAIComponentFromB2Body(pFixtureA->GetBody());
+                if (pProjectileComponent)
+                {
+                    pProjectileComponent->OnCollidedWithSolidTile();
                 }
             }
         }

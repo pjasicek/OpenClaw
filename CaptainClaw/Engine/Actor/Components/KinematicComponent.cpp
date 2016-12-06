@@ -186,7 +186,7 @@ void KinematicComponent::RemoveCarriedBody(b2Body* pBody)
         {
             if (m_IsStartElevator)
             {
-                LOG("REMOVING");
+                //LOG("REMOVING");
                 // TODO: Fix bug with start elevator when it moves in the same direction
                 //m_Speed = m_CurrentSpeed;
                 m_CurrentSpeed = Point(0, 0);

@@ -5,6 +5,10 @@
 #include "AnimationComponent.h"
 #include "PhysicsComponent.h"
 #include "RenderComponent.h"
+#include "PositionComponent.h"
+#include "../ActorTemplates.h"
+#include "ControllerComponents/AmmoComponent.h"
+#include "ControllerComponents/PowerupComponent.h"
 
 const char* ControllableComponent::g_Name = "ControllableComponent";
 const char* ClawControllableComponent::g_Name = "ClawControllableComponent";
@@ -61,6 +65,7 @@ ClawControllableComponent::ClawControllableComponent()
     m_pClawAnimationComponent = NULL;
     m_pRenderComponent = NULL;
     m_State = ClawState_None;
+    m_Direction = Direction_Right;
 }
 
 ClawControllableComponent::~ClawControllableComponent()
@@ -79,8 +84,14 @@ void ClawControllableComponent::VPostInit()
 
     m_pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name)).get();
     m_pClawAnimationComponent = MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
+    m_pPositionComponent = MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+    m_pAmmoComponent = MakeStrongPtr(_owner->GetComponent<AmmoComponent>(AmmoComponent::g_Name)).get();
+    m_pPowerupComponent = MakeStrongPtr(_owner->GetComponent<PowerupComponent>(PowerupComponent::g_Name)).get();
     assert(m_pClawAnimationComponent);
     assert(m_pRenderComponent);
+    assert(m_pPositionComponent);
+    assert(m_pAmmoComponent);
+    assert(m_pPowerupComponent);
     m_pClawAnimationComponent->AddObserver(this);
 
     m_pPhysicsComponent = MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
@@ -123,6 +134,7 @@ void ClawControllableComponent::VOnStartJumping()
 void ClawControllableComponent::VOnDirectionChange(Direction direction)
 {
     m_pRenderComponent->SetMirrored(direction == Direction_Left);
+    m_Direction = direction;
 }
 
 void ClawControllableComponent::VOnStopMoving()
@@ -199,15 +211,38 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
         return;
     }
 
+    AmmoType activeAmmoType = m_pAmmoComponent->GetActiveAmmoType();
     if (m_State == ClawState_Falling ||
         m_State == ClawState_Jumping)
     {
-        m_pClawAnimationComponent->SetAnimation("jumppistol");
+        if (activeAmmoType == AmmoType_Pistol)
+        {
+            m_pClawAnimationComponent->SetAnimation("jumppistol");
+        }
+        else if (activeAmmoType == AmmoType_Magic)
+        {
+            m_pClawAnimationComponent->SetAnimation("jumpmagic");
+        }
+        else if (activeAmmoType == AmmoType_Dynamite)
+        {
+            m_pClawAnimationComponent->SetAnimation("jumpdynamite");
+        }
         m_State = ClawState_JumpShooting;
     }
     else
     {
-        m_pClawAnimationComponent->SetAnimation("pistol");
+        if (activeAmmoType == AmmoType_Pistol)
+        {
+            m_pClawAnimationComponent->SetAnimation("pistol");
+        }
+        else if (activeAmmoType == AmmoType_Magic)
+        {
+            m_pClawAnimationComponent->SetAnimation("magic");
+        }
+        else if (activeAmmoType == AmmoType_Dynamite)
+        {
+            m_pClawAnimationComponent->SetAnimation("postdynamite");
+        }
         m_State = ClawState_Shooting;
     }
 }
@@ -257,7 +292,24 @@ void ClawControllableComponent::SetCurrentPhysicsState()
 void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
 {
     std::string animName = pAnimation->GetName();
-    if ((animName.find("pistol") != std::string::npos)
+
+    // Shooting, only magic and pistol supported at the moment
+    if (((animName.find("pistol") != std::string::npos) && pNewFrame->hasEvent) ||
+        ((animName.find("magic") != std::string::npos) && pNewFrame->hasEvent) ||
+        ((animName.find("dynamite") != std::string::npos) && pNewFrame->hasEvent))
+    {
+        if (m_pAmmoComponent->CanFire())
+        {
+            AmmoType projectileType = m_pAmmoComponent->GetActiveAmmoType();
+            int32 offsetX = 50;
+            if (m_Direction == Direction_Left) { offsetX *= -1; }
+            ActorTemplates::CreateClawProjectile(projectileType, m_Direction, Point(m_pPositionComponent->GetX() + offsetX, m_pPositionComponent->GetY() - 20));
+        }
+    }
+
+    if (((animName.find("pistol") != std::string::npos) || 
+        (animName.find("magic") != std::string::npos) || 
+        (animName.find("dynamite") != std::string::npos))
         && pAnimation->IsAtLastAnimFrame())
     {
         SetCurrentPhysicsState();

@@ -41,6 +41,9 @@ public:
     virtual bool VAddChild(shared_ptr<ISceneNode> kid) = 0;
     virtual bool VRemoveChild(uint32 actorId) = 0;
     virtual bool VOnLostDevice(Scene* pScene) = 0;
+
+    virtual void SortChildrenByZCoord() = 0;
+    virtual int32 GetZCoord() const = 0;
 };
 
 class SceneNodeProperties
@@ -53,6 +56,7 @@ public:
     const char* GetName() const { return m_Name.c_str(); }
     const Point& GetPosition() const { return m_Position; }
     const int32 GetOrientation() const { return m_Orientation; }
+    const int32 GetZCoord() const { return m_ZCoord; }
 
     RenderPass GetRenderPass() const { return m_RenderPass; }
 
@@ -62,6 +66,7 @@ protected:
     Point           m_Position;
     RenderPass      m_RenderPass;
     int32           m_Orientation;
+    int32           m_ZCoord;
 };
 
 typedef std::vector <shared_ptr<ISceneNode>> SceneNodeList;
@@ -69,7 +74,7 @@ typedef std::vector <shared_ptr<ISceneNode>> SceneNodeList;
 class SceneNode : public ISceneNode
 {
 public:
-    SceneNode(uint32 actorId, BaseRenderComponent* renderComponent, RenderPass renderPass, Point position);
+    SceneNode(uint32 actorId, BaseRenderComponent* renderComponent, RenderPass renderPass, Point position, int32 zCoord = 0);
     virtual ~SceneNode();
 
     virtual const SceneNodeProperties* const VGetProperties() const { return &m_Properties; }
@@ -91,6 +96,10 @@ public:
     Point GetPosition() { return m_Properties.m_Position; }
 
     int32 GetOrientation() const { return m_Properties.m_Orientation; }
+
+    virtual int32 GetZCoord() const { return m_Properties.m_ZCoord; }
+
+    virtual void SortChildrenByZCoord();
 
 protected:
     SceneNodeList           m_ChildrenList;

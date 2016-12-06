@@ -3,6 +3,8 @@
 #include "../../Physics/ClawPhysics.h"
 #include "../../GameApp/BaseGameLogic.h"
 #include "../../GameApp/BaseGameApp.h"
+#include "RenderComponent.h"
+#include "../../Graphics2D/Image.h"
 
 #include "PositionComponent.h"
 #include "ControllableComponent.h"
@@ -37,7 +39,7 @@ PhysicsComponent::PhysicsComponent() :
 
 PhysicsComponent::~PhysicsComponent()
 {
-    
+    m_pPhysics->VRemoveActor(_owner->GetGUID());
 }
 
 bool PhysicsComponent::VInit(TiXmlElement* data)
@@ -69,22 +71,97 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
     }
     if (TiXmlElement* pElem = data->FirstChildElement("GravityScale"))
     {
+        m_ActorBodyDef.gravityScale = std::stof(pElem->GetText());
+
+        // Backwards compatibility, can be removed in future
         m_GravityScale = std::stof(pElem->GetText());
     }
-    if (TiXmlElement* pElem = data->FirstChildElement("Friction"))
-    {
-        m_Friction = std::stof(pElem->GetText());
-    }
-    if (TiXmlElement* pElem = data->FirstChildElement("Density"))
-    {
-        m_Density = std::stof(pElem->GetText());
-    }
+    
 
     TiXmlElement* pBodySizeElem = data->FirstChildElement("CollisionSize");
     if (pBodySizeElem)
     {
+        pBodySizeElem->Attribute("width", &m_ActorBodyDef.size.x);
+        pBodySizeElem->Attribute("height", &m_ActorBodyDef.size.y);
+
+        // Backwards compatibility, can be removed in future
         pBodySizeElem->Attribute("width", &m_BodySize.x);
         pBodySizeElem->Attribute("height", &m_BodySize.y);
+    }
+
+    // ActorBodyDef addition
+
+    // Allowed types are: "Static", "Kinematic" and "Dynamic"
+    if (TiXmlElement* pElem = data->FirstChildElement("BodyType"))
+    {
+        std::string bodyTypeStr = pElem->GetText();
+        if (bodyTypeStr == "Static") { m_ActorBodyDef.bodyType = b2_staticBody; }
+        else if (bodyTypeStr == "Kinematic") { m_ActorBodyDef.bodyType = b2_kinematicBody; }
+        else if (bodyTypeStr == "Dynamic") { m_ActorBodyDef.bodyType = b2_dynamicBody; }
+        else
+        {
+            assert(false && "Unknown body type");
+        }
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("HasFootSensor"))
+    {
+        m_ActorBodyDef.addFootSensor = std::string(pElem->GetText()) == "true";
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("HasCapsuleShape"))
+    {
+        m_ActorBodyDef.makeCapsule = std::string(pElem->GetText()) == "true";
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("HasBulletBehaviour"))
+    {
+        m_ActorBodyDef.makeBullet = std::string(pElem->GetText()) == "true";
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("HasSensorBehaviour"))
+    {
+        m_ActorBodyDef.makeSensor = std::string(pElem->GetText()) == "true";
+    }
+    // Allowed types are: "Solid", "Ground", "Climb", "Death", "Trigger", "Projectile"
+    if (TiXmlElement* pElem = data->FirstChildElement("FixtureType"))
+    {
+        std::string fixtureTypeStr = pElem->GetText();
+        if (fixtureTypeStr == "Solid") { m_ActorBodyDef.fixtureType = FixtureType_Solid; }
+        else if (fixtureTypeStr == "Ground") { m_ActorBodyDef.fixtureType = FixtureType_Ground; }
+        else if (fixtureTypeStr == "Climb") { m_ActorBodyDef.fixtureType = FixtureType_Climb; }
+        else if (fixtureTypeStr == "Death") { m_ActorBodyDef.fixtureType = FixtureType_Death; }
+        else if (fixtureTypeStr == "Trigger") { m_ActorBodyDef.fixtureType = FixtureType_Trigger; }
+        else if (fixtureTypeStr == "Projectile") { m_ActorBodyDef.fixtureType = FixtureType_Projectile; }
+        else
+        {
+            assert(false && "Unknown body type");
+        }
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("HasInitialSpeed"))
+    {
+        m_ActorBodyDef.setInitialSpeed = std::string(pElem->GetText()) == "true";
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("InitialSpeed"))
+    {
+        pElem->Attribute("x", &m_ActorBodyDef.initialSpeed.x);
+        pElem->Attribute("y", &m_ActorBodyDef.initialSpeed.y);
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("CollisionFlag"))
+    {
+        m_ActorBodyDef.collisionFlag = CollisionFlag(std::stoi(pElem->GetText()));
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("CollisionMask"))
+    {
+        m_ActorBodyDef.collisionMask = std::stoi(pElem->GetText());
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("Friction"))
+    {
+        m_ActorBodyDef.friction = std::stof(pElem->GetText());
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("Density"))
+    {
+        m_ActorBodyDef.density = std::stof(pElem->GetText());
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("PrefabType"))
+    {
+        m_ActorBodyDef.prefabType = pElem->GetText();
     }
 
     return true;
@@ -92,7 +169,33 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
 
 void PhysicsComponent::VPostInit()
 {
-    m_pPhysics->VAddDynamicActor(_owner);
+    if (m_ActorBodyDef.collisionFlag != CollisionFlag_None)
+    {
+        if (fabs(m_ActorBodyDef.size.x) < DBL_EPSILON || fabs(m_ActorBodyDef.size.y) < DBL_EPSILON)
+        {
+            shared_ptr<ActorRenderComponent> pRenderComponent =
+                MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+            assert(pRenderComponent);
+
+            shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
+
+            m_ActorBodyDef.size.x = pImage->GetWidth();
+            m_ActorBodyDef.size.y = pImage->GetHeight();
+        }
+
+        shared_ptr<PositionComponent> pPositionComponent =
+            MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        assert(pPositionComponent);
+        m_ActorBodyDef.position = pPositionComponent->GetPosition();
+
+        m_ActorBodyDef.pActor = _owner;
+
+        m_pPhysics->VAddActorBody(&m_ActorBodyDef);
+    }
+    else
+    {
+        m_pPhysics->VAddDynamicActor(_owner);
+    }
 }
 
 TiXmlElement* PhysicsComponent::VGenerateXml()

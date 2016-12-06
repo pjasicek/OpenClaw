@@ -58,7 +58,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -76,17 +76,20 @@
   <ItemGroup>
     <ClCompile Include="ActorController.cpp" />
     <ClCompile Include="ClawEvents.cpp" />
+    <ClCompile Include="Engine\Actor\ActorTemplates.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\AIComponents\DestroyableContainerAIComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\AIComponents\ProjectileAIComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\ControllerComponents\AmmoComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\ControllerComponents\HealthComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\ControllerComponents\LifeComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\ControllerComponents\PowerupComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\ControllerComponents\ScoreComponent.cpp" />
-    <ClCompile Include="Engine\Actor\Components\PickupComponents\AmmoPickupComponent.cpp" />
-    <ClCompile Include="Engine\Actor\Components\PickupComponents\LivesPickupComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\LootComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PickupComponents\PickupComponent.cpp" />
-    <ClCompile Include="Engine\Actor\Components\PickupComponents\PowerupPickupComponent.cpp" />
-    <ClCompile Include="Engine\Actor\Components\PickupComponents\TreasurePickupComponent.cpp" />
-    <ClCompile Include="Engine\Actor\Components\HealthComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\KinematicComponent.cpp" />
-    <ClCompile Include="Engine\Actor\Components\PickupComponents\WarpPickupComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PowerupSparkleAIComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
@@ -98,6 +101,7 @@
     <ClCompile Include="Engine\Physics\CollisionBody.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsContactListener.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsDebugDrawer.cpp" />
+    <ClCompile Include="Engine\Process\PowerupProcess.cpp" />
     <ClCompile Include="Engine\Scene\HUDSceneNode.cpp" />
     <ClCompile Include="Engine\UserInterface\Console.cpp" />
     <ClCompile Include="Engine\Actor\Actor.cpp" />
@@ -144,17 +148,20 @@
   <ItemGroup>
     <ClInclude Include="ActorController.h" />
     <ClInclude Include="ClawEvents.h" />
+    <ClInclude Include="Engine\Actor\ActorTemplates.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\AIComponents\DestroyableContainerAIComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\AIComponents\ProjectileAIComponent.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\ControllerComponents\AmmoComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\ControllerComponents\HealthComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\ControllerComponents\LifeComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\ControllerComponents\PowerupComponent.h" />
     <ClInclude Include="Engine\Actor\Components\ControllerComponents\ScoreComponent.h" />
-    <ClInclude Include="Engine\Actor\Components\PickupComponents\AmmoPickupComponent.h" />
-    <ClInclude Include="Engine\Actor\Components\PickupComponents\LivesPickupComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\LootComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PickupComponents\PickupComponent.h" />
-    <ClInclude Include="Engine\Actor\Components\PickupComponents\PowerupPickupComponent.h" />
-    <ClInclude Include="Engine\Actor\Components\PickupComponents\TreasurePickupComponent.h" />
-    <ClInclude Include="Engine\Actor\Components\HealthComponent.h" />
     <ClInclude Include="Engine\Actor\Components\KinematicComponent.h" />
-    <ClInclude Include="Engine\Actor\Components\PickupComponents\WarpPickupComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PowerupSparkleAIComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />
@@ -165,6 +172,7 @@
     <ClInclude Include="Engine\Physics\CollisionBody.h" />
     <ClInclude Include="Engine\Physics\PhysicsContactListener.h" />
     <ClInclude Include="Engine\Physics\PhysicsDebugDrawer.h" />
+    <ClInclude Include="Engine\Process\PowerupProcess.h" />
     <ClInclude Include="Engine\Scene\HUDSceneNode.h" />
     <ClInclude Include="Engine\UserInterface\Console.h" />
     <ClInclude Include="Engine\Actor\Actor.h" />

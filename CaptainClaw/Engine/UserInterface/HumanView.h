@@ -49,7 +49,13 @@ protected:
 
     // Delegates
     void NewHUDElementDelegate(IEventDataPtr pEventData);
-    void UpdateScoreDelegate(IEventDataPtr pEventData);
+    void ScoreUpdatedDelegate(IEventDataPtr pEventData);
+    void LivesUpdatedDelegate(IEventDataPtr pEventData);
+    void HealthUpdatedDelegate(IEventDataPtr pEventData);
+    void AmmoUpdatedDelegate(IEventDataPtr pEventData);
+    void AmmoTypeUpdatedDelegate(IEventDataPtr pEventData);
+    void PowerupUpdatedTimeDelegate(IEventDataPtr pEventData);
+    void PowerupUpdatedStatusDelegate(IEventDataPtr pEventData);
 
     uint32 m_ViewId;
     uint32 m_ActorId;

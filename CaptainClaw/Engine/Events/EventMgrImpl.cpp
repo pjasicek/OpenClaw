@@ -178,7 +178,7 @@ bool EventMgr::VAbortEvent(const EventType& inType, bool allOfType)
 //---------------------------------------------------------------------------------------------------------------------
 bool EventMgr::VUpdate(unsigned long maxMillis)
 {
-    unsigned long currMs = GetTickCount();
+    unsigned long currMs = SDL_GetTicks();
     unsigned long maxMs = ((maxMillis == IEventMgr::kINFINITE) ? (IEventMgr::kINFINITE) : (currMs + maxMillis));
 
     // This section added to handle events from other threads.  Check out Chapter 20.
@@ -231,7 +231,7 @@ bool EventMgr::VUpdate(unsigned long maxMillis)
         }
 
         // check to see if time ran out
-        currMs = GetTickCount();
+        currMs = SDL_GetTicks();
         if (maxMillis != IEventMgr::kINFINITE && currMs >= maxMs)
         {
             LOG_TAG("EventLoop", "Aborting event processing; time ran out");

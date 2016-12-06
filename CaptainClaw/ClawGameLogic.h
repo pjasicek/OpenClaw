@@ -20,6 +20,9 @@ public:
     void ControlledActorStartClimbDelegate(IEventDataPtr pEventData);
     void ActorFireDelegate(IEventDataPtr pEventData);
     void ActorAttackDelegate(IEventDataPtr pEventData);
+    void NewLifeDelegate(IEventDataPtr pEventData);
+    void TeleportActorDelegate(IEventDataPtr pEventData);
+    void RequestChangeAmmoTypeDelegate(IEventDataPtr pEventData);
 
 protected:
     virtual bool VLoadGameDelegate(TiXmlElement* pLevelData);
