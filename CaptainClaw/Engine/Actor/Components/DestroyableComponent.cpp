@@ -75,7 +75,6 @@ TiXmlElement* DestroyableComponent::VGenerateXml()
 
 void DestroyableComponent::VOnHealthBelowZero()
 {
-    LOG("HERE");
     if (!m_PossibleDestructionSounds.empty())
     {
         srand((int)this + (int)&m_PossibleDestructionSounds);

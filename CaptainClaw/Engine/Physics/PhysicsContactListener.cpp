@@ -269,3 +269,13 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
         }
     }
 }
+
+void PhysicsContactListener::PreSolve(b2Contact* pContact, const b2Manifold* pOldManifold)
+{
+
+}
+
+void PhysicsContactListener::PostSolve(b2Contact* pContact, const b2ContactImpulse* pImpulse)
+{
+
+}

@@ -549,6 +549,7 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
     else if (logic.find("StackedCrates") != std::string::npos)
     {
         //pActorElem->LinkEndChild(StackedCratesToXml(wwdObject));
+        
     }
     else if (logic.find("Crate") != std::string::npos)
     {
@@ -764,7 +765,7 @@ TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
     pClawActor->SetAttribute("resource", "created");
 
     //pClawActor->LinkEndChild(CreatePositionComponent(pWapWwd->properties.startX, pWapWwd->properties.startY));
-    pClawActor->LinkEndChild(CreatePositionComponent(4850, 4100));
+    pClawActor->LinkEndChild(CreatePositionComponent(10700, 2600));
     pClawActor->LinkEndChild(CreateCollisionComponent(40, 110));
     pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, 1500, 40, 110, 4.0, 0.0, 0.5));
     pClawActor->LinkEndChild(CreateControllableComponent(true));
@@ -1028,7 +1029,45 @@ void WwdToXml(WapWwd* wapWwd)
         std::string imageSet = actorProperties.imageSet;
         std::string sound = actorProperties.sound;
 
-        root->LinkEndChild(WwdObjectToXml(&actorProperties, imagesRootPath));
+        // Here should be any objects that cant for some reason by created in that function
+        if (logic.find("StackedCrates") != std::string::npos)
+        {
+            WwdObject* wwdObject = &actorProperties;
+            if (wwdObject->height == 0)
+            {
+                wwdObject->height = 1;
+            }
+            assert(wwdObject->height > 0 && wwdObject->height <= 8 && "Invalid stacked crate height. Should be between 1 and 8");
+
+            for (int crateIdx = 0; crateIdx < wwdObject->height; crateIdx++)
+            {
+                std::vector<PickupType> loot;
+                // Is there a better way ?
+                if (crateIdx == 0) { loot.push_back(PickupType(wwdObject->userRect1.left)); }
+                else if (crateIdx == 1) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
+                else if (crateIdx == 2) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
+                else if (crateIdx == 3) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
+                else if (crateIdx == 4) { loot.push_back(PickupType(wwdObject->userRect1.left)); }
+                else if (crateIdx == 5) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
+                else if (crateIdx == 6) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
+                else if (crateIdx == 7) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
+
+                LOG("Creating crate with height idx: " + ToStr(crateIdx));
+
+                int positionOffset = -(crateIdx * 60);
+
+                root->LinkEndChild(ActorTemplates::CreateXmlData_CrateActor(
+                    "/LEVEL1/IMAGES/CRATES/*",
+                    Point(wwdObject->x, wwdObject->y + positionOffset),
+                    loot,
+                    5, wwdObject->z + crateIdx));
+            }
+        }
+        else
+        {
+            root->LinkEndChild(WwdObjectToXml(&actorProperties, imagesRootPath));
+        }
+
         continue;
 
         //=============================================================================================================

@@ -23,7 +23,6 @@ bool HealthComponent::VInit(TiXmlElement* pData)
     {
         m_MaxHealth = std::stoi(pElem->GetText());
     }
-    LOG(ToStr(m_MaxHealth));
 
     return true;
 }
@@ -76,7 +75,6 @@ void HealthComponent::SetCurrentHealth(int32 health)
 
 void HealthComponent::BroadcastHealthChanged(int32 oldHealth, int32 newHealth, bool isInitial)
 {
-    LOG("Old health: " + ToStr(oldHealth) + ", newHealth: " + ToStr(newHealth));
     NotifyHealthChanged(oldHealth, newHealth);
     if (newHealth <= 0)
     {
@@ -107,7 +105,6 @@ void HealthSubject::NotifyHealthBelowZero()
 {
     for (HealthObserver* pObserver : m_Observers)
     {
-        LOG("Some actor should die!");
         pObserver->VOnHealthBelowZero();
     }
 }

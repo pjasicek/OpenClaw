@@ -74,6 +74,7 @@ private:
     b2Body* m_pTiles;
 
     std::vector<uint32> m_ActorsToBeDestroyed;
+    std::vector<const ActorBodyDef*> m_ActorBodiesToBeCreated;
     
     ActorIDToBox2DBodyMap m_ActorToBodyMap;
     Box2DBodyToActorIDMap m_BodyToActorMap;

@@ -1,6 +1,7 @@
 #include "LootComponent.h"
 #include "../ActorTemplates.h"
 #include "PositionComponent.h"
+#include "PhysicsComponent.h"
 
 const char* LootComponent::g_Name = "LootComponent";
 
@@ -50,7 +51,7 @@ void LootComponent::VOnHealthBelowZero()
             MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
         assert(pPositionComponent);
 
-        //ActorTemplates::CreateActorPickup(item, pPositionComponent->GetPosition(), false);
+        StrongActorPtr pLoot = ActorTemplates::CreateActorPickup(item, pPositionComponent->GetPosition(), false);
     }
 
     m_Loot.clear();
