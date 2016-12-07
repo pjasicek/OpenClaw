@@ -152,6 +152,7 @@ struct ActorBodyDef
         size = Point(0, 0);
         gravityScale = 1.0f;
         setInitialSpeed = false;
+        setInitialImpulse = false;
         initialSpeed = Point(0, 0);
         collisionFlag = CollisionFlag_None;
         collisionMask = 0x0;
@@ -159,6 +160,7 @@ struct ActorBodyDef
 
         friction = 0.0f;
         density = 0.0f;
+        restitution = 0.0f;
     }
 
     void MakeAsStaticTriggerObject(WeakActorPtr actor, Point pos, Point collisionSize)
@@ -198,11 +200,13 @@ struct ActorBodyDef
     Point size;
     float gravityScale;
     bool setInitialSpeed;
+    bool setInitialImpulse;
     Point initialSpeed;
     CollisionFlag collisionFlag;
     uint32 collisionMask;
     float friction;
     float density;
+    float restitution;
     std::string prefabType;
 };
 

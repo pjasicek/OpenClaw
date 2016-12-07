@@ -50,7 +50,8 @@ enum CollisionFlag
     CollisionFlag_Death         = 0x400,
     CollisionFlag_Ladder        = 0x800,
     CollisionFlag_Barel         = 0x1000,
-    CollisionFlag_Trigger       = 0x2000
+    CollisionFlag_Trigger       = 0x2000,
+    CollisionFlag_Pickup        = 0x4000,
 };
 
 enum FixtureType
@@ -66,7 +67,8 @@ enum FixtureType
     FixtureType_AmbientTrigger,
     FixtureType_Trigger,
     FixtureType_Projectile,
-    FixtureType_Crate
+    FixtureType_Crate,
+    FixtureType_Pickup
 };
 
 enum AmmoType

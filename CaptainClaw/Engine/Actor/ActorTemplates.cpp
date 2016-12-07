@@ -4,6 +4,8 @@
 #include "../Events/EventMgr.h"
 #include "../Events/Events.h"
 
+#include <time.h>
+
 namespace ActorTemplates
 {
 
@@ -288,11 +290,13 @@ namespace ActorTemplates
         Point size,
         float gravityScale,
         bool hasInitialSpeed,
+        bool hasInitialImpulse,
         Point initialSpeed,
         /*CollisionFlag*/ uint32 collisionFlag,
         uint32 collisionMask,
-        float friction,
         float density,
+        float friction,
+        float restitution,
         std::string prefabType = "")
     {
         TiXmlElement* pPhysicsComponent = new TiXmlElement("PhysicsComponent");
@@ -302,13 +306,16 @@ namespace ActorTemplates
         XML_ADD_TEXT_ELEMENT("HasBulletBehaviour", ToStr(hasBulletBehaviour).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("HasSensorBehaviour", ToStr(hasSensorBehaviour).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("FixtureType", fixtureTypeStr.c_str(), pPhysicsComponent);
+        XML_ADD_2_PARAM_ELEMENT("CollisionSize", "width", size.x, "height", size.y, pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("GravityScale", ToStr(gravityScale).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("HasInitialSpeed", ToStr(hasInitialSpeed).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("HasInitialImpulse", ToStr(hasInitialImpulse).c_str(), pPhysicsComponent);
         XML_ADD_2_PARAM_ELEMENT("InitialSpeed", "x", initialSpeed.x, "y", initialSpeed.y, pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("CollisionFlag", ToStr(collisionFlag).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("CollisionMask", ToStr(collisionMask).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("Friction", ToStr(friction).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("Density", ToStr(density).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("Restitution", ToStr(restitution).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("PrefabType", prefabType.c_str(), pPhysicsComponent);
 
         return pPhysicsComponent;
@@ -365,6 +372,34 @@ namespace ActorTemplates
         pActorElem->LinkEndChild(CreateActorRenderComponent(imagePaths, zCoord));
 
         pActorElem->LinkEndChild(CreateTriggerComponent(1, false, isStatic));
+
+        srand((int)pActorElem + time(NULL));
+        double speedX = 0.5 + (rand() % 100) / 50.0;
+        double speedY = -(1 + (rand() % 100) / 50.0);
+
+        LOG("X: " + ToStr(speedX) + ", Y: " + ToStr(speedY));
+
+        if (rand() % 2 == 1) { speedX *= -1; }
+
+        pActorElem->LinkEndChild(CreatePhysicsComponent(
+            "Dynamic",  // Type - "Dynamic", "Kinematic", "Static"
+            false,      // Has foot sensor ?
+            false,      // Has capsule shape ?
+            true,       // Has bullet behaviour ?
+            false,       // Has sensor behaviour ?
+            "Trigger",    // Fixture type
+            position,      // Position
+            Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
+            0.8f,          // Gravity scale - set to 0.0f if no gravity is desired
+            true,          // Has any initial speed ?
+            false,
+            Point(speedX, speedY), // If it does, specify it here
+            CollisionFlag_Pickup,  // Collision flag - e.g. What is this actor ?
+            // TODO: Claw needs to have CollisionFlag_Controller flag set
+            0xFFFF,//(CollisionFlag_Controller | CollisionFlag_Death | CollisionFlag_Ground | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
+            10.0f, // Density
+            0.18f, // Friction - with floor and so
+            0.5f)); // Restitution - makes object bounce
 
         return pActorElem;
     }
@@ -454,11 +489,13 @@ namespace ActorTemplates
             Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
             0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
             true,          // Has any initial speed ?
+            false,
             Point(speed, 0), // If it does, specify it here
             CollisionFlag_Bullet,  // Collision flag - e.g. What is this actor ?
             (CollisionFlag_Controller | CollisionFlag_Crate | CollisionFlag_Barel | CollisionFlag_DynamicActor | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Density - determines if this character bounces
-            0.0f)); // Friction - with floor and so
+            0.0f, // Friction - with floor and so
+            0.0f)); // Restitution - makes object bounce
 
         if (ammoType == AmmoType_Magic)
         {
@@ -493,17 +530,19 @@ namespace ActorTemplates
             false,      // Has foot sensor ?
             false,      // Has capsule shape ?
             true,       // Has bullet behaviour ?
-            true,       // Has sensor behaviour ?
+            false,       // Has sensor behaviour ?
             "Crate",    // Fixture type
             position,      // Position
-            Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
-            0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
+            Point(48, 40),   // Size - Leave blank if you want size to be determined by its default image
+            0.8f,          // Gravity scale - set to 0.0f if no gravity is desired
             true,          // Has any initial speed ?
+            false,         // Has initial impulse ?
             Point(0, 0), // If it does, specify it here
             CollisionFlag_Crate,  // Collision flag - e.g. What is this actor ?
             (CollisionFlag_Crate | CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Bullet | CollisionFlag_Magic),  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Density - determines if this character bounces
-            0.0f)); // Friction - with floor and so
+            0.0f,  // Friction - with floor and so
+            0.3f)); // Restitution - makes object bounce
 
         pActor->LinkEndChild(CreateCycleAnimationComponent(75, true));
         pActor->LinkEndChild(CreateLootComponent(loot));
@@ -541,9 +580,14 @@ namespace ActorTemplates
         {
             pActorXmlData = CreateXmlData_AmmoPickupActor(imageSet, position, isStatic);
         }
-        else if (imageSet.find("_CATNIPS") != std::string::npos)
+        else if (imageSet.find("_HEALTH") != std::string::npos)
         {
             pActorXmlData = CreateXmlData_HealthPickupActor(imageSet, position, isStatic);
+        }
+        else
+        {
+            LOG_ERROR("Offending image set: " + imageSet);
+            assert(false);
         }
 
         return CreateAndReturnActor(pActorXmlData);

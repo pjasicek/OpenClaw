@@ -85,7 +85,9 @@ TreasurePickupComponent::TreasurePickupComponent()
     :
     m_ScorePoints(0),
     m_IsPickedUp(false)
-{ }
+{
+    LOG("CREATING");
+}
 
 bool TreasurePickupComponent::VDelegateInit(TiXmlElement* data)
 {
@@ -122,7 +124,6 @@ bool TreasurePickupComponent::VOnApply(Actor* pActorWhoPickedThis)
     {
         pScoreComponent->AddScorePoints(m_ScorePoints);
 
-        // TODO: Make it fly towards the left corner
         m_IsPickedUp = true;
 
         return true;

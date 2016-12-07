@@ -130,6 +130,8 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
         else if (fixtureTypeStr == "Trigger") { m_ActorBodyDef.fixtureType = FixtureType_Trigger; }
         else if (fixtureTypeStr == "Projectile") { m_ActorBodyDef.fixtureType = FixtureType_Projectile; }
         else if (fixtureTypeStr == "Crate") { m_ActorBodyDef.fixtureType = FixtureType_Crate; }
+        else if (fixtureTypeStr == "Pickup") { m_ActorBodyDef.fixtureType = FixtureType_Pickup; }
+        else if (fixtureTypeStr == "Trigger") { m_ActorBodyDef.fixtureType = FixtureType_Trigger; }
         else
         {
             assert(false && "Unknown body type");
@@ -138,6 +140,10 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
     if (TiXmlElement* pElem = data->FirstChildElement("HasInitialSpeed"))
     {
         m_ActorBodyDef.setInitialSpeed = std::string(pElem->GetText()) == "true";
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("HasInitialImpulse"))
+    {
+        m_ActorBodyDef.setInitialImpulse = std::string(pElem->GetText()) == "true";
     }
     if (TiXmlElement* pElem = data->FirstChildElement("InitialSpeed"))
     {
@@ -159,6 +165,10 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
     if (TiXmlElement* pElem = data->FirstChildElement("Density"))
     {
         m_ActorBodyDef.density = std::stof(pElem->GetText());
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("Restitution"))
+    {
+        m_ActorBodyDef.restitution = std::stof(pElem->GetText());
     }
     if (TiXmlElement* pElem = data->FirstChildElement("PrefabType"))
     {

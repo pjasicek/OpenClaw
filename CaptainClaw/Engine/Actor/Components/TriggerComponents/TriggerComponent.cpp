@@ -64,24 +64,27 @@ bool TriggerComponent::VInit(TiXmlElement* data)
 
 void TriggerComponent::VPostInit()
 {
-    // Set size from current image if necessary
-    if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
+    if (m_IsStatic)
     {
-        shared_ptr<ActorRenderComponent> pRenderComponent =
-            MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-        assert(pRenderComponent);
+        // Set size from current image if necessary
+        if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
+        {
+            shared_ptr<ActorRenderComponent> pRenderComponent =
+                MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+            assert(pRenderComponent);
 
-        shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
+            shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
 
-        m_Size.x = pImage->GetWidth();
-        m_Size.y = pImage->GetHeight();
+            m_Size.x = pImage->GetWidth();
+            m_Size.y = pImage->GetHeight();
+        }
+
+        shared_ptr<PositionComponent> pPositionComponent =
+            MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        assert(pPositionComponent);
+
+        m_pPhysics->VCreateTrigger(_owner, pPositionComponent->GetPosition(), m_Size, m_IsStatic);
     }
-
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
-    assert(pPositionComponent);
-
-    m_pPhysics->VCreateTrigger(_owner, pPositionComponent->GetPosition(), m_Size, m_IsStatic);
 }
 
 TiXmlElement* TriggerComponent::VGenerateXml()

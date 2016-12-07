@@ -303,6 +303,13 @@ void ClawPhysics::VOnUpdate(const uint32 msDiff)
         }
     }
     m_ActorsToBeDestroyed.clear();
+
+    // Create any pending actors
+    for (const ActorBodyDef* pActorBodyDef : m_ActorBodiesToBeCreated)
+    {
+        VAddActorBody(pActorBodyDef);
+    }
+    m_ActorBodiesToBeCreated.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -364,11 +371,13 @@ void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType c
     { 
         fixtureDef.filter.categoryBits = CollisionFlag_Solid;
         fixtureDef.userData = (void*)FixtureType_Solid; 
+        fixtureDef.friction = 0.18f;
     }
     else if (collisionType == CollisionType_Ground) 
     { 
         fixtureDef.filter.categoryBits = CollisionFlag_Ground;
         fixtureDef.userData = (void*)FixtureType_Ground; 
+        fixtureDef.friction = 0.18f;
     }
     else if (collisionType == CollisionType_Climb) 
     { 
@@ -577,6 +586,13 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
         return;
     }
 
+    // Cannot add bodies while the world is stepping, we need to schedule it
+    if (m_pWorld->IsLocked())
+    {
+        m_ActorBodiesToBeCreated.push_back(actorBodyDef);
+        return;
+    }
+
     // Convert pixel position and size to Box2D meters
     b2Vec2 b2Position = PixelsToMeters(PointToB2Vec2(actorBodyDef->position));
     b2Vec2 b2BodySize = PixelsToMeters(PointToB2Vec2(actorBodyDef->size));
@@ -586,6 +602,7 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
     bodyDef.position.Set(b2Position.x, b2Position.y);
     bodyDef.fixedRotation = true;
     b2Body* pBody = m_pWorld->CreateBody(&bodyDef);
+    assert(pBody != NULL && "Failed to create Box2D body.  Is the world currently stepping ?");
     pBody->SetUserData(pStrongActor.get());
     pBody->SetBullet(actorBodyDef->makeBullet);
     pBody->SetGravityScale(actorBodyDef->gravityScale);
@@ -602,6 +619,7 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
         fixtureDef.shape = &bodyShape;
         fixtureDef.density = actorBodyDef->density;
         fixtureDef.friction = actorBodyDef->friction;
+        fixtureDef.restitution = actorBodyDef->restitution;
         fixtureDef.isSensor = actorBodyDef->makeSensor;
         pBody->CreateFixture(&fixtureDef);
 
@@ -621,7 +639,9 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &bodyShape;
-        fixtureDef.friction = 0.0f;
+        fixtureDef.friction = actorBodyDef->friction;
+        fixtureDef.density = actorBodyDef->density;
+        fixtureDef.restitution = actorBodyDef->restitution;
         fixtureDef.userData = (void*)actorBodyDef->fixtureType;
         fixtureDef.isSensor = actorBodyDef->makeSensor;
         fixtureDef.filter.categoryBits = actorBodyDef->collisionFlag;
@@ -646,9 +666,15 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
 
+    LOG(ToStr(actorBodyDef->setInitialImpulse));
+
     if (actorBodyDef->setInitialSpeed)
     {
         VSetLinearSpeed(pStrongActor->GetGUID(), actorBodyDef->initialSpeed);
+    }
+    else if (actorBodyDef->setInitialImpulse)
+    {
+        VApplyLinearImpulse(pStrongActor->GetGUID(), actorBodyDef->initialSpeed);
     }
 }
 

@@ -47,6 +47,7 @@ bool ProjectileAIComponent::VInit(TiXmlElement* data)
     }
     if (TiXmlElement* pElem = data->FirstChildElement("ProjectileType"))
     {
+        // Possible types: "Bullet", "Magic", "Dynamite"
         m_Type = pElem->GetText();
     }
 
@@ -115,5 +116,10 @@ void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)
     if (pHealthComponent)
     {
         pHealthComponent->AddHealth(-m_Damage);
+    }
+
+    if (m_Type == "Bullet")
+    {
+        OnCollidedWithSolidTile();
     }
 }
