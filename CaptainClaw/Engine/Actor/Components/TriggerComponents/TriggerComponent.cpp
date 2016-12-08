@@ -66,6 +66,9 @@ void TriggerComponent::VPostInit()
 {
     if (m_IsStatic)
     {
+        int offsetX = 0;
+        int offsetY = 0;
+
         // Set size from current image if necessary
         if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
         {
@@ -77,13 +80,18 @@ void TriggerComponent::VPostInit()
 
             m_Size.x = pImage->GetWidth();
             m_Size.y = pImage->GetHeight();
+
+            offsetX = pImage->GetOffsetX();
+            offsetY = pImage->GetOffsetY();
         }
 
         shared_ptr<PositionComponent> pPositionComponent =
             MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
         assert(pPositionComponent);
 
-        m_pPhysics->VCreateTrigger(_owner, pPositionComponent->GetPosition(), m_Size, m_IsStatic);
+        Point physPos = Point(pPositionComponent->GetX() + offsetX, pPositionComponent->GetY() + offsetY);
+
+        m_pPhysics->VCreateTrigger(_owner, physPos , m_Size, m_IsStatic);
     }
 }
 

@@ -86,7 +86,6 @@ TreasurePickupComponent::TreasurePickupComponent()
     m_ScorePoints(0),
     m_IsPickedUp(false)
 {
-    LOG("CREATING");
 }
 
 bool TreasurePickupComponent::VDelegateInit(TiXmlElement* data)

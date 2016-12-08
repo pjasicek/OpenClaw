@@ -58,33 +58,7 @@ bool ProjectileAIComponent::VInit(TiXmlElement* data)
 
 void ProjectileAIComponent::VPostInit()
 {
-    /*if (m_Type == "Magic" || m_Type == "Dynamite")
-    {
-        LOG("Creating sparkles");
-        // Create powerup sparkles. Is this a good place ?
-        for (int i = 0; i < 30; i++)
-        {
-            StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor();
-            assert(pPowerupSparkle);
 
-            shared_ptr<PositionComponent> pPositionComponent =
-                MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
-            assert(pPositionComponent);
-
-            shared_ptr<PhysicsComponent> pPhysicsComponent =
-                MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
-            assert(pPhysicsComponent);
-
-            shared_ptr<PowerupSparkleAIComponent> pPowerupSparkleAIComponent =
-                MakeStrongPtr(pPowerupSparkle->GetComponent<PowerupSparkleAIComponent>(PowerupSparkleAIComponent::g_Name));
-            assert(pPowerupSparkleAIComponent);
-
-            pPowerupSparkleAIComponent->SetTargetPositionComponent(pPositionComponent.get());
-            pPowerupSparkleAIComponent->SetTargetSize(pPhysicsComponent->GetBodySize());
-
-            m_PowerupSparkles.push_back(pPowerupSparkle);
-        }
-    }*/
 }
 
 TiXmlElement* ProjectileAIComponent::VGenerateXml()

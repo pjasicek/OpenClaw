@@ -238,10 +238,11 @@ namespace ActorTemplates
         return pComponent;
     }
 
-    TiXmlElement* CreateAnimationComponent(std::string animationPath)
+    TiXmlElement* CreateAnimationComponent(std::string animationPath, bool pauseOnStart)
     {
         TiXmlElement* pAnimElem = new TiXmlElement("AnimationComponent");
         XML_ADD_TEXT_ELEMENT("AnimationPath", animationPath.c_str(), pAnimElem);
+        XML_ADD_TEXT_ELEMENT("PauseOnStart", ToStr(pauseOnStart).c_str(), pAnimElem);
 
         return pAnimElem;
     }
@@ -356,6 +357,27 @@ namespace ActorTemplates
         return pHealthComponent;
     }
 
+    TiXmlElement* CreateExplodeableComponent(Point explosionSize, int damage, int explodingTime = 100)
+    {
+        TiXmlElement* pExplodeableComponent = new TiXmlElement("ExplodeableComponent");
+
+        XML_ADD_2_PARAM_ELEMENT("ExplosionSize", "width", ToStr(explosionSize.x).c_str(), "height", ToStr(explosionSize.y).c_str(), pExplodeableComponent);
+        XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pExplodeableComponent);
+        XML_ADD_TEXT_ELEMENT("ExplodingTime", ToStr(explodingTime).c_str(), pExplodeableComponent);
+
+        return pExplodeableComponent;
+    }
+
+    TiXmlElement* CreateExplosionComponent(int damage, int explodingTime = 100)
+    {
+        TiXmlElement* pExplosionComponent = new TiXmlElement("ExplosionComponent");
+
+        XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pExplosionComponent);
+        XML_ADD_TEXT_ELEMENT("ExplodingTime", ToStr(explodingTime).c_str(), pExplosionComponent);
+
+        return pExplosionComponent;
+    }
+
     //=====================================================================================================================
     // Specific functions for creating specific actors
     //=====================================================================================================================
@@ -376,8 +398,6 @@ namespace ActorTemplates
         srand((int)pActorElem + time(NULL));
         double speedX = 0.5 + (rand() % 100) / 50.0;
         double speedY = -(1 + (rand() % 100) / 50.0);
-
-        LOG("X: " + ToStr(speedX) + ", Y: " + ToStr(speedY));
 
         if (rand() % 2 == 1) { speedX *= -1; }
 
@@ -476,6 +496,10 @@ namespace ActorTemplates
         double speed = 9.5;
         if (direction == Direction_Left) { speed *= -1; }
 
+        CollisionFlag collisionFlag = CollisionFlag_Bullet;
+        if (ammoType == AmmoType_Magic) { collisionFlag = CollisionFlag_Magic; }
+        else if (ammoType == AmmoType_Dynamite) { collisionFlag = CollisionFlag_Explosion; }
+
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
         pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), 5000));
         pActor->LinkEndChild(CreatePhysicsComponent(
@@ -491,8 +515,8 @@ namespace ActorTemplates
             true,          // Has any initial speed ?
             false,
             Point(speed, 0), // If it does, specify it here
-            CollisionFlag_Bullet,  // Collision flag - e.g. What is this actor ?
-            (CollisionFlag_Controller | CollisionFlag_Crate | CollisionFlag_Barel | CollisionFlag_DynamicActor | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
+            collisionFlag,  // Collision flag - e.g. What is this actor ?
+            (CollisionFlag_Controller | CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Density - determines if this character bounces
             0.0f, // Friction - with floor and so
             0.0f)); // Restitution - makes object bounce
@@ -533,13 +557,13 @@ namespace ActorTemplates
             false,       // Has sensor behaviour ?
             "Crate",    // Fixture type
             position,      // Position
-            Point(48, 40),   // Size - Leave blank if you want size to be determined by its default image
+            Point(44, 40),   // Size - Leave blank if you want size to be determined by its default image
             0.8f,          // Gravity scale - set to 0.0f if no gravity is desired
             true,          // Has any initial speed ?
             false,         // Has initial impulse ?
             Point(0, 0), // If it does, specify it here
             CollisionFlag_Crate,  // Collision flag - e.g. What is this actor ?
-            (CollisionFlag_Crate | CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Bullet | CollisionFlag_Magic),  // Collision mask - e.g. With what does this actor collide with ?
+            (CollisionFlag_Crate | CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_Explosion),  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Density - determines if this character bounces
             0.0f,  // Friction - with floor and so
             0.3f)); // Restitution - makes object bounce
@@ -548,6 +572,112 @@ namespace ActorTemplates
         pActor->LinkEndChild(CreateLootComponent(loot));
         pActor->LinkEndChild(CreateDestroyableComponent(true, {}));
         pActor->LinkEndChild(CreateHealthComponent(health, health));
+
+        return pActor;
+    }
+
+    TiXmlElement* CreateXmlData_PowderKegActor(std::string imageSet, Point position, int32 damage, int32 zCoord)
+    {
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", imageSet.c_str());
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), zCoord));
+        pActor->LinkEndChild(CreatePhysicsComponent(
+            "Static",  // Type - "Dynamic", "Kinematic", "Static"
+            false,      // Has foot sensor ?
+            false,      // Has capsule shape ?
+            true,       // Has bullet behaviour ?
+            true,       // Has sensor behaviour ?
+            "Crate",    // Fixture type
+            position,      // Position
+            Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
+            0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
+            false,          // Has any initial speed ?
+            false,         // Has initial impulse ?
+            Point(0, 0), // If it does, specify it here
+            CollisionFlag_PowderKeg,  // Collision flag - e.g. What is this actor ?
+            (CollisionFlag_Crate | CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Bullet | CollisionFlag_Explosion),  // Collision mask - e.g. With what does this actor collide with ?
+            0.0f,  // Friction - with floor and so
+            0.0f,  // Density - determines if this character bounces
+            0.3f)); // Restitution - makes object bounce
+
+        pActor->LinkEndChild(CreateAnimationComponent("/LEVEL1/ANIS/POWDERKEG/EXPLODE.ANI", true));
+        pActor->LinkEndChild(CreateDestroyableComponent(true, {}));
+        pActor->LinkEndChild(CreateHealthComponent(1, 1));
+        pActor->LinkEndChild(CreateExplodeableComponent(Point(100, 100), damage));
+
+        return pActor;
+    }
+
+    TiXmlElement* CreateXmlData_ExplosionActor(Point position, Point size, int32 damage, std::string imageSet = "", int32 zCoord = 0)
+    {
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", "Explosion");
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        //if (!imageSet.empty())
+        {
+            pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), zCoord));
+            pActor->LinkEndChild(CreateCycleAnimationComponent(75, false));
+        }
+        pActor->LinkEndChild(CreatePhysicsComponent(
+            "Dynamic",  // Type - "Dynamic", "Kinematic", "Static"
+            false,      // Has foot sensor ?
+            false,      // Has capsule shape ?
+            true,       // Has bullet behaviour ?
+            true,       // Has sensor behaviour ?
+            "Trigger",    // Fixture type
+            position,      // Position
+            size,          // Size - Leave blank if you want size to be determined by its default image
+            0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
+            false,          // Has any initial speed ?
+            false,         // Has initial impulse ?
+            Point(0, 0), // If it does, specify it here
+            CollisionFlag_Explosion,  // Collision flag - e.g. What is this actor ?
+            (CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Controller),  // Collision mask - e.g. With what does this actor collide with ?
+            0.0f,  // Friction - with floor and so
+            0.0f,  // Density - determines if this character bounces
+            0.0f)); // Restitution - makes object bounce
+
+        pActor->LinkEndChild(CreateTriggerComponent(-1, false, false));
+        pActor->LinkEndChild(CreateExplosionComponent(damage));
+
+        return pActor;
+    }
+
+    TiXmlElement* CreateXmlData_CrumblingPeg(std::string imageSet, Point position, int32 zCoord)
+    {
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", imageSet.c_str());
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), zCoord));
+        pActor->LinkEndChild(CreateCycleAnimationComponent(50, true));
+        pActor->LinkEndChild(CreatePhysicsComponent(
+            "Static",  // Type - "Dynamic", "Kinematic", "Static"
+            false,      // Has foot sensor ?
+            false,      // Has capsule shape ?
+            true,       // Has bullet behaviour ?
+            true,       // Has sensor behaviour ?
+            "Ground",    // Fixture type
+            position,      // Position
+            Point(0, 0),          // Size - Leave blank if you want size to be determined by its default image
+            0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
+            false,          // Has any initial speed ?
+            false,         // Has initial impulse ?
+            Point(0, 0), // If it does, specify it here
+            CollisionFlag_Ground,  // Collision flag - e.g. What is this actor ?
+            // TODO:
+            0xFFFF,  // Collision mask - e.g. With what does this actor collide with ?
+            0.0f,  // Friction - with floor and so
+            0.0f,  // Density - determines if this character bounces
+            0.0f)); // Restitution - makes object bounce
+
+        TiXmlElement* pCrumblingPegAIComponent = new TiXmlElement("CrumblingPegAIComponent");
+        XML_ADD_TEXT_ELEMENT("FloorOffset", "10", pCrumblingPegAIComponent);
+        XML_ADD_TEXT_ELEMENT("CrumbleFrameIdx", "10", pCrumblingPegAIComponent);
+        pActor->LinkEndChild(pCrumblingPegAIComponent);
 
         return pActor;
     }
@@ -606,5 +736,10 @@ namespace ActorTemplates
     StrongActorPtr CreateProjectile(std::string imageSet, Direction direction, Point position)
     {
         return nullptr;
+    }
+
+    StrongActorPtr CreateExplosion(Point position, Point size, int32 damage, std::string imageSet, int32 zCoord)
+    {
+        return CreateAndReturnActor(CreateXmlData_ExplosionActor(position, size, damage, imageSet, zCoord));
     }
 };

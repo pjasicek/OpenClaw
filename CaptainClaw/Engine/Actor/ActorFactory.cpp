@@ -31,6 +31,8 @@
 #include "Components\AIComponents\ProjectileAIComponent.h"
 #include "Components\LootComponent.h"
 #include "Components\DestroyableComponent.h"
+#include "Components\ExplodeableComponent.h"
+#include "Components\ExplosionComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -64,6 +66,8 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<ProjectileAIComponent>(ProjectileAIComponent::GetIdFromName(ProjectileAIComponent::g_Name));
     _componentFactory.Register<LootComponent>(LootComponent::GetIdFromName(LootComponent::g_Name));
     _componentFactory.Register<DestroyableComponent>(DestroyableComponent::GetIdFromName(DestroyableComponent::g_Name));
+    _componentFactory.Register<ExplodeableComponent>(ExplodeableComponent::GetIdFromName(ExplodeableComponent::g_Name));
+    _componentFactory.Register<ExplosionComponent>(ExplosionComponent::GetIdFromName(ExplosionComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

@@ -225,6 +225,12 @@
     <ClCompile Include="Engine\Actor\Components\DestroyableComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Actor\Components\ExplodeableComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actor\Components\ExplosionComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Process\Process.h">
@@ -410,9 +416,6 @@
     <ClInclude Include="Engine\Actor\Components\KinematicComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -462,6 +465,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Actor\Components\DestroyableComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actor\Components\ExplodeableComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actor\Components\ExplosionComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
