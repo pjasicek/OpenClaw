@@ -41,7 +41,7 @@ enum CollisionFlag
     CollisionFlag_Controller    = 0x2,
     CollisionFlag_DynamicActor  = 0x4,
     CollisionFlag_Bullet        = 0x8,
-    CollisionFlag_Dynamite      = 0x10,
+    CollisionFlag_Explosion     = 0x10,
     CollisionFlag_Magic         = 0x20,
     CollisionFlag_Crate         = 0x40,
     CollisionFlag_Rope          = 0x80,
@@ -49,7 +49,7 @@ enum CollisionFlag
     CollisionFlag_Ground        = 0x200,
     CollisionFlag_Death         = 0x400,
     CollisionFlag_Ladder        = 0x800,
-    CollisionFlag_Barel         = 0x1000,
+    CollisionFlag_PowderKeg     = 0x1000,
     CollisionFlag_Trigger       = 0x2000,
     CollisionFlag_Pickup        = 0x4000,
 };
@@ -68,7 +68,9 @@ enum FixtureType
     FixtureType_Trigger,
     FixtureType_Projectile,
     FixtureType_Crate,
-    FixtureType_Pickup
+    FixtureType_PowderKeg,
+    FixtureType_Pickup,
+    FixtureType_Explosion
 };
 
 enum AmmoType

@@ -571,6 +571,8 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
     }
     else if (logic.find("CrumblingPeg") != std::string::npos)
     {
+        return ActorTemplates::CreateXmlData_CrumblingPeg(tmpImageSet, Point(wwdObject->x, wwdObject->y), wwdObject->z);
+
         pActorElem->LinkEndChild(CrumblingPegToXml(wwdObject));
 
         TiXmlElement* animElem = new TiXmlElement("AnimationComponent");
@@ -600,6 +602,7 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
     else if (logic.find("PowderKeg") != std::string::npos)
     {
         //pActorElem->LinkEndChild(PowderKegToXml(wwdObject));
+        return ActorTemplates::CreateXmlData_PowderKegActor(tmpImageSet, Point(wwdObject->x, wwdObject->y), 50, wwdObject->z);
     }
     else if (logic.find("Officer") != std::string::npos)
     {
@@ -765,7 +768,7 @@ TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
     pClawActor->SetAttribute("resource", "created");
 
     //pClawActor->LinkEndChild(CreatePositionComponent(pWapWwd->properties.startX, pWapWwd->properties.startY));
-    pClawActor->LinkEndChild(CreatePositionComponent(10700, 2600));
+    pClawActor->LinkEndChild(CreatePositionComponent(6250, 4350));
     pClawActor->LinkEndChild(CreateCollisionComponent(40, 110));
     pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, 1500, 40, 110, 4.0, 0.0, 0.5));
     pClawActor->LinkEndChild(CreateControllableComponent(true));
@@ -1051,8 +1054,6 @@ void WwdToXml(WapWwd* wapWwd)
                 else if (crateIdx == 5) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
                 else if (crateIdx == 6) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
                 else if (crateIdx == 7) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
-
-                LOG("Creating crate with height idx: " + ToStr(crateIdx));
 
                 int positionOffset = -(crateIdx * 60);
 

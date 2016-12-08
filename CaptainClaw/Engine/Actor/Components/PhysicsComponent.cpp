@@ -132,6 +132,8 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
         else if (fixtureTypeStr == "Crate") { m_ActorBodyDef.fixtureType = FixtureType_Crate; }
         else if (fixtureTypeStr == "Pickup") { m_ActorBodyDef.fixtureType = FixtureType_Pickup; }
         else if (fixtureTypeStr == "Trigger") { m_ActorBodyDef.fixtureType = FixtureType_Trigger; }
+        else if (fixtureTypeStr == "PowderKeg") { m_ActorBodyDef.fixtureType = FixtureType_PowderKeg; }
+        else if (fixtureTypeStr == "Explosion") { m_ActorBodyDef.fixtureType = FixtureType_Explosion; }
         else
         {
             assert(false && "Unknown body type");
@@ -182,6 +184,11 @@ void PhysicsComponent::VPostInit()
 {
     if (m_ActorBodyDef.collisionFlag != CollisionFlag_None)
     {
+        shared_ptr<PositionComponent> pPositionComponent =
+            MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        assert(pPositionComponent);
+        m_ActorBodyDef.position = pPositionComponent->GetPosition();
+
         if (fabs(m_ActorBodyDef.size.x) < DBL_EPSILON || fabs(m_ActorBodyDef.size.y) < DBL_EPSILON)
         {
             shared_ptr<ActorRenderComponent> pRenderComponent =
@@ -190,14 +197,18 @@ void PhysicsComponent::VPostInit()
 
             shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
 
+            // Also offset position
+            m_ActorBodyDef.position = Point(m_ActorBodyDef.position.x + pImage->GetOffsetX(), m_ActorBodyDef.position.y + pImage->GetOffsetY());
+
+            /*pPositionComponent->SetPosition(
+                pPositionComponent->GetPosition().x + pImage->GetOffsetX(), 
+                pPositionComponent->GetPosition().y + pImage->GetOffsetY());*/
+
+            //m_ActorBodyDef.position = pPositionComponent->GetPosition();
+
             m_ActorBodyDef.size.x = pImage->GetWidth();
             m_ActorBodyDef.size.y = pImage->GetHeight();
         }
-
-        shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
-        assert(pPositionComponent);
-        m_ActorBodyDef.position = pPositionComponent->GetPosition();
 
         m_ActorBodyDef.pActor = _owner;
 

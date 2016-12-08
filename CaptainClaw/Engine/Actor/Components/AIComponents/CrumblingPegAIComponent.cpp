@@ -48,39 +48,10 @@ bool CrumblingPegAIComponent::VInit(TiXmlElement* data)
 
 void CrumblingPegAIComponent::VPostInit()
 {
-    // Set size from current image if necessary
-    if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
-    {
-        shared_ptr<ActorRenderComponent> pRenderComponent =
-            MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-        assert(pRenderComponent);
-
-        shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
-
-        m_Size.x = pImage->GetWidth();
-        m_Size.y = pImage->GetHeight();
-    }
-
     shared_ptr<AnimationComponent> pAnimationComponent =
         MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
-    pAnimationComponent->PauseAnimation();
     pAnimationComponent->AddObserver(this);
-
-    // Set size from current image if necessary
-    if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
-    {
-        shared_ptr<ActorRenderComponent> pRenderComponent =
-            MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-        assert(pRenderComponent);
-
-        shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
-
-        m_Size.x = pImage->GetWidth();
-        m_Size.y = pImage->GetHeight();
-    }
-
-    m_pPhysics->VAddStaticBody(_owner, m_Size, CollisionType_Ground);
 }
 
 TiXmlElement* CrumblingPegAIComponent::VGenerateXml()

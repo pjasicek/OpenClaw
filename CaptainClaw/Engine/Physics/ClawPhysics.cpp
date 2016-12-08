@@ -198,6 +198,11 @@ void ClawPhysics::VSyncVisibleScene()
             Point actorPixelPosition = pPositionComponent->GetPosition();
             if (pPositionComponent)
             {
+                if (pActorBody->GetType() == b2_staticBody)
+                {
+                    continue;
+                }
+
                 if (pActorBody->GetType() == b2_dynamicBody)
                 {
                     shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pActorBody);
@@ -665,8 +670,6 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
-
-    LOG(ToStr(actorBodyDef->setInitialImpulse));
 
     if (actorBodyDef->setInitialSpeed)
     {
