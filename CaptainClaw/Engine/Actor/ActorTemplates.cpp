@@ -198,6 +198,18 @@ namespace ActorTemplates
         return "Unknown";
     }
 
+    std::string GetImageSetFromGlitterType(const std::string& glitterType)
+    {
+        if (glitterType == "Glitter_Yellow") { return "GAME_GLITTER"; }
+        else if (glitterType == "Glitter_Red") { return "GAME_GLITTERRED"; }
+        else if (glitterType == "Glitter_Green") { return "GAME_GREENGLITTER"; }
+
+        LOG_ERROR("Offending glitter type: " + glitterType);
+        assert(false && "Invalid glitter type");
+
+        return "Unknown";
+    }
+
     //=====================================================================================================================
     // General functions for creating components
     //=====================================================================================================================
@@ -378,6 +390,17 @@ namespace ActorTemplates
         return pExplosionComponent;
     }
 
+    TiXmlElement* CreateXmlData_GlitterComponent(std::string glitterType, bool spawnImmediate, bool followOwner)
+    {
+        TiXmlElement* pGlitterComponent = new TiXmlElement("GlitterComponent");
+
+        XML_ADD_TEXT_ELEMENT("GlitterType", glitterType.c_str(), pGlitterComponent);
+        XML_ADD_TEXT_ELEMENT("SpawnImmediate", ToStr(spawnImmediate).c_str(), pGlitterComponent);
+        XML_ADD_TEXT_ELEMENT("FollowOwner", ToStr(followOwner).c_str(), pGlitterComponent);
+
+        return pGlitterComponent;
+    }
+
     //=====================================================================================================================
     // Specific functions for creating specific actors
     //=====================================================================================================================
@@ -421,6 +444,8 @@ namespace ActorTemplates
             0.18f, // Friction - with floor and so
             0.5f)); // Restitution - makes object bounce
 
+        pActorElem->LinkEndChild(CreateXmlData_GlitterComponent("Glitter_Yellow", false, false));
+
         return pActorElem;
     }
 
@@ -431,6 +456,12 @@ namespace ActorTemplates
         TiXmlElement* pTreasurePickupComponent = new TiXmlElement("TreasurePickupComponent");
         XML_ADD_TEXT_ELEMENT("ScorePoints", ToStr(GetScorePointsFromImageSet(imageSet)).c_str(), pTreasurePickupComponent);
         pActor->LinkEndChild(pTreasurePickupComponent);
+
+        // Coins have animation
+        if (imageSet.find("COIN") != std::string::npos)
+        {
+            pActor->LinkEndChild(CreateCycleAnimationComponent(99, false));
+        }
 
         return pActor;
     }
@@ -682,6 +713,20 @@ namespace ActorTemplates
         return pActor;
     }
 
+    TiXmlElement* CreateXmlData_GlitterActor(std::string glitterType, Point position, int32 zCoord)
+    {
+        std::string imageSet = GetImageSetFromGlitterType(glitterType);
+
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", imageSet.c_str());
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), zCoord));
+        pActor->LinkEndChild(CreateCycleAnimationComponent(99, false));
+
+        return pActor;
+    }
+
     //=====================================================================================================================
     // Public API
     //=====================================================================================================================
@@ -741,5 +786,10 @@ namespace ActorTemplates
     StrongActorPtr CreateExplosion(Point position, Point size, int32 damage, std::string imageSet, int32 zCoord)
     {
         return CreateAndReturnActor(CreateXmlData_ExplosionActor(position, size, damage, imageSet, zCoord));
+    }
+
+    StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord)
+    {
+        return CreateAndReturnActor(CreateXmlData_GlitterActor(glitterType, position, zCoord));
     }
 };

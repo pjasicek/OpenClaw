@@ -296,6 +296,11 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         }
     }
 
+    if (!m_IsClimbing && !IsInAir() && m_ClimbingSpeed.y > 0)
+    {
+        LOG("Should duck");
+    }
+
     /*if (m_OverlappingLaddersList.size() > 1)
         LOG(ToStr(m_OverlappingLaddersList.size()));*/
     // This should be available only to controlled actors

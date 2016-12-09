@@ -132,7 +132,7 @@ void AnimationComponent::VPostInit()
             // HACK: TODO: Make special animation creation somewhat more general
             // so I dont have to use these hacks
             // This hack is specific to Toggle pegs which set their on delay
-            if (cycleDuration != 75 && cycleDuration != 50)
+            if (cycleDuration != 75 && cycleDuration != 50 && cycleDuration != 99)
             {
                 srand(pPositionComponent->GetX());
                 pCycleAnim->SetDelay(rand() % 1000);

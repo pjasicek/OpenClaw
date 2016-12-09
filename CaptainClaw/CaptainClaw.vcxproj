@@ -92,6 +92,7 @@
     <ClCompile Include="Engine\Actor\Components\KinematicComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PowerupSparkleAIComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\ExplosionComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\GlitterComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Engine\Actor\Components\PickupComponents\PickupComponent.h" />
     <ClInclude Include="Engine\Actor\Components\KinematicComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PowerupSparkleAIComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\GlitterComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />

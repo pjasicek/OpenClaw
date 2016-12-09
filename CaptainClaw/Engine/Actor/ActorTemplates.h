@@ -6,10 +6,15 @@
 
 namespace ActorTemplates
 {
-    // Exposed Xml data generating functions.
+    // Exposed Component Xml data generating functions
+    TiXmlElement* CreateXmlData_GlitterComponent(std::string glitterType, bool spawnImmediate, bool followOwner);
+
+    // Exposed Actor Xml data generating functions.
     TiXmlElement* CreateXmlData_CrateActor(std::string imageSet, Point position, const std::vector<PickupType>& loot, uint32 health, int32 zCoord);
     TiXmlElement* CreateXmlData_PowderKegActor(std::string imageSet, Point position, int32 damage, int32 zCoord);
     TiXmlElement* CreateXmlData_CrumblingPeg(std::string imageSet, Point position, int32 zCoord);
+    TiXmlElement* CreateXmlData_GlitterActor(std::string glitterType, Point position, int32 zCoord);
+    
 
     // This is used by the game itself
     StrongActorPtr CreateActorPickup(PickupType pickupType, Point position, bool isStatic = false);
@@ -17,6 +22,7 @@ namespace ActorTemplates
     StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position);
     StrongActorPtr CreateProjectile(std::string imageSet, Direction direction, Point position);
     StrongActorPtr CreateExplosion(Point position, Point size, int32 damage, std::string imageSet = "", int32 zCoord = 0);
+    StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord = 1010);
 };
 
 #endif

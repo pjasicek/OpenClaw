@@ -373,8 +373,6 @@ TiXmlElement* TreasureToXml(WwdObject* pWwdObject)
         return animElem;
     }
 
-
-
     return NULL;
 }
 
@@ -712,7 +710,10 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
         XML_ADD_TEXT_ELEMENT("ScorePoints", ToStr(points).c_str(), pScoreElement);
         pActorElem->LinkEndChild(pScoreElement);
 
-
+        if (imageSet != "GAME_TREASURE_COINS")
+        {
+            pActorElem->LinkEndChild(ActorTemplates::CreateXmlData_GlitterComponent("Glitter_Yellow", true, false));
+        }
 
         TiXmlElement* elem = TreasureToXml(wwdObject);
         if (elem)

@@ -6,6 +6,7 @@
 #include "../ControllerComponents/PowerupComponent.h"
 #include "../RenderComponent.h"
 #include "../PositionComponent.h"
+#include "../GlitterComponent.h"
 
 #include "../../../GameApp/BaseGameApp.h"
 #include "../../../UserInterface/HumanView.h"
@@ -124,6 +125,14 @@ bool TreasurePickupComponent::VOnApply(Actor* pActorWhoPickedThis)
         pScoreComponent->AddScorePoints(m_ScorePoints);
 
         m_IsPickedUp = true;
+
+        // Destroy glitter is possible
+        shared_ptr<GlitterComponent> pGlitterComponent =
+            MakeStrongPtr(_owner->GetComponent<GlitterComponent>(GlitterComponent::g_Name));
+        if (pGlitterComponent)
+        {
+            pGlitterComponent->Deactivate();
+        }
 
         return true;
     }

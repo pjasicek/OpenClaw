@@ -72,6 +72,8 @@ public:
     void ApplyLinearImpulse(Point impulse) { m_pPhysics->VApplyLinearImpulse(_owner->GetGUID(), impulse); }
     void ApplyForce(Point force) { m_pPhysics->VApplyForce(_owner->GetGUID(), force); }
 
+    bool IsAwake() { return m_pPhysics->VIsAwake(_owner->GetGUID()); }
+
     void AddOverlappingLadder(const b2Fixture* ladder) { m_OverlappingLaddersList.push_back(ladder); }
     void RemoveOverlappingLadder(const b2Fixture* ladder);
 
