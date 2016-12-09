@@ -63,29 +63,6 @@ TiXmlElement* CrumblingPegAIComponent::VGenerateXml()
     return baseElement;
 }
 
-/*void CrumblingPegAIComponent::VUpdate(uint32 msDiff)
-{
-    // TODO: HACK: This is polling, drains cpu for no reason, should be event based
-    if (Animation* pAnimation = m_pAnimationComponent->GetCurrentAnimation())
-    {
-        if (m_PrevAnimframeIdx != pAnimation->GetCurrentAnimationFrame()->idx)
-        {
-            if (pAnimation->GetCurrentAnimationFrame()->idx == 9)
-            {
-                m_pPhysics->VRemoveActor(_owner->GetGUID());
-            }
-
-            if (pAnimation->IsAtLastAnimFrame())
-            {
-                shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
-                IEventMgr::Get()->VQueueEvent(pEvent);
-            }
-
-            m_PrevAnimframeIdx = pAnimation->GetCurrentAnimationFrame()->idx;
-        }
-    }
-}*/
-
 void CrumblingPegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
 {
     if (pNewFrame->idx == 9)

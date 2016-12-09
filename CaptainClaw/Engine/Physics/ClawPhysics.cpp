@@ -947,6 +947,16 @@ void ClawPhysics::VDeactivate(uint32_t actorId)
     }
 }
 
+bool ClawPhysics::VIsAwake(uint32_t actorId)
+{
+    if (b2Body* pBody = FindBox2DBody(actorId))
+    {
+        return pBody->IsAwake();
+    }
+
+    return false;
+}
+
 //=====================================================================================================================
 // Private implementations
 //=====================================================================================================================
