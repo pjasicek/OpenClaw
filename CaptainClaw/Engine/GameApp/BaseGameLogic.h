@@ -22,6 +22,7 @@ enum GameState
 
 typedef std::map<uint32, StrongActorPtr> ActorMap;
 
+class GameSaveMgr;
 class LevelData;
 class ActorFactory;
 class BaseGameApp;
@@ -84,6 +85,8 @@ public:
 
     void AttachProcess(StrongProcessPtr pProcess) { if (m_pProcessMgr) { m_pProcessMgr->AttachProcess(pProcess); } }
 
+    shared_ptr<GameSaveMgr> GetGameSaveMgr() { return m_pGameSaveMgr; }
+
 protected:
     virtual ActorFactory* VCreateActorFactory();
 
@@ -113,6 +116,8 @@ protected:
     shared_ptr<IGamePhysics> m_pPhysics;
 
     shared_ptr<LevelData> m_pCurrentLevel;
+
+    shared_ptr<GameSaveMgr> m_pGameSaveMgr;
 
 private:
     void RegisterAllDelegates();

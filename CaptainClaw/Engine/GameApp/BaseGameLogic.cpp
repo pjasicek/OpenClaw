@@ -5,6 +5,7 @@
 #include "../Resource/Loaders/PalLoader.h"
 #include "../Events/EventMgr.h"
 
+#include "GameSaves.h"
 #include "BaseGameLogic.h"
 
 #include <algorithm>
@@ -27,6 +28,8 @@ BaseGameLogic::BaseGameLogic()
     m_pActorFactory = NULL;
     m_Proxy = false;
     m_RenderDiagnostics = true;
+
+    m_pGameSaveMgr.reset(new GameSaveMgr());
 
     //RegisterEngineScriptEvents();
     RegisterAllDelegates();
@@ -55,6 +58,19 @@ BaseGameLogic::~BaseGameLogic()
 bool BaseGameLogic::Initialize()
 {
     m_pActorFactory = VCreateActorFactory();
+
+    TiXmlDocument gameSaves("SAVES.XML");
+    gameSaves.LoadFile();
+    if (gameSaves.Error())
+    {
+        LOG_ERROR("Error while loading SAVES.XML: " + std::string(gameSaves.ErrorDesc()));
+        return false;
+    }
+
+    if (!m_pGameSaveMgr->Initialize(gameSaves.RootElement()))
+    {
+        return false;
+    }
 
     return true;
 }

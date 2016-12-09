@@ -1,0 +1,15 @@
+<GameSaves>
+    <Level>
+        <LevelNumber>1</LevelNumber>
+        <LevelName>La Roca</LevelName>
+        <Checkpoint>
+            <CheckpointNumber>0</CheckpointNumber>
+            <Score>0</Score>
+            <Health>90</Health>
+            <Lives>3</Lives>
+            <BulletCount>25</BulletCount>
+            <MagicCount>20</MagicCount>
+            <DynamiteCount>15</DynamiteCount>
+        </Checkpoint>
+    </Level>
+</GameSaves>

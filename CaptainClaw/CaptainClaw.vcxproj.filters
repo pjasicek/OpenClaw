@@ -482,5 +482,8 @@
     <ClInclude Include="Engine\Actor\Components\GlitterComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\GameApp\GameSaves.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
