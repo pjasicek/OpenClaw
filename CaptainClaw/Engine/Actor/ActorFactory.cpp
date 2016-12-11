@@ -34,6 +34,7 @@
 #include "Components\ExplodeableComponent.h"
 #include "Components\ExplosionComponent.h"
 #include "Components\GlitterComponent.h"
+#include "Components\CheckpointComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -70,6 +71,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<ExplodeableComponent>(ExplodeableComponent::GetIdFromName(ExplodeableComponent::g_Name));
     _componentFactory.Register<ExplosionComponent>(ExplosionComponent::GetIdFromName(ExplosionComponent::g_Name));
     _componentFactory.Register<GlitterComponent>(GlitterComponent::GetIdFromName(GlitterComponent::g_Name));
+    _componentFactory.Register<CheckpointComponent>(CheckpointComponent::GetIdFromName(CheckpointComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

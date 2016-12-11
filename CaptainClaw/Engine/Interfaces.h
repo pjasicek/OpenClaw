@@ -52,6 +52,7 @@ enum CollisionFlag
     CollisionFlag_PowderKeg     = 0x1000,
     CollisionFlag_Trigger       = 0x2000,
     CollisionFlag_Pickup        = 0x4000,
+    CollisionFlag_Checkpoint    = 0x8000,
 };
 
 enum FixtureType
@@ -71,6 +72,16 @@ enum FixtureType
     FixtureType_PowderKeg,
     FixtureType_Pickup,
     FixtureType_Explosion
+};
+
+enum PlayerStat
+{
+    PlayerStat_Score,
+    PlayerStat_Health,
+    PlayerStat_Lives,
+    PlayerStat_Bullets,
+    PlayerStat_Magic,
+    PlayerStat_Dynamite
 };
 
 enum AmmoType

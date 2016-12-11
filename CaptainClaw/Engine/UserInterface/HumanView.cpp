@@ -262,7 +262,7 @@ void HumanView::HealthUpdatedDelegate(IEventDataPtr pEventData)
     shared_ptr<EventData_Updated_Health> pCastEventData = static_pointer_cast<EventData_Updated_Health>(pEventData);
     if (m_pHUD)
     {
-        m_pHUD->UpdateHealth(pCastEventData->GetNewHealth());
+        m_pHUD->UpdateHealth(max(0, pCastEventData->GetNewHealth()));
     }
     else
     {

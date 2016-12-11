@@ -3,7 +3,13 @@
 
 #include "../SharedDefines.h"
 
+// This can be refactored into classes, but this is not a pressing concern for me right now
+// as it works as intended
+
 const uint32 LEVELS_COUNT = 14;
+
+// TODO: Should be data driven
+Point GetSpawnPosition(uint32 levelNumber, uint32 checkpointNumber);
 
 struct CheckpointSave
 {
@@ -105,6 +111,8 @@ struct LevelSave
         {
             pLevelXml->LinkEndChild(saveIter.second.ToXml());
         }
+
+        return pLevelXml;
     }
 
     void LoadFromXml(TiXmlElement* pLevelXml)

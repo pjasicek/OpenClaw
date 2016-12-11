@@ -4,7 +4,7 @@
         <LevelName>La Roca</LevelName>
         <Checkpoint>
             <CheckpointNumber>0</CheckpointNumber>
-            <Score>0</Score>
+            <Score>123540</Score>
             <Health>90</Health>
             <Lives>3</Lives>
             <BulletCount>25</BulletCount>

@@ -104,7 +104,8 @@ bool BaseRenderComponent::VInit(TiXmlElement* pXmlData)
                 imageNameKey = "frame" + Util::ConvertToThreeDigitsString(imageNameNumStr);
             }*/
             // Just reconstruct it...
-            if (imageNameKey.length() > 3)
+            if (imageNameKey.length() > 3 /* Hack for checkpointflag */ || 
+                std::string(pXmlData->Parent()->ToElement()->Attribute("Type")) == "GAME_CHECKPOINTFLAG")
             {
                 std::string tmp = imageNameKey;
                 tmp.erase(std::remove_if(tmp.begin(), tmp.end(), (int(*)(int))std::isalpha), tmp.end());

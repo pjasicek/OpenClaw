@@ -21,6 +21,8 @@ public:
 
     virtual void VUpdate(uint32 msDiff) override;
 
+    void Destroy() { m_pPhysics->VRemoveActor(_owner->GetGUID()); }
+
     void SetControllableComponent(ControllableComponent* pComp) { m_pControllableComponent = pComp; }
 
     bool CanBounce() const { return m_CanBounce; }
@@ -32,7 +34,9 @@ public:
     int32 GetMaxJumpHeight() const { return m_MaxJumpHeight; }
     void SetMaxJumpHeight(int32 maxJumpHeight) { m_MaxJumpHeight = maxJumpHeight; }
 
+    void SetGravityScale(float gravityScale) { m_pPhysics->VSetGravityScale(_owner->GetGUID(), gravityScale); }
     float GetGravityScale() { return m_GravityScale; }
+    void RestoreGravityScale() { m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale); }
     float GetFriction() { return m_Friction; }
     float GetDensity() { return m_Density; }
 

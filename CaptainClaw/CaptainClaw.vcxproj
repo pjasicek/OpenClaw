@@ -78,6 +78,7 @@
     <ClCompile Include="ClawEvents.cpp" />
     <ClCompile Include="Engine\Actor\ActorTemplates.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\CheckpointComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\DestroyableComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\ProjectileAIComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.cpp" />
@@ -100,6 +101,7 @@
     <ClCompile Include="ClawGameApp.cpp" />
     <ClCompile Include="ClawGameLogic.cpp" />
     <ClCompile Include="ClawHumanView.cpp" />
+    <ClCompile Include="Engine\GameApp\GameSaves.cpp" />
     <ClCompile Include="Engine\Physics\ClawPhysics.cpp" />
     <ClCompile Include="Engine\Physics\CollisionBody.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsContactListener.cpp" />
@@ -153,6 +155,7 @@
     <ClInclude Include="ClawEvents.h" />
     <ClInclude Include="Engine\Actor\ActorTemplates.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\CheckpointComponent.h" />
     <ClInclude Include="Engine\Actor\Components\DestroyableComponent.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\ProjectileAIComponent.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.h" />

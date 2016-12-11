@@ -53,6 +53,11 @@ BaseGameLogic::~BaseGameLogic()
     m_ActorMap.clear();
 
     RemoveAllDelegates();
+
+    // TODO: Remove this after its tested
+    TiXmlDocument saveGamesDoc;
+    saveGamesDoc.LinkEndChild(m_pGameSaveMgr->ToXml());
+    saveGamesDoc.SaveFile("SAVES_test.XML");
 }
 
 bool BaseGameLogic::Initialize()
@@ -96,6 +101,10 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     PROFILE_MEMORY("GAME LOADING");
 
     m_pCurrentLevel.reset(new LevelData);
+
+    // TODO: This should not be here. This will be set when we select level from GUI
+    m_pCurrentLevel->m_LeveNumber = 1;
+    m_pCurrentLevel->m_LoadedCheckpoint = 0;
 
     // Level is going to be loaded from XML WWD
     TiXmlElement* pXmlLevelRoot = XmlResourceLoader::LoadAndReturnRootXmlElement(xmlLevelResource, true);
@@ -184,6 +193,7 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     std::replace(palettePath.begin(), palettePath.end(), '\\', '/');
     g_pApp->SetCurrentPalette(PalResourceLoader::LoadAndReturnPal(palettePath.c_str()));
     
+    uint32 clawId = -1;
     for (TiXmlElement* pActorElem = pXmlLevelRoot->FirstChildElement("Actor"); pActorElem; 
         pActorElem = pActorElem->NextSiblingElement("Actor"))
     {
@@ -194,6 +204,13 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
         {
             shared_ptr<EventData_New_Actor> pNewActorEvent(new EventData_New_Actor(pActor->GetGUID()));
             IEventMgr::Get()->VQueueEvent(pNewActorEvent);
+
+            // Get Claw's GUID
+            if (pActor->GetName() == "Claw")
+            {
+                assert(clawId == -1 && "Multiple Captain Claws in this level - not supported at this time !");
+                clawId = pActor->GetGUID();
+            }
         }
         else
         {
@@ -210,6 +227,24 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
             pHumanView->LoadGame(pXmlLevelRoot);
         }
     }
+
+    // Load game save data
+    const CheckpointSave* pCheckpointSave = m_pGameSaveMgr->GetCheckpointSave(
+        m_pCurrentLevel->m_LeveNumber, m_pCurrentLevel->m_LoadedCheckpoint);
+    assert(pCheckpointSave != NULL);
+
+    // Load claw stats: Score, Health, Lives, Ammo: Bullets, Magic, Dynamite
+    IEventMgr* pEventMgr = IEventMgr::Get();
+    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Modify_Player_Stat(clawId, PlayerStat_Score, pCheckpointSave->score, false)));
+    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Modify_Player_Stat(clawId, PlayerStat_Health, pCheckpointSave->health, false)));
+    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Modify_Player_Stat(clawId, PlayerStat_Lives, pCheckpointSave->lives, false)));
+    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Modify_Player_Stat(clawId, PlayerStat_Bullets, pCheckpointSave->bulletCount, false)));
+    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Modify_Player_Stat(clawId, PlayerStat_Magic, pCheckpointSave->magicCount, false)));
+    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Modify_Player_Stat(clawId, PlayerStat_Dynamite, pCheckpointSave->dynamiteCount, false)));
+
+    // Set claw to spawn location
+    m_CurrentSpawnPosition = GetSpawnPosition(m_pCurrentLevel->m_LeveNumber, m_pCurrentLevel->m_LoadedCheckpoint);
+    //pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(clawId, m_CurrentSpawnPosition)));
 
     LOG("Level loaded !");
     LOG("Level name: " + m_pCurrentLevel->m_LevelName);
