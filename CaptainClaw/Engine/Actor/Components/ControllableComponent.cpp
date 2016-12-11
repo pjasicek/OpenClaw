@@ -94,6 +94,9 @@ void ClawControllableComponent::VPostInit()
     assert(m_pPowerupComponent);
     m_pClawAnimationComponent->AddObserver(this);
 
+    auto pHealthComponent = MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name));
+    pHealthComponent->AddObserver(this);
+
     m_pPhysicsComponent = MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
 }
 
@@ -206,7 +209,8 @@ void ClawControllableComponent::OnAttack()
 void ClawControllableComponent::OnFire(bool outOfAmmo)
 {
     if (IsAttackingOrShooting() ||
-        m_State == ClawState_Climbing)
+        m_State == ClawState_Climbing ||
+        m_State == ClawState_Dying)
     {
         return;
     }
@@ -256,7 +260,8 @@ bool ClawControllableComponent::CanMove()
 {
     if (m_State == ClawState_Shooting ||
         m_State == ClawState_Attacking ||
-        m_State == ClawState_Ducking)
+        m_State == ClawState_Ducking ||
+        m_State == ClawState_Dying)
     {
         return false;
     }
@@ -325,6 +330,18 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
     }
 }
 
+void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
+{
+    if (pAnimation->GetName().find("death") != std::string::npos)
+    {
+        shared_ptr<EventData_Claw_Died> pEvent(new EventData_Claw_Died(_owner->GetGUID()));
+        IEventMgr::Get()->VTriggerEvent(pEvent);
+
+        SetCurrentPhysicsState();
+        m_pPhysicsComponent->RestoreGravityScale();
+    }
+}
+
 bool ClawControllableComponent::IsAttackingOrShooting()
 {
     if (m_State == ClawState_Shooting ||
@@ -338,4 +355,16 @@ bool ClawControllableComponent::IsAttackingOrShooting()
     }
 
     return false;
+}
+
+void ClawControllableComponent::VOnHealthBelowZero()
+{
+    LOG_WARNING("");
+    // TODO: Track how exactly claw died
+    if (m_pClawAnimationComponent->GetCurrentAnimationName() != "spikedeath")
+    {
+        m_pClawAnimationComponent->SetAnimation("spikedeath");
+        m_pPhysicsComponent->SetGravityScale(0.0f);
+        m_State = ClawState_Dying;
+    }
 }

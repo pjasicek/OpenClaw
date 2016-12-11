@@ -727,6 +727,44 @@ namespace ActorTemplates
         return pActor;
     }
 
+    TiXmlElement* CreateXmlData_CheckpointActor(std::string imageSet, Point position, int32 zCoord, Point spawnPosition, bool isSaveCheckpoint, uint32 saveCheckpointNumber)
+    {
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", imageSet.c_str());
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), zCoord));
+        pActor->LinkEndChild(CreateAnimationComponent("/GAME/ANIS/CHECKPOINT/*", true));
+        pActor->LinkEndChild(CreateTriggerComponent(10, false, false));
+        pActor->LinkEndChild(CreatePhysicsComponent(
+            "Dynamic",  // Type - "Dynamic", "Kinematic", "Static"
+            false,      // Has foot sensor ?
+            false,      // Has capsule shape ?
+            false,       // Has bullet behaviour ?
+            false,       // Has sensor behaviour ?
+            "Trigger",    // Fixture type
+            position,      // Position
+            Point(0, 0),          // Size - Leave blank if you want size to be determined by its default image
+            0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
+            false,          // Has any initial speed ?
+            false,         // Has initial impulse ?
+            Point(0, 0), // If it does, specify it here
+            CollisionFlag_Checkpoint,  // Collision flag - e.g. What is this actor ?
+            // TODO:
+            0xFFFF,  // Collision mask - e.g. With what does this actor collide with ?
+            0.0f,  // Friction - with floor and so
+            0.0f,  // Density - determines if this character bounces
+            0.0f)); // Restitution - makes object bounce
+
+        TiXmlElement* pCheckpointComponent = new TiXmlElement("CheckpointComponent");
+        XML_ADD_2_PARAM_ELEMENT("SpawnPosition", "x", ToStr(spawnPosition.x).c_str(), "y", ToStr(spawnPosition.y).c_str(), pCheckpointComponent);
+        XML_ADD_TEXT_ELEMENT("IsSaveCheckpoint", ToStr(isSaveCheckpoint).c_str(), pCheckpointComponent);
+        XML_ADD_TEXT_ELEMENT("SaveCheckpointNumber", ToStr(saveCheckpointNumber).c_str(), pCheckpointComponent);
+        pActor->LinkEndChild(pCheckpointComponent);
+
+        return pActor;
+    }
+
     //=====================================================================================================================
     // Public API
     //=====================================================================================================================

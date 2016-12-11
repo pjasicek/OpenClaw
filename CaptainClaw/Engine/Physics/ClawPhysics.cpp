@@ -399,7 +399,11 @@ void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType c
         fixtureDef.userData = (void*)FixtureType_None; 
     }
 
-    if ((int)fixtureDef.userData != FixtureType_Solid) { fixtureDef.isSensor = true; }
+    if ((int)fixtureDef.userData != FixtureType_Solid &&
+        (int)fixtureDef.userData != FixtureType_Death)
+    { 
+        fixtureDef.isSensor = true; 
+    }
 
     m_pTiles->CreateFixture(&fixtureDef);
 }

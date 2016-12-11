@@ -15,8 +15,10 @@ public:
     virtual void VPostInit() override;
     virtual TiXmlElement* VGenerateXml() override;
 
+    uint32 GetScore() { return m_CurrentScore; }
+
     void AddScorePoints(uint32 points);
-    void SetCurrentScore(uint32 newScore);
+    void SetCurrentScore(uint32 newScore, bool isInitial = false);
 
 private:
     void BroadcastScoreChanged(uint32 oldScore, uint32 newScore, bool isInitial = false);

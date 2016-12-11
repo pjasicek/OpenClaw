@@ -39,12 +39,12 @@ void ScoreComponent::AddScorePoints(uint32 points)
     BroadcastScoreChanged(oldScore, m_CurrentScore);
 }
 
-void ScoreComponent::SetCurrentScore(uint32 newScore)
+void ScoreComponent::SetCurrentScore(uint32 newScore, bool isInitial)
 {
     uint32 oldScore = m_CurrentScore;
     m_CurrentScore = newScore;
 
-    BroadcastScoreChanged(oldScore, m_CurrentScore);
+    BroadcastScoreChanged(oldScore, m_CurrentScore, isInitial);
 }
 
 void ScoreComponent::BroadcastScoreChanged(uint32 oldScore, uint32 newScore, bool isInitial)

@@ -14,6 +14,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_PowderKegActor(std::string imageSet, Point position, int32 damage, int32 zCoord);
     TiXmlElement* CreateXmlData_CrumblingPeg(std::string imageSet, Point position, int32 zCoord);
     TiXmlElement* CreateXmlData_GlitterActor(std::string glitterType, Point position, int32 zCoord);
+    TiXmlElement* CreateXmlData_CheckpointActor(std::string imageSet, Point position, int32 zCoord, Point spawnPosition, bool isSaveCheckpoint, uint32 saveCheckpointNumber);
     
 
     // This is used by the game itself

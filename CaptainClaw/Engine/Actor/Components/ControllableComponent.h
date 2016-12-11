@@ -4,6 +4,7 @@
 #include "../../SharedDefines.h"
 #include "../ActorComponent.h"
 #include "AnimationComponent.h"
+#include "ControllerComponents/HealthComponent.h"
 
 // Goal is to not hard bind claw to be the only controllable character
 // It is solved by accessing this partially interface class
@@ -59,6 +60,7 @@ enum ClawState
     ClawState_DuckAttacking,
     ClawState_JumpAttacking,
     ClawState_TakingDamage,
+    ClawState_Dying
 };
 
 class PositionComponent;
@@ -67,7 +69,7 @@ class ActorRenderComponent;
 class AnimationComponent;
 class AmmoComponent;
 class PowerupComponent;
-class ClawControllableComponent : public ControllableComponent, public AnimationObserver
+class ClawControllableComponent : public ControllableComponent, public AnimationObserver, public HealthObserver
 {
 public:
     ClawControllableComponent();
@@ -97,6 +99,10 @@ public:
 
     // AnimationObserver API
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
+    virtual void VOnAnimationLooped(Animation* pAnimation) override;
+
+    // HealthObserver API
+    virtual void VOnHealthBelowZero() override;
 
 private:
     void SetCurrentPhysicsState();

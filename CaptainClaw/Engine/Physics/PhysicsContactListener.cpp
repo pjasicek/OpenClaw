@@ -7,6 +7,7 @@
 #include "../Actor/Components/AIComponents/CrumblingPegAIComponent.h"
 #include "../Actor/Components/TriggerComponents/TriggerComponent.h"
 #include "../Actor/Components/AIComponents/ProjectileAIComponent.h"
+#include "../Actor/Components/ControllerComponents/HealthComponent.h"
 
 int numFootContacts = 0;
 
@@ -29,7 +30,8 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
 
         if (pFixtureA->GetUserData() == (void*)FixtureType_FootSensor)
         {
-            if (pFixtureB->GetUserData() == (void*)FixtureType_Solid)
+            if (pFixtureB->GetUserData() == (void*)FixtureType_Solid ||
+                pFixtureB->GetUserData() == (void*)FixtureType_Death)
             {
                 shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pFixtureA->GetBody());
                 pPhysicsComponent->OnBeginFootContact();
@@ -119,12 +121,6 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     pTriggerComponent->OnActorEntered(pActor);
                 }
             }
-            // Trigger landed on death tile
-            else if (pFixtureB->GetBody()->GetType() == b2_staticBody && 
-                 pFixtureB->GetUserData() == (void*)FixtureType_Death)
-            {
-
-            }
         }
     }
     // Projectile contact
@@ -160,6 +156,30 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
             }
         }
     }
+    // Death contact
+    {
+        if (pFixtureB->GetUserData() == (void*)FixtureType_Death)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_Death)
+        {
+            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            {
+                Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                assert(pActor);
+
+                shared_ptr<HealthComponent> pHealthComponent =
+                    MakeStrongPtr(pActor->GetComponent<HealthComponent>(HealthComponent::g_Name));
+                if (pHealthComponent)
+                {
+                    LOG("Someone should die");
+                    pHealthComponent->AddHealth(-1 * (pHealthComponent->GetHealth() + 1));
+                }
+            }
+        }
+    }
 }
 
 //=====================================================================================================================
@@ -181,7 +201,8 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
 
         if (pFixtureA->GetUserData() == (void*)FixtureType_FootSensor)
         {
-            if (pFixtureB->GetUserData() == (void*)FixtureType_Solid)
+            if (pFixtureB->GetUserData() == (void*)FixtureType_Solid || 
+                pFixtureB->GetUserData() == (void*)FixtureType_Death)
             {
                 shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pFixtureA->GetBody());
                 pPhysicsComponent->OnEndFootContact();

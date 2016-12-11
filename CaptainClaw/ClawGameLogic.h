@@ -23,6 +23,9 @@ public:
     void NewLifeDelegate(IEventDataPtr pEventData);
     void TeleportActorDelegate(IEventDataPtr pEventData);
     void RequestChangeAmmoTypeDelegate(IEventDataPtr pEventData);
+    void ModifyActorStatDelegate(IEventDataPtr pEventData);
+    void CheckpointReachedDelegate(IEventDataPtr pEventData);
+    void ClawDiedDelegate(IEventDataPtr pEventData);
 
 protected:
     virtual bool VLoadGameDelegate(TiXmlElement* pLevelData);

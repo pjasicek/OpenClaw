@@ -85,6 +85,7 @@ public:
 
     void AttachProcess(StrongProcessPtr pProcess) { if (m_pProcessMgr) { m_pProcessMgr->AttachProcess(pProcess); } }
 
+    shared_ptr<LevelData> GetCurrentLevelData() { return m_pCurrentLevel; }
     shared_ptr<GameSaveMgr> GetGameSaveMgr() { return m_pGameSaveMgr; }
 
 protected:
@@ -116,8 +117,9 @@ protected:
     shared_ptr<IGamePhysics> m_pPhysics;
 
     shared_ptr<LevelData> m_pCurrentLevel;
-
     shared_ptr<GameSaveMgr> m_pGameSaveMgr;
+
+    Point m_CurrentSpawnPosition;
 
 private:
     void RegisterAllDelegates();
@@ -175,16 +177,24 @@ public:
         m_LevelName = "Unknown";
         m_LevelAuthor = "Unknown";
         m_LevelCreatedDate = "Unknown";
+
+        m_LeveNumber = -1;
+        m_LoadedCheckpoint = -1;
     }
 
     std::string GetLevelName() const { return m_LevelName; }
     std::string GetLevelAuthor() const { return m_LevelAuthor; }
     std::string GetLevelCreatedDate() const { return m_LevelCreatedDate; }
+    uint32 GetLevelNumber() const { return m_LeveNumber; }
+    uint32 GetLoadedCheckpointNumber() const { return m_LoadedCheckpoint; }
 
 private:
     std::string m_LevelName;
     std::string m_LevelAuthor;
     std::string m_LevelCreatedDate;
+
+    uint32 m_LeveNumber;
+    uint32 m_LoadedCheckpoint;
 
     TileDescriptionMap m_TileDescriptionMap;
     TileCollisionPrototypeMap m_TileCollisionPrototypeMap;

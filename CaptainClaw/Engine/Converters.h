@@ -589,13 +589,28 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
         XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle75", animElem);
         pActorElem->LinkEndChild(animElem);
     }
-    else if (logic.find("SuperCheckpoint") != std::string::npos)
-    {
-        //pActorElem->LinkEndChild(SuperCheckpointToXml(wwdObject));
-    }
     else if (logic.find("Checkpoint") != std::string::npos)
     {
-        //pActorElem->LinkEndChild(CheckpointToXml(wwdObject));
+        bool isSaveCheckpoint = false;
+        uint32 saveCheckpointNumber = 0;
+        if (logic == "FirstSuperCheckpoint")
+        {
+            isSaveCheckpoint = true;
+            saveCheckpointNumber = 1;
+        }
+        else if (logic == "SecondSuperCheckpoint")
+        {
+            isSaveCheckpoint = true;
+            saveCheckpointNumber = 2;
+        }
+
+        return ActorTemplates::CreateXmlData_CheckpointActor(
+            wwdObject->imageSet, 
+            Point(wwdObject->x, wwdObject->y), 
+            wwdObject->z, 
+            Point(wwdObject->x, wwdObject->y), 
+            isSaveCheckpoint, 
+            saveCheckpointNumber);
     }
     else if (logic.find("PowderKeg") != std::string::npos)
     {
@@ -631,6 +646,7 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
 
         // All powerups should have trigger
         pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
+        pActorElem->LinkEndChild(ActorTemplates::CreateXmlData_GlitterComponent("Glitter_Yellow", true, false));
 
         std::string imageSet = wwdObject->imageSet;
         if (imageSet == "GAME_WARP")
@@ -782,18 +798,18 @@ TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
     pClawActor->LinkEndChild(pScoreComponent);
 
     TiXmlElement* pLifeComponent = new TiXmlElement("LifeComponent");
-    XML_ADD_TEXT_ELEMENT("Lives", "1", pLifeComponent);
+    XML_ADD_TEXT_ELEMENT("Lives", "0", pLifeComponent);
     pClawActor->LinkEndChild(pLifeComponent);
 
     TiXmlElement* pHealthComponent = new TiXmlElement("HealthComponent");
-    XML_ADD_TEXT_ELEMENT("Health", "80", pHealthComponent);
+    XML_ADD_TEXT_ELEMENT("Health", "0", pHealthComponent);
     XML_ADD_TEXT_ELEMENT("MaxHealth", "150", pHealthComponent);
     pClawActor->LinkEndChild(pHealthComponent);
 
     TiXmlElement* pAmmoComponent = new TiXmlElement("AmmoComponent");
-    XML_ADD_TEXT_ELEMENT("Pistol", "15", pAmmoComponent);
-    XML_ADD_TEXT_ELEMENT("Magic", "10", pAmmoComponent);
-    XML_ADD_TEXT_ELEMENT("Dynamite", "5", pAmmoComponent);
+    XML_ADD_TEXT_ELEMENT("Pistol", "0", pAmmoComponent);
+    XML_ADD_TEXT_ELEMENT("Magic", "0", pAmmoComponent);
+    XML_ADD_TEXT_ELEMENT("Dynamite", "0", pAmmoComponent);
     pClawActor->LinkEndChild(pAmmoComponent);
 
     TiXmlElement* pPowerupComponent = new TiXmlElement("PowerupComponent");

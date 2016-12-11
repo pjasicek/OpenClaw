@@ -35,6 +35,9 @@ const EventType EventData_Request_Change_Ammo_Type::sk_EventType(0xe4c6edd7);
 const EventType EventData_Teleport_Actor::sk_EventType(0x1f3bc45);
 const EventType EventData_Updated_Powerup_Time::sk_EventType(0xadb6bd74);
 const EventType EventData_Updated_Powerup_Status::sk_EventType(0xe0b1d14d);
+const EventType EventData_Modify_Player_Stat::sk_EventType(0xbcf3d9f5);
+const EventType EventData_Checkpoint_Reached::sk_EventType(0xcf204982);
+const EventType EventData_Claw_Died::sk_EventType(0x6b32b1af);
 
 /*bool EventData_PlaySound::VBuildEventFromScript(void)
 {
