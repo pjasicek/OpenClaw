@@ -1,43 +1,43 @@
-#include "ExplosionComponent.h"
+#include "AreaDamageComponent.h"
 #include "../../GameApp/BaseGameApp.h"
 #include "../../GameApp/BaseGameLogic.h"
 
 #include "../../Events/EventMgr.h"
 #include "../../Events/Events.h"
 
-const char* ExplosionComponent::g_Name = "ExplosionComponent";
+const char* AreaDamageComponent::g_Name = "AreaDamageComponent";
 
-ExplosionComponent::ExplosionComponent()
+AreaDamageComponent::AreaDamageComponent()
     :
     m_Damage(50),
-    m_ExplodingTime(50),
+    m_Duration(50),
     m_ActiveTime(0)
 { }
 
-bool ExplosionComponent::VDelegateInit(TiXmlElement* pData)
+bool AreaDamageComponent::VDelegateInit(TiXmlElement* pData)
 {
     assert(pData);
 
-    if (TiXmlElement* pElem = pData->FirstChildElement("ExplodingTime"))
+    if (TiXmlElement* pElem = pData->FirstChildElement("Duration"))
     {
-        m_ExplodingTime = std::stoi(pElem->GetText());
+        m_Duration = std::stoi(pElem->GetText());
     }
     if (TiXmlElement* pElem = pData->FirstChildElement("Damage"))
     {
         m_Damage = std::stoi(pElem->GetText());
     }
 
-    assert(m_ExplodingTime > 0);
+    assert(m_Duration > 0);
 
     return true;
 }
 
-void ExplosionComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement)
+void AreaDamageComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement)
 {
 
 }
 
-bool ExplosionComponent::VOnApply(Actor* pActorWhoPickedThis)
+bool AreaDamageComponent::VOnApply(Actor* pActorWhoPickedThis)
 {
     shared_ptr<HealthComponent> pHealthComponent =
         MakeStrongPtr(pActorWhoPickedThis->GetComponent<HealthComponent>(HealthComponent::g_Name));
@@ -49,11 +49,11 @@ bool ExplosionComponent::VOnApply(Actor* pActorWhoPickedThis)
     return false;
 }
 
-void ExplosionComponent::VUpdate(uint32 msDiff)
+void AreaDamageComponent::VUpdate(uint32 msDiff)
 {
     m_ActiveTime += msDiff;
 
-    if (m_ActiveTime >= m_ExplodingTime)
+    if (m_ActiveTime >= m_Duration)
     {
         shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
