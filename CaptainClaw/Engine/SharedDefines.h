@@ -149,6 +149,8 @@ struct ActorBodyDef
         makeSensor = true;
         fixtureType = FixtureType_None;
         position = Point(0, 0);
+        positionOffset = Point(0, 0);
+        collisionShape = "Rectangle";
         size = Point(0, 0);
         gravityScale = 1.0f;
         setInitialSpeed = false;
@@ -197,6 +199,8 @@ struct ActorBodyDef
     bool makeSensor;
     FixtureType fixtureType;
     Point position;
+    Point positionOffset;
+    std::string collisionShape;
     Point size;
     float gravityScale;
     bool setInitialSpeed;

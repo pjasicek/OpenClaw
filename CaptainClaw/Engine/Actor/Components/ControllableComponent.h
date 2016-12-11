@@ -37,8 +37,10 @@ public:
     virtual void OnAttack() = 0;
     virtual void OnFire(bool outOfAmmo = false) = 0;
     virtual void OnDuck() = 0;
+    virtual void OnStand() = 0;
 
     virtual bool CanMove() = 0;
+    virtual bool IsDucking() = 0;
 
 private:
     bool m_Active;
@@ -96,6 +98,8 @@ public:
     virtual void OnDuck() override;
 
     virtual bool CanMove() override;
+    virtual bool IsDucking() override;
+    virtual void OnStand() override;
 
     // AnimationObserver API
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
