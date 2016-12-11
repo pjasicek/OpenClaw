@@ -71,5 +71,5 @@ void ExplodeableComponent::VOnHealthBelowZero()
         MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     assert(pPositionComponent);
 
-    ActorTemplates::CreateExplosion(pPositionComponent->GetPosition(), m_ExplosionSize, m_Damage);
+    ActorTemplates::CreateAreaDamage(pPositionComponent->GetPosition(), m_ExplosionSize, m_Damage, CollisionFlag_Explosion);
 }

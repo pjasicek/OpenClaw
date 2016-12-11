@@ -6,10 +6,10 @@
 #include "ControllerComponents/HealthComponent.h"
 #include "PickupComponents/PickupComponent.h"
 
-class ExplosionComponent : public PickupComponent
+class AreaDamageComponent : public PickupComponent
 {
 public:
-    ExplosionComponent();
+    AreaDamageComponent();
 
     static const char* g_Name;
     virtual const char* VGetName() const { return g_Name; }
@@ -24,7 +24,7 @@ protected:
 
 private:
     int32 m_Damage;
-    int32 m_ExplodingTime;
+    int32 m_Duration;
     int32 m_ActiveTime;
 };
 

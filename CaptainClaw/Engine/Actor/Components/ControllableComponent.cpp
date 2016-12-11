@@ -363,15 +363,22 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             animName == "kick" ||
             animName == "uppercut" ||
             animName == "jumpswipe" ||
-            animName == "duckswipe")
-            && pAnimation->IsAtLastAnimFrame())
+            animName == "duckswipe"))
     {
-        SetCurrentPhysicsState();
+        if (pAnimation->GetCurrentAnimationFrame()->hasEvent)
+        {
+            ActorTemplates::CreateAreaDamage(m_pPositionComponent->GetPosition(), Point(50, 50), 10, CollisionFlag_ClawAttack);
+        }
+        if (pAnimation->IsAtLastAnimFrame())
+        {
+            SetCurrentPhysicsState();
+        }
     }
 }
 
 void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
 {
+    std::string animName = pAnimation->GetName();
     if (pAnimation->GetName().find("death") != std::string::npos)
     {
         shared_ptr<EventData_Claw_Died> pEvent(new EventData_Claw_Died(_owner->GetGUID()));

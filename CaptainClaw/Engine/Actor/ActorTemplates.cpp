@@ -300,6 +300,8 @@ namespace ActorTemplates
         bool hasSensorBehaviour,
         std::string fixtureTypeStr,
         Point position,
+        Point positionOffset,
+        std::string collisionShape,
         Point size,
         float gravityScale,
         bool hasInitialSpeed,
@@ -319,6 +321,8 @@ namespace ActorTemplates
         XML_ADD_TEXT_ELEMENT("HasBulletBehaviour", ToStr(hasBulletBehaviour).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("HasSensorBehaviour", ToStr(hasSensorBehaviour).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("FixtureType", fixtureTypeStr.c_str(), pPhysicsComponent);
+        XML_ADD_2_PARAM_ELEMENT("PositionOffset", "x", positionOffset.x, "y", positionOffset.y, pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("CollisionShape", collisionShape.c_str(), pPhysicsComponent);
         XML_ADD_2_PARAM_ELEMENT("CollisionSize", "width", size.x, "height", size.y, pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("GravityScale", ToStr(gravityScale).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("HasInitialSpeed", ToStr(hasInitialSpeed).c_str(), pPhysicsComponent);
@@ -380,14 +384,14 @@ namespace ActorTemplates
         return pExplodeableComponent;
     }
 
-    TiXmlElement* CreateExplosionComponent(int damage, int explodingTime = 100)
+    TiXmlElement* CreateAreaDamageComponent(int damage, int areaDuration = 100)
     {
-        TiXmlElement* pExplosionComponent = new TiXmlElement("ExplosionComponent");
+        TiXmlElement* pAreaDamageComponent = new TiXmlElement("AreaDamageComponent");
 
-        XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pExplosionComponent);
-        XML_ADD_TEXT_ELEMENT("ExplodingTime", ToStr(explodingTime).c_str(), pExplosionComponent);
+        XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pAreaDamageComponent);
+        XML_ADD_TEXT_ELEMENT("Duration", ToStr(areaDuration).c_str(), pAreaDamageComponent);
 
-        return pExplosionComponent;
+        return pAreaDamageComponent;
     }
 
     TiXmlElement* CreateXmlData_GlitterComponent(std::string glitterType, bool spawnImmediate, bool followOwner)
@@ -432,6 +436,8 @@ namespace ActorTemplates
             false,       // Has sensor behaviour ?
             "Trigger",    // Fixture type
             position,      // Position
+            Point(0, 0),   // Offset - where to move the body upon its placement
+            "Rectangle",   // Body shape - "Rectangle" or "Circle"
             Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
             0.8f,          // Gravity scale - set to 0.0f if no gravity is desired
             true,          // Has any initial speed ?
@@ -541,6 +547,8 @@ namespace ActorTemplates
             true,       // Has sensor behaviour ?
             "Projectile",  // Fixture type
             position,      // Position
+            Point(0, 0),   // Offset - where to move the body upon its placement
+            "Rectangle",   // Body shape - "Rectangle" or "Circle"
             Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
             0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
             true,          // Has any initial speed ?
@@ -588,13 +596,15 @@ namespace ActorTemplates
             false,       // Has sensor behaviour ?
             "Crate",    // Fixture type
             position,      // Position
+            Point(0, 0),   // Offset - where to move the body upon its placement
+            "Rectangle",   // Body shape - "Rectangle" or "Circle"
             Point(44, 40),   // Size - Leave blank if you want size to be determined by its default image
             0.8f,          // Gravity scale - set to 0.0f if no gravity is desired
             true,          // Has any initial speed ?
             false,         // Has initial impulse ?
             Point(0, 0), // If it does, specify it here
             CollisionFlag_Crate,  // Collision flag - e.g. What is this actor ?
-            (CollisionFlag_Crate | CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_Explosion),  // Collision mask - e.g. With what does this actor collide with ?
+            (CollisionFlag_Crate | CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_Explosion | CollisionFlag_ClawAttack | CollisionFlag_EnemyAIProjectile),  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Density - determines if this character bounces
             0.0f,  // Friction - with floor and so
             0.3f)); // Restitution - makes object bounce
@@ -622,6 +632,8 @@ namespace ActorTemplates
             true,       // Has sensor behaviour ?
             "Crate",    // Fixture type
             position,      // Position
+            Point(0, 0),   // Offset - where to move the body upon its placement
+            "Rectangle",   // Body shape - "Rectangle" or "Circle"
             Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
             0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
             false,          // Has any initial speed ?
@@ -641,7 +653,7 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_ExplosionActor(Point position, Point size, int32 damage, std::string imageSet = "", int32 zCoord = 0)
+    TiXmlElement* CreateXmlData_AreaDamageActor(Point position, Point size, int32 damage, CollisionFlag damageType, std::string imageSet = "", int32 zCoord = 0)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", "Explosion");
@@ -660,19 +672,21 @@ namespace ActorTemplates
             true,       // Has sensor behaviour ?
             "Trigger",    // Fixture type
             position,      // Position
+            Point(0, 0),   // Offset - where to move the body upon its placement
+            "Rectangle",   // Body shape - "Rectangle" or "Circle"
             size,          // Size - Leave blank if you want size to be determined by its default image
             0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
             false,          // Has any initial speed ?
             false,         // Has initial impulse ?
             Point(0, 0), // If it does, specify it here
-            CollisionFlag_Explosion,  // Collision flag - e.g. What is this actor ?
+            damageType,  // Collision flag - e.g. What is this actor ?
             (CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Controller),  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Friction - with floor and so
             0.0f,  // Density - determines if this character bounces
             0.0f)); // Restitution - makes object bounce
 
         pActor->LinkEndChild(CreateTriggerComponent(-1, false, false));
-        pActor->LinkEndChild(CreateExplosionComponent(damage));
+        pActor->LinkEndChild(CreateAreaDamageComponent(damage));
 
         return pActor;
     }
@@ -693,6 +707,8 @@ namespace ActorTemplates
             true,       // Has sensor behaviour ?
             "Ground",    // Fixture type
             position,      // Position
+            Point(0, 0),   // Offset - where to move the body upon its placement
+            "Rectangle",   // Body shape - "Rectangle" or "Circle"
             Point(0, 0),          // Size - Leave blank if you want size to be determined by its default image
             0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
             false,          // Has any initial speed ?
@@ -744,6 +760,8 @@ namespace ActorTemplates
             false,       // Has sensor behaviour ?
             "Trigger",    // Fixture type
             position,      // Position
+            Point(0, 0),   // Offset - where to move the body upon its placement
+            "Rectangle",   // Body shape - "Rectangle" or "Circle"
             Point(0, 0),          // Size - Leave blank if you want size to be determined by its default image
             0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
             false,          // Has any initial speed ?
@@ -821,9 +839,9 @@ namespace ActorTemplates
         return nullptr;
     }
 
-    StrongActorPtr CreateExplosion(Point position, Point size, int32 damage, std::string imageSet, int32 zCoord)
+    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag damageType, std::string imageSet, int32 zCoord)
     {
-        return CreateAndReturnActor(CreateXmlData_ExplosionActor(position, size, damage, imageSet, zCoord));
+        return CreateAndReturnActor(CreateXmlData_AreaDamageActor(position, size, damage, damageType, imageSet, zCoord));
     }
 
     StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord)

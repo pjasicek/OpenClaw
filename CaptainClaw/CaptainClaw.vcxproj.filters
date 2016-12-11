@@ -228,9 +228,6 @@
     <ClCompile Include="Engine\Actor\Components\ExplodeableComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actor\Components\ExplosionComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Actor\Components\GlitterComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -238,6 +235,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GameApp\GameSaves.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actor\Components\AreaDamageComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -479,9 +479,6 @@
     <ClInclude Include="Engine\Actor\Components\ExplodeableComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actor\Components\ExplosionComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -492,6 +489,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Actor\Components\CheckpointComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actor\Components\AreaDamageComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

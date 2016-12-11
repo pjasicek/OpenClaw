@@ -22,7 +22,7 @@ namespace ActorTemplates
     StrongActorPtr CreatePowerupSparkleActor();
     StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position);
     StrongActorPtr CreateProjectile(std::string imageSet, Direction direction, Point position);
-    StrongActorPtr CreateExplosion(Point position, Point size, int32 damage, std::string imageSet = "", int32 zCoord = 0);
+    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag damageType, std::string imageSet = "", int32 zCoord = 0);
     StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord = 1010);
 };
 
