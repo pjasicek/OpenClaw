@@ -243,6 +243,11 @@ TiXmlElement* PhysicsComponent::VGenerateXml()
 //
 void PhysicsComponent::VUpdate(uint32 msDiff)
 {
+    if (!m_pControllableComponent)
+    {
+        return;
+    }
+
     assert(m_NumFootContacts >= 0);
     //assert(m_IsJumping && m_IsFalling && "Cannot be jumping and falling at the same time");
 
@@ -251,10 +256,26 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     //LOG("Vel X: " + ToStr(GetVelocity().x) + ", Vel Y: " + ToStr(GetVelocity().y));
     //LOG(ToStr(m_OverlappingKinematicBodiesList.size()));
     
-    if (m_pControllableComponent && !m_pControllableComponent->CanMove())
+    //LOG("CLIMBING Y: " + ToStr(m_ClimbingSpeed.y));
+
+    if (m_pControllableComponent && m_pControllableComponent->CanMove() 
+        && (m_pControllableComponent->IsDucking() && fabs(m_ClimbingSpeed.y) < DBL_EPSILON))
     {
+        m_pControllableComponent->OnStand();
+    }
+
+    if (m_pControllableComponent && 
+        (!m_pControllableComponent->CanMove() || (m_pControllableComponent->IsDucking() && m_ClimbingSpeed.y > DBL_EPSILON)))
+    {
+        if (fabs(m_CurrentSpeed.x) > DBL_EPSILON)
+        {
+            m_Direction = m_CurrentSpeed.x < 0 ? Direction_Left : Direction_Right;
+            m_pControllableComponent->VOnDirectionChange(m_Direction);
+        }
+
         SetVelocity(Point(0, 0));
         m_CurrentSpeed = Point(0, 0);
+        m_ClimbingSpeed = Point(0, 0);
         return;
     }
 
@@ -295,10 +316,34 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             return;
         }
     }
+    
+    if (m_pControllableComponent)
+    {
+        if (!m_IsClimbing && !IsInAir() && m_ClimbingSpeed.y > DBL_EPSILON &&
+            GetVelocity().y < 0.1)
+        {
+            m_pControllableComponent->OnDuck();
+
+            if (fabs(m_CurrentSpeed.x) > DBL_EPSILON)
+            {
+                m_Direction = m_CurrentSpeed.x < 0 ? Direction_Left : Direction_Right;
+                m_pControllableComponent->VOnDirectionChange(m_Direction);
+            }
+
+            SetVelocity(Point(0, 0));
+            m_CurrentSpeed = Point(0, 0);
+            m_ClimbingSpeed = Point(0, 0);
+            return;
+        }
+        else if (m_pControllableComponent->IsDucking())
+        {
+            m_pControllableComponent->OnStand();
+        }
+    }
 
     if (!m_IsClimbing && !IsInAir() && m_ClimbingSpeed.y > 0)
     {
-        LOG("Should duck");
+        
     }
 
     /*if (m_OverlappingLaddersList.size() > 1)

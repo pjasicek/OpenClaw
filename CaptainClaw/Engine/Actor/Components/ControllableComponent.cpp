@@ -142,10 +142,12 @@ void ClawControllableComponent::VOnDirectionChange(Direction direction)
 
 void ClawControllableComponent::VOnStopMoving()
 {
-    if (m_State == ClawState_Shooting)
+    if (m_State == ClawState_Shooting ||
+        IsDucking())
     {
         return;
     }
+
     m_pClawAnimationComponent->SetAnimation("stand");
     m_State = ClawState_Standing;
 }
@@ -185,6 +187,11 @@ void ClawControllableComponent::OnAttack()
     {
         m_pClawAnimationComponent->SetAnimation("jumpswipe");
         m_State = ClawState_JumpAttacking;
+    }
+    else if (IsDucking())
+    {
+        m_pClawAnimationComponent->SetAnimation("duckswipe");
+        m_State = ClawState_DuckAttacking;
     }
     else
     {
@@ -233,6 +240,22 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
         }
         m_State = ClawState_JumpShooting;
     }
+    else if (IsDucking())
+    {
+        if (activeAmmoType == AmmoType_Pistol)
+        {
+            m_pClawAnimationComponent->SetAnimation("duckpistol");
+        }
+        else if (activeAmmoType == AmmoType_Magic)
+        {
+            m_pClawAnimationComponent->SetAnimation("duckmagic");
+        }
+        else if (activeAmmoType == AmmoType_Dynamite)
+        {
+            m_pClawAnimationComponent->SetAnimation("duckpostdynamite");
+        }
+        m_State = ClawState_DuckAttacking;
+    }
     else
     {
         if (activeAmmoType == AmmoType_Pistol)
@@ -253,15 +276,20 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
 
 void ClawControllableComponent::OnDuck()
 {
-
+    if (!IsDucking())
+    {
+        m_pClawAnimationComponent->SetAnimation("duck");
+        m_State = ClawState_Ducking;
+    }
 }
 
 bool ClawControllableComponent::CanMove()
 {
     if (m_State == ClawState_Shooting ||
         m_State == ClawState_Attacking ||
-        m_State == ClawState_Ducking ||
-        m_State == ClawState_Dying)
+        m_State == ClawState_Dying ||
+        m_State == ClawState_DuckAttacking ||
+        m_State == ClawState_DuckShooting)
     {
         return false;
     }
@@ -280,6 +308,11 @@ void ClawControllableComponent::SetCurrentPhysicsState()
     {
         m_pClawAnimationComponent->SetAnimation("jump");
         m_State = ClawState_Jumping;
+    }
+    else if (IsDucking())
+    {
+        m_pClawAnimationComponent->SetAnimation("duck");
+        m_State = ClawState_Ducking;
     }
     else if (m_pPhysicsComponent->IsOnGround())
     {
@@ -308,7 +341,14 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             AmmoType projectileType = m_pAmmoComponent->GetActiveAmmoType();
             int32 offsetX = 50;
             if (m_Direction == Direction_Left) { offsetX *= -1; }
-            ActorTemplates::CreateClawProjectile(projectileType, m_Direction, Point(m_pPositionComponent->GetX() + offsetX, m_pPositionComponent->GetY() - 20));
+            int32 offsetY = -20;
+            if (IsDucking()) { offsetY += 40; }
+            ActorTemplates::CreateClawProjectile(projectileType, m_Direction, Point(m_pPositionComponent->GetX() + offsetX, m_pPositionComponent->GetY() + offsetY));
+
+            if (IsDucking())
+            {
+                SetCurrentPhysicsState();
+            }
         }
     }
 
@@ -359,7 +399,6 @@ bool ClawControllableComponent::IsAttackingOrShooting()
 
 void ClawControllableComponent::VOnHealthBelowZero()
 {
-    LOG_WARNING("");
     // TODO: Track how exactly claw died
     if (m_pClawAnimationComponent->GetCurrentAnimationName() != "spikedeath")
     {
@@ -367,4 +406,17 @@ void ClawControllableComponent::VOnHealthBelowZero()
         m_pPhysicsComponent->SetGravityScale(0.0f);
         m_State = ClawState_Dying;
     }
+}
+
+bool ClawControllableComponent::IsDucking()
+{
+    return (m_State == ClawState_Ducking ||
+        m_State == ClawState_DuckAttacking ||
+        m_State == ClawState_DuckShooting);
+}
+
+void ClawControllableComponent::OnStand()
+{
+    m_State = ClawState_Standing;
+    SetCurrentPhysicsState();
 }
