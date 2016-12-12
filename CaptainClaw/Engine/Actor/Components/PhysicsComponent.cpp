@@ -139,6 +139,15 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
             assert(false && "Unknown body type");
         }
     }
+    if (TiXmlElement* pElem = data->FirstChildElement("PositionOffset"))
+    {
+        pElem->Attribute("x", &m_ActorBodyDef.positionOffset.x);
+        pElem->Attribute("y", &m_ActorBodyDef.positionOffset.y);
+    }
+    if (TiXmlElement* pElem = data->FirstChildElement("CollisionShape"))
+    {
+        m_ActorBodyDef.collisionShape = pElem->GetText();
+    }
     if (TiXmlElement* pElem = data->FirstChildElement("HasInitialSpeed"))
     {
         m_ActorBodyDef.setInitialSpeed = std::string(pElem->GetText()) == "true";
@@ -210,6 +219,7 @@ void PhysicsComponent::VPostInit()
             m_ActorBodyDef.size.y = pImage->GetHeight();
         }
 
+        m_ActorBodyDef.position += m_ActorBodyDef.positionOffset;
         m_ActorBodyDef.pActor = _owner;
 
         m_pPhysics->VAddActorBody(&m_ActorBodyDef);

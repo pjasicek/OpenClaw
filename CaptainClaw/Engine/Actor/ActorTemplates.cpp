@@ -216,7 +216,7 @@ namespace ActorTemplates
     TiXmlElement* CreatePositionComponent(double x, double y)
     {
         TiXmlElement* pComponent = new TiXmlElement("PositionComponent");
-        XML_ADD_2_PARAM_ELEMENT("Position", "x", x, "y", y, pComponent);
+        XML_ADD_2_PARAM_ELEMENT("Position", "x", (int)x, "y", (int)y, pComponent);
         return pComponent;
     }
 
@@ -345,6 +345,11 @@ namespace ActorTemplates
         for (auto item : loot)
         {
             XML_ADD_TEXT_ELEMENT("Item", ToStr(item).c_str(), pLootComponent);
+        }
+
+        if (loot.empty())
+        {
+            XML_ADD_TEXT_ELEMENT("Item", ToStr(PickupType_Treasure_Coins).c_str(), pLootComponent);
         }
 
         return pLootComponent;
@@ -648,12 +653,12 @@ namespace ActorTemplates
         pActor->LinkEndChild(CreateAnimationComponent("/LEVEL1/ANIS/POWDERKEG/EXPLODE.ANI", true));
         pActor->LinkEndChild(CreateDestroyableComponent(true, {}));
         pActor->LinkEndChild(CreateHealthComponent(1, 1));
-        pActor->LinkEndChild(CreateExplodeableComponent(Point(100, 100), damage));
+        pActor->LinkEndChild(CreateExplodeableComponent(Point(150, 150), damage));
 
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_AreaDamageActor(Point position, Point size, int32 damage, CollisionFlag damageType, std::string imageSet = "", int32 zCoord = 0)
+    TiXmlElement* CreateXmlData_AreaDamageActor(Point position, Point size, int32 damage, CollisionFlag damageType, std::string shape, Point positionOffset, std::string imageSet = "", int32 zCoord = 0)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", "Explosion");
@@ -672,8 +677,8 @@ namespace ActorTemplates
             true,       // Has sensor behaviour ?
             "Trigger",    // Fixture type
             position,      // Position
-            Point(0, 0),   // Offset - where to move the body upon its placement
-            "Rectangle",   // Body shape - "Rectangle" or "Circle"
+            positionOffset,   // Offset - where to move the body upon its placement
+            shape,         // Body shape - "Rectangle" or "Circle"
             size,          // Size - Leave blank if you want size to be determined by its default image
             0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
             false,          // Has any initial speed ?
@@ -839,9 +844,9 @@ namespace ActorTemplates
         return nullptr;
     }
 
-    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag damageType, std::string imageSet, int32 zCoord)
+    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag damageType, std::string shape, Point positionOffset, std::string imageSet, int32 zCoord)
     {
-        return CreateAndReturnActor(CreateXmlData_AreaDamageActor(position, size, damage, damageType, imageSet, zCoord));
+        return CreateAndReturnActor(CreateXmlData_AreaDamageActor(position, size, damage, damageType, shape, positionOffset, imageSet, zCoord));
     }
 
     StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord)
