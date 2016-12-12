@@ -365,9 +365,23 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             animName == "jumpswipe" ||
             animName == "duckswipe"))
     {
-        if (pAnimation->GetCurrentAnimationFrame()->hasEvent)
+        if (pAnimation->GetCurrentAnimationFrame()->hasEvent ||
+            (animName == "swipe" && pNewFrame->idx == 3))
         {
-            ActorTemplates::CreateAreaDamage(m_pPositionComponent->GetPosition(), Point(50, 50), 10, CollisionFlag_ClawAttack);
+            Point position = m_pPositionComponent->GetPosition();
+            Point positionOffset(60, 20);
+            if (animName == "jumpswipe")
+            {
+                positionOffset.y -= 10;
+                positionOffset.x += 5;
+            }
+            if (m_Direction == Direction_Left)
+            {
+                positionOffset = Point(-1.0 * positionOffset.x, positionOffset.y);
+            }
+            position += positionOffset;
+
+            ActorTemplates::CreateAreaDamage(position, Point(50, 25), 10, CollisionFlag_ClawAttack, "Rectangle");
         }
         if (pAnimation->IsAtLastAnimFrame())
         {

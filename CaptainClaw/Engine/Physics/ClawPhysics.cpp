@@ -630,6 +630,8 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
         fixtureDef.friction = actorBodyDef->friction;
         fixtureDef.restitution = actorBodyDef->restitution;
         fixtureDef.isSensor = actorBodyDef->makeSensor;
+        fixtureDef.filter.categoryBits = actorBodyDef->collisionFlag;
+        fixtureDef.filter.maskBits = actorBodyDef->collisionMask;
         pBody->CreateFixture(&fixtureDef);
 
         bodyShape.m_p.Set(0, b2BodySize.y / 2 - b2BodySize.x / 2);
@@ -643,11 +645,27 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
     }
     else
     {
-        b2PolygonShape bodyShape;
-        bodyShape.SetAsBox(b2BodySize.x / 2, b2BodySize.y / 2);
-
         b2FixtureDef fixtureDef;
-        fixtureDef.shape = &bodyShape;
+        if (actorBodyDef->collisionShape == "Rectangle")
+        {
+            b2PolygonShape bodyShape;
+            bodyShape.SetAsBox(b2BodySize.x / 2, b2BodySize.y / 2);
+            fixtureDef.shape = &bodyShape;
+        }
+        else if (actorBodyDef->collisionShape == "Circle")
+        {
+            b2CircleShape bodyShape;
+            bodyShape.m_p.Set(0, 0);
+            bodyShape.m_radius = b2BodySize.x / 2;
+            fixtureDef.shape = &bodyShape;
+            LOG_WARNING("");
+        }
+        else
+        {
+            LOG_ERROR("Conflicting shape: " + actorBodyDef->collisionShape);
+            assert(false && "Unknown collision shape.");
+        }
+
         fixtureDef.friction = actorBodyDef->friction;
         fixtureDef.density = actorBodyDef->density;
         fixtureDef.restitution = actorBodyDef->restitution;
