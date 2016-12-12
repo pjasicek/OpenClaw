@@ -88,7 +88,6 @@ void GlitterComponent::VUpdate(uint32 msDiff)
         // Spawn sparkle if actor is still
         if (pPhysicsComponent && !pPhysicsComponent->IsAwake())
         {
-            LOG("Creating glitter");
             m_pGlitter = ActorTemplates::CreateGlitter(m_GlitterType, m_pPositonComponent->GetPosition());
         }
     }
