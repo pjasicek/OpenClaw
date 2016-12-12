@@ -653,7 +653,7 @@ namespace ActorTemplates
         pActor->LinkEndChild(CreateAnimationComponent("/LEVEL1/ANIS/POWDERKEG/EXPLODE.ANI", true));
         pActor->LinkEndChild(CreateDestroyableComponent(true, {}));
         pActor->LinkEndChild(CreateHealthComponent(1, 1));
-        pActor->LinkEndChild(CreateExplodeableComponent(Point(150, 150), damage));
+        pActor->LinkEndChild(CreateExplodeableComponent(Point(120, 120), damage));
 
         return pActor;
     }
@@ -664,7 +664,7 @@ namespace ActorTemplates
         pActor->SetAttribute("Type", "Explosion");
 
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
-        //if (!imageSet.empty())
+        if (!imageSet.empty())
         {
             pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), zCoord));
             pActor->LinkEndChild(CreateCycleAnimationComponent(75, false));

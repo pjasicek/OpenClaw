@@ -83,6 +83,7 @@ bool Scene::RemoveChild(uint32 actorId)
     if (!kid)
     {
         LOG_WARNING("Attempting to remove nonexisting actor. ActorId: " + ToStr(actorId));
+        return false;
     }
 
     m_ActorMap.erase(actorId);

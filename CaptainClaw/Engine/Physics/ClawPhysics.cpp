@@ -646,19 +646,20 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
     else
     {
         b2FixtureDef fixtureDef;
+
+        b2PolygonShape rectangleShape;
+        b2CircleShape circleShape;
+
         if (actorBodyDef->collisionShape == "Rectangle")
         {
-            b2PolygonShape bodyShape;
-            bodyShape.SetAsBox(b2BodySize.x / 2, b2BodySize.y / 2);
-            fixtureDef.shape = &bodyShape;
+            rectangleShape.SetAsBox(b2BodySize.x / 2, b2BodySize.y / 2);
+            fixtureDef.shape = &rectangleShape;
         }
         else if (actorBodyDef->collisionShape == "Circle")
         {
-            b2CircleShape bodyShape;
-            bodyShape.m_p.Set(0, 0);
-            bodyShape.m_radius = b2BodySize.x / 2;
-            fixtureDef.shape = &bodyShape;
-            LOG_WARNING("");
+            circleShape.m_p.Set(0, 0);
+            circleShape.m_radius = b2BodySize.x / 2;
+            fixtureDef.shape = &circleShape;
         }
         else
         {
