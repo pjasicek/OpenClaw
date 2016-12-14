@@ -450,7 +450,7 @@ namespace ActorTemplates
             Point(speedX, speedY), // If it does, specify it here
             CollisionFlag_Pickup,  // Collision flag - e.g. What is this actor ?
             // TODO: Claw needs to have CollisionFlag_Controller flag set
-            0xFFFF,//(CollisionFlag_Controller | CollisionFlag_Death | CollisionFlag_Ground | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
+            (CollisionFlag_Controller | CollisionFlag_Death | CollisionFlag_Ground | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
             10.0f, // Density
             0.18f, // Friction - with floor and so
             0.5f)); // Restitution - makes object bounce
@@ -560,7 +560,7 @@ namespace ActorTemplates
             false,
             Point(speed, 0), // If it does, specify it here
             collisionFlag,  // Collision flag - e.g. What is this actor ?
-            (CollisionFlag_Controller | CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
+            (CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Density - determines if this character bounces
             0.0f, // Friction - with floor and so
             0.0f)); // Restitution - makes object bounce
@@ -601,7 +601,7 @@ namespace ActorTemplates
             false,       // Has sensor behaviour ?
             "Crate",    // Fixture type
             position,      // Position
-            Point(0, 0),   // Offset - where to move the body upon its placement
+            Point(0, -20),   // Offset - where to move the body upon its placement
             "Rectangle",   // Body shape - "Rectangle" or "Circle"
             Point(44, 40),   // Size - Leave blank if you want size to be determined by its default image
             0.8f,          // Gravity scale - set to 0.0f if no gravity is desired
@@ -721,7 +721,7 @@ namespace ActorTemplates
             Point(0, 0), // If it does, specify it here
             CollisionFlag_Ground,  // Collision flag - e.g. What is this actor ?
             // TODO:
-            0xFFFF,  // Collision mask - e.g. With what does this actor collide with ?
+            CollisionFlag_Controller,  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Friction - with floor and so
             0.0f,  // Density - determines if this character bounces
             0.0f)); // Restitution - makes object bounce
@@ -774,7 +774,7 @@ namespace ActorTemplates
             Point(0, 0), // If it does, specify it here
             CollisionFlag_Checkpoint,  // Collision flag - e.g. What is this actor ?
             // TODO:
-            0xFFFF,  // Collision mask - e.g. With what does this actor collide with ?
+            CollisionFlag_Controller,  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Friction - with floor and so
             0.0f,  // Density - determines if this character bounces
             0.0f)); // Restitution - makes object bounce

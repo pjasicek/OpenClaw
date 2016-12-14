@@ -87,6 +87,8 @@
     <ClCompile Include="Engine\Actor\Components\ControllerComponents\LifeComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\ControllerComponents\PowerupComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\ControllerComponents\ScoreComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\EnemyAI\EnemyAIComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\EnemyAI\EnemyAIStateComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\ExplodeableComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\LootComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PickupComponents\PickupComponent.cpp" />
@@ -164,6 +166,8 @@
     <ClInclude Include="Engine\Actor\Components\ControllerComponents\LifeComponent.h" />
     <ClInclude Include="Engine\Actor\Components\ControllerComponents\PowerupComponent.h" />
     <ClInclude Include="Engine\Actor\Components\ControllerComponents\ScoreComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\EnemyAI\EnemyAIComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\EnemyAI\EnemyAIStateComponent.h" />
     <ClInclude Include="Engine\Actor\Components\ExplodeableComponent.h" />
     <ClInclude Include="Engine\Actor\Components\AreaDamageComponent.h" />
     <ClInclude Include="Engine\Actor\Components\LootComponent.h" />

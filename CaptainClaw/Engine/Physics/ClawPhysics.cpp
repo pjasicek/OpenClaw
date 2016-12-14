@@ -454,6 +454,7 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
     fixtureDef.shape = &bodyShape;
     fixtureDef.density = pPhysicsComponent->GetDensity();
     fixtureDef.friction = pPhysicsComponent->GetFriction();
+    fixtureDef.filter.categoryBits = CollisionFlag_Controller;
     pBody->CreateFixture(&fixtureDef);
 
     bodyShape.m_p.Set(0, b2BodySize.y / 2 - b2BodySize.x / 2);
