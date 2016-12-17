@@ -57,7 +57,10 @@ shared_ptr<PhysicsComponent> GetPhysicsComponentFromB2Body(const b2Body* pBody)
     assert(pBody);
 
     Actor* pActor = static_cast<Actor*>(pBody->GetUserData());
-    assert(pActor);
+    if (!pActor)
+    {
+        return nullptr;
+    }
 
     shared_ptr<PhysicsComponent> pPhysicsComponent =
         MakeStrongPtr(pActor->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
@@ -71,7 +74,10 @@ shared_ptr<KinematicComponent> GetKinematicComponentFromB2Body(const b2Body* pBo
     assert(pBody);
 
     Actor* pActor = static_cast<Actor*>(pBody->GetUserData());
-    assert(pActor);
+    if (!pActor)
+    {
+        return nullptr;
+    }
 
     shared_ptr<KinematicComponent> pKinematicComponent =
         MakeStrongPtr(pActor->GetComponent<KinematicComponent>(KinematicComponent::g_Name));
@@ -84,14 +90,21 @@ shared_ptr<TriggerComponent> GetTriggerComponentFromB2Body(const b2Body* pBody)
 {
     assert(pBody);
 
+    // Actor might have been destroyed
     Actor* pActor = static_cast<Actor*>(pBody->GetUserData());
-    assert(pActor);
+    if (!pActor)
+    {
+        return nullptr;
+    }
 
-    // May no longer be valid, calling methods have to check it
-    shared_ptr<TriggerComponent> pTriggerComponent =
-        MakeStrongPtr(pActor->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
+    auto pWeakTrigComp = pActor->GetComponent<TriggerComponent>(TriggerComponent::g_Name);
+    if (!pWeakTrigComp.expired())
+    {
+        shared_ptr<TriggerComponent> pTriggerComponent = MakeStrongPtr(pWeakTrigComp);
+        return pTriggerComponent;
+    }
 
-    return pTriggerComponent;
+    return nullptr;
 }
 
 shared_ptr<ProjectileAIComponent> GetProjectileAIComponentFromB2Body(const b2Body* pBody)
@@ -99,7 +112,10 @@ shared_ptr<ProjectileAIComponent> GetProjectileAIComponentFromB2Body(const b2Bod
     assert(pBody);
 
     Actor* pActor = static_cast<Actor*>(pBody->GetUserData());
-    assert(pActor);
+    if (!pActor)
+    {
+        return nullptr;
+    }
 
     // May no longer be valid, calling methods have to check it
     shared_ptr<ProjectileAIComponent> pComponent =
@@ -692,6 +708,45 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
         pBody->CreateFixture(&fixtureDef);
     }
 
+    // TODO: Remove reduntant code up there... 
+    for (ActorFixtureDef actorFixtureDef : actorBodyDef->fixtureList)
+    {
+        LOG("____CREATING ADDITIONAL FIXTURE____");
+        b2Vec2 b2FixtureSize = PixelsToMeters(PointToB2Vec2(actorFixtureDef.size));
+        b2Vec2 b2Offset = PixelsToMeters(PointToB2Vec2(actorFixtureDef.offset));
+
+        b2FixtureDef fixture;
+
+        b2PolygonShape rectangleShape;
+        b2CircleShape circleShape;
+
+        if (actorFixtureDef.collisionShape == "Rectangle")
+        {
+            rectangleShape.SetAsBox(b2FixtureSize.x / 2, b2FixtureSize.y / 2, b2Offset, 0);
+            fixture.shape = &rectangleShape;
+        }
+        else if (actorFixtureDef.collisionShape == "Circle")
+        {
+            circleShape.m_p.Set(b2Offset.x, b2Offset.y);
+            circleShape.m_radius = b2BodySize.x / 2;
+            fixture.shape = &circleShape;
+        }
+        else
+        {
+            LOG_ERROR("Conflicting shape: " + actorBodyDef->collisionShape);
+            assert(false && "Unknown collision shape.");
+        }
+       
+        fixture.friction = actorFixtureDef.friction;
+        fixture.density = actorFixtureDef.density;
+        fixture.restitution = actorFixtureDef.restitution;
+        fixture.userData = (void*)actorFixtureDef.fixtureType;
+        fixture.isSensor = actorFixtureDef.isSensor;
+        fixture.filter.categoryBits = actorFixtureDef.collisionFlag;
+        fixture.filter.maskBits = actorFixtureDef.collisionMask;
+        pBody->CreateFixture(&fixture);
+    }
+
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
 
@@ -712,6 +767,12 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
 //
 void ClawPhysics::VRemoveActor(uint32_t actorId)
 {
+    // Clear any user data
+    if (b2Body* pBody = FindBox2DBody(actorId))
+    {
+        pBody->SetUserData(NULL);
+    }
+
     ScheduleActorForRemoval(actorId);
 }
 

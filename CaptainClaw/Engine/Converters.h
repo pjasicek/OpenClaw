@@ -619,10 +619,21 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
     }
     else if (logic.find("Officer") != std::string::npos)
     {
+        
+
         //pActorElem->LinkEndChild(OfficerToXml(wwdObject));
     }
     else if (logic.find("Soldier") != std::string::npos)
     {
+        std::vector<PickupType> loot;
+        if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
+        if (wwdObject->userRect1.left > 0) { loot.push_back(PickupType(wwdObject->userRect1.left)); }
+        if (wwdObject->userRect1.right > 0) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
+        if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
+        if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
+
+        return ActorTemplates::CreateXmlData_EnemyAIActor(tmpImageSet, aniPath, Point(wwdObject->x, wwdObject->y), loot, logic, wwdObject->z);
+
         //pActorElem->LinkEndChild(SoldierToXml(wwdObject));
     }
     else if (logic.find("Rat") != std::string::npos)

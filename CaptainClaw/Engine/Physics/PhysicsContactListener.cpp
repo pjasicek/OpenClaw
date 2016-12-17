@@ -101,7 +101,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
             }
         }
     }
-    // Trigger contact
+    // , contact
     {
         if (pFixtureB->GetUserData() == (void*)FixtureType_Trigger)
         {
@@ -237,32 +237,34 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
             if (pFixtureB->GetBody()->GetType() == b2_dynamicBody && pFixtureB->GetUserData() != (void*)FixtureType_Trigger)
             {
                 shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pFixtureB->GetBody());
+                if (pPhysicsComponent)
+                {
+                    // Moving platform (elevator)
+                    if (!pFixtureA->IsSensor() && pFixtureA->GetBody()->GetType() == b2_kinematicBody && !pFixtureB->IsSensor())
+                    {
+                        //LOG("REMOVED");
+                        shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
+                        pKinematicComponent->RemoveCarriedBody(pFixtureB->GetBody());
+                        pPhysicsComponent->RemoveOverlappingKinematicBody(pFixtureA->GetBody());
+                    }
 
-                // Moving platform (elevator)
-                if (!pFixtureA->IsSensor() && pFixtureA->GetBody()->GetType() == b2_kinematicBody && !pFixtureB->IsSensor())
-                {
-                    //LOG("REMOVED");
-                    shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
-                    pKinematicComponent->RemoveCarriedBody(pFixtureB->GetBody());
-                    pPhysicsComponent->RemoveOverlappingKinematicBody(pFixtureA->GetBody());
-                }
-
-                if (!pFixtureA->IsSensor())
-                {
-                    pPhysicsComponent->RemoveOverlappingGround(pFixtureA);
-                }
-                pFixtureA->SetSensor(true);
-                /*if (pFixtureB->GetBody()->GetLinearVelocity().y >= 0)
-                {
+                    if (!pFixtureA->IsSensor())
+                    {
+                        pPhysicsComponent->RemoveOverlappingGround(pFixtureA);
+                    }
+                    pFixtureA->SetSensor(true);
+                    /*if (pFixtureB->GetBody()->GetLinearVelocity().y >= 0)
+                    {
                     LOG("HERE");
                     pFixtureA->SetSensor(false);
                     shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pFixtureB->GetBody());
                     pPhysicsComponent->OnBeginFootContact();
-                }
-                else
-                {
+                    }
+                    else
+                    {
                     pFixtureA->SetSensor(true);
-                }*/
+                    }*/
+                }
             }
         }
     }
@@ -295,7 +297,7 @@ void PhysicsContactListener::PreSolve(b2Contact* pContact, const b2Manifold* pOl
     b2Fixture* pFixtureA = pContact->GetFixtureA();
     b2Fixture* pFixtureB = pContact->GetFixtureB();
     // Trigger contact
-    {
+    /*{
         if (pFixtureB->GetUserData() == (void*)FixtureType_Trigger)
         {
             std::swap(pFixtureA, pFixtureB);
@@ -307,14 +309,8 @@ void PhysicsContactListener::PreSolve(b2Contact* pContact, const b2Manifold* pOl
             {
                 pContact->SetEnabled(false);
             }
-            /*else if (pFixtureB->GetBody()->GetType() == b2_staticBody &&
-                pFixtureB->GetUserData() == (void*)FixtureType_Ground)
-            {
-                LOG("CONTACT");
-                pContact->SetEnabled(true);
-            }*/
         }
-    }
+    }*/
 }
 
 void PhysicsContactListener::PostSolve(b2Contact* pContact, const b2ContactImpulse* pImpulse)
@@ -322,7 +318,7 @@ void PhysicsContactListener::PostSolve(b2Contact* pContact, const b2ContactImpul
     b2Fixture* pFixtureA = pContact->GetFixtureA();
     b2Fixture* pFixtureB = pContact->GetFixtureB();
     // Trigger contact
-    {
+    /*{
         if (pFixtureB->GetUserData() == (void*)FixtureType_Trigger)
         {
             std::swap(pFixtureA, pFixtureB);
@@ -335,5 +331,5 @@ void PhysicsContactListener::PostSolve(b2Contact* pContact, const b2ContactImpul
                 pContact->SetEnabled(false);
             }
         }
-    }
+    }*/
 }

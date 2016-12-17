@@ -74,7 +74,8 @@ enum FixtureType
     FixtureType_Crate,
     FixtureType_PowderKeg,
     FixtureType_Pickup,
-    FixtureType_Explosion
+    FixtureType_Explosion,
+    FixtureType_EnemyAI
 };
 
 enum PlayerStat
@@ -170,6 +171,19 @@ enum PickupType
     PickupType_Powerup_LightningSword,
     PickupType_Powerup_IceSword,
     PickupType_Max
+};
+
+enum DamageType
+{
+    DamageType_None = -1,
+    DamageType_MeleeAttack,
+    DamageType_Bullet,
+    DamageType_Magic,
+    DamageType_Explosion,
+    DamageType_FireSword,
+    DamageType_LightningSword,
+    DamageType_IceSword,
+    DamageType_Max
 };
 
 struct ActorBodyDef;

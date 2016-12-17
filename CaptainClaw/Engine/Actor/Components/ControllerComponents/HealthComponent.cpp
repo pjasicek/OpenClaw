@@ -75,6 +75,7 @@ void HealthComponent::SetCurrentHealth(int32 health)
 
 void HealthComponent::BroadcastHealthChanged(int32 oldHealth, int32 newHealth, bool isInitial)
 {
+    LOG("!!!!!!!!!!!!!!!!!!!!!" + _owner->GetName());
     NotifyHealthChanged(oldHealth, newHealth);
     if (newHealth <= 0)
     {

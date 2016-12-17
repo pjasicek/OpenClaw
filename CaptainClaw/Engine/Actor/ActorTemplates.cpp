@@ -210,6 +210,45 @@ namespace ActorTemplates
         return "Unknown";
     }
 
+    std::string FixtureTypeToString(FixtureType fixtureType)
+    {
+        std::string fixtureTypeStr;
+
+        if (fixtureType == FixtureType_Solid) { fixtureTypeStr = "Solid"; }
+        else if (fixtureType == FixtureType_Ground) { fixtureTypeStr = "Ground"; }
+        else if (fixtureType == FixtureType_Climb) { fixtureTypeStr = "Climb"; }
+        else if (fixtureType == FixtureType_Death) { fixtureTypeStr = "Death"; }
+        else if (fixtureType == FixtureType_Trigger) { fixtureTypeStr = "Trigger"; }
+        else if (fixtureType == FixtureType_Projectile) { fixtureTypeStr = "Projectile"; }
+        else if (fixtureType == FixtureType_Crate) { fixtureTypeStr = "Crate"; }
+        else if (fixtureType == FixtureType_Pickup) { fixtureTypeStr = "Pickup"; }
+        else if (fixtureType == FixtureType_Trigger) { fixtureTypeStr = "Trigger"; }
+        else if (fixtureType == FixtureType_PowderKeg) { fixtureTypeStr = "PowderKeg"; }
+        else if (fixtureType == FixtureType_Explosion) { fixtureTypeStr = "Explosion"; }
+        else if (fixtureType == FixtureType_EnemyAI) { fixtureTypeStr = "EnemyAI"; }
+        else
+        {
+            assert(false && "Unknown body type");
+        }
+
+        return fixtureTypeStr;
+    }
+
+    std::string BodyTypeToString(b2BodyType bodyType)
+    {
+        std::string bodyTypeStr;
+
+        if (bodyType == b2_staticBody) { bodyTypeStr = "Static"; }
+        else if (bodyType == b2_kinematicBody) { bodyTypeStr = "Kinematic"; }
+        else if (bodyType == b2_dynamicBody) { bodyTypeStr = "Dynamic"; }
+        else
+        {
+            assert(false && "Unknown body type");
+        }
+
+        return bodyTypeStr;
+    }
+
     //=====================================================================================================================
     // General functions for creating components
     //=====================================================================================================================
@@ -338,6 +377,55 @@ namespace ActorTemplates
         return pPhysicsComponent;
     }
 
+    TiXmlElement* CreatePhysicsComponent(const ActorBodyDef* pBodyDef)
+    {
+        TiXmlElement* pPhysicsComponent = new TiXmlElement("PhysicsComponent");
+
+        std::string bodyTypeStr = BodyTypeToString(pBodyDef->bodyType);
+        std::string fixtureTypeStr = FixtureTypeToString(pBodyDef->fixtureType);
+
+        XML_ADD_TEXT_ELEMENT("BodyType", bodyTypeStr.c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("HasFootSensor", ToStr(pBodyDef->makeSensor).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("HasCapsuleShape", ToStr(pBodyDef->makeCapsule).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("HasBulletBehaviour", ToStr(pBodyDef->makeBullet).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("HasSensorBehaviour", ToStr(pBodyDef->makeSensor).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("FixtureType", fixtureTypeStr.c_str(), pPhysicsComponent);
+        XML_ADD_2_PARAM_ELEMENT("PositionOffset", "x", pBodyDef->positionOffset.x, "y", pBodyDef->positionOffset.y, pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("CollisionShape", pBodyDef->collisionShape.c_str(), pPhysicsComponent);
+        XML_ADD_2_PARAM_ELEMENT("CollisionSize", "width", pBodyDef->size.x, "height", pBodyDef->size.y, pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("GravityScale", ToStr(pBodyDef->gravityScale).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("HasInitialSpeed", ToStr(pBodyDef->setInitialSpeed).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("HasInitialImpulse", ToStr(pBodyDef->setInitialImpulse).c_str(), pPhysicsComponent);
+        XML_ADD_2_PARAM_ELEMENT("InitialSpeed", "x", pBodyDef->initialSpeed.x, "y", pBodyDef->initialSpeed.y, pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("CollisionFlag", ToStr(pBodyDef->collisionFlag).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("CollisionMask", ToStr(pBodyDef->collisionMask).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("Friction", ToStr(pBodyDef->friction).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("Density", ToStr(pBodyDef->density).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("Restitution", ToStr(pBodyDef->restitution).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("PrefabType", pBodyDef->prefabType.c_str(), pPhysicsComponent);
+
+        // Convert actor's fixtures to xml
+        for (ActorFixtureDef fixture : pBodyDef->fixtureList)
+        {
+            TiXmlElement* pFixtureElem = new TiXmlElement("ActorFixture");
+
+            XML_ADD_TEXT_ELEMENT("FixtureType", FixtureTypeToString(fixture.fixtureType).c_str(), pFixtureElem);
+            XML_ADD_TEXT_ELEMENT("CollisionShape", fixture.collisionShape.c_str(), pFixtureElem);
+            XML_ADD_TEXT_ELEMENT("IsSensor", ToStr(fixture.isSensor).c_str(), pFixtureElem);
+            XML_ADD_2_PARAM_ELEMENT("Size", "width", fixture.size.x, "height", fixture.size.y, pFixtureElem);
+            XML_ADD_2_PARAM_ELEMENT("Offset", "x", fixture.offset.x, "y", fixture.offset.y, pFixtureElem);
+            XML_ADD_TEXT_ELEMENT("CollisionFlag", ToStr(fixture.collisionFlag).c_str(), pFixtureElem);
+            XML_ADD_TEXT_ELEMENT("CollisionMask", ToStr(fixture.collisionMask).c_str(), pFixtureElem);
+            XML_ADD_TEXT_ELEMENT("Friction", ToStr(fixture.friction).c_str(), pFixtureElem);
+            XML_ADD_TEXT_ELEMENT("Density", ToStr(fixture.density).c_str(), pFixtureElem);
+            XML_ADD_TEXT_ELEMENT("Restitution", ToStr(fixture.restitution).c_str(), pFixtureElem);
+
+            pPhysicsComponent->LinkEndChild(pFixtureElem);
+        }
+
+        return pPhysicsComponent;
+    }
+
     TiXmlElement* CreateLootComponent(const std::vector<PickupType>& loot)
     {
         TiXmlElement* pLootComponent = new TiXmlElement("LootComponent");
@@ -433,7 +521,7 @@ namespace ActorTemplates
 
         if (rand() % 2 == 1) { speedX *= -1; }
 
-        pActorElem->LinkEndChild(CreatePhysicsComponent(
+        /*pActorElem->LinkEndChild(CreatePhysicsComponent(
             "Dynamic",  // Type - "Dynamic", "Kinematic", "Static"
             false,      // Has foot sensor ?
             false,      // Has capsule shape ?
@@ -453,7 +541,30 @@ namespace ActorTemplates
             (CollisionFlag_Controller | CollisionFlag_Death | CollisionFlag_Ground | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
             10.0f, // Density
             0.18f, // Friction - with floor and so
-            0.5f)); // Restitution - makes object bounce
+            0.5f)); // Restitution - makes object bounce*/
+
+        ActorBodyDef bodyDef;
+        bodyDef.bodyType = b2_dynamicBody;
+        bodyDef.makeSensor = false;
+        bodyDef.fixtureType = FixtureType_Pickup;
+        bodyDef.position = position;
+        bodyDef.gravityScale = 0.8f;
+        bodyDef.setInitialSpeed = true;
+        bodyDef.initialSpeed = Point(speedX, speedY);
+        bodyDef.collisionFlag = CollisionFlag_Pickup;
+        bodyDef.collisionMask = (CollisionFlag_Death | CollisionFlag_Ground | CollisionFlag_Solid);
+        bodyDef.density = 10.0f;
+        bodyDef.friction = 0.18f;
+        bodyDef.restitution = 0.5f;
+
+        ActorFixtureDef fixtureDef;
+        fixtureDef.fixtureType = FixtureType_Trigger;
+        fixtureDef.collisionFlag = CollisionFlag_Pickup;
+        fixtureDef.collisionMask = CollisionFlag_Controller;
+        fixtureDef.isSensor = true;
+        bodyDef.fixtureList.push_back(fixtureDef);
+
+        pActorElem->LinkEndChild(CreatePhysicsComponent(&bodyDef));
 
         pActorElem->LinkEndChild(CreateXmlData_GlitterComponent("Glitter_Yellow", false, false));
 
@@ -601,7 +712,7 @@ namespace ActorTemplates
             false,       // Has sensor behaviour ?
             "Crate",    // Fixture type
             position,      // Position
-            Point(0, -20),   // Offset - where to move the body upon its placement
+            Point(0, 0),   // Offset - where to move the body upon its placement
             "Rectangle",   // Body shape - "Rectangle" or "Circle"
             Point(44, 40),   // Size - Leave blank if you want size to be determined by its default image
             0.8f,          // Gravity scale - set to 0.0f if no gravity is desired
@@ -661,7 +772,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_AreaDamageActor(Point position, Point size, int32 damage, CollisionFlag damageType, std::string shape, Point positionOffset, std::string imageSet = "", int32 zCoord = 0)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
-        pActor->SetAttribute("Type", "Explosion");
+        pActor->SetAttribute("Type", "AreaDamage");
 
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
         if (!imageSet.empty())
@@ -784,6 +895,43 @@ namespace ActorTemplates
         XML_ADD_TEXT_ELEMENT("IsSaveCheckpoint", ToStr(isSaveCheckpoint).c_str(), pCheckpointComponent);
         XML_ADD_TEXT_ELEMENT("SaveCheckpointNumber", ToStr(saveCheckpointNumber).c_str(), pCheckpointComponent);
         pActor->LinkEndChild(pCheckpointComponent);
+
+        return pActor;
+    }
+
+    TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord)
+    {
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", logicName.c_str());
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet, zCoord));
+        pActor->LinkEndChild(CreateAnimationComponent(animationSet, true));
+        pActor->LinkEndChild(CreateTriggerComponent(1000, false, false));
+        pActor->LinkEndChild(CreateHealthComponent(10, 10));
+        pActor->LinkEndChild(CreateLootComponent(loot));
+        //pActor->LinkEndChild(CreateDestroyableComponent(true, {}));
+
+        ActorBodyDef bodyDef;
+        bodyDef.bodyType = b2_dynamicBody;
+        bodyDef.makeSensor = false;
+        bodyDef.makeCapsule = true;
+        bodyDef.fixtureType = FixtureType_EnemyAI;
+        //bodyDef.position = position;
+        bodyDef.collisionFlag = CollisionFlag_DynamicActor;
+        bodyDef.collisionMask = (CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Death);
+        //bodyDef.collisionMask = (CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Death | CollisionFlag_Controller | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_ClawAttack);
+        //bodyDef.collisionMask = 0xFFFFF;
+
+        ActorFixtureDef fixtureDef;
+        fixtureDef.fixtureType = FixtureType_EnemyAI;
+        fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
+        fixtureDef.collisionMask = (CollisionFlag_Death | CollisionFlag_Controller | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_ClawAttack | CollisionFlag_Explosion);
+        fixtureDef.isSensor = true;
+        fixtureDef.size = Point(40, 100);
+        bodyDef.fixtureList.push_back(fixtureDef);
+
+        pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
 
         return pActor;
     }

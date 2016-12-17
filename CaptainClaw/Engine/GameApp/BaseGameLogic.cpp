@@ -308,6 +308,7 @@ void BaseGameLogic::VDestroyActor(const uint32 actorId)
     auto findIter = m_ActorMap.find(actorId);
     if (findIter != m_ActorMap.end())
     {
+        LOG("Destroying: " + ToStr(actorId));
         findIter->second->Destroy();
         m_ActorMap.erase(findIter);
     }
