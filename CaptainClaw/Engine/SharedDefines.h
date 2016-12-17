@@ -138,6 +138,38 @@ public:
 
 inline Point operator-(const Point& left, const Point& right) { Point temp(left); temp -= right; return temp; }
 
+struct ActorFixtureDef
+{
+    ActorFixtureDef()
+    {
+        fixtureType = FixtureType_None;
+        collisionShape = "Rectangle";
+        isSensor = false;
+        size = Point(0, 0);
+        offset = Point(0, 0);
+
+        friction = 0.0f;
+        density = 0.0f;
+        float restitution = 0.0f;
+
+        collisionFlag = CollisionFlag_None;
+        collisionMask = 0x0;
+    }
+
+    FixtureType fixtureType;
+    std::string collisionShape;
+    bool isSensor;
+    Point size;
+    Point offset;
+
+    float friction;
+    float density;
+    float restitution;
+
+    CollisionFlag collisionFlag;
+    uint32 collisionMask;
+};
+
 struct ActorBodyDef
 {
     ActorBodyDef()
@@ -165,32 +197,6 @@ struct ActorBodyDef
         restitution = 0.0f;
     }
 
-    void MakeAsStaticTriggerObject(WeakActorPtr actor, Point pos, Point collisionSize)
-    {
-        pActor = actor;
-        bodyType = b2_staticBody;
-        fixtureType = FixtureType_Trigger;
-        position = pos;
-        size = collisionSize;
-        gravityScale = 0.0f;
-        collisionFlag = CollisionFlag_Trigger;
-        collisionMask = CollisionFlag_Controller | CollisionFlag_DynamicActor;
-    }
-
-    // TODO
-    void MakeAsDynamicTriggerObject()
-    {
-        
-    }
-
-    // TODO
-    void MakeAsEnemyAIObject()
-    {
-
-    }
-
-
-
     WeakActorPtr pActor;
     b2BodyType bodyType;
     bool addFootSensor;
@@ -212,6 +218,8 @@ struct ActorBodyDef
     float density;
     float restitution;
     std::string prefabType;
+
+    std::vector<ActorFixtureDef> fixtureList;
 };
 
 #define NOMINMAX

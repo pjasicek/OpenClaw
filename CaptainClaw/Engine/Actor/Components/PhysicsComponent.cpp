@@ -11,6 +11,49 @@
 
 const char* PhysicsComponent::g_Name = "PhysicsComponent";
 
+//=====================================================================================================================
+// Helper functions
+//=====================================================================================================================
+
+FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
+{
+    FixtureType fixtureType = FixtureType_None;
+
+    if (fixtureTypeStr == "Solid") { fixtureType = FixtureType_Solid; }
+    else if (fixtureTypeStr == "Ground") { fixtureType = FixtureType_Ground; }
+    else if (fixtureTypeStr == "Climb") { fixtureType = FixtureType_Climb; }
+    else if (fixtureTypeStr == "Death") { fixtureType = FixtureType_Death; }
+    else if (fixtureTypeStr == "Trigger") { fixtureType = FixtureType_Trigger; }
+    else if (fixtureTypeStr == "Projectile") { fixtureType = FixtureType_Projectile; }
+    else if (fixtureTypeStr == "Crate") { fixtureType = FixtureType_Crate; }
+    else if (fixtureTypeStr == "Pickup") { fixtureType = FixtureType_Pickup; }
+    else if (fixtureTypeStr == "Trigger") { fixtureType = FixtureType_Trigger; }
+    else if (fixtureTypeStr == "PowderKeg") { fixtureType = FixtureType_PowderKeg; }
+    else if (fixtureTypeStr == "Explosion") { fixtureType = FixtureType_Explosion; }
+    else if (fixtureTypeStr == "EnemyAI") { fixtureType = FixtureType_EnemyAI; }
+    else
+    {
+        assert(false && "Unknown body type");
+    }
+
+    return fixtureType;
+}
+
+b2BodyType BodyTypeStringToEnum(std::string bodyTypeStr)
+{
+    b2BodyType bodyType;
+
+    if (bodyTypeStr == "Static") { bodyType = b2_staticBody; }
+    else if (bodyTypeStr == "Kinematic") { bodyType = b2_kinematicBody; }
+    else if (bodyTypeStr == "Dynamic") { bodyType = b2_dynamicBody; }
+    else
+    {
+        assert(false && "Unknown body type");
+    }
+
+    return bodyType;
+}
+
 PhysicsComponent::PhysicsComponent() :
     m_CanClimb(false),
     m_CanBounce(false),
@@ -94,14 +137,7 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
     // Allowed types are: "Static", "Kinematic" and "Dynamic"
     if (TiXmlElement* pElem = data->FirstChildElement("BodyType"))
     {
-        std::string bodyTypeStr = pElem->GetText();
-        if (bodyTypeStr == "Static") { m_ActorBodyDef.bodyType = b2_staticBody; }
-        else if (bodyTypeStr == "Kinematic") { m_ActorBodyDef.bodyType = b2_kinematicBody; }
-        else if (bodyTypeStr == "Dynamic") { m_ActorBodyDef.bodyType = b2_dynamicBody; }
-        else
-        {
-            assert(false && "Unknown body type");
-        }
+        m_ActorBodyDef.bodyType = BodyTypeStringToEnum(pElem->GetText());
     }
     if (TiXmlElement* pElem = data->FirstChildElement("HasFootSensor"))
     {
@@ -122,22 +158,7 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
     // Allowed types are: "Solid", "Ground", "Climb", "Death", "Trigger", "Projectile"
     if (TiXmlElement* pElem = data->FirstChildElement("FixtureType"))
     {
-        std::string fixtureTypeStr = pElem->GetText();
-        if (fixtureTypeStr == "Solid") { m_ActorBodyDef.fixtureType = FixtureType_Solid; }
-        else if (fixtureTypeStr == "Ground") { m_ActorBodyDef.fixtureType = FixtureType_Ground; }
-        else if (fixtureTypeStr == "Climb") { m_ActorBodyDef.fixtureType = FixtureType_Climb; }
-        else if (fixtureTypeStr == "Death") { m_ActorBodyDef.fixtureType = FixtureType_Death; }
-        else if (fixtureTypeStr == "Trigger") { m_ActorBodyDef.fixtureType = FixtureType_Trigger; }
-        else if (fixtureTypeStr == "Projectile") { m_ActorBodyDef.fixtureType = FixtureType_Projectile; }
-        else if (fixtureTypeStr == "Crate") { m_ActorBodyDef.fixtureType = FixtureType_Crate; }
-        else if (fixtureTypeStr == "Pickup") { m_ActorBodyDef.fixtureType = FixtureType_Pickup; }
-        else if (fixtureTypeStr == "Trigger") { m_ActorBodyDef.fixtureType = FixtureType_Trigger; }
-        else if (fixtureTypeStr == "PowderKeg") { m_ActorBodyDef.fixtureType = FixtureType_PowderKeg; }
-        else if (fixtureTypeStr == "Explosion") { m_ActorBodyDef.fixtureType = FixtureType_Explosion; }
-        else
-        {
-            assert(false && "Unknown body type");
-        }
+        m_ActorBodyDef.fixtureType = FixtureTypeStringToEnum(pElem->GetText());
     }
     if (TiXmlElement* pElem = data->FirstChildElement("PositionOffset"))
     {
@@ -186,6 +207,57 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
         //m_ActorBodyDef.prefabType = pElem->GetText();
     }
 
+    for (TiXmlElement* pFixtureElem = data->FirstChildElement("ActorFixture");
+        pFixtureElem != NULL; pFixtureElem = pFixtureElem->NextSiblingElement("ActorFixture"))
+    {
+        ActorFixtureDef fixtureDef;
+
+        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("FixtureType"))
+        {
+            fixtureDef.fixtureType = FixtureTypeStringToEnum(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("CollisionShape"))
+        {
+            fixtureDef.collisionShape = pElem->GetText();
+        }
+        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("IsSensor"))
+        {
+            fixtureDef.isSensor = std::string(pElem->GetText()) == "true";
+        }
+        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("Size"))
+        {
+            pElem->Attribute("width", &fixtureDef.size.x);
+            pElem->Attribute("height", &fixtureDef.size.y);
+        }
+        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("Offset"))
+        {
+            pElem->Attribute("x", &fixtureDef.offset.x);
+            pElem->Attribute("y", &fixtureDef.offset.y);
+        }
+        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("CollisionFlag"))
+        {
+            fixtureDef.collisionFlag = CollisionFlag(std::stoi(pElem->GetText()));
+        }
+        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("CollisionMask"))
+        {
+            fixtureDef.collisionMask = std::stoi(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("Friction"))
+        {
+            fixtureDef.friction = std::stof(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("Density"))
+        {
+            fixtureDef.density = std::stof(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("Restitution"))
+        {
+            fixtureDef.restitution = std::stof(pElem->GetText());
+        }
+
+        m_ActorBodyDef.fixtureList.push_back(fixtureDef);
+    }
+
     return true;
 }
 
@@ -217,6 +289,14 @@ void PhysicsComponent::VPostInit()
 
             m_ActorBodyDef.size.x = pImage->GetWidth();
             m_ActorBodyDef.size.y = pImage->GetHeight();
+
+            for (ActorFixtureDef fixture : m_ActorBodyDef.fixtureList)
+            {
+                if (fixture.size.IsZero())
+                {
+                    fixture.size = Point(pImage->GetWidth(), pImage->GetHeight());
+                }
+            }
         }
 
         m_ActorBodyDef.position += m_ActorBodyDef.positionOffset;
