@@ -906,7 +906,7 @@ namespace ActorTemplates
 
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
         pActor->LinkEndChild(CreateActorRenderComponent(imageSet, zCoord));
-        pActor->LinkEndChild(CreateAnimationComponent(animationSet, true));
+        pActor->LinkEndChild(CreateAnimationComponent(animationSet, false));
         pActor->LinkEndChild(CreateTriggerComponent(1000, false, false));
         pActor->LinkEndChild(CreateHealthComponent(10, 10));
         pActor->LinkEndChild(CreateLootComponent(loot));
@@ -923,6 +923,11 @@ namespace ActorTemplates
         //bodyDef.collisionMask = (CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Death | CollisionFlag_Controller | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_ClawAttack);
         //bodyDef.collisionMask = 0xFFFFF;
 
+        if (logicName == "Soldier")
+        {
+            bodyDef.size = Point(50, 110);
+        }
+
         ActorFixtureDef fixtureDef;
         fixtureDef.fixtureType = FixtureType_EnemyAI;
         fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
@@ -932,6 +937,29 @@ namespace ActorTemplates
         bodyDef.fixtureList.push_back(fixtureDef);
 
         pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
+
+        if (logicName == "Soldier")
+        {
+            TiXmlElement* pEnemyAIElem = new TiXmlElement("EnemyAIComponent");
+
+            pActor->LinkEndChild(pEnemyAIElem);
+
+            TiXmlElement* pPatrolStateElem = new TiXmlElement("PatrolEnemyAIStateComponent");
+            XML_ADD_TEXT_ELEMENT("PatrolSpeed", "1.5", pPatrolStateElem);
+
+            TiXmlElement* pWalkActionElem = new TiXmlElement("WalkAction");
+            XML_ADD_TEXT_ELEMENT("Animation", "advance", pWalkActionElem);
+            pPatrolStateElem->LinkEndChild(pWalkActionElem);
+
+            TiXmlElement* pIdleActionElem = new TiXmlElement("IdleAction");
+            XML_ADD_TEXT_ELEMENT("AnimationDelay", "750", pIdleActionElem);
+            XML_ADD_TEXT_ELEMENT("Animation", "stand1", pIdleActionElem);
+            XML_ADD_TEXT_ELEMENT("Animation", "stand", pIdleActionElem);
+            XML_ADD_TEXT_ELEMENT("Animation", "stand2", pIdleActionElem);
+            pPatrolStateElem->LinkEndChild(pIdleActionElem);
+
+            pActor->LinkEndChild(pPatrolStateElem);
+        }
 
         return pActor;
     }

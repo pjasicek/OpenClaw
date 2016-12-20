@@ -560,6 +560,8 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             {
                 m_pControllableComponent->VOnStopMoving();
             }
+
+            //LOG(ToStr(m_pPhysics->VGetVelocity(_owner->GetGUID()).x) + " - " + ToStr(m_pPhysics->VGetVelocity(_owner->GetGUID()).y));
         }
         
     }
