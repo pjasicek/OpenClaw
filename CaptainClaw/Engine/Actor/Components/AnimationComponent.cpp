@@ -181,6 +181,14 @@ void AnimationComponent::VUpdate(uint32 msDiff)
 
 bool AnimationComponent::SetAnimation(std::string animationName)
 {
+    /*if (animationName == "advance")
+    {
+        for (auto a : _animationMap)
+        {
+            LOG(a.second->GetName());
+        }
+    }*/
+
     if (animationName == _currentAnimation->GetName())
     {
         //LOG("Trying to set the same animation: " + animationName);
@@ -188,11 +196,16 @@ bool AnimationComponent::SetAnimation(std::string animationName)
     }
     //LOG("Setting animation: " + animationName);
 
-    Animation* animation = _animationMap[animationName];
-    if (animation == NULL)
+    auto findIt = _animationMap.find(animationName);
+    if (findIt == _animationMap.end())
     {
+        LOG_WARNING("Could not find animation: " + animationName + " for actor: " + _owner->GetName());
         return false;
     }
+
+    //LOG("Setting anim: " + animationName);
+
+    Animation* animation = findIt->second;
 
     animation->Reset();
     _currentAnimation = animation;

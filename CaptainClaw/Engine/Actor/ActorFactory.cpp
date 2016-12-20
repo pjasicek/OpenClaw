@@ -35,6 +35,8 @@
 #include "Components\AreaDamageComponent.h"
 #include "Components\GlitterComponent.h"
 #include "Components\CheckpointComponent.h"
+#include "Components\EnemyAI\EnemyAIComponent.h"
+#include "Components\EnemyAI\EnemyAIStateComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -72,6 +74,8 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<AreaDamageComponent>(AreaDamageComponent::GetIdFromName(AreaDamageComponent::g_Name));
     _componentFactory.Register<GlitterComponent>(GlitterComponent::GetIdFromName(GlitterComponent::g_Name));
     _componentFactory.Register<CheckpointComponent>(CheckpointComponent::GetIdFromName(CheckpointComponent::g_Name));
+    _componentFactory.Register<EnemyAIComponent>(EnemyAIComponent::GetIdFromName(EnemyAIComponent::g_Name));
+    _componentFactory.Register<PatrolEnemyAIStateComponent>(PatrolEnemyAIStateComponent::GetIdFromName(PatrolEnemyAIStateComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

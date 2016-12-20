@@ -17,14 +17,30 @@ enum EnemyAIState
 
 struct EnemyAIAction
 {
-    std::string actionName;
+    EnemyAIAction()
+    {
+        activeAnimIdx = 0;
+        actionName = "Unknown";
+        isActive = false;
+        animDelay = 0;
+    }
 
+    bool IsAtLastAnimation()
+    {
+        return (activeAnimIdx == (animations.size() - 1));
+    }
+
+    std::string actionName;
+    uint32 animDelay;
+    bool isActive;
     uint32 activeAnimIdx;
     std::vector<std::string> animations;
 };
 
 class PhysicsComponent;
 class PositionComponent;
+class EnemyAIComponent;
+class ActorRenderComponent;
 
 //=====================================================================================================================
 // BaseEnemyAIStateComponent
@@ -32,12 +48,14 @@ class PositionComponent;
 class BaseEnemyAIStateComponent : public ActorComponent
 {
 public:
-    BaseEnemyAIStateComponent() : m_IsActive(false) { }
+    BaseEnemyAIStateComponent(std::string stateName) : m_IsActive(false), m_StateName(stateName) { }
+    virtual ~BaseEnemyAIStateComponent() { }
 
     static const char* g_Name;
     virtual const char* VGetName() const { return g_Name; }
 
     virtual bool VInit(TiXmlElement* pData) override;
+    virtual bool VDelegateInit(TiXmlElement* pData) = 0;
     virtual void VPostInit() override;
 
     virtual TiXmlElement* VGenerateXml() { return NULL; }
@@ -53,9 +71,13 @@ public:
 protected:
     bool m_IsActive;
 
+    std::string m_StateName;
+
     PhysicsComponent* m_pPhysicsComponent;
     PositionComponent* m_pPositionComponent;
     AnimationComponent* m_pAnimationComponent;
+    EnemyAIComponent* m_pEnemyAIComponent;
+    ActorRenderComponent* m_pRenderComponent;
 };
 
 //=====================================================================================================================
@@ -66,12 +88,13 @@ class PatrolEnemyAIStateComponent : public BaseEnemyAIStateComponent, public Ani
 {
 public:
     PatrolEnemyAIStateComponent();
-
+    virtual ~PatrolEnemyAIStateComponent();
 
     static const char* g_Name;
     virtual const char* VGetName() const { return g_Name; }
 
-    virtual bool VInit(TiXmlElement* pData) override;
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+    virtual void VPostInit();
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff);
@@ -84,14 +107,23 @@ public:
 
 private:
     void CalculatePatrolBorders();
+    void ChangeDirection(Direction newDirection);
+    void CommenceIdleBehaviour();
 
     int m_LeftPatrolBorder;
     int m_RightPatrolBorder;
+
+    double m_PatrolSpeed;
     
     Direction m_Direction;
 
-    EnemyAIAction* m_pCurrentAction;
-    EnemyActionMap m_ActionMap;
+    std::unique_ptr<EnemyAIAction> m_pWalkAction;
+    std::unique_ptr<EnemyAIAction> m_pIdleAction;
+
+    std::shared_ptr<IGamePhysics> m_pPhysics;
+
+    //EnemyAIAction* m_pCurrentAction;
+    //EnemyActionMap m_ActionMap;
 };
 
 #endif

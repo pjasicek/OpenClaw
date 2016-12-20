@@ -711,7 +711,6 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
     // TODO: Remove reduntant code up there... 
     for (ActorFixtureDef actorFixtureDef : actorBodyDef->fixtureList)
     {
-        LOG("____CREATING ADDITIONAL FIXTURE____");
         b2Vec2 b2FixtureSize = PixelsToMeters(PointToB2Vec2(actorFixtureDef.size));
         b2Vec2 b2Offset = PixelsToMeters(PointToB2Vec2(actorFixtureDef.offset));
 
