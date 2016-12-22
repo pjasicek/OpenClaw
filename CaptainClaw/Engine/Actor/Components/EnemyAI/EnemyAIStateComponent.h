@@ -107,8 +107,11 @@ public:
 
 private:
     void CalculatePatrolBorders();
+    double FindClosestHole(Point center, int height, float maxSearchDistance);
     void ChangeDirection(Direction newDirection);
     void CommenceIdleBehaviour();
+
+    bool m_bInitialized;
 
     int m_LeftPatrolBorder;
     int m_RightPatrolBorder;

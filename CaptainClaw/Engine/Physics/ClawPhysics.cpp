@@ -1041,6 +1041,96 @@ bool ClawPhysics::VIsAwake(uint32_t actorId)
     return false;
 }
 
+SDL_Rect ClawPhysics::VGetAABB(uint32_t actorId)
+{
+    SDL_Rect aabbRect = { 0, 0, 0, 0 };
+    if (b2Body* pBody = FindBox2DBody(actorId))
+    {
+        b2AABB aabb;
+        aabb.lowerBound = b2Vec2(FLT_MAX, FLT_MAX);
+        aabb.upperBound = b2Vec2(-FLT_MAX, -FLT_MAX);
+        b2Fixture* pFixture = pBody->GetFixtureList();
+        while (pFixture != NULL)
+        {
+            aabb.Combine(aabb, pFixture->GetAABB(0));
+            pFixture = pFixture->GetNext();
+        }
+
+        Point pointLowerBound = b2Vec2ToPoint(MetersToPixels(aabb.lowerBound));
+        Point pointUpperBound = b2Vec2ToPoint(MetersToPixels(aabb.upperBound));
+
+        aabbRect.x = (int)pointLowerBound.x;
+        aabbRect.y = (int)pointLowerBound.y;
+        aabbRect.w = (int)(pointUpperBound.x - pointLowerBound.x);
+        aabbRect.h = (int)(pointUpperBound.y - pointLowerBound.y);
+        
+        return aabbRect;
+    }
+
+    assert(false && "Could not find actor to retrieve AABB");
+    return aabbRect;
+}
+
+class RayCastCallback_Filtered : public b2RayCastCallback
+{
+public:
+    RayCastCallback_Filtered(const Point& p1, const Point& p2, uint32 filter)
+    {
+        m_Filter = filter;
+        m_Fraction = 1.0f;
+        
+        float diffX = fabs(p1.x - p2.x);
+        float diffY = fabs(p1.y - p2.y);
+        m_MaxDistance = sqrt((diffX * diffX) + (diffY * diffY));
+
+        m_RaycastResult.deltaX = p2.x - p1.x;
+        m_RaycastResult.deltaY = p2.y - p1.y;
+    }
+
+    virtual float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction) override
+    {
+        if (!(fixture->GetFilterData().categoryBits & m_Filter))
+        {
+            return 1.0f;
+        }
+
+        if (fabs(fraction) < m_Fraction)
+        {
+            m_Fraction = fraction;
+            m_RaycastResult.foundIntersection = true;
+        }
+
+        return 1.0f;
+    }
+
+    RaycastResult GetRaycastResult()
+    {
+        m_RaycastResult.closestPixelDistance = m_Fraction * m_MaxDistance;
+        m_RaycastResult.deltaX *= m_Fraction;
+        m_RaycastResult.deltaY *= m_Fraction;
+
+        return m_RaycastResult;
+    }
+
+private:
+    uint32 m_Filter;
+    float32 m_Fraction;
+    float m_MaxDistance;
+    RaycastResult m_RaycastResult;
+};
+
+RaycastResult ClawPhysics::VRayCast(const Point& fromPoint, const Point& toPoint, uint32 filterMask)
+{
+    RayCastCallback_Filtered callback(fromPoint, toPoint, filterMask);
+
+    b2Vec2 b2fromPoint = PixelsToMeters(PointToB2Vec2(fromPoint));
+    b2Vec2 b2toPoint = PixelsToMeters(PointToB2Vec2(toPoint));
+
+    m_pWorld->RayCast(&callback, b2fromPoint, b2toPoint);
+
+    return callback.GetRaycastResult();
+}
+
 //=====================================================================================================================
 // Private implementations
 //=====================================================================================================================
