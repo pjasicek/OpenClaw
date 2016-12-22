@@ -899,7 +899,7 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord)
+    TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", logicName.c_str());
@@ -923,7 +923,7 @@ namespace ActorTemplates
         //bodyDef.collisionMask = (CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Death | CollisionFlag_Controller | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_ClawAttack);
         //bodyDef.collisionMask = 0xFFFFF;
 
-        if (logicName == "Soldier")
+        if (logicName == "Soldier" || logicName == "Officer")
         {
             bodyDef.size = Point(50, 110);
         }
@@ -945,10 +945,12 @@ namespace ActorTemplates
             pActor->LinkEndChild(pEnemyAIElem);
 
             TiXmlElement* pPatrolStateElem = new TiXmlElement("PatrolEnemyAIStateComponent");
-            XML_ADD_TEXT_ELEMENT("PatrolSpeed", "1.5", pPatrolStateElem);
+            XML_ADD_TEXT_ELEMENT("PatrolSpeed", "1.2", pPatrolStateElem);
+            XML_ADD_TEXT_ELEMENT("LeftPatrolBorder", ToStr(minPatrolX).c_str(), pPatrolStateElem);
+            XML_ADD_TEXT_ELEMENT("RightPatrolBorder", ToStr(maxPatrolX).c_str(), pPatrolStateElem);
 
             TiXmlElement* pWalkActionElem = new TiXmlElement("WalkAction");
-            XML_ADD_TEXT_ELEMENT("Animation", "advance", pWalkActionElem);
+            XML_ADD_TEXT_ELEMENT("Animation", "fastadvance", pWalkActionElem);
             pPatrolStateElem->LinkEndChild(pWalkActionElem);
 
             TiXmlElement* pIdleActionElem = new TiXmlElement("IdleAction");
@@ -956,6 +958,32 @@ namespace ActorTemplates
             XML_ADD_TEXT_ELEMENT("Animation", "stand1", pIdleActionElem);
             XML_ADD_TEXT_ELEMENT("Animation", "stand", pIdleActionElem);
             XML_ADD_TEXT_ELEMENT("Animation", "stand2", pIdleActionElem);
+            pPatrolStateElem->LinkEndChild(pIdleActionElem);
+
+            pActor->LinkEndChild(pPatrolStateElem);
+        }
+        else if (logicName == "Officer")
+        {
+            TiXmlElement* pEnemyAIElem = new TiXmlElement("EnemyAIComponent");
+
+            pActor->LinkEndChild(pEnemyAIElem);
+
+            TiXmlElement* pPatrolStateElem = new TiXmlElement("PatrolEnemyAIStateComponent");
+            XML_ADD_TEXT_ELEMENT("PatrolSpeed", "1.3", pPatrolStateElem);
+            XML_ADD_TEXT_ELEMENT("LeftPatrolBorder", ToStr(minPatrolX).c_str(), pPatrolStateElem);
+            XML_ADD_TEXT_ELEMENT("RightPatrolBorder", ToStr(maxPatrolX).c_str(), pPatrolStateElem);
+
+            TiXmlElement* pWalkActionElem = new TiXmlElement("WalkAction");
+            XML_ADD_TEXT_ELEMENT("Animation", "fastadvance", pWalkActionElem);
+            pPatrolStateElem->LinkEndChild(pWalkActionElem);
+
+            TiXmlElement* pIdleActionElem = new TiXmlElement("IdleAction");
+            XML_ADD_TEXT_ELEMENT("AnimationDelay", "900", pIdleActionElem);
+            XML_ADD_TEXT_ELEMENT("Animation", "stand1", pIdleActionElem);
+            XML_ADD_TEXT_ELEMENT("Animation", "stand2", pIdleActionElem);
+            XML_ADD_TEXT_ELEMENT("Animation", "stand3", pIdleActionElem);
+            XML_ADD_TEXT_ELEMENT("Animation", "stand4", pIdleActionElem);
+            XML_ADD_TEXT_ELEMENT("Animation", "stand5", pIdleActionElem);
             pPatrolStateElem->LinkEndChild(pIdleActionElem);
 
             pActor->LinkEndChild(pPatrolStateElem);

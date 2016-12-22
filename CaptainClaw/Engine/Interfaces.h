@@ -186,6 +186,22 @@ enum DamageType
     DamageType_Max
 };
 
+struct RaycastResult
+{
+    RaycastResult()
+    {
+        foundIntersection = false;
+        closestPixelDistance = FLT_MAX;
+        deltaX = 0;
+        deltaY = 0;
+    }
+
+    bool foundIntersection;
+    float closestPixelDistance;
+    float deltaX;
+    float deltaY;
+};
+
 struct ActorBodyDef;
 class CameraNode;
 class Point;
@@ -235,6 +251,10 @@ public:
 
     virtual void VSetPosition(uint32_t actorId, const Point& position) = 0;
     virtual Point VGetPosition(uint32_t actorId) = 0;
+
+    virtual SDL_Rect VGetAABB(uint32_t actorId) = 0;
+
+    virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32_t filterMask) = 0;
 };
 
 enum GameViewType

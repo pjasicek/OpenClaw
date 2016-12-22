@@ -62,13 +62,17 @@ public:
     virtual void VSetPosition(uint32_t actorId, const Point& position) override;
     virtual Point VGetPosition(uint32_t actorId) override;
 
+    virtual SDL_Rect VGetAABB(uint32_t actorId) override;
+
+    virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32 filterMask) override;
+
 private:
     TiXmlDocument LoadPhysicsXmlConfig();
     b2Body* FindBox2DBody(uint32 actorId);
     uint32 FindActorId(b2Body* pBody);
     void ScheduleActorForRemoval(uint32 actorId) { m_ActorsToBeDestroyed.push_back(actorId); }
     
-    unique_ptr<b2World> m_pWorld;
+    shared_ptr<b2World> m_pWorld;
     unique_ptr<PhysicsDebugDrawer> m_pDebugDrawer;
     unique_ptr<PhysicsContactListener> m_pPhysicsContactListener;
 

@@ -4,10 +4,14 @@
 #include "../../../SharedDefines.h"
 #include "../../ActorComponent.h"
 
+#include "../ControllerComponents/HealthComponent.h"
+
 class BaseEnemyAIStateComponent;
+class PositionComponent;
+class ActorRenderComponent;
 
 typedef std::map<std::string, BaseEnemyAIStateComponent*> EnemyStateMap;
-class EnemyAIComponent : public ActorComponent
+class EnemyAIComponent : public ActorComponent, public HealthObserver
 {
 public:
     EnemyAIComponent();
@@ -24,9 +28,15 @@ public:
 
     void RegisterState(std::string stateName, BaseEnemyAIStateComponent* pState) { m_StateMap[stateName] = pState; }
 
+    virtual void VOnHealthBelowZero() override;
+
 private:
     bool m_bInitialized;
+    bool m_bDead;
     EnemyStateMap m_StateMap;
+
+    shared_ptr<PositionComponent> m_pPositionComponent;
+    shared_ptr<ActorRenderComponent> m_pRenderComponent;
 };
 
 #endif

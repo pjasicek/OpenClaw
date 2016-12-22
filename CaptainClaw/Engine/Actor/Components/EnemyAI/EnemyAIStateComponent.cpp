@@ -8,6 +8,7 @@
 
 #include "../../../GameApp/BaseGameLogic.h"
 #include "../../../GameApp/BaseGameApp.h"
+#include "../../../Physics/ClawPhysics.h"
 
 const char* BaseEnemyAIStateComponent::g_Name = "BaseEnemyAIStateComponent";
 const char* PatrolEnemyAIStateComponent::g_Name = "PatrolEnemyAIStateComponent";
@@ -68,7 +69,8 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     m_Direction(Direction_Right),
     //m_pCurrentAction(NULL),
     BaseEnemyAIStateComponent("PatrolState"),
-    m_PatrolSpeed(0.0)
+    m_PatrolSpeed(0.0),
+    m_bInitialized(false)
 {
 
 }
@@ -91,11 +93,11 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     }
     if (TiXmlElement* pElem = pData->FirstChildElement("LeftPatrolBorder"))
     {
-        m_LeftPatrolBorder = std::stoi(pData->GetText());
+        m_LeftPatrolBorder = std::stoi(pElem->GetText());
     }
     if (TiXmlElement* pElem = pData->FirstChildElement("RightPatrolBorder"))
     {
-        m_RightPatrolBorder = std::stoi(pData->GetText());
+        m_RightPatrolBorder = std::stoi(pElem->GetText());
     }
     if (TiXmlElement* pElem = pData->FirstChildElement("WalkAction"))
     {
@@ -124,11 +126,9 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
         }
     }
 
-    m_LeftPatrolBorder = 6330;
-    m_RightPatrolBorder = 6450;
-
-    assert(m_LeftPatrolBorder > 0);
-    assert(m_RightPatrolBorder > 0);
+    /*m_LeftPatrolBorder = 6330;
+    m_RightPatrolBorder = 6550;*/
+    
     assert(fabs(m_PatrolSpeed) > DBL_EPSILON);
 
     assert(m_pWalkAction != nullptr);
@@ -150,8 +150,6 @@ void PatrolEnemyAIStateComponent::VPostInit()
     BaseEnemyAIStateComponent::VPostInit();
 
     m_pAnimationComponent->AddObserver(this);
-
-    CalculatePatrolBorders();
 }
 
 void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
@@ -159,6 +157,15 @@ void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
     if (!m_IsActive)
     {
         return;
+    }
+
+    // Has to be here because in VPostInit there is no guarantee that
+    // PhysicsComponent is already initialized
+    if (!m_bInitialized)
+    {
+        CalculatePatrolBorders();
+
+        m_bInitialized = true;
     }
 
     // Only makes sense to check for stuff when walking
@@ -209,9 +216,88 @@ void PatrolEnemyAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
     }
 }
 
+double PatrolEnemyAIStateComponent::FindClosestHole(Point center, int height, float maxSearchDistance)
+{
+    double leftDelta = 0.0;
+    for (leftDelta = 0.0; leftDelta < fabs(maxSearchDistance); leftDelta += 1.0)
+    {
+        if (maxSearchDistance < 0)
+        {
+            leftDelta *= -1.0;
+        }
+
+        Point fromPoint = Point(center.x + leftDelta, center.y);
+        Point toPoint = Point(fromPoint.x, fromPoint.y + height / 2 + height / 4);
+
+        RaycastResult raycastResultDown = m_pPhysics->VRayCast(fromPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground));
+        if (!raycastResultDown.foundIntersection)
+        {
+            return leftDelta;
+        }
+
+        leftDelta = fabs(leftDelta);
+    }
+
+    return 0.0;
+}
+
 void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
 {
+    SDL_Rect aabb = m_pPhysics->VGetAABB(_owner->GetGUID());
 
+    Point center = m_pPositionComponent->GetPosition();
+
+    Point toLeftRay = Point(center.x - 10000, center.y);
+    Point toRightRay = Point(center.x + 10000, center.y);
+
+    RaycastResult raycastResultLeft = m_pPhysics->VRayCast(center, toLeftRay, CollisionFlag_Solid);
+    RaycastResult raycastResultRight = m_pPhysics->VRayCast(center, toRightRay, CollisionFlag_Solid);
+
+    assert(raycastResultLeft.foundIntersection);
+    assert(raycastResultRight.foundIntersection);
+
+    double patrolLeftBorder = 0.0;
+    double patrolRightBorder = 0.0;
+
+    double leftDelta = FindClosestHole(center, aabb.h, raycastResultLeft.deltaX);
+    if (fabs(leftDelta) < DBL_EPSILON)
+    {
+        patrolLeftBorder = center.x + raycastResultLeft.deltaX;
+    }
+    else
+    {
+        patrolLeftBorder = center.x + leftDelta;
+    }
+
+    double rightDelta = FindClosestHole(center, aabb.h, raycastResultRight.deltaX);
+    if (fabs(rightDelta) < DBL_EPSILON)
+    {
+        patrolRightBorder = center.x + raycastResultRight.deltaX;
+    }
+    else
+    {
+        patrolRightBorder = center.x + rightDelta;
+    }
+
+    if (m_LeftPatrolBorder == 0 || m_LeftPatrolBorder < (int)patrolLeftBorder)
+    {
+        m_LeftPatrolBorder = (int)patrolLeftBorder + 25;
+    }
+
+    if (m_RightPatrolBorder == 0 || m_RightPatrolBorder > (int)patrolRightBorder)
+    {
+        m_RightPatrolBorder = (int)patrolRightBorder - 25;
+    }
+
+    // Some min and max x's were stupidly preset
+    if (m_RightPatrolBorder < m_LeftPatrolBorder)
+    {
+        m_RightPatrolBorder = (int)patrolRightBorder - 25;
+    }
+
+    assert(m_LeftPatrolBorder > 0);
+    assert(m_RightPatrolBorder > 0);
+    assert(m_RightPatrolBorder > m_LeftPatrolBorder);
 }
 
 void PatrolEnemyAIStateComponent::ChangeDirection(Direction newDirection)

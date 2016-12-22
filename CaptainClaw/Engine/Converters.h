@@ -617,20 +617,8 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
         //pActorElem->LinkEndChild(PowderKegToXml(wwdObject));
         return ActorTemplates::CreateXmlData_PowderKegActor(tmpImageSet, Point(wwdObject->x, wwdObject->y), 50, wwdObject->z);
     }
-    else if (logic.find("Officer") != std::string::npos)
-    {
-        /*std::vector<PickupType> loot;
-        if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
-        if (wwdObject->userRect1.left > 0) { loot.push_back(PickupType(wwdObject->userRect1.left)); }
-        if (wwdObject->userRect1.right > 0) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
-        if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
-        if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
-
-        return ActorTemplates::CreateXmlData_EnemyAIActor(tmpImageSet, aniPath, Point(wwdObject->x, wwdObject->y), loot, logic, wwdObject->z);*/
-
-        //pActorElem->LinkEndChild(OfficerToXml(wwdObject));
-    }
-    else if (logic.find("Soldier") != std::string::npos && wwdObject->id == 390)
+    else if (logic == ("Officer") ||
+             logic == ("Soldier"))
     {
         std::vector<PickupType> loot;
         if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
@@ -639,9 +627,9 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
         if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
         if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
 
-        return ActorTemplates::CreateXmlData_EnemyAIActor(tmpImageSet, aniPath, Point(wwdObject->x, wwdObject->y), loot, logic, wwdObject->z);
+        return ActorTemplates::CreateXmlData_EnemyAIActor(tmpImageSet, aniPath, Point(wwdObject->x, wwdObject->y), loot, logic, wwdObject->z, wwdObject->minX, wwdObject->maxX);
 
-        //pActorElem->LinkEndChild(SoldierToXml(wwdObject));
+        //pActorElem->LinkEndChild(OfficerToXml(wwdObject));
     }
     else if (logic.find("Rat") != std::string::npos)
     {

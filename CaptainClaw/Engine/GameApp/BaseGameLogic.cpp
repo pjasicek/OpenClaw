@@ -164,6 +164,16 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
                 tileDesc.outsideAttrib = std::stoi(pTileDescElem->FirstChildElement("OutsideAttrib")->GetText());
             }
             tileDesc.insideAttrib = std::stoi(pTileDescElem->FirstChildElement("InsideAttrib")->GetText());
+
+            // HACK: Convert static ground tiles to solid (ground introduced many bugs)
+            // TODO: Rehaul ground behaviour so that it behaves like it should
+            if (m_pCurrentLevel->GetLevelNumber() == 1)
+            {
+                if (tileDesc.tileId == 331 || tileDesc.tileId == 332 || tileDesc.tileId == 334)
+                {
+                    tileDesc.insideAttrib = CollisionType_Solid;
+                }
+            }
             
             TiXmlElement* pTileRectElem = pTileDescElem->FirstChildElement("TileRect");
             tileDesc.rect.left = std::stoi(pTileRectElem->Attribute("left"));
