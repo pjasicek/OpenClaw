@@ -226,6 +226,8 @@ namespace ActorTemplates
         else if (fixtureType == FixtureType_PowderKeg) { fixtureTypeStr = "PowderKeg"; }
         else if (fixtureType == FixtureType_Explosion) { fixtureTypeStr = "Explosion"; }
         else if (fixtureType == FixtureType_EnemyAI) { fixtureTypeStr = "EnemyAI"; }
+        else if (fixtureType == FixtureType_EnemyAIMeleeSensor) { fixtureTypeStr = "EnemyAIMeleeSensor"; }
+        else if (fixtureType == FixtureType_EnemyAIRangedSensor) { fixtureTypeStr = "EnemyAIRangedSensor"; }
         else
         {
             assert(false && "Unknown body type");
@@ -697,6 +699,38 @@ namespace ActorTemplates
         return pActor;
     }
 
+    TiXmlElement* CreateXmlData_ProjectileActor(std::string imageSet, uint32 damage, DamageType damageType, Direction direction, Point position, CollisionFlag collisionFlag, uint32 collisionMask)
+    {
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", imageSet.c_str());
+
+        double speed = 9.5;
+        if (direction == Direction_Left) { speed *= -1; }
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), 5000));
+
+        ActorBodyDef bodyDef;
+        bodyDef.bodyType = b2_dynamicBody;
+        bodyDef.makeSensor = true;
+        bodyDef.fixtureType = FixtureType_Projectile;
+        bodyDef.collisionFlag = collisionFlag;
+        bodyDef.collisionMask = collisionMask;
+        bodyDef.gravityScale = 0.0f;
+        bodyDef.setInitialSpeed = true;
+        bodyDef.initialSpeed = Point(speed, 0);
+
+        pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
+
+        TiXmlElement* pProjectileAIComponent = new TiXmlElement("ProjectileAIComponent");
+        XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pProjectileAIComponent);
+        XML_ADD_TEXT_ELEMENT("ProjectileType", "Bullet", pProjectileAIComponent);
+        XML_ADD_2_PARAM_ELEMENT("Speed", "x", ToStr(speed).c_str(), "y", "0", pProjectileAIComponent);
+        pActor->LinkEndChild(pProjectileAIComponent);
+
+        return pActor;
+    }
+
     TiXmlElement* CreateXmlData_CrateActor(std::string imageSet, Point position, const std::vector<PickupType>& loot, uint32 health, int32 zCoord)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
@@ -769,7 +803,7 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_AreaDamageActor(Point position, Point size, int32 damage, CollisionFlag damageType, std::string shape, Point positionOffset, std::string imageSet = "", int32 zCoord = 0)
+    TiXmlElement* CreateXmlData_AreaDamageActor(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, Point positionOffset, std::string imageSet = "", int32 zCoord = 0)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", "AreaDamage");
@@ -780,6 +814,25 @@ namespace ActorTemplates
             pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), zCoord));
             pActor->LinkEndChild(CreateCycleAnimationComponent(75, false));
         }
+
+        uint32 collisionMask = 0;
+        if (collisionFlag == CollisionFlag_ClawAttack)
+        {
+            collisionMask = (CollisionFlag_Crate | CollisionFlag_DynamicActor);
+        }
+        else if (collisionFlag == CollisionFlag_EnemyAIAttack)
+        {
+            collisionMask = (CollisionFlag_Controller);
+        }
+        else if (collisionFlag == CollisionFlag_Explosion)
+        {
+            collisionMask = (CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Controller);
+        }
+        else
+        {
+            assert(false && "Unknown collision flag");
+        }
+
         pActor->LinkEndChild(CreatePhysicsComponent(
             "Dynamic",  // Type - "Dynamic", "Kinematic", "Static"
             false,      // Has foot sensor ?
@@ -795,11 +848,27 @@ namespace ActorTemplates
             false,          // Has any initial speed ?
             false,         // Has initial impulse ?
             Point(0, 0), // If it does, specify it here
-            damageType,  // Collision flag - e.g. What is this actor ?
-            (CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Controller),  // Collision mask - e.g. With what does this actor collide with ?
+            collisionFlag,  // Collision flag - e.g. What is this actor ?
+            collisionMask,  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Friction - with floor and so
             0.0f,  // Density - determines if this character bounces
-            0.0f)); // Restitution - makes object bounce
+            0.0f)); // Restitution - makes object bounce*/
+
+        
+        // TODO: This does not work for some reason
+        /*ActorBodyDef bodyDef;
+        bodyDef.bodyType = b2_dynamicBody;
+        bodyDef.makeSensor = true;
+        bodyDef.collisionShape = shape;
+        bodyDef.position = position;
+        bodyDef.positionOffset = positionOffset;
+        bodyDef.size = size;
+        bodyDef.fixtureType = FixtureType_Trigger;
+        bodyDef.collisionFlag = collisionFlag;
+        bodyDef.collisionMask = collisionMask;
+        bodyDef.gravityScale = 0.0f;
+
+        pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));*/
 
         pActor->LinkEndChild(CreateTriggerComponent(-1, false, false));
         pActor->LinkEndChild(CreateAreaDamageComponent(damage));
@@ -933,14 +1002,35 @@ namespace ActorTemplates
         fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
         fixtureDef.collisionMask = (CollisionFlag_Death | CollisionFlag_Controller | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_ClawAttack | CollisionFlag_Explosion);
         fixtureDef.isSensor = true;
-        fixtureDef.size = Point(40, 100);
+        fixtureDef.size = Point(40, 70);
         bodyDef.fixtureList.push_back(fixtureDef);
 
+        fixtureDef.fixtureType = FixtureType_EnemyAIMeleeSensor;
+        fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
+        fixtureDef.collisionMask = CollisionFlag_Controller;
+        fixtureDef.isSensor = true;
+        fixtureDef.size = Point(120, 50);
+        bodyDef.fixtureList.push_back(fixtureDef);
+
+        if (logicName == "Soldier")
+        {
+            fixtureDef.fixtureType = FixtureType_EnemyAIRangedSensor;
+            fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
+            fixtureDef.collisionMask = CollisionFlag_Controller;
+            fixtureDef.isSensor = true;
+            fixtureDef.size = Point(1000, 50);
+            fixtureDef.offset = Point(0, -30);
+            bodyDef.fixtureList.push_back(fixtureDef);
+        }
+
         pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
+
+        
 
         if (logicName == "Soldier")
         {
             TiXmlElement* pEnemyAIElem = new TiXmlElement("EnemyAIComponent");
+            XML_ADD_TEXT_ELEMENT("DeathAnimation", "killfall", pEnemyAIElem);
 
             pActor->LinkEndChild(pEnemyAIElem);
 
@@ -961,10 +1051,49 @@ namespace ActorTemplates
             pPatrolStateElem->LinkEndChild(pIdleActionElem);
 
             pActor->LinkEndChild(pPatrolStateElem);
+
+            TiXmlElement* pMeleeAttackStateElem = new TiXmlElement("MeleeAttackAIStateComponent");
+
+            TiXmlElement* pMeleeAtacksElem = new TiXmlElement("Attacks");
+
+            TiXmlElement* pMeleeAttackAction = new TiXmlElement("AttackAction");
+            XML_ADD_TEXT_ELEMENT("Animation", "strike1", pMeleeAttackAction);
+            XML_ADD_TEXT_ELEMENT("AttackAnimFrameIdx", "4", pMeleeAttackAction);
+            XML_ADD_TEXT_ELEMENT("AttackType", ToStr(DamageType_MeleeAttack).c_str(), pMeleeAttackAction);
+            XML_ADD_TEXT_ELEMENT("AttackFxImageSet", "NONE", pMeleeAttackAction);
+            XML_ADD_2_PARAM_ELEMENT("AttackSpawnPositionOffset", "x", -50, "y", 0, pMeleeAttackAction);
+            XML_ADD_2_PARAM_ELEMENT("AttackAreaSize", "width", 70, "height", 30, pMeleeAttackAction);
+            XML_ADD_TEXT_ELEMENT("Damage", "10", pMeleeAttackAction);
+            pMeleeAtacksElem->LinkEndChild(pMeleeAttackAction);
+
+            pMeleeAttackStateElem->LinkEndChild(pMeleeAtacksElem);
+
+            pActor->LinkEndChild(pMeleeAttackStateElem);
+
+            //=========================================================================================================
+
+            TiXmlElement* pRangedAttackStateElem = new TiXmlElement("RangedAttackAIStateComponent");
+
+            TiXmlElement* pRangedAtacksElem = new TiXmlElement("Attacks");
+
+            TiXmlElement* pRangedAttackAction = new TiXmlElement("AttackAction");
+            XML_ADD_TEXT_ELEMENT("Animation", "strike", pRangedAttackAction);
+            XML_ADD_TEXT_ELEMENT("AttackAnimFrameIdx", "2", pRangedAttackAction);
+            XML_ADD_TEXT_ELEMENT("AttackType", ToStr(DamageType_Bullet).c_str(), pRangedAttackAction);
+            XML_ADD_TEXT_ELEMENT("AttackFxImageSet", "/LEVEL1/IMAGES/MUSKETBALL/*", pRangedAttackAction);
+            XML_ADD_2_PARAM_ELEMENT("AttackSpawnPositionOffset", "x", -42, "y", -38, pRangedAttackAction);
+            XML_ADD_2_PARAM_ELEMENT("AttackAreaSize", "width", 0, "height", 0, pRangedAttackAction);
+            XML_ADD_TEXT_ELEMENT("Damage", "10", pRangedAttackAction);
+            pRangedAtacksElem->LinkEndChild(pRangedAttackAction);
+
+            pRangedAttackStateElem->LinkEndChild(pRangedAtacksElem);
+
+            pActor->LinkEndChild(pRangedAttackStateElem);
         }
         else if (logicName == "Officer")
         {
             TiXmlElement* pEnemyAIElem = new TiXmlElement("EnemyAIComponent");
+            XML_ADD_TEXT_ELEMENT("DeathAnimation", "fall", pEnemyAIElem);
 
             pActor->LinkEndChild(pEnemyAIElem);
 
@@ -987,6 +1116,28 @@ namespace ActorTemplates
             pPatrolStateElem->LinkEndChild(pIdleActionElem);
 
             pActor->LinkEndChild(pPatrolStateElem);
+
+            //=========================================================================================================
+
+            TiXmlElement* pMeleeAttackStateElem = new TiXmlElement("MeleeAttackAIStateComponent");
+
+            TiXmlElement* pMeleeAtacksElem = new TiXmlElement("Attacks");
+
+            TiXmlElement* pMeleeAttackAction = new TiXmlElement("AttackAction");
+            XML_ADD_TEXT_ELEMENT("Animation", "strike", pMeleeAttackAction);
+            XML_ADD_TEXT_ELEMENT("AttackAnimFrameIdx", "3", pMeleeAttackAction);
+            XML_ADD_TEXT_ELEMENT("AttackType", ToStr(DamageType_MeleeAttack).c_str(), pMeleeAttackAction);
+            XML_ADD_TEXT_ELEMENT("AttackFxImageSet", "NONE", pMeleeAttackAction);
+            XML_ADD_2_PARAM_ELEMENT("AttackSpawnPositionOffset", "x", -60, "y", 0, pMeleeAttackAction);
+            XML_ADD_2_PARAM_ELEMENT("AttackAreaSize", "width", 100, "height", 30, pMeleeAttackAction);
+            XML_ADD_TEXT_ELEMENT("Damage", "10", pMeleeAttackAction);
+            pMeleeAtacksElem->LinkEndChild(pMeleeAttackAction);
+
+            pMeleeAttackStateElem->LinkEndChild(pMeleeAtacksElem);
+
+            pActor->LinkEndChild(pMeleeAttackStateElem);
+
+            //=========================================================================================================
         }
 
         return pActor;
@@ -1043,9 +1194,23 @@ namespace ActorTemplates
         return CreateAndReturnActor(CreateXmlData_ClawProjectileActor(ammoType, direction, position));
     }
 
-    StrongActorPtr CreateProjectile(std::string imageSet, Direction direction, Point position)
+    StrongActorPtr CreateProjectile(
+        std::string imageSet, 
+        uint32 damage, 
+        DamageType damageType, 
+        Direction direction, 
+        Point position, 
+        CollisionFlag collisionFlag, 
+        uint32 collisionMask)
     {
-        return nullptr;
+        return CreateAndReturnActor(CreateXmlData_ProjectileActor(
+            imageSet, 
+            damage, 
+            damageType, 
+            direction, 
+            position, 
+            collisionFlag, 
+            collisionMask));
     }
 
     StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag damageType, std::string shape, Point positionOffset, std::string imageSet, int32 zCoord)

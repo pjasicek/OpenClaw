@@ -181,14 +181,6 @@ void AnimationComponent::VUpdate(uint32 msDiff)
 
 bool AnimationComponent::SetAnimation(std::string animationName)
 {
-    /*if (animationName == "advance")
-    {
-        for (auto a : _animationMap)
-        {
-            LOG(a.second->GetName());
-        }
-    }*/
-
     if (animationName == _currentAnimation->GetName())
     {
         //LOG("Trying to set the same animation: " + animationName);

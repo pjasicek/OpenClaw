@@ -177,7 +177,8 @@ void ClawControllableComponent::VOnStopClimbing()
 void ClawControllableComponent::OnAttack()
 {
     if (IsAttackingOrShooting() ||
-        m_State == ClawState_Climbing)
+        m_State == ClawState_Climbing ||
+        m_State == ClawState_TakingDamage)
     {
         return;
     }
@@ -217,7 +218,8 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
 {
     if (IsAttackingOrShooting() ||
         m_State == ClawState_Climbing ||
-        m_State == ClawState_Dying)
+        m_State == ClawState_Dying || 
+        m_State == ClawState_TakingDamage)
     {
         return;
     }
@@ -289,7 +291,8 @@ bool ClawControllableComponent::CanMove()
         m_State == ClawState_Attacking ||
         m_State == ClawState_Dying ||
         m_State == ClawState_DuckAttacking ||
-        m_State == ClawState_DuckShooting)
+        m_State == ClawState_DuckShooting ||
+        m_State == ClawState_TakingDamage)
     {
         return false;
     }
@@ -401,6 +404,11 @@ void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
         SetCurrentPhysicsState();
         m_pPhysicsComponent->RestoreGravityScale();
     }
+    else if (animName == "damage1" ||
+             animName == "damage2")
+    {
+        SetCurrentPhysicsState();
+    }
 }
 
 bool ClawControllableComponent::IsAttackingOrShooting()
@@ -426,6 +434,35 @@ void ClawControllableComponent::VOnHealthBelowZero()
         m_pClawAnimationComponent->SetAnimation("spikedeath");
         m_pPhysicsComponent->SetGravityScale(0.0f);
         m_State = ClawState_Dying;
+    }
+}
+
+void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth)
+{
+    // When claw takes damage but does not actually die
+    if (newHealth > 0 && oldHealth > newHealth)
+    {
+        if (Util::GetRandomNumber(0, 1) == 0)
+        {
+            m_pClawAnimationComponent->SetAnimation("damage1");
+        }
+        else
+        {
+            m_pClawAnimationComponent->SetAnimation("damage2");
+        }
+
+        Point knockback(-10, 0);
+        if (m_pRenderComponent->IsMirrored())
+        {
+            knockback = Point(knockback.x * -1.0, knockback.y);
+        }
+        m_pPositionComponent->SetPosition(m_pPositionComponent->GetX() + knockback.x, m_pPositionComponent->GetY() + knockback.y);
+
+        shared_ptr<EventData_Teleport_Actor> pEvent(new EventData_Teleport_Actor
+            (_owner->GetGUID(), m_pPositionComponent->GetPosition()));
+        IEventMgr::Get()->VQueueEvent(pEvent);
+        
+        m_State = ClawState_TakingDamage;
     }
 }
 

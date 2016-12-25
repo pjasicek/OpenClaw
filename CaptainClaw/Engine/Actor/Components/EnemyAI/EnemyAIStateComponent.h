@@ -94,12 +94,12 @@ public:
     virtual const char* VGetName() const { return g_Name; }
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
-    virtual void VPostInit();
+    virtual void VPostInit() override;
 
     // EnemyAIStateComponent API
-    virtual void VUpdate(uint32 msDiff);
-    virtual void VOnStateEnter();
-    virtual void VOnStateLeave();
+    virtual void VUpdate(uint32 msDiff) override;
+    virtual void VOnStateEnter() override;
+    virtual void VOnStateLeave() override;
     virtual EnemyAIState VGetStateType() const { return EnemyAIState_Patrolling; }
 
     // AnimationObserver API
@@ -127,6 +127,69 @@ private:
 
     //EnemyAIAction* m_pCurrentAction;
     //EnemyActionMap m_ActionMap;
+};
+
+//=====================================================================================================================
+// MeleeAttackAIStateComponent
+//=====================================================================================================================
+typedef std::vector<std::shared_ptr<EnemyAttackAction>> AttackActionList;
+class MeleeAttackAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver
+{
+public:
+    MeleeAttackAIStateComponent();
+    virtual ~MeleeAttackAIStateComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const { return g_Name; }
+    virtual void VPostInit() override;
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    // EnemyAIStateComponent API
+    virtual void VUpdate(uint32 msDiff) override;
+    virtual void VOnStateEnter() override;
+    virtual void VOnStateLeave() override;
+    virtual EnemyAIState VGetStateType() const { return EnemyAIState_MeleeAttacking; }
+
+    // AnimationObserver API
+    virtual void VOnAnimationLooped(Animation* pAnimation) override;
+    virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
+
+private:
+    void ExecuteMeleeAttack();
+
+    AttackActionList m_MeleeAttackActions;
+};
+
+//=====================================================================================================================
+// RangedAttackAIStateComponent
+//=====================================================================================================================
+class RangedAttackAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver
+{
+public:
+    RangedAttackAIStateComponent();
+    virtual ~RangedAttackAIStateComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const { return g_Name; }
+    virtual void VPostInit() override;
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    // EnemyAIStateComponent API
+    virtual void VUpdate(uint32 msDiff) override;
+    virtual void VOnStateEnter() override;
+    virtual void VOnStateLeave() override;
+    virtual EnemyAIState VGetStateType() const { return EnemyAIState_RangedAttacking; }
+
+    // AnimationObserver API
+    virtual void VOnAnimationLooped(Animation* pAnimation) override;
+    virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
+
+private:
+    void ExecuteRangedAttack();
+
+    AttackActionList m_RangedAttackActions;
 };
 
 #endif

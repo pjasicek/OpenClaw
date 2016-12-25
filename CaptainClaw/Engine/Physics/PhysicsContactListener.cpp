@@ -8,6 +8,9 @@
 #include "../Actor/Components/TriggerComponents/TriggerComponent.h"
 #include "../Actor/Components/AIComponents/ProjectileAIComponent.h"
 #include "../Actor/Components/ControllerComponents/HealthComponent.h"
+#include "../Actor/Components/EnemyAI/EnemyAIComponent.h"
+#include "../Actor/Components/ControllableComponent.h"
+#include "../Actor/Components/PositionComponent.h"
 
 int numFootContacts = 0;
 
@@ -139,8 +142,32 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                 assert(pActor);
 
                 shared_ptr<ProjectileAIComponent> pProjectileComponent = GetProjectileAIComponentFromB2Body(pFixtureA->GetBody());
+
                 if (pProjectileComponent)
                 {
+                    // HACK:
+                    /*if (shared_ptr<ClawControllableComponent> pClaw =
+                        MakeStrongPtr(pActor->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name)))
+                    {
+                        Actor* pProjectileActor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
+                        shared_ptr<PositionComponent> pProjectilePositionComponent =
+                            MakeStrongPtr(pProjectileActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+
+                        shared_ptr<PositionComponent> pClawPositionComponent =
+                            MakeStrongPtr(pActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+
+                        assert(pProjectilePositionComponent);
+                        assert(pClawPositionComponent);
+                        if (pProjectilePositionComponent->GetX() < pClawPositionComponent->GetX())
+                        {
+                            pClaw->m_LastHitDirection = Direction_Left;
+                        }
+                        else
+                        {
+                            pClaw->m_LastHitDirection = Direction_Right;
+                        }
+                    }*/
+
                     pProjectileComponent->OnCollidedWithActor(pActor);
                 }
             }
@@ -176,6 +203,58 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                 {
                     LOG("Someone should die");
                     pHealthComponent->AddHealth(-1 * (pHealthComponent->GetHealth() + 1));
+                }
+            }
+        }
+    }
+    // Enemy agro range contact
+    {
+        if (pFixtureB->GetUserData() == (void*)FixtureType_EnemyAIMeleeSensor)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_EnemyAIMeleeSensor)
+        {
+            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            {
+                Actor* pActorwhoEntered = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                Actor* pActorWithMeleeSensor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
+
+                if (pActorwhoEntered && pActorWithMeleeSensor)
+                {
+                    shared_ptr<EnemyAIComponent> pEnemyAIComponent =
+                        MakeStrongPtr(pActorWithMeleeSensor->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
+                    if (pEnemyAIComponent)
+                    {
+                        pEnemyAIComponent->OnEnemyEnteredMeleeZone(pActorwhoEntered);
+                    }
+                }
+            }
+        }
+    }
+    // Enemy ranged agro range contact
+    {
+        if (pFixtureB->GetUserData() == (void*)FixtureType_EnemyAIRangedSensor)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_EnemyAIRangedSensor)
+        {
+            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            {
+                Actor* pActorwhoEntered = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                Actor* pActorWithRangedSensor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
+
+                if (pActorwhoEntered && pActorWithRangedSensor)
+                {
+                    shared_ptr<EnemyAIComponent> pEnemyAIComponent =
+                        MakeStrongPtr(pActorWithRangedSensor->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
+                    if (pEnemyAIComponent)
+                    {
+                        pEnemyAIComponent->OnEnemyEnteredRangedZone(pActorwhoEntered);
+                    }
                 }
             }
         }
@@ -286,6 +365,57 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                 if (pTriggerComponent)
                 {
                     pTriggerComponent->OnActorLeft(pActor);
+                }
+            }
+        }
+    }
+    {
+        if (pFixtureB->GetUserData() == (void*)FixtureType_EnemyAIMeleeSensor)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_EnemyAIMeleeSensor)
+        {
+            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            {
+                Actor* pActorWhoLeft = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                Actor* pActorWithMeleeSensor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
+
+                if (pActorWhoLeft && pActorWithMeleeSensor)
+                {
+                    shared_ptr<EnemyAIComponent> pEnemyAIComponent =
+                        MakeStrongPtr(pActorWithMeleeSensor->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
+                    if (pEnemyAIComponent)
+                    {
+                        pEnemyAIComponent->OnEnemyLeftMeleeZone(pActorWhoLeft);
+                    }
+                }
+            }
+        }
+    }
+    // Enemy ranged agro range contact
+    {
+        if (pFixtureB->GetUserData() == (void*)FixtureType_EnemyAIRangedSensor)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_EnemyAIRangedSensor)
+        {
+            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            {
+                Actor* pActorWhoLeft = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                Actor* pActorWithRangedSensor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
+
+                if (pActorWhoLeft && pActorWithRangedSensor)
+                {
+                    shared_ptr<EnemyAIComponent> pEnemyAIComponent =
+                        MakeStrongPtr(pActorWithRangedSensor->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
+                    if (pEnemyAIComponent)
+                    {
+                        pEnemyAIComponent->OnEnemyLeftRangedZone(pActorWhoLeft);
+                    }
                 }
             }
         }
