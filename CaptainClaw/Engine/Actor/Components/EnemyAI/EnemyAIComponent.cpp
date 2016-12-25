@@ -4,6 +4,7 @@
 #include "../PositionComponent.h"
 #include "../ControllerComponents/HealthComponent.h"
 #include "../PhysicsComponent.h"
+#include "../AnimationComponent.h"
 
 #include "../../../GameApp/BaseGameApp.h"
 #include "../../../UserInterface/HumanView.h"
@@ -17,7 +18,8 @@ const char* EnemyAIComponent::g_Name = "EnemyAIComponent";
 EnemyAIComponent::EnemyAIComponent()
     :
     m_bInitialized(false),
-    m_bDead(false)
+    m_bDead(false),
+    m_bHasStateLock(true)
 {
 
 }
@@ -31,7 +33,10 @@ bool EnemyAIComponent::VInit(TiXmlElement* pData)
 {
     assert(pData);
 
-
+    if (TiXmlElement* pElem = pData->FirstChildElement("DeathAnimation"))
+    {
+        m_DeathAnimation = pElem->GetText();
+    }
 
     return true;
 }
@@ -54,22 +59,16 @@ void EnemyAIComponent::VUpdate(uint32 msDiff)
 {
     if (!m_bInitialized)
     {
-        LOG_WARNING("");
         assert(!m_StateMap.empty());
-        auto findIt = m_StateMap.find("PatrolState");
-        assert(findIt != m_StateMap.end());
-
-        findIt->second->VOnStateEnter();
+        EnterState("PatrolState");
 
         m_bInitialized = true;
     }
 
     if (m_bDead)
     {
-
-
         // I want it to disappear after ~900ms
-        Point moveDelta(-(800 / 900.0 * msDiff), -(800 / 900.0f * msDiff));
+        Point moveDelta((600 / 900.0 * msDiff), (600 / 900.0f * msDiff));
         m_pPositionComponent->SetPosition(m_pPositionComponent->GetX() + moveDelta.x, m_pPositionComponent->GetY() + moveDelta.y);
 
         // This feels like a hack
@@ -95,6 +94,14 @@ void EnemyAIComponent::VUpdate(uint32 msDiff)
                 LOG_ERROR("Could not retrieve camera");
             }
         }
+
+        if (!m_DeathAnimation.empty())
+        {
+            auto pAnimComp = MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+            assert(pAnimComp);
+
+            pAnimComp->SetAnimation(m_DeathAnimation);
+        }
     }
 }
 
@@ -111,4 +118,224 @@ void EnemyAIComponent::VOnHealthBelowZero()
     assert(pPhysicsComponent);
 
     pPhysicsComponent->Destroy();
+}
+
+void EnemyAIComponent::OnEnemyEnteredMeleeZone(Actor* pEnemy)
+{
+    m_EnemiesInMeleeZone.push_back(pEnemy);
+
+    if (m_EnemiesInMeleeZone.size() == 1)
+    {
+        if (m_bHasStateLock)
+        {
+            m_bHasStateLock = false;
+            EnterState("MeleeAttackState");
+        }
+    }
+}
+
+void EnemyAIComponent::OnEnemyLeftMeleeZone(Actor* pEnemy)
+{
+    for (auto iter = m_EnemiesInMeleeZone.begin(); iter != m_EnemiesInMeleeZone.end(); ++iter)
+    {
+        if ((*iter) == pEnemy)
+        {
+            m_EnemiesInMeleeZone.erase(iter);
+            if (m_EnemiesInMeleeZone.empty())
+            {
+                if (m_bHasStateLock)
+                {
+                    if (m_EnemiesInRangedZone.size() > 0 && HasState("RangedAttackState"))
+                    {
+                        m_bHasStateLock = false;
+                        EnterState("RangedAttackState");
+                    }
+                    else
+                    {
+                        EnterState("PatrolState");
+                    }
+                }
+            }
+            return;
+        }
+    }
+
+    LOG_WARNING("Could not remove enemy - no such actor found");
+}
+
+void EnemyAIComponent::OnEnemyEnteredRangedZone(Actor* pEnemy)
+{
+    m_EnemiesInRangedZone.push_back(pEnemy);
+
+    if (m_EnemiesInRangedZone.size() == 1)
+    {
+        if (m_bHasStateLock && HasState("RangedAttackState"))
+        {
+            m_bHasStateLock = false;
+            EnterState("RangedAttackState");
+        }
+    }
+}
+
+void EnemyAIComponent::OnEnemyLeftRangedZone(Actor* pEnemy)
+{
+    for (auto iter = m_EnemiesInRangedZone.begin(); iter != m_EnemiesInRangedZone.end(); ++iter)
+    {
+        if ((*iter) == pEnemy)
+        {
+            m_EnemiesInRangedZone.erase(iter);
+            if (m_EnemiesInRangedZone.empty())
+            {
+                if (m_bHasStateLock)
+                {
+                    if (m_EnemiesInMeleeZone.size() > 0 && HasState("MeleeAttackState"))
+                    {
+                        m_bHasStateLock = false;
+                        EnterState("MeleeAttackState");
+                    }
+                    else
+                    {
+                        EnterState("PatrolState");
+                    }
+                }
+            }
+            return;
+        }
+    }
+
+    LOG_WARNING("Could not remove enemy - no such actor found");
+}
+
+Point EnemyAIComponent::FindClosestHostileActorOffset()
+{
+    Point closest(0, 0);
+
+    if (m_EnemiesInMeleeZone.empty() && m_EnemiesInRangedZone.empty())
+    {
+        return closest;
+    }
+
+    if (!m_EnemiesInMeleeZone.empty())
+    {
+        for (Actor* pHostileActor : m_EnemiesInMeleeZone)
+        {
+            shared_ptr<PositionComponent> pHostileActorPositionComponent =
+                MakeStrongPtr(pHostileActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+            assert(pHostileActorPositionComponent);
+
+            Point positionDiff = pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();
+            if (positionDiff.Length() < (m_pPositionComponent->GetPosition() - closest).Length())
+            {
+                closest = positionDiff;
+            }
+        }
+    }
+    else
+    {
+        for (Actor* pHostileActor : m_EnemiesInRangedZone)
+        {
+            shared_ptr<PositionComponent> pHostileActorPositionComponent =
+                MakeStrongPtr(pHostileActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+            assert(pHostileActorPositionComponent);
+
+            Point positionDiff = pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();
+            if (positionDiff.Length() < (m_pPositionComponent->GetPosition() - closest).Length())
+            {
+                closest = positionDiff;
+            }
+        }
+    }
+
+    assert(std::fabs(closest.x) > DBL_EPSILON || std::fabs(closest.y) > DBL_EPSILON);
+
+    return closest;
+}
+
+void EnemyAIComponent::LeaveAllStates()
+{
+    for (auto stateIter : m_StateMap)
+    {
+        stateIter.second->VOnStateLeave();
+    }
+}
+
+void EnemyAIComponent::EnterState(std::string stateName)
+{
+    LeaveAllStates();
+
+    auto findIt = m_StateMap.find(stateName);
+    assert(findIt != m_StateMap.end());
+
+    findIt->second->VOnStateEnter();
+}
+
+void EnemyAIComponent::AcquireStateLock()
+{
+    LeaveAllStates();
+    m_bHasStateLock = true;
+}
+
+void EnemyAIComponent::OnStateCanFinish()
+{
+    EnemyAIState currentState = GetCurrentState();
+
+    if (currentState == EnemyAIState_MeleeAttacking)
+    {
+        if (m_EnemiesInMeleeZone.empty())
+        {
+            AcquireStateLock();
+            if (m_EnemiesInRangedZone.size() > 0)
+            {
+                EnterState("RangedAttackState");
+                m_bHasStateLock = false;
+            }
+        }
+    }
+    else if (currentState == EnemyAIState_RangedAttacking)
+    {
+        if (m_EnemiesInMeleeZone.size() > 0)
+        {
+            AcquireStateLock();
+            if (m_EnemiesInMeleeZone.size() > 0)
+            {
+                EnterState("MeleeAttackState");
+                m_bHasStateLock = false;
+            }
+        }
+        else if (m_EnemiesInRangedZone.empty())
+        {
+            AcquireStateLock();
+            if (m_EnemiesInMeleeZone.size() > 0)
+            {
+                EnterState("MeleeAttackState");
+                m_bHasStateLock = false;
+            }
+        }
+    }
+
+    if (m_bHasStateLock)
+    {
+        EnterState("PatrolState");
+    }
+}
+
+EnemyAIState EnemyAIComponent::GetCurrentState()
+{
+    for (auto stateIter : m_StateMap)
+    {
+        if (stateIter.second->IsActive())
+        {
+            return stateIter.second->VGetStateType();
+        }
+    }
+
+    assert(false && "Could not find any state ?");
+
+    return EnemyAIState_None;
+}
+
+bool EnemyAIComponent::HasState(std::string stateName)
+{
+    auto findIt = m_StateMap.find(stateName);
+    return findIt != m_StateMap.end();
 }

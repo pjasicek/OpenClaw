@@ -9,6 +9,8 @@
 #include "ActorFactory.h"
 #include "../Util/StringUtil.h"
 
+#include "ActorTemplates.h"
+
 #include "../SharedDefines.h"
 
 class ActorComponent

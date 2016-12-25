@@ -22,6 +22,8 @@ namespace Util
     void SplitStringIntoVector(std::string str, std::vector<std::string>& vec);
 
     void PrintRect(SDL_Rect rect, std::string comment);
+
+    int GetRandomNumber(int fromRange, int toRange);
 }
 
 #endif

@@ -76,6 +76,8 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<CheckpointComponent>(CheckpointComponent::GetIdFromName(CheckpointComponent::g_Name));
     _componentFactory.Register<EnemyAIComponent>(EnemyAIComponent::GetIdFromName(EnemyAIComponent::g_Name));
     _componentFactory.Register<PatrolEnemyAIStateComponent>(PatrolEnemyAIStateComponent::GetIdFromName(PatrolEnemyAIStateComponent::g_Name));
+    _componentFactory.Register<MeleeAttackAIStateComponent>(MeleeAttackAIStateComponent::GetIdFromName(MeleeAttackAIStateComponent::g_Name));
+    _componentFactory.Register<RangedAttackAIStateComponent>(RangedAttackAIStateComponent::GetIdFromName(RangedAttackAIStateComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

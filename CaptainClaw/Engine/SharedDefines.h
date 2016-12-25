@@ -222,6 +222,32 @@ struct ActorBodyDef
     std::vector<ActorFixtureDef> fixtureList;
 };
 
+struct EnemyAttackAction
+{
+    EnemyAttackAction()
+    {
+        attackAnimFrameIdx = 0;
+        attackDamageType = DamageType_None;
+    }
+
+    std::string animation;
+    uint32 attackAnimFrameIdx;
+    std::string attackFxImageSet;
+
+    DamageType attackDamageType;
+
+    // Used to spawn area damage
+
+    // Considering enemy is looking left
+    Point attackSpawnPositionOffset;
+    
+    // Applicable only to melee attacks
+    Point attackAreaSize;
+
+    // Damage which the attack will deal to enemies
+    uint32 damage;
+};
+
 #define NOMINMAX
 #include <Windows.h>
 #include <iostream>

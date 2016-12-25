@@ -107,6 +107,7 @@ public:
 
     // HealthObserver API
     virtual void VOnHealthBelowZero() override;
+    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth) override;
 
 private:
     void SetCurrentPhysicsState();

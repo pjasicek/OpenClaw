@@ -75,7 +75,9 @@ enum FixtureType
     FixtureType_PowderKeg,
     FixtureType_Pickup,
     FixtureType_Explosion,
-    FixtureType_EnemyAI
+    FixtureType_EnemyAI,
+    FixtureType_EnemyAIMeleeSensor,
+    FixtureType_EnemyAIRangedSensor
 };
 
 enum PlayerStat

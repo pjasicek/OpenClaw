@@ -1,9 +1,11 @@
 #include <assert.h>
 #include <string>
 #include <sstream>
+#include <random>
 
 #include "Util.h"
 #include "../GameApp/BaseGameLogic.h"
+
 //#include "../Level/Level.h"
 
 namespace Util
@@ -335,4 +337,12 @@ namespace Util
         }*/
     }
 
+    int GetRandomNumber(int fromRange, int toRange)
+    {
+        static std::random_device rd;
+        std::mt19937 rng(rd());
+        std::uniform_int_distribution<int> uni(fromRange, toRange);
+
+        return uni(rng);
+    }
 };
