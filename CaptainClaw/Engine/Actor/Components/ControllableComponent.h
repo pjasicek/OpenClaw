@@ -71,6 +71,7 @@ class ActorRenderComponent;
 class AnimationComponent;
 class AmmoComponent;
 class PowerupComponent;
+class HealthComponent;
 class ClawControllableComponent : public ControllableComponent, public AnimationObserver, public HealthObserver
 {
 public:
@@ -122,6 +123,7 @@ private:
     PositionComponent* m_pPositionComponent;
     AmmoComponent* m_pAmmoComponent;
     PowerupComponent* m_pPowerupComponent;
+    HealthComponent* m_pHealthComponent;
 };
 
 #endif

@@ -500,6 +500,82 @@ namespace ActorTemplates
         return pGlitterComponent;
     }
 
+    ActorFixtureDef CreateActorAgroRangeFixture(Point size, Point offset, FixtureType fixtureType)
+    {
+        ActorFixtureDef fixtureDef;
+
+        fixtureDef.fixtureType = fixtureType;
+        fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
+        fixtureDef.collisionMask = CollisionFlag_Controller;
+        fixtureDef.isSensor = true;
+        fixtureDef.size = size;
+        fixtureDef.offset = offset;
+
+        return fixtureDef;
+    }
+
+    TiXmlElement* CreateXmlData_PatrolState(uint32 animationDelay, double patrolSpeed, int leftPatrolBorder, int rightPatrolBorder, std::string walkAnimation, std::vector<std::string> idleAnimations)
+    {
+        TiXmlElement* pPatrolStateElem = new TiXmlElement("PatrolEnemyAIStateComponent");
+        XML_ADD_TEXT_ELEMENT("PatrolSpeed", ToStr(patrolSpeed).c_str(), pPatrolStateElem);
+        XML_ADD_TEXT_ELEMENT("LeftPatrolBorder", ToStr(leftPatrolBorder).c_str(), pPatrolStateElem);
+        XML_ADD_TEXT_ELEMENT("RightPatrolBorder", ToStr(rightPatrolBorder).c_str(), pPatrolStateElem);
+
+        TiXmlElement* pWalkActionElem = new TiXmlElement("WalkAction");
+        XML_ADD_TEXT_ELEMENT("Animation", walkAnimation.c_str(), pWalkActionElem);
+        pPatrolStateElem->LinkEndChild(pWalkActionElem);
+
+        TiXmlElement* pIdleActionElem = new TiXmlElement("IdleAction");
+        XML_ADD_TEXT_ELEMENT("AnimationDelay", ToStr(animationDelay).c_str(), pIdleActionElem);
+        for (auto idleAnim : idleAnimations)
+        {
+            XML_ADD_TEXT_ELEMENT("Animation", idleAnim.c_str(), pIdleActionElem);
+        }
+        pPatrolStateElem->LinkEndChild(pIdleActionElem);
+
+        return pPatrolStateElem;
+    }
+
+    TiXmlElement* CreateXmlData_EnemyAttackActionState(std::vector<EnemyAttackAction>& attackActions)
+    {
+        assert(!attackActions.empty());
+
+        std::string componentName;
+        if (attackActions[0].attackDamageType == DamageType_MeleeAttack)
+        {
+            componentName = "MeleeAttackAIStateComponent";
+        }
+        else if (attackActions[0].attackDamageType == DamageType_Bullet)
+        {
+            componentName = "RangedAttackAIStateComponent";
+        }
+        else
+        {
+            assert(false && "Unknown damage type");
+        }
+
+        TiXmlElement* pAttackStateElem = new TiXmlElement(componentName.c_str());
+
+        TiXmlElement* pAttacksElem = new TiXmlElement("Attacks");
+        for (auto attackAction : attackActions)
+        {
+            TiXmlElement* pAttackActionElem = new TiXmlElement("AttackAction");
+            XML_ADD_TEXT_ELEMENT("Animation", attackAction.animation.c_str(), pAttackActionElem);
+            XML_ADD_TEXT_ELEMENT("AttackAnimFrameIdx", ToStr(attackAction.attackAnimFrameIdx).c_str(), pAttackActionElem);
+            XML_ADD_TEXT_ELEMENT("AttackType", ToStr(attackAction.attackDamageType).c_str(), pAttackActionElem);
+            XML_ADD_TEXT_ELEMENT("AttackFxImageSet", attackAction.attackFxImageSet.c_str(), pAttackActionElem);
+            XML_ADD_2_PARAM_ELEMENT("AttackSpawnPositionOffset", "x", attackAction.attackSpawnPositionOffset.x, "y", attackAction.attackSpawnPositionOffset.y, pAttackActionElem);
+            XML_ADD_2_PARAM_ELEMENT("AttackAreaSize", "width", attackAction.attackAreaSize.x, "height", attackAction.attackAreaSize.y, pAttackActionElem);
+            XML_ADD_TEXT_ELEMENT("Damage", ToStr(attackAction.damage).c_str(), pAttackActionElem);
+
+            pAttacksElem->LinkEndChild(pAttackActionElem);
+        }
+
+        pAttackStateElem->LinkEndChild(pAttacksElem);
+
+        return pAttackStateElem;
+    }
+
     //=====================================================================================================================
     // Specific functions for creating specific actors
     //=====================================================================================================================
@@ -1005,22 +1081,13 @@ namespace ActorTemplates
         fixtureDef.size = Point(40, 70);
         bodyDef.fixtureList.push_back(fixtureDef);
 
-        fixtureDef.fixtureType = FixtureType_EnemyAIMeleeSensor;
-        fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
-        fixtureDef.collisionMask = CollisionFlag_Controller;
-        fixtureDef.isSensor = true;
-        fixtureDef.size = Point(120, 50);
-        bodyDef.fixtureList.push_back(fixtureDef);
+        bodyDef.fixtureList.push_back(
+            CreateActorAgroRangeFixture(Point(120, 50), Point(0, 0), FixtureType_EnemyAIMeleeSensor));
 
         if (logicName == "Soldier")
         {
-            fixtureDef.fixtureType = FixtureType_EnemyAIRangedSensor;
-            fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
-            fixtureDef.collisionMask = CollisionFlag_Controller;
-            fixtureDef.isSensor = true;
-            fixtureDef.size = Point(1000, 50);
-            fixtureDef.offset = Point(0, -30);
-            bodyDef.fixtureList.push_back(fixtureDef);
+            bodyDef.fixtureList.push_back(
+                CreateActorAgroRangeFixture(Point(1000, 50), Point(0, -30), FixtureType_EnemyAIRangedSensor));
         }
 
         pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
@@ -1034,61 +1101,53 @@ namespace ActorTemplates
 
             pActor->LinkEndChild(pEnemyAIElem);
 
-            TiXmlElement* pPatrolStateElem = new TiXmlElement("PatrolEnemyAIStateComponent");
-            XML_ADD_TEXT_ELEMENT("PatrolSpeed", "1.2", pPatrolStateElem);
-            XML_ADD_TEXT_ELEMENT("LeftPatrolBorder", ToStr(minPatrolX).c_str(), pPatrolStateElem);
-            XML_ADD_TEXT_ELEMENT("RightPatrolBorder", ToStr(maxPatrolX).c_str(), pPatrolStateElem);
+            //=========================================================================================================
+            // Patrol
 
-            TiXmlElement* pWalkActionElem = new TiXmlElement("WalkAction");
-            XML_ADD_TEXT_ELEMENT("Animation", "fastadvance", pWalkActionElem);
-            pPatrolStateElem->LinkEndChild(pWalkActionElem);
+            std::string walkAnimation = "fastadvance";
 
-            TiXmlElement* pIdleActionElem = new TiXmlElement("IdleAction");
-            XML_ADD_TEXT_ELEMENT("AnimationDelay", "750", pIdleActionElem);
-            XML_ADD_TEXT_ELEMENT("Animation", "stand1", pIdleActionElem);
-            XML_ADD_TEXT_ELEMENT("Animation", "stand", pIdleActionElem);
-            XML_ADD_TEXT_ELEMENT("Animation", "stand2", pIdleActionElem);
-            pPatrolStateElem->LinkEndChild(pIdleActionElem);
+            std::vector<std::string> idleAnimations;
+            idleAnimations.push_back("stand1");
+            idleAnimations.push_back("stand");
+            idleAnimations.push_back("stand2");
 
-            pActor->LinkEndChild(pPatrolStateElem);
-
-            TiXmlElement* pMeleeAttackStateElem = new TiXmlElement("MeleeAttackAIStateComponent");
-
-            TiXmlElement* pMeleeAtacksElem = new TiXmlElement("Attacks");
-
-            TiXmlElement* pMeleeAttackAction = new TiXmlElement("AttackAction");
-            XML_ADD_TEXT_ELEMENT("Animation", "strike1", pMeleeAttackAction);
-            XML_ADD_TEXT_ELEMENT("AttackAnimFrameIdx", "4", pMeleeAttackAction);
-            XML_ADD_TEXT_ELEMENT("AttackType", ToStr(DamageType_MeleeAttack).c_str(), pMeleeAttackAction);
-            XML_ADD_TEXT_ELEMENT("AttackFxImageSet", "NONE", pMeleeAttackAction);
-            XML_ADD_2_PARAM_ELEMENT("AttackSpawnPositionOffset", "x", -50, "y", 0, pMeleeAttackAction);
-            XML_ADD_2_PARAM_ELEMENT("AttackAreaSize", "width", 70, "height", 30, pMeleeAttackAction);
-            XML_ADD_TEXT_ELEMENT("Damage", "10", pMeleeAttackAction);
-            pMeleeAtacksElem->LinkEndChild(pMeleeAttackAction);
-
-            pMeleeAttackStateElem->LinkEndChild(pMeleeAtacksElem);
-
-            pActor->LinkEndChild(pMeleeAttackStateElem);
+            pActor->LinkEndChild(CreateXmlData_PatrolState(750, 1.2, minPatrolX, maxPatrolX, walkAnimation, idleAnimations));
 
             //=========================================================================================================
+            // Melee
 
-            TiXmlElement* pRangedAttackStateElem = new TiXmlElement("RangedAttackAIStateComponent");
+            std::vector<EnemyAttackAction> meleeAttacks;
 
-            TiXmlElement* pRangedAtacksElem = new TiXmlElement("Attacks");
+            EnemyAttackAction meleeAttackAction;
+            meleeAttackAction.animation = "strike1";
+            meleeAttackAction.attackAnimFrameIdx = 4;
+            meleeAttackAction.attackDamageType = DamageType_MeleeAttack;
+            meleeAttackAction.attackFxImageSet = "NONE";
+            meleeAttackAction.attackSpawnPositionOffset = Point(-50, 0);
+            meleeAttackAction.attackAreaSize = Point(70, 30);
+            meleeAttackAction.damage = 10;
 
-            TiXmlElement* pRangedAttackAction = new TiXmlElement("AttackAction");
-            XML_ADD_TEXT_ELEMENT("Animation", "strike", pRangedAttackAction);
-            XML_ADD_TEXT_ELEMENT("AttackAnimFrameIdx", "2", pRangedAttackAction);
-            XML_ADD_TEXT_ELEMENT("AttackType", ToStr(DamageType_Bullet).c_str(), pRangedAttackAction);
-            XML_ADD_TEXT_ELEMENT("AttackFxImageSet", "/LEVEL1/IMAGES/MUSKETBALL/*", pRangedAttackAction);
-            XML_ADD_2_PARAM_ELEMENT("AttackSpawnPositionOffset", "x", -42, "y", -38, pRangedAttackAction);
-            XML_ADD_2_PARAM_ELEMENT("AttackAreaSize", "width", 0, "height", 0, pRangedAttackAction);
-            XML_ADD_TEXT_ELEMENT("Damage", "10", pRangedAttackAction);
-            pRangedAtacksElem->LinkEndChild(pRangedAttackAction);
+            meleeAttacks.push_back(meleeAttackAction);
 
-            pRangedAttackStateElem->LinkEndChild(pRangedAtacksElem);
+            pActor->LinkEndChild(CreateXmlData_EnemyAttackActionState(meleeAttacks));
 
-            pActor->LinkEndChild(pRangedAttackStateElem);
+            //=========================================================================================================
+            // Ranged
+
+            std::vector<EnemyAttackAction> rangedAttacks;
+
+            EnemyAttackAction rangedAttackAction;
+            rangedAttackAction.animation = "strike";
+            rangedAttackAction.attackAnimFrameIdx = 2;
+            rangedAttackAction.attackDamageType = DamageType_Bullet;
+            rangedAttackAction.attackFxImageSet = "/LEVEL1/IMAGES/MUSKETBALL/*";
+            rangedAttackAction.attackSpawnPositionOffset = Point(-42, -38);
+            rangedAttackAction.attackAreaSize = Point(0, 0);
+            rangedAttackAction.damage = 10;
+
+            rangedAttacks.push_back(rangedAttackAction);
+
+            pActor->LinkEndChild(CreateXmlData_EnemyAttackActionState(rangedAttacks));
         }
         else if (logicName == "Officer")
         {
@@ -1097,47 +1156,37 @@ namespace ActorTemplates
 
             pActor->LinkEndChild(pEnemyAIElem);
 
-            TiXmlElement* pPatrolStateElem = new TiXmlElement("PatrolEnemyAIStateComponent");
-            XML_ADD_TEXT_ELEMENT("PatrolSpeed", "1.3", pPatrolStateElem);
-            XML_ADD_TEXT_ELEMENT("LeftPatrolBorder", ToStr(minPatrolX).c_str(), pPatrolStateElem);
-            XML_ADD_TEXT_ELEMENT("RightPatrolBorder", ToStr(maxPatrolX).c_str(), pPatrolStateElem);
+            //=========================================================================================================
+            // Patrol
 
-            TiXmlElement* pWalkActionElem = new TiXmlElement("WalkAction");
-            XML_ADD_TEXT_ELEMENT("Animation", "fastadvance", pWalkActionElem);
-            pPatrolStateElem->LinkEndChild(pWalkActionElem);
+            std::string walkAnimation = "fastadvance";
 
-            TiXmlElement* pIdleActionElem = new TiXmlElement("IdleAction");
-            XML_ADD_TEXT_ELEMENT("AnimationDelay", "900", pIdleActionElem);
-            XML_ADD_TEXT_ELEMENT("Animation", "stand1", pIdleActionElem);
-            XML_ADD_TEXT_ELEMENT("Animation", "stand2", pIdleActionElem);
-            XML_ADD_TEXT_ELEMENT("Animation", "stand3", pIdleActionElem);
-            XML_ADD_TEXT_ELEMENT("Animation", "stand4", pIdleActionElem);
-            XML_ADD_TEXT_ELEMENT("Animation", "stand5", pIdleActionElem);
-            pPatrolStateElem->LinkEndChild(pIdleActionElem);
+            std::vector<std::string> idleAnimations;
+            idleAnimations.push_back("stand1");
+            idleAnimations.push_back("stand2");
+            idleAnimations.push_back("stand3");
+            idleAnimations.push_back("stand4");
+            idleAnimations.push_back("stand5");
 
-            pActor->LinkEndChild(pPatrolStateElem);
+            pActor->LinkEndChild(CreateXmlData_PatrolState(900, 1.3, minPatrolX, maxPatrolX, walkAnimation, idleAnimations));
 
             //=========================================================================================================
+            // Melee
 
-            TiXmlElement* pMeleeAttackStateElem = new TiXmlElement("MeleeAttackAIStateComponent");
+            std::vector<EnemyAttackAction> meleeAttacks;
 
-            TiXmlElement* pMeleeAtacksElem = new TiXmlElement("Attacks");
+            EnemyAttackAction meleeAttackAction;
+            meleeAttackAction.animation = "strike";
+            meleeAttackAction.attackAnimFrameIdx = 3;
+            meleeAttackAction.attackDamageType = DamageType_MeleeAttack;
+            meleeAttackAction.attackFxImageSet = "NONE";
+            meleeAttackAction.attackSpawnPositionOffset = Point(-60, 0);
+            meleeAttackAction.attackAreaSize = Point(100, 30);
+            meleeAttackAction.damage = 10;
 
-            TiXmlElement* pMeleeAttackAction = new TiXmlElement("AttackAction");
-            XML_ADD_TEXT_ELEMENT("Animation", "strike", pMeleeAttackAction);
-            XML_ADD_TEXT_ELEMENT("AttackAnimFrameIdx", "3", pMeleeAttackAction);
-            XML_ADD_TEXT_ELEMENT("AttackType", ToStr(DamageType_MeleeAttack).c_str(), pMeleeAttackAction);
-            XML_ADD_TEXT_ELEMENT("AttackFxImageSet", "NONE", pMeleeAttackAction);
-            XML_ADD_2_PARAM_ELEMENT("AttackSpawnPositionOffset", "x", -60, "y", 0, pMeleeAttackAction);
-            XML_ADD_2_PARAM_ELEMENT("AttackAreaSize", "width", 100, "height", 30, pMeleeAttackAction);
-            XML_ADD_TEXT_ELEMENT("Damage", "10", pMeleeAttackAction);
-            pMeleeAtacksElem->LinkEndChild(pMeleeAttackAction);
+            meleeAttacks.push_back(meleeAttackAction);
 
-            pMeleeAttackStateElem->LinkEndChild(pMeleeAtacksElem);
-
-            pActor->LinkEndChild(pMeleeAttackStateElem);
-
-            //=========================================================================================================
+            pActor->LinkEndChild(CreateXmlData_EnemyAttackActionState(meleeAttacks));
         }
 
         return pActor;

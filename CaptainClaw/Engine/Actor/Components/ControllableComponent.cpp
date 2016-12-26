@@ -9,6 +9,7 @@
 #include "../ActorTemplates.h"
 #include "ControllerComponents/AmmoComponent.h"
 #include "ControllerComponents/PowerupComponent.h"
+#include "ControllerComponents/HealthComponent.h"
 
 const char* ControllableComponent::g_Name = "ControllableComponent";
 const char* ClawControllableComponent::g_Name = "ClawControllableComponent";
@@ -87,11 +88,13 @@ void ClawControllableComponent::VPostInit()
     m_pPositionComponent = MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
     m_pAmmoComponent = MakeStrongPtr(_owner->GetComponent<AmmoComponent>(AmmoComponent::g_Name)).get();
     m_pPowerupComponent = MakeStrongPtr(_owner->GetComponent<PowerupComponent>(PowerupComponent::g_Name)).get();
+    m_pHealthComponent = MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name)).get();
     assert(m_pClawAnimationComponent);
     assert(m_pRenderComponent);
     assert(m_pPositionComponent);
     assert(m_pAmmoComponent);
     assert(m_pPowerupComponent);
+    assert(m_pHealthComponent);
     m_pClawAnimationComponent->AddObserver(this);
 
     auto pHealthComponent = MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name));
@@ -407,6 +410,7 @@ void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
     else if (animName == "damage1" ||
              animName == "damage2")
     {
+        m_pHealthComponent->SetInvulnerable(false);
         SetCurrentPhysicsState();
     }
 }
@@ -461,6 +465,8 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
         shared_ptr<EventData_Teleport_Actor> pEvent(new EventData_Teleport_Actor
             (_owner->GetGUID(), m_pPositionComponent->GetPosition()));
         IEventMgr::Get()->VQueueEvent(pEvent);
+
+        m_pHealthComponent->SetInvulnerable(true);
         
         m_State = ClawState_TakingDamage;
     }

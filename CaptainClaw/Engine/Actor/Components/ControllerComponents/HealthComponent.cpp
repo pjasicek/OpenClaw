@@ -10,7 +10,8 @@ HealthComponent::HealthComponent()
     :
     m_CurrentHealth(0),
     m_MaxHealth(10),
-    m_IsController(false)
+    m_IsController(false),
+    m_bInvulnerable(false)
 { }
 
 bool HealthComponent::VInit(TiXmlElement* pData)
@@ -45,6 +46,11 @@ TiXmlElement* HealthComponent::VGenerateXml()
 
 void HealthComponent::AddHealth(int32 health)
 {
+    if (m_bInvulnerable && health < 0)
+    {
+        return;
+    }
+
     int32 oldHealth = m_CurrentHealth;
     m_CurrentHealth += health;
     if (m_CurrentHealth > m_MaxHealth)
