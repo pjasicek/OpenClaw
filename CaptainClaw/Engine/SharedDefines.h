@@ -228,6 +228,7 @@ struct EnemyAttackAction
     {
         attackAnimFrameIdx = 0;
         attackDamageType = DamageType_None;
+        attackFxImageSet = "NONE";
     }
 
     std::string animation;

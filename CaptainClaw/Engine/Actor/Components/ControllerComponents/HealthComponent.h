@@ -39,10 +39,14 @@ public:
     bool HasMaxHealth() { return m_CurrentHealth >= m_MaxHealth; }
     void SetMaxHealth() { SetCurrentHealth(m_MaxHealth); }
 
+    bool IsInvulnerable() { return m_bInvulnerable; }
+    void SetInvulnerable(bool invulnerable) { m_bInvulnerable = invulnerable; }
+
 private:
     void BroadcastHealthChanged(int32 oldHealth, int32 newHealth, bool isInitial = false);
 
     bool m_IsController;
+    bool m_bInvulnerable;
 
     int32 m_MaxHealth;
     int32 m_CurrentHealth;
