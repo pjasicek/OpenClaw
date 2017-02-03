@@ -6,6 +6,8 @@
 #include <SDL_ttf.h>
 #include "../SharedDefines.h"
 
+#include "CommandHandler.h"
+
 const int DEFAULT_SCREEN_WIDTH = 1280;
 const int DEFAULT_SCREEN_HEIGHT = 768;
 
@@ -57,6 +59,27 @@ struct GameOptions
     int resourceCacheSize;
 };
 
+// Cheats and stuff
+struct GameCheats
+{
+    GameCheats()
+    {
+        showPhysicsDebug = false;
+
+        clawInfiniteAmmo = false;
+        clawInvincible = false;
+        clawInfiniteJump = false;
+    }
+
+    // Environment
+    bool showPhysicsDebug;
+
+    // Claw
+    bool clawInfiniteAmmo;
+    bool clawInvincible;
+    bool clawInfiniteJump;
+};
+
 class EventMgr;
 class BaseGameLogic;
 class HumanView;
@@ -68,6 +91,9 @@ typedef std::map<std::string, TTF_Font*> FontMap;
 
 class BaseGameApp
 {
+    // Command handler should have unlimited access
+    friend class CommandHandler;
+
 public:
     BaseGameApp();
 
@@ -118,6 +144,8 @@ public:
 
     bool LoadLevel(const char* levelResource);
 
+    GameCheats* GetGameCheats() { return &m_GameCheats; }
+
 protected:
     virtual void VRegisterGameEvents() { }
 
@@ -155,6 +183,8 @@ private:
     bool m_IsQuitting;
 
     Point m_WindowSize;
+
+    GameCheats m_GameCheats;
 };
 
 extern BaseGameApp* g_pApp;

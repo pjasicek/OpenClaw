@@ -4,6 +4,7 @@
 #include "../ControllerComponents/LifeComponent.h"
 #include "../ControllerComponents/HealthComponent.h"
 #include "../ControllerComponents/PowerupComponent.h"
+#include "../ControllerComponents/AmmoComponent.h"
 #include "../RenderComponent.h"
 #include "../PositionComponent.h"
 #include "../GlitterComponent.h"
@@ -21,6 +22,7 @@ const char* LifePickupComponent::g_Name = "LifePickupComponent";
 const char* HealthPickupComponent::g_Name = "HealthPickupComponent";
 const char* TeleportPickupComponent::g_Name = "TeleportPickupComponent";
 const char* PowerupPickupComponent::g_Name = "PowerupPickupComponent";
+const char* AmmoPickupComponent::g_Name = "AmmoPickupComponent";
 
 //=====================================================================================================================
 //
@@ -380,6 +382,72 @@ bool PowerupPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
     if (pPowerupComponent)
     {
         pPowerupComponent->ApplyPowerup(m_PowerupType, m_PowerupDuration);
+
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        IEventMgr::Get()->VQueueEvent(pEvent);
+
+        return true;
+    }
+
+    return false;
+}
+
+//=====================================================================================================================
+//
+// AmmoPickupComponent Implementation
+//
+//=====================================================================================================================
+
+AmmoPickupComponent::AmmoPickupComponent()
+{ }
+
+bool AmmoPickupComponent::VDelegateInit(TiXmlElement* data)
+{
+    assert(data);
+
+    for (TiXmlElement* pElem = data->FirstChildElement("Ammo");
+        pElem != NULL; pElem = pElem->NextSiblingElement("Ammo"))
+    {
+        std::string ammoTypeStr = pElem->Attribute("ammoType");
+        int ammoCount = std::stoi(pElem->Attribute("ammoCount"));
+
+        AmmoType ammoType;
+        if (ammoTypeStr == "Pistol") { ammoType = AmmoType_Pistol; }
+        else if (ammoTypeStr == "Magic") { ammoType = AmmoType_Magic;; }
+        else if (ammoTypeStr == "Dynamite") { ammoType = AmmoType_Dynamite; }
+        else
+        {
+            LOG_ERROR("Unknown ammo type: " + ammoType);
+            return false;
+        }
+
+        assert(ammoType > AmmoType_None && ammoType < AmmoType_Max);
+        assert(ammoCount > 0);
+
+        m_AmmoPickupList.push_back(std::make_pair(ammoType, ammoCount));
+    }
+
+    assert(m_AmmoPickupList.size() > 0);
+
+    return true;
+}
+
+void AmmoPickupComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement)
+{
+
+}
+
+bool AmmoPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
+{
+    shared_ptr<AmmoComponent> pAmmoComponent =
+        MakeStrongPtr(pActorWhoPickedThis->GetComponent<AmmoComponent>(AmmoComponent::g_Name));
+    if (pAmmoComponent)
+    {
+        for (auto ammoPair : m_AmmoPickupList)
+        {
+            LOG("Ammo count: " + ToStr(ammoPair.second));
+            pAmmoComponent->AddAmmo(ammoPair.first, ammoPair.second);
+        }
 
         shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);

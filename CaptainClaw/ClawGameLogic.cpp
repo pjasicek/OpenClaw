@@ -60,6 +60,7 @@ void ClawGameLogic::RegisterAllDelegates()
     pGlobalEventManager->VAddListener(MakeDelegate(this, &ClawGameLogic::ModifyActorStatDelegate), EventData_Modify_Player_Stat::sk_EventType);
     pGlobalEventManager->VAddListener(MakeDelegate(this, &ClawGameLogic::CheckpointReachedDelegate), EventData_Checkpoint_Reached::sk_EventType);
     pGlobalEventManager->VAddListener(MakeDelegate(this, &ClawGameLogic::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
+    pGlobalEventManager->VAddListener(MakeDelegate(this, &ClawGameLogic::UpdatedPowerupStatusDelegate), EventData_Updated_Powerup_Status::sk_EventType);
 }
 
 void ClawGameLogic::RemoveAllDelegates()
@@ -76,6 +77,7 @@ void ClawGameLogic::RemoveAllDelegates()
     pGlobalEventManager->VRemoveListener(MakeDelegate(this, &ClawGameLogic::ModifyActorStatDelegate), EventData_Modify_Player_Stat::sk_EventType);
     pGlobalEventManager->VRemoveListener(MakeDelegate(this, &ClawGameLogic::CheckpointReachedDelegate), EventData_Checkpoint_Reached::sk_EventType);
     pGlobalEventManager->VRemoveListener(MakeDelegate(this, &ClawGameLogic::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
+    pGlobalEventManager->VRemoveListener(MakeDelegate(this, &ClawGameLogic::UpdatedPowerupStatusDelegate), EventData_Updated_Powerup_Status::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -385,4 +387,31 @@ void ClawGameLogic::ClawDiedDelegate(IEventDataPtr pEventData)
 
     pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Modify_Player_Stat(pCastEventData->GetActorId(), PlayerStat_Health, 1000, true)));
     pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(pCastEventData->GetActorId(), m_CurrentSpawnPosition)));
+}
+
+void ClawGameLogic::UpdatedPowerupStatusDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Updated_Powerup_Status> pCastEventData = static_pointer_cast<EventData_Updated_Powerup_Status>(pEventData);
+
+    StrongActorPtr pActor = MakeStrongPtr(VGetActor(pCastEventData->GetActorId()));
+    if (!pActor)
+    {
+        return;
+    }
+
+    if (pCastEventData->GetPowerupType() == PowerupType_Catnip)
+    {
+        shared_ptr<PhysicsComponent> pPhysicsComponent =
+            MakeStrongPtr(pActor->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+        assert(pPhysicsComponent);
+
+        if (pCastEventData->IsPowerupFinished())
+        {
+            pPhysicsComponent->SetMaxJumpHeight(130);
+        }
+        else
+        {
+            pPhysicsComponent->SetMaxJumpHeight(170);
+        }
+    }
 }

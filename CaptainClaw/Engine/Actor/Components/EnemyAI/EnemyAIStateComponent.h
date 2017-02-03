@@ -33,6 +33,7 @@ struct EnemyAIAction
     std::string actionName;
     uint32 animDelay;
     bool isActive;
+    bool retainDirection;
     uint32 activeAnimIdx;
     std::vector<std::string> animations;
 };
@@ -112,6 +113,7 @@ private:
     void CommenceIdleBehaviour();
 
     bool m_bInitialized;
+    bool m_bRetainDirection;
 
     int m_LeftPatrolBorder;
     int m_RightPatrolBorder;

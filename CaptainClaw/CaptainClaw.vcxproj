@@ -104,6 +104,7 @@
     <ClCompile Include="ClawGameApp.cpp" />
     <ClCompile Include="ClawGameLogic.cpp" />
     <ClCompile Include="ClawHumanView.cpp" />
+    <ClCompile Include="Engine\GameApp\CommandHandler.cpp" />
     <ClCompile Include="Engine\GameApp\GameSaves.cpp" />
     <ClCompile Include="Engine\Physics\ClawPhysics.cpp" />
     <ClCompile Include="Engine\Physics\CollisionBody.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="ClawGameLogic.h" />
     <ClInclude Include="ClawHumanView.h" />
     <ClInclude Include="Engine\Converters.h" />
+    <ClInclude Include="Engine\GameApp\CommandHandler.h" />
     <ClInclude Include="Engine\GameApp\GameSaves.h" />
     <ClInclude Include="Engine\Physics\ClawPhysics.h" />
     <ClInclude Include="Engine\Physics\CollisionBody.h" />

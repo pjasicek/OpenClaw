@@ -74,7 +74,8 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     //m_pCurrentAction(NULL),
     BaseEnemyAIStateComponent("PatrolState"),
     m_PatrolSpeed(0.0),
-    m_bInitialized(false)
+    m_bInitialized(false),
+    m_bRetainDirection(false)
 {
 
 }
@@ -102,6 +103,10 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     if (TiXmlElement* pElem = pData->FirstChildElement("RightPatrolBorder"))
     {
         m_RightPatrolBorder = std::stoi(pElem->GetText());
+    }  
+    if (TiXmlElement* pElem = pData->FirstChildElement("RetainDirection"))
+    {
+        m_bRetainDirection = std::string(pElem->GetText()) == "true";
     }
     if (TiXmlElement* pElem = pData->FirstChildElement("WalkAction"))
     {
@@ -310,10 +315,16 @@ void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
 void PatrolEnemyAIStateComponent::ChangeDirection(Direction newDirection)
 {
     m_Direction = newDirection;
-    m_pRenderComponent->SetMirrored(m_Direction == Direction_Right);
+    if (!m_bRetainDirection)
+    {
+        m_pRenderComponent->SetMirrored(m_Direction == Direction_Right);
+    }
 
     m_pWalkAction->isActive = true;
-    m_pIdleAction->isActive = false;
+    if (m_pIdleAction)
+    {
+        m_pIdleAction->isActive = false;
+    }
     m_pAnimationComponent->SetAnimation(m_pWalkAction->animations[0]);
 
     if (m_Direction == Direction_Left)

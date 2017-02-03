@@ -387,7 +387,7 @@ namespace ActorTemplates
         std::string fixtureTypeStr = FixtureTypeToString(pBodyDef->fixtureType);
 
         XML_ADD_TEXT_ELEMENT("BodyType", bodyTypeStr.c_str(), pPhysicsComponent);
-        XML_ADD_TEXT_ELEMENT("HasFootSensor", ToStr(pBodyDef->makeSensor).c_str(), pPhysicsComponent);
+        XML_ADD_TEXT_ELEMENT("HasFootSensor", ToStr(pBodyDef->addFootSensor).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("HasCapsuleShape", ToStr(pBodyDef->makeCapsule).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("HasBulletBehaviour", ToStr(pBodyDef->makeBullet).c_str(), pPhysicsComponent);
         XML_ADD_TEXT_ELEMENT("HasSensorBehaviour", ToStr(pBodyDef->makeSensor).c_str(), pPhysicsComponent);
@@ -514,24 +514,28 @@ namespace ActorTemplates
         return fixtureDef;
     }
 
-    TiXmlElement* CreateXmlData_PatrolState(uint32 animationDelay, double patrolSpeed, int leftPatrolBorder, int rightPatrolBorder, std::string walkAnimation, std::vector<std::string> idleAnimations)
+    TiXmlElement* CreateXmlData_PatrolState(uint32 animationDelay, double patrolSpeed, int leftPatrolBorder, int rightPatrolBorder, std::string walkAnimation, std::vector<std::string> idleAnimations, bool retainDirection = false)
     {
         TiXmlElement* pPatrolStateElem = new TiXmlElement("PatrolEnemyAIStateComponent");
         XML_ADD_TEXT_ELEMENT("PatrolSpeed", ToStr(patrolSpeed).c_str(), pPatrolStateElem);
         XML_ADD_TEXT_ELEMENT("LeftPatrolBorder", ToStr(leftPatrolBorder).c_str(), pPatrolStateElem);
         XML_ADD_TEXT_ELEMENT("RightPatrolBorder", ToStr(rightPatrolBorder).c_str(), pPatrolStateElem);
+        XML_ADD_TEXT_ELEMENT("RetainDirection", ToStr(retainDirection).c_str(), pPatrolStateElem);
 
         TiXmlElement* pWalkActionElem = new TiXmlElement("WalkAction");
         XML_ADD_TEXT_ELEMENT("Animation", walkAnimation.c_str(), pWalkActionElem);
         pPatrolStateElem->LinkEndChild(pWalkActionElem);
 
-        TiXmlElement* pIdleActionElem = new TiXmlElement("IdleAction");
-        XML_ADD_TEXT_ELEMENT("AnimationDelay", ToStr(animationDelay).c_str(), pIdleActionElem);
-        for (auto idleAnim : idleAnimations)
+        if (!idleAnimations.empty())
         {
-            XML_ADD_TEXT_ELEMENT("Animation", idleAnim.c_str(), pIdleActionElem);
+            TiXmlElement* pIdleActionElem = new TiXmlElement("IdleAction");
+            XML_ADD_TEXT_ELEMENT("AnimationDelay", ToStr(animationDelay).c_str(), pIdleActionElem);
+            for (auto idleAnim : idleAnimations)
+            {
+                XML_ADD_TEXT_ELEMENT("Animation", idleAnim.c_str(), pIdleActionElem);
+            }
+            pPatrolStateElem->LinkEndChild(pIdleActionElem);
         }
-        pPatrolStateElem->LinkEndChild(pIdleActionElem);
 
         return pPatrolStateElem;
     }
@@ -1072,6 +1076,10 @@ namespace ActorTemplates
         {
             bodyDef.size = Point(50, 110);
         }
+        else if (logicName == "Rat")
+        {
+            bodyDef.size = Point(40, 41);
+        }
 
         ActorFixtureDef fixtureDef;
         fixtureDef.fixtureType = FixtureType_EnemyAI;
@@ -1080,19 +1088,6 @@ namespace ActorTemplates
         fixtureDef.isSensor = true;
         fixtureDef.size = Point(40, 70);
         bodyDef.fixtureList.push_back(fixtureDef);
-
-        bodyDef.fixtureList.push_back(
-            CreateActorAgroRangeFixture(Point(120, 50), Point(0, 0), FixtureType_EnemyAIMeleeSensor));
-
-        if (logicName == "Soldier")
-        {
-            bodyDef.fixtureList.push_back(
-                CreateActorAgroRangeFixture(Point(1000, 50), Point(0, -30), FixtureType_EnemyAIRangedSensor));
-        }
-
-        pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
-
-        
 
         if (logicName == "Soldier")
         {
@@ -1148,6 +1143,12 @@ namespace ActorTemplates
             rangedAttacks.push_back(rangedAttackAction);
 
             pActor->LinkEndChild(CreateXmlData_EnemyAttackActionState(rangedAttacks));
+
+
+            bodyDef.fixtureList.push_back(
+                CreateActorAgroRangeFixture(Point(120, 50), Point(0, 0), FixtureType_EnemyAIMeleeSensor));
+            bodyDef.fixtureList.push_back(
+                CreateActorAgroRangeFixture(Point(1000, 50), Point(0, -30), FixtureType_EnemyAIRangedSensor));
         }
         else if (logicName == "Officer")
         {
@@ -1187,7 +1188,50 @@ namespace ActorTemplates
             meleeAttacks.push_back(meleeAttackAction);
 
             pActor->LinkEndChild(CreateXmlData_EnemyAttackActionState(meleeAttacks));
+
+
+            bodyDef.fixtureList.push_back(
+                CreateActorAgroRangeFixture(Point(120, 50), Point(0, 0), FixtureType_EnemyAIMeleeSensor));
         }
+        else if (logicName == "Rat")
+        {
+            TiXmlElement* pEnemyAIElem = new TiXmlElement("EnemyAIComponent");
+            XML_ADD_TEXT_ELEMENT("DeathAnimation", "dead", pEnemyAIElem);
+
+            pActor->LinkEndChild(pEnemyAIElem);
+
+            //=========================================================================================================
+            // Patrol
+
+            std::string walkAnimation = "walk";
+
+            std::vector<std::string> idleAnimations;
+
+            pActor->LinkEndChild(CreateXmlData_PatrolState(900, 1.3, minPatrolX, maxPatrolX, walkAnimation, idleAnimations, true));
+
+            //=========================================================================================================
+            // Ranged
+
+            std::vector<EnemyAttackAction> rangedAttacks;
+
+            EnemyAttackAction rangedAttackAction;
+            rangedAttackAction.animation = "throweastwest";
+            rangedAttackAction.attackAnimFrameIdx = 2;
+            rangedAttackAction.attackDamageType = DamageType_Bullet;
+            rangedAttackAction.attackFxImageSet = "/LEVEL1/IMAGES/RATBOMB/*";
+            rangedAttackAction.attackSpawnPositionOffset = Point(-15, 0);
+            rangedAttackAction.attackAreaSize = Point(0, 0);
+            rangedAttackAction.damage = 20;
+
+            rangedAttacks.push_back(rangedAttackAction);
+
+            pActor->LinkEndChild(CreateXmlData_EnemyAttackActionState(rangedAttacks));
+
+            bodyDef.fixtureList.push_back(
+                CreateActorAgroRangeFixture(Point(1000, 50), Point(0, 0), FixtureType_EnemyAIRangedSensor));
+        }
+
+        pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
 
         return pActor;
     }

@@ -19,6 +19,8 @@ public:
     inline int32_t GetOffsetX() { return _offsetX; }
     inline int32_t GetOffsetY() { return _offsetY; }
 
+    void SetOffset(int x, int y) { _offsetX = x; _offsetY = y; }
+
     SDL_Rect GetPositonRect(int32_t x, int32_t y);
 
 private:

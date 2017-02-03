@@ -44,6 +44,8 @@ public:
 
     bool LoadGame(TiXmlElement* pLevelData);
 
+    void RegisterConsoleCommandHandler(void(*handler)(const char*, void*), void* userdata);
+
 protected:
     virtual bool VLoadGameDelegate(TiXmlElement* levelData) { VPushElement(m_pScene); return true; }
 

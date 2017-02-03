@@ -496,6 +496,19 @@ void BaseGameLogic::CollideableTileCreatedDelegate(IEventDataPtr pEventData)
     }
 }
 
+StrongActorPtr BaseGameLogic::GetClawActor()
+{
+    for (auto actorIter : m_ActorMap)
+    {
+        if (actorIter.second->GetName() == "Claw")
+        {
+            return actorIter.second;
+        }
+    }
+
+    return nullptr;
+}
+
 //=====================================================================================================================
 // Private
 //=====================================================================================================================

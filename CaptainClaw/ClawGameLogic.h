@@ -26,6 +26,7 @@ public:
     void ModifyActorStatDelegate(IEventDataPtr pEventData);
     void CheckpointReachedDelegate(IEventDataPtr pEventData);
     void ClawDiedDelegate(IEventDataPtr pEventData);
+    void UpdatedPowerupStatusDelegate(IEventDataPtr pEventData);
 
 protected:
     virtual bool VLoadGameDelegate(TiXmlElement* pLevelData);

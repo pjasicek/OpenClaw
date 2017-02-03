@@ -4,6 +4,7 @@
 #include "../SharedDefines.h"
 #include "../Process/ProcessMgr.h"
 #include "../Actor/Actor.h"
+#include "CommandHandler.h"
 
 enum GameState
 {
@@ -30,6 +31,9 @@ class BaseGameLogic : public IGameLogic
 {
     // This is just to give game app access to game views
     friend class BaseGameApp;
+
+    // Command handler should have unlimited access
+    friend class CommandHandler;
 
 public:
     BaseGameLogic();
@@ -97,6 +101,8 @@ protected:
     void RequestNewActorDelegate(IEventDataPtr pEventData);
     void CollideableTileCreatedDelegate(IEventDataPtr pEventData);
     void RequestDestroyActorDelegate(IEventDataPtr pEventData);
+
+    StrongActorPtr GetClawActor();
 
     uint32 m_Lifetime;
     ProcessMgr* m_pProcessMgr;

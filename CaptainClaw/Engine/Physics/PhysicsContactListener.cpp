@@ -201,7 +201,6 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     MakeStrongPtr(pActor->GetComponent<HealthComponent>(HealthComponent::g_Name));
                 if (pHealthComponent)
                 {
-                    LOG("Someone should die");
                     pHealthComponent->AddHealth(-1 * (pHealthComponent->GetHealth() + 1));
                 }
             }
