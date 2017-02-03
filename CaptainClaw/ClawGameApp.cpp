@@ -11,8 +11,11 @@ BaseGameLogic* ClawGameApp::VCreateGameAndView()
         return NULL;
     }
 
-    shared_ptr<IGameView> clawHumanView(new ClawHumanView(GetRenderer()));
+    shared_ptr<HumanView> clawHumanView(new ClawHumanView(GetRenderer()));
     m_pGame->VAddView(clawHumanView);
+
+    // Register command handler
+    clawHumanView->RegisterConsoleCommandHandler(CommandHandler::HandleCommand, NULL);
 
     return m_pGame;
 }

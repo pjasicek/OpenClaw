@@ -1926,6 +1926,8 @@ public:
         return m_IsPowerupFinished;
     }
 
+    PowerupType GetPowerupType() const { return PowerupType(m_PowerupType); }
+
     virtual const char* GetName(void) const
     {
         return "EventData_Updated_Powerup_Status";

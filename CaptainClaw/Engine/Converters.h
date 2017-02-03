@@ -617,8 +617,9 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
         //pActorElem->LinkEndChild(PowderKegToXml(wwdObject));
         return ActorTemplates::CreateXmlData_PowderKegActor(tmpImageSet, Point(wwdObject->x, wwdObject->y), 50, wwdObject->z);
     }
-    else if (logic == ("Officer") ||
-             logic == ("Soldier"))
+    else if (logic == "Officer" ||
+             logic == "Soldier" ||
+             logic == "Rat")
     {
         std::vector<PickupType> loot;
         if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
@@ -637,6 +638,7 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
     }
     else if (logic.find("AmmoPowerup") != std::string::npos)
     {
+        return ActorTemplates::CreateXmlData_AmmoPickupActor(wwdObject->imageSet, Point(wwdObject->x, wwdObject->y), true);
         //pActorElem->LinkEndChild(AmmoToXml(wwdObject));
     }
     else if (logic.find("SpecialPowerup") != std::string::npos ||
@@ -797,7 +799,7 @@ TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
     //pClawActor->LinkEndChild(CreatePositionComponent(pWapWwd->properties.startX, pWapWwd->properties.startY));
     pClawActor->LinkEndChild(CreatePositionComponent(6250, 4350));
     pClawActor->LinkEndChild(CreateCollisionComponent(40, 110));
-    pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, 1500, 40, 110, 4.0, 0.0, 0.5));
+    pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, 130, 40, 110, 4.0, 0.0, 0.5));
     pClawActor->LinkEndChild(CreateControllableComponent(true));
     pClawActor->LinkEndChild(CreateAnimationComponent("/CLAW/ANIS/*"));
     pClawActor->LinkEndChild(CreateSoundComponent("/CLAW/SOUNDS/*"));

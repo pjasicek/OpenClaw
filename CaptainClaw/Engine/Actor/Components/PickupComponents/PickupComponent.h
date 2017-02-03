@@ -145,4 +145,28 @@ private:
     int32 m_PowerupDuration;
 };
 
+//=====================================================================================================================
+// AmmoPickupComponent
+//=====================================================================================================================
+
+typedef std::vector<std::pair<AmmoType, int>> AmmoList;
+
+class AmmoPickupComponent : public PickupComponent
+{
+public:
+    AmmoPickupComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const { return g_Name; }
+
+    virtual bool VOnApply(Actor* pActorWhoPickedThis);
+
+protected:
+    virtual bool VDelegateInit(TiXmlElement* data);
+    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
+
+private:
+    AmmoList m_AmmoPickupList;
+};
+
 #endif

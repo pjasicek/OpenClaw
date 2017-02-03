@@ -40,6 +40,14 @@ HumanView::~HumanView()
     SAFE_DELETE(m_pProcessMgr);
 }
 
+void HumanView::RegisterConsoleCommandHandler(void(*handler)(const char*, void*), void* userdata)
+{
+    if (m_pConsole)
+    {
+        m_pConsole->SetCommandHandler(handler, (void*)m_pConsole.get());
+    }
+}
+
 void HumanView::VOnRender(uint32 msDiff)
 {
     //PROFILE_CPU("HumanView Render");

@@ -92,6 +92,7 @@ enum PlayerStat
 
 enum AmmoType
 {
+    AmmoType_None = -1,
     AmmoType_Pistol,
     AmmoType_Magic,
     AmmoType_Dynamite,

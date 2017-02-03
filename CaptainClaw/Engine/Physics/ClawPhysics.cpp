@@ -5,10 +5,13 @@
 #include "../GameApp/BaseGameApp.h"
 #include "../GameApp/BaseGameLogic.h"
 
+#include "../Graphics2D/Image.h"
+
 #include "../Actor/Components/PositionComponent.h"
 #include "../Actor/Components/CollisionComponent.h"
 #include "../Actor/Components/PhysicsComponent.h"
 #include "../Actor/Components/KinematicComponent.h"
+#include "../Actor/Components/RenderComponent.h"
 #include "../Actor/Components/TriggerComponents/TriggerComponent.h"
 #include "../Actor/Components/AIComponents/ProjectileAIComponent.h"
 
@@ -284,6 +287,16 @@ void ClawPhysics::VSyncVisibleScene()
                 {
                     // Box2D has moved the physics object. Update actor's position and notify subsystems which care
                     pPositionComponent->SetPosition(bodyPixelPosition);
+
+                    /*shared_ptr<ActorRenderComponent> pRenderComponent =
+                        MakeStrongPtr(pGameActor->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+                    assert(pRenderComponent);
+
+                    shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
+                    assert(pImage);
+
+                    Point newPosition = Point(bodyPixelPosition.x + pImage->GetOffsetX(), bodyPixelPosition.y + pImage->GetOffsetY());*/
+
                     shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(actorId, bodyPixelPosition));
                     IEventMgr::Get()->VTriggerEvent(pEvent);
 
@@ -783,7 +796,11 @@ void ClawPhysics::VRemoveActor(uint32_t actorId)
 //
 void ClawPhysics::VRenderDiagnostics(SDL_Renderer* pRenderer, shared_ptr<CameraNode> pCamera)
 {
-    //return;
+    if (!g_pApp->GetGameCheats()->showPhysicsDebug)
+    {
+        return;
+    }
+
     //PROFILE_CPU("Render diagnostics");
     m_pDebugDrawer->PrepareForDraw(pRenderer, pCamera);
 

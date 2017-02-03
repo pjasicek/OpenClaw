@@ -26,6 +26,8 @@ public:
 
     bool CanFire() { return GetRemainingActiveAmmo() > 0; }
 
+    void OnFired() { SetAmmo(m_ActiveAmmoType, --m_AmmoMap[m_ActiveAmmoType]); }
+
 private:
     void BroadcastAmmoChanged(AmmoType ammoType, uint32 ammoCount);
 

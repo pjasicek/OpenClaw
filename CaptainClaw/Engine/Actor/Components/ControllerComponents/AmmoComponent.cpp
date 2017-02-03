@@ -62,7 +62,7 @@ void AmmoComponent::SetAmmo(AmmoType ammoType, int32 ammoCount)
         m_AmmoMap[ammoType] = 99;
     }
 
-    m_AmmoMap[ammoType] += ammoCount;
+    m_AmmoMap[ammoType] = ammoCount;
 
     BroadcastAmmoChanged(ammoType, m_AmmoMap[ammoType]);
 }

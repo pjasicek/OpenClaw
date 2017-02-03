@@ -4,6 +4,8 @@
 #include "../../../Events/EventMgr.h"
 #include "../../../Events/Events.h"
 
+#include "../../../GameApp/BaseGameApp.h"
+
 const char* HealthComponent::g_Name = "HealthComponent";
 
 HealthComponent::HealthComponent()
@@ -49,6 +51,15 @@ void HealthComponent::AddHealth(int32 health)
     if (m_bInvulnerable && health < 0)
     {
         return;
+    }
+
+    if (g_pApp->GetGameCheats()->clawInvincible && health < 0)
+    {
+        if (MakeStrongPtr(_owner->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name)))
+        {
+            LOG("HERE");
+            return;
+        }
     }
 
     int32 oldHealth = m_CurrentHealth;

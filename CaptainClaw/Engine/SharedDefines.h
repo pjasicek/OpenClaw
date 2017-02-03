@@ -134,6 +134,9 @@ public:
     float Length() const { return sqrt((float)(x*x + y*y)); }
 
     bool IsZero() { return (std::fabs(x) < DBL_EPSILON || std::fabs(y) < DBL_EPSILON); }
+    bool IsZeroXY() { return (std::fabs(x) < DBL_EPSILON && std::fabs(y) < DBL_EPSILON); }
+
+    std::string ToString() { return ("[X: " + ToStr(x) + ", Y: " + ToStr(y) + "]"); }
 };
 
 inline Point operator-(const Point& left, const Point& right) { Point temp(left); temp -= right; return temp; }

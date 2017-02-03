@@ -11,6 +11,8 @@
 #include "ControllerComponents/PowerupComponent.h"
 #include "ControllerComponents/HealthComponent.h"
 
+#include "../../GameApp/BaseGameApp.h"
+
 const char* ControllableComponent::g_Name = "ControllableComponent";
 const char* ClawControllableComponent::g_Name = "ClawControllableComponent";
 
@@ -355,6 +357,12 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             {
                 SetCurrentPhysicsState();
             }
+
+            if (!g_pApp->GetGameCheats()->clawInfiniteAmmo)
+            {
+                // TODO: Better name of this method ? 
+                m_pAmmoComponent->OnFired();
+            }
         }
     }
 
@@ -410,9 +418,10 @@ void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
     else if (animName == "damage1" ||
              animName == "damage2")
     {
-        m_pHealthComponent->SetInvulnerable(false);
         SetCurrentPhysicsState();
     }
+
+    m_pHealthComponent->SetInvulnerable(false);
 }
 
 bool ClawControllableComponent::IsAttackingOrShooting()

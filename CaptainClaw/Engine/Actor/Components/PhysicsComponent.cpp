@@ -283,14 +283,10 @@ void PhysicsComponent::VPostInit()
             // Also offset position
             m_ActorBodyDef.position = Point(m_ActorBodyDef.position.x + pImage->GetOffsetX(), m_ActorBodyDef.position.y + pImage->GetOffsetY());
 
-            /*pPositionComponent->SetPosition(
-                pPositionComponent->GetPosition().x + pImage->GetOffsetX(), 
-                pPositionComponent->GetPosition().y + pImage->GetOffsetY());*/
-
-            //m_ActorBodyDef.position = pPositionComponent->GetPosition();
-
             m_ActorBodyDef.size.x = pImage->GetWidth();
             m_ActorBodyDef.size.y = pImage->GetHeight();
+
+            //LOG("-------- X: " + ToStr(pImage->GetOffsetX()) + " Y: " + ToStr(pImage->GetOffsetY()));
 
             for (ActorFixtureDef fixture : m_ActorBodyDef.fixtureList)
             {
@@ -298,6 +294,12 @@ void PhysicsComponent::VPostInit()
                 {
                     fixture.size = Point(pImage->GetWidth(), pImage->GetHeight());
                 }
+            }
+
+            // HACK:
+            if (_owner->GetName() == "/LEVEL1/IMAGES/RATBOMB/*")
+            {
+                pImage->SetOffset(0, 0);
             }
         }
 
@@ -474,7 +476,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             m_IgnoreJump = true;
             m_CurrentSpeed.y = 0;
         }
-        if (m_HeightInAir > m_MaxJumpHeight)
+        if (!g_pApp->GetGameCheats()->clawInfiniteJump && (m_HeightInAir > m_MaxJumpHeight))
         {
             m_IgnoreJump = true;
             m_CurrentSpeed.y = 0;
