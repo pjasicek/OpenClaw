@@ -20,4 +20,18 @@
         <RezArchive>CLAW.REZ</RezArchive>
         <ResourceCacheSize>50</ResourceCacheSize>
     </Assets>
+    <Console>
+        <BackgroundImagePath>console02.tga</BackgroundImagePath>
+        <StretchBackgroundImage>true</StretchBackgroundImage>
+        <Width>0</Width>
+        <Height>0</Height>
+        <LineSeparatorHeight>3</LineSeparatorHeight>
+        <CommandPromptOffsetY>10</CommandPromptOffsetY>
+        <ConsoleAnimationSpeed>0.7</ConsoleAnimationSpeed>
+        <FontPath>clacon.ttf</FontPath>
+        <FontColor r="255" g="255" b="255" />
+        <FontHeight>20</FontHeight>
+        <LeftOffset>5</LeftOffset>
+        <CommandPrompt>> </CommandPrompt>
+    </Console>
 </Configuration>

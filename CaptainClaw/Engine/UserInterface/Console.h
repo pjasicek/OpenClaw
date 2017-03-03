@@ -15,12 +15,49 @@ const SDL_Color COLOR_BLACK = { 0, 0, 0, 255 };
 const SDL_Color COLOR_WHITE = { 255, 255, 255, 255 };
 const SDL_Color COLOR_BLACK_LIGHTER = { 30, 30, 30, 255 };
 
+struct ConsoleConfig
+{
+    ConsoleConfig()
+    {
+        backgroundImagePath = "";
+        pBackgroundImageTexture = NULL;
+        stretchBackgroundImage = true;
+        width = 0;
+        height = 0;
+        lineSeparatorHeight = 3;
+        commandPromptOffsetY = 10;
+        consoleAnimationSpeed = 0.65;
+        fontColor = COLOR_WHITE;
+        pFont = NULL;
+        fontPath = "";
+        fontHeight = 14;
+        leftOffset = 5;
+        commandPrompt = "> ";
+    }
+
+    std::string backgroundImagePath;
+    SDL_Texture* pBackgroundImageTexture;
+    bool stretchBackgroundImage;
+    uint16_t width;
+    uint16_t height;
+    uint16_t lineSeparatorHeight;
+    uint16_t commandPromptOffsetY;
+    double consoleAnimationSpeed;
+    SDL_Color fontColor;
+    TTF_Font* pFont;
+    std::string fontPath;
+    uint16_t fontHeight;
+    uint16_t leftOffset;
+    std::string commandPrompt;
+};
+
 class ConsoleLine;
 
 class Console
 {
 public:
     Console(uint16_t width, uint16_t height, TTF_Font* font, SDL_Renderer* renderer, const char* backgroundResource = NULL);
+    Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRenderer);
     ~Console();
 
     void OnUpdate(uint32_t msDiff);
@@ -35,7 +72,7 @@ public:
 
     void Resize(uint16_t width, uint16_t height) { _width = width; _height = height; }
 
-	void SetIsActive(bool val);
+    void SetIsActive(bool val);
 
     //* Registers callback for registering commited commands
     //* Usage:
@@ -62,7 +99,7 @@ private:
     void CommitCurrentCommand();
     void ScrollUp(int16_t distanceY);
     void ScrollDown(int16_t distanceY);
-	void AutocompleteCommand();
+    void AutocompleteCommand();
 
     void InvalidateSameCommands(std::string subCommand, int16_t subCommandPos);
 
@@ -82,6 +119,9 @@ private:
     int16_t _leftOffset;
     uint16_t _lineHeight;
     TTF_Font* _font;
+
+    uint16_t m_LineSeparatorHeight;
+    uint16_t m_CommandPromptOffsetY;
 
     std::string _commandPrompt;
     std::string _currentCommandText;

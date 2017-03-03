@@ -429,6 +429,69 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     m_GameOptions.consoleFontName = consoleFontElem->Attribute("font");
     consoleFontElem->Attribute("size", &m_GameOptions.consoleFontSize);
 
+    //-------------------------------------------------------------------------
+    // Console
+    //-------------------------------------------------------------------------
+
+    if (TiXmlElement* pConsoleRootElem = configRoot->FirstChildElement("Console"))
+    {
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("BackgroundImagePath"))
+        {
+            m_GameOptions.consoleConfig.backgroundImagePath = pElem->GetText();
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("StretchBackgroundImage"))
+        {
+            m_GameOptions.consoleConfig.stretchBackgroundImage = std::string(pElem->GetText()) == "true";
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("Width"))
+        {
+            m_GameOptions.consoleConfig.width = std::stoi(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("Height"))
+        {
+            m_GameOptions.consoleConfig.height = std::stoi(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("LineSeparatorHeight"))
+        {
+            m_GameOptions.consoleConfig.lineSeparatorHeight = std::stoi(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("CommandPromptOffsetY"))
+        {
+            m_GameOptions.consoleConfig.commandPromptOffsetY = std::stoi(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("ConsoleAnimationSpeed"))
+        {
+            m_GameOptions.consoleConfig.consoleAnimationSpeed = std::stod(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("FontPath"))
+        {
+            m_GameOptions.consoleConfig.fontPath = pElem->GetText();
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("FontColor"))
+        {
+            pElem->Attribute("r", (int*)&m_GameOptions.consoleConfig.fontColor.r);
+            pElem->Attribute("g", (int*)&m_GameOptions.consoleConfig.fontColor.g);
+            pElem->Attribute("b", (int*)&m_GameOptions.consoleConfig.fontColor.b);
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("FontHeight"))
+        {
+            m_GameOptions.consoleConfig.fontHeight = std::stoi(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("LeftOffset"))
+        {
+            m_GameOptions.consoleConfig.leftOffset = std::stoi(pElem->GetText());
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("CommandPrompt"))
+        {
+            m_GameOptions.consoleConfig.commandPrompt = pElem->GetText();
+        }
+    }
+    else
+    {
+        LOG_ERROR("Console configuration is missing.");
+        return false;
+    }
+
     return true;
 }
 
@@ -519,6 +582,16 @@ bool BaseGameApp::InitializeDisplay(GameOptions& gameOptions)
     }
 
     SDL_RenderSetScale(m_pRenderer, gameOptions.scale, gameOptions.scale);
+
+    // This feels a bit hacky
+    if (m_GameOptions.consoleConfig.width <= 0)
+    {
+        m_GameOptions.consoleConfig.width = (uint16_t)g_pApp->GetWindowSize().x;
+    }
+    if (m_GameOptions.consoleConfig.height <= 0)
+    {
+        m_GameOptions.consoleConfig.height = (uint16_t)g_pApp->GetWindowSize().y / 2;
+    }
 
     LOG("Display successfully initialized.");
 
