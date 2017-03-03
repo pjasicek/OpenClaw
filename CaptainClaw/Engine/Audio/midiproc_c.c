@@ -33,7 +33,7 @@
 
 #include <string.h>
 
-#include "../../MidiProc/midiproc.h"
+#include "../../../MidiProc/midiproc.h"
 
 #define TYPE_FORMAT_STRING_SIZE   19                                
 #define PROC_FORMAT_STRING_SIZE   217                               

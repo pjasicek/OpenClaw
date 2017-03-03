@@ -23,8 +23,10 @@ HumanView::HumanView(SDL_Renderer* renderer)
         m_pScene->AddChild(INVALID_ACTOR_ID, m_pCamera);
         m_pScene->SetCamera(m_pCamera);
 
-        m_pConsole = unique_ptr<Console>(new Console(g_pApp->GetWindowSize().x, g_pApp->GetWindowSize().y / 2,
-            g_pApp->GetConsoleFont(), renderer, "console02.tga"));
+        //m_pConsole = unique_ptr<Console>(new Console(g_pApp->GetWindowSize().x, g_pApp->GetWindowSize().y / 2,
+            //g_pApp->GetConsoleFont(), renderer, "console02.tga"));
+
+        m_pConsole = unique_ptr<Console>(new Console(g_pApp->GetConsoleConfig(), renderer));
     }
 }
 

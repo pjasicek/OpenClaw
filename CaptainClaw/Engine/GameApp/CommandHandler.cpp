@@ -4,6 +4,8 @@
 
 #include "../Actor/Components/ControllerComponents/PowerupComponent.h"
 
+std::vector<std::string> g_AvailableCheats;
+
 #define COMMAND_SET_BOOL_VALUE(targetCommandName, targetValue) \
 { \
     std::string targetCommandNameStr = std::string(targetCommandName); \
@@ -49,6 +51,8 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
             assert(pPowerupComponent);
 
             pPowerupComponent->ApplyPowerup(PowerupType_Catnip, 30000);
+            wasCommandExecuted = true;
+            pConsole->AddLine("Catnip buff ON for 30 seconds.", COLOR_GREEN);
         }
     }
 

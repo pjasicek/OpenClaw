@@ -6,6 +6,7 @@
 #include <SDL_ttf.h>
 #include "../SharedDefines.h"
 
+#include "../UserInterface/Console.h"
 #include "CommandHandler.h"
 
 const int DEFAULT_SCREEN_WIDTH = 1280;
@@ -57,6 +58,9 @@ struct GameOptions
     // Assets
     std::vector<const char*> resourceFileNames;
     int resourceCacheSize;
+
+    // Console config
+    ConsoleConfig consoleConfig;
 };
 
 // Cheats and stuff
@@ -146,6 +150,8 @@ public:
 
     GameCheats* GetGameCheats() { return &m_GameCheats; }
 
+    const ConsoleConfig* GetConsoleConfig() const { return &m_GameOptions.consoleConfig; }
+
 protected:
     virtual void VRegisterGameEvents() { }
 
@@ -169,6 +175,7 @@ private:
     bool InitializeFont(GameOptions& gameOptions);
     bool InitializeLocalization(GameOptions& gameOptions);
     bool InitializeEventMgr();
+    bool ReadConsoleConfig();
 
     void RegisterEngineEvents();
 

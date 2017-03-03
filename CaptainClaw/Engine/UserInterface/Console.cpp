@@ -59,37 +59,37 @@ void RenderRectangle(SDL_Renderer* renderer, SDL_Rect rect, SDL_Color color)
 
 void SplitStringIntoVector(std::string str, std::vector<std::string>& vec)
 {
-	std::stringstream ss(str);
-	ss >> std::noskipws;
-	std::string field;
-	char ws_delim;
-	while (1) 
-	{
-		if (ss >> field)
-		{
-			vec.push_back(field);
-		}
-		else if (ss.eof())
-		{
-			break;
-		}
-		else
-		{
-			vec.push_back(std::string());
-		}
-		ss.clear();
-		ss >> ws_delim;
-	}
+    std::stringstream ss(str);
+    ss >> std::noskipws;
+    std::string field;
+    char ws_delim;
+    while (1) 
+    {
+        if (ss >> field)
+        {
+            vec.push_back(field);
+        }
+        else if (ss.eof())
+        {
+            break;
+        }
+        else
+        {
+            vec.push_back(std::string());
+        }
+        ss.clear();
+        ss >> ws_delim;
+    }
 
-	if (vec.empty())
-	{
-		vec.push_back(str);
-	}
+    if (vec.empty())
+    {
+        vec.push_back(str);
+    }
 
-	if (str.back() == ' ')
-	{
-		vec.push_back(std::string(""));
-	}
+    if (str.back() == ' ')
+    {
+        vec.push_back(std::string(""));
+    }
 }
 
 //#####################################################################
@@ -315,6 +315,50 @@ Console::Console(uint16_t width, uint16_t height, TTF_Font* font, SDL_Renderer* 
     AddLine("          '.,,/'.,,", COLOR_WHITE);
 }
 
+Console::Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRenderer)
+{
+    _x = 0;
+    _y = 0;
+    _isActive = false;
+    _autocompleted = false;
+    _handler = NULL;
+    _handlerUserData = NULL;
+
+    _width = pConsoleConfig->width;
+    _height = pConsoleConfig->height;
+    _leftOffset = pConsoleConfig->leftOffset;
+    _commandPrompt = pConsoleConfig->commandPrompt + " ";
+    m_LineSeparatorHeight = pConsoleConfig->lineSeparatorHeight;
+    m_CommandPromptOffsetY = pConsoleConfig->commandPromptOffsetY;
+
+    if (pConsoleConfig->pFont)
+    {
+        _font = pConsoleConfig->pFont;
+    }
+    else
+    {
+        _font = TTF_OpenFont(pConsoleConfig->fontPath.c_str(), pConsoleConfig->fontHeight);
+    }
+    assert(_font != NULL);
+
+    if (pConsoleConfig->pBackgroundImageTexture)
+    {
+        _backgroundTexture = pConsoleConfig->pBackgroundImageTexture;
+    }
+    else
+    {
+        _backgroundTexture = IMG_LoadTexture(pRenderer, pConsoleConfig->backgroundImagePath.c_str());
+    }
+
+    _totalHeight = _height + m_LineSeparatorHeight + m_CommandPromptOffsetY;
+    _animationOffsetY = _totalHeight;
+
+    int w, h;
+    TTF_SizeText(_font, _commandPrompt.c_str(), &w, &h);
+    _commandLeftOffset = w + _leftOffset;
+    _lineHeight = h;
+}
+
 Console::~Console()
 {
     _consoleTextLines.clear();
@@ -432,10 +476,10 @@ bool Console::OnEvent(SDL_Event& event)
         {
             ScrollDown(3 * _lineHeight);
         }
-		// TAB - try to autocomplete current command
-		else if (event.type == SDL_KEYDOWN && (event.key.keysym.sym == SDLK_TAB))
-		{
-			AutocompleteCommand();
+        // TAB - try to autocomplete current command
+        else if (event.type == SDL_KEYDOWN && (event.key.keysym.sym == SDLK_TAB))
+        {
+            AutocompleteCommand();
             doneAutocomplete = true;
 
             // In case we cycled through all commands, reset history 
@@ -443,7 +487,7 @@ bool Console::OnEvent(SDL_Event& event)
             {
                 _autcompletedCommandsIdxs.clear();
             }
-		}
+        }
     }
     else if (event.type == SDL_TEXTINPUT)
     {
@@ -695,13 +739,13 @@ void Console::AutocompleteCommand()
         return;
     }
 
-	// Split current command into vector of strings separated by space
-	std::vector<std::string> currentStringsVector;
-	SplitStringIntoVector(_currentCommandText, currentStringsVector);
+    // Split current command into vector of strings separated by space
+    std::vector<std::string> currentStringsVector;
+    SplitStringIntoVector(_currentCommandText, currentStringsVector);
 
-	// Iterate over all saved autocomplete commands
-	for (auto autocompleteCommand : _autocompleteCommands)
-	{
+    // Iterate over all saved autocomplete commands
+    for (auto autocompleteCommand : _autocompleteCommands)
+    {
         // Check if we already checked tried this command in previous "TAB" click, if we did, skip it
         int pos = std::find(_autocompleteCommands.begin(), _autocompleteCommands.end(), autocompleteCommand) - _autocompleteCommands.begin();
 
@@ -712,29 +756,29 @@ void Console::AutocompleteCommand()
 
         _autcompletedCommandsIdxs.push_back(pos);
 
-		// Split current autocomplete command into vector of strings separated by sapce
-		std::vector <std::string> autocompleteCommandVector;
-		SplitStringIntoVector(autocompleteCommand, autocompleteCommandVector);
+        // Split current autocomplete command into vector of strings separated by sapce
+        std::vector <std::string> autocompleteCommandVector;
+        SplitStringIntoVector(autocompleteCommand, autocompleteCommandVector);
 
-		// If current command has already more strings, then no match is possible, skip
-		if (currentStringsVector.size() > autocompleteCommandVector.size())
-		{
-			continue;
-		}
+        // If current command has already more strings, then no match is possible, skip
+        if (currentStringsVector.size() > autocompleteCommandVector.size())
+        {
+            continue;
+        }
 
-		// Given "n = number of words in current command" compare strings with autocomplete command n - 1 times -
-		// - meaning check that all words up until last one are same
-		int16_t n = currentStringsVector.size() - 1;
-		// If we only have single string in current command, we go check only "last" string
-		bool foundMatch = true;
-		for (uint16_t i = 0; i < n; i++)
-		{
-			if (currentStringsVector[i].compare(autocompleteCommandVector[i]) != 0)
-			{
-				foundMatch = false;
+        // Given "n = number of words in current command" compare strings with autocomplete command n - 1 times -
+        // - meaning check that all words up until last one are same
+        int16_t n = currentStringsVector.size() - 1;
+        // If we only have single string in current command, we go check only "last" string
+        bool foundMatch = true;
+        for (uint16_t i = 0; i < n; i++)
+        {
+            if (currentStringsVector[i].compare(autocompleteCommandVector[i]) != 0)
+            {
+                foundMatch = false;
                 break;
-			}
-		}
+            }
+        }
 
         size_t replaceLength = std::max(autocompleteCommandVector[n].length(), currentStringsVector[n].length());
         currentStringsVector[n].clear();
@@ -742,26 +786,26 @@ void Console::AutocompleteCommand()
         InvalidateSameCommands(autocompleteCommandVector[n], n);
         
 
-		// If yes, check if last current command word is substring of last autocomplete word
-		if (foundMatch)
-		{
-			// If it is, autocomplete command and save index of given autocompleted command
-			if (autocompleteCommandVector[n].find(currentStringsVector[n]) == 0 ||
-				currentStringsVector[n].empty()) //<<<< !!! problem
-			{
-				size_t lastWordIdx;
-				if (std::count(_currentCommandText.begin(), _currentCommandText.end(), ' ') == 0)
-				{
-					lastWordIdx = 0;
-				}
-				else
-				{
+        // If yes, check if last current command word is substring of last autocomplete word
+        if (foundMatch)
+        {
+            // If it is, autocomplete command and save index of given autocompleted command
+            if (autocompleteCommandVector[n].find(currentStringsVector[n]) == 0 ||
+                currentStringsVector[n].empty()) //<<<< !!! problem
+            {
+                size_t lastWordIdx;
+                if (std::count(_currentCommandText.begin(), _currentCommandText.end(), ' ') == 0)
+                {
+                    lastWordIdx = 0;
+                }
+                else
+                {
                     lastWordIdx = _currentCommandText.find_last_of(' ') + 1;
 
-				}
-				_currentCommandText.replace(lastWordIdx, replaceLength, autocompleteCommandVector[n]);
+                }
+                _currentCommandText.replace(lastWordIdx, replaceLength, autocompleteCommandVector[n]);
                 break;
-			}
-		}
-	}    
+            }
+        }
+    }    
 }
