@@ -28,6 +28,7 @@ FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
     else if (fixtureTypeStr == "Crate") { fixtureType = FixtureType_Crate; }
     else if (fixtureTypeStr == "Pickup") { fixtureType = FixtureType_Pickup; }
     else if (fixtureTypeStr == "Trigger") { fixtureType = FixtureType_Trigger; }
+    else if (fixtureTypeStr == "Controller") { fixtureType = FixtureType_Controller; }
     else if (fixtureTypeStr == "PowderKeg") { fixtureType = FixtureType_PowderKeg; }
     else if (fixtureTypeStr == "Explosion") { fixtureType = FixtureType_Explosion; }
     else if (fixtureTypeStr == "EnemyAI") { fixtureType = FixtureType_EnemyAI; }
@@ -356,6 +357,8 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         && (m_pControllableComponent->IsDucking() && fabs(m_ClimbingSpeed.y) < DBL_EPSILON))
     {
         m_pControllableComponent->OnStand();
+        // TODO: HACK: one of the biggest hacks so far
+        m_pPhysics->VScaleActor(_owner->GetGUID(), 2.0);
     }
 
     if (m_pControllableComponent && 
@@ -417,6 +420,8 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             GetVelocity().y < 0.1)
         {
             m_pControllableComponent->OnDuck();
+            // TODO: HACK: one of the biggest hacks so far
+            m_pPhysics->VScaleActor(_owner->GetGUID(), 0.5);
 
             if (fabs(m_CurrentSpeed.x) > DBL_EPSILON)
             {
@@ -432,6 +437,8 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         else if (m_pControllableComponent->IsDucking())
         {
             m_pControllableComponent->OnStand();
+            // TODO: HACK: one of the biggest hacks so far
+            m_pPhysics->VScaleActor(_owner->GetGUID(), 2.0);
         }
     }
 
@@ -735,6 +742,7 @@ void PhysicsComponent::RemoveOverlappingLadder(const b2Fixture* ladder)
 
 void PhysicsComponent::AddOverlappingGround(const b2Fixture* pGround)
 {
+    //LOG_ERROR("owner: " + _owner->GetName());
     if (std::find(m_OverlappingGroundsList.begin(), m_OverlappingGroundsList.end(), pGround) == m_OverlappingGroundsList.end())
     {
         m_OverlappingGroundsList.push_back(pGround); 

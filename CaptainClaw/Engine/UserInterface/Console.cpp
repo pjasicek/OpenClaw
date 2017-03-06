@@ -9,11 +9,6 @@
 //################### GLOBAL CONSTANTS ################################
 //#####################################################################
 
-static const uint16_t CONSOLE_LINE_SEPARATOR_HEIGHT = 3;
-static const uint16_t CONSOLE_COMMAND_PROMPT_OFFSET_Y = 10;
-
-static const double CONSOLE_ANIMATION_SPEED = 0.65;
-
 //#####################################################################
 //################### HELPER FUNCTIONS ################################
 //#####################################################################
@@ -284,9 +279,13 @@ Console::Console(uint16_t width, uint16_t height, TTF_Font* font, SDL_Renderer* 
     _font = font;
     _isActive = false;
 
+    m_LineSeparatorHeight = 3;
+    m_CommandPromptOffsetY = 10;
+    m_ConsosleToggleSpeed = 0.65;
+
     _x = 0;
     _y = 0;
-    _totalHeight = _height + CONSOLE_LINE_SEPARATOR_HEIGHT + CONSOLE_COMMAND_PROMPT_OFFSET_Y;
+    _totalHeight = _height + m_LineSeparatorHeight + m_CommandPromptOffsetY;
     _animationOffsetY = _totalHeight;
 
     _leftOffset = 5;
@@ -315,7 +314,7 @@ Console::Console(uint16_t width, uint16_t height, TTF_Font* font, SDL_Renderer* 
     AddLine("          '.,,/'.,,", COLOR_WHITE);
 }
 
-Console::Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRenderer)
+Console::Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRenderer, SDL_Window* pWindow)
 {
     _x = 0;
     _y = 0;
@@ -324,31 +323,26 @@ Console::Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRende
     _handler = NULL;
     _handlerUserData = NULL;
 
-    _width = pConsoleConfig->width;
-    _height = pConsoleConfig->height;
+    m_pRenderer = pRenderer;
+    m_pWindow = pWindow;
+
+    assert(m_pRenderer && m_pWindow);
+
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(m_pWindow, &windowWidth, &windowHeight);
+
+    _width = pConsoleConfig->widthRatio * windowWidth;
+    _height = pConsoleConfig->heightRatio * windowHeight;
     _leftOffset = pConsoleConfig->leftOffset;
     _commandPrompt = pConsoleConfig->commandPrompt + " ";
     m_LineSeparatorHeight = pConsoleConfig->lineSeparatorHeight;
     m_CommandPromptOffsetY = pConsoleConfig->commandPromptOffsetY;
+    m_ConsosleToggleSpeed = pConsoleConfig->consoleAnimationSpeed;
 
-    if (pConsoleConfig->pFont)
-    {
-        _font = pConsoleConfig->pFont;
-    }
-    else
-    {
-        _font = TTF_OpenFont(pConsoleConfig->fontPath.c_str(), pConsoleConfig->fontHeight);
-    }
+    _font = TTF_OpenFont(pConsoleConfig->fontPath.c_str(), pConsoleConfig->fontHeight);
     assert(_font != NULL);
 
-    if (pConsoleConfig->pBackgroundImageTexture)
-    {
-        _backgroundTexture = pConsoleConfig->pBackgroundImageTexture;
-    }
-    else
-    {
-        _backgroundTexture = IMG_LoadTexture(pRenderer, pConsoleConfig->backgroundImagePath.c_str());
-    }
+    _backgroundTexture = IMG_LoadTexture(pRenderer, pConsoleConfig->backgroundImagePath.c_str());
 
     _totalHeight = _height + m_LineSeparatorHeight + m_CommandPromptOffsetY;
     _animationOffsetY = _totalHeight;
@@ -380,7 +374,7 @@ void Console::OnUpdate(uint32_t msDiff)
 
     if (_isActive && (_animationOffsetY > 0))
     {
-        _animationOffsetY -= (double)msDiff * CONSOLE_ANIMATION_SPEED;
+        _animationOffsetY -= (double)msDiff * m_ConsosleToggleSpeed;
         if (_animationOffsetY < 0)
         {
             _animationOffsetY = 0.0;
@@ -388,7 +382,7 @@ void Console::OnUpdate(uint32_t msDiff)
     }
     else if (!_isActive && (_animationOffsetY < _totalHeight))
     {
-        _animationOffsetY += (double)msDiff * CONSOLE_ANIMATION_SPEED;
+        _animationOffsetY += (double)msDiff * m_ConsosleToggleSpeed;
         if (_animationOffsetY > _totalHeight)
         {
             _animationOffsetY = _totalHeight;
@@ -542,7 +536,7 @@ void Console::RenderBackground(SDL_Renderer* renderer)
 {
     int imgWidth, imgHeight;
     int consoleWidth = _width;
-    int consoleHeight = _height + CONSOLE_COMMAND_PROMPT_OFFSET_Y;
+    int consoleHeight = _height + m_CommandPromptOffsetY;
 
     // No background texture is set - render default as black color
     if (_backgroundTexture == NULL)
@@ -595,7 +589,7 @@ void Console::RenderBackground(SDL_Renderer* renderer)
     }
 
     // Render RED line below console
-    SDL_Rect lineRect = { 0, _height + CONSOLE_COMMAND_PROMPT_OFFSET_Y - (int16_t)_animationOffsetY, _width, CONSOLE_LINE_SEPARATOR_HEIGHT };
+    SDL_Rect lineRect = { 0, _height + m_CommandPromptOffsetY - (int16_t)_animationOffsetY, _width, m_LineSeparatorHeight };
     RenderRectangle(renderer, lineRect, COLOR_RED);
 }
 
@@ -632,7 +626,7 @@ void Console::RenderCurrentCommand(SDL_Renderer* renderer)
 
 SDL_Rect Console::GetRenderRect()
 {
-    return{ _x, _y, _width, _height - _lineHeight - CONSOLE_LINE_SEPARATOR_HEIGHT };
+    return{ _x, _y, _width, _height - _lineHeight - m_LineSeparatorHeight };
 }
 
 void Console::CommitCurrentCommand()
@@ -656,7 +650,7 @@ void Console::CommitCurrentCommand()
     _currentCommandText.clear();
 
     // Move command line if necessary
-    if ((_consoleTextLines.size() * _lineHeight) > (uint16_t)(_height - CONSOLE_COMMAND_PROMPT_OFFSET_Y))
+    if ((_consoleTextLines.size() * _lineHeight) > (uint16_t)(_height - m_CommandPromptOffsetY))
     {
         _y += _lineHeight;
     }

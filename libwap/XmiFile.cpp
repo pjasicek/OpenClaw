@@ -256,7 +256,7 @@ struct midi_token_list_t : std::vector<midi_token_t>
     }
 };
 
-MidiFile* WAP_XmiConvertToMidiFromData(char* xmiData, size_t xmiLength)
+MidiFile* WAP_XmiToMidiFromData(char* xmiData, size_t xmiLength)
 {
     MidiFile* midiFile = NULL;
     size_t midiLength;
@@ -440,7 +440,7 @@ MidiFile* WAP_XmiToMidiFromFile(const char* xmiFilePath)
         return NULL;
     }
 
-    return WAP_XmiConvertToMidiFromData(xmiFileContents.data(), xmiFileContents.size());
+    return WAP_XmiToMidiFromData(xmiFileContents.data(), xmiFileContents.size());
 }
 
 MidiFile* WAP_XmiToMidiFromRezFile(RezFile* rezFile)
@@ -457,7 +457,7 @@ MidiFile* WAP_XmiToMidiFromRezFile(RezFile* rezFile)
         return NULL;
     }
 
-    return WAP_XmiConvertToMidiFromData(data, rezFile->size);
+    return WAP_XmiToMidiFromData(data, rezFile->size);
 }
 
 MidiFile* WAP_XmiToMidiFromRezArchive(RezArchive* rezArchive, char* xmiFilePath)

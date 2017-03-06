@@ -9,6 +9,7 @@ std::vector<std::string> g_AvailableCheats;
 #define COMMAND_SET_BOOL_VALUE(targetCommandName, targetValue) \
 { \
     std::string targetCommandNameStr = std::string(targetCommandName); \
+    std::transform(targetCommandNameStr.begin(), targetCommandNameStr.end(), targetCommandNameStr.begin(), ::tolower); \
     if (commandStr.find(targetCommandNameStr) != std::string::npos) \
     { \
         targetValue = commandStr.find("1") != std::string::npos; \

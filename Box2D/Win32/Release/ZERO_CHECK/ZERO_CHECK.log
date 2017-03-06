@@ -1,0 +1,11 @@
+﻿Build started 4. 3. 2017 10:35:42.
+     1>Project "C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\ZERO_CHECK.vcxproj" on node 2 (Build target(s)).
+     1>CustomBuild:
+         Checking Build System
+         CMake does not need to re-run because C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/CMakeFiles/generate.stamp is up-to-date.
+         CMake does not need to re-run because C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/CMakeFiles/generate.stamp is up-to-date.
+     1>Done Building Project "C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\ZERO_CHECK.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.35

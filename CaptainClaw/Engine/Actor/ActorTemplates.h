@@ -8,8 +8,8 @@ namespace ActorTemplates
 {
     // Exposed Component Xml data generating functions
     TiXmlElement* CreateXmlData_GlitterComponent(std::string glitterType, bool spawnImmediate, bool followOwner);
-
     TiXmlElement* CreateXmlData_AmmoPickupActor(std::string imageSet, Point position, bool isStatic);
+    TiXmlElement* CreatePhysicsComponent(const ActorBodyDef* pBodyDef);
 
     // Exposed Actor Xml data generating functions.
     TiXmlElement* CreateXmlData_CrateActor(std::string imageSet, Point position, const std::vector<PickupType>& loot, uint32 health, int32 zCoord);

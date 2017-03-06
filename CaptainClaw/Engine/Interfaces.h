@@ -68,6 +68,7 @@ enum FixtureType
     FixtureType_Death,
     // Sensors
     FixtureType_FootSensor,
+    FixtureType_Controller,
     FixtureType_AmbientTrigger,
     FixtureType_Trigger,
     FixtureType_Projectile,
@@ -258,6 +259,8 @@ public:
     virtual SDL_Rect VGetAABB(uint32_t actorId) = 0;
 
     virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32_t filterMask) = 0;
+
+    virtual void VScaleActor(uint32_t actorId, double scale) = 0;
 };
 
 enum GameViewType

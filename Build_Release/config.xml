@@ -23,8 +23,8 @@
     <Console>
         <BackgroundImagePath>console02.tga</BackgroundImagePath>
         <StretchBackgroundImage>true</StretchBackgroundImage>
-        <Width>0</Width>
-        <Height>0</Height>
+        <WidthRatio>1.0</WidthRatio>
+        <HeightRatio>0.5</HeightRatio>
         <LineSeparatorHeight>3</LineSeparatorHeight>
         <CommandPromptOffsetY>10</CommandPromptOffsetY>
         <ConsoleAnimationSpeed>0.7</ConsoleAnimationSpeed>

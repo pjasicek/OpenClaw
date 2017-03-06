@@ -169,10 +169,10 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
             // TODO: Rehaul ground behaviour so that it behaves like it should
             if (m_pCurrentLevel->GetLevelNumber() == 1)
             {
-                if (tileDesc.tileId == 331 || tileDesc.tileId == 332 || tileDesc.tileId == 334)
+                /*if (tileDesc.tileId == 331 || tileDesc.tileId == 332 || tileDesc.tileId == 334)
                 {
                     tileDesc.insideAttrib = CollisionType_Solid;
-                }
+                }*/
             }
             
             TiXmlElement* pTileRectElem = pTileDescElem->FirstChildElement("TileRect");
@@ -318,7 +318,7 @@ void BaseGameLogic::VDestroyActor(const uint32 actorId)
     auto findIter = m_ActorMap.find(actorId);
     if (findIter != m_ActorMap.end())
     {
-        LOG("Destroying: " + ToStr(actorId));
+        //LOG("Destroying: " + ToStr(actorId));
         findIter->second->Destroy();
         m_ActorMap.erase(findIter);
     }

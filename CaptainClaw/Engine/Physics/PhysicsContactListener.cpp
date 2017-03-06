@@ -70,16 +70,64 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
             {
                 shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pFixtureB->GetBody());
                 //LOG("bodyAABB y: " + ToStr(MetersToPixels(bodyAABB.upperBound.y)) + ", Fixture lower: " + ToStr(MetersToPixels(pFixtureA->GetAABB(0).lowerBound.y)));
+
+                int numPoints = pContact->GetManifold()->pointCount;
+                b2WorldManifold worldManifold;
+                pContact->GetWorldManifold(&worldManifold);
+
+                if (GetLowermostFixture(pFixtureB->GetBody()) != pFixtureB)
+                {
+                    pContact->SetEnabled(false);
+                    return;
+                }
+
+                pContact->SetEnabled(false);
+                for (int pointIdx = 0; pointIdx < numPoints; pointIdx++)
+                {
+                    b2Vec2 pointVelocity = pFixtureB->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold.points[pointIdx]);
+                    if (pointVelocity.y > -2)
+                    {
+                        b2AABB bodyAABB = GetBodyAABB(pFixtureB->GetBody());
+                        /*LOG("Actor upper AABB.y: " + ToStr(bodyAABB.upperBound.y));
+                        LOG("Fixture lower AABB.y: " + ToStr(pFixtureA->GetAABB(0).lowerBound.y));
+                        LOG("Lowermost fixture y: " + ToStr(GetLowermostFixture(pFixtureB->GetBody())->GetAABB(0).upperBound.y));*/
+                        /*if ((bodyAABB.upperBound.y - PixelsToMeters(5)) < pFixtureA->GetAABB(0).lowerBound.y)
+                        {
+                            pContact->SetEnabled(true);
+                            pPhysicsComponent->AddOverlappingGround(pFixtureA);
+                        }*/
+                        b2Vec2 relativePoint = pFixtureA->GetBody()->GetLocalPoint(worldManifold.points[pointIdx]);
+                        //LOG("Relative point Y: " + ToStr(relativePoint.y));
+                        float platformFaceY = 0.5f;//front of platform, from fixture definition :(
+                        if (relativePoint.y < platformFaceY - 0.05)
+                        {
+                            pFixtureB->GetBody()->SetTransform(b2Vec2(pFixtureB->GetBody()->GetPosition().x - 2, pFixtureA->GetAABB(0).lowerBound.y), 0);
+                            pContact->SetEnabled(true);
+                            pPhysicsComponent->AddOverlappingGround(pFixtureA);
+                        }
+                    }
+                    else
+                    {
+                        //LOG("Velocity = " + ToStr(pointVelocity.y));
+                    }
+                }
+#if 0
                 b2AABB bodyAABB = GetBodyAABB(pFixtureB->GetBody());
                 if (/*pFixtureB->GetBody()->GetLinearVelocity().y >= 0 &&*/
-                    (bodyAABB.upperBound.y - PixelsToMeters(5)) < pFixtureA->GetAABB(0).lowerBound.y)
+                    (bodyAABB.upperBound.y - PixelsToMeters(20)) < pFixtureA->GetAABB(0).lowerBound.y)
                 {
-                    //LOG("ENTERING");
-                    pFixtureA->SetSensor(false);
+                    
+                    //pFixtureA->SetSensor(false);
+                    pContact->SetEnabled(true);
                     pPhysicsComponent->AddOverlappingGround(pFixtureA);
                 }
+                else
+                {
+                    pContact->SetEnabled(false);
+                }
+#endif
                 // Moving platform (elevator)
-                if (!pFixtureA->IsSensor() && pFixtureA->GetBody()->GetType() == b2_kinematicBody && !pFixtureB->IsSensor())
+                if (pContact->IsEnabled() /*!pFixtureA->IsSensor()*/ && pFixtureA->GetBody()->GetType() == b2_kinematicBody && !pFixtureB->IsSensor())
                 {
                     //LOG("ADDED");
                     shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
@@ -88,7 +136,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                 }
 
                 // TODO: HACK: Crumbling peg, hackerino but who cares
-                if (!pFixtureA->IsSensor() && !pFixtureB->IsSensor() && 
+                if (pContact->IsEnabled() /*!pFixtureA->IsSensor()*/ && !pFixtureB->IsSensor() && 
                     pFixtureA->GetBody()->GetType() == b2_staticBody && pFixtureA->GetBody()->GetUserData())
                 {
                     Actor* pActor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
@@ -318,7 +366,7 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                 if (pPhysicsComponent)
                 {
                     // Moving platform (elevator)
-                    if (!pFixtureA->IsSensor() && pFixtureA->GetBody()->GetType() == b2_kinematicBody && !pFixtureB->IsSensor())
+                    if (pContact->IsEnabled()/*!pFixtureA->IsSensor()*/ && pFixtureA->GetBody()->GetType() == b2_kinematicBody && !pFixtureB->IsSensor())
                     {
                         //LOG("REMOVED");
                         shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
@@ -326,11 +374,18 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                         pPhysicsComponent->RemoveOverlappingKinematicBody(pFixtureA->GetBody());
                     }
 
-                    if (!pFixtureA->IsSensor())
+                    /*if (!pFixtureA->IsSensor())
                     {
                         pPhysicsComponent->RemoveOverlappingGround(pFixtureA);
                     }
-                    pFixtureA->SetSensor(true);
+                    pFixtureA->SetSensor(true);*/
+
+                    if (pContact->IsEnabled())
+                    {
+                        pPhysicsComponent->RemoveOverlappingGround(pFixtureA);
+                    }
+                    pContact->SetEnabled(false);
+
                     /*if (pFixtureB->GetBody()->GetLinearVelocity().y >= 0)
                     {
                     LOG("HERE");
@@ -438,6 +493,20 @@ void PhysicsContactListener::PreSolve(b2Contact* pContact, const b2Manifold* pOl
             {
                 pContact->SetEnabled(false);
             }
+        }
+    }*/
+
+    /*{
+        if (pFixtureB->GetUserData() == (void*)FixtureType_Ground)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_Ground)
+        {
+            LOG_ERROR("HERE");
+            pFixtureA->SetSensor(false);
+            pContact->SetEnabled(true);
         }
     }*/
 }

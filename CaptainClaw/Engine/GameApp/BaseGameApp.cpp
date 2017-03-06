@@ -133,6 +133,8 @@ int32 BaseGameApp::Run()
             
             //m_pGame->VRenderDiagnostics();
         }
+
+        //SDL_Delay(20);
     }
 
     Terminate();
@@ -443,13 +445,13 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
         {
             m_GameOptions.consoleConfig.stretchBackgroundImage = std::string(pElem->GetText()) == "true";
         }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("Width"))
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("WidthRatio"))
         {
-            m_GameOptions.consoleConfig.width = std::stoi(pElem->GetText());
+            m_GameOptions.consoleConfig.widthRatio = std::stod(pElem->GetText());
         }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("Height"))
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("HeightRatio"))
         {
-            m_GameOptions.consoleConfig.height = std::stoi(pElem->GetText());
+            m_GameOptions.consoleConfig.heightRatio = std::stod(pElem->GetText());
         }
         if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("LineSeparatorHeight"))
         {
@@ -462,10 +464,6 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
         if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("ConsoleAnimationSpeed"))
         {
             m_GameOptions.consoleConfig.consoleAnimationSpeed = std::stod(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("FontPath"))
-        {
-            m_GameOptions.consoleConfig.fontPath = pElem->GetText();
         }
         if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("FontColor"))
         {
@@ -484,6 +482,10 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
         if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("CommandPrompt"))
         {
             m_GameOptions.consoleConfig.commandPrompt = pElem->GetText();
+        }
+        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("FontPath"))
+        {
+            m_GameOptions.consoleConfig.fontPath = pElem->GetText();
         }
     }
     else
@@ -582,16 +584,6 @@ bool BaseGameApp::InitializeDisplay(GameOptions& gameOptions)
     }
 
     SDL_RenderSetScale(m_pRenderer, gameOptions.scale, gameOptions.scale);
-
-    // This feels a bit hacky
-    if (m_GameOptions.consoleConfig.width <= 0)
-    {
-        m_GameOptions.consoleConfig.width = (uint16_t)g_pApp->GetWindowSize().x;
-    }
-    if (m_GameOptions.consoleConfig.height <= 0)
-    {
-        m_GameOptions.consoleConfig.height = (uint16_t)g_pApp->GetWindowSize().y / 2;
-    }
 
     LOG("Display successfully initialized.");
 
@@ -752,6 +744,46 @@ TiXmlElement* CreateDefaultAssetsConfig()
     return assets;
 }
 
+TiXmlElement* CreateDefaultConsoleConfig()
+{
+TiXmlElement* pConsoleConfig = new TiXmlElement("Console");
+
+    // Assume that the default constructor has default values set
+    ConsoleConfig defaultConfig;
+
+    XML_ADD_TEXT_ELEMENT("BackgroundImagePath",
+        defaultConfig.backgroundImagePath.c_str(), pConsoleConfig);
+    XML_ADD_TEXT_ELEMENT("StretchBackgroundImage",
+        ToStr(defaultConfig.stretchBackgroundImage).c_str(), pConsoleConfig);
+    XML_ADD_TEXT_ELEMENT("WidthRatio",
+        ToStr(defaultConfig.widthRatio).c_str(), pConsoleConfig);
+    XML_ADD_TEXT_ELEMENT("HeightRatio",
+        ToStr(defaultConfig.heightRatio).c_str(), pConsoleConfig);
+    XML_ADD_TEXT_ELEMENT("LineSeparatorHeight",
+        ToStr(defaultConfig.lineSeparatorHeight).c_str(), pConsoleConfig);
+    XML_ADD_TEXT_ELEMENT("CommandPromptOffsetY",
+        ToStr(defaultConfig.commandPromptOffsetY).c_str(), pConsoleConfig);
+    XML_ADD_TEXT_ELEMENT("ConsoleAnimationSpeed",
+        ToStr(defaultConfig.consoleAnimationSpeed).c_str(), pConsoleConfig);
+    XML_ADD_TEXT_ELEMENT("FontPath",
+        defaultConfig.fontPath.c_str(), pConsoleConfig);
+
+    TiXmlElement* pColorElem = new TiXmlElement("FontColor");
+    pColorElem->SetAttribute("r", defaultConfig.fontColor.r);
+    pColorElem->SetAttribute("g", defaultConfig.fontColor.g);
+    pColorElem->SetAttribute("b", defaultConfig.fontColor.b);
+    pConsoleConfig->LinkEndChild(pColorElem);
+
+    XML_ADD_TEXT_ELEMENT("FontHeight",
+        ToStr(defaultConfig.fontHeight).c_str(), pConsoleConfig);
+    XML_ADD_TEXT_ELEMENT("LeftOffset",
+        ToStr(defaultConfig.leftOffset).c_str(), pConsoleConfig);
+    XML_ADD_TEXT_ELEMENT("CommandPrompt",
+        defaultConfig.commandPrompt.c_str(), pConsoleConfig);
+
+    return pConsoleConfig;
+}
+
 TiXmlDocument BaseGameApp::CreateAndReturnDefaultConfig(const char* inConfigFile)
 {
     TiXmlDocument xmlConfig;
@@ -764,6 +796,7 @@ TiXmlDocument BaseGameApp::CreateAndReturnDefaultConfig(const char* inConfigFile
     root->LinkEndChild(CreateDefaultAudioConfig());
     root->LinkEndChild(CreateDefaultFontConfig());
     root->LinkEndChild(CreateDefaultAssetsConfig());
+    root->LinkEndChild(CreateDefaultConsoleConfig());
 
     xmlConfig.SaveFile(inConfigFile);
 

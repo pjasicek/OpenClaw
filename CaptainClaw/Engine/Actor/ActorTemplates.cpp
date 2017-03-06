@@ -219,6 +219,7 @@ namespace ActorTemplates
         else if (fixtureType == FixtureType_Climb) { fixtureTypeStr = "Climb"; }
         else if (fixtureType == FixtureType_Death) { fixtureTypeStr = "Death"; }
         else if (fixtureType == FixtureType_Trigger) { fixtureTypeStr = "Trigger"; }
+        else if (fixtureType == FixtureType_Controller) { fixtureTypeStr = "Controller"; }
         else if (fixtureType == FixtureType_Projectile) { fixtureTypeStr = "Projectile"; }
         else if (fixtureType == FixtureType_Crate) { fixtureTypeStr = "Crate"; }
         else if (fixtureType == FixtureType_Pickup) { fixtureTypeStr = "Pickup"; }
@@ -969,7 +970,7 @@ namespace ActorTemplates
             false,      // Has foot sensor ?
             false,      // Has capsule shape ?
             true,       // Has bullet behaviour ?
-            true,       // Has sensor behaviour ?
+            false,       // Has sensor behaviour ?
             "Ground",    // Fixture type
             position,      // Position
             Point(0, 0),   // Offset - where to move the body upon its placement

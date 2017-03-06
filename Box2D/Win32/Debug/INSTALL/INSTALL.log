@@ -1,0 +1,71 @@
+﻿Build started 4. 3. 2017 10:31:33.
+     1>Project "c:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\INSTALL.vcxproj" on node 2 (Build target(s)).
+     1>PostBuildEvent:
+         setlocal
+         "D:\Program Files (x86)\CMake\bin\cmake.exe" -DBUILD_TYPE=Debug -P cmake_install.cmake
+         if %errorlevel% neq 0 goto :cmEnd
+         :cmEnd
+         endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+         :cmErrorLevel
+         exit /b %1
+         :cmDone
+         if %errorlevel% neq 0 goto :VCEnd
+         :VCEnd
+         -- Install configuration: "Debug"
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Box2D.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/b2BroadPhase.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/b2Collision.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/b2Distance.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/b2DynamicTree.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/b2TimeOfImpact.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/Shapes/b2CircleShape.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/Shapes/b2EdgeShape.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/Shapes/b2ChainShape.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/Shapes/b2PolygonShape.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/Shapes/b2Shape.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2BlockAllocator.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2Draw.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2GrowableStack.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2Math.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2Settings.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2StackAllocator.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2Timer.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2Body.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2ContactManager.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2Fixture.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2Island.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2TimeStep.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2World.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2WorldCallbacks.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2CircleContact.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2Contact.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2ContactSolver.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2ChainAndCircleContact.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2PolygonContact.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2DistanceJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2FrictionJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2GearJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2Joint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2MotorJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2MouseJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2PrismaticJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2PulleyJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2RevoluteJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2RopeJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2WeldJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2WheelJoint.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Rope/b2Rope.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/lib/Box2D.lib
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/lib/Box2D/Box2D-targets.cmake
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/lib/Box2D/Box2D-targets-debug.cmake
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/lib/cmake/Box2D/Box2DConfig.cmake
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/lib/cmake/Box2D/UseBox2D.cmake
+     1>Done Building Project "c:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\INSTALL.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.32

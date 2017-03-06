@@ -796,6 +796,18 @@ TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
     pClawActor->SetAttribute("Type", "Claw");
     pClawActor->SetAttribute("resource", "created");
 
+    /*ActorBodyDef clawBodyDef;
+    clawBodyDef.addFootSensor = true;
+    clawBodyDef.bodyType = b2_dynamicBody;
+    clawBodyDef.collisionFlag = CollisionFlag_Controller;
+    clawBodyDef.collisionMask = 0x1;
+    clawBodyDef.makeSensor = false;
+    clawBodyDef.makeCapsule = true;
+    clawBodyDef.size = Point(40, 130);
+    clawBodyDef.gravityScale = 4.0;
+    clawBodyDef.fixtureType = FixtureType_Controller;
+    pClawActor->LinkEndChild(ActorTemplates::CreatePhysicsComponent(&clawBodyDef));*/
+
     //pClawActor->LinkEndChild(CreatePositionComponent(pWapWwd->properties.startX, pWapWwd->properties.startY));
     pClawActor->LinkEndChild(CreatePositionComponent(6250, 4350));
     pClawActor->LinkEndChild(CreateCollisionComponent(40, 110));

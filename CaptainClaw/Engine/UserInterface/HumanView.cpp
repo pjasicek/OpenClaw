@@ -26,7 +26,7 @@ HumanView::HumanView(SDL_Renderer* renderer)
         //m_pConsole = unique_ptr<Console>(new Console(g_pApp->GetWindowSize().x, g_pApp->GetWindowSize().y / 2,
             //g_pApp->GetConsoleFont(), renderer, "console02.tga"));
 
-        m_pConsole = unique_ptr<Console>(new Console(g_pApp->GetConsoleConfig(), renderer));
+        m_pConsole = unique_ptr<Console>(new Console(g_pApp->GetConsoleConfig(), renderer, g_pApp->GetWindow()));
     }
 }
 

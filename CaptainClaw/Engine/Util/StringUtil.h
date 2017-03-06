@@ -36,4 +36,9 @@ std::string GetBaseName(std::string& path);
 std::string RemoveExtension(std::string& fileName);
 std::string StripPathAndExtension(std::string& fullFilePath);
 
+inline bool StringContains(std::string& str, std::string& what)
+{
+    return str.find(what) != std::string::npos;
+}
+
 #endif
