@@ -198,6 +198,8 @@ struct ActorBodyDef
         friction = 0.0f;
         density = 0.0f;
         restitution = 0.0f;
+
+        isActive = true;
     }
 
     WeakActorPtr pActor;
@@ -221,6 +223,8 @@ struct ActorBodyDef
     float density;
     float restitution;
     std::string prefabType;
+    // TODO: This is a bit hacky - used for ducking 
+    bool isActive;
 
     std::vector<ActorFixtureDef> fixtureList;
 };

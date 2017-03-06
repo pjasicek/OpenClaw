@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\CMakeFiles\2d3ada37243d526bd91db52b7a9fd429\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{E2D33A7A-5DDE-4F32-BD90-8F0D2EE86A0D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

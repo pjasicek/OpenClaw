@@ -20,15 +20,13 @@ struct ConsoleConfig
     ConsoleConfig()
     {
         backgroundImagePath = "";
-        pBackgroundImageTexture = NULL;
         stretchBackgroundImage = true;
-        width = 0;
-        height = 0;
+        widthRatio = 1.0;
+        heightRatio = 0.5;
         lineSeparatorHeight = 3;
         commandPromptOffsetY = 10;
         consoleAnimationSpeed = 0.65;
         fontColor = COLOR_WHITE;
-        pFont = NULL;
         fontPath = "";
         fontHeight = 14;
         leftOffset = 5;
@@ -36,15 +34,13 @@ struct ConsoleConfig
     }
 
     std::string backgroundImagePath;
-    SDL_Texture* pBackgroundImageTexture;
     bool stretchBackgroundImage;
-    uint16_t width;
-    uint16_t height;
+    double widthRatio;
+    double heightRatio;
     uint16_t lineSeparatorHeight;
     uint16_t commandPromptOffsetY;
     double consoleAnimationSpeed;
     SDL_Color fontColor;
-    TTF_Font* pFont;
     std::string fontPath;
     uint16_t fontHeight;
     uint16_t leftOffset;
@@ -57,7 +53,7 @@ class Console
 {
 public:
     Console(uint16_t width, uint16_t height, TTF_Font* font, SDL_Renderer* renderer, const char* backgroundResource = NULL);
-    Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRenderer);
+    Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRenderer, SDL_Window* pWindow);
     ~Console();
 
     void OnUpdate(uint32_t msDiff);
@@ -122,6 +118,10 @@ private:
 
     uint16_t m_LineSeparatorHeight;
     uint16_t m_CommandPromptOffsetY;
+    double m_ConsosleToggleSpeed;
+
+    SDL_Renderer* m_pRenderer;
+    SDL_Window* m_pWindow;
 
     std::string _commandPrompt;
     std::string _currentCommandText;

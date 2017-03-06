@@ -1,0 +1,123 @@
+﻿Build started 4. 3. 2017 12:56:44.
+     1>Project "C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\INSTALL.vcxproj" on node 2 (Build target(s)).
+     1>PostBuildEvent:
+         setlocal
+         "D:\Program Files (x86)\CMake\bin\cmake.exe" -DBUILD_TYPE=Release -P cmake_install.cmake
+         if %errorlevel% neq 0 goto :cmEnd
+         :cmEnd
+         xcopy /y Box2D_Install\lib\*.lib ..\Build_Release\
+         xcopy Box2D_Install\include\Box2D\*.h ..\ThirdParty\Box2D\ /sy
+         endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+         :cmErrorLevel
+         exit /b %1
+         :cmDone
+         if %errorlevel% neq 0 goto :VCEnd
+         :VCEnd
+         -- Install configuration: "Release"
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Box2D.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/b2BroadPhase.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/b2Collision.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/b2Distance.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/b2DynamicTree.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/b2TimeOfImpact.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/Shapes/b2CircleShape.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/Shapes/b2EdgeShape.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/Shapes/b2ChainShape.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/Shapes/b2PolygonShape.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Collision/Shapes/b2Shape.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2BlockAllocator.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2Draw.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2GrowableStack.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2Math.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2Settings.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2StackAllocator.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Common/b2Timer.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2Body.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2ContactManager.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2Fixture.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2Island.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2TimeStep.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2World.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/b2WorldCallbacks.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2CircleContact.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2Contact.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2ContactSolver.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2PolygonAndCircleContact.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2EdgeAndCircleContact.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2EdgeAndPolygonContact.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2ChainAndCircleContact.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2ChainAndPolygonContact.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Contacts/b2PolygonContact.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2DistanceJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2FrictionJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2GearJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2Joint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2MotorJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2MouseJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2PrismaticJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2PulleyJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2RevoluteJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2RopeJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2WeldJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Dynamics/Joints/b2WheelJoint.h
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/include/Box2D/Rope/b2Rope.h
+         -- Installing: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/lib/Box2D.lib
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/lib/Box2D/Box2D-targets.cmake
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/lib/Box2D/Box2D-targets-release.cmake
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/lib/cmake/Box2D/Box2DConfig.cmake
+         -- Up-to-date: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D_Install/lib/cmake/Box2D/UseBox2D.cmake
+         Box2D_Install\lib\Box2D.lib
+         1 File(s) copied
+         Box2D_Install\include\Box2D\Box2D.h
+         Box2D_Install\include\Box2D\Collision\b2BroadPhase.h
+         Box2D_Install\include\Box2D\Collision\b2Collision.h
+         Box2D_Install\include\Box2D\Collision\b2Distance.h
+         Box2D_Install\include\Box2D\Collision\b2DynamicTree.h
+         Box2D_Install\include\Box2D\Collision\b2TimeOfImpact.h
+         Box2D_Install\include\Box2D\Collision\Shapes\b2ChainShape.h
+         Box2D_Install\include\Box2D\Collision\Shapes\b2CircleShape.h
+         Box2D_Install\include\Box2D\Collision\Shapes\b2EdgeShape.h
+         Box2D_Install\include\Box2D\Collision\Shapes\b2PolygonShape.h
+         Box2D_Install\include\Box2D\Collision\Shapes\b2Shape.h
+         Box2D_Install\include\Box2D\Common\b2BlockAllocator.h
+         Box2D_Install\include\Box2D\Common\b2Draw.h
+         Box2D_Install\include\Box2D\Common\b2GrowableStack.h
+         Box2D_Install\include\Box2D\Common\b2Math.h
+         Box2D_Install\include\Box2D\Common\b2Settings.h
+         Box2D_Install\include\Box2D\Common\b2StackAllocator.h
+         Box2D_Install\include\Box2D\Common\b2Timer.h
+         Box2D_Install\include\Box2D\Dynamics\b2Body.h
+         Box2D_Install\include\Box2D\Dynamics\b2ContactManager.h
+         Box2D_Install\include\Box2D\Dynamics\b2Fixture.h
+         Box2D_Install\include\Box2D\Dynamics\b2Island.h
+         Box2D_Install\include\Box2D\Dynamics\b2TimeStep.h
+         Box2D_Install\include\Box2D\Dynamics\b2World.h
+         Box2D_Install\include\Box2D\Dynamics\b2WorldCallbacks.h
+         Box2D_Install\include\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.h
+         Box2D_Install\include\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.h
+         Box2D_Install\include\Box2D\Dynamics\Contacts\b2CircleContact.h
+         Box2D_Install\include\Box2D\Dynamics\Contacts\b2Contact.h
+         Box2D_Install\include\Box2D\Dynamics\Contacts\b2ContactSolver.h
+         Box2D_Install\include\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.h
+         Box2D_Install\include\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.h
+         Box2D_Install\include\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.h
+         Box2D_Install\include\Box2D\Dynamics\Contacts\b2PolygonContact.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2DistanceJoint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2FrictionJoint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2GearJoint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2Joint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2MotorJoint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2MouseJoint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2PrismaticJoint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2PulleyJoint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2RevoluteJoint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2RopeJoint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2WeldJoint.h
+         Box2D_Install\include\Box2D\Dynamics\Joints\b2WheelJoint.h
+         Box2D_Install\include\Box2D\Rope\b2Rope.h
+         47 File(s) copied
+     1>Done Building Project "C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\INSTALL.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.50

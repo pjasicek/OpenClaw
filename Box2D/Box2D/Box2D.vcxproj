@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{1ED35880-218C-4B59-8916-06B94483BB59}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>Box2D</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Box2D.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Box2D</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Box2D.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Box2D</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Box2D.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Box2D</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Box2D.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Box2D</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+"D:\Program Files (x86)\CMake\bin\cmake.exe" "-HC:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D" "-BC:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D" --check-stamp-file "C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/CMakeLists.txt;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeLists.txt;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Box2DConfig.cmake.in;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+"D:\Program Files (x86)\CMake\bin\cmake.exe" "-HC:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D" "-BC:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D" --check-stamp-file "C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/CMakeLists.txt;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeLists.txt;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Box2DConfig.cmake.in;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
+"D:\Program Files (x86)\CMake\bin\cmake.exe" "-HC:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D" "-BC:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D" --check-stamp-file "C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/CMakeLists.txt;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeLists.txt;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Box2DConfig.cmake.in;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
+"D:\Program Files (x86)\CMake\bin\cmake.exe" "-HC:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D" "-BC:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D" --check-stamp-file "C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/CMakeLists.txt;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeLists.txt;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Box2DConfig.cmake.in;C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Box2D.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2DistanceJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2FrictionJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2GearJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2Joint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MotorJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MouseJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PrismaticJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PulleyJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RevoluteJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RopeJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WeldJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WheelJoint.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2CircleContact.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2Contact.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ContactSolver.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonContact.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2Body.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2ContactManager.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2Fixture.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2Island.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2TimeStep.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2World.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2WorldCallbacks.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2BlockAllocator.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2Draw.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2GrowableStack.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2Math.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2Settings.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2StackAllocator.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2Timer.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2CircleShape.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2EdgeShape.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2ChainShape.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2PolygonShape.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2Shape.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2BroadPhase.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2Collision.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2Distance.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2DynamicTree.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2TimeOfImpact.h" />
+    <ClInclude Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Rope\b2Rope.h" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2DistanceJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2FrictionJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2GearJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2Joint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MotorJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MouseJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PrismaticJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PulleyJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RopeJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WheelJoint.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2CircleContact.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2Contact.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ContactSolver.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonContact.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2Body.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2ContactManager.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2Fixture.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2Island.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2World.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Dynamics\b2WorldCallbacks.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2BlockAllocator.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2Draw.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2Math.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2Settings.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2StackAllocator.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Common\b2Timer.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2CircleShape.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2EdgeShape.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2ChainShape.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2PolygonShape.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2BroadPhase.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2CollideCircle.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2CollideEdge.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2CollidePolygon.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2Collision.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2Distance.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2DynamicTree.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Collision\b2TimeOfImpact.cpp" />
+    <ClCompile Include="C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\Box2D\Rope\b2Rope.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -82,7 +82,7 @@ bool Scene::RemoveChild(uint32 actorId)
     shared_ptr<ISceneNode> kid = FindActor(actorId);
     if (!kid)
     {
-        LOG_WARNING("Attempting to remove nonexisting actor. ActorId: " + ToStr(actorId));
+        //LOG_WARNING("Attempting to remove nonexisting actor. ActorId: " + ToStr(actorId));
         return false;
     }
 

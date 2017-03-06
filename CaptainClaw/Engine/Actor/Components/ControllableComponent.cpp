@@ -281,15 +281,6 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
     }
 }
 
-void ClawControllableComponent::OnDuck()
-{
-    if (!IsDucking())
-    {
-        m_pClawAnimationComponent->SetAnimation("duck");
-        m_State = ClawState_Ducking;
-    }
-}
-
 bool ClawControllableComponent::CanMove()
 {
     if (m_State == ClawState_Shooting ||
@@ -488,8 +479,18 @@ bool ClawControllableComponent::IsDucking()
         m_State == ClawState_DuckShooting);
 }
 
+void ClawControllableComponent::OnDuck()
+{
+    if (!IsDucking())
+    {
+        m_pClawAnimationComponent->SetAnimation("duck");
+        m_State = ClawState_Ducking;
+    }
+}
+
 void ClawControllableComponent::OnStand()
 {
+    LOG("STOOD");
     m_State = ClawState_Standing;
     SetCurrentPhysicsState();
 }

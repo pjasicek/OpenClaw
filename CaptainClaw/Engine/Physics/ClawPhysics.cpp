@@ -147,6 +147,38 @@ b2AABB GetBodyAABB(b2Body* pBody)
     return aabb;
 }
 
+b2Fixture* GetLowermostFixture(b2Body* pBody, bool discardSensors)
+{
+    b2Fixture* pLowermostFixture = NULL;
+    b2AABB aabb;
+    aabb.lowerBound = b2Vec2(FLT_MAX, FLT_MAX);
+    aabb.upperBound = b2Vec2(-FLT_MAX, -FLT_MAX);
+    b2Fixture* fixture = pBody->GetFixtureList();
+    while (fixture != NULL)
+    {
+        if (fixture->IsSensor())
+        {
+            fixture = fixture->GetNext();
+            continue;
+        }
+
+        if (pLowermostFixture == NULL)
+        {
+            pLowermostFixture = fixture;
+        }
+        else if (fixture->GetAABB(0).upperBound.y > pLowermostFixture->GetAABB(0).upperBound.y)
+        {
+            pLowermostFixture = fixture;
+        }
+
+        fixture = fixture->GetNext();
+    }
+
+
+    assert(pLowermostFixture != NULL);
+    return pLowermostFixture;
+}
+
 //-----------------------------------------------------------------------------
 // ClawPhysics::ClawPhysics
 //
@@ -322,7 +354,7 @@ void ClawPhysics::VOnUpdate(const uint32 msDiff)
 {
     //PROFILE_CPU("ClawPhysics::VOnUpdate");
 
-    m_pWorld->Step(msDiff / 1000.0f, 8, 3);
+    m_pWorld->Step(msDiff / 1000.0f, 10, 8);
 
     // Remove actors form physics simulation which are scheduled to be destroyed
     for (uint32 actorId : m_ActorsToBeDestroyed)
@@ -417,6 +449,7 @@ void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType c
     { 
         fixtureDef.filter.categoryBits = CollisionFlag_Ladder;
         fixtureDef.userData = (void*)FixtureType_Climb; 
+        fixtureDef.isSensor = true;
     }
     else if (collisionType == CollisionType_Death) 
     { 
@@ -428,13 +461,38 @@ void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType c
         fixtureDef.userData = (void*)FixtureType_None; 
     }
 
-    if ((int)fixtureDef.userData != FixtureType_Solid &&
-        (int)fixtureDef.userData != FixtureType_Death)
+    /*if ((int)fixtureDef.userData != FixtureType_Solid &&
+        (int)fixtureDef.userData != FixtureType_Death && 
+        (int)fixtureDef.userData != FixtureType_Ground)
     { 
         fixtureDef.isSensor = true; 
-    }
+    }*/
 
-    m_pTiles->CreateFixture(&fixtureDef);
+    // Have to treat ground as independent body
+    // TODO: This is really ugly, redo to something better
+    if (collisionType == CollisionType_Ground)
+    {
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_staticBody;
+        bodyDef.position.Set(b2Position.x + b2Size.x / 2, b2Position.y + b2Size.y / 2);
+        bodyDef.fixedRotation = true;
+        b2Body* pBody = m_pWorld->CreateBody(&bodyDef);
+
+        b2PolygonShape bodyShape;
+        bodyShape.SetAsBox(b2Size.x / 2, b2Size.y / 2);
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &bodyShape;
+        fixtureDef.friction = 0.18f;
+        fixtureDef.filter.categoryBits = CollisionFlag_Ground;
+        fixtureDef.userData = (void*)FixtureType_Ground;
+        fixtureDef.isSensor = false;
+        pBody->CreateFixture(&fixtureDef);
+    }
+    else
+    {
+        m_pTiles->CreateFixture(&fixtureDef);
+    }
 }
 
 void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
@@ -559,7 +617,7 @@ void ClawPhysics::VAddKinematicBody(WeakActorPtr pActor)
     fixtureDef.shape = &bodyShape;
     fixtureDef.friction = 0.0f;
     fixtureDef.userData = (void*)FixtureType_Ground;
-    fixtureDef.isSensor = true;
+    fixtureDef.isSensor = false;
     pBody->CreateFixture(&fixtureDef);
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
@@ -603,7 +661,7 @@ void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionT
     fixtureDef.shape = &bodyShape;
     fixtureDef.friction = 0.0f;
     fixtureDef.userData = (void*)collisionType;
-    fixtureDef.isSensor = true;
+    fixtureDef.isSensor = false;
     pBody->CreateFixture(&fixtureDef);
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
@@ -1146,6 +1204,86 @@ RaycastResult ClawPhysics::VRayCast(const Point& fromPoint, const Point& toPoint
     m_pWorld->RayCast(&callback, b2fromPoint, b2toPoint);
 
     return callback.GetRaycastResult();
+}
+
+// HACK: THIS WHOLE METHOD IS A HACK AND IT DOES NOT DO WHAT IT SHOULD DO
+// THIS IS TIGHTLY COUPLED TO CLÄW'S CROUCHING
+void ClawPhysics::VScaleActor(uint32_t actorId, double scale)
+{
+    if (b2Body* pBody = FindBox2DBody(actorId))
+    {
+        if (scale < 1.0)
+        {
+            b2Fixture* pBodyRectangleFixture = NULL;
+            b2Fixture* pHeadCircleFixture = NULL;
+
+            b2Fixture* fixture = pBody->GetFixtureList();
+            while (fixture != NULL)
+            {
+                if (fixture->IsSensor())
+                {
+                    fixture = fixture->GetNext();
+                    continue;
+                }
+                if (fixture->GetShape()->GetType() == b2Shape::e_circle)
+                {
+                    if (pHeadCircleFixture == NULL)
+                    {
+                        pHeadCircleFixture = fixture;
+                    }
+                    else
+                    {
+                        if (fixture->GetAABB(0).lowerBound.y < pHeadCircleFixture->GetAABB(0).lowerBound.y)
+                        {
+                            pHeadCircleFixture = fixture;
+                        }
+                    }
+                }
+                else if (fixture->GetShape()->GetType() == b2Shape::e_polygon)
+                {
+                    if (pBodyRectangleFixture == NULL)
+                    {
+                        pBodyRectangleFixture = fixture;
+                    }
+                    else
+                    {
+                        if (fixture->GetAABB(0).lowerBound.y < pBodyRectangleFixture->GetAABB(0).lowerBound.y)
+                        {
+                            pBodyRectangleFixture = fixture;
+                        }
+                    }
+                }
+                fixture = fixture->GetNext();
+            }
+
+            assert(pBodyRectangleFixture && pHeadCircleFixture);
+            auto a = pBodyRectangleFixture->GetFilterData();
+            auto b = pHeadCircleFixture->GetFilterData();
+            a.maskBits = 0x0;
+            b.maskBits = 0x0;
+
+            pBodyRectangleFixture->SetFilterData(a);
+            pHeadCircleFixture->SetFilterData(b);
+        }
+        else
+        {
+            b2Fixture* fixture = pBody->GetFixtureList();
+            while (fixture != NULL)
+            {
+                if (fixture->IsSensor())
+                {
+                    fixture = fixture->GetNext();
+                    continue;
+                }
+                
+                auto a = fixture->GetFilterData();
+                a.maskBits = 0xFFFFFFFF;
+                fixture->SetFilterData(a);
+
+                fixture = fixture->GetNext();
+            }
+        }
+    }
 }
 
 //=====================================================================================================================

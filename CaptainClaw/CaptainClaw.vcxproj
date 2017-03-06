@@ -111,6 +111,7 @@
     <ClCompile Include="Engine\Physics\PhysicsContactListener.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsDebugDrawer.cpp" />
     <ClCompile Include="Engine\Process\PowerupProcess.cpp" />
+    <ClCompile Include="Engine\Resource\Loaders\MidiLoader.cpp" />
     <ClCompile Include="Engine\Scene\HUDSceneNode.cpp" />
     <ClCompile Include="Engine\UserInterface\Console.cpp" />
     <ClCompile Include="Engine\Actor\Actor.cpp" />

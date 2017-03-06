@@ -66,6 +66,8 @@ public:
 
     virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32 filterMask) override;
 
+    virtual void VScaleActor(uint32_t actorId, double scale);
+
 private:
     TiXmlDocument LoadPhysicsXmlConfig();
     b2Body* FindBox2DBody(uint32 actorId);
@@ -101,6 +103,7 @@ extern shared_ptr<KinematicComponent> GetKinematicComponentFromB2Body(const b2Bo
 extern shared_ptr<TriggerComponent> GetTriggerComponentFromB2Body(const b2Body* pBody);
 extern shared_ptr<ProjectileAIComponent> GetProjectileAIComponentFromB2Body(const b2Body* pBody);
 extern b2AABB GetBodyAABB(b2Body* pBody);
+extern b2Fixture* GetLowermostFixture(b2Body* pBody, bool discardSensors = true);
 
 extern IGamePhysics* CreateClawPhysics();
 
