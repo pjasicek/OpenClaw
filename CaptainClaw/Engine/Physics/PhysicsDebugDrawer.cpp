@@ -2,7 +2,7 @@
 #include "../SharedDefines.h"
 #include "../Scene/SceneNodes.h"
 
-#include <SDL2_gfxPrimitives.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
 
 // Conversion warnings from Box2D -> SDL2_gfx
 #pragma warning(disable: 4244)

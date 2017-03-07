@@ -1,4 +1,3 @@
-#include <Tinyxml\tinyxml.h>
 #include "KinematicComponent.h"
 #include "../../GameApp/BaseGameApp.h"
 #include "../../GameApp/BaseGameLogic.h"

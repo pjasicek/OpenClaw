@@ -1,4 +1,3 @@
-#include <Tinyxml\tinyxml.h>
 #include "Template.h"
 
 const char* ConcreteComponent::g_Name = "ConcreteComponent";

@@ -55,9 +55,9 @@ private: \
     PARAM1_TYPE m_##PARAM1_NAME##; \
 }; \
 
-MAKE_EVENT_0_PARAM(yolo)
+//MAKE_EVENT_0_PARAM(yolo)
 
-MAKE_EVENT_1_PARAM(Stop_Jump, bool, Now)
+//MAKE_EVENT_1_PARAM(Stop_Jump, bool, Now)
 
 //---------------------------------------------------------------------------------------------------------------------
 // EventData_NewActor - This event is sent out when an actor is *actually* created.

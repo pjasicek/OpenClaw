@@ -1,7 +1,7 @@
 #ifndef HUMANVIEW_H_
 #define HUMANVIEW_H_
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "../SharedDefines.h"
 #include "../GameApp/BaseGameApp.h"
 #include "../Process/ProcessMgr.h"

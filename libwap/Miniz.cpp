@@ -130,7 +130,7 @@ below header, or create miniz.h, #define MINIZ_HEADER_FILE_ONLY, and then includ
 #define MINIZ_LITTLE_ENDIAN 1
 #define MINIZ_HAS_64BIT_REGISTERS 1
 */
-#include "miniz.h"
+#include "Miniz.h"
 
 // ------------------- End of Header: Implementation follows. (If you only want the header, define MINIZ_HEADER_FILE_ONLY.)
 #ifndef MINIZ_HEADER_FILE_ONLY

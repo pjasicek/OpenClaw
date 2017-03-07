@@ -12,7 +12,9 @@ ClawHumanView::ClawHumanView(SDL_Renderer* renderer)
     RegisterAllDelegates();
 
     m_pCamera->SetSize(g_pApp->GetWindowSize().x, g_pApp->GetWindowSize().y);
-    m_pCamera->VSetPosition(Point(400, 4500));
+
+    Point startingPos = Point(400, 4500);
+    m_pCamera->VSetPosition(startingPos);
 
     m_pFreeCameraController.reset(new MovementController(m_pCamera));
 

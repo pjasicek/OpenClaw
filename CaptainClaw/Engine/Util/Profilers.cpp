@@ -1,38 +1,36 @@
 #include "Profilers.h"
 #include "../SharedDefines.h"
 
+// For memory profiler
+#ifdef _WIN32
 #include <Windows.h>
 #include <Psapi.h>
+#endif
+
 #include <string>
 #include <stdint.h>
 #include <iostream>
+#include <SDL2/SDL.h>
 
 CPU_PROFILER::CPU_PROFILER(std::string tag)
 {
     m_Tag = tag;
 
-    QueryPerformanceCounter(&m_StartingTime);
+    m_StartingTime = SDL_GetPerformanceCounter();
 }
 
 CPU_PROFILER::~CPU_PROFILER()
 {
-    LARGE_INTEGER EndingTime, ElapsedMicroseconds;
-    LARGE_INTEGER Frequency;
-    QueryPerformanceFrequency(&Frequency);
-    QueryPerformanceCounter(&EndingTime);
-
-    ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - m_StartingTime.QuadPart;
-    ElapsedMicroseconds.QuadPart *= 1000000;
-    ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+    uint64_t now = SDL_GetPerformanceCounter();
 
     if (!m_Tag.empty())
     {
-        std::string s("[" + m_Tag + "]: Elapsed microseconds: " + ToStr((uint32)ElapsedMicroseconds.QuadPart));
+        std::string s("[" + m_Tag + "]: Elapsed microseconds: " + ToStr((unsigned long)(((now - m_StartingTime) * 1000000) / SDL_GetPerformanceFrequency())));
         std::cout << s << std::endl;
     }
     else
     {
-        std::string s("Elapsed microseconds: " + ToStr((uint32)ElapsedMicroseconds.QuadPart));
+        std::string s("Elapsed microseconds: " + ToStr((unsigned long)(((now - m_StartingTime) * 1000000) / SDL_GetPerformanceFrequency())));
         std::cout << s << std::endl;
     }
 }
@@ -41,14 +39,18 @@ CPU_PROFILER::~CPU_PROFILER()
 MEMORY_PROFILER::MEMORY_PROFILER(std::string tag)
 {
     m_Tag = tag;
-
+#ifdef _WIN32
     PROCESS_MEMORY_COUNTERS pmc;
     GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
     m_StartingMemory = pmc.WorkingSetSize;
+#else
+    LOG_ERROR("Memory profiler not supported on this platform !");
+#endif
 }
 
 MEMORY_PROFILER::~MEMORY_PROFILER()
 {
+#ifdef _WIN32
     PROCESS_MEMORY_COUNTERS pmc;
     GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
     SIZE_T currentMemory = pmc.WorkingSetSize;
@@ -65,4 +67,5 @@ MEMORY_PROFILER::~MEMORY_PROFILER()
         std::string s("Memory difference: " + ToStr(memoryDiff));
         std::cout << s << std::endl;
     }
+#endif
 }

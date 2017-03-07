@@ -77,7 +77,7 @@ void DestroyableComponent::VOnHealthBelowZero()
 {
     if (!m_PossibleDestructionSounds.empty())
     {
-        srand((int)this + (int)&m_PossibleDestructionSounds);
+        srand((long)this + (long)&m_PossibleDestructionSounds);
         int soundToPlayIdx = rand() % m_PossibleDestructionSounds.size();
 
         // Play this sound

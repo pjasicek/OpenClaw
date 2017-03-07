@@ -1,4 +1,4 @@
-
+#include <memory.h>
 #include "StringUtil.h"
 
 using std::string;
@@ -68,42 +68,27 @@ test_match:
 
 string ToStr(int num, int base)
 {
-    char str[MAX_DIGITS_IN_INT];
-    memset(str, 0, MAX_DIGITS_IN_INT);
-    _itoa_s(num, str, MAX_DIGITS_IN_INT, base);
-    return (string(str));
-}  // end ToStr()
+    return std::to_string(num);
+}
 
 string ToStr(unsigned int num, int base)
 {
-    char str[MAX_DIGITS_IN_INT];
-    memset(str, 0, MAX_DIGITS_IN_INT);
-    _ultoa_s((unsigned long)num, str, MAX_DIGITS_IN_INT, base);
-    return (string(str));
+    return std::to_string(num);
 }
 
 string ToStr(unsigned long num, int base)
 {
-    char str[MAX_DIGITS_IN_INT];
-    memset(str, 0, MAX_DIGITS_IN_INT);
-    _ultoa_s(num, str, MAX_DIGITS_IN_INT, base);
-    return (string(str));
+    return std::to_string(num);
 }
 
 string ToStr(float num)
 {
-    char str[64];  // I'm sure this is overkill
-    memset(str, 0, 64);
-    _sprintf_p(str, 64, "%f", num);
-    return (string(str));
+    return std::to_string(num);
 }
 
 string ToStr(double num)
 {
-    char str[64];  // I'm sure this is overkill
-    memset(str, 0, 64);
-    _sprintf_p(str, 64, "%fL", num);
-    return (string(str));
+    return std::to_string(num);
 }
 
 string ToStr(bool val)
@@ -138,7 +123,7 @@ void Split(const string& str, std::vector<std::string>& vec, char delimiter)
         vec.push_back(str.substr(startIndex));
 }
 
-void* HashName(char const * pIdentStr)
+unsigned long HashName(char const * pIdentStr)
 {
     // Relatively simple hash of arbitrary text string into a
     // 32-bit identifier Output value is
@@ -201,7 +186,7 @@ void* HashName(char const * pIdentStr)
 #pragma warning(push)
 #pragma warning(disable : 4312)
 
-    return reinterpret_cast<void *>((s2 << 16) | s1);
+    return ((s2 << 16) | s1);
 
 #pragma warning(pop)
 #undef DO1
@@ -224,5 +209,6 @@ std::string RemoveExtension(std::string& fileName)
 
 std::string StripPathAndExtension(std::string& fullFilePath)
 {
-    return RemoveExtension(GetBaseName(fullFilePath));
+    std::string path = GetBaseName(fullFilePath);
+    return RemoveExtension(path);
 }

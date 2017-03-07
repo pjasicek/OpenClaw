@@ -480,7 +480,7 @@ void MeleeAttackAIStateComponent::ExecuteMeleeAttack()
         m_pRenderComponent->SetMirrored(true);
     }
 
-    srand((int)this + time(NULL));
+    srand((long)this + time(NULL));
 
     // TODO: Pick randomly melee action ?
 
@@ -646,7 +646,7 @@ void RangedAttackAIStateComponent::ExecuteRangedAttack()
         m_pRenderComponent->SetMirrored(true);
     }
 
-    srand((int)this + time(NULL));
+    srand((long)this + time(NULL));
 
     // TODO: Pick randomly melee action ?
 

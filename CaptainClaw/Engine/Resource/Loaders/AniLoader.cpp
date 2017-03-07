@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "AniLoader.h"
 
 #include "../../GameApp/BaseGameApp.h"

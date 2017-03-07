@@ -1,4 +1,3 @@
-#include <Tinyxml\tinyxml.h>
 #include "RenderComponent.h"
 #include "../../GameApp/BaseGameApp.h"
 #include "../../Graphics2D/Image.h"
@@ -12,6 +11,7 @@
 #include "../../Scene/HUDSceneNode.h"
 
 #include "../../Events/Events.h"
+#include "../Actor.h"
 
 #include <algorithm>
 #include <cctype>

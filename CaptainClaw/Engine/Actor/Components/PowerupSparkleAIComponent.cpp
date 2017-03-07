@@ -2,6 +2,7 @@
 #include "PositionComponent.h"
 #include "../../Events/EventMgr.h"
 #include "../../Events/Events.h"
+#include "../Actor.h"
 
 #include <time.h>
 
@@ -29,7 +30,7 @@ void PowerupSparkleAIComponent::VPostInit()
     assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
     pAnimationComponent->AddObserver(this);
 
-    srand((int)this);
+    srand((long)this);
     pAnimationComponent->SetDelay(rand() % 1000);
 
     m_pPositonComponent = MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
@@ -51,7 +52,7 @@ void PowerupSparkleAIComponent::VOnAnimationLooped(Animation* pAnimation)
     assert(m_pTargetPositionComponent);
 
     Point targetPos = m_pTargetPositionComponent->GetPosition();
-    srand((int)this + (int)m_pPositonComponent->GetX() + (int)m_pPositonComponent->GetY() + time(NULL));
+    srand((long)this + (int)m_pPositonComponent->GetX() + (int)m_pPositonComponent->GetY() + time(NULL));
     m_pPositonComponent->SetX(targetPos.x - m_TargetSize.x / 2 + rand() % (int)m_TargetSize.x);
     m_pPositonComponent->SetY(targetPos.y - m_TargetSize.y / 2  + rand() % (int)m_TargetSize.y);
 

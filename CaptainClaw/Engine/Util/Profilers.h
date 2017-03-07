@@ -2,7 +2,6 @@
 #define __PROFILERS_H__
 
 #include <stdint.h>
-#include <Windows.h>
 #include <string>
 
 class CPU_PROFILER
@@ -12,7 +11,7 @@ public:
     ~CPU_PROFILER();
 
 private:
-    LARGE_INTEGER m_StartingTime;
+    uint64_t m_StartingTime;
     std::string m_Tag;
 };
 

@@ -1,7 +1,7 @@
 #ifndef __XMLMACROS_H__
 #define __XMLMACROS_H__
 
-#include <Tinyxml/tinyxml.h>
+#include <tinyxml.h>
 
 #ifndef XML_ADD_TEXT_ELEMENT
 #define XML_ADD_TEXT_ELEMENT(elementName, elementValue, parentElement) \

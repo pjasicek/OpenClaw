@@ -5,7 +5,7 @@
 #include "../Resource/Loaders/PidLoader.h"
 #include "../Graphics2D/Image.h"
 
-#include <SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 
 //=============================================================================
 // List of exposed HUD elements from scene:

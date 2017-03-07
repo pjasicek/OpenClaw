@@ -1,15 +1,23 @@
-#include <SDL.h>
-#include <Windows.h>
+#include <SDL2/SDL.h>
 #include <fstream>
 #include <vector>
 
 #include "Audio.h"
-#include "../../../MidiProc/midiproc.h"
 
 #include <iostream>
+
+#ifdef _WIN32
+#include <Windows.h>
+#include "../../../MidiProc/midiproc.h"
+#endif
+
+#ifdef PlaySound
+#undef PlaySound
+#endif
+
 using namespace std;
 
-const uint32_t MIDI_RPC_MAX_HANDSHAKE_TRIES = 50;
+const uint32_t MIDI_RPC_MAX_HANDSHAKE_TRIES = 250;
 
 //############################################
 //################# API ######################
@@ -41,11 +49,13 @@ bool Audio::Initialize(int frequency, int channels, int chunkSize, const char* m
         return false;
     }
 
+#ifdef _WIN32
     _isMidiRpcInitialized = InitializeMidiRPC(midiRpcPath);
     if (!_isMidiRpcInitialized)
     {
         return false;
     }
+#endif //_WIN32
 
     _isAudioInitialized = true;
 
@@ -54,11 +64,14 @@ bool Audio::Initialize(int frequency, int channels, int chunkSize, const char* m
 
 void Audio::Terminate()
 {
+#ifdef _WIN32
     TerminateMidiRPC();
+#endif //_WIN32
 }
 
 void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
 {
+#ifdef _WIN32
     RpcTryExcept
     {
         MidiRPC_PrepareNewSong();
@@ -70,6 +83,11 @@ void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Audio::PlayMusic: Failed due to RPC exception");
     }
     RpcEndExcept
+#else
+    SDL_RWops* pRWops = SDL_RWFromMem((void*)musicData, musicSize);
+    Mix_Music* pMusic = Mix_LoadMUS_RW(pRWops, 0);
+    Mix_PlayMusic(pMusic, looping ? -1 : 1);
+#endif //_WIN32
 }
 
 // This is probably slow as fuck, should be removed, only used for debugging afaik
@@ -93,6 +111,7 @@ void Audio::PlayMusic(const char* musicPath, bool looping)
 
 void Audio::PauseMusic()
 {
+#ifdef _WIN32
     RpcTryExcept
     {
         MidiRPC_PauseSong();
@@ -102,10 +121,14 @@ void Audio::PauseMusic()
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Audio::PauseMusic: Failed due to RPC exception");
     }
     RpcEndExcept
+#else
+    Mix_PauseMusic();
+#endif //_WIN32
 }
 
 void Audio::ResumeMusic()
 {
+#ifdef _WIN32
     RpcTryExcept
     {
         MidiRPC_ResumeSong();
@@ -115,10 +138,14 @@ void Audio::ResumeMusic()
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Audio::ResumeMusic: Failed due to RPC exception");
     }
     RpcEndExcept
+#else
+    Mix_ResumeMusic();
+#endif //_WIN32
 }
 
 void Audio::StopMusic()
 {
+#ifdef _WIN32
     RpcTryExcept
     {
         MidiRPC_StopSong();
@@ -128,10 +155,14 @@ void Audio::StopMusic()
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "AudioMgr::StopMusic: Failed due to RPC exception");
     }
     RpcEndExcept
+#else
+    Mix_HaltMusic();
+#endif //_WIN32
 }
 
 void Audio::SetMusicVolume(uint32_t volume)
 {
+#ifdef _WIN32
     RpcTryExcept
     {
         MidiRPC_ChangeVolume(volume);
@@ -141,6 +172,9 @@ void Audio::SetMusicVolume(uint32_t volume)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "AudioMgr::SetMusicVolume: Failed due to RPC exception");
     }
     RpcEndExcept
+#else
+    Mix_VolumeMusic(volume);
+#endif //_WIN32
 }
 
 void Audio::PlaySound(const char* soundData, size_t soundSize, bool looping)
@@ -164,15 +198,20 @@ void Audio::SetSoundVolume(uint32_t volume)
 void Audio::PauseAllSounds()
 {
     Mix_Pause(-1);
+#ifdef _WIN32
     MidiRPC_PauseSong();
+#endif //_WIN32
 }
 
 void Audio::ResumeAllSounds()
 {
     Mix_Resume(-1);
+#ifdef _WIN32
     MidiRPC_ResumeSong();
+#endif //_WIN32
 }
 
+#ifdef _WIN32
 //############################################
 //############## MIDI RPC ####################
 //############################################
@@ -293,3 +332,4 @@ void Audio::TerminateMidiRPC()
     }
     RpcEndExcept
 }
+#endif //_WIN32

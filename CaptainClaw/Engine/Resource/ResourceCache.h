@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 
+#include <stdlib.h>
 #include <libwap.h>
 #include "../SharedDefines.h"
 

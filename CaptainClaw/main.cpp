@@ -1,8 +1,6 @@
 //#define SDL_MAIN_HANDLED
 //#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 
-#include <Windows.h>
-
 #include "Engine/GameApp/MainLoop.h"
 #include "ClawGameApp.h"
 

@@ -8,7 +8,7 @@
 
 #include "../SharedDefines.h"
 
-//#include "ActorComponent.h"
+#include "ActorComponent.h"
 
 typedef std::map<uint32, StrongActorComponentPtr> ActorComponentsMap;
 

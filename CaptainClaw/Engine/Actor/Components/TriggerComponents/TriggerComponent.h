@@ -4,6 +4,7 @@
 #include "../../../SharedDefines.h"
 #include "../../ActorComponent.h"
 #include "../../../Util/Subject.h"
+#include "../../Actor.h"
 
 class TriggerObserver;
 class TriggerSubject : public Subject<TriggerObserver>

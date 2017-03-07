@@ -6,21 +6,6 @@
 #include "../Actor/Actor.h"
 #include "CommandHandler.h"
 
-enum GameState
-{
-    GameState_Invalid,
-    GameState_Initializing,
-    GameState_MainMenu,
-    GameState_OptionsMenu,
-    GameState_SelectLevelMenu,
-    GameState_LoadSaveMenu,
-    GameState_LoadingLevel,
-    GameState_IngameRunning,
-    GameState_IngamePaused,
-    GameState_FinishedLevel,
-    GameState_Cutscene
-};
-
 typedef std::map<uint32, StrongActorPtr> ActorMap;
 
 class GameSaveMgr;

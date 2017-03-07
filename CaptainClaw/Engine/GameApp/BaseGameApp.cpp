@@ -1,5 +1,3 @@
-#include <Tinyxml/tinystr.h>
-
 #include "../Resource/ResourceCache.h"
 #include "../Audio/Audio.h"
 #include "../Events/EventMgr.h"
@@ -9,13 +7,13 @@
 #include "../UserInterface/HumanView.h"
 
 // Resource loaders
-#include "..\Resource\Loaders\DefaultLoader.h"
-#include "..\Resource\Loaders\XmlLoader.h"
-#include "..\Resource\Loaders\WwdLoader.h"
-#include "..\Resource\Loaders\PalLoader.h"
-#include "..\Resource\Loaders\PidLoader.h"
-#include "..\Resource\Loaders\AniLoader.h"
-#include "..\Resource\Loaders\WavLoader.h"
+#include "../Resource/Loaders/DefaultLoader.h"
+#include "../Resource/Loaders/XmlLoader.h"
+#include "../Resource/Loaders/WwdLoader.h"
+#include "../Resource/Loaders/PalLoader.h"
+#include "../Resource/Loaders/PidLoader.h"
+#include "../Resource/Loaders/AniLoader.h"
+#include "../Resource/Loaders/WavLoader.h"
 
 #include "BaseGameApp.h"
 
@@ -134,6 +132,7 @@ int32 BaseGameApp::Run()
             //m_pGame->VRenderDiagnostics();
         }
 
+        // Uncomment to artificially decrease fps to ~30-35
         //SDL_Delay(20);
     }
 

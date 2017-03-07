@@ -1,12 +1,14 @@
 #ifndef __INTERFACES_H__
 #define __INTERFACES_H__
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <stdint.h>
 #include <memory>
 #include <list>
 #include <map>
-#include <Tinyxml/tinyxml.h>
+#include <tinyxml.h>
+#include <stdlib.h>
+#include <float.h>
 
 class Actor;
 typedef std::shared_ptr<Actor> StrongActorPtr;
@@ -270,6 +272,21 @@ enum GameViewType
     GameView_AI,
     GameView_Recorder,
     GameView_Other
+};
+
+enum GameState
+{
+    GameState_Invalid,
+    GameState_Initializing,
+    GameState_MainMenu,
+    GameState_OptionsMenu,
+    GameState_SelectLevelMenu,
+    GameState_LoadSaveMenu,
+    GameState_LoadingLevel,
+    GameState_IngameRunning,
+    GameState_IngamePaused,
+    GameState_FinishedLevel,
+    GameState_Cutscene
 };
 
 class IGameLogic

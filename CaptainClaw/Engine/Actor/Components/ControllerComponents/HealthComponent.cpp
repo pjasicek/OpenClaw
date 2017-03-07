@@ -1,5 +1,6 @@
 #include "HealthComponent.h"
 #include "../ControllableComponent.h"
+#include "../../Actor.h"
 
 #include "../../../Events/EventMgr.h"
 #include "../../../Events/Events.h"

@@ -1,8 +1,6 @@
 #ifndef __SCENE_H__
 #define __SCENE_H__
 
-#include <SDL.h>
-
 #include "../SharedDefines.h"
 #include "SceneNodes.h"
 

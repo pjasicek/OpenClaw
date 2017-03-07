@@ -1,4 +1,3 @@
-#include <Tinyxml\tinyxml.h>
 #include "ControllableComponent.h"
 #include "../../Events/Events.h"
 #include "../../Events/EventMgr.h"

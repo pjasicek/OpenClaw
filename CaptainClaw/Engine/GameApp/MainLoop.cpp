@@ -4,11 +4,7 @@
 
 int RunGameEngine(int argc, char** argv)
 {
-    int tmpDebugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
-    tmpDebugFlag |= _CRTDBG_LEAK_CHECK_DF;
-    _CrtSetDbgFlag(tmpDebugFlag);
-
-    if (!SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS))
+    if (SDL_ThreadPriority(SDL_THREAD_PRIORITY_HIGH) != 0)
     {
         LOG_WARNING("Failed to set high priority class to this process");
     }

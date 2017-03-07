@@ -2,6 +2,7 @@
 
 #include "../../GameApp/BaseGameApp.h"
 #include "../../Converters.h"
+#include "../../Interfaces.h"
 
 //=================================================================================================
 // class WwdResourceExtraData

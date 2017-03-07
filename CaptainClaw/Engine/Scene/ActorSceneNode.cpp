@@ -1,4 +1,3 @@
-#include <SDL.h>
 #include "Scene.h"
 #include "ActorSceneNode.h"
 #include "../Actor/Components/RenderComponent.h"

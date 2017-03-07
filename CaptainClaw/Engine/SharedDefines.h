@@ -8,7 +8,7 @@
 #include <vector>
 #include <list>
 #include <map>
-#include <Tinyxml/tinyxml.h>
+#include <tinyxml.h>
 #include <Box2D/Box2D.h>
 #include <algorithm>
 
@@ -49,6 +49,10 @@ typedef int8_t int8;
 
 #ifndef PROFILE_MEMORY
 #define PROFILE_MEMORY(tag) MEMORY_PROFILER _MEMORY_PROFILER_(tag);
+#endif
+
+#ifndef max
+#define max(a, b) ((a) < (b) ? (b) : (a))
 #endif
 
 const uint32 INVALID_ACTOR_ID = 0;
@@ -255,22 +259,5 @@ struct EnemyAttackAction
     // Damage which the attack will deal to enemies
     uint32 damage;
 };
-
-#define NOMINMAX
-#include <Windows.h>
-#include <iostream>
-
-#define START_QUERY_PERFORMANCE_TIMER \
-    LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds; \
-    LARGE_INTEGER Frequency; \
-    QueryPerformanceFrequency(&Frequency); \
-    QueryPerformanceCounter(&StartingTime); \
-
-#define END_QUERY_PERFORMANCE_TIMER \
-    QueryPerformanceCounter(&EndingTime); \
-    ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart; \
-    ElapsedMicroseconds.QuadPart *= 1000000; \
-    ElapsedMicroseconds.QuadPart /= Frequency.QuadPart; \
-    std::cout << "Elapsed microseconds: " << ElapsedMicroseconds.QuadPart << std::endl; \
 
 #endif

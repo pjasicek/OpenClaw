@@ -96,7 +96,7 @@ extern b2Vec2 PixelsToMeters(b2Vec2& pixels);
 extern float PixelsToMeters(float pixels);
 extern b2Vec2 MetersToPixels(b2Vec2 meters);
 extern float MetersToPixels(float pixels);
-extern Point b2Vec2ToPoint(b2Vec2& vec);
+extern Point b2Vec2ToPoint(const b2Vec2& vec);
 extern b2Vec2 PointToB2Vec2(const Point& point);
 extern shared_ptr<PhysicsComponent> GetPhysicsComponentFromB2Body(const b2Body* pBody);
 extern shared_ptr<KinematicComponent> GetKinematicComponentFromB2Body(const b2Body* pBody);

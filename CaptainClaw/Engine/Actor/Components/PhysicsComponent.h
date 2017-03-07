@@ -4,6 +4,7 @@
 #include <Box2D/Box2D.h>
 #include "../../SharedDefines.h"
 #include "../ActorComponent.h"
+#include "../Actor.h"
 
 class ControllableComponent;
 class PhysicsComponent : public ActorComponent
