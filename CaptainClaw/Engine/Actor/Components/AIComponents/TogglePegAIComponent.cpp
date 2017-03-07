@@ -1,4 +1,3 @@
-#include <Tinyxml\tinyxml.h>
 #include "TogglePegAIComponent.h"
 #include "../../../GameApp/BaseGameApp.h"
 #include "../../../GameApp/BaseGameLogic.h"

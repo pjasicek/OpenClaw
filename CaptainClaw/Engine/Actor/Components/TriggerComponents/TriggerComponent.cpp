@@ -1,4 +1,3 @@
-#include <Tinyxml/tinyxml.h>
 #include "TriggerComponent.h"
 #include "../PositionComponent.h"
 #include "../../../GameApp/BaseGameApp.h"

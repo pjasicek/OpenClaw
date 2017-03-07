@@ -43,7 +43,7 @@ std::vector<char> ReadWholeFile(char* filePath)
 
     if (!file.good())
     {
-        throw std::exception::exception("Could not read whole file\n");
+        throw std::exception();
     }
 
     return buffer;

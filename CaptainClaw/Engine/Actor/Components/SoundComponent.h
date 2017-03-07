@@ -1,7 +1,7 @@
 #ifndef SOUNDCOMPONENT_H_
 #define SOUNDCOMPONENT_H_
 
-#include <SDL_mixer.h>
+#include <SDL2/SDL_mixer.h>
 #include "../../SharedDefines.h"
 #include "../ActorComponent.h"
 

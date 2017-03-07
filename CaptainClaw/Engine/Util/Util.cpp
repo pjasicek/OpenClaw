@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <random>
+#include <iostream>
 
 #include "Util.h"
 #include "../GameApp/BaseGameLogic.h"

@@ -1,4 +1,3 @@
-#include <Tinyxml\tinyxml.h>
 #include "CrumblingPegAIComponent.h"
 #include "../../../GameApp/BaseGameApp.h"
 #include "../../../GameApp/BaseGameLogic.h"
@@ -68,6 +67,12 @@ void CrumblingPegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, An
     if (pNewFrame->idx == 9)
     {
         m_pPhysics->VRemoveActor(_owner->GetGUID());
+    }
+    // TODO: VOnAnimationLooped not working prop
+    if (pAnimation->IsAtLastAnimFrame())
+    {
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        IEventMgr::Get()->VQueueEvent(pEvent);
     }
 }
 

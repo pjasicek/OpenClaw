@@ -1,4 +1,3 @@
-#include <Tinyxml\tinyxml.h>
 #include "PhysicsComponent.h"
 #include "../../Physics/ClawPhysics.h"
 #include "../../GameApp/BaseGameLogic.h"
@@ -697,9 +696,15 @@ bool PhysicsComponent::AttachToLadder()
     {
         // Assume ladder is rectangular which means I can aswell use its aabb for exact position
         b2AABB aabb = pLadderFixture->GetAABB(0);
-        Point bottomright = b2Vec2ToPoint(MetersToPixels(aabb.upperBound));
-        Point topleft = b2Vec2ToPoint(MetersToPixels(aabb.lowerBound));
-        Point center = b2Vec2ToPoint(MetersToPixels(aabb.GetCenter()));
+
+        b2Vec2 b2bottomRight = MetersToPixels(aabb.upperBound);
+        Point bottomright = b2Vec2ToPoint(b2bottomRight);
+
+        b2Vec2 b2topLeft = MetersToPixels(aabb.lowerBound);
+        Point topleft = b2Vec2ToPoint(b2topLeft);
+
+        b2Vec2 b2center = MetersToPixels(aabb.GetCenter());
+        Point center = b2Vec2ToPoint(b2center);
 
         if (actorPosition.x > topleft.x && actorPosition.x < bottomright.x)
         {

@@ -598,7 +598,7 @@ namespace ActorTemplates
 
         pActorElem->LinkEndChild(CreateTriggerComponent(1, false, isStatic));
 
-        srand((int)pActorElem + time(NULL));
+        srand((long)pActorElem + time(NULL));
         double speedX = 0.5 + (rand() % 100) / 50.0;
         double speedY = -(1 + (rand() % 100) / 50.0);
 

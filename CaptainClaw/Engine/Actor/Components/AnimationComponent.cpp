@@ -1,5 +1,5 @@
-#include <Tinyxml\tinyxml.h>
 #include "AnimationComponent.h"
+#include "../Actor.h"
 #include "../../GameApp/BaseGameApp.h"
 #include "../../Resource/Loaders/AniLoader.h"
 #include "RenderComponent.h"

@@ -1,4 +1,4 @@
-#include <Tinyxml\tinyxml.h>
+#include <tinyxml.h>
 
 #include "../SharedDefines.h"
 #include "Actor.h"

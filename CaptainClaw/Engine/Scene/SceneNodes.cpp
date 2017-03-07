@@ -103,7 +103,8 @@ bool SceneNode::VIsVisible(Scene* pScene) const
     SDL_Rect actorRect = m_pRenderComponent->VGetPositionRect();
 
     SDL_Rect result;
-    if (!SDL_IntersectRect(&cameraRect, &(m_pRenderComponent->VGetPositionRect()), &result))
+    SDL_Rect position = m_pRenderComponent->VGetPositionRect();
+    if (!SDL_IntersectRect(&cameraRect, &position, &result))
     {
         return false;
     }

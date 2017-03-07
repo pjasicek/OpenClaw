@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 #include <stdint.h>
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include <SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 const SDL_Color COLOR_RED = { 255, 0, 0, 255 };
 const SDL_Color COLOR_GREEN = { 0, 255, 0, 255 };

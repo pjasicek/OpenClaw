@@ -1,9 +1,9 @@
 #ifndef __BASEGAMEAPP_H__
 #define __BASEGAMEAPP_H__
 
-#include <Tinyxml\tinyxml.h>
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include <tinyxml.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "../SharedDefines.h"
 
 #include "../UserInterface/Console.h"

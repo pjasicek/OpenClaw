@@ -5,13 +5,12 @@
 #include <stdint.h>
 #include <functional>
 
-#include "Actor.h"
-#include "ActorFactory.h"
 #include "../Util/StringUtil.h"
 
 #include "ActorTemplates.h"
 
 #include "../SharedDefines.h"
+#include "ActorFactory.h"
 
 class ActorComponent
 {
@@ -35,8 +34,7 @@ public:
     virtual uint32 VGetId() const { return GetIdFromName(VGetName()); }
     static uint32 GetIdFromName(const char* componentName)
     {
-        void* rawId = HashName(componentName);
-        return reinterpret_cast<uint32>(rawId);
+        return HashName(componentName);
     }
 
 protected:

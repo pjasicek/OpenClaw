@@ -1,4 +1,3 @@
-#include <Tinyxml\tinyxml.h>
 #include "SoundComponent.h"
 #include "../../GameApp/BaseGameApp.h"
 #include "../../Resource/Loaders/WavLoader.h"

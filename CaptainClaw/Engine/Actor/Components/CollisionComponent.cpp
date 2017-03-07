@@ -1,4 +1,3 @@
-#include <Tinyxml\tinyxml.h>
 #include "CollisionComponent.h"
 
 const char* CollisionComponent::g_Name = "CollisionComponent";

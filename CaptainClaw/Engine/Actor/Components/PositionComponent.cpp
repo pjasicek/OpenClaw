@@ -1,4 +1,3 @@
-#include <Tinyxml\tinyxml.h>
 #include "PositionComponent.h"
 
 const char* PositionComponent::g_Name = "PositionComponent";

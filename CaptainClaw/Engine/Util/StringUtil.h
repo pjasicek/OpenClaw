@@ -30,7 +30,7 @@ extern std::string ToStr(bool val);
 // "one", "two", "three"
 void Split(const std::string& str, std::vector<std::string>& vec, char delimiter);
 
-void* HashName(char const* identStr);
+unsigned long HashName(char const* identStr);
 
 std::string GetBaseName(std::string& path);
 std::string RemoveExtension(std::string& fileName);

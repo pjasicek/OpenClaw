@@ -12,23 +12,7 @@
 #include "libwap.h"
 #include <iostream>
 
-#define NOMINMAX
-#include <Windows.h>
-#include <iostream>
-
 using namespace std;
-#define START_QUERY_PERFORMANCE_TIMER \
-    LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds; \
-    LARGE_INTEGER Frequency; \
-    QueryPerformanceFrequency(&Frequency); \
-    QueryPerformanceCounter(&StartingTime); \
-
-#define END_QUERY_PERFORMANCE_TIMER \
-    QueryPerformanceCounter(&EndingTime); \
-    ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart; \
-    ElapsedMicroseconds.QuadPart *= 1000000; \
-    ElapsedMicroseconds.QuadPart /= Frequency.QuadPart; \
-    std::cout << "Elapsed microseconds: " << ElapsedMicroseconds.QuadPart << std::endl; \
 
 /*************************************************************************/
 /**************************** PRIVATE STRUCTURES *************************/
@@ -183,7 +167,7 @@ void WAP_FreeFileData(RezFile* rezFile)
     g_rezFileDataMap.erase(rezFile);
 }
 
-static RezFile* GetChildFile(RezDirectory* rezFileDirectory, std::string& fileName)
+static RezFile* GetChildFile(RezDirectory* rezFileDirectory, std::string fileName)
 {
     uint32_t i;
     RezFile* searchedFile = NULL;

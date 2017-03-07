@@ -98,9 +98,22 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                         }*/
                         b2Vec2 relativePoint = pFixtureA->GetBody()->GetLocalPoint(worldManifold.points[pointIdx]);
                         //LOG("Relative point Y: " + ToStr(relativePoint.y));
-                        float platformFaceY = 0.5f;//front of platform, from fixture definition :(
+                        float platformFaceY = 0.3f;//front of platform, from fixture definition :(
                         if (relativePoint.y < platformFaceY - 0.05)
                         {
+                            /*Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                            if (pActor->GetName() == "Claw")
+                            {
+                                LOG("y: " + ToStr(relativePoint.y));
+                                LOG("x: " + ToStr(relativePoint.x));
+                            }*/
+                            //TODO: I DONT KNOW WHY BUT IT WORKS (not really tho)
+                            // It caused bugs with colliding with grounds from the side from "downtown"
+                            if (fabs(relativePoint.y) < 0.1f && fabs(relativePoint.x) > 0.3f)
+                            {
+                                return;
+                            }
+                            
                             pFixtureB->GetBody()->SetTransform(b2Vec2(pFixtureB->GetBody()->GetPosition().x - 2, pFixtureA->GetAABB(0).lowerBound.y), 0);
                             pContact->SetEnabled(true);
                             pPhysicsComponent->AddOverlappingGround(pFixtureA);

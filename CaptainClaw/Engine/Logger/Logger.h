@@ -1,7 +1,7 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <string>
 #include <memory.h>
 

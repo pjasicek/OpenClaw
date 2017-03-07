@@ -1,7 +1,7 @@
 #ifndef __PHYSICSDEBUGDRAWER_H__
 #define __PHYSICSDEBUGDRAWER_H__
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "ClawPhysics.h"
 
 class CameraNode;

@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <libwap.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "../SharedDefines.h"
 
 struct TileCollisionPrototype;

@@ -25,7 +25,7 @@
 
 const float METERS_TO_PIXELS = 75.0f;
 
-b2Vec2 PixelsToMeters(b2Vec2& pixels)
+b2Vec2 PixelsToMeters(const b2Vec2& pixels)
 {
     return b2Vec2(pixels.x / METERS_TO_PIXELS, pixels.y / METERS_TO_PIXELS);
 }
@@ -45,7 +45,7 @@ float MetersToPixels(float pixels)
     return pixels * METERS_TO_PIXELS;
 }
 
-Point b2Vec2ToPoint(b2Vec2& vec)
+Point b2Vec2ToPoint(const b2Vec2& vec)
 {
     return Point(vec.x, vec.y);
 }

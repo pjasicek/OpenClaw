@@ -4,6 +4,8 @@
 #include <SDL_mixer.h>
 #include <Tinyxml/tinyxml.h>
 #include "../ResourceCache.h"
+#include <SDL2/SDL_mixer.h>
+#include <tinyxml.h>
 
 class WavResourceExtraData : public IResourceExtraData
 {

@@ -2,6 +2,7 @@
 
 #include "../../../Events/EventMgr.h"
 #include "../../../Events/Events.h"
+#include "../../Actor.h"
 
 const char* ScoreComponent::g_Name = "ScoreComponent";
 

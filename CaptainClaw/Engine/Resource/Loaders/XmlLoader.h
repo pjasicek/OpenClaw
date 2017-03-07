@@ -1,7 +1,7 @@
 #ifndef XMLLOADER_H_
 #define XMLLOADER_H_
 
-#include <Tinyxml\tinyxml.h>
+#include <tinyxml.h>
 #include "../ResourceCache.h"
 
 class XmlResourceExtraData : public IResourceExtraData

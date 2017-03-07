@@ -7,11 +7,15 @@
 extern "C" {
 #endif
 
+#ifdef _WIN32
 #ifdef LIBWAP_EXPORTS
 #define LIBWAP_API __declspec(dllexport)
 #else
 #define LIBWAP_API __declspec(dllimport)
 #endif //LIBWAP_EXPORTS
+#else
+#define LIBWAP_EXPORTS
+#endif
 
 #include <stdint.h>
 
