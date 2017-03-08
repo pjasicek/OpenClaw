@@ -2,7 +2,6 @@
 #define __ACTOR_TEMPLATES_H__
 
 #include "../SharedDefines.h"
-#include "Actor.h"
 
 namespace ActorTemplates
 {

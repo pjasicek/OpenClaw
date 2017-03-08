@@ -2,7 +2,7 @@
 #define WWDLOADER_H_
 
 #include <libwap.h>
-#include <Tinyxml\tinyxml.h>
+#include <tinyxml.h>
 #include "../ResourceCache.h"
 
 class WwdResourceExtraData : public IResourceExtraData
