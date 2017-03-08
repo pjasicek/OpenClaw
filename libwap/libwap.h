@@ -14,10 +14,11 @@ extern "C" {
 #define LIBWAP_API __declspec(dllimport)
 #endif //LIBWAP_EXPORTS
 #else
-#define LIBWAP_EXPORTS
+#define LIBWAP_API
 #endif
 
 #include <stdint.h>
+#include <stdlib.h>
 
 /***************************************************************/
 /********************* REZ FORMAT ******************************/
