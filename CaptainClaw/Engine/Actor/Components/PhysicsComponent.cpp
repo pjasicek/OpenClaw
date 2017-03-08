@@ -436,6 +436,10 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         else if (m_pControllableComponent->IsDucking())
         {
             m_pControllableComponent->OnStand();
+        }
+
+        if (!m_pControllableComponent->IsDucking())
+        {
             // TODO: HACK: one of the biggest hacks so far
             m_pPhysics->VScaleActor(_owner->GetGUID(), 2.0);
         }
