@@ -37,6 +37,8 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                 pFixtureB->GetUserData() == (void*)FixtureType_Death)
             {
                 shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pFixtureA->GetBody());
+                assert(pPhysicsComponent != nullptr);
+
                 pPhysicsComponent->OnBeginFootContact();
             }
         }
@@ -53,6 +55,8 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
             if (pFixtureB->GetBody()->GetType() == b2_dynamicBody)
             {
                 shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pFixtureB->GetBody());
+                assert(pPhysicsComponent != nullptr);
+
                 pPhysicsComponent->AddOverlappingLadder(pFixtureA);
             }
         }
@@ -69,6 +73,11 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
             if (pFixtureB->GetBody()->GetType() == b2_dynamicBody/* && pFixtureB->GetUserData() != (void*)FixtureType_Trigger*/)
             {
                 shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pFixtureB->GetBody());
+                if (pPhysicsComponent == nullptr)
+                {
+                    LOG_ERROR("Ground fixture: Box2D step with already deleted physics component !");
+                    return;
+                }
                 //LOG("bodyAABB y: " + ToStr(MetersToPixels(bodyAABB.upperBound.y)) + ", Fixture lower: " + ToStr(MetersToPixels(pFixtureA->GetAABB(0).lowerBound.y)));
 
                 int numPoints = pContact->GetManifold()->pointCount;
@@ -114,7 +123,6 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                                 return;
                             }
                             
-                            pFixtureB->GetBody()->SetTransform(b2Vec2(pFixtureB->GetBody()->GetPosition().x - 2, pFixtureA->GetAABB(0).lowerBound.y), 0);
                             pContact->SetEnabled(true);
                             pPhysicsComponent->AddOverlappingGround(pFixtureA);
                         }
@@ -344,6 +352,8 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                 pFixtureB->GetUserData() == (void*)FixtureType_Death)
             {
                 shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pFixtureA->GetBody());
+                assert(pPhysicsComponent != nullptr);
+
                 pPhysicsComponent->OnEndFootContact();
             }
         }
@@ -360,6 +370,8 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
             if (pFixtureB->GetBody()->GetType() == b2_dynamicBody)
             {
                 shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pFixtureB->GetBody());
+                assert(pPhysicsComponent != nullptr);
+
                 pPhysicsComponent->RemoveOverlappingLadder(pFixtureA);
             }
         }
