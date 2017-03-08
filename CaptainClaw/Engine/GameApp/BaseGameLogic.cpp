@@ -9,6 +9,7 @@
 #include "BaseGameLogic.h"
 
 #include <algorithm>
+#include <fstream>
 
 //=================================================================================================
 //
@@ -262,6 +263,10 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     LOG("Level created date: " + m_pCurrentLevel->m_LevelCreatedDate);
 
     SAFE_DELETE(pXmlLevelRoot);
+
+    // TODO: This is a bit hacky but it helps with development (prevents entering cheats over and over again). It can be data driven.
+    LOG("Loading startup ingame commands...");
+    ExecuteStartupCommands(g_pApp->GetGameConfig()->startupCommandsFile);
 
     return true;
 }
@@ -523,4 +528,17 @@ void BaseGameLogic::RemoveAllDelegates()
 {
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::CollideableTileCreatedDelegate), EventData_Collideable_Tile_Created::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::RequestDestroyActorDelegate), EventData_Destroy_Actor::sk_EventType);
+}
+
+void BaseGameLogic::ExecuteStartupCommands(const std::string& startupCommandsFile)
+{
+    std::ifstream commandsFile(startupCommandsFile);
+    if (commandsFile.is_open())
+    {
+        std::string line;
+        while (std::getline(commandsFile, line))
+        {
+            CommandHandler::HandleCommand(line.c_str(), (void*)g_pApp->GetHumanView()->GetConsole().get());
+        }
+    }
 }

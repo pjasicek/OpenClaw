@@ -34,6 +34,13 @@ struct GameOptions
 
         resourceFileNames.push_back("CLAW.REZ");
         resourceCacheSize = 50;
+
+        startupCommandsFile = "startup_commands.txt";
+    }
+
+    GameOptions()
+    {
+        startupCommandsFile = "startup_commands.txt";
     }
 
     // Display options
@@ -61,6 +68,9 @@ struct GameOptions
 
     // Console config
     ConsoleConfig consoleConfig;
+
+    // File with prewritten commands which are executed upon startup of the game
+    std::string startupCommandsFile;
 };
 
 // Cheats and stuff
@@ -151,6 +161,8 @@ public:
     GameCheats* GetGameCheats() { return &m_GameCheats; }
 
     const ConsoleConfig* GetConsoleConfig() const { return &m_GameOptions.consoleConfig; }
+
+    const GameOptions* GetGameConfig() const { return &m_GameOptions; }
 
 protected:
     virtual void VRegisterGameEvents() { }

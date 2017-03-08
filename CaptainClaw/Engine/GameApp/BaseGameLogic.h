@@ -113,6 +113,8 @@ protected:
     Point m_CurrentSpawnPosition;
 
 private:
+    void ExecuteStartupCommands(const std::string& startupCommandsFile);
+
     void RegisterAllDelegates();
     void RemoveAllDelegates();
 };

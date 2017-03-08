@@ -36,6 +36,7 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
 
 
     std::string commandStr = command;
+    std::transform(commandStr.begin(), commandStr.end(), commandStr.begin(), ::tolower);
     bool wasCommandExecuted = false;
 
     COMMAND_SET_BOOL_VALUE("InfiniteAmmo", g_pApp->m_GameCheats.clawInfiniteAmmo);
@@ -43,7 +44,7 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
     COMMAND_SET_BOOL_VALUE("InfiniteJump", g_pApp->m_GameCheats.clawInfiniteJump);
     COMMAND_SET_BOOL_VALUE("PhysicsDebug", g_pApp->m_GameCheats.showPhysicsDebug);
 
-    if (commandStr == "Catnip")
+    if (commandStr == "catnip")
     {
         if (StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor())
         {
@@ -54,6 +55,11 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
             pPowerupComponent->ApplyPowerup(PowerupType_Catnip, 30000);
             wasCommandExecuted = true;
             pConsole->AddLine("Catnip buff ON for 30 seconds.", COLOR_GREEN);
+        }
+        else
+        {
+            pConsole->AddLine("Claw is not yet created, cannot apply Catnip buff", COLOR_RED);
+            return;
         }
     }
 

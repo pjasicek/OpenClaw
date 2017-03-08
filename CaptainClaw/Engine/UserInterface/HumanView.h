@@ -46,6 +46,8 @@ public:
 
     void RegisterConsoleCommandHandler(void(*handler)(const char*, void*), void* userdata);
 
+    shared_ptr<Console> GetConsole() const { return m_pConsole; }
+
 protected:
     virtual bool VLoadGameDelegate(TiXmlElement* levelData) { VPushElement(m_pScene); return true; }
 
@@ -71,7 +73,7 @@ protected:
     shared_ptr<ScreenElementScene> m_pScene;
     shared_ptr<ScreenElementHUD> m_pHUD;
     shared_ptr<CameraNode> m_pCamera;
-    unique_ptr<Console> m_pConsole;
+    shared_ptr<Console> m_pConsole;
 
     shared_ptr<IKeyboardHandler> m_pKeyboardHandler;
     shared_ptr<IPointerHandler> m_pPointerHandler;
