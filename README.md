@@ -14,6 +14,7 @@
 For all platforms you will need original CLAW.REZ game archive from original game
 ### Windows
   - Project contains VS2013 solution with all libraries and include directories preset
+
 ### Linux
   - CMake is on the way
  
