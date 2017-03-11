@@ -1,7 +1,6 @@
 #ifndef MIDILOADER_H_
 #define MIDILOADER_H_
 
-#include <SDL_mixer.h>
 #include <Tinyxml/tinyxml.h>
 #include "../ResourceCache.h"
 
