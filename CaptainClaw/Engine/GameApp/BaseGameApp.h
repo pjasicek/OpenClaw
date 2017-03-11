@@ -112,8 +112,8 @@ public:
     BaseGameApp();
 
     // Muset be defined in inherited class
-    virtual char* VGetGameTitle() = 0;
-    virtual char* VGetGameAppDirectory() = 0;
+    virtual const char* VGetGameTitle() = 0;
+    virtual const char* VGetGameAppDirectory() = 0;
     virtual BaseGameLogic* VCreateGameAndView() = 0;
 
     // Icon ?
