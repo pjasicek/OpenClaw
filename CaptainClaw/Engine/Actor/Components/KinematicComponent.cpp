@@ -8,6 +8,9 @@
 #include "PhysicsComponent.h"
 #include "../../Physics/ClawPhysics.h"
 
+#include "../../Events/EventMgr.h"
+#include "../../Events/Events.h"
+
 const char* KinematicComponent::g_Name = "KinematicComponent";
 
 KinematicComponent::KinematicComponent()
@@ -22,12 +25,12 @@ KinematicComponent::KinematicComponent()
     m_IsTriggerElevator(false),
     m_IsTriggered(true)
 {
-
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &KinematicComponent::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
 }
 
 KinematicComponent::~KinematicComponent()
 {
-
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &KinematicComponent::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
 }
 
 bool KinematicComponent::VInit(TiXmlElement* data)
@@ -96,14 +99,15 @@ void KinematicComponent::VPostInit()
     assert(pPositionComponent);
 
     m_pPositionComponent = pPositionComponent.get();
+    
     /*if (m_pPositionComponent->GetX() < m_MinPosition.x)
     {
         LOG("SETTING");
         m_pPositionComponent->SetX(m_MinPosition.x);
     }*/
 
+    m_InitialPosition = m_pPositionComponent->GetPosition();
     m_LastPosition = m_pPositionComponent->GetPosition();
-
     m_CurrentSpeed = m_Speed;
 
     if (m_IsTriggerElevator || m_IsStartElevator)
@@ -270,4 +274,17 @@ void KinematicComponent::OnMoved(Point newPosition)
     }
 
     m_LastPosition = newPosition;
+}
+
+// After claw dies, set elevators to default position
+void KinematicComponent::ClawDiedDelegate(IEventDataPtr pEventData)
+{
+    if (m_IsTriggerElevator)
+    {
+        m_IsTriggered = false;
+        m_CurrentSpeed = Point(0, 0);
+    }
+
+    m_pPositionComponent->SetPosition(m_InitialPosition);
+    m_pPhysics->VSetPosition(_owner->GetGUID(), m_InitialPosition);
 }

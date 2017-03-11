@@ -4,7 +4,7 @@
 
 int RunGameEngine(int argc, char** argv)
 {
-    if (SDL_ThreadPriority(SDL_THREAD_PRIORITY_HIGH) != 0)
+    if (SDL_SetThreadPriority(SDL_THREAD_PRIORITY_HIGH) != 0)
     {
         LOG_WARNING("Failed to set high priority class to this process");
     }

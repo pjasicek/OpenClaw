@@ -33,7 +33,11 @@ public:
 
     void OnMoved(Point newPosition);
 
+    void ClawDiedDelegate(IEventDataPtr pEventData);
+
 private:
+    Point m_InitialPosition;
+
     // Type
     bool m_IsStartElevator;
     bool m_IsTriggerElevator;

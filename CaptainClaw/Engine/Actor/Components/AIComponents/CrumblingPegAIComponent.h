@@ -27,6 +27,8 @@ public:
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
 
+    void ClawDiedDelegate(IEventDataPtr pEventData);
+
 private:
     Point m_Size;
     shared_ptr<IGamePhysics> m_pPhysics;

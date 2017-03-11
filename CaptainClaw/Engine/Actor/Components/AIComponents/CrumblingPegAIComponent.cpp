@@ -18,11 +18,13 @@ CrumblingPegAIComponent::CrumblingPegAIComponent()
     :
     m_Size(Point(0, 0)),
     m_pPhysics(nullptr)
-{ }
+{
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &CrumblingPegAIComponent::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
+}
 
 CrumblingPegAIComponent::~CrumblingPegAIComponent()
 {
-
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &CrumblingPegAIComponent::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
 }
 
 bool CrumblingPegAIComponent::VInit(TiXmlElement* data)
@@ -57,8 +59,6 @@ TiXmlElement* CrumblingPegAIComponent::VGenerateXml()
 {
     TiXmlElement* baseElement = new TiXmlElement(VGetName());
 
-    //
-
     return baseElement;
 }
 
@@ -66,20 +66,20 @@ void CrumblingPegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, An
 {
     if (pNewFrame->idx == 9)
     {
-        m_pPhysics->VRemoveActor(_owner->GetGUID());
+        m_pPhysics->VDeactivate(_owner->GetGUID());
     }
     // TODO: VOnAnimationLooped not working prop
     if (pAnimation->IsAtLastAnimFrame())
     {
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
-        IEventMgr::Get()->VQueueEvent(pEvent);
+        pAnimation->Pause();
+        auto pARC = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+        pARC->SetHidden(true);
     }
 }
 
 void CrumblingPegAIComponent::VOnAnimationLooped(Animation* pAnimation)
 {
-    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
-    IEventMgr::Get()->VQueueEvent(pEvent);
+
 }
 
 void CrumblingPegAIComponent::OnContact(b2Body* pBody)
@@ -88,4 +88,19 @@ void CrumblingPegAIComponent::OnContact(b2Body* pBody)
         MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
     pAnimationComponent->ResumeAnimation();
+}
+
+// After claw dies, "recreate" crumbling pegs
+void CrumblingPegAIComponent::ClawDiedDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<AnimationComponent> pAnimationComponent =
+        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+    pAnimationComponent->GetCurrentAnimation()->Reset();
+    pAnimationComponent->GetCurrentAnimation()->Pause();
+
+    auto pARC = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+    pARC->SetHidden(false);
+    pARC->SetImage(pAnimationComponent->GetCurrentAnimation()->GetCurrentAnimationFrame()->imageName);
+
+    m_pPhysics->VActivate(_owner->GetGUID());
 }
