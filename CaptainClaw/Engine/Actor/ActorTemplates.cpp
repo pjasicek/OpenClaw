@@ -212,7 +212,7 @@ namespace ActorTemplates
 
     std::string GetImageSetFromScoreCount(int score)
     {
-        if (score == 0) { return "/GAME/IMAGES/POINTS/FRAME0.PID"; }
+        if (score == 0) { return "/GAME/IMAGES/POINTS/FRAME0*"; }
         if (score == 100) { return "/GAME/IMAGES/POINTS/FRAME1*"; }
         else if (score == 500) { return "/GAME/IMAGES/POINTS/FRAME2*"; }
         else if (score == 1500) { return "/GAME/IMAGES/POINTS/FRAME3*"; }

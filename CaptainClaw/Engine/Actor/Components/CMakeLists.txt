@@ -20,6 +20,7 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/RenderComponentInterface.h
     ${CMAKE_CURRENT_SOURCE_DIR}/SoundComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Template.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/PredefinedMoveComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/AnimationComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Animation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/AreaDamageComponent.cpp
@@ -37,6 +38,7 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/RenderComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SoundComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Template.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/PredefinedMoveComponent.cpp
 )
 
 add_subdirectory(AIComponents)
