@@ -129,7 +129,7 @@ StrongActorPtr ActorFactory::CreateActor(const char* actorResource, TiXmlElement
     if (root == NULL)
     {
         LOG_ERROR("Could not load XML root node");
-        return false;
+        return nullptr;
     }
 
     return CreateActor(root, overrides);
