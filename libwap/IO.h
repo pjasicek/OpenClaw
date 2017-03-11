@@ -67,7 +67,7 @@ private:
         T tmp = val;
         read_write_impl(tmp);
         if (!Output && tmp != val)
-            throw std::exception::exception("Error: void read_write_impl(const T &val)\n");
+            throw std::runtime_error("Error: void read_write_impl(const T &val)\n");
     }
 
     template <typename T>
@@ -75,7 +75,7 @@ private:
     {
         if (m_offset > m_buffer_size - sizeof(T))
         {
-            throw std::exception::exception("Error: Invalid data\n");
+            throw std::runtime_error("Error: Invalid data\n");
         }
         char *val_ptr = reinterpret_cast<char *>(&val);
         BasicStreamHelper<Output>::memcpy(val_ptr, m_buffer + m_offset, sizeof(T));

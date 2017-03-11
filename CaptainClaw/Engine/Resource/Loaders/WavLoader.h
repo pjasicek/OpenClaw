@@ -1,7 +1,6 @@
 #ifndef WAVLOADER_H_
 #define WAVLOADER_H_
 
-#include <SDL_mixer.h>
 #include <Tinyxml/tinyxml.h>
 #include "../ResourceCache.h"
 #include <SDL2/SDL_mixer.h>
