@@ -1,0 +1,46 @@
+cmake_minimum_required(VERSION 3.5)
+
+target_sources(captainclaw
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/AnimationComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Animation.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/AreaDamageComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/CheckpointComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/CollisionComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ControllableComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/DestroyableComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ExplodeableComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/GlitterComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/KinematicComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/LootComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/PhysicsComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/PositionComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/PowerupSparkleAIComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/RenderComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/RenderComponentInterface.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/SoundComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Template.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/AnimationComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Animation.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/AreaDamageComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/CheckpointComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/CollisionComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ControllableComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/DestroyableComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ExplodeableComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/GlitterComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/KinematicComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/LootComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/PhysicsComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/PositionComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/PowerupSparkleAIComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RenderComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/SoundComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Template.cpp
+)
+
+add_subdirectory(AIComponents)
+add_subdirectory(ControllerComponents)
+add_subdirectory(EnemyAI)
+add_subdirectory(PickupComponents)
+add_subdirectory(TriggerComponents)
