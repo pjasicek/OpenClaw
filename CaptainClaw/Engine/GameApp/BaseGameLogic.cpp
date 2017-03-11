@@ -257,6 +257,11 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     m_CurrentSpawnPosition = GetSpawnPosition(m_pCurrentLevel->m_LeveNumber, m_pCurrentLevel->m_LoadedCheckpoint);
     //pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(clawId, m_CurrentSpawnPosition)));
 
+    // Start playing background music
+    std::string backgroundMusicPath = "/LEVEL" + ToStr(m_pCurrentLevel->GetLevelNumber()) +
+        "/MUSIC/PLAY.XMI";
+    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Request_Play_Sound(backgroundMusicPath, 6, true)));
+
     LOG("Level loaded !");
     LOG("Level name: " + m_pCurrentLevel->m_LevelName);
     LOG("Level author: " + m_pCurrentLevel->m_LevelAuthor);

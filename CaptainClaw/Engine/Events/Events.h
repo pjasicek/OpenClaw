@@ -2004,4 +2004,39 @@ private:
     uint32 m_ActorId;
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Request_Play_Sound
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Request_Play_Sound : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Request_Play_Sound(std::string soundPath, uint32 volume, bool isMusic)
+    {
+        m_MusicPath = soundPath;
+        m_Volume = volume;
+        m_bIsMusic = isMusic;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Request_Play_Sound(m_MusicPath, m_Volume, m_bIsMusic));
+    }
+    virtual void VSerialize(std::ostrstream& out) const { out << m_MusicPath << m_Volume << m_bIsMusic; }
+    virtual void VDeserialize(std::istrstream& in) { in >> m_MusicPath >> m_Volume >> m_bIsMusic; }
+
+    std::string GetSoundPath() const { return m_MusicPath; }
+    uint32 GetVolume() const { return m_Volume; }
+    bool IsMusic() const { return m_bIsMusic; }
+
+    virtual const char* GetName(void) const { return "EventData_Request_Play_Sound"; }
+
+private:
+    std::string m_MusicPath;
+    uint32 m_Volume;
+    bool m_bIsMusic;
+};
+
 #endif

@@ -3,7 +3,7 @@
 #include "../../GameApp/BaseGameApp.h"
 
 //=================================================================================================
-// class WavResourceExtraData
+// class MidiResourceExtraData
 //
 //     This class implements the IResourceExtraData
 //
@@ -33,9 +33,9 @@ void MidiResourceExtraData::LoadMidiFile(char* rawBuffer, uint32 size)
 }
 
 //=================================================================================================
-// class WavResourceLoader
+// class MidiResourceLoader
 //
-//     This class implements the IResourceLoader interface with WAV sound format
+//     This class implements the IResourceLoader interface with Midi "file handle"
 //
 
 bool MidiResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle)

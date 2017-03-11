@@ -3,6 +3,9 @@
 #include "../GameApp/BaseGameLogic.h"
 #include "../Events/EventMgr.h"
 #include "../Events/Events.h"
+#include "../Audio/Audio.h"
+#include "../Resource/Loaders/MidiLoader.h"
+#include "../Resource/Loaders/WavLoader.h"
 
 const uint32 g_InvalidGameViewId = 0xFFFFFFFF;
 
@@ -201,6 +204,7 @@ void HumanView::RegisterAllDelegates()
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::AmmoTypeUpdatedDelegate), EventData_Updated_Ammo_Type::sk_EventType);
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::PowerupUpdatedTimeDelegate), EventData_Updated_Powerup_Time::sk_EventType);
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::PowerupUpdatedStatusDelegate), EventData_Updated_Powerup_Status::sk_EventType);
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::RequestPlaySoundDelegate), EventData_Request_Play_Sound::sk_EventType);
 }
 
 void HumanView::RemoveAllDelegates()
@@ -214,6 +218,7 @@ void HumanView::RemoveAllDelegates()
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::AmmoTypeUpdatedDelegate), EventData_Updated_Ammo_Type::sk_EventType);
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::PowerupUpdatedTimeDelegate), EventData_Updated_Powerup_Time::sk_EventType);
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::PowerupUpdatedStatusDelegate), EventData_Updated_Powerup_Status::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::RequestPlaySoundDelegate), EventData_Request_Play_Sound::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -360,5 +365,31 @@ void HumanView::PowerupUpdatedStatusDelegate(IEventDataPtr pEventData)
     else
     {
         LOG_ERROR("HUD is unitialized");
+    }
+}
+
+// TODO: Handle somehow volume of specific track
+// Mix_VolumeChunk for sound
+// Music has only 1 channel as far as I know so setting volume for music globally should be fine
+void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Request_Play_Sound> pCastEventData = static_pointer_cast<EventData_Request_Play_Sound>(pEventData);
+    if (pCastEventData)
+    {
+        if (pCastEventData->IsMusic()) // Background music - instrumental
+        {
+            shared_ptr<MidiFile> pMidiFile = MidiResourceLoader::LoadAndReturnMidiFile(pCastEventData->GetSoundPath().c_str());
+            assert(pMidiFile != nullptr);
+
+            g_pApp->GetAudio()->PlayMusic(pMidiFile->data, pMidiFile->size, true);
+            g_pApp->GetAudio()->SetMusicVolume(pCastEventData->GetVolume());
+        }
+        else // Effect / Speech etc. - WAV
+        {
+            shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(pCastEventData->GetSoundPath().c_str());
+            assert(pSound != nullptr);
+
+            g_pApp->GetAudio()->PlaySound(pSound.get(), false);
+        }
     }
 }

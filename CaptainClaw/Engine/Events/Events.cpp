@@ -38,6 +38,7 @@ const EventType EventData_Updated_Powerup_Status::sk_EventType(0xe0b1d14d);
 const EventType EventData_Modify_Player_Stat::sk_EventType(0xbcf3d9f5);
 const EventType EventData_Checkpoint_Reached::sk_EventType(0xcf204982);
 const EventType EventData_Claw_Died::sk_EventType(0x6b32b1af);
+const EventType EventData_Request_Play_Sound::sk_EventType(0x6abcb1af);
 
 /*bool EventData_PlaySound::VBuildEventFromScript(void)
 {
