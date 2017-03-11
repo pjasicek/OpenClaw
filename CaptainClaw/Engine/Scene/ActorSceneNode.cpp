@@ -55,8 +55,8 @@ void SDL2ActorSceneNode::VRender(Scene* pScene)
     int32 offsetY = arc->IsInverted() ? -actorImage->GetOffsetY() : actorImage->GetOffsetY();
     SDL_Rect renderRect =
     {
-        m_Properties.GetPosition().x - actorImage->GetWidth() / 2  + offsetX - cameraRect.x,
-        m_Properties.GetPosition().y - actorImage->GetHeight() / 2 + offsetY - cameraRect.y,
+        (int)m_Properties.GetPosition().x - actorImage->GetWidth() / 2  + offsetX - cameraRect.x,
+        (int)m_Properties.GetPosition().y - actorImage->GetHeight() / 2 + offsetY - cameraRect.y,
         actorImage->GetWidth(),
         actorImage->GetHeight()
     };

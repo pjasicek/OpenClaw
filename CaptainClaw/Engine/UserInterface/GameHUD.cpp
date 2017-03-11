@@ -79,12 +79,12 @@ void ScreenElementHUD::VOnLostDevice()
 
 void ScreenElementHUD::VOnRender(uint32 msDiff)
 {
-    uint32 cameraWidth = m_pCamera->GetWidth();
+    int cameraWidth = m_pCamera->GetWidth();
 
     if (IsElementVisible("score"))
     {
         // Render score numbers
-        for (uint32 i = 0; i < SCORE_NUMBERS_COUNT; i++)
+        for (int i = 0; i < SCORE_NUMBERS_COUNT; i++)
         {
             SDL_Rect renderRect = { 40 + i * 13, 5, m_ScoreNumbers[i]->GetWidth(), m_ScoreNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_ScoreNumbers[i]->GetTexture(), NULL, &renderRect);
@@ -94,7 +94,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
     if (IsElementVisible("health"))
     {
         // Render health numbers
-        for (uint32 i = 0; i < HEALTH_NUMBERS_COUNT; i++)
+        for (int i = 0; i < HEALTH_NUMBERS_COUNT; i++)
         {
             SDL_Rect renderRect = { cameraWidth - 60 + i * (m_HealthNumbers[i]->GetWidth() - 2), 2, m_HealthNumbers[i]->GetWidth(), m_HealthNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_HealthNumbers[i]->GetTexture(), NULL, &renderRect);
@@ -104,7 +104,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
     if (IsElementVisible("pistol") || IsElementVisible("dynamite") || IsElementVisible("magic"))
     {
         // Render ammo numbers
-        for (uint32 i = 0; i < AMMO_NUMBERS_COUNT; i++)
+        for (int i = 0; i < AMMO_NUMBERS_COUNT; i++)
         {
             SDL_Rect renderRect = { cameraWidth - 46 + i * (m_AmmoNumbers[i]->GetWidth()), 43, m_AmmoNumbers[i]->GetWidth(), m_AmmoNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_AmmoNumbers[i]->GetTexture(), NULL, &renderRect);
@@ -114,7 +114,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
     if (IsElementVisible("lives"))
     {
         // Render lives numbers
-        for (uint32 i = 0; i < LIVES_NUMBERS_COUNT; i++)
+        for (int i = 0; i < LIVES_NUMBERS_COUNT; i++)
         {
             SDL_Rect renderRect = { cameraWidth - 36 + i * (m_AmmoNumbers[i]->GetWidth()), 71, m_LivesNumbers[i]->GetWidth(), m_LivesNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_LivesNumbers[i]->GetTexture(), NULL, &renderRect);
@@ -124,7 +124,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
     if (IsElementVisible("stopwatch"))
     {
         // Render stopwatch numbers
-        for (uint32 i = 0; i < STOPWATCH_NUMBERS_COUNT; i++)
+        for (int i = 0; i < STOPWATCH_NUMBERS_COUNT; i++)
         {
             SDL_Rect renderRect = { 40 + i * 13, 45, m_StopwatchNumbers[i]->GetWidth(), m_StopwatchNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_StopwatchNumbers[i]->GetTexture(), NULL, &renderRect);

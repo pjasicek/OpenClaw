@@ -1312,7 +1312,7 @@ uint32 ClawPhysics::FindActorId(b2Body* pBody)
 
 IGamePhysics* CreateClawPhysics()
 {
-    std::auto_ptr<IGamePhysics> pClawPhysics;
+    std::unique_ptr<IGamePhysics> pClawPhysics;
     pClawPhysics.reset(new ClawPhysics);
 
     if (pClawPhysics.get() && !pClawPhysics->VInitialize())

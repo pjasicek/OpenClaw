@@ -146,7 +146,7 @@ SDL_Rect TriggerComponent::GetTriggerArea()
     }
 
     Point triggerPosition = pPositionComponent->GetPosition();
-    triggerArea = { triggerPosition.x, triggerPosition.y, m_Size.x, m_Size.y };
+    triggerArea = { (int)triggerPosition.x, (int)triggerPosition.y, (int)m_Size.x, (int)m_Size.y };
 
     return triggerArea;
 }

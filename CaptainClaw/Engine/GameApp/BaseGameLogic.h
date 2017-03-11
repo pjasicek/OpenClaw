@@ -147,12 +147,12 @@ struct TileRect
 
 struct TileDescription
 {
-    int32 tileId;
-    int32 type;
-    uint32 width;
-    uint32 height;
-    int32 insideAttrib;
-    int32 outsideAttrib;
+    int tileId;
+    int type;
+    int width;
+    int height;
+    int insideAttrib;
+    int outsideAttrib;
     TileRect rect;
 };
 

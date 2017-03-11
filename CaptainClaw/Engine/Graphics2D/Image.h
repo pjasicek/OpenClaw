@@ -14,10 +14,10 @@ public:
     static Image* CreateImage(WapPid* pid, SDL_Renderer* renderer);
 
     inline SDL_Texture* GetTexture() { return _texture; }
-    inline uint32_t GetWidth() { return _width; }
-    inline uint32_t GetHeight() { return _height; }
-    inline int32_t GetOffsetX() { return _offsetX; }
-    inline int32_t GetOffsetY() { return _offsetY; }
+    inline int GetWidth() { return _width; }
+    inline int GetHeight() { return _height; }
+    inline int GetOffsetX() { return _offsetX; }
+    inline int GetOffsetY() { return _offsetY; }
 
     void SetOffset(int x, int y) { _offsetX = x; _offsetY = y; }
 
@@ -27,10 +27,10 @@ private:
     bool Initialize(WapPid* pid, SDL_Renderer* renderer);
 
     SDL_Texture* _texture;
-    uint32_t _width;
-    uint32_t _height;
-    int32_t _offsetX;
-    int32_t _offsetY;
+    int _width;
+    int _height;
+    int _offsetX;
+    int _offsetY;
 };
 
 #endif

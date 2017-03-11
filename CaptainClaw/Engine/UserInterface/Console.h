@@ -101,12 +101,12 @@ private:
 
     SDL_Rect GetRenderRect();
 
-    uint16_t _width;
-    uint16_t _height;
-    uint16_t _totalHeight;
+    int _width;
+    int _height;
+    int _totalHeight;
 
-    int16_t _x;
-    int16_t _y;
+    int _x;
+    int _y;
 
     double _animationOffsetY;
 

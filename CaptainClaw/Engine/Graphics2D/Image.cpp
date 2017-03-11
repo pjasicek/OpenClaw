@@ -23,8 +23,8 @@ Image::~Image()
 
 SDL_Rect Image::GetPositonRect(int32_t x, int32_t y)
 {
-    int32_t positionX = x - _width / 2 + _offsetX;
-    int32_t positionY = y - _height / 2 + _offsetY;
+    int positionX = x - _width / 2 + _offsetX;
+    int positionY = y - _height / 2 + _offsetY;
 
     SDL_Rect rect = { positionX, positionY, _width, _height };
 

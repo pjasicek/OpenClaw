@@ -155,7 +155,7 @@ unsigned long HashName(char const * pIdentStr)
 #define DO16(buf)   DO8(buf,0); DO8(buf,8);
 
     if (pIdentStr == NULL)
-        return NULL;
+        return 0;
 
     unsigned long s1 = 0;
     unsigned long s2 = 0;

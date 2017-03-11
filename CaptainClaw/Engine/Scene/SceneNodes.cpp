@@ -238,7 +238,7 @@ CameraNode::CameraNode(Point position, uint32 width, uint32 height)
     : SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_0, position),
     m_OffsetX(0),
     m_OffsetY(0),
-    m_Active(true), 
+    m_Active(true),
     m_DebugCamera(false)
 {
     m_Width = width;
@@ -255,10 +255,10 @@ void CameraNode::VRender(Scene* pScene)
 
 SDL_Rect CameraNode::GetCameraRect() const
 {
-    return { m_Properties.GetPosition().x,
-             m_Properties.GetPosition().y,
-             m_Width,
-             m_Height };
+    return { (int)m_Properties.GetPosition().x,
+             (int)m_Properties.GetPosition().y,
+             (int)m_Width,
+             (int)m_Height };
 }
 
 void CameraNode::SetViewPosition(Scene* pScene)
