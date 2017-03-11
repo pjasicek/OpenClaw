@@ -2,7 +2,7 @@
 #define __EVENTMGR_H__
 
 #include <memory>
-#include <strstream>
+#include <sstream>
 #include <string>
 
 #include <FastDelegate/FastDelegate.h>
@@ -39,8 +39,8 @@ public:
     virtual ~IEventData(void) {}
     virtual const EventType& VGetEventType(void) const = 0;
     virtual float GetTimeStamp(void) const = 0;
-    virtual void VSerialize(std::ostrstream& out) const = 0;
-    virtual void VDeserialize(std::istrstream& in) = 0;
+    virtual void VSerialize(std::ostringstream& out) const = 0;
+    virtual void VDeserialize(std::istringstream& in) = 0;
     virtual IEventDataPtr VCopy(void) const = 0;
     virtual const char* GetName(void) const = 0;
 
@@ -62,8 +62,8 @@ public:
     float GetTimeStamp(void) const { return m_TimeStamp; }
 
     // Serializing for network input / output
-    virtual void VSerialize(std::ostrstream &out) const	{ }
-    virtual void VDeserialize(std::istrstream& in) { }
+    virtual void VSerialize(std::ostringstream &out) const	{ }
+    virtual void VDeserialize(std::istringstream& in) { }
 
 private:
     const float m_TimeStamp;

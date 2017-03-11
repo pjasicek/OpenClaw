@@ -31,8 +31,8 @@ public: \
     \
     virtual const EventType& VGetEventType() const { return sk_EventType; } \
     virtual IEventDataPtr VCopy() const { return IEventDataPtr(new EventData_##EVENT_NAME##()); } \
-    virtual void VSerialize(std::ostrstream& out) const { } \
-    virtual void VDeserialize(std::istrstream& in) { } \
+    virtual void VSerialize(std::ostringstream& out) const { } \
+    virtual void VDeserialize(std::istringstream& in) { } \
     virtual const char* GetName(void) const { return ("EventData_" STRINGIFY(EVENT_NAME)); } \
 }; \
 
@@ -47,8 +47,8 @@ public: \
     \
     virtual const EventType& VGetEventType() const { return sk_EventType; } \
     virtual IEventDataPtr VCopy() const { return IEventDataPtr(new EventData_##EVENT_NAME##()); } \
-    virtual void VSerialize(std::ostrstream& out) const { } \
-    virtual void VDeserialize(std::istrstream& in) { } \
+    virtual void VSerialize(std::ostringstream& out) const { } \
+    virtual void VDeserialize(std::istringstream& in) { } \
     PARAM1_TYPE Get##PARAM1_NAME##() const { return m_##PARAM1_NAME##; } \
     virtual const char* GetName(void) const { return ("EventData_" STRINGIFY(EVENT_NAME)); } \
 private: \
@@ -79,13 +79,13 @@ public:
     {
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId;
         in >> m_ViewId;
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId << " ";
         out << m_ViewId << " ";
@@ -146,12 +146,12 @@ public:
         return IEventDataPtr(new EventData_Destroy_Actor(m_Id));
     }
 
-    virtual void VSerialize(std::ostrstream &out) const
+    virtual void VSerialize(std::ostringstream &out) const
     {
         out << m_Id;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_Id;
     }
@@ -192,14 +192,14 @@ public:
         //
     }
 
-    virtual void VSerialize(std::ostrstream &out) const
+    virtual void VSerialize(std::ostringstream &out) const
     {
         out << m_Id << " ";
         out << m_Move.x << " ";
         out << m_Move.y << " ";
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_Id;
         in >> m_Move.x;
@@ -251,12 +251,12 @@ public:
     {
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         LOG_ERROR(GetName() + std::string(" should not be serialzied!"));
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         LOG_ERROR(GetName() + std::string(" should not be serialzied!"));
     }
@@ -315,12 +315,12 @@ public:
     {
     }
 
-    virtual void VSerialize(std::ostrstream &out) const
+    virtual void VSerialize(std::ostringstream &out) const
     {
         out << m_ActorId;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId;
     }
@@ -449,14 +449,14 @@ virtual IEventDataPtr VCopy() const
 return IEventDataPtr( new EventData_Game_State( m_gameState, m_parameter ) );
 }
 
-virtual void VSerialize(std::ostrstream &out) const
+virtual void VSerialize(std::ostringstream &out) const
 {
 const int tempVal = static_cast< int >( m_gameState );
 out << tempVal << " ";
 out << m_parameter;
 }
 
-virtual void VDeserialize(std::istrstream &in)
+virtual void VDeserialize(std::istringstream &in)
 {
 int tempVal;
 in >> tempVal;
@@ -518,13 +518,13 @@ public:
         return "EventData_Remote_Client";
     }
 
-    virtual void VSerialize(std::ostrstream &out) const
+    virtual void VSerialize(std::ostringstream &out) const
     {
         out << m_SocketId << " ";
         out << m_IpAddress;
     }
 
-    virtual void VDeserialize(std::istrstream &in)
+    virtual void VDeserialize(std::istringstream &in)
     {
         in >> m_SocketId;
         in >> m_IpAddress;
@@ -569,7 +569,7 @@ public:
         return IEventDataPtr(new EventData_Update_Tick(m_DeltaMilliseconds));
     }
 
-    virtual void VSerialize(std::ostrstream & out)
+    virtual void VSerialize(std::ostringstream & out)
     {
         LOG_ERROR("You should not be serializing update ticks!");
     }
@@ -620,13 +620,13 @@ public:
     }
 
 
-    virtual void VSerialize(std::ostrstream &out) const
+    virtual void VSerialize(std::ostringstream &out) const
     {
         out << m_ActorId << " ";
         out << m_SocketId;
     }
 
-    virtual void VDeserialize(std::istrstream &in)
+    virtual void VDeserialize(std::istringstream &in)
     {
         in >> m_ActorId;
         in >> m_SocketId;
@@ -672,7 +672,7 @@ public:
         return IEventDataPtr(new EventData_Decompress_Request(m_ResourceFileName, m_FileName));
     }
 
-    virtual void VSerialize(std::ostrstream & out)
+    virtual void VSerialize(std::ostringstream & out)
     {
         LOG_ERROR("You should not be serializing decompression requests!");
     }
@@ -723,7 +723,7 @@ public:
         return IEventDataPtr(new EventData_Decompression_Progress(m_Progress, m_ResourceFileName, m_FileName, m_pBuffer));
     }
 
-    virtual void VSerialize(std::ostrstream & out)
+    virtual void VSerialize(std::ostringstream & out)
     {
         LOG_ERROR("You should not be serializing decompression progress events!");
     }
@@ -781,7 +781,7 @@ public:
         return sk_EventType;
     }
 
-    virtual void VDeserialize(std::istrstream & in)
+    virtual void VDeserialize(std::istringstream & in)
     {
         in >> m_ActorResource;
         in >> m_HasInitialPosition;
@@ -799,7 +799,7 @@ public:
         return IEventDataPtr(new EventData_Request_New_Actor(m_ActorResource, (m_HasInitialPosition) ? &m_InitialPosition : NULL, m_ServerActorId, m_ViewId));
     }
 
-    virtual void VSerialize(std::ostrstream & out) const
+    virtual void VSerialize(std::ostringstream & out) const
     {
         out << m_ActorResource << " ";
         out << m_HasInitialPosition << " ";
@@ -854,7 +854,7 @@ public:
         return sk_EventType;
     }
 
-    virtual void VDeserialize(std::istrstream & in)
+    virtual void VDeserialize(std::istringstream & in)
     {
         in >> m_ActorId;
     }
@@ -864,7 +864,7 @@ public:
         return IEventDataPtr(new EventData_Request_Destroy_Actor(m_ActorId));
     }
 
-    virtual void VSerialize(std::ostrstream & out) const
+    virtual void VSerialize(std::ostringstream & out) const
     {
         out << m_ActorId;
     }
@@ -915,12 +915,12 @@ public:
         return IEventDataPtr(new EventData_PlaySound(m_SoundResource));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_SoundResource;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_SoundResource;
     }
@@ -973,12 +973,12 @@ public:
         return IEventDataPtr(new EventData_Attach_Actor(m_ActorId));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId;
     }
@@ -1031,12 +1031,12 @@ public:
         return IEventDataPtr(new EventData_Collideable_Tile_Created(m_TileId, m_PositionX, m_PositionY));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_TileId << " " << m_PositionX << " " << m_PositionY;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_TileId >> m_PositionX >> m_PositionY;
     }
@@ -1099,12 +1099,12 @@ public:
         return IEventDataPtr(new EventData_Start_Climb(m_ActorId, m_ClimbMovement));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId;
     }
@@ -1159,12 +1159,12 @@ public:
         return IEventDataPtr(new EventData_Actor_Fire(m_ActorId));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId;
     }
@@ -1211,12 +1211,12 @@ public:
         return IEventDataPtr(new EventData_Actor_Attack(m_ActorId));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId;
     }
@@ -1265,12 +1265,12 @@ public:
         return IEventDataPtr(new EventData_New_HUD_Element(m_ActorId, m_pKey, m_pHUDSceneNode));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         LOG_ERROR(GetName() + std::string(" should not be serialzied!"));
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         LOG_ERROR(GetName() + std::string(" should not be serialzied!"));
     }
@@ -1319,8 +1319,8 @@ public:
     {
         return IEventDataPtr(new EventData_Modify_Player_Stat(m_ActorId, PlayerStat(m_Stat), m_Value, m_AddToExistingStat));
     }
-    virtual void VSerialize(std::ostrstream& out) const { out << m_ActorId << m_Stat << m_Value << m_AddToExistingStat; }
-    virtual void VDeserialize(std::istrstream& in) { in >> m_ActorId >> m_Stat >> m_Value >> m_AddToExistingStat; }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_ActorId << m_Stat << m_Value << m_AddToExistingStat; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_ActorId >> m_Stat >> m_Value >> m_AddToExistingStat; }
 
     uint32 GetActorId(void) const { return m_ActorId; }
     PlayerStat GetStatType() const { return PlayerStat(m_Stat); }
@@ -1361,12 +1361,12 @@ public:
         return IEventDataPtr(new EventData_Updated_Score(m_ActorId, m_OldScore, m_NewScore, m_IsInitialScore));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId << m_NewScore << m_OldScore << m_IsInitialScore;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId >> m_NewScore >> m_OldScore >> m_IsInitialScore;
     }
@@ -1433,12 +1433,12 @@ public:
         return IEventDataPtr(new EventData_New_Life(m_ActorId, m_NumNewLives));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_NumNewLives;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_NumNewLives;
     }
@@ -1493,12 +1493,12 @@ public:
         return IEventDataPtr(new EventData_Updated_Lives(m_OldLivesCount, m_NewLivesCount, m_IsInitialLives));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_OldLivesCount << m_NewLivesCount << m_IsInitialLives;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_OldLivesCount >> m_NewLivesCount >> m_IsInitialLives;
     }
@@ -1554,12 +1554,12 @@ public:
         return IEventDataPtr(new EventData_Updated_Health(m_OldHealth, m_NewHealth, m_IsInitialHealth));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_OldHealth << m_NewHealth << m_IsInitialHealth;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_OldHealth >> m_NewHealth >> m_IsInitialHealth;
     }
@@ -1614,12 +1614,12 @@ public:
         return IEventDataPtr(new EventData_Updated_Ammo(m_AmmoType, m_AmmoCount));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_AmmoType << m_AmmoCount;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_AmmoType >> m_AmmoCount;
     }
@@ -1668,12 +1668,12 @@ public:
         return IEventDataPtr(new EventData_Request_Change_Ammo_Type(m_ActorId, m_AmmoType));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId << m_AmmoType;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId >> m_AmmoType;
     }
@@ -1722,12 +1722,12 @@ public:
         return IEventDataPtr(new EventData_Updated_Ammo_Type(m_ActorId, m_AmmoType));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId << m_AmmoType;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId >> m_AmmoType;
     }
@@ -1776,12 +1776,12 @@ public:
         return IEventDataPtr(new EventData_Teleport_Actor(m_ActorId, m_Destination));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId << m_Destination.x << m_Destination.y;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId >> m_Destination.x >> m_Destination.y;
     }
@@ -1838,12 +1838,12 @@ public:
         return IEventDataPtr(new EventData_Updated_Powerup_Time(m_ActorId, m_PowerupType, m_SecondsRemaining));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId << m_PowerupType << m_SecondsRemaining;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId >> m_PowerupType >> m_SecondsRemaining;
     }
@@ -1906,12 +1906,12 @@ public:
         return IEventDataPtr(new EventData_Updated_Powerup_Status(m_ActorId, PowerupType(m_PowerupType), m_IsPowerupFinished));
     }
 
-    virtual void VSerialize(std::ostrstream& out) const
+    virtual void VSerialize(std::ostringstream& out) const
     {
         out << m_ActorId << m_PowerupType << m_IsPowerupFinished;
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_ActorId >> m_PowerupType >> m_IsPowerupFinished;
     }
@@ -1960,8 +1960,8 @@ public:
     {
         return IEventDataPtr(new EventData_Checkpoint_Reached(m_ActorId, m_SpawnPoint, m_IsSaveCheckpoint, m_SaveCheckpointNumber));
     }
-    virtual void VSerialize(std::ostrstream& out) const { out << m_ActorId << m_SpawnPoint.x << m_SpawnPoint.y << m_IsSaveCheckpoint << m_SaveCheckpointNumber; }
-    virtual void VDeserialize(std::istrstream& in) { in >> m_ActorId >> m_SpawnPoint.x >> m_SpawnPoint.y >> m_IsSaveCheckpoint >> m_SaveCheckpointNumber; }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_ActorId << m_SpawnPoint.x << m_SpawnPoint.y << m_IsSaveCheckpoint << m_SaveCheckpointNumber; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_ActorId >> m_SpawnPoint.x >> m_SpawnPoint.y >> m_IsSaveCheckpoint >> m_SaveCheckpointNumber; }
 
     uint32 GetActorId(void) const { return m_ActorId; }
     Point GetSpawnPoint() const { return m_SpawnPoint; }
@@ -1994,8 +1994,8 @@ public:
     {
         return IEventDataPtr(new EventData_Claw_Died(m_ActorId));
     }
-    virtual void VSerialize(std::ostrstream& out) const { out << m_ActorId; }
-    virtual void VDeserialize(std::istrstream& in) { in >> m_ActorId; }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_ActorId; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_ActorId; }
 
     uint32 GetActorId(void) const { return m_ActorId; }
     virtual const char* GetName(void) const { return "EventData_Claw_Died"; }
@@ -2024,8 +2024,8 @@ public:
     {
         return IEventDataPtr(new EventData_Request_Play_Sound(m_MusicPath, m_Volume, m_bIsMusic));
     }
-    virtual void VSerialize(std::ostrstream& out) const { out << m_MusicPath << m_Volume << m_bIsMusic; }
-    virtual void VDeserialize(std::istrstream& in) { in >> m_MusicPath >> m_Volume >> m_bIsMusic; }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_MusicPath << m_Volume << m_bIsMusic; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_MusicPath >> m_Volume >> m_bIsMusic; }
 
     std::string GetSoundPath() const { return m_MusicPath; }
     uint32 GetVolume() const { return m_Volume; }

@@ -27,14 +27,14 @@ public:
         //
     }
 
-    virtual void VSerialize(std::ostrstream &out) const
+    virtual void VSerialize(std::ostringstream &out) const
     {
         out << m_Id << " ";
         out << m_Move.x << " ";
         out << m_Move.y << " ";
     }
 
-    virtual void VDeserialize(std::istrstream& in)
+    virtual void VDeserialize(std::istringstream& in)
     {
         in >> m_Id;
         in >> m_Move.x;
