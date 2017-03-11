@@ -12,10 +12,10 @@ public:
 
     virtual std::string VToString() { return "MidiResourceExtraData"; }
     void LoadMidiFile(char* rawBuffer, uint32 size);
-    MidiFile* GetMidiFile() { return m_pMidiFile; }
+    shared_ptr<MidiFile> GetMidiFile() { return m_pMidiFile; }
 
 private:
-    MidiFile* m_pMidiFile;
+    shared_ptr<MidiFile> m_pMidiFile;
 };
 
 class MidiResourceLoader : public IResourceLoader
@@ -27,7 +27,7 @@ public:
     virtual uint32 VGetLoadedResourceSize(char* rawBuffer, uint32 rawSize);
     virtual bool VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle);
 
-    static MidiFile* LoadAndReturnMidiFile(const char* resourceString);
+    static shared_ptr<MidiFile> LoadAndReturnMidiFile(const char* resourceString);
     static std::shared_ptr<MidiResourceLoader> Create();
 };
 

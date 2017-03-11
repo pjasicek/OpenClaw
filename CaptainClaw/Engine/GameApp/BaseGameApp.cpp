@@ -14,6 +14,7 @@
 #include "../Resource/Loaders/PidLoader.h"
 #include "../Resource/Loaders/AniLoader.h"
 #include "../Resource/Loaders/WavLoader.h"
+#include "../Resource/Loaders/MidiLoader.h"
 
 #include "BaseGameApp.h"
 
@@ -640,6 +641,7 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
     m_pResourceCache->RegisterLoader(PidResourceLoader::Create());
     m_pResourceCache->RegisterLoader(AniResourceLoader::Create());
     m_pResourceCache->RegisterLoader(WavResourceLoader::Create());
+    m_pResourceCache->RegisterLoader(MidiResourceLoader::Create());
 
     LOG("Resource cache successfully initialized");
 
