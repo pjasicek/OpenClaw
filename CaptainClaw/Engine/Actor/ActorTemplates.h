@@ -9,6 +9,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_GlitterComponent(std::string glitterType, bool spawnImmediate, bool followOwner);
     TiXmlElement* CreateXmlData_AmmoPickupActor(std::string imageSet, Point position, bool isStatic);
     TiXmlElement* CreatePhysicsComponent(const ActorBodyDef* pBodyDef);
+    TiXmlElement* CreatePredefinedMoveComponent(std::vector<PredefinedMove>& moves, bool isInfinite);
 
     // Exposed Actor Xml data generating functions.
     TiXmlElement* CreateXmlData_CrateActor(std::string imageSet, Point position, const std::vector<PickupType>& loot, uint32 health, int32 zCoord);
@@ -25,6 +26,8 @@ namespace ActorTemplates
     StrongActorPtr CreateProjectile(std::string imageSet, uint32 damage, DamageType damageType, Direction direction, Point position, CollisionFlag collisionFlag, uint32 collisionMask);
     StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag damageType, std::string shape, Point positionOffset = Point(0, 0), std::string imageSet = "", int32 zCoord = 0);
     StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord = 1010);
+    //StrongActorPtr CreatePopupActor(Point position, std::string imageSet, std::vector<PredefinedMove>& moves, int32 zCoord = 0);
+    StrongActorPtr CreateScorePopupActor(Point position, int score);
 };
 
 #endif

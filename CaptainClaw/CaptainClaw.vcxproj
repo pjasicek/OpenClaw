@@ -94,6 +94,7 @@
     <ClCompile Include="Engine\Actor\Components\LootComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PickupComponents\PickupComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\KinematicComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PredefinedMoveComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PowerupSparkleAIComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\AreaDamageComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\GlitterComponent.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Engine\Actor\Components\LootComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PickupComponents\PickupComponent.h" />
     <ClInclude Include="Engine\Actor\Components\KinematicComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PredefinedMoveComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PowerupSparkleAIComponent.h" />
     <ClInclude Include="Engine\Actor\Components\GlitterComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.h" />

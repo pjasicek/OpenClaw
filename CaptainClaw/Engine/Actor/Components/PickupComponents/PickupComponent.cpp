@@ -128,13 +128,15 @@ bool TreasurePickupComponent::VOnApply(Actor* pActorWhoPickedThis)
 
         m_IsPickedUp = true;
 
-        // Destroy glitter is possible
+        // Destroy glitter if possible
         shared_ptr<GlitterComponent> pGlitterComponent =
             MakeStrongPtr(_owner->GetComponent<GlitterComponent>(GlitterComponent::g_Name));
         if (pGlitterComponent)
         {
             pGlitterComponent->Deactivate();
         }
+
+        ActorTemplates::CreateScorePopupActor(m_pPositionComponent->GetPosition(), m_ScorePoints);
 
         return true;
     }

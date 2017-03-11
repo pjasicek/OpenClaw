@@ -260,4 +260,18 @@ struct EnemyAttackAction
     uint32 damage;
 };
 
+struct PredefinedMove
+{
+    PredefinedMove()
+    {
+        msDuration = 0;
+        pixelsPerSecond = Point(0, 0);
+        soundToPlay = "";
+    }
+
+    uint32 msDuration;
+    Point pixelsPerSecond;
+    std::string soundToPlay;
+};
+
 #endif

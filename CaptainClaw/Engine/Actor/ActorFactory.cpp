@@ -37,6 +37,7 @@
 #include "Components/CheckpointComponent.h"
 #include "Components/EnemyAI/EnemyAIComponent.h"
 #include "Components/EnemyAI/EnemyAIStateComponent.h"
+#include "Components/PredefinedMoveComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -79,6 +80,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<PatrolEnemyAIStateComponent>(PatrolEnemyAIStateComponent::GetIdFromName(PatrolEnemyAIStateComponent::g_Name));
     _componentFactory.Register<MeleeAttackAIStateComponent>(MeleeAttackAIStateComponent::GetIdFromName(MeleeAttackAIStateComponent::g_Name));
     _componentFactory.Register<RangedAttackAIStateComponent>(RangedAttackAIStateComponent::GetIdFromName(RangedAttackAIStateComponent::g_Name));
+    _componentFactory.Register<PredefinedMoveComponent>(PredefinedMoveComponent::GetIdFromName(PredefinedMoveComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

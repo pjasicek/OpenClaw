@@ -47,7 +47,8 @@ bool BaseRenderComponent::VInit(TiXmlElement* pXmlData)
         // !!! THIS ASSUMES THAT WE ONLY WANT IMAGES FROM THIS DIRECTORY. IT IGNORES ALL NESTED DIRECTORIES !!!
         // Maybe add recursive algo to libwap
         std::string imageDir = std::string(imagesPath);
-        imageDir = imageDir.substr(0, imageDir.find("*")); // Get rid of everything after '*' including '*'
+        //imageDir = imageDir.substr(0, imageDir.find("*")); // Get rid of everything after '*' including '*'
+        imageDir = imageDir.substr(0, imageDir.find_last_of("/")); // Get rid of filenames - get just path to the final directory
         std::vector<std::string> matchingPathNames =
             g_pApp->GetResourceCache()->GetAllFilesInDirectory(imageDir.c_str());
 

@@ -210,6 +210,28 @@ namespace ActorTemplates
         return "Unknown";
     }
 
+    std::string GetImageSetFromScoreCount(int score)
+    {
+        if (score == 0) { return "/GAME/IMAGES/POINTS/FRAME0.PID"; }
+        if (score == 100) { return "/GAME/IMAGES/POINTS/FRAME1*"; }
+        else if (score == 500) { return "/GAME/IMAGES/POINTS/FRAME2*"; }
+        else if (score == 1500) { return "/GAME/IMAGES/POINTS/FRAME3*"; }
+        else if (score == 2500) { return "/GAME/IMAGES/POINTS/FRAME4*"; }
+        else if (score == 5000) { return "/GAME/IMAGES/POINTS/FRAME5*"; }
+        else if (score == 7500) { return "/GAME/IMAGES/POINTS/FRAME6*"; }
+        else if (score == 10000) { return "/GAME/IMAGES/POINTS/FRAME7*"; }
+        else if (score == 15000) { return "/GAME/IMAGES/POINTS/FRAME8*"; }
+        else if (score == 25000) { return "/GAME/IMAGES/POINTS/FRAME9*"; }
+        else
+        {
+            LOG_ERROR("Conflicting score: " + ToStr(score));
+            assert(false && "Invalid score number");
+        }
+
+        // Never reached but stops compiler from complaining
+        return "";
+    }
+
     std::string FixtureTypeToString(FixtureType fixtureType)
     {
         std::string fixtureTypeStr;
@@ -278,7 +300,7 @@ namespace ActorTemplates
         return pComponent;
     }
 
-    TiXmlElement* CreateActorRenderComponent(std::string imageSet, int32 zCoord, bool isVisible = true, bool isMirrored = false, bool isInverted = false)
+    TiXmlElement* CreateActorRenderComponent(std::string imageSet, int32 zCoord, bool isVisible = true, bool isMirrored = false, bool isInverted = false, bool convertImageSetToWildcard = true)
     {
         TiXmlElement* pComponent = new TiXmlElement("ActorRenderComponent");
         XML_ADD_TEXT_ELEMENT("Visible", ToStr(isVisible).c_str(), pComponent);
@@ -286,7 +308,10 @@ namespace ActorTemplates
         XML_ADD_TEXT_ELEMENT("Inverted", ToStr(isInverted).c_str(), pComponent);
         XML_ADD_TEXT_ELEMENT("ZCoord", ToStr(zCoord).c_str(), pComponent);
 
-        ImageSetToWildcardImagePath(imageSet);
+        if (convertImageSetToWildcard)
+        {
+            ImageSetToWildcardImagePath(imageSet);
+        }
         XML_ADD_TEXT_ELEMENT("ImagePath", imageSet.c_str(), pComponent);
 
         return pComponent;
@@ -501,6 +526,8 @@ namespace ActorTemplates
         return pGlitterComponent;
     }
 
+    
+
     ActorFixtureDef CreateActorAgroRangeFixture(Point size, Point offset, FixtureType fixtureType)
     {
         ActorFixtureDef fixtureDef;
@@ -539,6 +566,31 @@ namespace ActorTemplates
         }
 
         return pPatrolStateElem;
+    }
+
+    TiXmlElement* CreatePredefinedMoveComponent(std::vector<PredefinedMove>& moves, bool isInfinite)
+    {
+        TiXmlElement* pPredefinedMovesElem = new TiXmlElement("PredefinedMoveComponent");
+
+        for (PredefinedMove& move : moves)
+        {
+            TiXmlElement* pMoveElem = new TiXmlElement("PredefinedMove");
+            XML_ADD_TEXT_ELEMENT("DurationMiliseconds", ToStr(move.msDuration).c_str(), pMoveElem);
+            XML_ADD_2_PARAM_ELEMENT("PixelsPerSecond", "x", ToStr(move.pixelsPerSecond.x).c_str(), 
+                "y", ToStr(move.pixelsPerSecond.y).c_str(), pMoveElem);
+            XML_ADD_TEXT_ELEMENT("Sound", move.soundToPlay.c_str(), pMoveElem);
+            pPredefinedMovesElem->LinkEndChild(pMoveElem);
+        }
+
+        XML_ADD_TEXT_ELEMENT("IsInfinite", ToStr(isInfinite).c_str(), pPredefinedMovesElem);
+
+        return pPredefinedMovesElem;
+    }
+
+    TiXmlElement* CreatePredefinedMoveComponent(const PredefinedMove& move, bool isInfinite)
+    {
+        std::vector<PredefinedMove> moves = { move };
+        return CreatePredefinedMoveComponent(moves, isInfinite);
     }
 
     TiXmlElement* CreateXmlData_EnemyAttackActionState(std::vector<EnemyAttackAction>& attackActions)
@@ -1009,6 +1061,25 @@ namespace ActorTemplates
         return pActor;
     }
 
+    TiXmlElement* CreateXmlData_ScorePopupActor(Point position, int score)
+    {
+        std::string imageSet = GetImageSetFromScoreCount(score);
+        //std::string imageSet = "GAME_POINTS";
+
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", imageSet.c_str());
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), 0, true, false, false, false));
+
+        PredefinedMove move;
+        move.msDuration = 650;
+        move.pixelsPerSecond = Point(0, -50);
+        pActor->LinkEndChild(CreatePredefinedMoveComponent(move, false));
+
+        return pActor;
+    }
+
     TiXmlElement* CreateXmlData_CheckpointActor(std::string imageSet, Point position, int32 zCoord, Point spawnPosition, bool isSaveCheckpoint, uint32 saveCheckpointNumber)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
@@ -1315,5 +1386,10 @@ namespace ActorTemplates
     StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord)
     {
         return CreateAndReturnActor(CreateXmlData_GlitterActor(glitterType, position, zCoord));
+    }
+
+    StrongActorPtr CreateScorePopupActor(Point position, int score)
+    {
+        return CreateAndReturnActor(CreateXmlData_ScorePopupActor(position, score));
     }
 };
