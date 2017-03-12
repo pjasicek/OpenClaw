@@ -255,6 +255,9 @@
     <ClCompile Include="Engine\Actor\Components\PredefinedMoveComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Util\Converters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Process\Process.h">
@@ -410,9 +413,6 @@
     <ClInclude Include="ClawHumanView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Converters.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\UserInterface\MovementController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -522,6 +522,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\SoundStrings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Util\Converters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

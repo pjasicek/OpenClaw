@@ -3,7 +3,10 @@
 #include "../Events/Events.h"
 #include "../Resource/Loaders/XmlLoader.h"
 #include "../Resource/Loaders/PalLoader.h"
+#include "../Resource/Loaders/WwdLoader.h"
 #include "../Events/EventMgr.h"
+
+#include "../Util/Converters.h"
 
 #include "GameSaves.h"
 #include "BaseGameLogic.h"
@@ -29,6 +32,7 @@ BaseGameLogic::BaseGameLogic()
     m_pActorFactory = NULL;
     m_Proxy = false;
     m_RenderDiagnostics = true;
+    m_SelectedLevel = -1;
 
     m_pGameSaveMgr.reset(new GameSaveMgr());
 
@@ -430,7 +434,28 @@ void BaseGameLogic::VChangeState(GameState newState)
 {
     if (newState == GameState_LoadingLevel)
     {
-        if (!VLoadGame("LEVEL1.xml"))
+        // TODO: Remove hardcoding this value later when Menu GUI will be in place
+        m_SelectedLevel = 1;
+        assert(m_SelectedLevel >= 0 && m_SelectedLevel <= 14);
+
+        // Load Monolith's WWD, they are located in /LEVEL[1-14]/WORLDS/WORLD.WWD
+        std::string levelName = "LEVEL" + ToStr(m_SelectedLevel);
+        std::string pathToLevelWwd = "/" + levelName + "/WORLDS/WORLD.WWD";
+        WapWwd* pWwd = WwdResourceLoader::LoadAndReturnWwd(pathToLevelWwd.c_str());
+        assert(pWwd != NULL);
+
+        // Convert Monolith .WWD format to my .XML format
+        TiXmlElement* pXmlLevel = WwdToXml(pWwd);
+        assert(pXmlLevel != NULL);
+
+        // Save converted level to file, e.g. LEVEL1.xml
+        TiXmlDocument xmlDoc;
+        xmlDoc.LinkEndChild(pXmlLevel);
+        std::string outFileLevelName = levelName + ".xml";
+        xmlDoc.SaveFile(outFileLevelName.c_str());
+
+        // Load saved level file, e.g. LEVEL1.xml
+        if (!VLoadGame(outFileLevelName.c_str()))
         {
             LOG_ERROR("Could not load level");
             exit(1);

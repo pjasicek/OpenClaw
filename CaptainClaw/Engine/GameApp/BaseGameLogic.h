@@ -106,9 +106,10 @@ protected:
 
     bool m_RenderDiagnostics;
     shared_ptr<IGamePhysics> m_pPhysics;
-
     shared_ptr<LevelData> m_pCurrentLevel;
     shared_ptr<GameSaveMgr> m_pGameSaveMgr;
+
+    int m_SelectedLevel;
 
     Point m_CurrentSpawnPosition;
 

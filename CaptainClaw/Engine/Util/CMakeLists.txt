@@ -10,4 +10,6 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/Profilers.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/StringUtil.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Util.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Converters.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Converters.cpp
 )

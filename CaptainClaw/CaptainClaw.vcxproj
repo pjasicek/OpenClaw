@@ -150,6 +150,7 @@
     <ClCompile Include="Engine\Events\EventMgr.cpp" />
     <ClCompile Include="Engine\Events\EventMgrImpl.cpp" />
     <ClCompile Include="Engine\Graphics2D\Image.cpp" />
+    <ClCompile Include="Engine\Util\Converters.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Actor\Components\Animation.cpp" />
     <ClCompile Include="Engine\Util\Profilers.cpp" />
@@ -185,7 +186,7 @@
     <ClInclude Include="Engine\Audio\Audio.h" />
     <ClInclude Include="ClawGameLogic.h" />
     <ClInclude Include="ClawHumanView.h" />
-    <ClInclude Include="Engine\Converters.h" />
+    <ClInclude Include="Engine\Util\Converters.h" />
     <ClInclude Include="Engine\GameApp\CommandHandler.h" />
     <ClInclude Include="Engine\GameApp\GameSaves.h" />
     <ClInclude Include="Engine\Physics\ClawPhysics.h" />

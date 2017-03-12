@@ -2039,4 +2039,22 @@ private:
     bool m_bIsMusic;
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Request_Reset_Level
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Request_Reset_Level : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Request_Reset_Level() { }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const { return IEventDataPtr(new EventData_Request_Reset_Level()); }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "This event CANNOT be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "This event CANNOT be deserialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_Request_Reset_Level"; }
+};
+
 #endif

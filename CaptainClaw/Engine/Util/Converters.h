@@ -1,0 +1,951 @@
+#ifndef __CONVERTERS_H__
+#define __CONVERTERS_H__
+
+#include <algorithm>
+#include <libwap.h>
+#include "../SharedDefines.h"
+#include "../Actor/ActorTemplates.h"
+
+//
+//
+// TODO TODO TODO: Somehow refactor this, delete unneeded ones and usse everything from Actor/ActorTemplates.cpp
+//
+//
+
+#define INSERT_POSITION_COMPONENT(x, y, rootElem) \
+{ \
+   TiXmlElement* elem = new TiXmlElement("PositionComponent"); \
+   rootElem->LinkEndChild(elem); \
+   XML_ADD_2_PARAM_ELEMENT("Position", "x", x, "y", y, elem); \
+} \
+
+#define INSERT_COLLISION_COMPONENT(width, height, rootElem) \
+{ \
+   TiXmlElement* elem = new TiXmlElement("CollisionComponent"); \
+   rootElem->LinkEndChild(elem); \
+   XML_ADD_2_PARAM_ELEMENT("CollisionSize", "width", width, "height", height, elem); \
+} \
+
+inline TiXmlElement* CreatePositionComponent(int x, int y)
+{
+    TiXmlElement* elem = new TiXmlElement("PositionComponent");
+    XML_ADD_2_PARAM_ELEMENT("Position", "x", x, "y", y, elem);
+
+    return elem;
+}
+
+inline TiXmlElement* CreateCollisionComponent(int width, int height)
+{
+    TiXmlElement* elem = new TiXmlElement("CollisionComponent");
+    XML_ADD_2_PARAM_ELEMENT("CollisionSize", "width", width, "height", height, elem);
+
+    return elem;
+}
+
+inline TiXmlElement* CreatePhysicsComponent(bool canClimb, bool canBounce, bool canJump, int maxJumpHeight, int width, int height, double gravityScale, double friction, double density)
+{
+    TiXmlElement* elem = new TiXmlElement("PhysicsComponent");
+
+    XML_ADD_TEXT_ELEMENT("CanClimb", ToStr(canClimb).c_str(), elem);
+    XML_ADD_TEXT_ELEMENT("CanBounce", ToStr(canBounce).c_str(), elem);
+    XML_ADD_TEXT_ELEMENT("CanJump", ToStr(canJump).c_str(), elem);
+    XML_ADD_TEXT_ELEMENT("JumpHeight", ToStr(maxJumpHeight).c_str(), elem);
+    XML_ADD_2_PARAM_ELEMENT("CollisionSize", "width", width, "height", height, elem);
+    XML_ADD_TEXT_ELEMENT("GravityScale", ToStr(gravityScale).c_str(), elem);
+    XML_ADD_TEXT_ELEMENT("Friction", ToStr(friction).c_str(), elem);
+    XML_ADD_TEXT_ELEMENT("Density", ToStr(density).c_str(), elem);
+
+    return elem;
+}
+
+inline TiXmlElement* CreateControllableComponent(bool active)
+{
+    TiXmlElement* elem = new TiXmlElement("ClawControllableComponent");
+    
+    XML_ADD_TEXT_ELEMENT("IsActive", ToStr(active).c_str(), elem);
+
+    return elem;
+}
+
+inline TiXmlElement* CreateAnimationComponent(const char* aniPath)
+{
+    TiXmlElement* elem = new TiXmlElement("AnimationComponent");
+
+    XML_ADD_TEXT_ELEMENT("AnimationPath", aniPath, elem);
+
+    return elem;
+}
+
+inline TiXmlElement* CreateSoundComponent(const char* soundPath)
+{
+    TiXmlElement* elem = new TiXmlElement("SoundComponent");
+
+    XML_ADD_TEXT_ELEMENT("SoundPath", soundPath, elem);
+
+    return elem;
+}
+
+inline TiXmlElement* CreateActorRenderComponent(const char* imagesPath, int32 zCoord, bool visible = true)
+{
+    TiXmlElement* elem = new TiXmlElement("ActorRenderComponent");
+
+    XML_ADD_TEXT_ELEMENT("ImagePath", imagesPath, elem);
+    XML_ADD_TEXT_ELEMENT("ZCoord", ToStr(zCoord).c_str(), elem);
+
+    return elem;
+}
+
+inline TiXmlElement* CreatePlayAreaElement(int x, int y, int w, int h)
+{
+    TiXmlElement* pPlayAreaElement = new TiXmlElement("PlayArea");
+    pPlayAreaElement->SetAttribute("x", x);
+    pPlayAreaElement->SetAttribute("y", y);
+    pPlayAreaElement->SetAttribute("width", w);
+    pPlayAreaElement->SetAttribute("height", h);
+    return pPlayAreaElement;
+}
+
+
+//=====================================================================================================================
+
+inline TiXmlElement* CreateAnimationComponent(std::string aniPath)
+{
+    TiXmlElement* animationComponent = new TiXmlElement("AnimationComponent");
+    XML_ADD_TEXT_ELEMENT("AnimationPath", aniPath.c_str(), animationComponent);
+    return animationComponent;
+}
+
+inline TiXmlElement* CreateCycleAnimation(int animFrameTime)
+{
+    TiXmlElement* cycleElem = new TiXmlElement("Animation");
+    std::string cycleStr = "cycle" + ToStr(animFrameTime);
+    cycleElem->SetAttribute("type", cycleStr.c_str());
+    //XML_ADD_1_PARAM_ELEMENT("Animation", "type", cycleStr.c_str(), cycleElem);
+
+    return cycleElem;
+}
+
+inline TiXmlElement* CreateTriggerComponent(int enterCount, bool onceALife, bool isStatic)
+{
+    TiXmlElement* pTriggerComponent = new TiXmlElement("TriggerComponent");
+    if (onceALife)
+    {
+        XML_ADD_TEXT_ELEMENT("TriggerOnce", "true", pTriggerComponent);
+    }
+    else if (enterCount > 0)
+    {
+        XML_ADD_TEXT_ELEMENT("TriggerFinitedTimes", ToStr(enterCount).c_str(), pTriggerComponent);
+    }
+    else
+    {
+        XML_ADD_TEXT_ELEMENT("TriggerUnlimited", "true", pTriggerComponent);
+    }
+    if (isStatic)
+    {
+        XML_ADD_TEXT_ELEMENT("IsStatic", "true", pTriggerComponent);
+    }
+
+    return pTriggerComponent;
+}
+
+//=====================================================================================================================
+
+// This is really ugly as fuck
+inline TiXmlElement* AmbientSoundToXml(WwdObject* pWwdObject)
+{
+    TiXmlElement* pAmbientSoundElem = new TiXmlElement("AmbientSound");
+
+    std::string logicName = pWwdObject->logic;
+    if (logicName == "GlobalAmbientSound" ||
+        logicName == "AmbientSound")
+    {
+        if (pWwdObject->hitRect.right != 0 && pWwdObject->hitRect.bottom != 0)
+        {
+            pAmbientSoundElem->LinkEndChild(CreatePlayAreaElement(pWwdObject->hitRect.left, pWwdObject->hitRect.top,
+                pWwdObject->hitRect.right - pWwdObject->hitRect.left, pWwdObject->hitRect.bottom - pWwdObject->hitRect.top));
+        }
+        else
+        {
+            XML_ADD_TEXT_ELEMENT("Global", "true", pAmbientSoundElem);
+        }
+    }
+    else if (logicName == "SpotAmbientSound")
+    {
+        if (pWwdObject->maxX != 0 && pWwdObject->maxY != 0)
+        {
+            pAmbientSoundElem->LinkEndChild(CreatePlayAreaElement(pWwdObject->minX, pWwdObject->minY,
+                pWwdObject->maxX - pWwdObject->minX, pWwdObject->maxY - pWwdObject->minY));
+        }
+        if (pWwdObject->attackRect.top != 0 && pWwdObject->attackRect.left != 0)
+        {
+            pAmbientSoundElem->LinkEndChild(CreatePlayAreaElement(pWwdObject->attackRect.left, pWwdObject->attackRect.top,
+                pWwdObject->attackRect.right - pWwdObject->attackRect.left, pWwdObject->attackRect.bottom - pWwdObject->attackRect.top));
+        }
+    } 
+    else
+    {
+        LOG_WARNING("Unknown AmbientSound logic: " + logicName);
+    }
+
+    // Sound play interval
+    if (pWwdObject->moveRect.right != 0 && pWwdObject->moveRect.bottom != 0)
+    {
+        TiXmlElement* pPlayIntervalElem = new TiXmlElement("PlayInterval");
+        pPlayIntervalElem->SetAttribute("minTimeOn", pWwdObject->moveRect.left);
+        pPlayIntervalElem->SetAttribute("maxTimeOn", pWwdObject->moveRect.right);
+        pPlayIntervalElem->SetAttribute("minTimeOff", pWwdObject->moveRect.top);
+        pPlayIntervalElem->SetAttribute("maxTimeOff", pWwdObject->moveRect.bottom);
+        pAmbientSoundElem->LinkEndChild(pPlayIntervalElem);
+    }
+    else
+    {
+        XML_ADD_TEXT_ELEMENT("Looping", "true", pAmbientSoundElem);
+    }
+
+    // Volume
+    int soundVolume = 100;
+    if (pWwdObject->damage != 0)
+    {
+        soundVolume = pWwdObject->damage;
+    }
+
+    XML_ADD_TEXT_ELEMENT("Volume", ToStr(soundVolume).c_str(), pAmbientSoundElem);
+
+    XML_ADD_TEXT_ELEMENT("Sound", pWwdObject->sound, pAmbientSoundElem);
+
+    return pAmbientSoundElem;
+}
+
+inline TiXmlElement* SoundTriggerToXml(WwdObject* pWwdObject)
+{
+    TiXmlElement* pSoundTriggerElem = new TiXmlElement("SoundTrigger");
+
+
+    return pSoundTriggerElem;
+}
+
+inline TiXmlElement* StackedCratesToXml(WwdObject* pWwdObject)
+{
+    
+}
+
+inline TiXmlElement* CrateToXml(WwdObject* pWwdObject)
+{
+
+}
+
+inline TiXmlElement* EyeCandyToXml(WwdObject* pWwdObject)
+{
+    if (std::string(pWwdObject->logic).find("AniCandy") != std::string::npos)
+    {
+        TiXmlElement* animElem = new TiXmlElement("AnimationComponent");
+        XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle150", animElem);
+
+        return animElem;
+    }
+
+    return NULL;
+}
+
+inline TiXmlElement* CrumblingPegToXml(WwdObject* pWwdObject)
+{
+    TiXmlElement* pCrumblingPegAIComponent = new TiXmlElement("CrumblingPegAIComponent");
+
+    XML_ADD_TEXT_ELEMENT("FloorOffset", "10", pCrumblingPegAIComponent);
+    XML_ADD_TEXT_ELEMENT("CrumbleFrameIdx", "10", pCrumblingPegAIComponent);
+
+    return pCrumblingPegAIComponent;
+}
+
+inline TiXmlElement* ElevatorToXml(WwdObject* pWwdObject)
+{
+    //----- [Level::Actors::ActorProperties::AI_ElevatorComponent]
+    TiXmlElement* aiElevatorComponent = new TiXmlElement("KinematicComponent");
+    aiElevatorComponent->SetAttribute("Type", pWwdObject->logic);
+    aiElevatorComponent->SetAttribute("resource", "created");
+
+    std::string logic = pWwdObject->logic;
+    if (logic == "TriggerElevator")
+    {
+        XML_ADD_TEXT_ELEMENT("TriggeredBehaviour", "true", aiElevatorComponent);
+    }
+    else if (logic == "StartElevator")
+    {
+        XML_ADD_TEXT_ELEMENT("StartBehaviour", "true", aiElevatorComponent);
+    }
+    else if (logic == "StopElevator")
+    {
+        XML_ADD_TEXT_ELEMENT("StopBehaviour", "true", aiElevatorComponent);
+    }
+    else if (logic == "Elevator")
+    {
+        XML_ADD_TEXT_ELEMENT("StandardBehaviour", "true", aiElevatorComponent);
+    }
+    else
+    {
+        LOG_WARNING("Unknown Elevator: " + logic)
+
+    }
+
+    Point speed(0, 0);
+    bool hasHorizontalMovement = false;
+    bool hasVerticalMovement = false;
+    if (pWwdObject->minX > 0 && pWwdObject->maxX > 0)
+    {
+        hasHorizontalMovement = true;
+    }
+    if (pWwdObject->minY > 0 && pWwdObject->maxY > 0)
+    {
+        hasVerticalMovement = true;
+    }
+
+    if (hasHorizontalMovement)
+    {
+        if (pWwdObject->speedX > 0)
+        {
+            speed.x = pWwdObject->speedX;
+        }
+        else
+        {
+            speed.x = 125;
+        }
+    }
+    if (hasVerticalMovement)
+    {
+        if (pWwdObject->speedY > 0)
+        {
+            speed.y = pWwdObject->speedY;
+        }
+        else if (pWwdObject->speedX > 0)
+        {
+            speed.y = pWwdObject->speedX;
+        }
+        else
+        {
+            speed.y = 125;
+        }
+    }
+
+    XML_ADD_2_PARAM_ELEMENT("Speed", "x", ToStr(speed.x).c_str(), "y", ToStr(speed.y).c_str(), aiElevatorComponent);
+    XML_ADD_2_PARAM_ELEMENT("MinPosition", "x", ToStr(pWwdObject->minX).c_str(), "y", ToStr(pWwdObject->minY).c_str(), aiElevatorComponent);
+    XML_ADD_2_PARAM_ELEMENT("MaxPosition", "x", ToStr(pWwdObject->maxX).c_str(), "y", ToStr(pWwdObject->maxY).c_str(), aiElevatorComponent);
+
+    return aiElevatorComponent;
+}
+
+inline TiXmlElement* SuperCheckpointToXml(WwdObject* pWwdObject)
+{
+
+}
+
+inline TiXmlElement* CheckpointToXml(WwdObject* pWwdObject)
+{
+
+}
+
+inline TiXmlElement* PowderKegToXml(WwdObject* pWwdObject)
+{
+
+}
+
+inline TiXmlElement* OfficerToXml(WwdObject* pWwdObject)
+{
+
+}
+
+inline TiXmlElement* SoldierToXml(WwdObject* pWwdObject)
+{
+
+}
+
+inline TiXmlElement* RatToXml(WwdObject* pWwdObject)
+{
+
+}
+
+inline TiXmlElement* AmmoToXml(WwdObject* pWwdObject)
+{
+
+}
+
+inline TiXmlElement* TreasureToXml(WwdObject* pWwdObject)
+{
+    if (std::string(pWwdObject->imageSet) == "GAME_TREASURE_COINS")
+    {
+        TiXmlElement* animElem = new TiXmlElement("AnimationComponent");
+        //animElem->LinkEndChild(CreateCycleAnimation(100));
+        XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle100", animElem);
+
+        return animElem;
+    }
+
+    return NULL;
+}
+
+inline TiXmlElement* SpecialPowerupToXml(WwdObject* pWwdObject)
+{
+
+}
+
+inline TiXmlElement* TogglePegToXml(WwdObject* pWwdObject)
+{
+    TiXmlElement* pTogglePegAIElem = new TiXmlElement("TogglePegAIComponent");
+    pTogglePegAIElem->SetAttribute("Type", pWwdObject->logic);
+    pTogglePegAIElem->SetAttribute("resource", "created");
+
+    std::string logic = pWwdObject->logic;
+
+    uint32 delay = 0;
+    if (logic == "TogglePeg")
+    {
+        delay = 0;
+    }
+    else if (logic == "TogglePeg2")
+    {
+        delay = 750;
+    }
+    else if (logic == "TogglePeg3")
+    {
+        delay = 1500;
+    }
+    else if (logic == "TogglePeg4")
+    {
+        delay = 2250;
+    }
+    else
+    {
+        LOG_WARNING("Unknown TogglePeg: " + logic)
+    }
+
+    if (pWwdObject->speed > 0)
+    {
+        delay = pWwdObject->speed;
+    }
+
+    XML_ADD_TEXT_ELEMENT("Delay", ToStr(delay).c_str(), pTogglePegAIElem);
+
+    uint32 timeOn = 0;
+    uint32 timeOff = 0;
+    if (pWwdObject->speedX > 0)
+    {
+        timeOn = pWwdObject->speedX;
+    }
+    else
+    {
+        timeOn = 1500;
+    }
+    if (pWwdObject->speedY > 0)
+    {
+        timeOff = pWwdObject->speedY;
+    }
+    else
+    {
+        timeOff = 1500;
+    }
+
+    if (pWwdObject->smarts & 0x1)
+    {
+        XML_ADD_TEXT_ELEMENT("AlwaysOn", "true", pTogglePegAIElem);
+    }
+    else
+    {
+        XML_ADD_TEXT_ELEMENT("TimeOn", ToStr(timeOn).c_str(), pTogglePegAIElem);
+        XML_ADD_TEXT_ELEMENT("TimeOff", ToStr(timeOff).c_str(), pTogglePegAIElem);
+    }
+
+    return pTogglePegAIElem;
+}
+
+inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
+{
+    TiXmlElement* pActorElem = new TiXmlElement("Actor");
+    pActorElem->SetAttribute("Type", wwdObject->logic);
+
+    std::string logic = wwdObject->logic;
+    std::string imageSet = wwdObject->imageSet;
+
+    // Common components for all actors
+
+    // Position component
+    INSERT_POSITION_COMPONENT(wwdObject->x, wwdObject->y, pActorElem);
+
+    // ActorRenderComponent
+    //----- [Level::Actors::ActorProperties::ActorRenderComponent]
+    TiXmlElement* actorRenderComponent = new TiXmlElement("ActorRenderComponent");
+    pActorElem->LinkEndChild(actorRenderComponent);
+
+    // For debug
+    XML_ADD_TEXT_ELEMENT("imgpath", wwdObject->imageSet, actorRenderComponent);
+
+    XML_ADD_TEXT_ELEMENT("Visible", ToStr(true).c_str(), actorRenderComponent);
+    XML_ADD_TEXT_ELEMENT("Mirrored", ToStr((wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR) != 0).c_str(), actorRenderComponent);
+    XML_ADD_TEXT_ELEMENT("Inverted", ToStr((wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_INVERT) != 0).c_str(), actorRenderComponent);
+    XML_ADD_TEXT_ELEMENT("ZCoord", ToStr(wwdObject->z).c_str(), actorRenderComponent);
+
+    std::string tmpImagesRootPath = imagesRootPath;
+    std::string tmpImageSet = wwdObject->imageSet;
+    bool imageSetValid = false;
+
+    if (tmpImageSet.find("LEVEL_") == 0)
+    {
+        // Remove "LEVEL_" from tmpImageSet, e.g. "LEVEL_SOLDIER" -> "SOLDIER"
+        tmpImageSet.erase(0, strlen("LEVEL_"));
+        imageSetValid = true;
+    }
+    else if (tmpImageSet.find("GAME_") == 0)
+    {
+        // Remove "GAME_" from tmpImageSet, e.g. "GAME_TREASURE_COINS" -> "TREASURE_COINS"
+        tmpImageSet.erase(0, strlen("GAME_"));
+        tmpImagesRootPath = std::string("/GAME/IMAGES/");
+        std::replace(tmpImageSet.begin(), tmpImageSet.end(), '_', '/');
+        imageSetValid = true;
+
+    }
+    else
+    {
+        LOG_WARNING("Unknown actor image path: " + std::string(wwdObject->imageSet));
+    }
+
+    if (imageSetValid)
+    {
+        //std::replace(tmpImageSet.begin(), tmpImageSet.end(), '_', '/');
+        tmpImageSet += "/*";
+        tmpImageSet = tmpImagesRootPath + tmpImageSet;
+    }
+
+    // DoNothing logic only has one single frame which has to be assigned
+    // We cant use general wildcard here
+    // Example: We want "/LEVEL1/IMAGES/ARCHESFRONT/*1.PID"
+    if (logic == "DoNothing")
+    {
+        // Unfortunately, this hack IS NOT ENOUGH, index "i" == -1 means "i" should be 1
+        // I really have no clue how could Claw's level parsing code should be sane by any
+        // means. Ok, enough of my crying.
+        if (wwdObject->i == -1)
+        {
+            wwdObject->i = 1;
+        }
+        tmpImageSet += ToStr(wwdObject->i) + ".PID";
+    }
+
+    XML_ADD_TEXT_ELEMENT("ImagePath", tmpImageSet.c_str(), actorRenderComponent);
+
+    std::string aniPath;
+    // We probably should have valid animation frames in order to create an animation :d
+    if (imageSetValid)
+    {
+        aniPath = tmpImageSet;
+        aniPath.replace(aniPath.find("/IMAGES/"), strlen("/IMAGES/"), "/ANIS/");
+    }
+
+    //=========================================================================
+    // Specific logics to XML
+    //=========================================================================
+
+    if (logic.find("AmbientSound") != std::string::npos)
+    {
+        //pActorElem->LinkEndChild(AmbientSoundToXml(wwdObject));
+    }
+    else if (logic.find("SoundTrigger") != std::string::npos)
+    {
+        //pActorElem->LinkEndChild(SoundTriggerToXml(wwdObject));
+    }
+    else if (logic.find("StackedCrates") != std::string::npos)
+    {
+        //pActorElem->LinkEndChild(StackedCratesToXml(wwdObject));
+        
+    }
+    else if (logic.find("Crate") != std::string::npos)
+    {
+        std::vector<PickupType> loot;
+        if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
+        if (wwdObject->userRect1.left > 0) { loot.push_back(PickupType(wwdObject->userRect1.left)); }
+        if (wwdObject->userRect1.right > 0) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
+        if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
+        if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
+        return ActorTemplates::CreateXmlData_CrateActor(tmpImageSet, Point(wwdObject->x, wwdObject->y), loot, 5, wwdObject->z);
+    }
+    else if (logic.find("Candy") != std::string::npos)
+    {
+        TiXmlElement* elem = EyeCandyToXml(wwdObject);
+        if (elem)
+        {
+            pActorElem->LinkEndChild(elem);
+        }
+    }
+    else if (logic.find("CrumblingPeg") != std::string::npos)
+    {
+        return ActorTemplates::CreateXmlData_CrumblingPeg(tmpImageSet, Point(wwdObject->x, wwdObject->y), wwdObject->z);
+
+        pActorElem->LinkEndChild(CrumblingPegToXml(wwdObject));
+
+        TiXmlElement* animElem = new TiXmlElement("AnimationComponent");
+        XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle50", animElem);
+        pActorElem->LinkEndChild(animElem);
+    }
+    else if (logic.find("Elevator") != std::string::npos)
+    {
+        pActorElem->LinkEndChild(ElevatorToXml(wwdObject));
+    }
+    else if (logic.find("TogglePeg") != std::string::npos)
+    {
+        pActorElem->LinkEndChild(TogglePegToXml(wwdObject));
+
+        TiXmlElement* animElem = new TiXmlElement("AnimationComponent");
+        XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle75", animElem);
+        pActorElem->LinkEndChild(animElem);
+    }
+    else if (logic.find("Checkpoint") != std::string::npos)
+    {
+        bool isSaveCheckpoint = false;
+        uint32 saveCheckpointNumber = 0;
+        if (logic == "FirstSuperCheckpoint")
+        {
+            isSaveCheckpoint = true;
+            saveCheckpointNumber = 1;
+        }
+        else if (logic == "SecondSuperCheckpoint")
+        {
+            isSaveCheckpoint = true;
+            saveCheckpointNumber = 2;
+        }
+
+        return ActorTemplates::CreateXmlData_CheckpointActor(
+            wwdObject->imageSet, 
+            Point(wwdObject->x, wwdObject->y), 
+            wwdObject->z, 
+            Point(wwdObject->x, wwdObject->y), 
+            isSaveCheckpoint, 
+            saveCheckpointNumber);
+    }
+    else if (logic.find("PowderKeg") != std::string::npos)
+    {
+        //pActorElem->LinkEndChild(PowderKegToXml(wwdObject));
+        return ActorTemplates::CreateXmlData_PowderKegActor(tmpImageSet, Point(wwdObject->x, wwdObject->y), 50, wwdObject->z);
+    }
+    else if (logic == "Officer" ||
+             logic == "Soldier" ||
+             logic == "Rat")
+    {
+        std::vector<PickupType> loot;
+        if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
+        if (wwdObject->userRect1.left > 0) { loot.push_back(PickupType(wwdObject->userRect1.left)); }
+        if (wwdObject->userRect1.right > 0) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
+        if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
+        if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
+
+        return ActorTemplates::CreateXmlData_EnemyAIActor(tmpImageSet, aniPath, Point(wwdObject->x, wwdObject->y), loot, logic, wwdObject->z, wwdObject->minX, wwdObject->maxX);
+
+        //pActorElem->LinkEndChild(OfficerToXml(wwdObject));
+    }
+    else if (logic.find("Rat") != std::string::npos)
+    {
+        //pActorElem->LinkEndChild(RatToXml(wwdObject));
+    }
+    else if (logic.find("AmmoPowerup") != std::string::npos)
+    {
+        return ActorTemplates::CreateXmlData_AmmoPickupActor(wwdObject->imageSet, Point(wwdObject->x, wwdObject->y), true);
+        //pActorElem->LinkEndChild(AmmoToXml(wwdObject));
+    }
+    else if (logic.find("SpecialPowerup") != std::string::npos ||
+        imageSet.find("CATNIPS") != std::string::npos)
+    {
+        //pActorElem->LinkEndChild(SpecialPowerupToXml(wwdObject));
+
+#define CREATE_POWERUP_COMPONENT(name, duration) \
+    TiXmlElement* pPowerupPickupComponent = new TiXmlElement("PowerupPickupComponent"); \
+    XML_ADD_TEXT_ELEMENT("Type", name, pPowerupPickupComponent); \
+    XML_ADD_TEXT_ELEMENT("Duration", duration, pPowerupPickupComponent); \
+    pActorElem->LinkEndChild(pPowerupPickupComponent); \
+
+        // All powerups should have trigger
+        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
+
+        if (imageSet != "GAME_WARP")
+        {
+            pActorElem->LinkEndChild(ActorTemplates::CreateXmlData_GlitterComponent("Glitter_Yellow", true, false));
+        }
+
+        std::string imageSet = wwdObject->imageSet;
+        if (imageSet == "GAME_WARP")
+        {
+            TiXmlElement* pTeleportPickupComponent = new TiXmlElement("TeleportPickupComponent");
+            XML_ADD_2_PARAM_ELEMENT("Destination", "x", ToStr(wwdObject->speedX).c_str(), "y", ToStr(wwdObject->speedY).c_str(), pTeleportPickupComponent);
+            pActorElem->LinkEndChild(pTeleportPickupComponent);
+
+            TiXmlElement* pAnimCompElem = new TiXmlElement("AnimationComponent");
+            pAnimCompElem->LinkEndChild(CreateCycleAnimation(125));
+            pActorElem->LinkEndChild(pAnimCompElem);
+        }
+        else if (imageSet == "GAME_POWERUPS_INVULNERABLE")
+        {
+            CREATE_POWERUP_COMPONENT("Invulnerability", "30000");
+        }
+        else if (imageSet == "GAME_POWERUPS_GHOST")
+        {
+            CREATE_POWERUP_COMPONENT("Invisibility", "30000");
+        }
+        else if (imageSet == "GAME_CATNIPS_NIP1")
+        {
+            int duration = 15000;
+            if (wwdObject->smarts > 0)
+            {
+                duration = wwdObject->smarts;
+            }
+
+            CREATE_POWERUP_COMPONENT("Catnip", ToStr(duration).c_str());
+        }
+        else if (imageSet == "GAME_CATNIPS_NIP2")
+        {
+            int duration = 30000;
+            if (wwdObject->smarts > 0)
+            {
+                duration = wwdObject->smarts;
+            }
+
+            CREATE_POWERUP_COMPONENT("Catnip", ToStr(duration).c_str());
+        }
+        else if (imageSet == "GAME_POWERUPS_FIRESWORD")
+        {
+            CREATE_POWERUP_COMPONENT("FireSword", "30000");
+        }
+        else if (imageSet == "GAME_POWERUPS_ICESWORD")
+        {
+            CREATE_POWERUP_COMPONENT("IceSword", "30000");
+        }
+        else if (imageSet == "GAME_POWERUPS_LIGHTNINGSWORD")
+        {
+            CREATE_POWERUP_COMPONENT("LightningSword", "30000");
+        }
+        else
+        {
+            LOG_ERROR("Unknown special powerup: " + imageSet);
+        }
+    }
+    else if (logic == "TreasurePowerup" ||
+             logic == "GlitterlessPowerup")
+    {
+        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
+
+        std::string imageSet = wwdObject->imageSet;
+        int points = 0;
+        std::string pickupSound;
+
+        if (imageSet == "GAME_TREASURE_COINS")
+        {
+            points = 100;
+            pickupSound = SOUND_GAME_TREASURE_COIN;
+        }
+        else if (imageSet == "GAME_TREASURE_GOLDBARS")
+        {
+            points = 500;
+            pickupSound = SOUND_GAME_TREASURE_GOLDBAR;
+        }
+        else if (imageSet == "GAME_TREASURE_NECKLACE")
+        {
+            points = 10000;
+            pickupSound = SOUND_GAME_TREASURE_GECKO;
+        }
+        else if (imageSet.find("GAME_TREASURE_RINGS") != std::string::npos)
+        {
+            points = 1500;
+            pickupSound = SOUND_GAME_TREASURE_RING;
+        }
+        else if (imageSet.find("GAME_TREASURE_CHALICES") != std::string::npos)
+        {
+            points = 2500;
+            pickupSound = SOUND_GAME_TREASURE_CHALICE;
+        }
+        else if (imageSet.find("GAME_TREASURE_CROSSES") != std::string::npos)
+        {
+            points = 5000;
+            pickupSound = SOUND_GAME_TREASURE_CROSS;
+        }
+        else if (imageSet.find("GAME_TREASURE_SCEPTERS") != std::string::npos)
+        {
+            points = 7500;
+            pickupSound = SOUND_GAME_TREASURE_SCEPTER;
+        }
+        else if (imageSet.find("GAME_TREASURE_GECKOS") != std::string::npos)
+        {
+            points = 10000;
+            pickupSound = SOUND_GAME_TREASURE_GECKO;
+        }
+        else if (imageSet.find("GAME_TREASURE_CROWNS") != std::string::npos)
+        {
+            points = 15000;
+            pickupSound = SOUND_GAME_TREASURE_CROWN;
+        }
+        else if (imageSet.find("GAME_TREASURE_JEWELEDSKULL") != std::string::npos)
+        {
+            points = 25000;
+            pickupSound = SOUND_GAME_TREASURE_SKULL;
+        }
+        else
+        {
+            assert(false && "Unknown treasure");
+        }
+
+        TiXmlElement* pScoreElement = new TiXmlElement("TreasurePickupComponent");
+        XML_ADD_TEXT_ELEMENT("ScorePoints", ToStr(points).c_str(), pScoreElement);
+        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pScoreElement);
+        pActorElem->LinkEndChild(pScoreElement);
+
+        if (imageSet != "GAME_TREASURE_COINS")
+        {
+            pActorElem->LinkEndChild(ActorTemplates::CreateXmlData_GlitterComponent("Glitter_Yellow", true, false));
+        }
+
+        TiXmlElement* elem = TreasureToXml(wwdObject);
+        if (elem)
+        {
+            pActorElem->LinkEndChild(elem);
+        }
+    }
+    else if (logic == "HealthPowerup" && imageSet.find("CATNIPS") == std::string::npos)
+    {
+        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
+
+        TiXmlElement* healthPickupComponent = new TiXmlElement("HealthPickupComponent");
+        pActorElem->LinkEndChild(healthPickupComponent);
+
+        std::string imageSet = wwdObject->imageSet;
+        if (imageSet == "LEVEL_HEALTH")
+        {
+            XML_ADD_TEXT_ELEMENT("Health", "5", healthPickupComponent);
+        }
+        else if (imageSet == "GAME_HEALTH_POTION1")
+        {
+            XML_ADD_TEXT_ELEMENT("Health", "10", healthPickupComponent);
+        }
+        else if (imageSet == "GAME_HEALTH_POTION2")
+        {
+            XML_ADD_TEXT_ELEMENT("Health", "20", healthPickupComponent);
+        }
+        else if (imageSet == "GAME_HEALTH_POTION3")
+        {
+            XML_ADD_TEXT_ELEMENT("Health", "35", healthPickupComponent);
+        }
+        else
+        {
+            LOG_WARNING("Trying to parse unknown HealthPickupComponent" + imageSet);
+        }
+    }
+    else
+    {
+        //LOG_WARNING("Unknown logic: " + logic);
+    }
+
+    return pActorElem;
+}
+
+//=====================================================================================================================
+// Claw to Xml
+//=====================================================================================================================
+
+inline TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
+{
+    TiXmlElement* pClawActor = new TiXmlElement("Actor");
+    pClawActor->SetAttribute("Type", "Claw");
+    pClawActor->SetAttribute("resource", "created");
+
+    /*ActorBodyDef clawBodyDef;
+    clawBodyDef.addFootSensor = true;
+    clawBodyDef.bodyType = b2_dynamicBody;
+    clawBodyDef.collisionFlag = CollisionFlag_Controller;
+    clawBodyDef.collisionMask = 0x1;
+    clawBodyDef.makeSensor = false;
+    clawBodyDef.makeCapsule = true;
+    clawBodyDef.size = Point(40, 130);
+    clawBodyDef.gravityScale = 4.0;
+    clawBodyDef.fixtureType = FixtureType_Controller;
+    pClawActor->LinkEndChild(ActorTemplates::CreatePhysicsComponent(&clawBodyDef));*/
+
+    //pClawActor->LinkEndChild(CreatePositionComponent(pWapWwd->properties.startX, pWapWwd->properties.startY));
+    pClawActor->LinkEndChild(CreatePositionComponent(6250, 4350));
+    pClawActor->LinkEndChild(CreateCollisionComponent(40, 110));
+    pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, 130, 40, 110, 4.0, 0.0, 0.5));
+    pClawActor->LinkEndChild(CreateControllableComponent(true));
+    pClawActor->LinkEndChild(CreateAnimationComponent("/CLAW/ANIS/*"));
+    pClawActor->LinkEndChild(CreateSoundComponent("/CLAW/SOUNDS/*"));
+    pClawActor->LinkEndChild(CreateActorRenderComponent("/CLAW/IMAGES/*", 4000));
+
+    TiXmlElement* pScoreComponent = new TiXmlElement("ScoreComponent");
+    XML_ADD_TEXT_ELEMENT("Score", "0", pScoreComponent);
+    pClawActor->LinkEndChild(pScoreComponent);
+
+    TiXmlElement* pLifeComponent = new TiXmlElement("LifeComponent");
+    XML_ADD_TEXT_ELEMENT("Lives", "0", pLifeComponent);
+    pClawActor->LinkEndChild(pLifeComponent);
+
+    TiXmlElement* pHealthComponent = new TiXmlElement("HealthComponent");
+    XML_ADD_TEXT_ELEMENT("Health", "0", pHealthComponent);
+    XML_ADD_TEXT_ELEMENT("MaxHealth", "150", pHealthComponent);
+    pClawActor->LinkEndChild(pHealthComponent);
+
+    TiXmlElement* pAmmoComponent = new TiXmlElement("AmmoComponent");
+    XML_ADD_TEXT_ELEMENT("Pistol", "0", pAmmoComponent);
+    XML_ADD_TEXT_ELEMENT("Magic", "0", pAmmoComponent);
+    XML_ADD_TEXT_ELEMENT("Dynamite", "0", pAmmoComponent);
+    pClawActor->LinkEndChild(pAmmoComponent);
+
+    TiXmlElement* pPowerupComponent = new TiXmlElement("PowerupComponent");
+    pClawActor->LinkEndChild(pPowerupComponent);
+
+    return pClawActor;
+}
+
+//=====================================================================================================================
+// HUD to Xml
+//=====================================================================================================================
+
+inline TiXmlElement* CreateHUDElement(std::string pathToImages, int animFrameDuration, std::string animPath, Point position, bool anchorRight, bool anchorBottom, std::string key, bool visible = true)
+{
+    TiXmlElement* pHUDElement = new TiXmlElement("Actor");
+    pHUDElement->SetAttribute("Type", pathToImages.c_str());
+    pHUDElement->SetAttribute("resource", "created");
+
+    pHUDElement->LinkEndChild(CreatePositionComponent(position.x, position.y));
+
+    if (!animPath.empty())
+    {
+        pHUDElement->LinkEndChild(CreateAnimationComponent(animPath));
+    }
+    else
+    {
+        TiXmlElement* pAnimCompElem = new TiXmlElement("AnimationComponent");
+        pAnimCompElem->LinkEndChild(CreateCycleAnimation(animFrameDuration));
+        pHUDElement->LinkEndChild(pAnimCompElem);
+    }
+
+    TiXmlElement* pHUDRenderComponentElem = new TiXmlElement("HUDRenderComponent");
+    XML_ADD_TEXT_ELEMENT("ImagePath", pathToImages.c_str(), pHUDRenderComponentElem);
+    if (anchorRight)
+    {
+        XML_ADD_TEXT_ELEMENT("AnchorRight", "true", pHUDRenderComponentElem);
+    }
+    if (anchorBottom)
+    {
+        XML_ADD_TEXT_ELEMENT("AnchorBottom", "true", pHUDRenderComponentElem);
+    }
+    if (visible)
+    {
+        XML_ADD_TEXT_ELEMENT("Visible", "true", pHUDRenderComponentElem);
+    }
+    else
+    {
+        XML_ADD_TEXT_ELEMENT("Visible", "false", pHUDRenderComponentElem);
+    }
+    if (!key.empty())
+    {
+        XML_ADD_TEXT_ELEMENT("HUDElementKey", key.c_str(), pHUDRenderComponentElem);
+    }
+    pHUDElement->LinkEndChild(pHUDRenderComponentElem);
+
+    return pHUDElement;
+}
+
+TiXmlElement* WwdToXml(WapWwd* wapWwd);
+
+
+#endif

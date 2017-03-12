@@ -205,6 +205,7 @@ void HumanView::RegisterAllDelegates()
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::PowerupUpdatedTimeDelegate), EventData_Updated_Powerup_Time::sk_EventType);
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::PowerupUpdatedStatusDelegate), EventData_Updated_Powerup_Status::sk_EventType);
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::RequestPlaySoundDelegate), EventData_Request_Play_Sound::sk_EventType);
+    pEventMgr->VAddListener(MakeDelegate(this, &HumanView::RequestResetLevelDelegate), EventData_Request_Reset_Level::sk_EventType);
 }
 
 void HumanView::RemoveAllDelegates()
@@ -219,6 +220,7 @@ void HumanView::RemoveAllDelegates()
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::PowerupUpdatedTimeDelegate), EventData_Updated_Powerup_Time::sk_EventType);
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::PowerupUpdatedStatusDelegate), EventData_Updated_Powerup_Status::sk_EventType);
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::RequestPlaySoundDelegate), EventData_Request_Play_Sound::sk_EventType);
+    pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::RequestResetLevelDelegate), EventData_Request_Reset_Level::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -393,4 +395,13 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
             g_pApp->GetAudio()->PlaySound(pSound.get(), false);
         }
     }
+}
+
+void HumanView::RequestResetLevelDelegate(IEventDataPtr pEventData)
+{
+    // This event actually has nothing but the information that someone requested level reset
+    shared_ptr<EventData_Request_Reset_Level> pCastEventData = 
+        static_pointer_cast<EventData_Request_Reset_Level>(pEventData);
+
+    LOG_ERROR("");
 }

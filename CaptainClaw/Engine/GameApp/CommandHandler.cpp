@@ -4,6 +4,9 @@
 
 #include "../Actor/Components/ControllerComponents/PowerupComponent.h"
 
+#include "../Events/EventMgr.h"
+#include "../Events/Events.h"
+
 std::vector<std::string> g_AvailableCheats;
 
 #define COMMAND_SET_BOOL_VALUE(targetCommandName, targetValue) \
@@ -61,6 +64,13 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
             pConsole->AddLine("Claw is not yet created, cannot apply Catnip buff", COLOR_RED);
             return;
         }
+    }
+
+    if (commandStr == "reset level")
+    {
+        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Request_Reset_Level));
+        pConsole->AddLine("Requested level reset.", COLOR_GREEN);
+        wasCommandExecuted = true;
     }
 
     if (!wasCommandExecuted)

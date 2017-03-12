@@ -1,7 +1,7 @@
 #include "WwdLoader.h"
 
 #include "../../GameApp/BaseGameApp.h"
-#include "../../Converters.h"
+//#include "../../Converters.h"
 #include "../../Interfaces.h"
 
 //=================================================================================================
@@ -22,7 +22,7 @@ WwdResourceExtraData::~WwdResourceExtraData()
 void WwdResourceExtraData::LoadWwd(char* rawBuffer, uint32 size)
 {
     _wapWorldLevel = WAP_WwdLoadFromData(rawBuffer, size);
-    WwdToXml(_wapWorldLevel);
+    //WwdToXml(_wapWorldLevel);
     //exit(0);
 }
 
