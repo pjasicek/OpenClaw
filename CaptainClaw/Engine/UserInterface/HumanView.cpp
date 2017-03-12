@@ -81,6 +81,7 @@ void HumanView::VOnRender(uint32 msDiff)
                 screenElement->VOnRender(msDiff);
             }
         }
+        //LOG("SCREEN ELEMENTS: " + ToStr(m_ScreenElements.size()))
 
         g_pApp->GetGameLogic()->VRenderDiagnostics(renderer, m_pCamera);
 
@@ -403,5 +404,15 @@ void HumanView::RequestResetLevelDelegate(IEventDataPtr pEventData)
     shared_ptr<EventData_Request_Reset_Level> pCastEventData = 
         static_pointer_cast<EventData_Request_Reset_Level>(pEventData);
 
-    LOG_ERROR("");
+    // Reset Graphical representation of level
+    m_ScreenElements.clear();
+
+    m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
+    m_pCamera.reset(new CameraNode(Point(0, 0), 0, 0));
+    m_pHUD.reset(new ScreenElementHUD());
+    m_pScene->AddChild(INVALID_ACTOR_ID, m_pCamera);
+    m_pScene->SetCamera(m_pCamera);
+    m_pCamera->SetSize(g_pApp->GetWindowSize().x, g_pApp->GetWindowSize().y);
+
+    g_pApp->GetGameLogic()->VResetLevel();
 }

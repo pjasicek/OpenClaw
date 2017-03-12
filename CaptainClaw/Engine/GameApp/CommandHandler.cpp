@@ -68,7 +68,7 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
 
     if (commandStr == "reset level")
     {
-        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Request_Reset_Level));
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Reset_Level));
         pConsole->AddLine("Requested level reset.", COLOR_GREEN);
         wasCommandExecuted = true;
     }

@@ -167,8 +167,8 @@ namespace ActorTemplates
         }
         else
         {
-            LOG_WARNING("Conflicting image set: " + imageSet);
-            LOG_WARNING("Assuming you know what you doing - be careful");
+            /*LOG_WARNING("Conflicting image set: " + imageSet);
+            LOG_WARNING("Assuming you know what you doing - be careful");*/
 
             return;
 

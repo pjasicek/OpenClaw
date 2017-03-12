@@ -214,6 +214,8 @@ class Point;
 class IGamePhysics
 {
 public:
+    virtual ~IGamePhysics() { }
+
     // Initialization and maintanance of the Physics World
     virtual bool VInitialize() = 0;
     virtual void VSyncVisibleScene() = 0;

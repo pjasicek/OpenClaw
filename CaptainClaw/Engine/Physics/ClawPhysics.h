@@ -69,12 +69,11 @@ public:
     virtual void VScaleActor(uint32_t actorId, double scale);
 
 private:
-    TiXmlDocument LoadPhysicsXmlConfig();
     b2Body* FindBox2DBody(uint32 actorId);
     uint32 FindActorId(b2Body* pBody);
     void ScheduleActorForRemoval(uint32 actorId) { m_ActorsToBeDestroyed.push_back(actorId); }
     
-    shared_ptr<b2World> m_pWorld;
+    unique_ptr<b2World> m_pWorld;
     unique_ptr<PhysicsDebugDrawer> m_pDebugDrawer;
     unique_ptr<PhysicsContactListener> m_pPhysicsContactListener;
 

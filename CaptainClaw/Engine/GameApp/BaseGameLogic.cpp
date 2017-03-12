@@ -11,6 +11,8 @@
 #include "GameSaves.h"
 #include "BaseGameLogic.h"
 
+#include "../Physics/ClawPhysics.h"
+
 #include <algorithm>
 #include <fstream>
 
@@ -542,6 +544,32 @@ StrongActorPtr BaseGameLogic::GetClawActor()
     }
 
     return nullptr;
+}
+
+void BaseGameLogic::VResetLevel()
+{
+    // Handle all pending events before reset
+    IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
+
+    for (auto actorIter : m_ActorMap)
+    {
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(actorIter.second->GetGUID()));
+        IEventMgr::Get()->VTriggerEvent(pEvent);
+    }
+
+    assert(m_ActorMap.empty());
+
+    // Process any pending events which could have arose from deleting all actors
+    IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
+
+    // Reset level info
+    m_pCurrentLevel.reset();
+
+    // Reset physics. TODO: is replacing pointer which is shared between multiple classes OK like this ?
+    m_pPhysics.reset(CreateClawPhysics());
+
+    // Load new level
+    VChangeState(GameState_LoadingLevel);
 }
 
 //=====================================================================================================================

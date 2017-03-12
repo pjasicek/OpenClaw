@@ -175,12 +175,13 @@ void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
         CalculatePatrolBorders();
 
         m_bInitialized = true;
+        return;
     }
 
     // Only makes sense to check for stuff when walking
     if (m_pWalkAction->isActive)
     {
-        if (fabs(m_pPhysics->VGetVelocity(_owner->GetGUID()).x) < DBL_EPSILON)
+        if (fabs(m_pPhysics->VGetVelocity(_owner->GetGUID()).x) < 0.1)
         {
             CommenceIdleBehaviour();
         }
@@ -195,6 +196,7 @@ void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
 void PatrolEnemyAIStateComponent::VOnStateEnter()
 {
     m_IsActive = true;
+    //CommenceIdleBehaviour();
     ChangeDirection(m_Direction);
 }
 

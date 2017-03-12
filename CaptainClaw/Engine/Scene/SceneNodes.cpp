@@ -37,7 +37,7 @@ SceneNode::SceneNode(uint32 actorId, BaseRenderComponent* renderComponent, Rende
 
 SceneNode::~SceneNode()
 {
-
+    //LOG("Destroyed SceneNode: " + ToStr(m_Properties.GetActorId()));
 }
 
 // Idk now, SDL2 should handle everything on its own

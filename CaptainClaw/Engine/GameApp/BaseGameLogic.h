@@ -67,6 +67,9 @@ public:
     virtual void VChangeState(GameState newState);
     const GameState GetGameState() const { return m_GameState; }
 
+    // ???
+    virtual void VResetLevel();
+
     // Render diagnostics
     void ToggleRenderDiagnostics() { m_RenderDiagnostics = !m_RenderDiagnostics; }
     virtual void VRenderDiagnostics(SDL_Renderer* pRenderer, shared_ptr<CameraNode> pCamera);

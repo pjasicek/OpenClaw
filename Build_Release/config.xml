@@ -18,7 +18,7 @@
     </Font>
     <Assets>
         <RezArchive>CLAW.REZ</RezArchive>
-        <ResourceCacheSize>50</ResourceCacheSize>
+        <ResourceCacheSize>300</ResourceCacheSize>
     </Assets>
     <Console>
         <BackgroundImagePath>console02.tga</BackgroundImagePath>
