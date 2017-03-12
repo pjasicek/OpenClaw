@@ -31,11 +31,6 @@ void SDL2ActorSceneNode::VRender(Scene* pScene)
         return;
     }
 
-    if (arc->IsHidden())
-    {
-        return;
-    }
-
     if (!arc->IsVisible())
     {
         return;

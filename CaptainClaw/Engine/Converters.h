@@ -973,6 +973,11 @@ void WwdToXml(WapWwd* wapWwd)
 
     std::string tileRootDirPath = wapWwd->properties.imageDirectoryPath;
     std::replace(tileRootDirPath.begin(), tileRootDirPath.end(), '\\', '/');
+    // Level 2 does not have /LEVEL2/TILES but only LEVEL2/TILES
+    if (tileRootDirPath[0] != '/')
+    {
+        tileRootDirPath.insert(0, "/");
+    }
 
     //---- [Level::Actor type=Plane]
     for (uint16 planeIdx = 0; planeIdx < wapWwd->properties.numPlanes; ++planeIdx)

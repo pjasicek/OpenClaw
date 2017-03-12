@@ -27,9 +27,6 @@ public:
 
     uint32 GetImagesCount() const { return m_ImageMap.size(); }
 
-    void SetHidden(bool hidden) { m_Hidden = hidden; }
-    bool IsHidden() { return m_Hidden; }
-
     // Gets actor's X-Y-W-H
     virtual SDL_Rect VGetPositionRect() const = 0;
 
@@ -47,7 +44,6 @@ protected:
     ImageMap m_ImageMap;
 
     shared_ptr<SceneNode> m_pSceneNode;
-    bool m_Hidden;
 
 private:
     shared_ptr<SceneNode> GetSceneNode();

@@ -392,7 +392,7 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
     {
         m_PlaneProperties.zCoord = std::stoi(node->GetText());
     }
-
+    
     m_PlaneProperties.tilesOnAxisX = m_PlaneProperties.planePixelWidth / m_PlaneProperties.tilePixelWidth;
     m_PlaneProperties.tilesOnAxisY = m_PlaneProperties.planePixelHeight / m_PlaneProperties.tilePixelHeight;
 

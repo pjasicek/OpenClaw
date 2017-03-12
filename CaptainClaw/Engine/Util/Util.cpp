@@ -197,6 +197,7 @@ namespace Util
                 (tileDesc->rect.right == tileDesc->width - 1) && (tileDesc->rect.bottom > 0)) // !!! Not 100% but it works because we have case (3) ending on right side somewhere between top and bottom
             {
                 //myfile << "Tile 5" << endl;
+                assert(false && "Paring rects case: 5");
             }
             // !!! UNUSED !!!
             // My paper case (6)
@@ -205,6 +206,7 @@ namespace Util
                 (tileDesc->rect.right > 0) && (tileDesc->rect.bottom == tileDesc->height - 1)) // !!! similiar to (2)
             {
                 //myfile << "Tile 6" << endl;
+                assert(false && "Paring rects case: 6");
             }
             // My paper case (7) --- PAPERFIED
             // This yields 3 rectangles
@@ -283,6 +285,7 @@ namespace Util
                 (IsInBetween(tileDesc->rect.right, 0, tileDesc->width - 1)) && (IsInBetween(tileDesc->rect.bottom, 0, tileDesc->height - 1)))
             {
                 //myfile << "Tile 11" << endl;
+                assert(false && "Paring rects case: 11");
             }
             // My paper case (12)
             // This yields 4 rectangles
@@ -290,6 +293,7 @@ namespace Util
                 (tileDesc->rect.right == tileDesc->width - 1) && IsInBetween(tileDesc->rect.bottom, 0, tileDesc->height - 1))
             {
                 //myfile << "Tile 12" << endl;
+                assert(false && "Paring rects case: 12");
             }
             // My paper case (13) --- PAPERFIED
             // This yields 4 rectangles
@@ -316,6 +320,7 @@ namespace Util
                 IsInBetween(tileDesc->rect.right, 0, tileDesc->width - 1) && (tileDesc->rect.bottom == tileDesc->height - 1))
             {
                 //myfile << "Tile 14" << endl;
+                assert(false && "Paring rects case: 14");
             }
             // My paper case (15)
             // This yields 5 rectangles
@@ -323,6 +328,7 @@ namespace Util
                 IsInBetween(tileDesc->rect.right, 0, tileDesc->width - 1) && (tileDesc->rect.bottom == tileDesc->height - 1))
             {
                 //myfile << "Tile 15" << endl;
+                assert(false && "Paring rects case: 16");
             }
         }
         else
@@ -330,7 +336,12 @@ namespace Util
             assert(false);
         }
 
-        assert(!tilePrototype->collisionRectangles.empty());
+        if (tilePrototype->collisionRectangles.empty())
+        {
+            LOG_ERROR("Collision rectangles are empty for tile: " + ToStr(tileDesc->tileId));
+            //PrintRect(tileDesc->)
+            assert(!tilePrototype->collisionRectangles.empty());
+        }
 
         /*for (auto a : tilePrototype->collisionRectangles)
         {

@@ -73,7 +73,7 @@ void CrumblingPegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, An
     {
         pAnimation->Pause();
         auto pARC = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-        pARC->SetHidden(true);
+        pARC->SetVisible(false);
     }
 }
 
@@ -99,7 +99,7 @@ void CrumblingPegAIComponent::ClawDiedDelegate(IEventDataPtr pEventData)
     pAnimationComponent->GetCurrentAnimation()->Pause();
 
     auto pARC = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-    pARC->SetHidden(false);
+    pARC->SetVisible(true);
     pARC->SetImage(pAnimationComponent->GetCurrentAnimation()->GetCurrentAnimationFrame()->imageName);
 
     m_pPhysics->VActivate(_owner->GetGUID());
