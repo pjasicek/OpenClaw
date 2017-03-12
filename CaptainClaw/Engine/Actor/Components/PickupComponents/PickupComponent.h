@@ -50,6 +50,7 @@ protected:
 
 private:
     int32 m_ScorePoints;
+    std::string m_PickupSound;
     bool m_IsPickedUp;
 
     shared_ptr<PositionComponent> m_pPositionComponent;

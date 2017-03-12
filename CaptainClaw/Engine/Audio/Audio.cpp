@@ -49,6 +49,11 @@ bool Audio::Initialize(int frequency, int channels, int chunkSize, const char* m
         return false;
     }
 
+    /*if (Mix_AllocateChannels(16))
+    {
+
+    }*/
+
 #ifdef _WIN32
     _isMidiRpcInitialized = InitializeMidiRPC(midiRpcPath);
     if (!_isMidiRpcInitialized)
@@ -182,12 +187,12 @@ void Audio::PlaySound(const char* soundData, size_t soundSize, bool looping)
     SDL_RWops* soundRwOps = SDL_RWFromMem((void*)soundData, soundSize);
     Mix_Chunk* soundChunk = Mix_LoadWAV_RW(soundRwOps, 1);
 
-    Mix_PlayChannel(-1, soundChunk, looping ? -1 : 1);
+    Mix_PlayChannel(-1, soundChunk, looping ? -1 : 0);
 }
 
 void Audio::PlaySound(Mix_Chunk* sound, bool looping)
 {
-    Mix_PlayChannel(-1, sound, looping ? -1 : 1);
+    Mix_PlayChannel(-1, sound, looping ? -1 : 0);
 }
 
 void Audio::SetSoundVolume(uint32_t volume)

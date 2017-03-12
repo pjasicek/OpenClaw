@@ -389,6 +389,7 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
             shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(pCastEventData->GetSoundPath().c_str());
             assert(pSound != nullptr);
 
+            Mix_VolumeChunk(pSound.get(), pCastEventData->GetVolume());
             g_pApp->GetAudio()->PlaySound(pSound.get(), false);
         }
     }

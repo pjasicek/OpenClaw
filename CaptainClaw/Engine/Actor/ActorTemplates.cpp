@@ -73,6 +73,69 @@ namespace ActorTemplates
         { PickupType_Powerup_IceSword,          "" },
     };
 
+    std::map<PickupType, std::string> g_PickupTypeToPickupSoundMap =
+    {
+        { PickupType_Default,                   SOUND_GAME_TREASURE_COIN },
+        { PickupType_Treasure_Goldbars,         SOUND_GAME_TREASURE_GOLDBAR },
+        { PickupType_Treasure_Rings_Red,        SOUND_GAME_TREASURE_RING },
+        { PickupType_Treasure_Rings_Green,      SOUND_GAME_TREASURE_RING },
+        { PickupType_Treasure_Rings_Blue,       SOUND_GAME_TREASURE_RING },
+        { PickupType_Treasure_Rings_Purple,     SOUND_GAME_TREASURE_RING },
+        { PickupType_Treasure_Necklace,         SOUND_GAME_TREASURE_GECKO },
+        { PickupType_Treasure_Crosses_Red,      SOUND_GAME_TREASURE_CROSS },
+        { PickupType_Treasure_Crosses_Green,    SOUND_GAME_TREASURE_CROSS },
+        { PickupType_Treasure_Crosses_Blue,     SOUND_GAME_TREASURE_CROSS },
+        { PickupType_Treasure_Crosses_Purple,   SOUND_GAME_TREASURE_CROSS },
+        { PickupType_Treasure_Scepters_Red,     SOUND_GAME_TREASURE_SCEPTER },
+        { PickupType_Treasure_Scepters_Green,   SOUND_GAME_TREASURE_SCEPTER },
+        { PickupType_Treasure_Scepters_Blue,    SOUND_GAME_TREASURE_SCEPTER },
+        { PickupType_Treasure_Scepters_Purple,  SOUND_GAME_TREASURE_SCEPTER },
+        { PickupType_Treasure_Geckos_Red,       SOUND_GAME_TREASURE_GECKO },
+        { PickupType_Treasure_Geckos_Green,     SOUND_GAME_TREASURE_GECKO },
+        { PickupType_Treasure_Geckos_Blue,      SOUND_GAME_TREASURE_GECKO },
+        { PickupType_Treasure_Geckos_Purple,    SOUND_GAME_TREASURE_GECKO },
+        { PickupType_Ammo_Deathbag, "" },
+        { PickupType_Ammo_Shot, "" },
+        { PickupType_Ammo_Shotbag, "" },
+        { PickupType_Powerup_Catnip_1, "" },
+        { PickupType_Powerup_Catnip_2, "" },
+        { PickupType_Health_Breadwater, "" },
+        { PickupType_Health_25, "" },
+        { PickupType_Health_10, "" },
+        { PickupType_Health_15, "" },
+        { PickupType_Ammo_Magic_5, "" },
+        { PickupType_Ammo_Magic_10, "" },
+        { PickupType_Ammo_Magic_25, "" },
+        { PickupType_Mappiece, "" },
+        { PickupType_Warp, "" },
+        { PickupType_Treasure_Coins,            SOUND_GAME_TREASURE_COIN },
+        { PickupType_Ammo_Dynamite, "" },
+        { PickupType_Curse_Ammo, "" },
+        { PickupType_Curse_Magic, "" },
+        { PickupType_Curse_Health, "" },
+        { PickupType_Curse_Death, "" },
+        { PickupType_Curse_Treasure, "" },
+        { PickupType_Curse_Freeze, "" },
+        { PickupType_Treasure_Chalices_Red,     SOUND_GAME_TREASURE_CHALICE },
+        { PickupType_Treasure_Chalices_Green,   SOUND_GAME_TREASURE_CHALICE },
+        { PickupType_Treasure_Chalices_Blue,    SOUND_GAME_TREASURE_CHALICE },
+        { PickupType_Treasure_Chalices_Purple,  SOUND_GAME_TREASURE_CHALICE },
+        { PickupType_Treasure_Crowns_Red,       SOUND_GAME_TREASURE_CROWN },
+        { PickupType_Treasure_Crowns_Green,     SOUND_GAME_TREASURE_CROWN },
+        { PickupType_Treasure_Crowns_Blue,      SOUND_GAME_TREASURE_CROWN },
+        { PickupType_Treasure_Crowns_Purple,    SOUND_GAME_TREASURE_CROWN },
+        { PickupType_Treasure_Skull_Red,        SOUND_GAME_TREASURE_SKULL },
+        { PickupType_Treasure_Skull_Green,      SOUND_GAME_TREASURE_SKULL },
+        { PickupType_Treasure_Skull_Blue,       SOUND_GAME_TREASURE_SKULL },
+        { PickupType_Treasure_Skull_Purple,     SOUND_GAME_TREASURE_SKULL },
+        { PickupType_Powerup_Invisibility, "" },
+        { PickupType_Powerup_Invincibility, "" },
+        { PickupType_Powerup_Life, "" },
+        { PickupType_Powerup_FireSword, "" },
+        { PickupType_Powerup_LightningSword, "" },
+        { PickupType_Powerup_IceSword, "" },
+    };
+
     //=====================================================================================================================
     // Helper functions
     //=====================================================================================================================
@@ -706,12 +769,13 @@ namespace ActorTemplates
         return pActorElem;
     }
 
-    TiXmlElement* CreateXmlData_TreasurePickupActor(std::string imageSet, Point position, bool isStatic)
+    TiXmlElement* CreateXmlData_TreasurePickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
     {
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic);
 
         TiXmlElement* pTreasurePickupComponent = new TiXmlElement("TreasurePickupComponent");
         XML_ADD_TEXT_ELEMENT("ScorePoints", ToStr(GetScorePointsFromImageSet(imageSet)).c_str(), pTreasurePickupComponent);
+        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pTreasurePickupComponent);
         pActor->LinkEndChild(pTreasurePickupComponent);
 
         // Coins have animation
@@ -1324,7 +1388,14 @@ namespace ActorTemplates
         TiXmlElement* pActorXmlData = NULL;
         if (imageSet.find("_TREASURE") != std::string::npos)
         {
-            pActorXmlData = CreateXmlData_TreasurePickupActor(imageSet, position, isStatic);
+            std::string pickupSound = g_PickupTypeToPickupSoundMap[pickupType];
+            if (pickupSound.empty())
+            {
+                LOG_ERROR("Could not get valid pickup sound for pickup type: " + ToStr(pickupType));
+                return StrongActorPtr();
+            }
+
+            pActorXmlData = CreateXmlData_TreasurePickupActor(imageSet, pickupSound, position, isStatic);
         }
         else if (imageSet.find("_CATNIPS") != std::string::npos)
         {

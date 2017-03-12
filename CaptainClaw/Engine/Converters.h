@@ -723,19 +723,66 @@ TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
 
         std::string imageSet = wwdObject->imageSet;
         int points = 0;
-        if (imageSet == "GAME_TREASURE_COINS") points = 100;
-        else if (imageSet == "GAME_TREASURE_GOLDBARS") points = 500;
-        else if (imageSet == "GAME_TREASURE_NECKLACE") points = 10000;
-        else if (imageSet.find("GAME_TREASURE_RINGS") != std::string::npos) points = 1500;
-        else if (imageSet.find("GAME_TREASURE_CHALICES") != std::string::npos) points = 2500;
-        else if (imageSet.find("GAME_TREASURE_CROSSES") != std::string::npos) points = 5000;
-        else if (imageSet.find("GAME_TREASURE_SCEPTERS") != std::string::npos) points = 7500;
-        else if (imageSet.find("GAME_TREASURE_GECKOS") != std::string::npos) points = 10000;
-        else if (imageSet.find("GAME_TREASURE_CROWNS") != std::string::npos) points = 15000;
-        else if (imageSet.find("GAME_TREASURE_JEWELEDSKULL") != std::string::npos) points = 25000;
+        std::string pickupSound;
+
+        if (imageSet == "GAME_TREASURE_COINS")
+        {
+            points = 100;
+            pickupSound = SOUND_GAME_TREASURE_COIN;
+        }
+        else if (imageSet == "GAME_TREASURE_GOLDBARS")
+        {
+            points = 500;
+            pickupSound = SOUND_GAME_TREASURE_GOLDBAR;
+        }
+        else if (imageSet == "GAME_TREASURE_NECKLACE")
+        {
+            points = 10000;
+            pickupSound = SOUND_GAME_TREASURE_GECKO;
+        }
+        else if (imageSet.find("GAME_TREASURE_RINGS") != std::string::npos)
+        {
+            points = 1500;
+            pickupSound = SOUND_GAME_TREASURE_RING;
+        }
+        else if (imageSet.find("GAME_TREASURE_CHALICES") != std::string::npos)
+        {
+            points = 2500;
+            pickupSound = SOUND_GAME_TREASURE_CHALICE;
+        }
+        else if (imageSet.find("GAME_TREASURE_CROSSES") != std::string::npos)
+        {
+            points = 5000;
+            pickupSound = SOUND_GAME_TREASURE_CROSS;
+        }
+        else if (imageSet.find("GAME_TREASURE_SCEPTERS") != std::string::npos)
+        {
+            points = 7500;
+            pickupSound = SOUND_GAME_TREASURE_SCEPTER;
+        }
+        else if (imageSet.find("GAME_TREASURE_GECKOS") != std::string::npos)
+        {
+            points = 10000;
+            pickupSound = SOUND_GAME_TREASURE_GECKO;
+        }
+        else if (imageSet.find("GAME_TREASURE_CROWNS") != std::string::npos)
+        {
+            points = 15000;
+            pickupSound = SOUND_GAME_TREASURE_CROWN;
+        }
+        else if (imageSet.find("GAME_TREASURE_JEWELEDSKULL") != std::string::npos)
+        {
+            points = 25000;
+            pickupSound = SOUND_GAME_TREASURE_SKULL;
+        }
+        else
+        {
+            assert(false && "Unknown treasure");
+        }
 
         TiXmlElement* pScoreElement = new TiXmlElement("TreasurePickupComponent");
         XML_ADD_TEXT_ELEMENT("ScorePoints", ToStr(points).c_str(), pScoreElement);
+        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pScoreElement);
         pActorElem->LinkEndChild(pScoreElement);
 
         if (imageSet != "GAME_TREASURE_COINS")
@@ -1220,6 +1267,7 @@ void WwdToXml(WapWwd* wapWwd)
             }
         }
 
+        // TODO: Use stuff from ActorTemplates.cpp
         if (logic == "TreasurePowerup" || logic == "GlitterlessPowerup")
         {
             //----- [Level::Actors::ActorProperties::TreasurePickupComponent]
@@ -1229,19 +1277,65 @@ void WwdToXml(WapWwd* wapWwd)
             assert(imageSet.find("TREASURE") != std::string::npos);
 
             int32 points = 0;
+            std::string pickupSound;
 
-            if (imageSet == "GAME_TREASURE_COINS") points = 100;
-            else if (imageSet == "GAME_TREASURE_GOLDBARS") points = 500;
-            else if (imageSet == "GAME_TREASURE_NECKLACE") points = 10000;
-            else if (imageSet.find("GAME_TREASURE_RINGS") != std::string::npos) points = 1500;
-            else if (imageSet.find("GAME_TREASURE_CHALICES") != std::string::npos) points = 2500;
-            else if (imageSet.find("GAME_TREASURE_CROSSES") != std::string::npos) points = 5000;
-            else if (imageSet.find("GAME_TREASURE_SCEPTERS") != std::string::npos) points = 7500;
-            else if (imageSet.find("GAME_TREASURE_GECKOS") != std::string::npos) points = 10000;
-            else if (imageSet.find("GAME_TREASURE_CROWNS") != std::string::npos) points = 15000;
-            else if (imageSet.find("GAME_TREASURE_JEWELEDSKULL") != std::string::npos) points = 25000;
+            if (imageSet == "GAME_TREASURE_COINS")
+            {
+                points = 100;
+                pickupSound = SOUND_GAME_TREASURE_COIN;
+            }
+            else if (imageSet == "GAME_TREASURE_GOLDBARS")
+            {
+                points = 500;
+                pickupSound = SOUND_GAME_TREASURE_GOLDBAR;
+            }
+            else if (imageSet == "GAME_TREASURE_NECKLACE")
+            {
+                points = 10000;
+                pickupSound = SOUND_GAME_TREASURE_GECKO;
+            }
+            else if (imageSet.find("GAME_TREASURE_RINGS") != std::string::npos)
+            {
+                points = 1500;
+                pickupSound = SOUND_GAME_TREASURE_RING;
+            }
+            else if (imageSet.find("GAME_TREASURE_CHALICES") != std::string::npos)
+            {
+                points = 2500;
+                pickupSound = SOUND_GAME_TREASURE_CHALICE;
+            }
+            else if (imageSet.find("GAME_TREASURE_CROSSES") != std::string::npos)
+            {
+                points = 5000;
+                pickupSound = SOUND_GAME_TREASURE_CROSS;
+            }
+            else if (imageSet.find("GAME_TREASURE_SCEPTERS") != std::string::npos)
+            {
+                points = 7500;
+                pickupSound = SOUND_GAME_TREASURE_SCEPTER;
+            }
+            else if (imageSet.find("GAME_TREASURE_GECKOS") != std::string::npos)
+            {
+                points = 10000;
+                pickupSound = SOUND_GAME_TREASURE_GECKO;
+            }
+            else if (imageSet.find("GAME_TREASURE_CROWNS") != std::string::npos)
+            {
+                points = 15000;
+                pickupSound = SOUND_GAME_TREASURE_CROWN;
+            }
+            else if (imageSet.find("GAME_TREASURE_JEWELEDSKULL") != std::string::npos)
+            {
+                points = 25000;
+                pickupSound = SOUND_GAME_TREASURE_SKULL;
+            }
+            else
+            {
+                assert(false && "Unknown treasure");
+            }
 
             XML_ADD_TEXT_ELEMENT("Points", ToStr(points).c_str(), treasurePickupComponent);
+            XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), treasurePickupComponent);
         }
 
         if (actorProperties.powerup != 0)

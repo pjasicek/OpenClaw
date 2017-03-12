@@ -99,6 +99,16 @@ bool TreasurePickupComponent::VDelegateInit(TiXmlElement* data)
     {
         m_ScorePoints = std::stoi(pElem->GetText());
     }
+    if (TiXmlElement* pElem = data->FirstChildElement("PickupSound"))
+    {
+        m_PickupSound = pElem->GetText();
+    }
+
+    if (m_PickupSound.empty())
+    {
+        LOG_ERROR("No pickup sound for actor: " + std::string(data->Parent()->ToElement()->Attribute("Type")));
+        assert(false && "No pickup sound for TreasurePickupComponent");
+    }
 
     return true;
 }
@@ -122,7 +132,7 @@ bool TreasurePickupComponent::VOnApply(Actor* pActorWhoPickedThis)
 {
     shared_ptr<ScoreComponent> pScoreComponent =
         MakeStrongPtr(pActorWhoPickedThis->GetComponent<ScoreComponent>(ScoreComponent::g_Name));
-    if (pScoreComponent)
+    if (pScoreComponent && !m_IsPickedUp)
     {
         pScoreComponent->AddScorePoints(m_ScorePoints);
 
@@ -137,6 +147,9 @@ bool TreasurePickupComponent::VOnApply(Actor* pActorWhoPickedThis)
         }
 
         ActorTemplates::CreateScorePopupActor(m_pPositionComponent->GetPosition(), m_ScorePoints);
+
+        // Play pickup sound
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(m_PickupSound.c_str(), 38, false)));
 
         return true;
     }

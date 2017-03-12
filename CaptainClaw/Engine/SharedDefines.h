@@ -20,6 +20,7 @@
 #include "Events/EventMgr.h"
 #include "XmlMacros.h"
 #include "Interfaces.h"
+#include "SoundStrings.h"
 
 using std::shared_ptr;
 using std::unique_ptr;

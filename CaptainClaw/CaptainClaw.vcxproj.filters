@@ -521,5 +521,8 @@
     <ClInclude Include="Engine\Actor\Components\PredefinedMoveComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\SoundStrings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

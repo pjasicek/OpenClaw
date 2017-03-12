@@ -194,6 +194,7 @@
     <ClInclude Include="Engine\Physics\PhysicsDebugDrawer.h" />
     <ClInclude Include="Engine\Process\PowerupProcess.h" />
     <ClInclude Include="Engine\Scene\HUDSceneNode.h" />
+    <ClInclude Include="Engine\SoundStrings.h" />
     <ClInclude Include="Engine\UserInterface\Console.h" />
     <ClInclude Include="Engine\Actor\Actor.h" />
     <ClInclude Include="Engine\Actor\ActorComponent.h" />
