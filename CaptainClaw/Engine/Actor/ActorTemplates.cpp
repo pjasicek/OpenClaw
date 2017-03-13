@@ -94,18 +94,18 @@ namespace ActorTemplates
         { PickupType_Treasure_Geckos_Green,     SOUND_GAME_TREASURE_GECKO },
         { PickupType_Treasure_Geckos_Blue,      SOUND_GAME_TREASURE_GECKO },
         { PickupType_Treasure_Geckos_Purple,    SOUND_GAME_TREASURE_GECKO },
-        { PickupType_Ammo_Deathbag, "" },
-        { PickupType_Ammo_Shot, "" },
-        { PickupType_Ammo_Shotbag, "" },
-        { PickupType_Powerup_Catnip_1, "" },
-        { PickupType_Powerup_Catnip_2, "" },
-        { PickupType_Health_Breadwater, "" },
-        { PickupType_Health_25, "" },
-        { PickupType_Health_10, "" },
-        { PickupType_Health_15, "" },
-        { PickupType_Ammo_Magic_5, "" },
-        { PickupType_Ammo_Magic_10, "" },
-        { PickupType_Ammo_Magic_25, "" },
+        { PickupType_Ammo_Deathbag,             SOUND_GAME_PICKUP_AMMUNITION },
+        { PickupType_Ammo_Shot,                 SOUND_GAME_PICKUP_AMMUNITION },
+        { PickupType_Ammo_Shotbag,              SOUND_GAME_PICKUP_AMMUNITION },
+        { PickupType_Powerup_Catnip_1,          SOUND_GAME_PICKUP_CATNIP },
+        { PickupType_Powerup_Catnip_2,          SOUND_GAME_PICKUP_CATNIP },
+        { PickupType_Health_Breadwater,         SOUND_GAME_PICKUP_FOODITEM },
+        { PickupType_Health_25,                 SOUND_GAME_PICKUP_POTION },
+        { PickupType_Health_10,                 SOUND_GAME_PICKUP_POTION },
+        { PickupType_Health_15,                 SOUND_GAME_PICKUP_POTION },
+        { PickupType_Ammo_Magic_5,              SOUND_GAME_PICKUP_MAGIC },
+        { PickupType_Ammo_Magic_10,             SOUND_GAME_PICKUP_MAGIC },
+        { PickupType_Ammo_Magic_25,             SOUND_GAME_PICKUP_MAGIC },
         { PickupType_Mappiece, "" },
         { PickupType_Warp, "" },
         { PickupType_Treasure_Coins,            SOUND_GAME_TREASURE_COIN },
@@ -207,9 +207,11 @@ namespace ActorTemplates
         else if (imageSet == "GAME_HEALTH_POTION2") healthCount = 15;
         else if (imageSet == "GAME_HEALTH_POTION3") healthCount = 25;
         else if (imageSet == "GAME_HEALTH_BREADWATER") healthCount = 5;
+        else if (imageSet == "LEVEL_HEALTH") healthCount = 5;
 
         if (healthCount == 0)
         {
+            LOG_ERROR("Offending imageset: " + imageSet);
             assert(false && "Invalid health pickup");
         }
 
@@ -787,30 +789,32 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_AmmoPickupActor(std::string imageSet, Point position, bool isStatic)
+    TiXmlElement* CreateXmlData_AmmoPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
     {
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic);
 
         TiXmlElement* pAmmoPickupComponent = new TiXmlElement("AmmoPickupComponent");
         std::pair<std::string, uint32> ammoPair = GetAmmoCountAndTypeFromImageset(imageSet);
         XML_ADD_2_PARAM_ELEMENT("Ammo", "ammoType", ammoPair.first.c_str(), "ammoCount", ammoPair.second, pAmmoPickupComponent);
+        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pAmmoPickupComponent);
         pActor->LinkEndChild(pAmmoPickupComponent);
 
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_HealthPickupActor(std::string imageSet, Point position, bool isStatic)
+    TiXmlElement* CreateXmlData_HealthPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
     {
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic);
 
         TiXmlElement* pHealthPickupComponent = new TiXmlElement("HealthPickupComponent");
         XML_ADD_TEXT_ELEMENT("Health", ToStr(GetHealthCountFromImageSet(imageSet)).c_str(), pHealthPickupComponent);
+        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pHealthPickupComponent);
         pActor->LinkEndChild(pHealthPickupComponent);
 
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_PowerupPickupActor(std::string imageSet, Point position, bool isStatic)
+    TiXmlElement* CreateXmlData_PowerupPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
     {
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 5000, isStatic);
 
@@ -818,6 +822,7 @@ namespace ActorTemplates
         std::pair<std::string, uint32> powerupPair = GetPowerupTypeAndDurationFromImageset(imageSet);
         XML_ADD_TEXT_ELEMENT("Type", powerupPair.first.c_str(), pPowerupPickupComponent);
         XML_ADD_TEXT_ELEMENT("Duration", ToStr(powerupPair.second).c_str(), pPowerupPickupComponent);
+        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pPowerupPickupComponent);
         pActor->LinkEndChild(pPowerupPickupComponent);
 
         return pActor;
@@ -1385,31 +1390,31 @@ namespace ActorTemplates
             return StrongActorPtr();
         }
 
+        std::string pickupSound = g_PickupTypeToPickupSoundMap[pickupType];
+        if (pickupSound.empty())
+        {
+            LOG_ERROR("Could not get valid pickup sound for pickup type: " + ToStr(pickupType));
+            return StrongActorPtr();
+        }
+
         TiXmlElement* pActorXmlData = NULL;
         if (imageSet.find("_TREASURE") != std::string::npos)
         {
-            std::string pickupSound = g_PickupTypeToPickupSoundMap[pickupType];
-            if (pickupSound.empty())
-            {
-                LOG_ERROR("Could not get valid pickup sound for pickup type: " + ToStr(pickupType));
-                return StrongActorPtr();
-            }
-
             pActorXmlData = CreateXmlData_TreasurePickupActor(imageSet, pickupSound, position, isStatic);
         }
         else if (imageSet.find("_CATNIPS") != std::string::npos)
         {
-            pActorXmlData = CreateXmlData_PowerupPickupActor(imageSet, position, isStatic);
+            pActorXmlData = CreateXmlData_PowerupPickupActor(imageSet, pickupSound, position, isStatic);
         }
         else if (imageSet.find("_AMMO") != std::string::npos ||
                  imageSet.find("_MAGIC") != std::string::npos ||
                  imageSet.find("_DYNAMITE") != std::string::npos)
         {
-            pActorXmlData = CreateXmlData_AmmoPickupActor(imageSet, position, isStatic);
+            pActorXmlData = CreateXmlData_AmmoPickupActor(imageSet, pickupSound, position, isStatic);
         }
         else if (imageSet.find("_HEALTH") != std::string::npos)
         {
-            pActorXmlData = CreateXmlData_HealthPickupActor(imageSet, position, isStatic);
+            pActorXmlData = CreateXmlData_HealthPickupActor(imageSet, pickupSound, position, isStatic);
         }
         else
         {

@@ -503,56 +503,10 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
 
 void PhysicsContactListener::PreSolve(b2Contact* pContact, const b2Manifold* pOldManifold)
 {
-    b2Fixture* pFixtureA = pContact->GetFixtureA();
-    b2Fixture* pFixtureB = pContact->GetFixtureB();
-    // Trigger contact
-    /*{
-        if (pFixtureB->GetUserData() == (void*)FixtureType_Trigger)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_Trigger)
-        {
-            if (pFixtureB->GetBody()->GetType() == b2_dynamicBody)
-            {
-                pContact->SetEnabled(false);
-            }
-        }
-    }*/
-
-    /*{
-        if (pFixtureB->GetUserData() == (void*)FixtureType_Ground)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_Ground)
-        {
-            LOG_ERROR("HERE");
-            pFixtureA->SetSensor(false);
-            pContact->SetEnabled(true);
-        }
-    }*/
+    
 }
 
 void PhysicsContactListener::PostSolve(b2Contact* pContact, const b2ContactImpulse* pImpulse)
 {
-    b2Fixture* pFixtureA = pContact->GetFixtureA();
-    b2Fixture* pFixtureB = pContact->GetFixtureB();
-    // Trigger contact
-    /*{
-        if (pFixtureB->GetUserData() == (void*)FixtureType_Trigger)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_Trigger)
-        {
-            if (pFixtureB->GetBody()->GetType() == b2_dynamicBody)
-            {
-                pContact->SetEnabled(false);
-            }
-        }
-    }*/
+    
 }

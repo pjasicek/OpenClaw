@@ -16,8 +16,7 @@ public:
 
     virtual bool VOnApply(Actor* pActorWhoPickedThis);
 
-    // TODO: Future work: Create separate CheckpointFlagAIComponent and move there the transition from "RISE" to "WAVE"
-    virtual void VOnAnimationLooped(Animation* pAnimation) override;
+    virtual void VOnAnimationAtLastFrame(Animation* pAnimation) override;
 
 protected:
     virtual bool VDelegateInit(TiXmlElement* data);

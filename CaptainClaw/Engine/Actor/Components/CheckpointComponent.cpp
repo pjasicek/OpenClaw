@@ -62,10 +62,13 @@ bool CheckpointComponent::VOnApply(Actor* pActorWhoPickedThis)
     shared_ptr<EventData_Checkpoint_Reached> pEvent(new EventData_Checkpoint_Reached(pActorWhoPickedThis->GetGUID(), m_SpawnPosition, m_IsSaveCheckpoint, m_SaveCheckpointNumber));
     IEventMgr::Get()->VQueueEvent(pEvent);
 
+    // I Need to specify this here since I return false
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(SOUND_GAME_FLAG_RISE, 35, false)));
+
     return false;
 }
 
-void CheckpointComponent::VOnAnimationLooped(Animation* pAnimation)
+void CheckpointComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
 {
     if (!(pAnimation->GetName() == "wave"))
     {
@@ -74,5 +77,7 @@ void CheckpointComponent::VOnAnimationLooped(Animation* pAnimation)
         assert(pAnimationComponent);
 
         assert(pAnimationComponent->SetAnimation("wave"));
+
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(SOUND_GAME_FLAG_WAVE, 35, false)));
     }
 }

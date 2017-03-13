@@ -4,12 +4,12 @@
         <LevelName>La Roca</LevelName>
         <Checkpoint>
             <CheckpointNumber>0</CheckpointNumber>
-            <Score>123540</Score>
-            <Health>90</Health>
-            <Lives>3</Lives>
-            <BulletCount>25</BulletCount>
-            <MagicCount>20</MagicCount>
-            <DynamiteCount>15</DynamiteCount>
+            <Score>0</Score>
+            <Health>100</Health>
+            <Lives>5</Lives>
+            <BulletCount>75</BulletCount>
+            <MagicCount>50</MagicCount>
+            <DynamiteCount>50</DynamiteCount>
         </Checkpoint>
     </Level>
 </GameSaves>

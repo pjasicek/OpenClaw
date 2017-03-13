@@ -284,6 +284,11 @@ void AnimationComponent::OnAnimationLooped()
     NotifyAnimationLooped(_currentAnimation);
 }
 
+void AnimationComponent::OnAnimationAtLastFrame()
+{
+    NotifyAnimationAtLastFrame(_currentAnimation);
+}
+
 void AnimationComponent::SetDelay(uint32 msDelay)
 {
     _currentAnimation->SetDelay(msDelay);
@@ -335,6 +340,14 @@ void AnimationSubject::NotifyAnimationResumed(Animation* pAnimation)
     for (AnimationObserver* pSubject : m_AnimationObservers)
     {
         pSubject->VOnAnimationResumed(pAnimation);
+    }
+}
+
+void AnimationSubject::NotifyAnimationAtLastFrame(Animation* pAnimation)
+{
+    for (AnimationObserver* pSubject : m_AnimationObservers)
+    {
+        pSubject->VOnAnimationAtLastFrame(pAnimation);
     }
 }
 

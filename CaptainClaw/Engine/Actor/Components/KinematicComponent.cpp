@@ -237,7 +237,6 @@ void KinematicComponent::OnMoved(Point newPosition)
     std::vector<b2Body*> uniqueCarriedBodies = m_CarriedBodiesList;
     std::sort(uniqueCarriedBodies.begin(), uniqueCarriedBodies.end());
     uniqueCarriedBodies.erase(std::unique(uniqueCarriedBodies.begin(), uniqueCarriedBodies.end()), uniqueCarriedBodies.end());
-    //LOG("HERE");
     for (b2Body* pCarriedBody : uniqueCarriedBodies)
     {
         if (pCarriedBody->GetType() == b2_dynamicBody)

@@ -7,7 +7,6 @@ namespace ActorTemplates
 {
     // Exposed Component Xml data generating functions
     TiXmlElement* CreateXmlData_GlitterComponent(std::string glitterType, bool spawnImmediate, bool followOwner);
-    TiXmlElement* CreateXmlData_AmmoPickupActor(std::string imageSet, Point position, bool isStatic);
     TiXmlElement* CreatePhysicsComponent(const ActorBodyDef* pBodyDef);
     TiXmlElement* CreatePredefinedMoveComponent(std::vector<PredefinedMove>& moves, bool isInfinite);
 
@@ -18,6 +17,10 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_GlitterActor(std::string glitterType, Point position, int32 zCoord);
     TiXmlElement* CreateXmlData_CheckpointActor(std::string imageSet, Point position, int32 zCoord, Point spawnPosition, bool isSaveCheckpoint, uint32 saveCheckpointNumber);
     TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX);
+    TiXmlElement* CreateXmlData_AmmoPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
+    TiXmlElement* CreateXmlData_TreasurePickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
+    TiXmlElement* CreateXmlData_PowerupPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
+    TiXmlElement* CreateXmlData_HealthPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
 
     // This is used by the game itself
     StrongActorPtr CreateActorPickup(PickupType pickupType, Point position, bool isStatic = false);

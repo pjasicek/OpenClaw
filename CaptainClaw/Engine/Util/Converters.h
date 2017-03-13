@@ -644,7 +644,17 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic.find("AmmoPowerup") != std::string::npos)
     {
-        return ActorTemplates::CreateXmlData_AmmoPickupActor(wwdObject->imageSet, Point(wwdObject->x, wwdObject->y), true);
+        std::string pickupSound;
+        if (std::string(wwdObject->imageSet).find("MAGIC") != std::string::npos)
+        {
+            pickupSound = SOUND_GAME_PICKUP_MAGIC;
+        }
+        else
+        {
+            pickupSound = SOUND_GAME_PICKUP_AMMUNITION;
+        }
+
+        return ActorTemplates::CreateXmlData_AmmoPickupActor(wwdObject->imageSet, pickupSound, Point(wwdObject->x, wwdObject->y), true);
         //pActorElem->LinkEndChild(AmmoToXml(wwdObject));
     }
     else if (logic.find("SpecialPowerup") != std::string::npos ||
@@ -694,6 +704,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             }
 
             CREATE_POWERUP_COMPONENT("Catnip", ToStr(duration).c_str());
+            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_GAME_PICKUP_CATNIP, pPowerupPickupComponent);
         }
         else if (imageSet == "GAME_CATNIPS_NIP2")
         {
@@ -704,6 +715,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             }
 
             CREATE_POWERUP_COMPONENT("Catnip", ToStr(duration).c_str());
+            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_GAME_PICKUP_CATNIP, pPowerupPickupComponent);
         }
         else if (imageSet == "GAME_POWERUPS_FIRESWORD")
         {
@@ -804,6 +816,18 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic == "HealthPowerup" && imageSet.find("CATNIPS") == std::string::npos)
     {
+        std::string pickupSound = SOUND_GAME_PICKUP_FOODITEM;
+        if (std::string(wwdObject->imageSet).find("POTION") != std::string::npos ||
+            std::string(wwdObject->imageSet).find("MILK") != std::string::npos)
+        {
+            pickupSound = SOUND_GAME_PICKUP_POTION;
+        }
+
+
+        // TODO: Use this instead of the stuff below
+        /*delete pActorElem;
+        return ActorTemplates::CreateXmlData_HealthPickupActor(tmpImageSet, pickupSound, Point(wwdObject->x, wwdObject->y), true);*/
+
         pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
 
         TiXmlElement* healthPickupComponent = new TiXmlElement("HealthPickupComponent");
@@ -829,7 +853,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         else
         {
             LOG_WARNING("Trying to parse unknown HealthPickupComponent" + imageSet);
+            assert(false);
         }
+
+        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), healthPickupComponent);
     }
     else
     {

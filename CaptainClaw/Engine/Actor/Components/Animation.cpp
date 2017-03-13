@@ -192,6 +192,11 @@ void Animation::SetNextFrame()
         {
             looped = true;
         }
+        // If next frame will be last
+        else if (_currentAnimationFrame.idx + 2 == _animationFrames.size())
+        {
+            _owner->OnAnimationAtLastFrame();
+        }
     }
 
     int32 delta = 0;

@@ -17,6 +17,7 @@ public:
     void NotifyAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame);
     void NotifyAnimationPaused(Animation* pAnimation);
     void NotifyAnimationResumed(Animation* pAnimation);
+    void NotifyAnimationAtLastFrame(Animation* pAnimation);
     void AddObserver(AnimationObserver* pObserver);
     void RemoveObserver(AnimationObserver* pObserver);
 
@@ -32,6 +33,7 @@ public:
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) { }
     virtual void VOnAnimationPaused(Animation* pAnimation) { }
     virtual void VOnAnimationResumed(Animation* pAnimation) { }
+    virtual void VOnAnimationAtLastFrame(Animation* pAnimation) { }
 };
 
 typedef std::map<std::string, Animation*> AnimationMap;
@@ -76,6 +78,7 @@ private:
     void OnAnimationFinished();
     void OnAnimationFrameChanged(AnimationFrame* pLastFrame, AnimationFrame* pNewFrame);
     void OnAnimationLooped();
+    void OnAnimationAtLastFrame();
 
 
     AnimationMap _animationMap;

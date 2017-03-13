@@ -58,7 +58,6 @@ void HealthComponent::AddHealth(int32 health)
     {
         if (MakeStrongPtr(_owner->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name)))
         {
-            LOG("HERE");
             return;
         }
     }
