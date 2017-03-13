@@ -8,7 +8,7 @@
     </Display>
     <Audio>
         <Frequency>44100</Frequency>
-        <Channels>4</Channels>
+        <Channels>1</Channels>
         <ChunkSize>2048</ChunkSize>
         <MusicRpcServerPath>MidiProc.exe</MusicRpcServerPath>
     </Audio>

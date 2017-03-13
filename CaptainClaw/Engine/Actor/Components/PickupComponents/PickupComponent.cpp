@@ -32,6 +32,17 @@ const char* AmmoPickupComponent::g_Name = "AmmoPickupComponent";
 
 bool PickupComponent::VInit(TiXmlElement* data)
 {
+    if (TiXmlElement* pElem = data->FirstChildElement("PickupSound"))
+    {
+        m_PickupSound = pElem->GetText();
+    }
+
+    if (m_PickupSound.empty())
+    {
+        LOG_ERROR("No pickup sound for actor: " + std::string(data->Parent()->ToElement()->Attribute("Type")));
+        //assert(false && "No pickup sound for TreasurePickupComponent");
+    }
+
     if (!VDelegateInit(data))
     {
         return false;
@@ -70,6 +81,12 @@ void PickupComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
             pTriggerComponent->Destroy();
         }
 
+        // Play pickup sound if applicable
+        if (m_PickupSound.length() > 0)
+        {
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(m_PickupSound.c_str(), 40, false)));
+        }
+
         //LOG("Pickup up");
     }
     else
@@ -98,16 +115,6 @@ bool TreasurePickupComponent::VDelegateInit(TiXmlElement* data)
     if (TiXmlElement* pElem = data->FirstChildElement("ScorePoints"))
     {
         m_ScorePoints = std::stoi(pElem->GetText());
-    }
-    if (TiXmlElement* pElem = data->FirstChildElement("PickupSound"))
-    {
-        m_PickupSound = pElem->GetText();
-    }
-
-    if (m_PickupSound.empty())
-    {
-        LOG_ERROR("No pickup sound for actor: " + std::string(data->Parent()->ToElement()->Attribute("Type")));
-        assert(false && "No pickup sound for TreasurePickupComponent");
     }
 
     return true;
@@ -147,9 +154,6 @@ bool TreasurePickupComponent::VOnApply(Actor* pActorWhoPickedThis)
         }
 
         ActorTemplates::CreateScorePopupActor(m_pPositionComponent->GetPosition(), m_ScorePoints);
-
-        // Play pickup sound
-        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(m_PickupSound.c_str(), 38, false)));
 
         return true;
     }

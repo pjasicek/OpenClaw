@@ -26,6 +26,8 @@ public:
 protected:
     virtual bool VDelegateInit(TiXmlElement* data) { return true; }
     virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) = 0;
+
+    std::string m_PickupSound;
 };
 
 //=====================================================================================================================
@@ -50,7 +52,6 @@ protected:
 
 private:
     int32 m_ScorePoints;
-    std::string m_PickupSound;
     bool m_IsPickedUp;
 
     shared_ptr<PositionComponent> m_pPositionComponent;
