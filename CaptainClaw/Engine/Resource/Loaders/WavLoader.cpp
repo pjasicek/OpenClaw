@@ -59,8 +59,11 @@ bool WavResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::shar
 
 uint32 WavResourceLoader::VGetLoadedResourceSize(char* rawBuffer, uint32 rawSize)
 {
-    // It is how it is - thats how Mix_Chunk consumes it.
-    return rawSize;
+    // TODO: This is inefficent, this resource gets basically loaded twice, once just
+    // to find out how much room it takes and second time to actually create it
+    SDL_RWops* soundRwOps = SDL_RWFromMem((void*)rawBuffer, rawSize);
+    auto pSound = shared_ptr<Mix_Chunk>(Mix_LoadWAV_RW(soundRwOps, 1), DeleteMixChunk);
+    return pSound->alen;
 }
 
 shared_ptr<Mix_Chunk> WavResourceLoader::LoadAndReturnSound(const char* resourceString)

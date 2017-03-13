@@ -52,7 +52,7 @@ TiXmlElement* XmlResourceLoader::LoadAndReturnRootXmlElement(const char* resourc
             LOG_ERROR("Could not load XML document: " + std::string(resourceString) + ". Error: " + doc->ErrorDesc());
             return NULL;
         }
-
+        
         return doc->RootElement();
     }
     else

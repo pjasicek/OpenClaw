@@ -22,8 +22,6 @@ WwdResourceExtraData::~WwdResourceExtraData()
 void WwdResourceExtraData::LoadWwd(char* rawBuffer, uint32 size)
 {
     _wapWorldLevel = WAP_WwdLoadFromData(rawBuffer, size);
-    //WwdToXml(_wapWorldLevel);
-    //exit(0);
 }
 
 //=================================================================================================
