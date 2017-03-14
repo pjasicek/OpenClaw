@@ -7,9 +7,9 @@
             <Score>0</Score>
             <Health>100</Health>
             <Lives>5</Lives>
-            <BulletCount>75</BulletCount>
-            <MagicCount>50</MagicCount>
-            <DynamiteCount>50</DynamiteCount>
+            <BulletCount>5</BulletCount>
+            <MagicCount>5</MagicCount>
+            <DynamiteCount>5</DynamiteCount>
         </Checkpoint>
     </Level>
 </GameSaves>

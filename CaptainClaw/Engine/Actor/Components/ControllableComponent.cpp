@@ -234,15 +234,36 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
     {
         if (activeAmmoType == AmmoType_Pistol)
         {
-            m_pClawAnimationComponent->SetAnimation("jumppistol");
+            if (m_pAmmoComponent->CanFire())
+            {
+                m_pClawAnimationComponent->SetAnimation("jumppistol");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("emptyjumppistol");
+            }
         }
         else if (activeAmmoType == AmmoType_Magic)
         {
-            m_pClawAnimationComponent->SetAnimation("jumpmagic");
+            if (m_pAmmoComponent->CanFire())
+            {
+                m_pClawAnimationComponent->SetAnimation("jumpmagic");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("emptyjumpmagic");
+            }
         }
         else if (activeAmmoType == AmmoType_Dynamite)
         {
-            m_pClawAnimationComponent->SetAnimation("jumpdynamite");
+            if (m_pAmmoComponent->CanFire())
+            {
+                m_pClawAnimationComponent->SetAnimation("jumpdynamite");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("emptyjumpdynamite");
+            }
         }
         m_State = ClawState_JumpShooting;
     }
@@ -250,15 +271,36 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
     {
         if (activeAmmoType == AmmoType_Pistol)
         {
-            m_pClawAnimationComponent->SetAnimation("duckpistol");
+            if (m_pAmmoComponent->CanFire())
+            {
+                m_pClawAnimationComponent->SetAnimation("duckpistol");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("duckemptypistol");
+            }
         }
         else if (activeAmmoType == AmmoType_Magic)
         {
-            m_pClawAnimationComponent->SetAnimation("duckmagic");
+            if (m_pAmmoComponent->CanFire())
+            {
+                m_pClawAnimationComponent->SetAnimation("duckmagic");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("duckemptymagic");
+            }
         }
         else if (activeAmmoType == AmmoType_Dynamite)
         {
-            m_pClawAnimationComponent->SetAnimation("duckpostdynamite");
+            if (m_pAmmoComponent->CanFire())
+            {
+                m_pClawAnimationComponent->SetAnimation("duckpostdynamite");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("duckemptydynamite");
+            }
         }
         m_State = ClawState_DuckAttacking;
     }
@@ -266,15 +308,36 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
     {
         if (activeAmmoType == AmmoType_Pistol)
         {
-            m_pClawAnimationComponent->SetAnimation("pistol");
+            if (m_pAmmoComponent->CanFire())
+            {
+                m_pClawAnimationComponent->SetAnimation("pistol");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("emptypistol");
+            }
         }
         else if (activeAmmoType == AmmoType_Magic)
         {
-            m_pClawAnimationComponent->SetAnimation("magic");
+            if (m_pAmmoComponent->CanFire())
+            {
+                m_pClawAnimationComponent->SetAnimation("magic");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("emptymagic");
+            }
         }
         else if (activeAmmoType == AmmoType_Dynamite)
         {
-            m_pClawAnimationComponent->SetAnimation("postdynamite");
+            if (m_pAmmoComponent->CanFire())
+            {
+                m_pClawAnimationComponent->SetAnimation("postdynamite");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("emptydynamite");
+            }
         }
         m_State = ClawState_Shooting;
     }
@@ -489,7 +552,6 @@ void ClawControllableComponent::OnDuck()
 
 void ClawControllableComponent::OnStand()
 {
-    LOG("STOOD");
     m_State = ClawState_Standing;
     SetCurrentPhysicsState();
 }

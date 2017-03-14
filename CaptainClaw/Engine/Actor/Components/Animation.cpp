@@ -2,6 +2,23 @@
 #include "AnimationComponent.h"
 #include "../../Util/Util.h"
 
+#include "../../Events/EventMgr.h"
+#include "../../Events/Events.h"
+
+static void PlayFrameSound(const std::string& sound)
+{
+    // Only Claw sounds are supported at the moment (there are some misc others)
+    std::string soundName = sound;
+    if (soundName.find("CLAW_") != std::string::npos)
+    {
+        soundName.erase(0, std::string("CLAW_").length());
+        std::string soundPath = "/CLAW/SOUNDS/" + soundName + ".WAV";
+
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(soundPath, 35, false)));
+    }
+}
+
 Animation::Animation() :
     _name("Unknown"),
     _currentTime(0),
@@ -144,6 +161,15 @@ void Animation::Update(uint32 msDiff)
         return;
     }
 
+    // Hack for now
+    if (_currentAnimationFrame.hasEvent)
+    {
+        if (_currentAnimationFrame.idx == 0 && _currentTime == 0)
+        {
+            PlayFrameSound(_currentAnimationFrame.eventName);
+        }
+    }
+
     _currentTime += msDiff;
 
     int32 currentFrameDuration = _currentAnimationFrame.duration;
@@ -211,5 +237,10 @@ void Animation::SetNextFrame()
     if (looped)
     {
         _owner->OnAnimationLooped();
+    }
+
+    if (_currentAnimationFrame.idx != 0 && _currentAnimationFrame.hasEvent)
+    {
+        PlayFrameSound(_currentAnimationFrame.eventName);
     }
 }
