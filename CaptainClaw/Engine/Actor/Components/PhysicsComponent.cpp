@@ -497,9 +497,14 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         Point velocity = GetVelocity();
 
         double ySpeed = m_CurrentSpeed.y;
+        if (_owner->GetName() == "Claw")
+        {
+            //LOG("CurrentSpeed.y: " + ToStr(m_CurrentSpeed.y));
+        }
         if (ySpeed < 0)
         {
             SetVelocity(Point(velocity.x, -8.8));
+
         }
         else if (velocity.y < -2 && ySpeed >= 0)
         {
@@ -516,10 +521,15 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             SetVelocity(Point(0, velocity.y));
         }
 
+        bool applyForce = true;
         // TODO: Add config to choose between fixed physics timestep and variable
-        if (true)
+        /*if (true)
         {
-            ApplyForce(m_pPhysics->GetGravity());
+            if (m_CurrentSpeed.y > -2)
+            {
+                ApplyForce(m_pPhysics->GetGravity());
+            }
+            //ApplyForce(m_pPhysics->GetGravity());
         }
         else
         {
@@ -533,18 +543,53 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
 
                 timeSinceLastUpdate = 0;
             }
-        }
+        }*/
 
+        bool disableGravity = false;
+        Point gravity = m_pPhysics->GetGravity();
         velocity = GetVelocity();
         if (velocity.y < -8.8)
         {
             SetVelocity(Point(velocity.x, -8.8));
+            applyForce = false;
         }
         if (velocity.y > 14)
         {
             //LOG("Velocity: " + ToStr(velocity.y));
             SetVelocity(Point(velocity.x, 14));
+            applyForce = false;
         }
+        if (applyForce)
+        {
+            m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale);
+            //ApplyForce(m_pPhysics->GetGravity());
+        }
+        else
+        {
+            m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0.0f);
+        }
+
+        /*if (true && applyForce)
+        {
+            if (m_CurrentSpeed.y > -2)
+            {
+                ApplyForce(m_pPhysics->GetGravity());
+            }
+            //ApplyForce(m_pPhysics->GetGravity());
+        }*/
+        /*else
+        {
+            static uint32 timeSinceLastUpdate = 0;
+            const uint32 updateInterval = 1000 / 120;
+
+            timeSinceLastUpdate += msDiff;
+            if (timeSinceLastUpdate >= updateInterval)
+            {
+                ApplyForce(m_pPhysics->GetGravity());
+
+                timeSinceLastUpdate = 0;
+            }
+        }*/
 
         //=====================================================================
 

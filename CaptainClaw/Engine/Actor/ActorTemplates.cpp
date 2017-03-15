@@ -964,7 +964,7 @@ namespace ActorTemplates
             (CollisionFlag_Crate | CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_Explosion | CollisionFlag_ClawAttack | CollisionFlag_EnemyAIProjectile),  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Density - determines if this character bounces
             0.0f,  // Friction - with floor and so
-            0.3f)); // Restitution - makes object bounce
+            0.0f)); // Restitution - makes object bounce
 
         pActor->LinkEndChild(CreateCycleAnimationComponent(75, true));
         pActor->LinkEndChild(CreateLootComponent(loot));

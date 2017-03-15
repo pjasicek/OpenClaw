@@ -134,7 +134,7 @@ int32 BaseGameApp::Run()
         }
 
         // Uncomment to artificially decrease fps to ~30-35
-        //SDL_Delay(20);
+        //SDL_Delay(50);
     }
 
     Terminate();
