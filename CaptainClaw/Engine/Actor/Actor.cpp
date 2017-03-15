@@ -4,6 +4,8 @@
 #include "Actor.h"
 #include "ActorComponent.h"
 
+#include "Components/PositionComponent.h"
+
 Actor::Actor(uint32 actorGUID)
 {
     _GUID = actorGUID;
@@ -34,6 +36,8 @@ void Actor::PostInit()
     {
         component.second->VPostInit();
     }
+
+    m_pPositionComponent = MakeStrongPtr(GetComponent<PositionComponent>(PositionComponent::g_Name));
 }
 
 void Actor::Destroy()

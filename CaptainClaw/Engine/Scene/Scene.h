@@ -18,10 +18,10 @@ public:
     bool AddChild(uint32 actorId, shared_ptr<ISceneNode> kid);
     bool RemoveChild(uint32 actorId);
 
-    void SetCamera(shared_ptr<CameraNode> camera) { m_pCamera = camera; }
-    const shared_ptr<CameraNode> GetCamera() const { return m_pCamera; }
+    inline void SetCamera(shared_ptr<CameraNode> camera) { m_pCamera = camera; }
+    inline const shared_ptr<CameraNode> GetCamera() const { return m_pCamera; }
 
-    SDL_Renderer* GetRenderer() { return m_pRenderer; }
+    inline SDL_Renderer* GetRenderer() { return m_pRenderer; }
 
     void SortSceneNodesByZCoord();
 

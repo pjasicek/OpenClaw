@@ -12,6 +12,7 @@
 
 typedef std::map<uint32, StrongActorComponentPtr> ActorComponentsMap;
 
+class PositionComponent;
 class TiXmlElement;
 class Actor
 {
@@ -68,6 +69,12 @@ public:
 
     void AddComponent(StrongActorComponentPtr pComponent);
 
+    //=========================================================================
+    // Some components are accessed REALLY often so it makes sense to just
+    // put them here and dont use the templated GetComponent method
+    //=========================================================================
+
+    inline shared_ptr<PositionComponent> GetPositionComponent() { return m_pPositionComponent; }
 
 private:
     friend class ActorFactory;
@@ -79,6 +86,8 @@ private:
 
     // Resource from which this actor was loaded
     std::string _resource;
+
+    shared_ptr<PositionComponent> m_pPositionComponent;
 };
 
 #endif
