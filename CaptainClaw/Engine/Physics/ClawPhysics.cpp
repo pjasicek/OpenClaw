@@ -266,13 +266,27 @@ void ClawPhysics::VSyncVisibleScene()
                         // He might be on platform
                         if (pPhysicsComponent->IsOnGround())
                         {
-                            //LOG("GROUNDED");
                             pPhysicsComponent->SetFalling(false);
                             pPhysicsComponent->SetJumping(false);
                         }
                         // Falling
                         else if ((bodyPixelPosition.y - actorPixelPosition.y) > DBL_EPSILON)
                         {
+                            // TODO: Some unknown stuff is making claw cancel jump
+                            /*if (pGameActor->GetName() == "Claw")
+                            {
+                                if ((bodyPixelPosition.y - actorPixelPosition.y) > 2 || true)
+                                {
+                                    pPhysicsComponent->SetFalling(true);
+                                    pPhysicsComponent->SetJumping(false);
+                                }
+                            }
+                            else
+                            {
+                                pPhysicsComponent->SetFalling(true);
+                                pPhysicsComponent->SetJumping(false);
+                            }*/
+
                             pPhysicsComponent->SetFalling(true);
                             pPhysicsComponent->SetJumping(false);
                         }
@@ -302,7 +316,15 @@ void ClawPhysics::VSyncVisibleScene()
                     // Notify change of states
                     if (!wasFalling && pPhysicsComponent->IsFalling())
                     {
-                        //LOG("----" + ToStr(bodyPixelPosition.y - actorPixelPosition.y));
+                        /*if (pGameActor->GetName() == "Claw")
+                        {
+                            LOG("----" + ToStr(bodyPixelPosition.y - actorPixelPosition.y));
+
+                            int count;
+                            auto keys = SDL_GetKeyboardState(&count);
+                            
+                            LOG("space: " + ToStr(keys[SDL_SCANCODE_SPACE]));
+                        }*/
                         pPhysicsComponent->OnStartFalling();
                     }
                     if (!wasJumping && pPhysicsComponent->IsJumping())

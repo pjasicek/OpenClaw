@@ -23,11 +23,17 @@ public:
     virtual void VOnHealthBelowZero() override;
 
     // Animation observer
-    virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
+    virtual void VOnAnimationLooped(Animation* pAnimation) override;
 
 private:
-    bool m_DeleteOnDestruction;
+    // XML properties
+    bool m_bDeleteOnDestruction;
+    bool m_bRemoveFromPhysics;
+    std::string m_DeathAnimationName;
     std::vector<std::string> m_PossibleDestructionSounds;
+
+    // Internal members
+    bool m_bIsDead;
     shared_ptr<IGamePhysics> m_pPhysics;
 };
 

@@ -390,23 +390,29 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
             if (m_pPhysics)
             {
                 //PROFILE_CPU("PHYSICS");
-                m_pPhysics->VOnUpdate(msDiff);
-                m_pPhysics->VSyncVisibleScene();
-                break;
-
-                static uint32 timeSinceLastUpdate = 16;
-                const uint32 updateInterval = 0;
-
-                timeSinceLastUpdate += msDiff;
-                if (timeSinceLastUpdate >= updateInterval)
+                // TODO: Add config to choose between fixed physics timestep and variable
+                if (true)
                 {
-                    //PROFILE_CPU("PHYSICS");
-                    //LOG(ToStr(timeSinceLastUpdate));
-                    m_pPhysics->VOnUpdate(timeSinceLastUpdate);
+                    m_pPhysics->VOnUpdate(msDiff);
                     m_pPhysics->VSyncVisibleScene();
-
-                    timeSinceLastUpdate = 0;
                 }
+                else
+                {
+                    static uint32 timeSinceLastUpdate = 0;
+                    const uint32 updateInterval = 1000 / 120;
+
+                    timeSinceLastUpdate += msDiff;
+                    if (timeSinceLastUpdate >= updateInterval)
+                    {
+                        //PROFILE_CPU("PHYSICS");
+                        //LOG(ToStr(timeSinceLastUpdate));
+                        m_pPhysics->VOnUpdate(timeSinceLastUpdate);
+                        m_pPhysics->VSyncVisibleScene();
+
+                        timeSinceLastUpdate = 0;
+                    }
+                }
+                break;
             }
 
             break;

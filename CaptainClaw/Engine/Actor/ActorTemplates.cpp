@@ -536,11 +536,16 @@ namespace ActorTemplates
         return pLootComponent;
     }
 
-    TiXmlElement* CreateDestroyableComponent(bool deleteOnDestruction, const std::vector<std::string>& deathSounds)
+    TiXmlElement* CreateDestroyableComponent(bool deleteOnDestruction, const std::string& deathAnimName, const std::vector<std::string>& deathSounds, bool removeFromPhysics = true)
     {
         TiXmlElement* pDestroyableComponent = new TiXmlElement("DestroyableComponent");
 
         XML_ADD_TEXT_ELEMENT("DeleteOnDestruction", ToStr(deleteOnDestruction).c_str(), pDestroyableComponent);
+        XML_ADD_TEXT_ELEMENT("RemoveFromPhysics", ToStr(removeFromPhysics).c_str(), pDestroyableComponent);
+        if (!deathAnimName.empty())
+        {
+            XML_ADD_TEXT_ELEMENT("DeathAnimationName", deathAnimName.c_str(), pDestroyableComponent);
+        }
         for (auto deathSound : deathSounds)
         {
             XML_ADD_TEXT_ELEMENT("DeathSound", deathSound.c_str(), pDestroyableComponent);
@@ -963,7 +968,7 @@ namespace ActorTemplates
 
         pActor->LinkEndChild(CreateCycleAnimationComponent(75, true));
         pActor->LinkEndChild(CreateLootComponent(loot));
-        pActor->LinkEndChild(CreateDestroyableComponent(true, {}));
+        pActor->LinkEndChild(CreateDestroyableComponent(true, "DEFAULT", { SOUND_GAME_CRATE_BREAK1, SOUND_GAME_CRATE_BREAK2 }));
         pActor->LinkEndChild(CreateHealthComponent(health, health));
 
         return pActor;
@@ -998,7 +1003,7 @@ namespace ActorTemplates
             0.3f)); // Restitution - makes object bounce
 
         pActor->LinkEndChild(CreateAnimationComponent("/LEVEL1/ANIS/POWDERKEG/EXPLODE.ANI", true));
-        pActor->LinkEndChild(CreateDestroyableComponent(true, {}));
+        pActor->LinkEndChild(CreateDestroyableComponent(true, "explode", { SOUND_LEVEL1_KEG_EXPLODE }));
         pActor->LinkEndChild(CreateHealthComponent(1, 1));
         pActor->LinkEndChild(CreateExplodeableComponent(Point(120, 120), damage));
 
@@ -1200,7 +1205,6 @@ namespace ActorTemplates
         pActor->LinkEndChild(CreateTriggerComponent(1000, false, false));
         pActor->LinkEndChild(CreateHealthComponent(10, 10));
         pActor->LinkEndChild(CreateLootComponent(loot));
-        //pActor->LinkEndChild(CreateDestroyableComponent(true, {}));
 
         ActorBodyDef bodyDef;
         bodyDef.bodyType = b2_dynamicBody;
@@ -1373,6 +1377,25 @@ namespace ActorTemplates
         }
 
         pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
+
+        // Death sounds
+        if (logicName == "Soldier")
+        {
+            pActor->LinkEndChild(CreateDestroyableComponent(false, "", { SOUND_LEVEL1_SOLDIER_DEATH }, false));
+        }
+        else if (logicName == "Officer")
+        {
+            pActor->LinkEndChild(CreateDestroyableComponent(false, "", { SOUND_LEVEL1_OFFICER_DEATH1, SOUND_LEVEL1_OFFICER_DEATH2 }, false));
+        }
+        else if (logicName == "Rat")
+        {
+            pActor->LinkEndChild(CreateDestroyableComponent(false, "", { SOUND_LEVEL1_RAT_DEATH }, false));
+        }
+        else
+        {
+            LOG_ERROR("Confilcting logic name: " + logicName);
+            assert(false && "Currently unsupported enemy logic !");
+        }
 
         return pActor;
     }

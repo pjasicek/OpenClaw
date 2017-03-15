@@ -516,7 +516,24 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             SetVelocity(Point(0, velocity.y));
         }
 
-        ApplyForce(m_pPhysics->GetGravity());
+        // TODO: Add config to choose between fixed physics timestep and variable
+        if (true)
+        {
+            ApplyForce(m_pPhysics->GetGravity());
+        }
+        else
+        {
+            static uint32 timeSinceLastUpdate = 0;
+            const uint32 updateInterval = 1000 / 120;
+
+            timeSinceLastUpdate += msDiff;
+            if (timeSinceLastUpdate >= updateInterval)
+            {
+                ApplyForce(m_pPhysics->GetGravity());
+
+                timeSinceLastUpdate = 0;
+            }
+        }
 
         velocity = GetVelocity();
         if (velocity.y < -8.8)
@@ -525,6 +542,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         }
         if (velocity.y > 14)
         {
+            //LOG("Velocity: " + ToStr(velocity.y));
             SetVelocity(Point(velocity.x, 14));
         }
 

@@ -472,7 +472,7 @@ void MeleeAttackAIStateComponent::ExecuteMeleeAttack()
     }
 
     Point closestEnemyOffset = m_pEnemyAIComponent->FindClosestHostileActorOffset();
-    LOG("X Offset: " + ToStr(closestEnemyOffset.x));
+    //LOG("X Offset: " + ToStr(closestEnemyOffset.x));
     if (closestEnemyOffset.x < 0)
     {
         m_pRenderComponent->SetMirrored(false);
@@ -638,7 +638,7 @@ void RangedAttackAIStateComponent::ExecuteRangedAttack()
     }
 
     Point closestEnemyOffset = m_pEnemyAIComponent->FindClosestHostileActorOffset();
-    LOG("X Offset: " + ToStr(closestEnemyOffset.x));
+    //LOG("X Offset: " + ToStr(closestEnemyOffset.x));
     if (closestEnemyOffset.x < 0)
     {
         m_pRenderComponent->SetMirrored(false);

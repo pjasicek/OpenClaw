@@ -9,7 +9,9 @@ const char* DestroyableComponent::g_Name = "DestroyableComponent";
 
 DestroyableComponent::DestroyableComponent()
     :
-    m_DeleteOnDestruction(true)
+    m_bDeleteOnDestruction(true),
+    m_bRemoveFromPhysics(true),
+    m_bIsDead(false)
 { }
 
 DestroyableComponent::~DestroyableComponent()
@@ -30,9 +32,16 @@ bool DestroyableComponent::VInit(TiXmlElement* pData)
 
     if (TiXmlElement* pElem = pData->FirstChildElement("DeleteOnDestruction"))
     {
-        m_DeleteOnDestruction = std::string(pElem->GetText()) == "true";
+        m_bDeleteOnDestruction = std::string(pElem->GetText()) == "true";
     }
-    
+    if (TiXmlElement* pElem = pData->FirstChildElement("RemoveFromPhysics"))
+    {
+        m_bRemoveFromPhysics = std::string(pElem->GetText()) == "true";
+    }
+    if (TiXmlElement* pElem = pData->FirstChildElement("DeathAnimationName"))
+    {
+        m_DeathAnimationName = pElem->GetText();
+    }
     for (TiXmlElement* pElem = pData->FirstChildElement("DeathSound");
         pElem; pElem = pElem->NextSiblingElement("DeathSound"))
     {
@@ -77,34 +86,55 @@ void DestroyableComponent::VOnHealthBelowZero()
 {
     if (!m_PossibleDestructionSounds.empty())
     {
+        // Pick random death sound
         srand((long)this + (long)&m_PossibleDestructionSounds);
         int soundToPlayIdx = rand() % m_PossibleDestructionSounds.size();
 
-        // Play this sound
+        // And play it
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(m_PossibleDestructionSounds[soundToPlayIdx].c_str(), 40, false)));
     }
 
-    shared_ptr<AnimationComponent> pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
-    if (pAnimationComponent)
+    if (!m_DeathAnimationName.empty())
     {
-        pAnimationComponent->ResumeAnimation();
+        shared_ptr<AnimationComponent> pAnimationComponent =
+            MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+        if (pAnimationComponent)
+        {
+            if (m_DeathAnimationName == "DEFAULT")
+            {
+                pAnimationComponent->ResumeAnimation();
+            }
+            else
+            {
+                pAnimationComponent->SetAnimation(m_DeathAnimationName);
+                pAnimationComponent->ResumeAnimation();
+            }
+        }
     }
 
-    m_pPhysics->VRemoveActor(_owner->GetGUID());
+    if (m_bRemoveFromPhysics)
+    {
+        m_pPhysics->VRemoveActor(_owner->GetGUID());
+    }
+
+    m_bIsDead = true;
 }
 
-void DestroyableComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
+void DestroyableComponent::VOnAnimationLooped(Animation* pAnimation)
 {
-    if (pAnimation->IsAtLastAnimFrame())
+    if (!m_bIsDead)
     {
-        if (m_DeleteOnDestruction)
-        {
-            shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
-            IEventMgr::Get()->VQueueEvent(pEvent);
-        }
-        else
-        {
-            pAnimation->Pause();
-        }
+        return;
+    }
+
+    if (m_bDeleteOnDestruction)
+    {
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        IEventMgr::Get()->VQueueEvent(pEvent);
+    }
+    else
+    {
+        pAnimation->Pause();
     }
 }
