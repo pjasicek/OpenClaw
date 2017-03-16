@@ -232,11 +232,14 @@ void ClawPhysics::VSyncVisibleScene()
 {
     // check all the existing actor's bodies for changes. 
     //  If there is a change, send the appropriate event for the game system.
-    for (ActorIDToBox2DBodyMap::const_iterator it = m_ActorToBodyMap.begin();
+
+    // Iterating vector or list has lower overhead
+    /*for (ActorIDToBox2DBodyMap::const_iterator it = m_ActorToBodyMap.begin();
         it != m_ActorToBodyMap.end();
-        ++it)
+        ++it)*/
+    for (const std::pair<uint32, b2Body*>& it : m_ActorIdAndBodyList)
     {
-        b2Body* pActorBody = it->second;
+        b2Body* pActorBody = it.second;
         assert(pActorBody);
 
         if (pActorBody->GetType() == b2_staticBody)
@@ -244,7 +247,7 @@ void ClawPhysics::VSyncVisibleScene()
             continue;
         }
 
-        uint32 actorId = it->first;
+        uint32 actorId = it.first;
 
         StrongActorPtr pGameActor = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(actorId));
         assert(pGameActor);
@@ -259,6 +262,10 @@ void ClawPhysics::VSyncVisibleScene()
             Point bodyPixelPosition = b2Vec2ToPoint(MetersToPixels(pActorBody->GetPosition()));
             Point actorPixelPosition = pPositionComponent->GetPosition();
 
+            // TODO: Now only Claw cares about falling / jumping states, maybe refactor in future
+            //if (pGameActor->GetName() == "Claw")
+
+            // This causes slight CPU (1.5%) overhead
             if (pActorBody->GetType() == b2_dynamicBody)
             {
                 shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pActorBody);
@@ -382,6 +389,14 @@ void ClawPhysics::VOnUpdate(const uint32 msDiff)
             m_pWorld->DestroyBody(pBody);
             m_ActorToBodyMap.erase(actorId);
             m_BodyToActorMap.erase(pBody);
+            for (auto iter = m_ActorIdAndBodyList.begin(); iter != m_ActorIdAndBodyList.end(); iter++)
+            {
+                if (iter->first == actorId)
+                {
+                    m_ActorIdAndBodyList.erase(iter);
+                    break;
+                }
+            }
         }
     }
     m_ActorsToBeDestroyed.clear();
@@ -580,6 +595,7 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
 }
 
 //-----------------------------------------------------------------------------
@@ -638,6 +654,7 @@ void ClawPhysics::VAddKinematicBody(WeakActorPtr pActor)
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
 }
 
 void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType)
@@ -682,6 +699,7 @@ void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionT
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
 }
 
 void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
@@ -835,6 +853,7 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
 
     if (actorBodyDef->setInitialSpeed)
     {
@@ -934,6 +953,7 @@ void ClawPhysics::VCreateTrigger(WeakActorPtr pActor, const Point& pos, Point& s
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
 }
 
 //-----------------------------------------------------------------------------

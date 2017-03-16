@@ -8,6 +8,7 @@
 
 typedef std::map<uint32, b2Body*> ActorIDToBox2DBodyMap;
 typedef std::map<b2Body*, uint32> Box2DBodyToActorIDMap;
+typedef std::vector<std::pair<uint32, b2Body*>> ActorIdAndBodyList;
 
 class PhysicsContactListener;
 class PhysicsDebugDrawer;
@@ -84,6 +85,7 @@ private:
     
     ActorIDToBox2DBodyMap m_ActorToBodyMap;
     Box2DBodyToActorIDMap m_BodyToActorMap;
+    ActorIdAndBodyList m_ActorIdAndBodyList;
 };
 
 class KinematicComponent;
