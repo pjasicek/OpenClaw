@@ -26,6 +26,8 @@ struct GameOptions
         frequency = 44100;
         channels = 2;
         chunkSize = 2048;
+        soundVolume = 50; // In percents
+        musicVolume = 50; // In percents
         midiRpcServerPath = "MidiProc.exe";
 
         fontNames.push_back("clacon.ttf");
@@ -55,6 +57,8 @@ struct GameOptions
     int frequency;
     uint32 channels;
     int chunkSize;
+    int soundVolume;
+    int musicVolume;
     const char* midiRpcServerPath;
 
     // Font

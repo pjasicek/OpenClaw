@@ -351,6 +351,22 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
         audioElem->LinkEndChild(chunkSizeElem);
     }
 
+    TiXmlElement* pSoundVolumeElem = audioElem->FirstChildElement("SoundVolume");
+    if (!pSoundVolumeElem)
+    {
+        pSoundVolumeElem = new TiXmlElement("SoundVolume");
+        pSoundVolumeElem->LinkEndChild(new TiXmlText("50"));
+        audioElem->LinkEndChild(pSoundVolumeElem);
+    }
+
+    TiXmlElement* pMusicVolumeElem = audioElem->FirstChildElement("MusicVolume");
+    if (!pMusicVolumeElem)
+    {
+        pMusicVolumeElem = new TiXmlElement("MusicVolume");
+        pMusicVolumeElem->LinkEndChild(new TiXmlText("50"));
+        audioElem->LinkEndChild(pMusicVolumeElem);
+    }
+
     TiXmlElement* midiRpcPathElem = audioElem->FirstChildElement("MusicRpcServerPath");
     if (!midiRpcPathElem)
     {
@@ -362,6 +378,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     m_GameOptions.frequency = std::stoi(frequencyElem->GetText());
     m_GameOptions.channels = std::stoi(channelsElem->GetText());
     m_GameOptions.chunkSize = std::stoi(chunkSizeElem->GetText());
+    m_GameOptions.soundVolume = std::stoi(pSoundVolumeElem->GetText());
+    m_GameOptions.musicVolume = std::stoi(pMusicVolumeElem->GetText());
     m_GameOptions.midiRpcServerPath = midiRpcPathElem->GetText();
 
     //-------------------------------------------------------------------------
@@ -720,6 +738,8 @@ TiXmlElement* CreateDefaultAudioConfig()
     XML_ADD_TEXT_ELEMENT("Frequency", "44100", audio);
     XML_ADD_TEXT_ELEMENT("Channels", "2", audio);
     XML_ADD_TEXT_ELEMENT("ChunkSize", "2048", audio);
+    XML_ADD_TEXT_ELEMENT("SoundVolume", "50", audio);
+    XML_ADD_TEXT_ELEMENT("MusicVolume", "50", audio);
     XML_ADD_TEXT_ELEMENT("MusicRpcServerPath", "MidiProc.exe", audio);
 
     return audio;

@@ -23,7 +23,7 @@ public:
     virtual void VOnHealthBelowZero() override;
 
     // Animation observer
-    virtual void VOnAnimationLooped(Animation* pAnimation) override;
+    virtual void VOnAnimationAtLastFrame(Animation* pAnimation) override;
 
 private:
     // XML properties

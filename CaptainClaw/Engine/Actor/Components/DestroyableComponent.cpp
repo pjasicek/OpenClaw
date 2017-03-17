@@ -121,7 +121,7 @@ void DestroyableComponent::VOnHealthBelowZero()
     m_bIsDead = true;
 }
 
-void DestroyableComponent::VOnAnimationLooped(Animation* pAnimation)
+void DestroyableComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
 {
     if (!m_bIsDead)
     {
