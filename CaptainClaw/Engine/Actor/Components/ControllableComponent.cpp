@@ -494,6 +494,11 @@ bool ClawControllableComponent::IsAttackingOrShooting()
 
 void ClawControllableComponent::VOnHealthBelowZero()
 {
+    if (m_State == ClawState_Dying)
+    {
+        return;
+    }
+
     // TODO: Track how exactly claw died
     if (m_pClawAnimationComponent->GetCurrentAnimationName() != "spikedeath")
     {

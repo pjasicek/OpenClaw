@@ -151,7 +151,7 @@ void ScreenElementHUD::VOnUpdate(uint32 msDiff)
     if (msAccumulation > 1000)
     {
         UpdateFPS(framesAccumulation);
-        msAccumulation -= 1000;
+        msAccumulation = 0;
         framesAccumulation = 0;
     }
 }

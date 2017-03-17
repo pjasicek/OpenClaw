@@ -1,2 +1,3 @@
-InfiniteJump on
-Invincible on
+#InfiniteJump on
+#Invincible on
+teleport 1450 4750

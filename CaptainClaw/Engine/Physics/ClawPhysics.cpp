@@ -250,7 +250,7 @@ void ClawPhysics::VSyncVisibleScene()
         uint32 actorId = it.first;
 
         StrongActorPtr pGameActor = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(actorId));
-        assert(pGameActor);
+        //assert(pGameActor);
 
         if (pGameActor && pActorBody)
         {

@@ -94,6 +94,22 @@ struct GameCheats
     bool clawInfiniteJump;
 };
 
+// Put everything you want to be configurable here without
+// worrying about parsing from XML first. Used mainly by console for fast iteration
+struct GlobalOptions
+{
+    GlobalOptions()
+    {
+        cpuDelayMs = 0;
+        maxJumpSpeed = 8.8;
+        maxFallSpeed = 14.0;
+    }
+
+    int cpuDelayMs;
+    double maxJumpSpeed;
+    double maxFallSpeed;
+};
+
 class EventMgr;
 class BaseGameLogic;
 class HumanView;
@@ -204,6 +220,7 @@ private:
     Point m_WindowSize;
 
     GameCheats m_GameCheats;
+    GlobalOptions m_GlobalOptions;
 };
 
 extern BaseGameApp* g_pApp;

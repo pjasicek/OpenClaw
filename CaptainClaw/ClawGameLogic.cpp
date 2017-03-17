@@ -374,7 +374,7 @@ void ClawGameLogic::CheckpointReachedDelegate(IEventDataPtr pEventData)
 
 void ClawGameLogic::ClawDiedDelegate(IEventDataPtr pEventData)
 {
-    shared_ptr<EventData_Checkpoint_Reached> pCastEventData = static_pointer_cast<EventData_Checkpoint_Reached>(pEventData);
+    shared_ptr<EventData_Claw_Died> pCastEventData = static_pointer_cast<EventData_Claw_Died>(pEventData);
 
     StrongActorPtr pActor = MakeStrongPtr(VGetActor(pCastEventData->GetActorId()));
     if (!pActor)

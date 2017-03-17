@@ -133,8 +133,8 @@ int32 BaseGameApp::Run()
             //m_pGame->VRenderDiagnostics();
         }
 
-        // Uncomment to artificially decrease fps to ~30-35
-        //SDL_Delay(50);
+        // Artificially decrease fps. Configurable from console
+        SDL_Delay(m_GlobalOptions.cpuDelayMs);
     }
 
     Terminate();

@@ -1263,8 +1263,8 @@ namespace ActorTemplates
             meleeAttackAction.attackAnimFrameIdx = 4;
             meleeAttackAction.attackDamageType = DamageType_MeleeAttack;
             meleeAttackAction.attackFxImageSet = "NONE";
-            meleeAttackAction.attackSpawnPositionOffset = Point(-50, 0);
-            meleeAttackAction.attackAreaSize = Point(70, 30);
+            meleeAttackAction.attackSpawnPositionOffset = Point(-30, 0);
+            meleeAttackAction.attackAreaSize = Point(90, 30);
             meleeAttackAction.damage = 10;
 
             meleeAttacks.push_back(meleeAttackAction);
@@ -1326,8 +1326,8 @@ namespace ActorTemplates
             meleeAttackAction.attackAnimFrameIdx = 3;
             meleeAttackAction.attackDamageType = DamageType_MeleeAttack;
             meleeAttackAction.attackFxImageSet = "NONE";
-            meleeAttackAction.attackSpawnPositionOffset = Point(-60, 0);
-            meleeAttackAction.attackAreaSize = Point(100, 30);
+            meleeAttackAction.attackSpawnPositionOffset = Point(-30, 0);
+            meleeAttackAction.attackAreaSize = Point(130, 30);
             meleeAttackAction.damage = 10;
 
             meleeAttacks.push_back(meleeAttackAction);
