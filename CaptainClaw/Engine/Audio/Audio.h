@@ -4,25 +4,27 @@
 #include <stdint.h>
 #include <SDL2/SDL_mixer.h>
 
+#include "../GameApp/BaseGameApp.h"
+
 class Audio
 {
 public:
     Audio() { }
     ~Audio();
 
-    bool Initialize(int frequency, int channels, int chunkSize, const char* midiRpcPath);
+    bool Initialize(const GameOptions& config);
     void Terminate();
 
-    void PlaySound(const char* soundData, size_t soundSize, bool looping);
-    void PlaySound(Mix_Chunk* sound, bool looping);
-    void SetSoundVolume(uint32_t volume); 
+    void PlaySound(const char* soundData, size_t soundSize, int volumePercentage = 100, int loops = 0);
+    void PlaySound(Mix_Chunk* sound, int volumePercentage = 100, int loops = 0);
+    void SetSoundVolume(uint32_t volumePercentage); 
 
     void PlayMusic(const char* musicData, size_t musicSize, bool looping);
     void PlayMusic(const char* musicPath, bool looping);
     void PauseMusic();
     void ResumeMusic();
     void StopMusic();
-    void SetMusicVolume(uint32_t volume);
+    void SetMusicVolume(uint32_t volumePercentage);
 
     void PauseAllSounds();
     void ResumeAllSounds();
@@ -42,6 +44,8 @@ private:
     bool _isMidiRpcInitialized;
     bool _isAudioInitialized;
     unsigned char* _rpcBindingString;
+    int m_SoundVolume;
+    int m_MusicVolume;
 };
 
 #endif

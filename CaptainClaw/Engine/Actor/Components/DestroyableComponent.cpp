@@ -92,7 +92,7 @@ void DestroyableComponent::VOnHealthBelowZero()
 
         // And play it
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-            new EventData_Request_Play_Sound(m_PossibleDestructionSounds[soundToPlayIdx].c_str(), 40, false)));
+            new EventData_Request_Play_Sound(m_PossibleDestructionSounds[soundToPlayIdx].c_str(), 100, false)));
     }
 
     if (!m_DeathAnimationName.empty())

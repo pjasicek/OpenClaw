@@ -62,6 +62,9 @@ public:
     bool IsInAir() { return m_IsFalling || m_IsJumping; }
     bool IsFalling() { return m_IsFalling; }
     bool IsJumping() { return m_IsJumping; }
+    bool IsClimbing() { return m_IsClimbing; }
+    bool IsOnLadder() { return m_OverlappingLaddersList.size() > 0; }
+    Point GetClimbingSpeed() { return m_ClimbingSpeed; }
 
     void SetFalling(bool falling);
     void SetJumping(bool jumping);
@@ -87,6 +90,8 @@ public:
 
     void AddOverlappingKinematicBody(const b2Body* pBody);
     void RemoveOverlappingKinematicBody(const b2Body* pBody);
+
+    void SetTopLadderContact(b2Contact* pContact) { m_pTopLadderContact = pContact; }
 
 private:
     // Configurable data read from XML
@@ -126,6 +131,8 @@ private:
 
     // Actor body definition for physics body creation
     ActorBodyDef m_ActorBodyDef;
+
+    b2Contact* m_pTopLadderContact;
 
     std::vector<const b2Body*> m_OverlappingKinematicBodiesList;
     std::vector<const b2Fixture*> m_OverlappingLaddersList;

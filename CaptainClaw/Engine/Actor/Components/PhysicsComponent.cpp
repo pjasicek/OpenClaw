@@ -8,6 +8,9 @@
 #include "PositionComponent.h"
 #include "ControllableComponent.h"
 
+#include "../../Events/EventMgr.h"
+#include "../../Events/Events.h"
+
 const char* PhysicsComponent::g_Name = "PhysicsComponent";
 
 //=====================================================================================================================
@@ -79,7 +82,8 @@ PhysicsComponent::PhysicsComponent() :
     m_IgnoreJump(false),
     m_HeightInAir(20),
     m_pControllableComponent(nullptr),
-    m_pPhysics(nullptr)
+    m_pPhysics(nullptr),
+    m_pTopLadderContact(NULL)
 { }
 
 PhysicsComponent::~PhysicsComponent()
@@ -398,6 +402,23 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     //LOG("Climbing: " + ToStr(m_IsClimbing));
     if (m_IsClimbing)
     {
+        // TODO: Climbing up when on top of the ladder should be disabled
+        /*if (m_ClimbingSpeed.y < (-1.0 * DBL_EPSILON) && m_pTopLadderContact && m_OverlappingLaddersList.size() > 0)
+        {
+            LOG(".");
+            m_ClimbingSpeed.Set(0, 0);
+            m_CurrentSpeed.Set(0, 0);
+            m_IgnoreJump = false;
+            m_IsClimbing = false;
+            m_IsJumping = false;
+            m_IsFalling = false;
+            m_HeightInAir = 0;
+            m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale);
+            //m_pControllableComponent->VOnStopMoving();
+            m_pPhysics->VSetLinearSpeedEx(_owner->GetGUID(), Point(0,0));
+            return;
+        }*/
+
         if (fabs(m_ClimbingSpeed.y) > DBL_EPSILON)
         {
             m_CurrentSpeed = Point(0, 0);
@@ -447,6 +468,14 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             }
             else
             {
+                // If on top of the ladder climb through the artificial ground patch
+                if (m_pTopLadderContact != NULL)
+                {
+                    m_pTopLadderContact->SetEnabled(false);
+                    m_pTopLadderContact = NULL;
+
+                }
+
                 m_pControllableComponent->VOnClimb();
             }
             m_ClimbingSpeed = Point(0, 0);

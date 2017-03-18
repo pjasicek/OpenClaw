@@ -618,7 +618,7 @@ bool BaseGameApp::InitializeAudio(GameOptions& gameOptions)
     LOG(">>>>> Initializing audio...");
 
     m_pAudio = new Audio();
-    if (!m_pAudio->Initialize(gameOptions.frequency, gameOptions.channels, gameOptions.chunkSize, gameOptions.midiRpcServerPath))
+    if (!m_pAudio->Initialize(gameOptions))
     {
         LOG_ERROR("Failed to initialize SDL Mixer audio subsystem");
         return false;

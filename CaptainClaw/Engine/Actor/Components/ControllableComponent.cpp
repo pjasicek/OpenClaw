@@ -560,3 +560,9 @@ void ClawControllableComponent::OnStand()
     m_State = ClawState_Standing;
     SetCurrentPhysicsState();
 }
+
+bool ClawControllableComponent::IsClimbing()
+{
+    return m_pClawAnimationComponent->GetCurrentAnimationName().find("climb") != std::string::npos &&
+        !m_pClawAnimationComponent->GetCurrentAnimation()->IsPaused();
+}

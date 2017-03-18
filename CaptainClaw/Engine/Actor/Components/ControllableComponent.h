@@ -45,6 +45,8 @@ public:
     virtual bool IsDying() = 0;
     virtual bool InPhysicsCapableState() = 0;
 
+    virtual bool IsClimbing() = 0;
+
 private:
     bool m_Active;
 };
@@ -107,6 +109,9 @@ public:
 
     virtual bool IsDying() { return m_State == ClawState_Dying; }
     virtual bool InPhysicsCapableState() override { return m_State != ClawState_Dying; }
+
+    // Feels abit hacky
+    virtual bool IsClimbing() override;
 
     // AnimationObserver API
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;

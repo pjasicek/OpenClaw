@@ -532,6 +532,14 @@ void BaseGameLogic::CollideableTileCreatedDelegate(IEventDataPtr pEventData)
 
             m_pPhysics->VAddStaticGeometry(position, size, tileCollisionRect.collisionType);
         }
+
+        // LEVEL1: Top of the ladder
+        if (m_pCurrentLevel->GetLevelNumber() == 1 && tileProto.id == 310)
+        {
+            Point position(pCastEventData->GetPositionX(), pCastEventData->GetPositionY());
+            Point size(64, 10);
+            m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground);
+        }
     }
     else
     {
