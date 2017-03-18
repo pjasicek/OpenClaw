@@ -7,6 +7,9 @@
 #include "Util.h"
 #include "../GameApp/BaseGameLogic.h"
 
+#include "../Events/EventMgr.h"
+#include "../Events/Events.h"
+
 //#include "../Level/Level.h"
 
 namespace Util
@@ -356,5 +359,15 @@ namespace Util
         std::uniform_int_distribution<int> uni(fromRange, toRange);
 
         return uni(rng);
+    }
+
+    void PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume)
+    {
+        if (!sounds.empty())
+        {
+            int soundIdx = Util::GetRandomNumber(0, sounds.size() - 1);
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                new EventData_Request_Play_Sound(sounds[soundIdx].c_str(), volume, false)));
+        }
     }
 };

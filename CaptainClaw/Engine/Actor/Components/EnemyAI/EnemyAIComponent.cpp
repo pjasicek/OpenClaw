@@ -147,13 +147,8 @@ void EnemyAIComponent::VOnHealthBelowZero()
         stateComponentIter.second->VOnStateLeave();
     }
 
-    if (!m_DeathSounds.empty())
-    {
-        // Play death sound
-        int deathSoundIdx = Util::GetRandomNumber(0, m_DeathSounds.size() - 1);
-        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-            new EventData_Request_Play_Sound(m_DeathSounds[deathSoundIdx].c_str(), 100, false)));
-    }
+    // Play deaht sound
+    Util::PlayRandomSoundFromList(m_DeathSounds);
 
     shared_ptr<PhysicsComponent> pPhysicsComponent =
         MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
