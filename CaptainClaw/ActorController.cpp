@@ -15,6 +15,7 @@ ActorController::ActorController(shared_ptr<SceneNode> controlledObject, float s
 void ActorController::OnUpdate(uint32 msDiff)
 {
     int count;
+    SDL_PumpEvents();
     m_pKeyStates = SDL_GetKeyboardState(&count);
 
     float moveX = 0.0f;
@@ -24,32 +25,32 @@ void ActorController::OnUpdate(uint32 msDiff)
 
     // We need two conditions because I want behaviour such as when both right and left
     // buttons are pressed, I dont want actor to move, e.g. to have the move effect nullyfied
-    if (m_pKeyStates[SDL_SCANCODE_RIGHT])
+    if (InputKeys[SDLK_RIGHT])
     {
         moveX += m_Speed * (float)msDiff;
     }
-    if (m_pKeyStates[SDL_SCANCODE_LEFT])
+    if (InputKeys[SDLK_LEFT])
     {
         moveX -= m_Speed * (float)msDiff;
     }
 
     // CLimbing
-    if (m_pKeyStates[SDL_SCANCODE_DOWN])
+    if (InputKeys[SDLK_DOWN])
     {
         climbY += 5.0;
     }
-    if (m_pKeyStates[SDL_SCANCODE_UP])
+    if (InputKeys[SDLK_UP])
     {
         climbY -= 5.0;
     }
 
     // Jumping
-    if (m_pKeyStates[SDL_SCANCODE_SPACE])
+    if (InputKeys[SDLK_SPACE])
     {
         moveY -= m_Speed * (float)msDiff;
     }
 
-    if (m_pKeyStates[SDL_SCANCODE_LSHIFT] || m_pKeyStates[SDL_SCANCODE_RSHIFT])
+    if (InputKeys[SDL_SCANCODE_LSHIFT] || InputKeys[SDL_SCANCODE_RSHIFT])
     {
         moveX *= 10;
         moveY *= 10;
@@ -95,11 +96,14 @@ bool ActorController::VOnKeyDown(SDL_Keycode key)
         return true;
     }
 
+    InputKeys[key] = true;
+
     return false;
 }
 
 bool ActorController::VOnKeyUp(SDL_Keycode key)
 {
+    InputKeys[key] = false;
     return false;
 }
 

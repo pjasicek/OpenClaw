@@ -56,19 +56,12 @@ struct GameOptions
     bool isFullscreenDesktop;
 
     // Audio
-<<<<<<< HEAD
     unsigned frequency;
     unsigned channels;
     unsigned chunkSize;
-    std::string midiRpcServerPath;
-=======
-    int frequency;
-    uint32 channels;
-    int chunkSize;
     int soundVolume;
     int musicVolume;
-    const char* midiRpcServerPath;
->>>>>>> c75aef15f760adb4be737f449bb3dc5e9f024a32
+    std::string midiRpcServerPath;
 
     // Font
     std::vector<const char*> fontNames;
