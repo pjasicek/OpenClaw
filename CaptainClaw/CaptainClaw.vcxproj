@@ -98,7 +98,7 @@
     <ClCompile Include="Engine\Actor\Components\PowerupSparkleAIComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\AreaDamageComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\GlitterComponent.cpp" />
-    <ClCompile Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\TriggerComponents\SoundTriggerComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.cpp" />
     <ClCompile Include="Engine\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Audio\midiproc_c.c" />
@@ -183,7 +183,7 @@
     <ClInclude Include="Engine\Actor\Components\PredefinedMoveComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PowerupSparkleAIComponent.h" />
     <ClInclude Include="Engine\Actor\Components\GlitterComponent.h" />
-    <ClInclude Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\TriggerComponents\SoundTriggerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />
     <ClInclude Include="ClawGameLogic.h" />

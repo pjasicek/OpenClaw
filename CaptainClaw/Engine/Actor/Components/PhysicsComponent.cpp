@@ -780,7 +780,7 @@ void PhysicsComponent::SetFalling(bool falling)
 {
     if (falling)
     {
-        if (m_HeightInAir < 2 && (GetVelocity().y < 3))
+        if (m_HeightInAir < 5 && (GetVelocity().y < 5))
         {
             return;
         }

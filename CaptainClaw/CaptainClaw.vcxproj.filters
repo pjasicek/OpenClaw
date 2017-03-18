@@ -147,9 +147,6 @@
     <ClCompile Include="Engine\UserInterface\MovementController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ActorController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -262,6 +259,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Util\PrimeSearch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actor\Components\TriggerComponents\SoundTriggerComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -422,9 +422,6 @@
     <ClInclude Include="Engine\UserInterface\MovementController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actor\Components\TriggerComponents\AmbientSoundTriggerComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ActorController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -540,6 +537,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Util\PrimeSearch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actor\Components\TriggerComponents\SoundTriggerComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

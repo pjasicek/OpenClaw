@@ -275,4 +275,52 @@ struct PredefinedMove
     std::string soundToPlay;
 };
 
+inline void SetBoolIfDefined(bool *dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText() == NULL)
+        return;
+
+    std::string opt = elem->GetText();
+    if (opt == "true")
+    {
+        *dest = true;
+    }
+    else if (opt == "false")
+    {
+        *dest = false;
+    }
+}
+
+inline void SetUintIfDefined(unsigned* dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText())
+    {
+        *dest = std::stoi(elem->GetText());
+    }
+}
+
+inline void SetIntIfDefined(int* dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText())
+    {
+        *dest = std::stoi(elem->GetText());
+    }
+}
+
+inline void SetStringIfDefined(std::string* dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText())
+    {
+        *dest = elem->GetText();
+    }
+}
+
+inline void SetDoubleIfDefined(double* dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText())
+    {
+        *dest = std::stod(elem->GetText());
+    }
+}
+
 #endif

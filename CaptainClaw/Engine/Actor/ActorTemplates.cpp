@@ -769,28 +769,6 @@ namespace ActorTemplates
 
         if (rand() % 2 == 1) { speedX *= -1; }
 
-        /*pActorElem->LinkEndChild(CreatePhysicsComponent(
-            "Dynamic",  // Type - "Dynamic", "Kinematic", "Static"
-            false,      // Has foot sensor ?
-            false,      // Has capsule shape ?
-            true,       // Has bullet behaviour ?
-            false,       // Has sensor behaviour ?
-            "Trigger",    // Fixture type
-            position,      // Position
-            Point(0, 0),   // Offset - where to move the body upon its placement
-            "Rectangle",   // Body shape - "Rectangle" or "Circle"
-            Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
-            0.8f,          // Gravity scale - set to 0.0f if no gravity is desired
-            true,          // Has any initial speed ?
-            false,
-            Point(speedX, speedY), // If it does, specify it here
-            CollisionFlag_Pickup,  // Collision flag - e.g. What is this actor ?
-            // TODO: Claw needs to have CollisionFlag_Controller flag set
-            (CollisionFlag_Controller | CollisionFlag_Death | CollisionFlag_Ground | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
-            10.0f, // Density
-            0.18f, // Friction - with floor and so
-            0.5f)); // Restitution - makes object bounce*/
-
         ActorBodyDef bodyDef;
         bodyDef.bodyType = b2_dynamicBody;
         bodyDef.makeSensor = false;
@@ -817,6 +795,32 @@ namespace ActorTemplates
         pActorElem->LinkEndChild(CreateXmlData_GlitterComponent("Glitter_Yellow", false, false));
 
         return pActorElem;
+    }
+
+    TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, Point position, Point size, int enterCount)
+    {
+        TiXmlElement* pActorElem = new TiXmlElement("Actor");
+        pActorElem->SetAttribute("Type", sound.c_str());
+
+        pActorElem->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActorElem->LinkEndChild(CreateTriggerComponent(enterCount, false, true));
+
+        ActorBodyDef bodyDef;
+        bodyDef.bodyType = b2_staticBody;
+        bodyDef.fixtureType = FixtureType_Pickup;
+        bodyDef.position = position;
+
+        ActorFixtureDef fixtureDef;
+        fixtureDef.fixtureType = FixtureType_Trigger;
+        fixtureDef.collisionFlag = CollisionFlag_Pickup;
+        fixtureDef.collisionMask = CollisionFlag_Controller;
+        fixtureDef.isSensor = true;
+        fixtureDef.size = size;
+        bodyDef.fixtureList.push_back(fixtureDef);
+
+        pActorElem->LinkEndChild(CreatePhysicsComponent(&bodyDef));
+
+
     }
 
     TiXmlElement* CreateXmlData_TreasurePickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
