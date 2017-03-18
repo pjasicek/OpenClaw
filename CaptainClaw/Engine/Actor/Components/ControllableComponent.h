@@ -67,7 +67,8 @@ enum ClawState
     ClawState_DuckAttacking,
     ClawState_JumpAttacking,
     ClawState_TakingDamage,
-    ClawState_Dying
+    ClawState_Dying,
+    ClawState_Idle
 };
 
 class PositionComponent;
@@ -126,6 +127,11 @@ private:
     bool IsAttackingOrShooting();
 
     ClawState m_State;
+    ClawState m_LastState;
+
+    std::vector<std::string> m_TakeDamageSoundList;
+    std::vector<std::string> m_IdleQuoteSoundList;
+    uint32 m_IdleTime;
 
     Direction m_Direction;
     PhysicsComponent* m_pPhysicsComponent;

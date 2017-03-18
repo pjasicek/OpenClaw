@@ -67,7 +67,9 @@ ClawControllableComponent::ClawControllableComponent()
     m_pClawAnimationComponent = NULL;
     m_pRenderComponent = NULL;
     m_State = ClawState_None;
+    m_LastState = ClawState_None;
     m_Direction = Direction_Right;
+    m_IdleTime = 0;
 }
 
 ClawControllableComponent::~ClawControllableComponent()
@@ -102,11 +104,52 @@ void ClawControllableComponent::VPostInit()
     pHealthComponent->AddObserver(this);
 
     m_pPhysicsComponent = MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
+
+    // Sounds that play when claw takes some damage
+    m_TakeDamageSoundList.push_back(SOUND_CLAW_TAKE_DAMAGE1);
+    m_TakeDamageSoundList.push_back(SOUND_CLAW_TAKE_DAMAGE2);
+    m_TakeDamageSoundList.push_back(SOUND_CLAW_TAKE_DAMAGE3);
+    m_TakeDamageSoundList.push_back(SOUND_CLAW_TAKE_DAMAGE4);
+
+    // Sounds that play when claw is idle for some time
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE1);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE2);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE3);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE4);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE5);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE6);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE7);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE8);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE9);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE10);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE11);
+    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE12);
 }
 
 void ClawControllableComponent::VUpdate(uint32 msDiff)
 {
+    if (m_State == ClawState_Standing ||
+        m_State == ClawState_Idle)
+    {
+        m_IdleTime += msDiff;
+        if (m_IdleTime > 5000)
+        {
+            int idleQuoteSoundIdx = Util::GetRandomNumber(0, m_IdleQuoteSoundList.size() - 1);
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                new EventData_Request_Play_Sound(m_IdleQuoteSoundList[idleQuoteSoundIdx], 100, false)));
 
+            m_pClawAnimationComponent->SetAnimation("idle");
+
+            m_State = ClawState_Idle;
+            m_IdleTime = 0;
+        }
+    }
+    else
+    {
+        m_IdleTime = 0;
+    }
+
+    m_LastState = m_State;
 }
 
 // Interface for subclasses
@@ -147,6 +190,7 @@ void ClawControllableComponent::VOnDirectionChange(Direction direction)
 void ClawControllableComponent::VOnStopMoving()
 {
     if (m_State == ClawState_Shooting ||
+        m_State == ClawState_Idle ||
         IsDucking())
     {
         return;
@@ -521,6 +565,11 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
         {
             m_pClawAnimationComponent->SetAnimation("damage2");
         }
+
+        // Play random "take damage" sound
+        int takeDamageSoundIdx = Util::GetRandomNumber(0, m_TakeDamageSoundList.size() - 1);
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(m_TakeDamageSoundList[takeDamageSoundIdx], 100, false)));
 
         Point knockback(-10, 0);
         if (m_pRenderComponent->IsMirrored())
