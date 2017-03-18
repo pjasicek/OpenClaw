@@ -5,6 +5,7 @@
 #include "../ActorComponent.h"
 #include "AnimationComponent.h"
 #include "ControllerComponents/HealthComponent.h"
+#include "../../Util/PrimeSearch.h"
 
 // Goal is to not hard bind claw to be the only controllable character
 // It is solved by accessing this partially interface class
@@ -132,6 +133,8 @@ private:
     std::vector<std::string> m_TakeDamageSoundList;
     std::vector<std::string> m_IdleQuoteSoundList;
     uint32 m_IdleTime;
+
+    unique_ptr<PrimeSearch> m_pIdleQuotesSequence;
 
     Direction m_Direction;
     PhysicsComponent* m_pPhysicsComponent;

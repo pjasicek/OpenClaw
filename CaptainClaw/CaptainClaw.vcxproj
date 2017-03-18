@@ -152,6 +152,7 @@
     <ClCompile Include="Engine\Graphics2D\Image.cpp" />
     <ClCompile Include="Engine\Util\Converters.cpp" />
     <ClCompile Include="Engine\Util\Memory\MemoryPool.cpp" />
+    <ClCompile Include="Engine\Util\PrimeSearch.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Actor\Components\Animation.cpp" />
     <ClCompile Include="Engine\Util\Profilers.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="Engine\Graphics2D\Image.h" />
     <ClInclude Include="Engine\Util\Memory\MemoryMacros.h" />
     <ClInclude Include="Engine\Util\Memory\MemoryPool.h" />
+    <ClInclude Include="Engine\Util\PrimeSearch.h" />
     <ClInclude Include="Engine\Util\Subject.h" />
     <ClInclude Include="Engine\Util\Profilers.h" />
     <ClInclude Include="Engine\Util\Singleton.h" />

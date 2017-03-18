@@ -124,6 +124,8 @@ void ClawControllableComponent::VPostInit()
     m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE10);
     m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE11);
     m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE12);
+
+    m_pIdleQuotesSequence.reset(new PrimeSearch(m_IdleQuoteSoundList.size()));
 }
 
 void ClawControllableComponent::VUpdate(uint32 msDiff)
@@ -132,9 +134,14 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_State == ClawState_Idle)
     {
         m_IdleTime += msDiff;
-        if (m_IdleTime > 5000)
+        if (m_IdleTime > 500)
         {
-            int idleQuoteSoundIdx = Util::GetRandomNumber(0, m_IdleQuoteSoundList.size() - 1);
+            // This is to prevent the same sound to play multiple times in a row
+            int idleQuoteSoundIdx = m_pIdleQuotesSequence->GetNext();
+            if (idleQuoteSoundIdx == -1)
+            {
+                idleQuoteSoundIdx = m_pIdleQuotesSequence->GetNext(true);
+            }
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(m_IdleQuoteSoundList[idleQuoteSoundIdx], 100, false)));
 
