@@ -351,12 +351,12 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     //assert(m_IsJumping && m_IsFalling && "Cannot be jumping and falling at the same time");
 
     /*LOG("Jumping: " + ToStr((m_IsJumping)) + ", Falling: " + ToStr(m_IsFalling) + ", JumpHeight: " + ToStr(m_HeightInAir) + ", NumFootContacts: " + ToStr(m_NumFootContacts));
-    LOG("Movement: " + m_CurrentSpeed.ToString());*/
+    LOG("Movement: " + m_CurrentSpeed.ToString());
     //LOG(ToStr(m_OverlappingLaddersList.size()));
     //LOG("Vel X: " + ToStr(GetVelocity().x) + ", Vel Y: " + ToStr(GetVelocity().y));
     //LOG(ToStr(m_OverlappingKinematicBodiesList.size()));
     
-    //LOG("CLIMBING Y: " + ToStr(m_ClimbingSpeed.y));
+    LOG("CLIMBING Y: " + ToStr(m_ClimbingSpeed.y));*/
     
 
     if (m_pControllableComponent && !m_pControllableComponent->InPhysicsCapableState())
@@ -472,8 +472,6 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
                 if (m_pTopLadderContact != NULL)
                 {
                     m_pTopLadderContact->SetEnabled(false);
-                    m_pTopLadderContact = NULL;
-
                 }
 
                 m_pControllableComponent->VOnClimb();
