@@ -229,7 +229,7 @@ void Audio::ResumeAllSounds()
 //############## MIDI RPC ####################
 //############################################
 
-bool Audio::InitializeMidiRPC(const char* midiRpcServerPath)
+bool Audio::InitializeMidiRPC(const std::string& midiRpcServerPath)
 {
     if (!InitializeMidiRPCServer(midiRpcServerPath))
     {
@@ -244,12 +244,12 @@ bool Audio::InitializeMidiRPC(const char* midiRpcServerPath)
     return true;
 }
 
-bool Audio::InitializeMidiRPCServer(const char* midiRpcServerPath)
+bool Audio::InitializeMidiRPCServer(const std::string& midiRpcServerPath)
 {
     STARTUPINFO si = { sizeof(si) };
     PROCESS_INFORMATION pi;
 
-    BOOL doneCreateProc = CreateProcess(midiRpcServerPath, NULL, NULL, NULL, FALSE,
+    BOOL doneCreateProc = CreateProcess(midiRpcServerPath.c_str(), NULL, NULL, NULL, FALSE,
                                            0, NULL, NULL, &si, &pi);
     if (doneCreateProc)
     {

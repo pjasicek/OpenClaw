@@ -73,7 +73,7 @@ bool BaseGameLogic::Initialize()
 
     std::string savesFile = g_pApp->GetGameConfig()->savesFile;
 
-    TiXmlDocument gameSaves(savesFile);
+    TiXmlDocument gameSaves(savesFile.c_str());
     gameSaves.LoadFile();
     if (gameSaves.Error())
     {

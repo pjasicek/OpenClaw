@@ -31,8 +31,8 @@ public:
 
 private:
     //##### Methods #####//
-    bool InitializeMidiRPC(const char* midiRpcServerPath);
-    bool InitializeMidiRPCServer(const char* midiRpcServerPath);
+    bool InitializeMidiRPC(const std::string& midiRpcServerPath);
+    bool InitializeMidiRPCServer(const std::string& midiRpcServerPath);
     bool InitializeMidiRPCClient();
     bool IsRPCServerListening();
 
