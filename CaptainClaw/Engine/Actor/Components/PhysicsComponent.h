@@ -92,6 +92,7 @@ public:
     void RemoveOverlappingKinematicBody(const b2Body* pBody);
 
     void SetTopLadderContact(b2Contact* pContact) { m_pTopLadderContact = pContact; }
+    b2Contact* GetTopLadderContact() { return m_pTopLadderContact; }
 
 private:
     // Configurable data read from XML
