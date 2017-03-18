@@ -23,37 +23,6 @@
 // ClawPhysics implementation
 //=====================================================================================================================
 
-const float METERS_TO_PIXELS = 75.0f;
-
-inline b2Vec2 PixelsToMeters(const b2Vec2& pixels)
-{
-    return b2Vec2(pixels.x / METERS_TO_PIXELS, pixels.y / METERS_TO_PIXELS);
-}
-
-inline float PixelsToMeters(float pixels)
-{
-    return pixels / METERS_TO_PIXELS;
-}
-
-inline b2Vec2 MetersToPixels(b2Vec2 meters)
-{
-    return b2Vec2(meters.x * METERS_TO_PIXELS, meters.y * METERS_TO_PIXELS);
-}
-
-inline float MetersToPixels(float pixels)
-{
-    return pixels * METERS_TO_PIXELS;
-}
-
-inline Point b2Vec2ToPoint(const b2Vec2& vec)
-{
-    return Point(vec.x, vec.y);
-}
-
-inline b2Vec2 PointToB2Vec2(const Point& point)
-{
-    return b2Vec2((float)point.x, (float)point.y);
-}
 
 shared_ptr<PhysicsComponent> GetPhysicsComponentFromB2Body(const b2Body* pBody)
 {
