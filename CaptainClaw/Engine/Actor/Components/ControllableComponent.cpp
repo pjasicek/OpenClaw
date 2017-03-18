@@ -134,7 +134,7 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_State == ClawState_Idle)
     {
         m_IdleTime += msDiff;
-        if (m_IdleTime > 500)
+        if (m_IdleTime > g_pApp->GetGlobalOptions()->idleSoundQuoteIntervalMs)
         {
             // This is to prevent the same sound to play multiple times in a row
             int idleQuoteSoundIdx = m_pIdleQuotesSequence->GetNext();

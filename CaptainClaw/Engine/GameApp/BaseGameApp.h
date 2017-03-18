@@ -111,11 +111,13 @@ struct GlobalOptions
         cpuDelayMs = 0;
         maxJumpSpeed = 8.8;
         maxFallSpeed = 14.0;
+        idleSoundQuoteIntervalMs = 15000;
     }
 
     int cpuDelayMs;
     double maxJumpSpeed;
     double maxFallSpeed;
+    int idleSoundQuoteIntervalMs;
 };
 
 class EventMgr;
@@ -187,6 +189,7 @@ public:
     const ConsoleConfig* GetConsoleConfig() const { return &m_GameOptions.consoleConfig; }
 
     const GameOptions* GetGameConfig() const { return &m_GameOptions; }
+    const GlobalOptions* GetGlobalOptions() const { return &m_GlobalOptions; }
 
 protected:
     virtual void VRegisterGameEvents() { }
