@@ -339,6 +339,49 @@ namespace ActorTemplates
         return bodyTypeStr;
     }
 
+    
+    std::vector<std::pair<std::string, std::string>> GetSoundsFromActorLogic(const std::string& logic)
+    {
+        std::vector <std::pair<std::string, std::string>> soundTypeAndNamePairList;
+        if (logic == "Soldier")
+        {
+            soundTypeAndNamePairList.push_back(std::make_pair(
+                std::string("TakeDamage"), std::string(SOUND_LEVEL1_SOLDIER_DAMAGED)));
+            soundTypeAndNamePairList.push_back(std::make_pair(
+                std::string("Death"), std::string(SOUND_LEVEL1_SOLDIER_DEATH)));
+            soundTypeAndNamePairList.push_back(std::make_pair(
+                std::string("MeleeAttack"), std::string(SOUND_LEVEL1_SOLDIER_MELEE_ATTACK)));
+            soundTypeAndNamePairList.push_back(std::make_pair(
+                std::string("RangedAttack"), std::string(SOUND_LEVEL1_SOLDIER_SHOOT)));
+
+        }
+        else if (logic == "Officer")
+        {
+            soundTypeAndNamePairList.push_back(std::make_pair(
+                std::string("TakeDamage"), std::string(SOUND_LEVEL1_TAKE_DAMAGE1)));
+            soundTypeAndNamePairList.push_back(std::make_pair(
+                std::string("Death"), std::string(SOUND_LEVEL1_OFFICER_DEATH1)));
+            soundTypeAndNamePairList.push_back(std::make_pair(
+                std::string("Death"), std::string(SOUND_LEVEL1_OFFICER_DEATH2)));
+            soundTypeAndNamePairList.push_back(std::make_pair(
+                std::string("MeleeAttack"), std::string(SOUND_LEVEL1_OFFICER_MELEE_ATTACK)));
+        }
+        else if (logic == "Rat")
+        {
+            soundTypeAndNamePairList.push_back(std::make_pair(
+                std::string("Death"), std::string(SOUND_LEVEL1_RAT_DEATH)));
+            soundTypeAndNamePairList.push_back(std::make_pair(
+                std::string("RangedAttack"), std::string(SOUND_LEVEL1_RAT_THROW_BOMB)));
+        }
+        else
+        {
+            LOG_ERROR("Unsupported logic: " + logic);
+            assert(false && "Unsupported logic");
+        }
+
+        return soundTypeAndNamePairList;
+    }
+
     //=====================================================================================================================
     // General functions for creating components
     //=====================================================================================================================
@@ -1234,9 +1277,9 @@ namespace ActorTemplates
         fixtureDef.size = Point(40, 70);
         bodyDef.fixtureList.push_back(fixtureDef);
 
+        TiXmlElement* pEnemyAIElem = new TiXmlElement("EnemyAIComponent");
         if (logicName == "Soldier")
         {
-            TiXmlElement* pEnemyAIElem = new TiXmlElement("EnemyAIComponent");
             XML_ADD_TEXT_ELEMENT("DeathAnimation", "killfall", pEnemyAIElem);
 
             pActor->LinkEndChild(pEnemyAIElem);
@@ -1297,7 +1340,6 @@ namespace ActorTemplates
         }
         else if (logicName == "Officer")
         {
-            TiXmlElement* pEnemyAIElem = new TiXmlElement("EnemyAIComponent");
             XML_ADD_TEXT_ELEMENT("DeathAnimation", "fall", pEnemyAIElem);
 
             pActor->LinkEndChild(pEnemyAIElem);
@@ -1340,7 +1382,6 @@ namespace ActorTemplates
         }
         else if (logicName == "Rat")
         {
-            TiXmlElement* pEnemyAIElem = new TiXmlElement("EnemyAIComponent");
             XML_ADD_TEXT_ELEMENT("DeathAnimation", "dead", pEnemyAIElem);
 
             pActor->LinkEndChild(pEnemyAIElem);
@@ -1376,26 +1417,15 @@ namespace ActorTemplates
                 CreateActorAgroRangeFixture(Point(1000, 50), Point(0, 0), FixtureType_EnemyAIRangedSensor));
         }
 
-        pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
+        // Add sounds associated to given enemy
+        auto soundTypeAndNamePairs = GetSoundsFromActorLogic(logicName);
+        for (std::pair<std::string, std::string> soundTypeAndNamePair : soundTypeAndNamePairs)
+        {
+            XML_ADD_2_PARAM_ELEMENT("Sound", "SoundType", soundTypeAndNamePair.first.c_str(), 
+                "SoundName", soundTypeAndNamePair.second.c_str(), pEnemyAIElem);
+        }
 
-        // Death sounds
-        if (logicName == "Soldier")
-        {
-            pActor->LinkEndChild(CreateDestroyableComponent(false, "", { SOUND_LEVEL1_SOLDIER_DEATH }, false));
-        }
-        else if (logicName == "Officer")
-        {
-            pActor->LinkEndChild(CreateDestroyableComponent(false, "", { SOUND_LEVEL1_OFFICER_DEATH1, SOUND_LEVEL1_OFFICER_DEATH2 }, false));
-        }
-        else if (logicName == "Rat")
-        {
-            pActor->LinkEndChild(CreateDestroyableComponent(false, "", { SOUND_LEVEL1_RAT_DEATH }, false));
-        }
-        else
-        {
-            LOG_ERROR("Confilcting logic name: " + logicName);
-            assert(false && "Currently unsupported enemy logic !");
-        }
+        pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
 
         return pActor;
     }

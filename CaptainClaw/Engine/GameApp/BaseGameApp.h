@@ -189,7 +189,7 @@ public:
     const ConsoleConfig* GetConsoleConfig() const { return &m_GameOptions.consoleConfig; }
 
     const GameOptions* GetGameConfig() const { return &m_GameOptions; }
-    const GlobalOptions* GetGlobalOptions() const { return &m_GlobalOptions; }
+    GlobalOptions* GetGlobalOptions() { return &m_GlobalOptions; }
 
 protected:
     virtual void VRegisterGameEvents() { }

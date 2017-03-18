@@ -10,6 +10,9 @@
 #include "../../../GameApp/BaseGameApp.h"
 #include "../../../Physics/ClawPhysics.h"
 
+#include "../../../Events/EventMgr.h"
+#include "../../../Events/Events.h"
+
 #include <time.h>
 
 const char* BaseEnemyAIStateComponent::g_Name = "BaseEnemyAIStateComponent";
@@ -517,6 +520,15 @@ void MeleeAttackAIStateComponent::VOnAnimationFrameChanged(
             pAttack->damage,
             CollisionFlag_EnemyAIAttack,
             "Rectangle");
+
+        SoundList meleeAttackSounds = m_pEnemyAIComponent->GetMeleeAttackSounds();
+        if (!meleeAttackSounds.empty())
+        {
+            // Play ranged attack sound
+            int soundIdx = Util::GetRandomNumber(0, meleeAttackSounds.size() - 1);
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                new EventData_Request_Play_Sound(meleeAttackSounds[soundIdx].c_str(), 100, false)));
+        }
     }
 }
 
@@ -685,5 +697,14 @@ void RangedAttackAIStateComponent::VOnAnimationFrameChanged(
             m_pPositionComponent->GetPosition() + offset,
             CollisionFlag_EnemyAIProjectile,
             (CollisionFlag_Controller | CollisionFlag_Solid));
+
+        SoundList rangedAttackSounds = m_pEnemyAIComponent->GetRangedAttackSounds();
+        if (!rangedAttackSounds.empty())
+        {
+            // Play ranged attack sound
+            int soundIdx = Util::GetRandomNumber(0, rangedAttackSounds.size() - 1);
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                new EventData_Request_Play_Sound(rangedAttackSounds[soundIdx].c_str(), 100, false)));
+        }
     }
 }

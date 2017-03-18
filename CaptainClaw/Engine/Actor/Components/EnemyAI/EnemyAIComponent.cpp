@@ -38,6 +38,40 @@ bool EnemyAIComponent::VInit(TiXmlElement* pData)
         m_DeathAnimation = pElem->GetText();
     }
 
+    for (TiXmlElement* pElem = pData->FirstChildElement("Sound");
+        pElem != NULL;
+        pElem = pElem->NextSiblingElement())
+    {
+        std::string soundType = pElem->Attribute("SoundType");
+        std::string soundName = pElem->Attribute("SoundName");
+
+        if (soundType == "TakeDamage")
+        {
+            m_TakeDamageSounds.push_back(soundName);
+        }
+        else if (soundType == "MeleeAttack")
+        {
+            m_MeleeAttackSounds.push_back(soundName);
+        }
+        else if (soundType == "RangedAttack")
+        {
+            m_RangedAttackSounds.push_back(soundName);
+        }
+        else if (soundType == "Death")
+        {
+            m_DeathSounds.push_back(soundName);
+        }
+        else if (soundType == "Quote")
+        {
+            m_QuoteToHostileUnitSounds.push_back(soundName);
+        }
+        else
+        {
+            LOG_ERROR("Conflicting sound type: " + soundType + ", SoundName: " + soundName);
+            assert(false && "Unknown sound type");
+        }
+    }
+
     return true;
 }
 
@@ -111,6 +145,14 @@ void EnemyAIComponent::VOnHealthBelowZero()
     for (auto stateComponentIter : m_StateMap)
     {
         stateComponentIter.second->VOnStateLeave();
+    }
+
+    if (!m_DeathSounds.empty())
+    {
+        // Play death sound
+        int deathSoundIdx = Util::GetRandomNumber(0, m_DeathSounds.size() - 1);
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(m_DeathSounds[deathSoundIdx].c_str(), 100, false)));
     }
 
     shared_ptr<PhysicsComponent> pPhysicsComponent =

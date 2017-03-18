@@ -13,6 +13,8 @@ class ActorRenderComponent;
 
 typedef std::map<std::string, BaseEnemyAIStateComponent*> EnemyStateMap;
 typedef std::vector<Actor*> ActorList;
+typedef std::vector<std::string> SoundList;
+
 class EnemyAIComponent : public ActorComponent, public HealthObserver
 {
 public:
@@ -42,6 +44,12 @@ public:
 
     void OnStateCanFinish();
 
+    const SoundList& GetTakeDamageSounds() const { return m_TakeDamageSounds; }
+    const SoundList& GetMeleeAttackSounds() const { return m_MeleeAttackSounds; }
+    const SoundList& GetRangedAttackSounds() const { return m_RangedAttackSounds; }
+    const SoundList& GetDeathSounds() const { return m_DeathSounds; }
+    const SoundList& GetQuotToHostileUnitSounds() const { return m_QuoteToHostileUnitSounds; }
+
 private:
     void LeaveAllStates();
     bool HasState(std::string stateName);
@@ -61,6 +69,12 @@ private:
 
     ActorList m_EnemiesInMeleeZone;
     ActorList m_EnemiesInRangedZone;
+
+    SoundList m_TakeDamageSounds;
+    SoundList m_MeleeAttackSounds;
+    SoundList m_RangedAttackSounds;
+    SoundList m_DeathSounds;
+    SoundList m_QuoteToHostileUnitSounds;
 };
 
 #endif
