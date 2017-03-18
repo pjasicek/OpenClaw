@@ -88,6 +88,9 @@ void CrumblingPegAIComponent::OnContact(b2Body* pBody)
         MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
     pAnimationComponent->ResumeAnimation();
+
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+        new EventData_Request_Play_Sound(SOUND_LEVEL1_PEG_CRUMBLE, 100, false)));
 }
 
 // After claw dies, "recreate" crumbling pegs
