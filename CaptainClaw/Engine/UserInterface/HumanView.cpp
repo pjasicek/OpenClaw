@@ -132,6 +132,7 @@ bool HumanView::VOnEvent(SDL_Event& evt)
             {
                 return m_pKeyboardHandler->VOnKeyDown(evt.key.keysym.sym);
             }
+            break;
         }
         case SDL_KEYUP:
         {
@@ -139,55 +140,57 @@ bool HumanView::VOnEvent(SDL_Event& evt)
             {
                 return m_pKeyboardHandler->VOnKeyUp(evt.key.keysym.sym);
             }
+            break;
         }
 
         case SDL_FINGERDOWN:
         case SDL_FINGERUP:
+        {
+            float threshold = 0.2;
+            SDL_Event sdlevent;
+            sdlevent.key.keysym.sym;
+
+            /*LOG_WARNING("fingerx: ");
+            LOG_WARNING(std::to_string(evt.tfinger.x));
+            LOG_WARNING("fingery: ");
+            LOG_WARNING(std::to_string(evt.tfinger.y));*/
+            sdlevent.key.keysym.sym = SDLK_UNKNOWN;
+            if (evt.tfinger.y < (0.5 - threshold))
             {
-                float threshold = 0.2;
-                SDL_Event sdlevent;
-                sdlevent.key.keysym.sym;
+                sdlevent.key.keysym.sym= SDLK_SPACE;
+                //LOG_WARNING("push UP");
+            }
+            if (evt.tfinger.x < (0.5 - threshold))
+            {
+                sdlevent.key.keysym.sym = SDLK_LEFT;
+                //LOG_WARNING("push LEFT");
+            }
+            if (evt.tfinger.y > (0.5 + threshold))
+            {
+                sdlevent.key.keysym.sym = SDLK_DOWN;
+                //LOG_WARNING("push DOWN");
+            }
+            if (evt.tfinger.x > (0.5 + threshold))
+            {
+                sdlevent.key.keysym.sym = SDLK_RIGHT;
+                //LOG_WARNING("push RIGHT");
+            }
 
-                /*LOG_WARNING("fingerx: ");
-                LOG_WARNING(std::to_string(evt.tfinger.x));
-                LOG_WARNING("fingery: ");
-                LOG_WARNING(std::to_string(evt.tfinger.y));*/
-                sdlevent.key.keysym.sym = SDLK_UNKNOWN;
-                if (evt.tfinger.y < (0.5 - threshold))
+            if (sdlevent.key.keysym.sym != SDLK_UNKNOWN)
+            {
+                if (SDL_FINGERDOWN == evt.type)
                 {
-                    sdlevent.key.keysym.sym= SDLK_SPACE;
-                    //LOG_WARNING("push UP");
+                    return m_pKeyboardHandler->VOnKeyDown(sdlevent.key.keysym.sym);
+                    //LOG_WARNING("push down");
                 }
-                if (evt.tfinger.x < (0.5 - threshold))
+                else
                 {
-                    sdlevent.key.keysym.sym = SDLK_LEFT;
-                    //LOG_WARNING("push LEFT");
-                }
-                if (evt.tfinger.y > (0.5 + threshold))
-                {
-                    sdlevent.key.keysym.sym = SDLK_DOWN;
-                    //LOG_WARNING("push DOWN");
-                }
-                if (evt.tfinger.x > (0.5 + threshold))
-                {
-                    sdlevent.key.keysym.sym = SDLK_RIGHT;
-                    //LOG_WARNING("push RIGHT");
-                }
-
-                if (sdlevent.key.keysym.sym != SDLK_UNKNOWN)
-                {
-                    if (SDL_FINGERDOWN == evt.type)
-                    {
-                        return m_pKeyboardHandler->VOnKeyDown(sdlevent.key.keysym.sym);
-                        //LOG_WARNING("push down");
-                    }
-                    else
-                    {
-                        return m_pKeyboardHandler->VOnKeyUp(sdlevent.key.keysym.sym);
-                        //LOG_WARNING("push up");
-                    }
+                    return m_pKeyboardHandler->VOnKeyUp(sdlevent.key.keysym.sym);
+                    //LOG_WARNING("push up");
                 }
             }
+            break;
+        }
 
         case SDL_MOUSEMOTION:
         {
