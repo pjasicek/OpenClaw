@@ -37,13 +37,13 @@ struct ConsoleConfig
     bool stretchBackgroundImage;
     double widthRatio;
     double heightRatio;
-    uint16_t lineSeparatorHeight;
-    uint16_t commandPromptOffsetY;
+    unsigned lineSeparatorHeight;
+    unsigned commandPromptOffsetY;
     double consoleAnimationSpeed;
     SDL_Color fontColor;
     std::string fontPath;
-    uint16_t fontHeight;
-    uint16_t leftOffset;
+    unsigned fontHeight;
+    unsigned leftOffset;
     std::string commandPrompt;
 };
 

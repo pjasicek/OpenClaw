@@ -197,6 +197,9 @@ void BaseGameApp::OnEvent(SDL_Event& event)
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
         case SDL_MOUSEWHEEL:
+        case SDL_FINGERUP:
+        case SDL_FINGERDOWN:
+        case SDL_FINGERMOTION:
         {
             if (m_pGame)
             {
@@ -252,11 +255,60 @@ HumanView* BaseGameApp::GetHumanView() const
     return pView;
 }
 
+static void setBoolIfDefined(bool *dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText() == NULL)
+        return;
+
+    std::string opt = elem->GetText();
+    if (opt == "true")
+    {
+        *dest = true;
+    }
+    else if (opt == "false")
+    {
+        *dest = false;
+    }
+}
+
+static void setUintIfDefined(unsigned* dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText())
+    {
+        *dest = std::stoi(elem->GetText());
+    }
+}
+
+static void setIntIfDefined(int* dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText())
+    {
+        *dest = std::stoi(elem->GetText());
+    }
+}
+
+static void setStringIfDefined(std::string* dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText())
+    {
+        *dest = elem->GetText();
+    }
+}
+
+static void setDoubleIfDefined(double* dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText())
+    {
+        *dest = std::stod(elem->GetText());
+    }
+}
+
 bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
 {
     if (!m_XmlConfiguration.LoadFile(inConfigFile))
     {
-        LOG_WARNING("Configuration file: " + std::string(inConfigFile) + " not found - creating default configuration");
+        LOG_WARNING("Configuration file: " + std::string(inConfigFile)
+            + " not found - creating default configuration");
         m_XmlConfiguration = CreateAndReturnDefaultConfig(inConfigFile);
     }
 
@@ -270,223 +322,122 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     //-------------------------------------------------------------------------
     // Display
     //-------------------------------------------------------------------------
-
     TiXmlElement* displayElem = configRoot->FirstChildElement("Display");
-    if (!displayElem) // Create default if it does not exist in config
+    if (displayElem)
     {
-        displayElem = CreateDefaultDisplayConfig();
-        configRoot->LinkEndChild(displayElem);
-    }
+        TiXmlElement* windowSizeElem = displayElem->FirstChildElement("Size");
+        if (windowSizeElem)
+        {
+            windowSizeElem->Attribute("width", &m_GameOptions.windowWidth);
+            windowSizeElem->Attribute("height", &m_GameOptions.windowHeight);
+        }
 
-    // Program deffensively here, missing element could cause disaster
-    TiXmlElement* windowSizeElem = displayElem->FirstChildElement("Size");
-    if (!windowSizeElem)
-    {
-        windowSizeElem = new TiXmlElement("Size");
-        windowSizeElem->SetAttribute("width", 1280);
-        windowSizeElem->SetAttribute("height", 768);
-        displayElem->LinkEndChild(windowSizeElem);
-    }
-
-    windowSizeElem->Attribute("width", &m_GameOptions.windowWidth);
-    windowSizeElem->Attribute("height", &m_GameOptions.windowHeight);
-
-    TiXmlElement* scaleElem = displayElem->FirstChildElement("Scale");
-    if (!scaleElem)
-    {
-        scaleElem = new TiXmlElement("Scale");
-        displayElem->LinkEndChild(scaleElem->LinkEndChild(new TiXmlText("1.0")));
-    }
-
-    m_GameOptions.scale = std::stod(scaleElem->GetText());
-
-    TiXmlElement* useVsyncElem = displayElem->FirstChildElement("UseVerticalSync");
-    if (useVsyncElem && (std::string(useVsyncElem->GetText()) == "true"))
-    {
-        m_GameOptions.useVerticalSync = true;
-    }
-
-    if (TiXmlElement* pElem = displayElem->FirstChildElement("IsFullscreen"))
-    {
-        m_GameOptions.isFullscreen = std::string(pElem->GetText()) == "true";
-    }
-    if (TiXmlElement* pElem = displayElem->FirstChildElement("IsFullscreenDesktop"))
-    {
-        m_GameOptions.isFullscreenDesktop = std::string(pElem->GetText()) == "true";
+        setDoubleIfDefined(&m_GameOptions.scale,
+            displayElem->FirstChildElement("Scale"));
+        setBoolIfDefined(&m_GameOptions.useVerticalSync,
+            displayElem->FirstChildElement("UseVerticalSync"));
+        setBoolIfDefined(&m_GameOptions.isFullscreen,
+            displayElem->FirstChildElement("IsFullscreen"));
+        setBoolIfDefined(&m_GameOptions.isFullscreenDesktop,
+            displayElem->FirstChildElement("IsFullscreenDesktop"));
     }
 
     //-------------------------------------------------------------------------
     // Audio
     //-------------------------------------------------------------------------
-
     TiXmlElement* audioElem = configRoot->FirstChildElement("Audio");
-    if (!audioElem) // Create default if it does not exist in config
+    if (audioElem)
     {
-        audioElem = CreateDefaultAudioConfig();
-        configRoot->LinkEndChild(audioElem);
+        setUintIfDefined(&m_GameOptions.frequency,
+            audioElem->FirstChildElement("Frequency"));
+        setUintIfDefined(&m_GameOptions.channels,
+            audioElem->FirstChildElement("Channels"));
+        setUintIfDefined(&m_GameOptions.chunkSize,
+            audioElem->FirstChildElement("ChunkSize"));
+        setStringIfDefined(&m_GameOptions.midiRpcServerPath,
+            audioElem->FirstChildElement("MusiscRpcServerPath"));
     }
-
-    // Program deffensively here, missing element could cause disaster
-    TiXmlElement* frequencyElem = audioElem->FirstChildElement("Frequency");
-    if (!frequencyElem)
-    {
-        frequencyElem = new TiXmlElement("Frequency");
-        frequencyElem->LinkEndChild(new TiXmlText("44100"));
-        audioElem->LinkEndChild(frequencyElem);
-    }
-
-    TiXmlElement* channelsElem = audioElem->FirstChildElement("Channels");
-    if (!channelsElem)
-    {
-        channelsElem = new TiXmlElement("Channels");
-        channelsElem->LinkEndChild(new TiXmlText("2"));
-        audioElem->LinkEndChild(channelsElem);
-    }
-
-    TiXmlElement* chunkSizeElem = audioElem->FirstChildElement("ChunkSize");
-    if (!chunkSizeElem)
-    {
-        chunkSizeElem = new TiXmlElement("ChunkSize");
-        chunkSizeElem->LinkEndChild(new TiXmlText("2048"));
-        audioElem->LinkEndChild(chunkSizeElem);
-    }
-
-    TiXmlElement* midiRpcPathElem = audioElem->FirstChildElement("MusicRpcServerPath");
-    if (!midiRpcPathElem)
-    {
-        midiRpcPathElem = new TiXmlElement("MusicRpcServerPath");
-        midiRpcPathElem->LinkEndChild(new TiXmlText("MidiProc.exe"));
-        audioElem->LinkEndChild(midiRpcPathElem);
-    }
-
-    m_GameOptions.frequency = std::stoi(frequencyElem->GetText());
-    m_GameOptions.channels = std::stoi(channelsElem->GetText());
-    m_GameOptions.chunkSize = std::stoi(chunkSizeElem->GetText());
-    m_GameOptions.midiRpcServerPath = midiRpcPathElem->GetText();
 
     //-------------------------------------------------------------------------
     // Assets
     //-------------------------------------------------------------------------
-
     TiXmlElement* assetsElem = configRoot->FirstChildElement("Assets");
-    if (!assetsElem) // Create default if it does not exist in config
+    if (assetsElem)
     {
-        assetsElem = CreateDefaultAssetsConfig();
-        configRoot->LinkEndChild(assetsElem);
+        setStringIfDefined(&m_GameOptions.rezArchivePath,
+            assetsElem->FirstChildElement("RezArchive"));
+        setUintIfDefined(&m_GameOptions.resourceCacheSize,
+            assetsElem->FirstChildElement("ResourceCacheSize"));
+        setStringIfDefined(&m_GameOptions.tempDir,
+            assetsElem->FirstChildElement("TempDir"));
+        setStringIfDefined(&m_GameOptions.savesFile,
+            assetsElem->FirstChildElement("SavesFile"));
     }
-
-    // Program deffensively here, missing element could cause disaster
-    TiXmlElement* rezArchivePathElem = assetsElem->FirstChildElement("RezArchive");
-    if (!rezArchivePathElem)
-    {
-        rezArchivePathElem = new TiXmlElement("RezArchive");
-        rezArchivePathElem->LinkEndChild(new TiXmlText("CLAW.REZ"));
-        assetsElem->LinkEndChild(rezArchivePathElem);
-    }
-
-    TiXmlElement* resourceCacheSizeElem = assetsElem->FirstChildElement("ResourceCacheSize");
-    if (!rezArchivePathElem)
-    {
-        resourceCacheSizeElem = new TiXmlElement("ResourceCacheSize");
-        resourceCacheSizeElem->LinkEndChild(new TiXmlText("50"));
-        assetsElem->LinkEndChild(resourceCacheSizeElem);
-    }
-
-    m_GameOptions.resourceFileNames.push_back(rezArchivePathElem->GetText());
-    m_GameOptions.resourceCacheSize = std::stoi(resourceCacheSizeElem->GetText());
 
     //-------------------------------------------------------------------------
     // Font
     //-------------------------------------------------------------------------
-
     TiXmlElement* fontRootElem = configRoot->FirstChildElement("Font");
-    if (!fontRootElem) // Create default if it does not exist in config
+    if (fontRootElem)
     {
-        fontRootElem = CreateDefaultFontConfig();
-        configRoot->LinkEndChild(fontRootElem);
-    }
+        for (TiXmlElement* fontElem = fontRootElem->FirstChildElement("Font");
+            fontElem != NULL;
+            fontElem = fontElem->NextSiblingElement("Font"))
+        {
+            if (fontElem->GetText())
+            {
+                m_GameOptions.fontNames.push_back(fontElem->GetText());
+            }
+        }
 
-    for (TiXmlElement* fontElem = fontRootElem->FirstChildElement("Font");
-        fontElem != NULL; fontElem = fontElem->NextSiblingElement("Font"))
-    {
-        m_GameOptions.fontNames.push_back(fontElem->GetText());
+        TiXmlElement* consoleFontElem = fontRootElem->FirstChildElement("ConsoleFont");
+        if (consoleFontElem)
+        {
+            consoleFontElem->Attribute("size", (int*)&m_GameOptions.consoleFontSize);
+            if (const char* fontName = consoleFontElem->Attribute("font"))
+            {
+                m_GameOptions.consoleFontName = fontName;
+            }
+        }
     }
-
-    if (m_GameOptions.fontNames.empty())
-    {
-        TiXmlElement* fontChildElem = new TiXmlElement("Font");
-        fontChildElem->LinkEndChild(new TiXmlText("clacon.ttf"));
-        fontRootElem->LinkEndChild(fontChildElem);
-    }
-
-    TiXmlElement* consoleFontElem = fontRootElem->FirstChildElement("ConsoleFont");
-    if (!consoleFontElem)
-    {
-        consoleFontElem = new TiXmlElement("ConsoleFont");
-        consoleFontElem->SetAttribute("font", "clacon.ttf");
-        consoleFontElem->SetAttribute("size", 20);
-        fontRootElem->LinkEndChild(consoleFontElem);
-    }
-
-    m_GameOptions.consoleFontName = consoleFontElem->Attribute("font");
-    consoleFontElem->Attribute("size", &m_GameOptions.consoleFontSize);
 
     //-------------------------------------------------------------------------
     // Console
     //-------------------------------------------------------------------------
-
     if (TiXmlElement* pConsoleRootElem = configRoot->FirstChildElement("Console"))
     {
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("BackgroundImagePath"))
-        {
-            m_GameOptions.consoleConfig.backgroundImagePath = pElem->GetText();
-        }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("StretchBackgroundImage"))
-        {
-            m_GameOptions.consoleConfig.stretchBackgroundImage = std::string(pElem->GetText()) == "true";
-        }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("WidthRatio"))
-        {
-            m_GameOptions.consoleConfig.widthRatio = std::stod(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("HeightRatio"))
-        {
-            m_GameOptions.consoleConfig.heightRatio = std::stod(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("LineSeparatorHeight"))
-        {
-            m_GameOptions.consoleConfig.lineSeparatorHeight = std::stoi(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("CommandPromptOffsetY"))
-        {
-            m_GameOptions.consoleConfig.commandPromptOffsetY = std::stoi(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("ConsoleAnimationSpeed"))
-        {
-            m_GameOptions.consoleConfig.consoleAnimationSpeed = std::stod(pElem->GetText());
-        }
+        setStringIfDefined(&m_GameOptions.consoleConfig.backgroundImagePath,
+            pConsoleRootElem->FirstChildElement("BackgroundImagePath"));
+        setBoolIfDefined(&m_GameOptions.consoleConfig.stretchBackgroundImage,
+            pConsoleRootElem->FirstChildElement("StretchBackgroundImage"));
+        setDoubleIfDefined(&m_GameOptions.consoleConfig.widthRatio,
+            pConsoleRootElem->FirstChildElement("WidthRatio"));
+        setDoubleIfDefined(&m_GameOptions.consoleConfig.heightRatio,
+            pConsoleRootElem->FirstChildElement("HeightRatio"));
+        setUintIfDefined(&m_GameOptions.consoleConfig.lineSeparatorHeight,
+            pConsoleRootElem->FirstChildElement("LineSeparatorHeight"));
+        setUintIfDefined(&m_GameOptions.consoleConfig.commandPromptOffsetY,
+            pConsoleRootElem->FirstChildElement("CommandPromptOffsetY"));
+        setDoubleIfDefined(&m_GameOptions.consoleConfig.consoleAnimationSpeed,
+            pConsoleRootElem->FirstChildElement("ConsoleAnimationSpeed"));
         if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("FontColor"))
         {
-            pElem->Attribute("r", (int*)&m_GameOptions.consoleConfig.fontColor.r);
-            pElem->Attribute("g", (int*)&m_GameOptions.consoleConfig.fontColor.g);
-            pElem->Attribute("b", (int*)&m_GameOptions.consoleConfig.fontColor.b);
+            int r, g, b;
+            pElem->Attribute("r", &r);
+            pElem->Attribute("g", &g);
+            pElem->Attribute("b", &b);
+            m_GameOptions.consoleConfig.fontColor.r = r;
+            m_GameOptions.consoleConfig.fontColor.g = g;
+            m_GameOptions.consoleConfig.fontColor.b = b;
         }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("FontHeight"))
-        {
-            m_GameOptions.consoleConfig.fontHeight = std::stoi(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("LeftOffset"))
-        {
-            m_GameOptions.consoleConfig.leftOffset = std::stoi(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("CommandPrompt"))
-        {
-            m_GameOptions.consoleConfig.commandPrompt = pElem->GetText();
-        }
-        if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("FontPath"))
-        {
-            m_GameOptions.consoleConfig.fontPath = pElem->GetText();
-        }
+        setUintIfDefined(&m_GameOptions.consoleConfig.fontHeight,
+            pConsoleRootElem->FirstChildElement("FontHeight"));
+        setUintIfDefined(&m_GameOptions.consoleConfig.leftOffset,
+            pConsoleRootElem->FirstChildElement("LeftOffset"));
+        setStringIfDefined(&m_GameOptions.consoleConfig.commandPrompt,
+            pConsoleRootElem->FirstChildElement("CommandPrompt"));
+        setStringIfDefined(&m_GameOptions.consoleConfig.fontPath,
+            pConsoleRootElem->FirstChildElement("FontPath"));
     }
     else
     {
@@ -556,7 +507,7 @@ bool BaseGameApp::InitializeDisplay(GameOptions& gameOptions)
         LOG_ERROR("Failed to create main window");
         return false;
     }
-    
+
     if (gameOptions.isFullscreen)
     {
         SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN);
@@ -600,7 +551,7 @@ bool BaseGameApp::InitializeAudio(GameOptions& gameOptions)
     LOG(">>>>> Initializing audio...");
 
     m_pAudio = new Audio();
-    if (!m_pAudio->Initialize(gameOptions.frequency, gameOptions.channels, gameOptions.chunkSize, gameOptions.midiRpcServerPath))
+    if (!m_pAudio->Initialize(gameOptions.frequency, gameOptions.channels, gameOptions.chunkSize, gameOptions.midiRpcServerPath.c_str()))
     {
         LOG_ERROR("Failed to initialize SDL Mixer audio subsystem");
         return false;
@@ -620,17 +571,18 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
 {
     LOG(">>>>> Initializing resource cache...");
 
-    if (gameOptions.resourceFileNames.empty())
+    if (gameOptions.rezArchivePath.empty())
     {
         LOG_ERROR("No specified assets resource files in configuration.");
         return false;
     }
 
-    IResourceFile* rezArchive = new ResourceRezArchive(gameOptions.resourceFileNames[0]);
+    IResourceFile* rezArchive = new ResourceRezArchive(gameOptions.rezArchivePath);
+
     m_pResourceCache = new ResourceCache(gameOptions.resourceCacheSize, rezArchive);
     if (!m_pResourceCache->Init())
     {
-        LOG_ERROR("Failed to initialize resource cachce from resource file: " + std::string(gameOptions.resourceFileNames[0]));
+        LOG_ERROR("Failed to initialize resource cachce from resource file: " + std::string(gameOptions.rezArchivePath));
         return false;
     }
 
@@ -661,7 +613,7 @@ bool BaseGameApp::InitializeFont(GameOptions& gameOptions)
         return false;
     }
 
-    m_pConsoleFont = TTF_OpenFont(gameOptions.consoleFontName, gameOptions.consoleFontSize);
+    m_pConsoleFont = TTF_OpenFont(gameOptions.consoleFontName.c_str(), gameOptions.consoleFontSize);
     if (m_pConsoleFont == NULL)
     {
         LOG_ERROR("Failed to load TTF font");
@@ -741,6 +693,8 @@ TiXmlElement* CreateDefaultAssetsConfig()
 
     XML_ADD_TEXT_ELEMENT("RezArchive", "CLAW.REZ", assets);
     XML_ADD_TEXT_ELEMENT("ResourceCacheSize", "50", assets);
+    XML_ADD_TEXT_ELEMENT("TempDir", ".", assets);
+    XML_ADD_TEXT_ELEMENT("SavesFile", "SAVES.XML", assets);
 
     return assets;
 }
@@ -792,7 +746,7 @@ TiXmlDocument BaseGameApp::CreateAndReturnDefaultConfig(const char* inConfigFile
     //----- [Configuration]
     TiXmlElement* root = new TiXmlElement("Configuration");
     xmlConfig.LinkEndChild(root);
-    
+
     root->LinkEndChild(CreateDefaultDisplayConfig());
     root->LinkEndChild(CreateDefaultAudioConfig());
     root->LinkEndChild(CreateDefaultFontConfig());

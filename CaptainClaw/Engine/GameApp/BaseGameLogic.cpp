@@ -71,11 +71,14 @@ bool BaseGameLogic::Initialize()
 {
     m_pActorFactory = VCreateActorFactory();
 
-    TiXmlDocument gameSaves("SAVES.XML");
+    std::string savesFile = g_pApp->GetGameConfig()->savesFile;
+
+    TiXmlDocument gameSaves(savesFile);
     gameSaves.LoadFile();
     if (gameSaves.Error())
     {
-        LOG_ERROR("Error while loading SAVES.XML: " + std::string(gameSaves.ErrorDesc()));
+        LOG_ERROR("Error while loading " + savesFile
+             + ": " + std::string(gameSaves.ErrorDesc()));
         return false;
     }
 
@@ -459,7 +462,7 @@ void BaseGameLogic::VChangeState(GameState newState)
         // Save converted level to file, e.g. LEVEL1.xml
         TiXmlDocument xmlDoc;
         xmlDoc.LinkEndChild(pXmlLevel);
-        std::string outFileLevelName = levelName + ".xml";
+        std::string outFileLevelName = g_pApp->GetGameConfig()->tempDir + "/" +  levelName + ".xml";
         xmlDoc.SaveFile(outFileLevelName.c_str());
 
         // Load saved level file, e.g. LEVEL1.xml

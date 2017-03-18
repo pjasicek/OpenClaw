@@ -32,15 +32,17 @@ struct GameOptions
         consoleFontName = "clacon.ttf";
         consoleFontSize = 20;
 
-        resourceFileNames.push_back("CLAW.REZ");
+        rezArchivePath = "CLAW.REZ";
         resourceCacheSize = 50;
+        tempDir = ".";
+        savesFile = "SAVES.XML";
 
         startupCommandsFile = "startup_commands.txt";
     }
 
     GameOptions()
     {
-        startupCommandsFile = "startup_commands.txt";
+        SetDefaults();
     }
 
     // Display options
@@ -52,19 +54,21 @@ struct GameOptions
     bool isFullscreenDesktop;
 
     // Audio
-    int frequency;
-    uint32 channels;
-    int chunkSize;
-    const char* midiRpcServerPath;
+    unsigned frequency;
+    unsigned channels;
+    unsigned chunkSize;
+    std::string midiRpcServerPath;
 
     // Font
     std::vector<const char*> fontNames;
-    const char* consoleFontName;
-    int consoleFontSize;
+    std::string consoleFontName;
+    unsigned consoleFontSize;
 
     // Assets
-    std::vector<const char*> resourceFileNames;
-    int resourceCacheSize;
+    std::string rezArchivePath;
+    unsigned resourceCacheSize;
+    std::string tempDir;
+    std::string savesFile;
 
     // Console config
     ConsoleConfig consoleConfig;
@@ -196,7 +200,7 @@ private:
     SDL_Window* m_pWindow;
     SDL_Renderer* m_pRenderer;
     WapPal* m_pPalette;
-    
+
     bool m_IsRunning;
     bool m_QuitRequested;
     bool m_IsQuitting;
