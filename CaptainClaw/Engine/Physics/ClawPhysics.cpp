@@ -25,32 +25,32 @@
 
 const float METERS_TO_PIXELS = 75.0f;
 
-b2Vec2 PixelsToMeters(const b2Vec2& pixels)
+inline b2Vec2 PixelsToMeters(const b2Vec2& pixels)
 {
     return b2Vec2(pixels.x / METERS_TO_PIXELS, pixels.y / METERS_TO_PIXELS);
 }
 
-float PixelsToMeters(float pixels)
+inline float PixelsToMeters(float pixels)
 {
     return pixels / METERS_TO_PIXELS;
 }
 
-b2Vec2 MetersToPixels(b2Vec2 meters)
+inline b2Vec2 MetersToPixels(b2Vec2 meters)
 {
     return b2Vec2(meters.x * METERS_TO_PIXELS, meters.y * METERS_TO_PIXELS);
 }
 
-float MetersToPixels(float pixels)
+inline float MetersToPixels(float pixels)
 {
     return pixels * METERS_TO_PIXELS;
 }
 
-Point b2Vec2ToPoint(const b2Vec2& vec)
+inline Point b2Vec2ToPoint(const b2Vec2& vec)
 {
     return Point(vec.x, vec.y);
 }
 
-b2Vec2 PointToB2Vec2(const Point& point)
+inline b2Vec2 PointToB2Vec2(const Point& point)
 {
     return b2Vec2((float)point.x, (float)point.y);
 }
@@ -232,135 +232,136 @@ void ClawPhysics::VSyncVisibleScene()
 {
     // check all the existing actor's bodies for changes. 
     //  If there is a change, send the appropriate event for the game system.
-    for (ActorIDToBox2DBodyMap::const_iterator it = m_ActorToBodyMap.begin();
+
+    // Iterating vector or list has lower overhead
+    /*for (ActorIDToBox2DBodyMap::const_iterator it = m_ActorToBodyMap.begin();
         it != m_ActorToBodyMap.end();
-        ++it)
+        ++it)*/
+    for (const std::pair<uint32, b2Body*>& it : m_ActorIdAndBodyList)
     {
-        uint32 actorId = it->first;
-        b2Body* pActorBody = it->second;
+        b2Body* pActorBody = it.second;
         assert(pActorBody);
 
+        if (pActorBody->GetType() == b2_staticBody)
+        {
+            continue;
+        }
+
+        uint32 actorId = it.first;
+
         StrongActorPtr pGameActor = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(actorId));
+        //assert(pGameActor);
+
         if (pGameActor && pActorBody)
         {
-            shared_ptr<PositionComponent> pPositionComponent = MakeStrongPtr(pGameActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+            /*shared_ptr<PositionComponent> pPositionComponent = MakeStrongPtr(pGameActor->GetComponent<PositionComponent>(PositionComponent::g_Name));*/
+
+            shared_ptr<PositionComponent> pPositionComponent = pGameActor->GetPositionComponent();
+            assert(pPositionComponent);
 
             Point bodyPixelPosition = b2Vec2ToPoint(MetersToPixels(pActorBody->GetPosition()));
             Point actorPixelPosition = pPositionComponent->GetPosition();
-            if (pPositionComponent)
+
+            // TODO: Now only Claw cares about falling / jumping states, maybe refactor in future
+            //if (pGameActor->GetName() == "Claw")
+
+            // This causes slight CPU (1.5%) overhead
+            if (pActorBody->GetType() == b2_dynamicBody)
             {
-                if (pActorBody->GetType() == b2_staticBody)
+                shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pActorBody);
+                bool wasFalling = pPhysicsComponent->IsFalling();
+                bool wasJumping = pPhysicsComponent->IsJumping();
+                // Set jumping / falling properties
+                //if ((uint32)bodyPixelPosition.y != (uint32)actorPixelPosition.y)
+                if (fabs(bodyPixelPosition.y - actorPixelPosition.y) > DBL_EPSILON)
                 {
-                    continue;
-                }
-
-                if (pActorBody->GetType() == b2_dynamicBody)
-                {
-                    shared_ptr<PhysicsComponent> pPhysicsComponent = GetPhysicsComponentFromB2Body(pActorBody);
-                    bool wasFalling = pPhysicsComponent->IsFalling();
-                    bool wasJumping = pPhysicsComponent->IsJumping();
-                    // Set jumping / falling properties
-                    //if ((uint32)bodyPixelPosition.y != (uint32)actorPixelPosition.y)
-                    if (fabs(bodyPixelPosition.y - actorPixelPosition.y) > DBL_EPSILON)
+                    // He might be on platform
+                    if (pPhysicsComponent->IsOnGround())
                     {
-                        // He might be on platform
-                        if (pPhysicsComponent->IsOnGround())
-                        {
-                            pPhysicsComponent->SetFalling(false);
-                            pPhysicsComponent->SetJumping(false);
-                        }
-                        // Falling
-                        else if ((bodyPixelPosition.y - actorPixelPosition.y) > DBL_EPSILON)
-                        {
-                            // TODO: Some unknown stuff is making claw cancel jump
-                            /*if (pGameActor->GetName() == "Claw")
-                            {
-                                if ((bodyPixelPosition.y - actorPixelPosition.y) > 2 || true)
-                                {
-                                    pPhysicsComponent->SetFalling(true);
-                                    pPhysicsComponent->SetJumping(false);
-                                }
-                            }
-                            else
-                            {
-                                pPhysicsComponent->SetFalling(true);
-                                pPhysicsComponent->SetJumping(false);
-                            }*/
-
-                            pPhysicsComponent->SetFalling(true);
-                            pPhysicsComponent->SetJumping(false);
-                        }
-                        else // Jumping
-                        {
-                            pPhysicsComponent->SetFalling(false);
-                            pPhysicsComponent->SetJumping(true);
-                            pPhysicsComponent->AddJumpHeight(fabs(bodyPixelPosition.y - actorPixelPosition.y));
-                        }
+                        pPhysicsComponent->SetFalling(false);
+                        pPhysicsComponent->SetJumping(false);
                     }
-                    else if (fabs(bodyPixelPosition.y - actorPixelPosition.y) < DBL_EPSILON)
+                    // Falling
+                    else if ((bodyPixelPosition.y - actorPixelPosition.y) > DBL_EPSILON)
                     {
-                        // TODO: Check this. This causes animation glitches on connected ground platforms
-                        // Should be fixed when all consecutive tiles are joined, but anyway, keep this in mind
-                        if (!pPhysicsComponent->IsOnGround() && (bodyPixelPosition.y - actorPixelPosition.y) > DBL_EPSILON)
+                        // TODO: Some unknown stuff is making claw cancel jump
+                        /*if (pGameActor->GetName() == "Claw")
                         {
-                            //LOG("!pPhysicsComponent->IsOnGround()");
-                            pPhysicsComponent->SetFalling(true);
+                        if ((bodyPixelPosition.y - actorPixelPosition.y) > 2 || true)
+                        {
+                        pPhysicsComponent->SetFalling(true);
+                        pPhysicsComponent->SetJumping(false);
+                        }
                         }
                         else
                         {
-                            pPhysicsComponent->SetFalling(false);
-                        }
+                        pPhysicsComponent->SetFalling(true);
+                        pPhysicsComponent->SetJumping(false);
+                        }*/
+
+                        pPhysicsComponent->SetFalling(true);
                         pPhysicsComponent->SetJumping(false);
                     }
-
-                    // Notify change of states
-                    if (!wasFalling && pPhysicsComponent->IsFalling())
+                    else // Jumping
                     {
-                        /*if (pGameActor->GetName() == "Claw")
-                        {
-                            LOG("----" + ToStr(bodyPixelPosition.y - actorPixelPosition.y));
-
-                            int count;
-                            auto keys = SDL_GetKeyboardState(&count);
-                            
-                            LOG("space: " + ToStr(keys[SDL_SCANCODE_SPACE]));
-                        }*/
-                        pPhysicsComponent->OnStartFalling();
-                    }
-                    if (!wasJumping && pPhysicsComponent->IsJumping())
-                    {
-                        //LOG(ToStr(bodyPixelPosition.y - actorPixelPosition.y));
-                        pPhysicsComponent->OnStartJumping();
+                        pPhysicsComponent->SetFalling(false);
+                        pPhysicsComponent->SetJumping(true);
+                        pPhysicsComponent->AddJumpHeight(fabs(bodyPixelPosition.y - actorPixelPosition.y));
                     }
                 }
-
-                /*if (((uint32)bodyPixelPosition.x != (uint32)actorPixelPosition.x) ||
-                ((uint32)bodyPixelPosition.y != (uint32)actorPixelPosition.y))*/
-                if ((fabs(bodyPixelPosition.x - actorPixelPosition.x)) > DBL_EPSILON ||
-                    (fabs(bodyPixelPosition.y - actorPixelPosition.y)) > DBL_EPSILON)
+                else if (fabs(bodyPixelPosition.y - actorPixelPosition.y) < DBL_EPSILON)
                 {
-                    // Box2D has moved the physics object. Update actor's position and notify subsystems which care
-                    pPositionComponent->SetPosition(bodyPixelPosition);
-
-                    /*shared_ptr<ActorRenderComponent> pRenderComponent =
-                        MakeStrongPtr(pGameActor->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-                    assert(pRenderComponent);
-
-                    shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
-                    assert(pImage);
-
-                    Point newPosition = Point(bodyPixelPosition.x + pImage->GetOffsetX(), bodyPixelPosition.y + pImage->GetOffsetY());*/
-
-                    shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(actorId, bodyPixelPosition));
-                    IEventMgr::Get()->VTriggerEvent(pEvent);
-
-                    // If it is kinematic body (moving platform, elevator), notify it
-                    if (pActorBody->GetType() == b2_kinematicBody)
+                    // TODO: Check this. This causes animation glitches on connected ground platforms
+                    // Should be fixed when all consecutive tiles are joined, but anyway, keep this in mind
+                    if (!pPhysicsComponent->IsOnGround() && (bodyPixelPosition.y - actorPixelPosition.y) > DBL_EPSILON)
                     {
-                        shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pActorBody);
-                        pKinematicComponent->RemoveCarriedBody(pActorBody);
-                        pKinematicComponent->OnMoved(bodyPixelPosition);
+                        //LOG("!pPhysicsComponent->IsOnGround()");
+                        pPhysicsComponent->SetFalling(true);
                     }
+                    else
+                    {
+                        pPhysicsComponent->SetFalling(false);
+                    }
+                    pPhysicsComponent->SetJumping(false);
+                }
+
+                // Notify change of states
+                if (!wasFalling && pPhysicsComponent->IsFalling())
+                {
+                    /*if (pGameActor->GetName() == "Claw")
+                    {
+                    LOG("----" + ToStr(bodyPixelPosition.y - actorPixelPosition.y));
+
+                    int count;
+                    auto keys = SDL_GetKeyboardState(&count);
+
+                    LOG("space: " + ToStr(keys[SDL_SCANCODE_SPACE]));
+                    }*/
+                    pPhysicsComponent->OnStartFalling();
+                }
+                if (!wasJumping && pPhysicsComponent->IsJumping())
+                {
+                    //LOG(ToStr(bodyPixelPosition.y - actorPixelPosition.y));
+                    pPhysicsComponent->OnStartJumping();
+                }
+            }
+
+            // Body moved by some portion
+            if ((fabs(bodyPixelPosition.x - actorPixelPosition.x)) > DBL_EPSILON ||
+                (fabs(bodyPixelPosition.y - actorPixelPosition.y)) > DBL_EPSILON)
+            {
+                // Box2D has moved the physics object. Update actor's position and notify subsystems which care
+                pPositionComponent->SetPosition(bodyPixelPosition);
+
+                shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(actorId, bodyPixelPosition));
+                IEventMgr::Get()->VTriggerEvent(pEvent);
+
+                // If it is kinematic body (moving platform, elevator), notify it
+                if (pActorBody->GetType() == b2_kinematicBody)
+                {
+                    shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pActorBody);
+                    pKinematicComponent->RemoveCarriedBody(pActorBody);
+                    pKinematicComponent->OnMoved(bodyPixelPosition);
                 }
             }
         }
@@ -388,6 +389,14 @@ void ClawPhysics::VOnUpdate(const uint32 msDiff)
             m_pWorld->DestroyBody(pBody);
             m_ActorToBodyMap.erase(actorId);
             m_BodyToActorMap.erase(pBody);
+            for (auto iter = m_ActorIdAndBodyList.begin(); iter != m_ActorIdAndBodyList.end(); iter++)
+            {
+                if (iter->first == actorId)
+                {
+                    m_ActorIdAndBodyList.erase(iter);
+                    break;
+                }
+            }
         }
     }
     m_ActorsToBeDestroyed.clear();
@@ -586,6 +595,7 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
 }
 
 //-----------------------------------------------------------------------------
@@ -644,6 +654,7 @@ void ClawPhysics::VAddKinematicBody(WeakActorPtr pActor)
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
 }
 
 void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType)
@@ -688,6 +699,7 @@ void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionT
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
 }
 
 void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
@@ -841,6 +853,7 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
 
     if (actorBodyDef->setInitialSpeed)
     {
@@ -940,6 +953,7 @@ void ClawPhysics::VCreateTrigger(WeakActorPtr pActor, const Point& pos, Point& s
 
     m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
     m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
+    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
 }
 
 //-----------------------------------------------------------------------------

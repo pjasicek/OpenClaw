@@ -33,7 +33,7 @@ bool ClawHumanView::VOnEvent(SDL_Event& event)
     {
         return true;
     }
-
+    
     // Handle game specific events
     return false;
 }

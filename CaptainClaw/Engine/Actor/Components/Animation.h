@@ -46,6 +46,7 @@ public:
     uint32 GetAnimFramesSize() const { return _animationFrames.size(); }
     bool IsAtLastAnimFrame() const { return _currentAnimationFrame.idx + 1 == _animationFrames.size(); }
     bool IsAtFirstAnimFrame() const { return _currentAnimationFrame.idx == 0; }
+    bool IsPaused() const { return _paused; }
 
 private:
     void AddAnimationFrame(AnimationFrame& animFrame) { _animationFrames.push_back(animFrame); }

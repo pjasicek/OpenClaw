@@ -122,6 +122,9 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                             {
                                 return;
                             }
+
+                            // TODO: Think about better solution and rename this to something better
+                            pPhysicsComponent->SetTopLadderContact(pContact);
                             
                             pContact->SetEnabled(true);
                             pPhysicsComponent->AddOverlappingGround(pFixtureA);
@@ -405,7 +408,7 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                     }
                     pFixtureA->SetSensor(true);*/
 
-                    if (pContact->IsEnabled())
+                    if (pContact->IsEnabled() || pPhysicsComponent->GetTopLadderContact() == pContact)
                     {
                         pPhysicsComponent->RemoveOverlappingGround(pFixtureA);
                     }

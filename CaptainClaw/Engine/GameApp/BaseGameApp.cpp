@@ -133,8 +133,8 @@ int32 BaseGameApp::Run()
             //m_pGame->VRenderDiagnostics();
         }
 
-        // Uncomment to artificially decrease fps to ~30-35
-        //SDL_Delay(50);
+        // Artificially decrease fps. Configurable from console
+        SDL_Delay(m_GlobalOptions.cpuDelayMs);
     }
 
     Terminate();
@@ -356,6 +356,10 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             audioElem->FirstChildElement("ChunkSize"));
         setStringIfDefined(&m_GameOptions.midiRpcServerPath,
             audioElem->FirstChildElement("MusiscRpcServerPath"));
+        setIntIfDefined(&m_GameOptions.soundVolume,
+            audioElem->FirstChildElement("SoundVolume"));
+        setIntIfDefined(&m_GameOptions.musicVolume,
+            audioElem->FirstChildElement("MusicVolume"));
     }
 
     //-------------------------------------------------------------------------
@@ -551,7 +555,7 @@ bool BaseGameApp::InitializeAudio(GameOptions& gameOptions)
     LOG(">>>>> Initializing audio...");
 
     m_pAudio = new Audio();
-    if (!m_pAudio->Initialize(gameOptions.frequency, gameOptions.channels, gameOptions.chunkSize, gameOptions.midiRpcServerPath.c_str()))
+    if (!m_pAudio->Initialize(gameOptions))
     {
         LOG_ERROR("Failed to initialize SDL Mixer audio subsystem");
         return false;
@@ -672,6 +676,8 @@ TiXmlElement* CreateDefaultAudioConfig()
     XML_ADD_TEXT_ELEMENT("Frequency", "44100", audio);
     XML_ADD_TEXT_ELEMENT("Channels", "2", audio);
     XML_ADD_TEXT_ELEMENT("ChunkSize", "2048", audio);
+    XML_ADD_TEXT_ELEMENT("SoundVolume", "50", audio);
+    XML_ADD_TEXT_ELEMENT("MusicVolume", "50", audio);
     XML_ADD_TEXT_ELEMENT("MusicRpcServerPath", "MidiProc.exe", audio);
 
     return audio;

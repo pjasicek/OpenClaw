@@ -63,7 +63,7 @@ bool CheckpointComponent::VOnApply(Actor* pActorWhoPickedThis)
     IEventMgr::Get()->VQueueEvent(pEvent);
 
     // I Need to specify this here since I return false
-    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(SOUND_GAME_FLAG_RISE, 35, false)));
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(SOUND_GAME_FLAG_RISE, 100, false)));
 
     return false;
 }
@@ -78,6 +78,6 @@ void CheckpointComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
 
         assert(pAnimationComponent->SetAnimation("wave"));
 
-        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(SOUND_GAME_FLAG_WAVE, 35, false)));
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(SOUND_GAME_FLAG_WAVE, 100, false)));
     }
 }

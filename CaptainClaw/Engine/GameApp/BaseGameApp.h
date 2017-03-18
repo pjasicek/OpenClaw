@@ -26,6 +26,8 @@ struct GameOptions
         frequency = 44100;
         channels = 2;
         chunkSize = 2048;
+        soundVolume = 50; // In percents
+        musicVolume = 50; // In percents
         midiRpcServerPath = "MidiProc.exe";
 
         fontNames.push_back("clacon.ttf");
@@ -54,10 +56,19 @@ struct GameOptions
     bool isFullscreenDesktop;
 
     // Audio
+<<<<<<< HEAD
     unsigned frequency;
     unsigned channels;
     unsigned chunkSize;
     std::string midiRpcServerPath;
+=======
+    int frequency;
+    uint32 channels;
+    int chunkSize;
+    int soundVolume;
+    int musicVolume;
+    const char* midiRpcServerPath;
+>>>>>>> c75aef15f760adb4be737f449bb3dc5e9f024a32
 
     // Font
     std::vector<const char*> fontNames;
@@ -96,6 +107,22 @@ struct GameCheats
     bool clawInfiniteAmmo;
     bool clawInvincible;
     bool clawInfiniteJump;
+};
+
+// Put everything you want to be configurable here without
+// worrying about parsing from XML first. Used mainly by console for fast iteration
+struct GlobalOptions
+{
+    GlobalOptions()
+    {
+        cpuDelayMs = 0;
+        maxJumpSpeed = 8.8;
+        maxFallSpeed = 14.0;
+    }
+
+    int cpuDelayMs;
+    double maxJumpSpeed;
+    double maxFallSpeed;
 };
 
 class EventMgr;
@@ -208,6 +235,7 @@ private:
     Point m_WindowSize;
 
     GameCheats m_GameCheats;
+    GlobalOptions m_GlobalOptions;
 };
 
 extern BaseGameApp* g_pApp;

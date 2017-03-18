@@ -264,8 +264,7 @@ SDL_Rect ActorRenderComponent::VGetPositionRect() const
         return positionRect;
     }
 
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pPositionComponent = _owner->GetPositionComponent();
     if (!pPositionComponent)
     {
         return positionRect;

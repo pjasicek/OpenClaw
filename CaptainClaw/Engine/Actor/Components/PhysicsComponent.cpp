@@ -8,6 +8,9 @@
 #include "PositionComponent.h"
 #include "ControllableComponent.h"
 
+#include "../../Events/EventMgr.h"
+#include "../../Events/Events.h"
+
 const char* PhysicsComponent::g_Name = "PhysicsComponent";
 
 //=====================================================================================================================
@@ -79,7 +82,8 @@ PhysicsComponent::PhysicsComponent() :
     m_IgnoreJump(false),
     m_HeightInAir(20),
     m_pControllableComponent(nullptr),
-    m_pPhysics(nullptr)
+    m_pPhysics(nullptr),
+    m_pTopLadderContact(NULL)
 { }
 
 PhysicsComponent::~PhysicsComponent()
@@ -337,6 +341,7 @@ TiXmlElement* PhysicsComponent::VGenerateXml()
 //
 void PhysicsComponent::VUpdate(uint32 msDiff)
 {
+    // Just move this to ClawControllerComponent update......................
     if (!m_pControllableComponent)
     {
         return;
@@ -345,15 +350,30 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     assert(m_NumFootContacts >= 0);
     //assert(m_IsJumping && m_IsFalling && "Cannot be jumping and falling at the same time");
 
-    //LOG("Jumping: " + ToStr((m_IsJumping)) + ", Falling: " + ToStr(m_IsFalling) + ", JumpHeight: " + ToStr(m_HeightInAir) + ", NumFootContacts: " + ToStr(m_NumFootContacts));
+    /*LOG("Jumping: " + ToStr((m_IsJumping)) + ", Falling: " + ToStr(m_IsFalling) + ", JumpHeight: " + ToStr(m_HeightInAir) + ", NumFootContacts: " + ToStr(m_NumFootContacts));
+    LOG("Movement: " + m_CurrentSpeed.ToString());
     //LOG(ToStr(m_OverlappingLaddersList.size()));
     //LOG("Vel X: " + ToStr(GetVelocity().x) + ", Vel Y: " + ToStr(GetVelocity().y));
     //LOG(ToStr(m_OverlappingKinematicBodiesList.size()));
     
-    //LOG("CLIMBING Y: " + ToStr(m_ClimbingSpeed.y));
+    LOG("CLIMBING Y: " + ToStr(m_ClimbingSpeed.y));*/
+    
+
+    if (m_pControllableComponent && !m_pControllableComponent->InPhysicsCapableState())
+    {
+        SetVelocity(Point(0, 0));
+        m_CurrentSpeed = Point(0, 0);
+        m_ClimbingSpeed = Point(0, 0);
+        return;
+    }
+
+    if (m_IsClimbing)
+    {
+        m_HeightInAir = 0;
+    }
 
     if (m_pControllableComponent && m_pControllableComponent->CanMove() 
-        && (m_pControllableComponent->IsDucking() && fabs(m_ClimbingSpeed.y) < DBL_EPSILON))
+        && (m_pControllableComponent->IsDucking() && fabs(m_ClimbingSpeed.y) < DBL_EPSILON) )
     {
         m_pControllableComponent->OnStand();
         // TODO: HACK: one of the biggest hacks so far
@@ -369,22 +389,64 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             m_pControllableComponent->VOnDirectionChange(m_Direction);
         }
 
+        //LOG("RETURN 1");
         SetVelocity(Point(0, 0));
         m_CurrentSpeed = Point(0, 0);
         m_ClimbingSpeed = Point(0, 0);
         return;
     }
 
+    // I will give 100$ to someone who will refactor this method so that it is extendable
+    // and does not contain uncomprehandable state machine
+
     //LOG("Climbing: " + ToStr(m_IsClimbing));
     if (m_IsClimbing)
     {
-        
-        if (m_IgnoreJump && (fabs(m_CurrentSpeed.y) < DBL_EPSILON))
+        // TODO: Climbing up when on top of the ladder should be disabled
+        /*if (m_ClimbingSpeed.y < (-1.0 * DBL_EPSILON) && m_pTopLadderContact && m_OverlappingLaddersList.size() > 0)
+        {
+            LOG(".");
+            m_ClimbingSpeed.Set(0, 0);
+            m_CurrentSpeed.Set(0, 0);
+            m_IgnoreJump = false;
+            m_IsClimbing = false;
+            m_IsJumping = false;
+            m_IsFalling = false;
+            m_HeightInAir = 0;
+            m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale);
+            //m_pControllableComponent->VOnStopMoving();
+            m_pPhysics->VSetLinearSpeedEx(_owner->GetGUID(), Point(0,0));
+            return;
+        }*/
+
+        if (fabs(m_ClimbingSpeed.y) > DBL_EPSILON)
+        {
+            m_CurrentSpeed = Point(0, 0);
+            m_IgnoreJump = true;
+        }
+        else
         {
             m_IgnoreJump = false;
         }
+
+        //LOG("IgnoreJump: " + ToStr(m_IgnoreJump));
+        //if (m_IgnoreJump && m_CanJump)
+        if (!m_IgnoreJump && (fabs(m_CurrentSpeed.y) > DBL_EPSILON) &&
+            fabs(m_ClimbingSpeed.y) < DBL_EPSILON)
+        {
+            //LOG("GOTO");
+            m_pControllableComponent->VOnStartJumping();
+            m_IgnoreJump = false;
+            m_IsClimbing = false;
+            m_IsJumping = true;
+            m_IsFalling = false;
+            m_HeightInAir = 0;
+            m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale);
+            goto set_velocity;
+        }
         else if (!m_IgnoreJump && (fabs(m_CurrentSpeed.y) > DBL_EPSILON))
         {
+            //LOG(".");
             m_IsClimbing = false;
             m_IsJumping = true;
             m_IsFalling = false;
@@ -406,6 +468,12 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             }
             else
             {
+                // If on top of the ladder climb through the artificial ground patch
+                if (m_pTopLadderContact != NULL)
+                {
+                    m_pTopLadderContact->SetEnabled(false);
+                }
+
                 m_pControllableComponent->VOnClimb();
             }
             m_ClimbingSpeed = Point(0, 0);
@@ -461,8 +529,14 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         bool wasFalling = GetVelocity().y > FLT_EPSILON;
         bool wasJumping = m_IsJumping;
 
+        
+        if (m_IsClimbing)
+        {
+
+        
+        }
         // "20" lets us skip uneven ground and therefore skip spamming transition between falling/jumping
-        if (m_HeightInAir > 20 && fabs(GetVelocity().y) < FLT_EPSILON)
+        else if (m_HeightInAir > 20 && fabs(GetVelocity().y) < FLT_EPSILON)
         {
             m_IgnoreJump = true;
             m_CurrentSpeed.y = 0;
@@ -492,6 +566,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             m_CurrentSpeed.y = 0;
         }
 
+set_velocity:
         // Set velocity here
         //=====================================================================
         Point velocity = GetVelocity();

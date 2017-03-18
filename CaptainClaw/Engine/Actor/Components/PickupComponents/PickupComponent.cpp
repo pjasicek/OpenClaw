@@ -84,7 +84,7 @@ void PickupComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
         // Play pickup sound if applicable
         if (m_PickupSound.length() > 0)
         {
-            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(m_PickupSound.c_str(), 40, false)));
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(m_PickupSound.c_str(), 100, false)));
         }
 
         //LOG("Pickup up");

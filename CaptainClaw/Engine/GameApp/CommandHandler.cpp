@@ -37,10 +37,18 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
     Console* pConsole = static_cast<Console*>(userdata);
     assert(pConsole);
 
-
     std::string commandStr = command;
     std::transform(commandStr.begin(), commandStr.end(), commandStr.begin(), ::tolower);
     bool wasCommandExecuted = false;
+
+    // Ignore comments
+    if (commandStr.length() > 0 && commandStr[0] == '#')
+    {
+        return;
+    }
+
+    std::vector<std::string> commandArgs;
+    Util::SplitStringIntoVector(commandStr, commandArgs);
 
     COMMAND_SET_BOOL_VALUE("InfiniteAmmo", g_pApp->m_GameCheats.clawInfiniteAmmo);
     COMMAND_SET_BOOL_VALUE("Invincible", g_pApp->m_GameCheats.clawInvincible);
@@ -70,6 +78,33 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
     {
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Reset_Level));
         pConsole->AddLine("Requested level reset.", COLOR_GREEN);
+        wasCommandExecuted = true;
+    }
+
+    if (commandStr.find("teleport ") != std::string::npos)
+    {
+        if (commandArgs.size() == 3)
+        {
+            int x = std::stoi(commandArgs[1]);
+            int y = std::stoi(commandArgs[2]);
+
+            if (StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor())
+            {
+                shared_ptr<EventData_Teleport_Actor> pEvent(new EventData_Teleport_Actor(pClaw->GetGUID(), Point(x, y)));
+                IEventMgr::Get()->VTriggerEvent(pEvent);
+                wasCommandExecuted = true;
+            }
+            else
+            {
+                pConsole->AddLine("Claw is not yet created, cannot teleport", COLOR_RED);
+                return;
+            }
+        }
+    }
+
+    if (commandStr.find("cpudelay ") != std::string::npos && commandArgs.size() == 2)
+    {
+        g_pApp->m_GlobalOptions.cpuDelayMs = std::stoi(commandArgs[1]);
         wasCommandExecuted = true;
     }
 

@@ -28,7 +28,7 @@ Audio::~Audio()
     Terminate();
 }
 
-bool Audio::Initialize(int frequency, int channels, int chunkSize, const char* midiRpcPath)
+bool Audio::Initialize(const GameOptions& config)
 {
     _isServerInitialized = false;
     _isClientInitialized = false;
@@ -43,24 +43,25 @@ bool Audio::Initialize(int frequency, int channels, int chunkSize, const char* m
     }
 
     // Setup audio mode
-    if (Mix_OpenAudio(frequency, MIX_DEFAULT_FORMAT, channels, chunkSize) != 0)
+    if (Mix_OpenAudio(config.frequency, MIX_DEFAULT_FORMAT, config.channels, config.chunkSize) != 0)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", Mix_GetError());
+        LOG_ERROR(std::string(Mix_GetError()));
         return false;
     }
 
-    /*if (Mix_AllocateChannels(16))
-    {
-
-    }*/
+    m_SoundVolume = config.soundVolume;
+    m_MusicVolume = config.musicVolume;
 
 #ifdef _WIN32
-    _isMidiRpcInitialized = InitializeMidiRPC(midiRpcPath);
+    _isMidiRpcInitialized = InitializeMidiRPC(config.midiRpcServerPath);
     if (!_isMidiRpcInitialized)
     {
         return false;
     }
 #endif //_WIN32
+
+    SetSoundVolume(m_SoundVolume);
+    SetMusicVolume(m_MusicVolume);
 
     _isAudioInitialized = true;
 
@@ -85,9 +86,9 @@ void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
     }
     RpcExcept(1)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Audio::PlayMusic: Failed due to RPC exception");
+        //__LOG_ERROR("Audio::SetMusicVolume: Failed due to RPC exception");
     }
-    RpcEndExcept
+    RpcEndExcept;
 #else
     SDL_RWops* pRWops = SDL_RWFromMem((void*)musicData, musicSize);
     Mix_Music* pMusic = Mix_LoadMUS_RW(pRWops, 0);
@@ -165,12 +166,14 @@ void Audio::StopMusic()
 #endif //_WIN32
 }
 
-void Audio::SetMusicVolume(uint32_t volume)
+void Audio::SetMusicVolume(uint32_t volumePercentage)
 {
+    m_MusicVolume = (int)((((float)volumePercentage) / 100.0f) * (float)MIX_MAX_VOLUME);
+
 #ifdef _WIN32
     RpcTryExcept
     {
-        MidiRPC_ChangeVolume(volume);
+        MidiRPC_ChangeVolume(m_MusicVolume);
     }
         RpcExcept(1)
     {
@@ -178,26 +181,31 @@ void Audio::SetMusicVolume(uint32_t volume)
     }
     RpcEndExcept
 #else
-    Mix_VolumeMusic(volume);
+    Mix_VolumeMusic(m_MusicVolume);
 #endif //_WIN32
 }
 
-void Audio::PlaySound(const char* soundData, size_t soundSize, bool looping)
+void Audio::PlaySound(const char* soundData, size_t soundSize, int volumePercentage, int loops)
 {
     SDL_RWops* soundRwOps = SDL_RWFromMem((void*)soundData, soundSize);
     Mix_Chunk* soundChunk = Mix_LoadWAV_RW(soundRwOps, 1);
 
-    Mix_PlayChannel(-1, soundChunk, looping ? -1 : 0);
+    Mix_PlayChannel(-1, soundChunk, loops);
 }
 
-void Audio::PlaySound(Mix_Chunk* sound, bool looping)
+void Audio::PlaySound(Mix_Chunk* sound, int volumePercentage, int loops)
 {
-    Mix_PlayChannel(-1, sound, looping ? -1 : 0);
+    int chunkVolume = (int)((((float)volumePercentage) / 100.0f) * (float)m_SoundVolume);
+
+    Mix_VolumeChunk(sound, chunkVolume);
+    Mix_PlayChannel(-1, sound, loops);
 }
 
-void Audio::SetSoundVolume(uint32_t volume)
+void Audio::SetSoundVolume(uint32_t volumePercentage)
 {
-    Mix_Volume(-1, volume);
+    m_SoundVolume = (int)((((float)volumePercentage) / 100.0f) * (float)MIX_MAX_VOLUME);
+
+    Mix_Volume(-1, m_SoundVolume);
 }
 
 void Audio::PauseAllSounds()
@@ -246,11 +254,11 @@ bool Audio::InitializeMidiRPCServer(const char* midiRpcServerPath)
     if (doneCreateProc)
     {
         _isServerInitialized = true;
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "MIDI RPC Server started. [%s]", midiRpcServerPath);
+        LOG("MIDI RPC Server started. [" + std::string(midiRpcServerPath) + "]");
     }
     else
     {
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "FAILED to start RPC MIDI Server. [%s]", midiRpcServerPath);
+        LOG_ERROR("FAILED to start RPC MIDI Server. [" + std::string(midiRpcServerPath) + "]");
     }
 
     return (doneCreateProc != 0);
@@ -262,7 +270,7 @@ bool Audio::InitializeMidiRPCClient()
 
     if (!_isServerInitialized)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to initialize RPC MIDI Client - server was was not initialized");
+        LOG_ERROR("Failed to initialize RPC MIDI Client - server was was not initialized");
         return false;
     }
 
@@ -275,7 +283,7 @@ bool Audio::InitializeMidiRPCClient()
 
     if (rpcStatus != 0)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to initialize RPC MIDI Client - RPC binding composition failed");
+        LOG_ERROR("Failed to initialize RPC MIDI Client - RPC binding composition failed");
         return false;
     }
 
@@ -283,23 +291,23 @@ bool Audio::InitializeMidiRPCClient()
 
     if (rpcStatus != 0)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed to initialize RPC MIDI Client - RPC client binding failed");
+        LOG_ERROR("Failed to initialize RPC MIDI Client - RPC client binding failed");
         return false;
     }
 
-    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "RPC Client successfully initialized");
+    LOG("RPC Client successfully initialized");
 
     _isClientInitialized = true;
 
     bool isServerListening = IsRPCServerListening();
     if (!isServerListening)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Handshake between RPC Server and Client failed");
+        LOG_ERROR("Handshake between RPC Server and Client failed");
         return false;
     }
     else
     {
-        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "RPC Server and Client successfully handshaked");
+        LOG_ERROR("RPC Server and Client successfully handshaked");
     }
 
     return true;
@@ -331,10 +339,10 @@ void Audio::TerminateMidiRPC()
     {
         MidiRPC_StopServer();
     }
-        RpcExcept(1)
+    RpcExcept(1)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Audio::SetMusicVolume: Failed due to RPC exception");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Audio::TerminateMidiRPC: Failed due to RPC exception");
     }
-    RpcEndExcept
+    RpcEndExcept;
 }
 #endif //_WIN32
