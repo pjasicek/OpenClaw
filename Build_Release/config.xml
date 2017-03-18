@@ -15,16 +15,18 @@
         <MusicRpcServerPath>MidiProc.exe</MusicRpcServerPath>
     </Audio>
     <Font>
-        <Font>clacon.ttf</Font>
+        <Fontt>clacon.ttf</Fontt>
         <ConsoleFont font="clacon.ttf" size="20" />
     </Font>
     <Assets>
         <RezArchive>CLAW.REZ</RezArchive>
         <ResourceCacheSize>50</ResourceCacheSize>
+        <TempDir></TempDir>
+        <SavesFile>SAVES.XML</SavesFile>
     </Assets>
     <Console>
         <BackgroundImagePath>console02.tga</BackgroundImagePath>
-        <StretchBackgroundImage>true</StretchBackgroundImage>
+        <StretchBackgroundImage></StretchBackgroundImage>
         <WidthRatio>1.0</WidthRatio>
         <HeightRatio>0.5</HeightRatio>
         <LineSeparatorHeight>3</LineSeparatorHeight>

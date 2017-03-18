@@ -525,11 +525,6 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     {
         //LOG(ToStr(GetVelocity().y));
         // This is to ensure one jump per one space press
-        
-        bool wasFalling = GetVelocity().y > FLT_EPSILON;
-        bool wasJumping = m_IsJumping;
-
-        
         if (m_IsClimbing)
         {
 

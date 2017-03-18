@@ -9,8 +9,14 @@ int RunGameEngine(int argc, char** argv)
         LOG_WARNING("Failed to set high priority class to this process");
     }
 
+#ifndef ANDROID
+    std::string configDir = "";
+#else
+    std::string configDir = "/sdcard/claw/";
+#endif
+
     // Load options
-    if (!g_pApp->LoadGameOptions("config.xml"))
+    if (!g_pApp->LoadGameOptions(std::string(configDir + "config.xml").c_str()))
     {
         LOG_ERROR("Could not load game options. Exiting.");
         return -1;

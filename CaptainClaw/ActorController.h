@@ -25,6 +25,8 @@ private:
     shared_ptr<SceneNode> m_pControlledObject;
     float m_Speed;
 
+    std::map<int, bool> InputKeys;
+
     // SDL_Scancode array
     const uint8* m_pKeyStates;
 
