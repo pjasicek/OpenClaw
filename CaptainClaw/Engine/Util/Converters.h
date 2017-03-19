@@ -548,6 +548,24 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic.find("SoundTrigger") != std::string::npos)
     {
+        std::string sound = wwdObject->sound;
+        if (true)//sound == "LEVEL_TRIGGER_PUDDLE2")
+        {
+            SDL_Rect predefinedPosition;
+            predefinedPosition.x = wwdObject->minX;
+            predefinedPosition.y = wwdObject->minY;
+            predefinedPosition.w = wwdObject->maxX;
+            predefinedPosition.h = wwdObject->maxY;
+
+            int enterCount = wwdObject->smarts;
+            // TODO: ...
+            if (enterCount == 0)
+            {
+                enterCount = 1;
+            }
+
+            return ActorTemplates::CreateXmlData_SoundTriggerActor(sound, logic, Point(wwdObject->x, wwdObject->y), predefinedPosition, enterCount);
+        }
         //pActorElem->LinkEndChild(SoundTriggerToXml(wwdObject));
     }
     else if (logic.find("StackedCrates") != std::string::npos)

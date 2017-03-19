@@ -73,7 +73,11 @@ void TriggerComponent::VPostInit()
         {
             shared_ptr<ActorRenderComponent> pRenderComponent =
                 MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-            assert(pRenderComponent);
+            //assert(pRenderComponent);
+            if (pRenderComponent == nullptr)
+            {
+                return;
+            }
 
             shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
 

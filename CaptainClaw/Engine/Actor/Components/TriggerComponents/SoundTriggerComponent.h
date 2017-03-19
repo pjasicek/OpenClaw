@@ -9,7 +9,7 @@
 // SoundTriggerComponent
 //=====================================================================================================================
 
-class SoundTriggerComponent : public PickupComponent
+class SoundTriggerComponent : public ActorComponent, public TriggerObserver
 {
 public:
     SoundTriggerComponent();
@@ -17,15 +17,17 @@ public:
     static const char* g_Name;
     virtual const char* VGetName() const { return g_Name; }
 
-    virtual bool VOnApply(Actor* pActorWhoPickedThis);
+    virtual bool VInit(TiXmlElement* data) override;
+    virtual void VPostInit() override;
+    virtual TiXmlElement* VGenerateXml() override;
 
-protected:
-    virtual bool VDelegateInit(TiXmlElement* data);
-    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
+    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered) override;
 
 private:
+    std::string m_TriggerSound;
     bool m_bActivateDialog;
     int m_EnterCount;
+    bool m_bIsInfinite;
 
 };
 

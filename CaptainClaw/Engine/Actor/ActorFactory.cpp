@@ -38,6 +38,7 @@
 #include "Components/EnemyAI/EnemyAIComponent.h"
 #include "Components/EnemyAI/EnemyAIStateComponent.h"
 #include "Components/PredefinedMoveComponent.h"
+#include "Components/TriggerComponents/SoundTriggerComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -81,6 +82,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<MeleeAttackAIStateComponent>(MeleeAttackAIStateComponent::GetIdFromName(MeleeAttackAIStateComponent::g_Name));
     _componentFactory.Register<RangedAttackAIStateComponent>(RangedAttackAIStateComponent::GetIdFromName(RangedAttackAIStateComponent::g_Name));
     _componentFactory.Register<PredefinedMoveComponent>(PredefinedMoveComponent::GetIdFromName(PredefinedMoveComponent::g_Name));
+    _componentFactory.Register<SoundTriggerComponent>(SoundTriggerComponent::GetIdFromName(SoundTriggerComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

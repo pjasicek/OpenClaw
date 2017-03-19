@@ -22,6 +22,9 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_PowerupPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
     TiXmlElement* CreateXmlData_HealthPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
 
+    TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, Point position, Point size, int enterCount, bool activateDialog = false);
+    TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, const std::string& logicName, Point position, SDL_Rect presetPosition, int enterCount);
+
     // This is used by the game itself
     StrongActorPtr CreateActorPickup(PickupType pickupType, Point position, bool isStatic = false);
     StrongActorPtr CreatePowerupSparkleActor();

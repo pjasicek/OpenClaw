@@ -163,7 +163,7 @@ namespace ActorTemplates
         }
         else if (imageSet.find("STATES/") != std::string::npos)
         {
-            imageSet.replace(imageSet.begin(), imageSet.begin() + strlen("GAME/"), "/STATES/IMAGES/");
+            imageSet.replace(imageSet.begin(), imageSet.begin() + strlen("STATES/"), "/STATES/IMAGES/");
         }
         else
         {
@@ -380,6 +380,42 @@ namespace ActorTemplates
         }
 
         return soundTypeAndNamePairList;
+    }
+
+    std::string GetSoundPathFromClawPath(const std::string& sound)
+    {
+        if (sound.find("_") == std::string::npos)
+        {
+            LOG_WARNING("Cannot convert sound: " + sound);
+            return sound;
+        }
+
+        std::string soundName = sound;
+        std::replace(soundName.begin(), soundName.end(), '_', '/');
+        if (soundName.find("GAME/") != std::string::npos)
+        {
+            soundName.replace(soundName.begin(), soundName.begin() + strlen("GAME/"), "/GAME/SOUNDS/");
+            soundName += ".WAV";
+        }
+        else if (soundName.find("STATES/") != std::string::npos)
+        {
+            soundName.replace(soundName.begin(), soundName.begin() + strlen("STATES/"), "/STATES/SOUNDS/");
+            soundName += ".WAV";
+        }
+        else if (soundName.find("LEVEL/") != std::string::npos)
+        {
+            std::string levelName = "LEVEL" + ToStr(1);
+            soundName.replace(soundName.begin(), soundName.begin() + strlen("LEVEL/"), 
+                "/" + levelName + "/SOUNDS/");
+            soundName += ".WAV";
+        }
+        else
+        {
+            LOG_ERROR("Conflicting sound: " + sound);
+            assert(false && "Invalid sound");
+        }
+
+        return soundName;
     }
 
     //=====================================================================================================================
@@ -797,8 +833,10 @@ namespace ActorTemplates
         return pActorElem;
     }
 
-    TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, Point position, Point size, int enterCount)
+    TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, Point position, Point size, int enterCount, bool activateDialog)
     {
+        // General stuff
+
         TiXmlElement* pActorElem = new TiXmlElement("Actor");
         pActorElem->SetAttribute("Type", sound.c_str());
 
@@ -806,21 +844,83 @@ namespace ActorTemplates
         pActorElem->LinkEndChild(CreateTriggerComponent(enterCount, false, true));
 
         ActorBodyDef bodyDef;
+        bodyDef.makeSensor = true;
         bodyDef.bodyType = b2_staticBody;
         bodyDef.fixtureType = FixtureType_Pickup;
         bodyDef.position = position;
-
-        ActorFixtureDef fixtureDef;
-        fixtureDef.fixtureType = FixtureType_Trigger;
-        fixtureDef.collisionFlag = CollisionFlag_Pickup;
-        fixtureDef.collisionMask = CollisionFlag_Controller;
-        fixtureDef.isSensor = true;
-        fixtureDef.size = size;
-        bodyDef.fixtureList.push_back(fixtureDef);
+        bodyDef.collisionFlag = CollisionFlag_Pickup;
+        bodyDef.collisionMask = CollisionFlag_Controller;
+        bodyDef.fixtureType = FixtureType_Trigger;
+        bodyDef.size = size;
 
         pActorElem->LinkEndChild(CreatePhysicsComponent(&bodyDef));
 
+        // SoundTrigger specific
+        TiXmlElement* pSoundTriggerElem = new TiXmlElement("SoundTriggerComponent");
 
+        XML_ADD_TEXT_ELEMENT("EnterCount", ToStr(enterCount).c_str(), pSoundTriggerElem);
+        XML_ADD_TEXT_ELEMENT("ActivateDialog", ToStr(activateDialog).c_str(), pSoundTriggerElem);
+
+        std::string soundPath = GetSoundPathFromClawPath(sound);
+        XML_ADD_TEXT_ELEMENT("Sound", soundPath.c_str(), pSoundTriggerElem);
+
+        pActorElem->LinkEndChild(pSoundTriggerElem);
+
+        LOG_ERROR("Created");
+
+        return pActorElem;
+    }
+
+    TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, const std::string& logicName, Point position, SDL_Rect presetPosition, int enterCount)
+    {
+        Point size;
+        if (logicName.find("Tiny") != std::string::npos)
+        {
+            size.Set(32, 32);
+        }
+        else if (logicName.find("Small") != std::string::npos)
+        {
+            size.Set(64, 64);
+        }
+        else if (logicName.find("Big") != std::string::npos)
+        {
+            size.Set(256, 256);
+        }
+        else if (logicName.find("Huge") != std::string::npos)
+        {
+            size.Set(512, 512);
+        }
+        else if (logicName.find("Wide") != std::string::npos)
+        {
+            size.Set(200, 64);
+        }
+        else if (logicName.find("Tall") != std::string::npos)
+        {
+            size.Set(64, 200);
+        }
+        else
+        {
+            size.Set(128, 128);
+        }
+
+        bool activateDialog = logicName.find("ClawDialog") != std::string::npos;
+
+        // Position is already preset
+        if (presetPosition.x != 0)
+        {
+            //position.Set(presetPosition.x, presetPosition.y);
+            //size.Set(presetPosition.w - presetPosition.x, presetPosition.h - presetPosition.y);
+
+            size.x = std::min((int)size.x, presetPosition.w - presetPosition.x);
+            size.y = std::min((int)size.y, presetPosition.h - presetPosition.y);
+        }
+
+        LOG("Size: " + size.ToString());
+        Util::PrintRect(presetPosition, "Preset");
+
+        
+
+        return CreateXmlData_SoundTriggerActor(sound, position, size, enterCount, activateDialog);
     }
 
     TiXmlElement* CreateXmlData_TreasurePickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
