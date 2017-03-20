@@ -916,6 +916,34 @@ namespace ActorTemplates
         return CreateXmlData_SoundTriggerActor(sound, position, size, enterCount, activateDialog);
     }
 
+    TiXmlElement* CreateXmlData_GlobalAmbientSoundActor(
+        const std::string& sound,
+        int soundVolume,
+        int minTimeOff,
+        int maxTimeOff,
+        int minTimeOn,
+        int maxTimeOn,
+        bool isLooping)
+    {
+        TiXmlElement* pActorElem = new TiXmlElement("Actor");
+        pActorElem->SetAttribute("Type", sound.c_str());
+
+        std::string soundPath = GetSoundPathFromClawPath(sound);
+
+        TiXmlElement* pGlobalSoundComponent = new TiXmlElement("GlobalAmbientSoundComponent");
+        XML_ADD_TEXT_ELEMENT("Sound", soundPath.c_str(), pGlobalSoundComponent);
+        XML_ADD_TEXT_ELEMENT("SoundVolume", ToStr(soundVolume).c_str(), pGlobalSoundComponent);
+        XML_ADD_TEXT_ELEMENT("MinTimeOff", ToStr(minTimeOff).c_str(), pGlobalSoundComponent);
+        XML_ADD_TEXT_ELEMENT("MaxTimeOff", ToStr(maxTimeOff).c_str(), pGlobalSoundComponent);
+        XML_ADD_TEXT_ELEMENT("MinTimeOn", ToStr(minTimeOn).c_str(), pGlobalSoundComponent);
+        XML_ADD_TEXT_ELEMENT("MaxTimeOn", ToStr(maxTimeOn).c_str(), pGlobalSoundComponent);
+        XML_ADD_TEXT_ELEMENT("IsLooping", ToStr(isLooping).c_str(), pGlobalSoundComponent);
+
+        pActorElem->LinkEndChild(pGlobalSoundComponent);
+
+        return pActorElem;
+    }
+
     TiXmlElement* CreateXmlData_TreasurePickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
     {
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic);

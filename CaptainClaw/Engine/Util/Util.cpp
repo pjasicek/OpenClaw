@@ -370,4 +370,22 @@ namespace Util
                 new EventData_Request_Play_Sound(sounds[soundIdx].c_str(), volume, false)));
         }
     }
+
+    int GetSoundDurationMs(Mix_Chunk* pSound)
+    {
+        uint32 points = 0;
+        uint32 frames = 0;
+        int frequency = 0;
+        uint16 format = 0;
+        int channels = 0;
+
+        if (Mix_QuerySpec(&frequency, &format, &channels) == 0)
+        {
+            return -1;
+        }
+
+        points = (pSound->alen / ((format & 0xFF) / 8));
+        frames = points / channels;
+        return ((frames * 1000) / frequency);
+    }
 };

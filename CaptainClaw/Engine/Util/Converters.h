@@ -544,6 +544,29 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
     if (logic.find("AmbientSound") != std::string::npos)
     {
+        if (logic == "GlobalAmbientSound")
+        {
+            std::string sound = wwdObject->sound;
+            int soundVolume = wwdObject->damage;
+            if (soundVolume == 0)
+            {
+                soundVolume = 100;
+            }
+            int minTimeOff = wwdObject->moveRect.right;
+            int maxTimeOff = wwdObject->moveRect.bottom;
+            int minTimeOn = wwdObject->moveRect.left;
+            int maxTimeOn = wwdObject->moveRect.top;
+
+            return ActorTemplates::CreateXmlData_GlobalAmbientSoundActor(
+                sound,
+                soundVolume,
+                minTimeOff,
+                maxTimeOff,
+                minTimeOn,
+                maxTimeOn,
+                minTimeOn == 0);
+        }
+
         //pActorElem->LinkEndChild(AmbientSoundToXml(wwdObject));
     }
     else if (logic.find("SoundTrigger") != std::string::npos)

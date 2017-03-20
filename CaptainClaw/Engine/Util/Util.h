@@ -6,6 +6,7 @@
 #include <string>
 #include <libwap.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include "../SharedDefines.h"
 
 struct TileCollisionPrototype;
@@ -26,6 +27,8 @@ namespace Util
     int GetRandomNumber(int fromRange, int toRange);
 
     void PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume = 100);
+
+    int GetSoundDurationMs(Mix_Chunk* pSound);
 }
 
 #endif

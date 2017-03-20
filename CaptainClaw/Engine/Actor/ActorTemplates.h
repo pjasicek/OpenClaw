@@ -25,6 +25,8 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, Point position, Point size, int enterCount, bool activateDialog = false);
     TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, const std::string& logicName, Point position, SDL_Rect presetPosition, int enterCount);
 
+    TiXmlElement* CreateXmlData_GlobalAmbientSoundActor(const std::string& sound, int soundVolume, int minTimeOff, int maxTimeOff, int minTimeOn, int maxTimeOn, bool isLooping);
+
     // This is used by the game itself
     StrongActorPtr CreateActorPickup(PickupType pickupType, Point position, bool isStatic = false);
     StrongActorPtr CreatePowerupSparkleActor();

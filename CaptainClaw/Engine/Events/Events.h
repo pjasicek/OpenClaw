@@ -2012,30 +2012,33 @@ class EventData_Request_Play_Sound : public BaseEventData
 public:
     static const EventType sk_EventType;
 
-    EventData_Request_Play_Sound(std::string soundPath, uint32 volume, bool isMusic)
+    EventData_Request_Play_Sound(std::string soundPath, uint32 volume, bool isMusic = false, int loops = 0)
     {
         m_MusicPath = soundPath;
         m_Volume = volume;
         m_bIsMusic = isMusic;
+        m_Loops = loops;
     }
 
     virtual const EventType& VGetEventType(void) const { return sk_EventType; }
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Request_Play_Sound(m_MusicPath, m_Volume, m_bIsMusic));
+        return IEventDataPtr(new EventData_Request_Play_Sound(m_MusicPath, m_Volume, m_bIsMusic, m_Loops));
     }
-    virtual void VSerialize(std::ostringstream& out) const { out << m_MusicPath << m_Volume << m_bIsMusic; }
-    virtual void VDeserialize(std::istringstream& in) { in >> m_MusicPath >> m_Volume >> m_bIsMusic; }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_MusicPath << m_Volume << m_bIsMusic << m_Loops; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_MusicPath >> m_Volume >> m_bIsMusic >> m_Loops; }
 
     std::string GetSoundPath() const { return m_MusicPath; }
     uint32 GetVolume() const { return m_Volume; }
     bool IsMusic() const { return m_bIsMusic; }
+    int GetNumLoops() const { return m_Loops; }
 
     virtual const char* GetName(void) const { return "EventData_Request_Play_Sound"; }
 
 private:
     std::string m_MusicPath;
     uint32 m_Volume;
+    int m_Loops;
     bool m_bIsMusic;
 };
 
