@@ -90,6 +90,12 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     return;
                 }
 
+                Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                if (pActor->GetName() == "Claw")
+                {
+                    //LOG("Contact");
+                }
+
                 pContact->SetEnabled(false);
                 for (int pointIdx = 0; pointIdx < numPoints; pointIdx++)
                 {
@@ -107,15 +113,15 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                         }*/
                         b2Vec2 relativePoint = pFixtureA->GetBody()->GetLocalPoint(worldManifold.points[pointIdx]);
                         //LOG("Relative point Y: " + ToStr(relativePoint.y));
-                        float platformFaceY = 0.3f;//front of platform, from fixture definition :(
+                        float platformFaceY = 0.5f;//front of platform, from fixture definition :(
                         if (relativePoint.y < platformFaceY - 0.05)
                         {
-                            /*Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                            
                             if (pActor->GetName() == "Claw")
                             {
-                                LOG("y: " + ToStr(relativePoint.y));
-                                LOG("x: " + ToStr(relativePoint.x));
-                            }*/
+                                //LOG("y: " + ToStr(relativePoint.y));
+                                //LOG("x: " + ToStr(relativePoint.x));
+                            }
                             //TODO: I DONT KNOW WHY BUT IT WORKS (not really tho)
                             // It caused bugs with colliding with grounds from the side from "downtown"
                             if (fabs(relativePoint.y) < 0.1f && fabs(relativePoint.x) > 0.3f)
@@ -126,8 +132,16 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                             // TODO: Think about better solution and rename this to something better
                             pPhysicsComponent->SetTopLadderContact(pContact);
                             
+                            //pFixtureB->GetBody()->SetLinearVelocity(pFixtureA->GetBody()->GetLinearVelocity());
+
+                            if (pActor->GetName() == "Claw")
+                            {
+                                //LOG("Enabling");
+                            }
+                            
                             pContact->SetEnabled(true);
                             pPhysicsComponent->AddOverlappingGround(pFixtureA);
+                            break;
                         }
                     }
                     else
@@ -157,6 +171,8 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
                     pKinematicComponent->AddCarriedBody(pFixtureB->GetBody());
                     pPhysicsComponent->AddOverlappingKinematicBody(pFixtureA->GetBody());
+                    pContact->SetFriction(100.0f);
+                    pPhysicsComponent->SetMovingPlatformContact(pContact);
                 }
 
                 // TODO: HACK: Crumbling peg, hackerino but who cares
@@ -172,6 +188,11 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     {
                         pCrumblingPegComponent->OnContact(pFixtureB->GetBody());
                     }
+                }
+
+                if (pActor->GetName() == "Claw")
+                {
+                    //LOG("Contact was enabled: " + ToStr(pContact->IsEnabled()));
                 }
             }
         }
@@ -400,6 +421,7 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                         shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
                         pKinematicComponent->RemoveCarriedBody(pFixtureB->GetBody());
                         pPhysicsComponent->RemoveOverlappingKinematicBody(pFixtureA->GetBody());
+                        pPhysicsComponent->SetMovingPlatformContact(NULL);
                     }
 
                     /*if (!pFixtureA->IsSensor())

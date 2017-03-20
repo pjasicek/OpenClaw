@@ -866,8 +866,6 @@ namespace ActorTemplates
 
         pActorElem->LinkEndChild(pSoundTriggerElem);
 
-        LOG_ERROR("Created");
-
         return pActorElem;
     }
 
@@ -914,11 +912,6 @@ namespace ActorTemplates
             size.x = std::min((int)size.x, presetPosition.w - presetPosition.x);
             size.y = std::min((int)size.y, presetPosition.h - presetPosition.y);
         }
-
-        LOG("Size: " + size.ToString());
-        Util::PrintRect(presetPosition, "Preset");
-
-        
 
         return CreateXmlData_SoundTriggerActor(sound, position, size, enterCount, activateDialog);
     }

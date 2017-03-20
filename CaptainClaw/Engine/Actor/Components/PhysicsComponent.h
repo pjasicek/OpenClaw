@@ -73,6 +73,9 @@ public:
 
     bool AttachToLadder();
 
+    void SetExternalSourceSpeed(const Point& externalSpeed) { m_ExternalSourceSpeed = externalSpeed; }
+    void SetMovingPlatformContact(b2Contact* pContact) { m_pMovingPlatformContact = pContact; }
+
     // Communication with IGamePhysics
     Point GetVelocity() { return m_pPhysics->VGetVelocity(_owner->GetGUID()); }
     void SetVelocity(Point velocity) { m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), velocity); }
@@ -120,6 +123,7 @@ private:
     Point m_ConstantSpeed;
 
     Point m_CurrentSpeed;
+    Point m_ExternalSourceSpeed;
 
     Point m_ClimbingSpeed;
 
@@ -134,6 +138,7 @@ private:
     ActorBodyDef m_ActorBodyDef;
 
     b2Contact* m_pTopLadderContact;
+    b2Contact* m_pMovingPlatformContact;
 
     std::vector<const b2Body*> m_OverlappingKinematicBodiesList;
     std::vector<const b2Fixture*> m_OverlappingLaddersList;

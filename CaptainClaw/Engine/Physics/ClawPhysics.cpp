@@ -329,7 +329,7 @@ void ClawPhysics::VSyncVisibleScene()
                 if (pActorBody->GetType() == b2_kinematicBody)
                 {
                     shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pActorBody);
-                    pKinematicComponent->RemoveCarriedBody(pActorBody);
+                    //pKinematicComponent->RemoveCarriedBody(pActorBody);
                     pKinematicComponent->OnMoved(bodyPixelPosition);
                 }
             }
@@ -1058,6 +1058,16 @@ void ClawPhysics::VSetLinearSpeed(uint32_t actorId, const Point& speed)
                 pBody->SetLinearVelocity(b2Vec2(grav.x, 14));
             }
         }*/
+    }
+}
+
+void ClawPhysics::VAddLinearSpeed(uint32_t actorId, const Point& speedIncrement)
+{
+    if (b2Body* pBody = FindBox2DBody(actorId))
+    {
+        b2Vec2 currSpeed = pBody->GetLinearVelocity();
+        b2Vec2 modifiedSpeed = currSpeed + PointToB2Vec2(speedIncrement);
+        pBody->SetLinearVelocity(modifiedSpeed);
     }
 }
 

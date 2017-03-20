@@ -83,7 +83,8 @@ PhysicsComponent::PhysicsComponent() :
     m_HeightInAir(20),
     m_pControllableComponent(nullptr),
     m_pPhysics(nullptr),
-    m_pTopLadderContact(NULL)
+    m_pTopLadderContact(NULL),
+    m_pMovingPlatformContact(NULL)
 { }
 
 PhysicsComponent::~PhysicsComponent()
@@ -358,6 +359,10 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     
     LOG("CLIMBING Y: " + ToStr(m_ClimbingSpeed.y));*/
     
+    if (m_OverlappingKinematicBodiesList.empty())
+    {
+        m_ExternalSourceSpeed.Set(0, 0);
+    }
 
     if (m_pControllableComponent && !m_pControllableComponent->InPhysicsCapableState())
     {
@@ -589,6 +594,23 @@ set_velocity:
         else
         {
             SetVelocity(Point(0, velocity.y));
+        }
+
+        if (m_pMovingPlatformContact && fabs(m_CurrentSpeed.x) < DBL_EPSILON)
+        {
+            // Not moving while getting carried, set high friction
+            m_pMovingPlatformContact->SetFriction(100.0f);
+        }
+        else if (m_pMovingPlatformContact && (fabs(m_CurrentSpeed.x) > DBL_EPSILON))
+        {
+            // Moving while on platform
+            m_pMovingPlatformContact->SetFriction(0.0f);
+            m_pPhysics->VAddLinearSpeed(_owner->GetGUID(), m_ExternalSourceSpeed);
+
+            // If moving on platform, be slower
+            velocity = GetVelocity();
+            velocity.Set((velocity.x * 2) / 3, velocity.y);
+            SetVelocity(velocity);
         }
 
         bool applyForce = true;

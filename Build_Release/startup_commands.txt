@@ -1,3 +1,4 @@
-#InfiniteJump on
-#Invincible on
-teleport 1450 4750
+InfiniteJump on
+Invincible on
+physicsdebug on
+#teleport 1450 4750

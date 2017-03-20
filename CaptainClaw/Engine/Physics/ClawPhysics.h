@@ -52,6 +52,7 @@ public:
     virtual Point VGetVelocity(uint32_t actorId) override;
     virtual void SetVelocity(uint32_t actorId, const Point& velocity) override;
     virtual void VTranslate(uint32_t actorId, const Point& dir) override;
+    virtual void VAddLinearSpeed(uint32_t actorId, const Point& speedIncrement) override;
     virtual void VSetLinearSpeed(uint32_t actorId, const Point& speed) override;
     virtual void VSetGravityScale(uint32_t actorId, const float gravityScale) override;
     virtual void VSetLinearSpeedEx(uint32_t actorId, const Point& speed) override;

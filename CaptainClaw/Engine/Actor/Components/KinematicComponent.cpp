@@ -137,17 +137,17 @@ void KinematicComponent::VUpdate(uint32 msDiff)
     bool directionChanged = false;
     if (m_Speed.x > 0)
     {
-        if (m_pPositionComponent->GetX() < m_MinPosition.x)
+        if ((m_CurrentSpeed.x < -1.0 * DBL_EPSILON) && m_pPositionComponent->GetX() < m_MinPosition.x)
         {
-            m_pPositionComponent->SetX(m_MinPosition.x);
-            m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());
+            /*m_pPositionComponent->SetX(m_MinPosition.x);
+            m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());*/
             m_CurrentSpeed = Point(m_CurrentSpeed.x * -1.0, m_CurrentSpeed.y);
             directionChanged = true;
         }
-        else if (m_pPositionComponent->GetX() > m_MaxPosition.x)
+        else if ((m_CurrentSpeed.x > DBL_EPSILON) && m_pPositionComponent->GetX() > m_MaxPosition.x)
         {
-            m_pPositionComponent->SetX(m_MaxPosition.x);
-            m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());
+            /*m_pPositionComponent->SetX(m_MaxPosition.x);
+            m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());*/
             m_CurrentSpeed = Point(m_CurrentSpeed.x * -1.0, m_CurrentSpeed.y);
             directionChanged = true;
         }
@@ -159,16 +159,16 @@ void KinematicComponent::VUpdate(uint32 msDiff)
         {
             m_CurrentSpeed = Point(m_CurrentSpeed.x, m_CurrentSpeed.y * -1.0);
         }
-        else if (m_pPositionComponent->GetY() < m_MinPosition.y)
+        else if ((m_CurrentSpeed.y < -1.0 * DBL_EPSILON) && m_pPositionComponent->GetY() < m_MinPosition.y)
         {
-            m_pPositionComponent->SetY(m_MinPosition.y);
-            m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());
+            //m_pPositionComponent->SetY(m_MinPosition.y);
+            //m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());
             m_CurrentSpeed = Point(m_CurrentSpeed.x, m_CurrentSpeed.y * -1.0);
         }
-        else if (m_pPositionComponent->GetY() > m_MaxPosition.y)
+        else if ((m_CurrentSpeed.y > DBL_EPSILON) && m_pPositionComponent->GetY() > m_MaxPosition.y)
         {
-            m_pPositionComponent->SetY(m_MaxPosition.y);
-            m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());
+            //m_pPositionComponent->SetY(m_MaxPosition.y);
+            //m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());
             m_CurrentSpeed = Point(m_CurrentSpeed.x, m_CurrentSpeed.y * -1.0);
         }
     }
@@ -229,7 +229,10 @@ void KinematicComponent::OnMoved(Point newPosition)
         return;
     }
 
-    
+    if (fabs(m_Speed.x) < DBL_EPSILON)
+    {
+        return;
+    }
 
     Point positionDelta = Point(newPosition.x - m_LastPosition.x, newPosition.y - m_LastPosition.y);
     //LOG(ToStr(positionDelta.x) + " " + ToStr(positionDelta.y));
@@ -254,7 +257,12 @@ void KinematicComponent::OnMoved(Point newPosition)
                 continue;
             }
 
-            if (pPhysicsComponent && pPhysicsComponent->GetVelocity().y < -4)
+            if (pPhysicsComponent)
+            {
+                pPhysicsComponent->SetExternalSourceSpeed(m_CurrentSpeed);
+            }
+
+            /*if (pPhysicsComponent && pPhysicsComponent->GetVelocity().y < -4)
             {
                 continue;
             }
@@ -265,10 +273,10 @@ void KinematicComponent::OnMoved(Point newPosition)
 
             shared_ptr<PositionComponent> pPositionComponent =
                 MakeStrongPtr(pActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
-            Point currentPos = pPositionComponent->GetPosition();
+            Point currentPos = pPositionComponent->GetPosition();*/
             //pPositionComponent->SetPosition(currentPos.x + positionDelta.x, currentPos.y + positionDelta.y);
             
-            m_pPhysics->VSetPosition(pActor->GetGUID(), Point(currentPos.x + positionDelta.x, currentPos.y + positionDelta.y));
+            //m_pPhysics->VSetPosition(pActor->GetGUID(), Point(currentPos.x + positionDelta.x, currentPos.y + positionDelta.y));
         }
     }
 

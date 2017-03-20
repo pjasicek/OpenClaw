@@ -250,6 +250,7 @@ public:
     virtual void SetVelocity(uint32_t actorId, const Point& velocity) = 0;
     virtual void VTranslate(uint32_t actorId, const Point& dir) = 0;
     virtual void VSetLinearSpeed(uint32_t actorId, const Point& speed) = 0;
+    virtual void VAddLinearSpeed(uint32_t actorId, const Point& speedIncrement) = 0;
     virtual void VSetGravityScale(uint32_t actorId, const float gravityScale) = 0;
     virtual void VSetLinearSpeedEx(uint32_t actorId, const Point& speed) = 0;
     virtual bool VIsAwake(uint32_t actorId) = 0;

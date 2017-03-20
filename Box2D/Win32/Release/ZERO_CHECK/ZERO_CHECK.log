@@ -1,11 +1,12 @@
-﻿Build started 4. 3. 2017 10:35:42.
-     1>Project "C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\ZERO_CHECK.vcxproj" on node 2 (Build target(s)).
+﻿Build started 19. 3. 2017 10:39:59.
+     1>Project "d:\CaptainClaw_git\CaptainClaw\Box2D\ZERO_CHECK.vcxproj" on node 2 (Build target(s)).
      1>CustomBuild:
          Checking Build System
-         CMake does not need to re-run because C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/CMakeFiles/generate.stamp is up-to-date.
-         CMake does not need to re-run because C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/CMakeFiles/generate.stamp is up-to-date.
-     1>Done Building Project "C:\Users\Petr\Documents\Visual Studio 2013\Projects\CaptainClaw\Box2D\ZERO_CHECK.vcxproj" (Build target(s)).
+         CMake is re-running because C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/CMakeFiles/generate.stamp dependency file is missing.
+     1>CUSTOMBUILD : CMake error : The source directory "C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D" does not appear to contain CMakeLists.txt.
+         Specify --help for usage, or press the help button on the CMake GUI.
+     1>Done Building Project "d:\CaptainClaw_git\CaptainClaw\Box2D\ZERO_CHECK.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
 Time Elapsed 00:00:00.35
