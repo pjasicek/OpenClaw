@@ -92,6 +92,9 @@ void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
 #else
     SDL_RWops* pRWops = SDL_RWFromMem((void*)musicData, musicSize);
     Mix_Music* pMusic = Mix_LoadMUS_RW(pRWops, 0);
+    if(!pMusic) {
+        LOG_ERROR("Mix_LoadMUS_RW: " + std::string(Mix_GetError()));
+    }
     Mix_PlayMusic(pMusic, looping ? -1 : 1);
 #endif //_WIN32
 }
