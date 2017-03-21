@@ -138,7 +138,13 @@ public:
     uint32 GetWidth() { return m_Width; }
     uint32 GetHeight() { return m_Height; }
 
-    SDL_Rect GetCameraRect() const;
+    inline SDL_Rect GetCameraRect() const
+    {
+        return{ (int)m_Properties.GetPosition().x,
+            (int)m_Properties.GetPosition().y,
+            (int)(m_Width / m_ScaleX),
+            (int)(m_Height / m_ScaleY) };
+    }
 
     int32 GetCameraOffsetX() { return m_OffsetX; }
     int32 GetCameraOffsetY() { return m_OffsetY; }
@@ -153,6 +159,9 @@ protected:
     uint32      m_OffsetY;
     bool        m_Active;
     bool        m_DebugCamera;
+
+    float m_ScaleX;
+    float m_ScaleY;
 
     shared_ptr<SceneNode> m_pTarget;
 };

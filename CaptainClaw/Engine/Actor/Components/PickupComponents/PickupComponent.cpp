@@ -39,7 +39,7 @@ bool PickupComponent::VInit(TiXmlElement* data)
 
     if (m_PickupSound.empty())
     {
-        LOG_ERROR("No pickup sound for actor: " + std::string(data->Parent()->ToElement()->Attribute("Type")));
+        //LOG_ERROR("No pickup sound for actor: " + std::string(data->Parent()->ToElement()->Attribute("Type")));
         //assert(false && "No pickup sound for TreasurePickupComponent");
     }
 

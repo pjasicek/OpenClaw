@@ -606,6 +606,24 @@ bool BaseGameApp::InitializeEventMgr()
     return true;
 }
 
+Point BaseGameApp::GetScale()
+{
+    float scaleX, scaleY;
+    uint32 windowFlags = GetWindowFlags();
+    Point scale(1.0, 1.0);
+
+    SDL_RenderGetScale(m_pRenderer, &scaleX, &scaleY);
+    
+    scale.Set((double)scaleX, (double)scaleY);
+
+    return scale;
+}
+
+uint32 BaseGameApp::GetWindowFlags()
+{
+    return SDL_GetWindowFlags(m_pWindow);
+}
+
 //=====================================================================================================================
 // XML config management
 //=====================================================================================================================

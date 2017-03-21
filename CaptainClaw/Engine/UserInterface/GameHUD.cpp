@@ -81,6 +81,7 @@ void ScreenElementHUD::VOnLostDevice()
 
 void ScreenElementHUD::VOnRender(uint32 msDiff)
 {
+    Point scale = g_pApp->GetScale();
     int cameraWidth = m_pCamera->GetWidth();
 
     if (IsElementVisible("score"))
@@ -98,7 +99,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
         // Render health numbers
         for (int i = 0; i < HEALTH_NUMBERS_COUNT; i++)
         {
-            SDL_Rect renderRect = { cameraWidth - 60 + i * (m_HealthNumbers[i]->GetWidth() - 2), 2, m_HealthNumbers[i]->GetWidth(), m_HealthNumbers[i]->GetHeight() };
+            SDL_Rect renderRect = { (int)(cameraWidth / scale.x) - 60 + i * (m_HealthNumbers[i]->GetWidth() - 2), 2, m_HealthNumbers[i]->GetWidth(), m_HealthNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_HealthNumbers[i]->GetTexture(), NULL, &renderRect);
         }
     }
@@ -108,7 +109,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
         // Render ammo numbers
         for (int i = 0; i < AMMO_NUMBERS_COUNT; i++)
         {
-            SDL_Rect renderRect = { cameraWidth - 46 + i * (m_AmmoNumbers[i]->GetWidth()), 43, m_AmmoNumbers[i]->GetWidth(), m_AmmoNumbers[i]->GetHeight() };
+            SDL_Rect renderRect = { (int)(cameraWidth / scale.x) - 46 + i * (m_AmmoNumbers[i]->GetWidth()), 43, m_AmmoNumbers[i]->GetWidth(), m_AmmoNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_AmmoNumbers[i]->GetTexture(), NULL, &renderRect);
         }
     }
@@ -118,7 +119,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
         // Render lives numbers
         for (int i = 0; i < LIVES_NUMBERS_COUNT; i++)
         {
-            SDL_Rect renderRect = { cameraWidth - 36 + i * (m_AmmoNumbers[i]->GetWidth()), 71, m_LivesNumbers[i]->GetWidth(), m_LivesNumbers[i]->GetHeight() };
+            SDL_Rect renderRect = { (int)(cameraWidth / scale.x) - 36 + i * (m_AmmoNumbers[i]->GetWidth()), 71, m_LivesNumbers[i]->GetWidth(), m_LivesNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_LivesNumbers[i]->GetTexture(), NULL, &renderRect);
         }
     }
@@ -137,8 +138,8 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
     {
         SDL_Rect renderRect;
         SDL_QueryTexture(m_pFPSTexture, NULL, NULL, &renderRect.w, &renderRect.h);
-        renderRect.x = m_pCamera->GetWidth() / 2 - 20;
-        renderRect.y = 15;
+        renderRect.x = ((m_pCamera->GetWidth() / 2) / scale.x - 20);
+        renderRect.y = 15 / scale.y;
         SDL_RenderCopy(m_pRenderer, m_pFPSTexture, NULL, &renderRect);
     }
 
@@ -146,8 +147,8 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
     {
         SDL_Rect renderRect;
         SDL_QueryTexture(m_pPositionTexture, NULL, NULL, &renderRect.w, &renderRect.h);
-        renderRect.x = m_pCamera->GetWidth() - renderRect.w - 1;
-        renderRect.y = m_pCamera->GetHeight() - renderRect.h - 1;
+        renderRect.x = (m_pCamera->GetWidth() / scale.x - renderRect.w - 1);
+        renderRect.y = (m_pCamera->GetHeight() / scale.y - renderRect.h - 1);
         SDL_RenderCopy(m_pRenderer, m_pPositionTexture, NULL, &renderRect);
     }
 }

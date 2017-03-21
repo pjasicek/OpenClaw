@@ -3,6 +3,7 @@
 #include "TilePlaneSceneNode.h"
 #include "../Actor/Components/RenderComponent.h"
 #include "../Graphics2D/Image.h"
+#include "../GameApp/BaseGameApp.h"
 
 SDL2TilePlaneSceneNode::SDL2TilePlaneSceneNode(const uint32 actorId,
     BaseRenderComponent* pRenderComponent,
@@ -34,6 +35,8 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
 
     int32_t renderPadding = 100;
 
+    Point scale = g_pApp->GetScale();
+
     float movementRatioX = pProperties->movementPercentX / 100.0f;
     float movementRatioY = pProperties->movementPercentY / 100.0f;
 
@@ -43,10 +46,10 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
     int32_t startCol = parallaxCameraPosX / tilePixelWidth;
     int32_t startRow = parallaxCameraPosY / tilePixelHeight;
 
-    int32_t colTilesToRender = (uint32_t)((camera->GetWidth() / tilePixelWidth)) +
+    int32_t colTilesToRender = (uint32_t)((camera->GetWidth() / tilePixelWidth) / scale.x) +
         (uint32_t)((renderPadding * 2) / pProperties->tilePixelWidth);
 
-    int32_t rowTilesToRender = (uint32_t)((camera->GetHeight() / tilePixelHeight)) +
+    int32_t rowTilesToRender = (uint32_t)((camera->GetHeight() / tilePixelHeight) / scale.y) +
         (uint32_t)((renderPadding * 2) / tilePixelHeight);
 
     // Some planes (Back, Front) repeat themselves, which means they can be rendered

@@ -1,7 +1,7 @@
 <Configuration>
     <Display>
-        <Size width="1280" height="800" />
-        <Scale>1</Scale>
+        <Size width="1600" height="900" />
+        <Scale>1.0</Scale>
         <UseVerticalSync>false</UseVerticalSync>
         <IsFullscreen>false</IsFullscreen>
         <IsFullscreenDesktop>false</IsFullscreenDesktop>

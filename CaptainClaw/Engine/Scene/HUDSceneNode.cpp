@@ -2,6 +2,7 @@
 #include "HUDSceneNode.h"
 #include "../Actor/Components/RenderComponent.h"
 #include "../Graphics2D/Image.h"
+#include "../GameApp/BaseGameApp.h"
 
 SDL2HUDSceneNode::SDL2HUDSceneNode(const uint32 actorId,
     BaseRenderComponent* pRenderComponent,
@@ -26,6 +27,7 @@ void SDL2HUDSceneNode::VRender(Scene* pScene)
     }
 
     HUDRenderComponent* hrc = static_cast<HUDRenderComponent*>(m_pRenderComponent);
+    Point scale = g_pApp->GetScale();
 
     shared_ptr<Image> actorImage = MakeStrongPtr(hrc->GetCurrentImage());
     if (!actorImage)
@@ -40,12 +42,12 @@ void SDL2HUDSceneNode::VRender(Scene* pScene)
     int32 x = m_Properties.GetPosition().x - actorImage->GetWidth() / 2 + offsetX;
     if (hrc->IsAnchoredRight())
     {
-        x += pScene->GetCamera()->GetWidth();
+        x += (pScene->GetCamera()->GetWidth()) / scale.x;
     }
     int32 y = m_Properties.GetPosition().y - actorImage->GetHeight() / 2 + offsetY;
     if (hrc->IsAnchoredBottom())
     {
-        y += pScene->GetCamera()->GetHeight();
+        y += (pScene->GetCamera()->GetHeight()) / scale.y;
     }
 
     // HACK: Pistol and magic first frame has incorrect offset...

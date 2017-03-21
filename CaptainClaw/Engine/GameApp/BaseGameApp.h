@@ -162,6 +162,8 @@ public:
     // This is provided to be used the engine
     bool LoadStrings(std::string language);
     std::string GetString(std::string stringId);
+    Point GetScale();
+    uint32 GetWindowFlags();
 
     inline SDL_Renderer* GetRenderer() const { return m_pRenderer; }
     inline WapPal* GetCurrentPalette() const { return m_pPalette; }

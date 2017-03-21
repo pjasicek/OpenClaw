@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "../Actor/ActorComponent.h"
 #include "../Actor/Components/RenderComponent.h"
+#include "../GameApp/BaseGameApp.h"
 
 //=================================================================================================
 // SceneNodeProperties Implementation
@@ -243,6 +244,10 @@ CameraNode::CameraNode(Point position, uint32 width, uint32 height)
 {
     m_Width = width;
     m_Height = height;
+
+    Point scale = g_pApp->GetScale();
+    m_ScaleX = (float)scale.x;
+    m_ScaleY = (float)scale.y;
 }
 
 void CameraNode::VRender(Scene* pScene)
@@ -253,14 +258,6 @@ void CameraNode::VRender(Scene* pScene)
     }
 }
 
-SDL_Rect CameraNode::GetCameraRect() const
-{
-    return { (int)m_Properties.GetPosition().x,
-             (int)m_Properties.GetPosition().y,
-             (int)m_Width,
-             (int)m_Height };
-}
-
 void CameraNode::SetViewPosition(Scene* pScene)
 {
     // If there is a target, make sure target is in the center of the camera
@@ -268,7 +265,8 @@ void CameraNode::SetViewPosition(Scene* pScene)
     {
         Point targetPos = m_pTarget->VGetProperties()->GetPosition();
         // Center camera
-        Point cameraPos = targetPos - Point(m_Width / 2, m_Height / 2);
+        Point scale = g_pApp->GetScale();
+        Point cameraPos = targetPos - Point((m_Width / 2) / scale.x, (m_Height / 2) / scale.y);
         VSetPosition(cameraPos);
     }
 }
