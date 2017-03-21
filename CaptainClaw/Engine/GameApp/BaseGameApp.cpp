@@ -302,8 +302,10 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     {
         SetUintIfDefined(&m_GameOptions.frequency,
             audioElem->FirstChildElement("Frequency"));
-        SetUintIfDefined(&m_GameOptions.channels,
-            audioElem->FirstChildElement("Channels"));
+        SetUintIfDefined(&m_GameOptions.soundChannels,
+            audioElem->FirstChildElement("SoundChannels"));
+        SetUintIfDefined(&m_GameOptions.mixingChannels,
+            audioElem->FirstChildElement("MixingChannels"));
         SetUintIfDefined(&m_GameOptions.chunkSize,
             audioElem->FirstChildElement("ChunkSize"));
         SetStringIfDefined(&m_GameOptions.midiRpcServerPath,
@@ -626,7 +628,8 @@ TiXmlElement* CreateDefaultAudioConfig()
     TiXmlElement* audio = new TiXmlElement("Audio");
 
     XML_ADD_TEXT_ELEMENT("Frequency", "44100", audio);
-    XML_ADD_TEXT_ELEMENT("Channels", "2", audio);
+    XML_ADD_TEXT_ELEMENT("SoundChannels", "1", audio);
+    XML_ADD_TEXT_ELEMENT("MixingChannels", "24", audio);
     XML_ADD_TEXT_ELEMENT("ChunkSize", "2048", audio);
     XML_ADD_TEXT_ELEMENT("SoundVolume", "50", audio);
     XML_ADD_TEXT_ELEMENT("MusicVolume", "50", audio);

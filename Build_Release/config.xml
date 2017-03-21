@@ -8,7 +8,8 @@
     </Display>
     <Audio>
         <Frequency>44100</Frequency>
-        <Channels>1</Channels>
+        <SoundChannels>1</SoundChannels>
+        <MixingChannels>24</MixingChannels>
         <ChunkSize>2048</ChunkSize>
         <SoundVolume>50</SoundVolume>
         <MusicVolume>10</MusicVolume>

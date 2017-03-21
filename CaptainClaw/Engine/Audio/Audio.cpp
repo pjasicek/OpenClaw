@@ -43,14 +43,13 @@ bool Audio::Initialize(const GameOptions& config)
     }
 
     // Setup audio mode
-    if (Mix_OpenAudio(config.frequency, MIX_DEFAULT_FORMAT, config.channels, config.chunkSize) != 0)
+    if (Mix_OpenAudio(config.frequency, MIX_DEFAULT_FORMAT, config.soundChannels, config.chunkSize) != 0)
     {
         LOG_ERROR(std::string(Mix_GetError()));
         return false;
     }
 
-    // TODO: Add to global config ?
-    Mix_AllocateChannels(24);
+    Mix_AllocateChannels(config.mixingChannels);
 
     m_SoundVolume = config.soundVolume;
     m_MusicVolume = config.musicVolume;

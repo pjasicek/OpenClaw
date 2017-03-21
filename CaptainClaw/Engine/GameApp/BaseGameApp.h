@@ -24,7 +24,8 @@ struct GameOptions
         isFullscreenDesktop = false;
 
         frequency = 44100;
-        channels = 2;
+        soundChannels = 2;
+        mixingChannels = 24;
         chunkSize = 2048;
         soundVolume = 50; // In percents
         musicVolume = 50; // In percents
@@ -57,7 +58,8 @@ struct GameOptions
 
     // Audio
     unsigned frequency;
-    unsigned channels;
+    unsigned soundChannels;
+    unsigned mixingChannels;
     unsigned chunkSize;
     int soundVolume;
     int musicVolume;
