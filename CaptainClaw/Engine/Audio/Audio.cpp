@@ -49,6 +49,9 @@ bool Audio::Initialize(const GameOptions& config)
         return false;
     }
 
+    // TODO: Add to global config ?
+    Mix_AllocateChannels(24);
+
     m_SoundVolume = config.soundVolume;
     m_MusicVolume = config.musicVolume;
 
@@ -188,20 +191,26 @@ void Audio::SetMusicVolume(uint32_t volumePercentage)
 #endif //_WIN32
 }
 
-void Audio::PlaySound(const char* soundData, size_t soundSize, int volumePercentage, int loops)
+bool Audio::PlaySound(const char* soundData, size_t soundSize, int volumePercentage, int loops)
 {
     SDL_RWops* soundRwOps = SDL_RWFromMem((void*)soundData, soundSize);
     Mix_Chunk* soundChunk = Mix_LoadWAV_RW(soundRwOps, 1);
 
-    Mix_PlayChannel(-1, soundChunk, loops);
+    return PlaySound(soundChunk, volumePercentage, loops);
 }
 
-void Audio::PlaySound(Mix_Chunk* sound, int volumePercentage, int loops)
+bool Audio::PlaySound(Mix_Chunk* sound, int volumePercentage, int loops)
 {
     int chunkVolume = (int)((((float)volumePercentage) / 100.0f) * (float)m_SoundVolume);
 
     Mix_VolumeChunk(sound, chunkVolume);
-    Mix_PlayChannel(-1, sound, loops);
+    if (Mix_PlayChannel(-1, sound, loops) == -1)
+    {
+        LOG_ERROR("Failed to play chunk: " + std::string(Mix_GetError()));
+        return false;
+    }
+
+    return true;
 }
 
 void Audio::SetSoundVolume(uint32_t volumePercentage)

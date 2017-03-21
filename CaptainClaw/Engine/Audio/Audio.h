@@ -15,8 +15,8 @@ public:
     bool Initialize(const GameOptions& config);
     void Terminate();
 
-    void PlaySound(const char* soundData, size_t soundSize, int volumePercentage = 100, int loops = 0);
-    void PlaySound(Mix_Chunk* sound, int volumePercentage = 100, int loops = 0);
+    bool PlaySound(const char* soundData, size_t soundSize, int volumePercentage = 100, int loops = 0);
+    bool PlaySound(Mix_Chunk* sound, int volumePercentage = 100, int loops = 0);
     void SetSoundVolume(uint32_t volumePercentage); 
 
     void PlayMusic(const char* musicData, size_t musicSize, bool looping);

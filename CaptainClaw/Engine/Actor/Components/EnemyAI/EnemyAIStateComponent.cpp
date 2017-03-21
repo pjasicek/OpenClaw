@@ -164,20 +164,8 @@ void PatrolEnemyAIStateComponent::VPostInit()
 
     m_pAnimationComponent->AddObserver(this);
 
-    
-
-    // Disable gravity and stick them to their platforms / grounds
-    /*Point center = m_pPositionComponent->GetPosition();
-
-    Point fromPoint = Point(center.x, center.y);
-    Point toPoint = Point(center.x, center.y + 1000);
-
-    RaycastResult raycastResultDown = m_pPhysics->VRayCast(fromPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground));
-    assert(raycastResultDown.foundIntersection);
-
-    m_pPositionComponent->SetPosition(center.x, center.y + raycastResultDown.deltaY);
-    m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());
-    m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0.0f);*/
+    Point noSpeed(0, 0);
+    m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), noSpeed);
 }
 
 void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
@@ -349,6 +337,15 @@ void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
         m_IsAlwaysIdle = true;
         m_bRetainDirection = true;
     }
+
+    // Move them into the middle of their patrol path at the beginning
+    // Doing not so caused some bugs with level resets
+    Point spawnPosition((m_LeftPatrolBorder + m_RightPatrolBorder) / 2, m_pPositionComponent->GetY());
+    m_pPhysics->VSetPosition(_owner->GetGUID(), spawnPosition);
+    m_pPositionComponent->SetPosition(spawnPosition);
+
+    /*shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(_owner->GetGUID(), spawnPosition));
+    IEventMgr::Get()->VQueueEvent(pEvent);*/
 
     assert(m_LeftPatrolBorder > 0);
     assert(m_RightPatrolBorder > 0);
