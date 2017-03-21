@@ -39,6 +39,8 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/SoundComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Template.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PredefinedMoveComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/GlobalAmbientSoundComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/GlobalAmbientSoundComponent.h
 )
 
 add_subdirectory(AIComponents)

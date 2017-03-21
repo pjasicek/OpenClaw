@@ -11,7 +11,7 @@
         <Channels>1</Channels>
         <ChunkSize>2048</ChunkSize>
         <SoundVolume>50</SoundVolume>
-        <MusicVolume>40</MusicVolume>
+        <MusicVolume>10</MusicVolume>
         <MusicRpcServerPath>MidiProc.exe</MusicRpcServerPath>
     </Audio>
     <Font>
