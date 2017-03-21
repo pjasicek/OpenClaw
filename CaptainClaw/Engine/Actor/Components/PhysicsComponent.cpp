@@ -725,7 +725,7 @@ set_velocity:
             {
                 m_pControllableComponent->VOnRun();
             }
-            else if (m_IsStopped && ((fabs(GetVelocity().y) < DBL_EPSILON) || !m_OverlappingKinematicBodiesList.empty()))
+            else if (m_IsStopped && ((fabs(GetVelocity().y) < DBL_EPSILON) && (fabs(GetVelocity().x) < DBL_EPSILON) || !m_OverlappingKinematicBodiesList.empty()))
             {
                 m_pControllableComponent->VOnStopMoving();
             }

@@ -119,6 +119,8 @@ private:
     int m_RightPatrolBorder;
 
     double m_PatrolSpeed;
+
+    bool m_IsAlwaysIdle;
     
     Direction m_Direction;
 

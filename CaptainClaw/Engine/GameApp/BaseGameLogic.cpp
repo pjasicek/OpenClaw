@@ -435,10 +435,17 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
         pGameView->VOnUpdate(msDiff);
     }
 
-    // Update all game actors
-    for (auto actorIter : m_ActorMap)
+    // Limit update to max 100 times / second
+    static int msAccumulation = 0;
+    msAccumulation += msDiff;
+    if (msAccumulation >= 10)
     {
-        actorIter.second->Update(msDiff);
+        // Update all game actors
+        for (auto actorIter : m_ActorMap)
+        {
+            actorIter.second->Update(msAccumulation);
+        }
+        msAccumulation = 0;
     }
 }
 

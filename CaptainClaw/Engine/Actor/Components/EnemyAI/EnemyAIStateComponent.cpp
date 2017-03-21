@@ -78,7 +78,8 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     BaseEnemyAIStateComponent("PatrolState"),
     m_PatrolSpeed(0.0),
     m_bInitialized(false),
-    m_bRetainDirection(false)
+    m_bRetainDirection(false),
+    m_IsAlwaysIdle(false)
 {
 
 }
@@ -162,6 +163,21 @@ void PatrolEnemyAIStateComponent::VPostInit()
     BaseEnemyAIStateComponent::VPostInit();
 
     m_pAnimationComponent->AddObserver(this);
+
+    
+
+    // Disable gravity and stick them to their platforms / grounds
+    /*Point center = m_pPositionComponent->GetPosition();
+
+    Point fromPoint = Point(center.x, center.y);
+    Point toPoint = Point(center.x, center.y + 1000);
+
+    RaycastResult raycastResultDown = m_pPhysics->VRayCast(fromPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground));
+    assert(raycastResultDown.foundIntersection);
+
+    m_pPositionComponent->SetPosition(center.x, center.y + raycastResultDown.deltaY);
+    m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());
+    m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0.0f);*/
 }
 
 void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
@@ -178,6 +194,18 @@ void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
         CalculatePatrolBorders();
 
         m_bInitialized = true;
+
+        return;
+    }
+
+    // If this unit does not have room to move, just let it be idle
+    if (m_IsAlwaysIdle)
+    {
+        if (m_pIdleAction && !m_pIdleAction->isActive)
+        {
+            CommenceIdleBehaviour();
+        }
+        
         return;
     }
 
@@ -312,9 +340,19 @@ void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
         m_RightPatrolBorder = (int)patrolRightBorder - 25;
     }
 
+    m_LeftPatrolBorder += 10;
+    m_RightPatrolBorder -= 10;
+
+    // Not enough room for the unit to move, dont force it, it would fall
+    if (m_LeftPatrolBorder >= m_RightPatrolBorder)
+    {
+        m_IsAlwaysIdle = true;
+        m_bRetainDirection = true;
+    }
+
     assert(m_LeftPatrolBorder > 0);
     assert(m_RightPatrolBorder > 0);
-    assert(m_RightPatrolBorder > m_LeftPatrolBorder);
+    //assert(m_RightPatrolBorder > m_LeftPatrolBorder);
 }
 
 void PatrolEnemyAIStateComponent::ChangeDirection(Direction newDirection)
