@@ -49,6 +49,8 @@ public:
     void UpdateFPS(uint32 newFPS);
 
 private:
+    void UpdateCameraPosition();
+
     bool m_IsVisible;
     shared_ptr<Image> m_ScoreNumbers[SCORE_NUMBERS_COUNT];
     shared_ptr<Image> m_HealthNumbers[HEALTH_NUMBERS_COUNT];
@@ -62,6 +64,7 @@ private:
     HUDElementsMap m_HUDElementsMap;
 
     SDL_Texture* m_pFPSTexture;
+    SDL_Texture* m_pPositionTexture;
 };
 
 #endif

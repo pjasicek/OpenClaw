@@ -4,6 +4,7 @@
 #include "../Scene/SceneNodes.h"
 #include "../Resource/Loaders/PidLoader.h"
 #include "../Graphics2D/Image.h"
+#include "../UserInterface/HumanView.h"
 
 #include <SDL2/SDL_ttf.h>
 
@@ -27,7 +28,8 @@
 ScreenElementHUD::ScreenElementHUD()
     :
     m_IsVisible(true),
-    m_pFPSTexture(NULL)
+    m_pFPSTexture(NULL),
+    m_pPositionTexture(NULL)
 {
    
 }
@@ -139,12 +141,23 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
         renderRect.y = 15;
         SDL_RenderCopy(m_pRenderer, m_pFPSTexture, NULL, &renderRect);
     }
+
+    if (m_pPositionTexture)
+    {
+        SDL_Rect renderRect;
+        SDL_QueryTexture(m_pPositionTexture, NULL, NULL, &renderRect.w, &renderRect.h);
+        renderRect.x = m_pCamera->GetWidth() - renderRect.w - 1;
+        renderRect.y = m_pCamera->GetHeight() - renderRect.h - 1;
+        SDL_RenderCopy(m_pRenderer, m_pPositionTexture, NULL, &renderRect);
+    }
 }
 
 void ScreenElementHUD::VOnUpdate(uint32 msDiff)
 {
     static int msAccumulation = 0;
     static int framesAccumulation = 0;
+
+    UpdateCameraPosition();
 
     msAccumulation += msDiff;
     framesAccumulation++;
@@ -232,6 +245,24 @@ void ScreenElementHUD::UpdateFPS(uint32 newFPS)
     SDL_Surface* pFPSSurface = TTF_RenderText_Blended(g_pApp->GetConsoleFont(), fpsString.c_str(), { 255, 255, 255, 255 });
     m_pFPSTexture = SDL_CreateTextureFromSurface(m_pRenderer, pFPSSurface);
     SDL_FreeSurface(pFPSSurface);
+}
+
+void ScreenElementHUD::UpdateCameraPosition()
+{
+    if (m_pPositionTexture)
+    {
+        SDL_DestroyTexture(m_pPositionTexture);
+    }
+
+    Point cameraCenter = Point(m_pCamera->GetPosition().x + m_pCamera->GetWidth() / 2,
+        m_pCamera->GetPosition().y + m_pCamera->GetHeight() / 2);
+
+    std::string positionString = "Position: [X = " + ToStr((int)cameraCenter.x) +
+        ", Y = " + ToStr((int)cameraCenter.y) + "]";
+
+    SDL_Surface* pPositionSurface = TTF_RenderText_Blended(g_pApp->GetConsoleFont(), positionString.c_str(), { 255, 255, 255, 255 });
+    m_pPositionTexture = SDL_CreateTextureFromSurface(m_pRenderer, pPositionSurface);
+    SDL_FreeSurface(pPositionSurface);
 }
 
 bool ScreenElementHUD::SetElementVisible(std::string element, bool visible)
