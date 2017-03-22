@@ -99,7 +99,11 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
         // Render health numbers
         for (int i = 0; i < HEALTH_NUMBERS_COUNT; i++)
         {
-            SDL_Rect renderRect = { (int)(cameraWidth / scale.x) - 60 + i * (m_HealthNumbers[i]->GetWidth() - 2), 2, m_HealthNumbers[i]->GetWidth(), m_HealthNumbers[i]->GetHeight() };
+            SDL_Rect renderRect = { 
+                (int)(cameraWidth / scale.x) - 60 + i * (m_HealthNumbers[i]->GetWidth() - 0) + m_HealthNumbers[i]->GetOffsetX(),
+                2 + m_HealthNumbers[i]->GetOffsetY(),
+                m_HealthNumbers[i]->GetWidth(), 
+                m_HealthNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_HealthNumbers[i]->GetTexture(), NULL, &renderRect);
         }
     }
@@ -109,7 +113,11 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
         // Render ammo numbers
         for (int i = 0; i < AMMO_NUMBERS_COUNT; i++)
         {
-            SDL_Rect renderRect = { (int)(cameraWidth / scale.x) - 46 + i * (m_AmmoNumbers[i]->GetWidth()), 43, m_AmmoNumbers[i]->GetWidth(), m_AmmoNumbers[i]->GetHeight() };
+            SDL_Rect renderRect = { 
+                (int)(cameraWidth / scale.x) - 46 + i * (m_AmmoNumbers[i]->GetWidth() + m_AmmoNumbers[i]->GetOffsetX()), 
+                43 + m_AmmoNumbers[i]->GetOffsetY(), 
+                m_AmmoNumbers[i]->GetWidth(), 
+                m_AmmoNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_AmmoNumbers[i]->GetTexture(), NULL, &renderRect);
         }
     }
@@ -119,7 +127,11 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
         // Render lives numbers
         for (int i = 0; i < LIVES_NUMBERS_COUNT; i++)
         {
-            SDL_Rect renderRect = { (int)(cameraWidth / scale.x) - 36 + i * (m_AmmoNumbers[i]->GetWidth()), 71, m_LivesNumbers[i]->GetWidth(), m_LivesNumbers[i]->GetHeight() };
+            SDL_Rect renderRect = { 
+                (int)(cameraWidth / scale.x) - 36 + i * (m_LivesNumbers[i]->GetWidth() + m_LivesNumbers[i]->GetOffsetX()),
+                71 + m_LivesNumbers[i]->GetOffsetY(),
+                m_LivesNumbers[i]->GetWidth(), 
+                m_LivesNumbers[i]->GetHeight() };
             SDL_RenderCopy(m_pRenderer, m_LivesNumbers[i]->GetTexture(), NULL, &renderRect);
         }
     }
@@ -184,6 +196,11 @@ static void SetImageText(uint32 newValue, uint32 divider, shared_ptr<Image>* pFi
         std::string resourcePath = textResourcePrefixPath + numStr + ".pid";
         pField[i] = PidResourceLoader::LoadAndReturnImage(resourcePath.c_str(), g_pApp->GetCurrentPalette());
         divider /= 10;
+
+        if (num == 1)
+        {
+            pField[i]->SetOffset(4, 0);
+        }
     }
 }
 
