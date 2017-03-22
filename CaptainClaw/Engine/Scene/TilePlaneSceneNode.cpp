@@ -58,15 +58,16 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
     int32_t maxTileIdxY = pProperties->tilesOnAxisY;
     int32_t minTileIdxX = 0;
     int32_t minTileIdxY = 0;
+    // TODO: Wrap even when when out of bounds on the negative side
     if (pProperties->isWrappedX)
     {
         maxTileIdxX = INT32_MAX;
-        minTileIdxX = INT32_MIN;
+        minTileIdxX = 0;
     }
     if (pProperties->isWrappedY)
     {
         maxTileIdxY = INT32_MAX;
-        minTileIdxY = INT32_MIN;
+        minTileIdxY = 0;
     }
 
     int32_t row, col;
