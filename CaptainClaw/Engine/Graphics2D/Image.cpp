@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <SDL_image.h>
 #include "Image.h"
 
 Image::Image()
@@ -120,6 +121,32 @@ Image* Image::CreateImage(WapPid* pid, SDL_Renderer* renderer)
     return image;
 }
 
+Image* Image::CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer)
+{
+    Image* pImage = new Image();
+    SDL_RWops* pRWops = SDL_RWFromMem((void*)rawBuffer, size);
+    SDL_Surface* pSurface = IMG_LoadPCX_RW(pRWops);
+    if (pSurface == NULL)
+    {
+        return NULL;
+    }
+
+    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
+    SDL_FreeSurface(pSurface);
+
+    if (pTexture == NULL)
+    {
+        return NULL;
+    }
+
+    if (!pImage->InitializePcx(pTexture))
+    {
+        return NULL;
+    }
+
+    return pImage;
+}
+
 bool Image::Initialize(WapPid* pid, SDL_Renderer* renderer)
 {
     if (pid == NULL || renderer == NULL)
@@ -137,6 +164,20 @@ bool Image::Initialize(WapPid* pid, SDL_Renderer* renderer)
     {
         return false;
     }
+
+    return true;
+}
+
+bool Image::InitializePcx(SDL_Texture* pTexture)
+{
+    if (pTexture == NULL)
+    {
+        return false;
+    }
+
+    SDL_QueryTexture(pTexture, NULL, NULL, &_width, &_height);
+    _offsetX = _offsetY = 0;
+    _texture = pTexture;
 
     return true;
 }

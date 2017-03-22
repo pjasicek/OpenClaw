@@ -3,6 +3,7 @@
 
 #include <libwap.h>
 #include <SDL2/SDL.h>
+#include <stdint.h>
 
 class Image
 {
@@ -12,6 +13,7 @@ public:
 
     static SDL_Texture* GetTextureFromPid(WapPid* pid, SDL_Renderer* renderer);
     static Image* CreateImage(WapPid* pid, SDL_Renderer* renderer);
+    static Image* CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer);
 
     inline SDL_Texture* GetTexture() { return _texture; }
     inline int GetWidth() { return _width; }
@@ -25,6 +27,7 @@ public:
 
 private:
     bool Initialize(WapPid* pid, SDL_Renderer* renderer);
+    bool InitializePcx(SDL_Texture* pTexture);
 
     SDL_Texture* _texture;
     int _width;

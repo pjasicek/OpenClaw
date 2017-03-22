@@ -11,6 +11,7 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/WavLoader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/WwdLoader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/XmlLoader.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/PcxLoader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/AniLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MidiLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PalLoader.cpp
@@ -18,4 +19,5 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/WavLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/WwdLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/XmlLoader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/PcxLoader.cpp
 )
