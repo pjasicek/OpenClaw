@@ -9,6 +9,7 @@
 #include "ControllerComponents/AmmoComponent.h"
 #include "ControllerComponents/PowerupComponent.h"
 #include "ControllerComponents/HealthComponent.h"
+#include "FollowableComponent.h"
 
 #include "../../GameApp/BaseGameApp.h"
 
@@ -144,6 +145,13 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
             }
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(m_IdleQuoteSoundList[idleQuoteSoundIdx], 100, false)));
+
+            shared_ptr<FollowableComponent> pExclamationMark =
+                MakeStrongPtr(_owner->GetComponent<FollowableComponent>(FollowableComponent::g_Name));
+            if (pExclamationMark)
+            {
+                pExclamationMark->Activate(2000);
+            }
 
             m_pClawAnimationComponent->SetAnimation("idle");
 
