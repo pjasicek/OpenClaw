@@ -118,6 +118,7 @@ protected:
 
 private:
     void ExecuteStartupCommands(const std::string& startupCommandsFile);
+    //void LoadGameWorkerThread(const char* pXmlLevelPath, float* pProgress, bool* pRet);
 
     void RegisterAllDelegates();
     void RemoveAllDelegates();
