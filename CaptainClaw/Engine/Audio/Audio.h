@@ -26,6 +26,8 @@ public:
     void StopMusic();
     void SetMusicVolume(uint32_t volumePercentage);
 
+    void StopAllSounds();
+
     void PauseAllSounds();
     void ResumeAllSounds();
 

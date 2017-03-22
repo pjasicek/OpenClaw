@@ -7,6 +7,7 @@
 #include "../Resource/Loaders/PcxLoader.h"
 #include "../Events/EventMgr.h"
 #include "../Graphics2D/Image.h"
+#include "../Audio/Audio.h"
 
 #include "../Util/Converters.h"
 
@@ -109,6 +110,16 @@ std::string BaseGameLogic::GetActorXml(uint32 actorId)
     return "";
 }
 
+SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer)
+{
+    SDL_Surface* pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+    SDL_FillRect(pSurface, NULL, SDL_MapRGB(pSurface->format, color.r, color.g, color.b));
+    SDL_Texture* pTextureRect = SDL_CreateTextureFromSurface(pRenderer, pSurface);
+
+    SDL_FreeSurface(pSurface);
+    return pTextureRect;
+}
+
 void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Point& scale, float progress)
 {
     // While we are at it, eat incoming events
@@ -127,24 +138,30 @@ void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Po
     int progressFullLength = renderRect.w / 2;
     int progressCurrLength = (int)((progressFullLength * progress) / 100.0f);
     int progressHeight = (int)(30 * scale.x);
-    SDL_Rect progressBarRect = { renderRect.w / 4, renderRect.h * 0.75, progressCurrLength, progressHeight };
+    SDL_Rect totalProgressBarRect = { renderRect.w / 4, renderRect.h * 0.75, progressFullLength, progressHeight };
+    SDL_Rect remainingProgressBarRect = { renderRect.w / 4, renderRect.h * 0.75, progressCurrLength, progressHeight };
 
-    SDL_Surface* pSurface = SDL_CreateRGBSurface(0, progressBarRect.w, progressBarRect.h, 32, 0, 0, 0, 0);
-    SDL_FillRect(pSurface, NULL, SDL_MapRGB(pSurface->format, 255, 0, 0));
-    SDL_Texture* pProgressBarTexture = SDL_CreateTextureFromSurface(pRenderer, pSurface);
+    SDL_Texture* pTotalProgressBar = CreateSDLTextureRect(
+        progressFullLength, progressHeight, COLOR_BLACK, pRenderer);
+    SDL_Texture* pRemainingProgressBar = CreateSDLTextureRect(
+        remainingProgressBarRect.w, remainingProgressBarRect.h, COLOR_RED, pRenderer);
 
-    SDL_RenderCopy(pRenderer, pProgressBarTexture, NULL, &progressBarRect);
+    SDL_RenderCopy(pRenderer, pTotalProgressBar, NULL, &totalProgressBarRect);
+    SDL_RenderCopy(pRenderer, pRemainingProgressBar, NULL, &remainingProgressBarRect);
 
     SDL_RenderPresent(pRenderer);
 
-    SDL_FreeSurface(pSurface);
-    SDL_DestroyTexture(pProgressBarTexture);
+    SDL_DestroyTexture(pTotalProgressBar);
+    SDL_DestroyTexture(pRemainingProgressBar);
 }
 
 bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
 {
     PROFILE_CPU("GAME LOADING");
     PROFILE_MEMORY("GAME LOADING");
+
+    // Stop all audio
+    g_pApp->GetAudio()->StopAllSounds();
 
     m_pCurrentLevel.reset(new LevelData);
 

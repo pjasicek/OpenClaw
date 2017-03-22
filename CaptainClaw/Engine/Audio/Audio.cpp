@@ -219,6 +219,12 @@ void Audio::SetSoundVolume(uint32_t volumePercentage)
     Mix_Volume(-1, m_SoundVolume);
 }
 
+void Audio::StopAllSounds()
+{
+    Mix_HaltChannel(-1);
+    StopMusic();
+}
+
 void Audio::PauseAllSounds()
 {
     Mix_Pause(-1);
