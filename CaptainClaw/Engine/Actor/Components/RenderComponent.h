@@ -73,7 +73,7 @@ public:
 
     void SetMirrored(bool mirrored) { m_IsMirrored = mirrored; }
 
-    void SetVisible(bool visible) { m_IsVisible = visible; }
+    inline void SetVisible(bool visible) { m_IsVisible = visible; }
     inline bool IsVisible() { return m_IsVisible; }
     inline bool IsMirrored() { return m_IsMirrored; }
     inline bool IsInverted() { return m_IsInverted; }

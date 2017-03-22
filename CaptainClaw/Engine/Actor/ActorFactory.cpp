@@ -40,6 +40,7 @@
 #include "Components/PredefinedMoveComponent.h"
 #include "Components/TriggerComponents/SoundTriggerComponent.h"
 #include "Components/GlobalAmbientSoundComponent.h"
+#include "Components/FollowableComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -85,6 +86,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<PredefinedMoveComponent>(PredefinedMoveComponent::GetIdFromName(PredefinedMoveComponent::g_Name));
     _componentFactory.Register<SoundTriggerComponent>(SoundTriggerComponent::GetIdFromName(SoundTriggerComponent::g_Name));
     _componentFactory.Register<GlobalAmbientSoundComponent>(GlobalAmbientSoundComponent::GetIdFromName(GlobalAmbientSoundComponent::g_Name));
+    _componentFactory.Register<FollowableComponent>(FollowableComponent::GetIdFromName(FollowableComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

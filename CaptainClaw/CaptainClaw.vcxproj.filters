@@ -267,6 +267,9 @@
     <ClCompile Include="Engine\Actor\Components\GlobalAmbientSoundComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Actor\Components\FollowableComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Process\Process.h">
@@ -546,6 +549,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Actor\Components\GlobalAmbientSoundComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actor\Components\FollowableComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

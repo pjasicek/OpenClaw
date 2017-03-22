@@ -138,8 +138,8 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
     {
         SDL_Rect renderRect;
         SDL_QueryTexture(m_pFPSTexture, NULL, NULL, &renderRect.w, &renderRect.h);
-        renderRect.x = ((m_pCamera->GetWidth() / 2) / scale.x - 20);
-        renderRect.y = 15 / scale.y;
+        renderRect.x = (int)((m_pCamera->GetWidth() / 2) / scale.x - 20);
+        renderRect.y = (int)(15 / scale.y);
         SDL_RenderCopy(m_pRenderer, m_pFPSTexture, NULL, &renderRect);
     }
 
@@ -147,8 +147,8 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
     {
         SDL_Rect renderRect;
         SDL_QueryTexture(m_pPositionTexture, NULL, NULL, &renderRect.w, &renderRect.h);
-        renderRect.x = (m_pCamera->GetWidth() / scale.x - renderRect.w - 1);
-        renderRect.y = (m_pCamera->GetHeight() / scale.y - renderRect.h - 1);
+        renderRect.x = (int)(m_pCamera->GetWidth() / scale.x - renderRect.w - 1);
+        renderRect.y = (int)(m_pCamera->GetHeight() / scale.y - renderRect.h - 1);
         SDL_RenderCopy(m_pRenderer, m_pPositionTexture, NULL, &renderRect);
     }
 }
@@ -255,8 +255,10 @@ void ScreenElementHUD::UpdateCameraPosition()
         SDL_DestroyTexture(m_pPositionTexture);
     }
 
-    Point cameraCenter = Point(m_pCamera->GetPosition().x + m_pCamera->GetWidth() / 2,
-        m_pCamera->GetPosition().y + m_pCamera->GetHeight() / 2);
+    Point scale = g_pApp->GetScale();
+
+    Point cameraCenter = Point(m_pCamera->GetPosition().x + (int)((m_pCamera->GetWidth() / 2) / scale.x),
+        m_pCamera->GetPosition().y + (int)((m_pCamera->GetHeight() / 2) / scale.y));
 
     std::string positionString = "Position: [X = " + ToStr((int)cameraCenter.x) +
         ", Y = " + ToStr((int)cameraCenter.y) + "]";

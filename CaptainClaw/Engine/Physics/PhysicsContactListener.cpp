@@ -119,12 +119,19 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                             
                             if (pActor->GetName() == "Claw")
                             {
-                                //LOG("y: " + ToStr(relativePoint.y));
-                                //LOG("x: " + ToStr(relativePoint.x));
+                                /*LOG("y: " + ToStr(relativePoint.y));
+                                LOG("x: " + ToStr(relativePoint.x));
+                                LOG("PointVelocity.y: " + ToStr(pointVelocity.y));*/
                             }
                             //TODO: I DONT KNOW WHY BUT IT WORKS (not really tho)
                             // It caused bugs with colliding with grounds from the side from "downtown"
                             if (fabs(relativePoint.y) < 0.1f && fabs(relativePoint.x) > 0.3f)
+                            {
+                                return;
+                            }
+
+                            // If bellow the platform the contact should be disabled
+                            if (relativePoint.y > 0.1f)
                             {
                                 return;
                             }

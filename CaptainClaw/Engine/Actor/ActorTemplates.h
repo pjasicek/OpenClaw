@@ -9,6 +9,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_GlitterComponent(std::string glitterType, bool spawnImmediate, bool followOwner);
     TiXmlElement* CreatePhysicsComponent(const ActorBodyDef* pBodyDef);
     TiXmlElement* CreatePredefinedMoveComponent(std::vector<PredefinedMove>& moves, bool isInfinite);
+    TiXmlElement* CreateFollowableComponent(Point offset, std::string imageSet, std::string animPath);
 
     // Exposed Actor Xml data generating functions.
     TiXmlElement* CreateXmlData_CrateActor(std::string imageSet, Point position, const std::vector<PickupType>& loot, uint32 health, int32 zCoord);
@@ -36,6 +37,7 @@ namespace ActorTemplates
     StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord = 1010);
     //StrongActorPtr CreatePopupActor(Point position, std::string imageSet, std::vector<PredefinedMove>& moves, int32 zCoord = 0);
     StrongActorPtr CreateScorePopupActor(Point position, int score);
+    StrongActorPtr CreateRenderedActor(Point position, std::string imageSet, std::string animPath, int zCoord);
 };
 
 #endif

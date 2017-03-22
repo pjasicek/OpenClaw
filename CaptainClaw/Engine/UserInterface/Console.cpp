@@ -329,7 +329,12 @@ Console::Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRende
     assert(m_pRenderer && m_pWindow);
 
     int windowWidth, windowHeight;
+    float scaleX, scaleY;
     SDL_GetWindowSize(m_pWindow, &windowWidth, &windowHeight);
+    SDL_RenderGetScale(pRenderer, &scaleX, &scaleY);
+
+    windowWidth = (int)(windowWidth / scaleX);
+    windowHeight = (int)(windowHeight / scaleY);
 
     _width = pConsoleConfig->widthRatio * windowWidth;
     _height = pConsoleConfig->heightRatio * windowHeight;

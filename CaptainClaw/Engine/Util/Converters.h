@@ -929,14 +929,15 @@ inline TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
     clawBodyDef.fixtureType = FixtureType_Controller;
     pClawActor->LinkEndChild(ActorTemplates::CreatePhysicsComponent(&clawBodyDef));*/
 
-    //pClawActor->LinkEndChild(CreatePositionComponent(pWapWwd->properties.startX, pWapWwd->properties.startY));
-    pClawActor->LinkEndChild(CreatePositionComponent(6250, 4350));
+    pClawActor->LinkEndChild(CreatePositionComponent(pWapWwd->properties.startX, pWapWwd->properties.startY));
+    //pClawActor->LinkEndChild(CreatePositionComponent(6250, 4350));
     pClawActor->LinkEndChild(CreateCollisionComponent(40, 110));
     pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, 130, 40, 110, 4.0, 0.0, 0.5));
     pClawActor->LinkEndChild(CreateControllableComponent(true));
     pClawActor->LinkEndChild(CreateAnimationComponent("/CLAW/ANIS/*"));
     pClawActor->LinkEndChild(CreateSoundComponent("/CLAW/SOUNDS/*"));
     pClawActor->LinkEndChild(CreateActorRenderComponent("/CLAW/IMAGES/*", 4000));
+    pClawActor->LinkEndChild(ActorTemplates::CreateFollowableComponent(Point(-5, -80), "/GAME/IMAGES/EXCLAMATION/*", ""));
 
     TiXmlElement* pScoreComponent = new TiXmlElement("ScoreComponent");
     XML_ADD_TEXT_ELEMENT("Score", "0", pScoreComponent);

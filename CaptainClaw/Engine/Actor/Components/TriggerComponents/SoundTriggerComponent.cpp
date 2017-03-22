@@ -1,5 +1,6 @@
 #include "SoundTriggerComponent.h"
 #include "../ControllableComponent.h"
+#include "../FollowableComponent.h"
 
 #include "../../../Events/EventMgr.h"
 #include "../../../Events/Events.h"
@@ -68,6 +69,11 @@ void SoundTriggerComponent::VOnActorEnteredTrigger(Actor* pActorWhoPickedThis)
 
     if (m_bActivateDialog)
     {
-        LOG("Activate claw dialog");
+        shared_ptr<FollowableComponent> pExclamationMark =
+            MakeStrongPtr(pActorWhoPickedThis->GetComponent<FollowableComponent>(FollowableComponent::g_Name));
+        if (pExclamationMark)
+        {
+            pExclamationMark->Activate(2000);
+        }
     }
 }

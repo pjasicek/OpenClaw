@@ -36,18 +36,18 @@ void SDL2HUDSceneNode::VRender(Scene* pScene)
         return;
     }
 
-    int32 offsetX = hrc->IsMirrored() ? -actorImage->GetOffsetX() : actorImage->GetOffsetX();
-    int32 offsetY = hrc->IsInverted() ? -actorImage->GetOffsetY() : actorImage->GetOffsetY();
+    int offsetX = hrc->IsMirrored() ? -actorImage->GetOffsetX() : actorImage->GetOffsetX();
+    int offsetY = hrc->IsInverted() ? -actorImage->GetOffsetY() : actorImage->GetOffsetY();
 
-    int32 x = m_Properties.GetPosition().x - actorImage->GetWidth() / 2 + offsetX;
+    int x = (int32)(m_Properties.GetPosition().x - actorImage->GetWidth() / 2 + offsetX);
     if (hrc->IsAnchoredRight())
     {
-        x += (pScene->GetCamera()->GetWidth()) / scale.x;
+        x += (int)((pScene->GetCamera()->GetWidth()) / scale.x);
     }
-    int32 y = m_Properties.GetPosition().y - actorImage->GetHeight() / 2 + offsetY;
+    int32 y = (int)(m_Properties.GetPosition().y - actorImage->GetHeight() / 2 + offsetY);
     if (hrc->IsAnchoredBottom())
     {
-        y += (pScene->GetCamera()->GetHeight()) / scale.y;
+        y += (int)((pScene->GetCamera()->GetHeight()) / scale.y);
     }
 
     // HACK: Pistol and magic first frame has incorrect offset...

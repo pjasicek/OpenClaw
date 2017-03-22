@@ -598,6 +598,16 @@ namespace ActorTemplates
         return pPhysicsComponent;
     }
 
+    TiXmlElement* CreateFollowableComponent(Point offset, std::string imageSet, std::string animPath)
+    {
+        TiXmlElement* pFollowableComponentElem = new TiXmlElement("FollowableComponent");
+        XML_ADD_2_PARAM_ELEMENT("Offset", "x", offset.x, "y", offset.y, pFollowableComponentElem);
+        XML_ADD_TEXT_ELEMENT("ImageSet", imageSet.c_str(), pFollowableComponentElem);
+        XML_ADD_TEXT_ELEMENT("AnimationPath", animPath.c_str(), pFollowableComponentElem);
+
+        return pFollowableComponentElem;
+    }
+
     TiXmlElement* CreateLootComponent(const std::vector<PickupType>& loot)
     {
         TiXmlElement* pLootComponent = new TiXmlElement("LootComponent");
@@ -1601,6 +1611,21 @@ namespace ActorTemplates
         }
 
         return CreateAndReturnActor(pActorXmlData);
+    }
+
+    StrongActorPtr CreateRenderedActor(Point position, std::string imageSet, std::string animPath, int zCoord)
+    {
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", imageSet.c_str());
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet, zCoord, true, false, false, false));
+        if (!animPath.empty())
+        {
+            pActor->LinkEndChild(CreateAnimationComponent(animPath, true));
+        }
+
+        return CreateAndReturnActor(pActor);
     }
 
     StrongActorPtr CreatePowerupSparkleActor()

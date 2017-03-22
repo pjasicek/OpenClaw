@@ -438,7 +438,7 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
     // Limit update to max 100 times / second
     static int msAccumulation = 0;
     msAccumulation += msDiff;
-    if (msAccumulation >= 10)
+    if (msAccumulation >= 5)
     {
         // Update all game actors
         for (auto actorIter : m_ActorMap)
