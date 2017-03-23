@@ -234,6 +234,8 @@ bool LifePickupComponent::VOnApply(Actor* pActorWhoPickedThis)
         shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
 
+
+
         return true;
     }
 

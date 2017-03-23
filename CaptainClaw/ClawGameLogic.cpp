@@ -198,6 +198,8 @@ void ClawGameLogic::NewLifeDelegate(IEventDataPtr pEventData)
         return;
     }
     pLifeComponent->AddLives(pCastEventData->GetNumNewLives());
+
+    
 }
 
 void ClawGameLogic::TeleportActorDelegate(IEventDataPtr pEventData)

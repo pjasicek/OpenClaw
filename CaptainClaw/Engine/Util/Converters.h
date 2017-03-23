@@ -728,6 +728,11 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             pAnimCompElem->LinkEndChild(CreateCycleAnimation(125));
             pActorElem->LinkEndChild(pAnimCompElem);
         }
+        else if (imageSet == "GAME_POWERUPS_EXTRALIFE")
+        {
+            return ActorTemplates::CreateXmlData_LifePickupActor(
+                imageSet, SOUND_GAME_EXTRA_LIFE, Point(wwdObject->x, wwdObject->y), true);
+        }
         else if (imageSet == "GAME_POWERUPS_INVULNERABLE")
         {
             CREATE_POWERUP_COMPONENT("Invulnerability", "30000");

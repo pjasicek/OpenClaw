@@ -795,6 +795,8 @@ namespace ActorTemplates
     //=====================================================================================================================
     // Specific functions for creating specific actors
     //=====================================================================================================================
+
+    // TODO: What is this function specifically for ? Only dynamically spawned pickups ?
     TiXmlElement* CreateXmlData_GeneralPickupActor(std::string imageSet, Point position, int32 zCoord, bool isStatic)
     {
         TiXmlElement* pActorElem = new TiXmlElement("Actor");
@@ -816,7 +818,14 @@ namespace ActorTemplates
         if (rand() % 2 == 1) { speedX *= -1; }
 
         ActorBodyDef bodyDef;
-        bodyDef.bodyType = b2_dynamicBody;
+        if (isStatic)
+        {
+            bodyDef.bodyType = b2_staticBody;
+        }
+        else
+        {
+            bodyDef.bodyType = b2_dynamicBody;
+        }
         bodyDef.makeSensor = false;
         bodyDef.fixtureType = FixtureType_Pickup;
         bodyDef.position = position;
@@ -838,7 +847,7 @@ namespace ActorTemplates
 
         pActorElem->LinkEndChild(CreatePhysicsComponent(&bodyDef));
 
-        pActorElem->LinkEndChild(CreateXmlData_GlitterComponent("Glitter_Yellow", false, false));
+        pActorElem->LinkEndChild(CreateXmlData_GlitterComponent("Glitter_Yellow", isStatic, false));
 
         return pActorElem;
     }
@@ -981,6 +990,18 @@ namespace ActorTemplates
         XML_ADD_2_PARAM_ELEMENT("Ammo", "ammoType", ammoPair.first.c_str(), "ammoCount", ammoPair.second, pAmmoPickupComponent);
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pAmmoPickupComponent);
         pActor->LinkEndChild(pAmmoPickupComponent);
+
+        return pActor;
+    }
+
+    TiXmlElement* CreateXmlData_LifePickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
+    {
+        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic);
+
+        TiXmlElement* pLifePickupComponent = new TiXmlElement("LifePickupComponent");
+        XML_ADD_TEXT_ELEMENT("Lives", ToStr(1).c_str(), pLifePickupComponent);
+        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pLifePickupComponent);
+        pActor->LinkEndChild(pLifePickupComponent);
 
         return pActor;
     }

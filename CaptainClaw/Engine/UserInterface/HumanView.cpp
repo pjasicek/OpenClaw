@@ -304,6 +304,10 @@ void HumanView::ScoreUpdatedDelegate(IEventDataPtr pEventData)
             {
                 shared_ptr<EventData_New_Life> pEvent(new EventData_New_Life(pCastEventData->GetActorId(), 1));
                 IEventMgr::Get()->VQueueEvent(pEvent);
+
+                // Play new life sound
+                IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                    new EventData_Request_Play_Sound(SOUND_GAME_EXTRA_LIFE, 100, false)));
             }
         }
     }
