@@ -164,6 +164,12 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_IdleTime = 0;
     }
 
+    std::string currAnimName = m_pClawAnimationComponent->GetCurrentAnimationName();
+    if (currAnimName != "damage1" && currAnimName != "damage2")
+    {
+        m_pHealthComponent->SetInvulnerable(false);
+    }
+
     m_LastState = m_State;
 }
 
@@ -445,6 +451,9 @@ void ClawControllableComponent::SetCurrentPhysicsState()
         m_State = ClawState_Standing;
         LOG_ERROR("Unknown physics state. Assume standing");
     }
+
+    m_pPhysicsComponent->RestoreGravityScale();
+    m_pHealthComponent->SetInvulnerable(false);
 }
 
 void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
@@ -598,6 +607,7 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
         IEventMgr::Get()->VQueueEvent(pEvent);
 
         m_pHealthComponent->SetInvulnerable(true);
+        m_pPhysicsComponent->SetGravityScale(0.0f);
         
         m_State = ClawState_TakingDamage;
     }

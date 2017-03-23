@@ -772,6 +772,11 @@ void PhysicsComponent::OnStartFalling()
         return;
     }
 
+    if (m_pControllableComponent && !m_pControllableComponent->InPhysicsCapableState())
+    {
+        return;
+    }
+
     //LOG("FALL");
     m_IsFalling = true;
     if (m_pControllableComponent)
@@ -783,6 +788,11 @@ void PhysicsComponent::OnStartFalling()
 void PhysicsComponent::OnStartJumping()
 {  
     if (m_IsClimbing)
+    {
+        return;
+    }
+
+    if (m_pControllableComponent && !m_pControllableComponent->InPhysicsCapableState())
     {
         return;
     }

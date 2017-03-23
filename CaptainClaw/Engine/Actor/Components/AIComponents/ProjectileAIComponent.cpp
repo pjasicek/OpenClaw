@@ -89,7 +89,7 @@ void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)
         MakeStrongPtr(pActorWhoWasShot->GetComponent<HealthComponent>(HealthComponent::g_Name));
     if (pHealthComponent)
     {
-        pHealthComponent->AddHealth(-m_Damage);
+        pHealthComponent->AddHealth((-1) * m_Damage);
     }
 
     if (m_Type == "Bullet")

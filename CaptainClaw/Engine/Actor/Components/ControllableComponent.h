@@ -110,7 +110,7 @@ public:
     virtual void OnStand() override;
 
     virtual bool IsDying() { return m_State == ClawState_Dying; }
-    virtual bool InPhysicsCapableState() override { return m_State != ClawState_Dying; }
+    virtual bool InPhysicsCapableState() override { return (m_State != ClawState_Dying && m_State != ClawState_TakingDamage); }
 
     // Feels abit hacky
     virtual bool IsClimbing() override;
