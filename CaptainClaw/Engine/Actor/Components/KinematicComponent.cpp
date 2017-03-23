@@ -53,7 +53,8 @@ bool KinematicComponent::VInit(TiXmlElement* data)
     {
         pElem->Attribute("x", &m_Speed.x);
         pElem->Attribute("y", &m_Speed.y);
-        m_Speed = Point(m_Speed.x / 50, m_Speed.y / 50);
+        double platformSpeedModifier = g_pApp->GetGlobalOptions()->platformSpeedModifier;
+        m_Speed = Point(m_Speed.x * platformSpeedModifier, m_Speed.y * platformSpeedModifier);
     }
     if (TiXmlElement* pElem = data->FirstChildElement("MinPosition"))
     {

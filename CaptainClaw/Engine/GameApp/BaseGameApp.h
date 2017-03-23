@@ -114,12 +114,14 @@ struct GlobalOptions
         maxJumpSpeed = 8.8;
         maxFallSpeed = 14.0;
         idleSoundQuoteIntervalMs = 15000;
+        platformSpeedModifier = 0.015;
     }
 
     int cpuDelayMs;
     double maxJumpSpeed;
     double maxFallSpeed;
     int idleSoundQuoteIntervalMs;
+    double platformSpeedModifier;
 };
 
 class EventMgr;
