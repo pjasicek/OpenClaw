@@ -557,6 +557,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             int minTimeOn = wwdObject->moveRect.left;
             int maxTimeOn = wwdObject->moveRect.top;
 
+            SAFE_DELETE(pActorElem);
             return ActorTemplates::CreateXmlData_GlobalAmbientSoundActor(
                 sound,
                 soundVolume,
@@ -587,6 +588,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 enterCount = 1;
             }
 
+            SAFE_DELETE(pActorElem);
             return ActorTemplates::CreateXmlData_SoundTriggerActor(sound, logic, Point(wwdObject->x, wwdObject->y), predefinedPosition, enterCount);
         }
         //pActorElem->LinkEndChild(SoundTriggerToXml(wwdObject));
@@ -604,6 +606,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         if (wwdObject->userRect1.right > 0) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
         if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
         if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
+
+        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_CrateActor(tmpImageSet, Point(wwdObject->x, wwdObject->y), loot, 5, wwdObject->z);
     }
     else if (logic.find("Candy") != std::string::npos)
@@ -616,6 +620,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic.find("CrumblingPeg") != std::string::npos)
     {
+        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_CrumblingPeg(tmpImageSet, Point(wwdObject->x, wwdObject->y), wwdObject->z);
 
         pActorElem->LinkEndChild(CrumblingPegToXml(wwdObject));
@@ -651,6 +656,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             saveCheckpointNumber = 2;
         }
 
+        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_CheckpointActor(
             wwdObject->imageSet, 
             Point(wwdObject->x, wwdObject->y), 
@@ -662,6 +668,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     else if (logic.find("PowderKeg") != std::string::npos)
     {
         //pActorElem->LinkEndChild(PowderKegToXml(wwdObject));
+        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_PowderKegActor(tmpImageSet, Point(wwdObject->x, wwdObject->y), 50, wwdObject->z);
     }
     else if (logic == "Officer" ||
@@ -675,6 +682,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
         if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
 
+        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_EnemyAIActor(tmpImageSet, aniPath, Point(wwdObject->x, wwdObject->y), loot, logic, wwdObject->z, wwdObject->minX, wwdObject->maxX);
 
         //pActorElem->LinkEndChild(OfficerToXml(wwdObject));
@@ -695,6 +703,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             pickupSound = SOUND_GAME_PICKUP_AMMUNITION;
         }
 
+        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_AmmoPickupActor(wwdObject->imageSet, pickupSound, Point(wwdObject->x, wwdObject->y), true);
         //pActorElem->LinkEndChild(AmmoToXml(wwdObject));
     }
@@ -730,6 +739,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         }
         else if (imageSet == "GAME_POWERUPS_EXTRALIFE")
         {
+            SAFE_DELETE(pActorElem);
             return ActorTemplates::CreateXmlData_LifePickupActor(
                 imageSet, SOUND_GAME_EXTRA_LIFE, Point(wwdObject->x, wwdObject->y), true);
         }
