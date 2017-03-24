@@ -172,6 +172,10 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     float loadingProgress = 0.0f;
     float lastProgress = 0.0f;
 
+    // Preload level resources
+    std::string levelPath = "/LEVEL" + ToStr(m_pCurrentLevel->GetLevelNumber()) + "/*";
+    g_pApp->GetResourceCache()->Preload(levelPath, NULL);
+
     // Start rendering the loading screen
     Point windowSize = g_pApp->GetWindowSize();
     Point scale = g_pApp->GetScale();
@@ -279,7 +283,7 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
         assert(false && "Tile descriptions element not found.");
     }
 
-    loadingProgress = 5.0f;
+    loadingProgress = 10.0f;
     RenderLoadingScreen(pBackgroundImage, backgroundRect, scale, loadingProgress);
 
     // Get number of actors to estimate loading progress

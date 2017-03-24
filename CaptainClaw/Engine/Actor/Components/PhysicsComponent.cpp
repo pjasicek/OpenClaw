@@ -378,7 +378,8 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     }
 
     if (m_pControllableComponent && m_pControllableComponent->CanMove() 
-        && (m_pControllableComponent->IsDucking() && fabs(m_ClimbingSpeed.y) < DBL_EPSILON) )
+        && (m_pControllableComponent->IsDucking() && fabs(m_ClimbingSpeed.y) < DBL_EPSILON)
+        && IsOnGround())
     {
         m_pControllableComponent->OnStand();
         // TODO: HACK: one of the biggest hacks so far
@@ -699,7 +700,7 @@ set_velocity:
         if (fabs(velocity.x) > DBL_EPSILON)
         {
             m_Direction = velocity.x < 0 ? Direction_Left : Direction_Right;
-            if (!IsInAir())
+            if (!IsInAir() && IsOnGround())
             {
                 m_IsRunning = true;
                 m_IsStopped = false;
@@ -707,7 +708,7 @@ set_velocity:
         }
         else
         {
-            if (!IsInAir())
+            if (!IsInAir() && IsOnGround())
             {
                 m_IsStopped = true;
                 m_IsRunning = false;
@@ -721,11 +722,11 @@ set_velocity:
             {
                 m_pControllableComponent->VOnDirectionChange(m_Direction);
             }
-            if (m_IsRunning) // TODO: Dont poll here. State changing didnt work.
+            if (m_IsRunning && IsOnGround()) // TODO: Dont poll here. State changing didnt work.
             {
                 m_pControllableComponent->VOnRun();
             }
-            else if (m_IsStopped && ((fabs(GetVelocity().y) < DBL_EPSILON) && (fabs(GetVelocity().x) < DBL_EPSILON) || !m_OverlappingKinematicBodiesList.empty()))
+            else if (m_IsStopped && ((fabs(GetVelocity().y) < DBL_EPSILON) && (fabs(GetVelocity().x) < DBL_EPSILON) || !m_OverlappingKinematicBodiesList.empty()) && IsOnGround())
             {
                 m_pControllableComponent->VOnStopMoving();
             }
@@ -957,4 +958,19 @@ void PhysicsComponent::RemoveOverlappingKinematicBody(const b2Body* pBody)
         }
     }
     LOG_WARNING("Could not remove overlapping kinematic body - no such body found")
+}
+
+void PhysicsComponent::SetForceFall()
+{
+    m_IsRunning = false;
+    m_IsStopped = false;
+    m_IsFalling = true;
+    m_IsJumping = false;
+    m_HeightInAir = 0;
+    m_IgnoreJump = true;
+    SetVelocity(Point(GetVelocity().x, 0));
+    if (m_pControllableComponent)
+    {
+        m_pControllableComponent->VOnStartFalling();
+    }
 }

@@ -11,6 +11,7 @@
 #include "Engine/Actor/Components/ControllerComponents/HealthComponent.h"
 #include "Engine/Actor/Components/ControllerComponents/ScoreComponent.h"
 #include "Engine/Actor/Components/ControllerComponents/AmmoComponent.h"
+#include "Engine/Actor/Components/PositionComponent.h"
 #include "Engine/Physics/ClawPhysics.h"
 #include "Engine/GameApp/GameSaves.h"
 
@@ -213,6 +214,9 @@ void ClawGameLogic::TeleportActorDelegate(IEventDataPtr pEventData)
     }
 
     m_pPhysics->VSetPosition(pCastEventData->GetActorId(), pCastEventData->GetDestination());
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+        new EventData_Move_Actor(pCastEventData->GetActorId(), pCastEventData->GetDestination())));
+    pActor->GetPositionComponent()->SetPosition(pCastEventData->GetDestination());
 }
 
 void ClawGameLogic::RequestChangeAmmoTypeDelegate(IEventDataPtr pEventData)
@@ -409,11 +413,11 @@ void ClawGameLogic::UpdatedPowerupStatusDelegate(IEventDataPtr pEventData)
 
         if (pCastEventData->IsPowerupFinished())
         {
-            pPhysicsComponent->SetMaxJumpHeight(130);
+            pPhysicsComponent->SetMaxJumpHeight(g_pApp->GetGlobalOptions()->maxJumpHeight);
         }
         else
         {
-            pPhysicsComponent->SetMaxJumpHeight(170);
+            pPhysicsComponent->SetMaxJumpHeight(g_pApp->GetGlobalOptions()->powerupMaxJumpHeight);
         }
     }
 }

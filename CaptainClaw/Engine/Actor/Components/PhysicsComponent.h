@@ -70,6 +70,10 @@ public:
     void SetJumping(bool jumping);
 
     void AddJumpHeight(float deltaHeight) { m_HeightInAir += deltaHeight; }
+    float GetHeightInAir() { return m_HeightInAir; }
+    void SetHeightInAir(float heightInAir) { m_HeightInAir = heightInAir; }
+
+    void SetForceFall();
 
     bool AttachToLadder();
 

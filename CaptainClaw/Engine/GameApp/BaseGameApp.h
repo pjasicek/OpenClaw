@@ -115,6 +115,8 @@ struct GlobalOptions
         maxFallSpeed = 14.0;
         idleSoundQuoteIntervalMs = 15000;
         platformSpeedModifier = 0.015;
+        maxJumpHeight = 130;
+        powerupMaxJumpHeight = 200;
     }
 
     int cpuDelayMs;
@@ -122,6 +124,8 @@ struct GlobalOptions
     double maxFallSpeed;
     int idleSoundQuoteIntervalMs;
     double platformSpeedModifier;
+    float maxJumpHeight;
+    float powerupMaxJumpHeight;
 };
 
 class EventMgr;

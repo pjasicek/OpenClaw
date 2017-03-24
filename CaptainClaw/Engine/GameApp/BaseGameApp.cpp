@@ -64,8 +64,6 @@ bool BaseGameApp::Initialize(int argc, char** argv)
         return false;
     }
 
-    m_pResourceCache->Preload("/LEVEL1/*", NULL);
-
     m_pResourceCache->Preload("/CLAW/*", NULL);
     m_pResourceCache->Preload("/GAME/*", NULL);
     m_pResourceCache->Preload("/STATES/*", NULL);

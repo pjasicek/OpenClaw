@@ -249,6 +249,10 @@ void ClawPhysics::VSyncVisibleScene()
                     {
                         pPhysicsComponent->SetFalling(false);
                         pPhysicsComponent->SetJumping(false);
+                        if (pActorBody->GetLinearVelocity().y < -5)
+                        {
+                            pPhysicsComponent->AddJumpHeight(fabs(bodyPixelPosition.y - actorPixelPosition.y));
+                        }
                     }
                     // Falling
                     else if ((bodyPixelPosition.y - actorPixelPosition.y) > DBL_EPSILON)
@@ -273,9 +277,22 @@ void ClawPhysics::VSyncVisibleScene()
                     }
                     else // Jumping
                     {
-                        pPhysicsComponent->SetFalling(false);
-                        pPhysicsComponent->SetJumping(true);
-                        pPhysicsComponent->AddJumpHeight(fabs(bodyPixelPosition.y - actorPixelPosition.y));
+                        if (pPhysicsComponent->CanJump())
+                        {
+                            pPhysicsComponent->SetFalling(false);
+                            pPhysicsComponent->SetJumping(true);
+                            pPhysicsComponent->AddJumpHeight(fabs(bodyPixelPosition.y - actorPixelPosition.y));
+
+                            float jumpPixelsLeft = pPhysicsComponent->GetMaxJumpHeight() - pPhysicsComponent->GetHeightInAir();
+                            // Jumped past limit
+                            if (jumpPixelsLeft < 0.0f)
+                            {
+                                // Set b2Body to its max height
+                                bodyPixelPosition = Point(bodyPixelPosition.x, bodyPixelPosition.y + fabs(jumpPixelsLeft));
+                                VSetPosition(actorId, bodyPixelPosition);
+                                pPhysicsComponent->SetForceFall();
+                            }
+                        }
                     }
                 }
                 else if (fabs(bodyPixelPosition.y - actorPixelPosition.y) < DBL_EPSILON)
