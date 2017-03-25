@@ -606,7 +606,8 @@ set_velocity:
         {
             // Moving while on platform
             m_pMovingPlatformContact->SetFriction(0.0f);
-            m_pPhysics->VAddLinearSpeed(_owner->GetGUID(), m_ExternalSourceSpeed);
+            Point externalSourceSpeedX(m_ExternalSourceSpeed.x, 0);
+            m_pPhysics->VAddLinearSpeed(_owner->GetGUID(), externalSourceSpeedX);
 
             // If moving on platform, be slower
             velocity = GetVelocity();

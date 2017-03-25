@@ -285,7 +285,7 @@ void ClawPhysics::VSyncVisibleScene()
 
                             float jumpPixelsLeft = pPhysicsComponent->GetMaxJumpHeight() - pPhysicsComponent->GetHeightInAir();
                             // Jumped past limit
-                            if (jumpPixelsLeft < 0.0f)
+                            if (!g_pApp->GetGameCheats()->clawInfiniteJump && jumpPixelsLeft < 0.0f)
                             {
                                 // Set b2Body to its max height
                                 bodyPixelPosition = Point(bodyPixelPosition.x, bodyPixelPosition.y + fabs(jumpPixelsLeft));
