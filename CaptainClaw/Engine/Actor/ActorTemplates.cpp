@@ -316,6 +316,7 @@ namespace ActorTemplates
         else if (fixtureType == FixtureType_EnemyAI) { fixtureTypeStr = "EnemyAI"; }
         else if (fixtureType == FixtureType_EnemyAIMeleeSensor) { fixtureTypeStr = "EnemyAIMeleeSensor"; }
         else if (fixtureType == FixtureType_EnemyAIRangedSensor) { fixtureTypeStr = "EnemyAIRangedSensor"; }
+        else if (fixtureType == FixtureType_DamageAura) { fixtureTypeStr = "DamageAura"; }
         else
         {
             assert(false && "Unknown body type");
@@ -579,20 +580,7 @@ namespace ActorTemplates
         // Convert actor's fixtures to xml
         for (ActorFixtureDef fixture : pBodyDef->fixtureList)
         {
-            TiXmlElement* pFixtureElem = new TiXmlElement("ActorFixture");
-
-            XML_ADD_TEXT_ELEMENT("FixtureType", FixtureTypeToString(fixture.fixtureType).c_str(), pFixtureElem);
-            XML_ADD_TEXT_ELEMENT("CollisionShape", fixture.collisionShape.c_str(), pFixtureElem);
-            XML_ADD_TEXT_ELEMENT("IsSensor", ToStr(fixture.isSensor).c_str(), pFixtureElem);
-            XML_ADD_2_PARAM_ELEMENT("Size", "width", fixture.size.x, "height", fixture.size.y, pFixtureElem);
-            XML_ADD_2_PARAM_ELEMENT("Offset", "x", fixture.offset.x, "y", fixture.offset.y, pFixtureElem);
-            XML_ADD_TEXT_ELEMENT("CollisionFlag", ToStr(fixture.collisionFlag).c_str(), pFixtureElem);
-            XML_ADD_TEXT_ELEMENT("CollisionMask", ToStr(fixture.collisionMask).c_str(), pFixtureElem);
-            XML_ADD_TEXT_ELEMENT("Friction", ToStr(fixture.friction).c_str(), pFixtureElem);
-            XML_ADD_TEXT_ELEMENT("Density", ToStr(fixture.density).c_str(), pFixtureElem);
-            XML_ADD_TEXT_ELEMENT("Restitution", ToStr(fixture.restitution).c_str(), pFixtureElem);
-
-            pPhysicsComponent->LinkEndChild(pFixtureElem);
+            pPhysicsComponent->LinkEndChild(ActorFixtureDefToXml(&fixture));
         }
 
         return pPhysicsComponent;
@@ -1583,6 +1571,26 @@ namespace ActorTemplates
 
         pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));
 
+        // Damage aura - if Claw enters it, he gets damaged
+        DamageAuraComponentDef auraDef;
+        auraDef.baseAuraComponentDef.applyAuraOnEnter = true;
+        auraDef.baseAuraComponentDef.isGroupPulse = false;
+        auraDef.baseAuraComponentDef.isPulsating = true;
+        auraDef.baseAuraComponentDef.removeActorAfterPulse = false;
+        auraDef.baseAuraComponentDef.pulseIntrval = 2000;
+
+        auraDef.baseAuraComponentDef.auraFixtureDef.collisionFlag = CollisionFlag_DamageAura;
+        auraDef.baseAuraComponentDef.auraFixtureDef.collisionMask = CollisionFlag_Controller;
+        auraDef.baseAuraComponentDef.auraFixtureDef.collisionShape = "Rectangle";
+        auraDef.baseAuraComponentDef.auraFixtureDef.fixtureType = FixtureType_DamageAura;
+        auraDef.baseAuraComponentDef.auraFixtureDef.isSensor = true;
+        // Size should be the same as body
+        auraDef.baseAuraComponentDef.auraFixtureDef.size = Point(bodyDef.size.x - 10, bodyDef.size.y - 15);
+
+        auraDef.damage = 10;
+
+        pActor->LinkEndChild(DamageAuraComponentDefToXml(&auraDef));
+
         return pActor;
     }
 
@@ -1695,7 +1703,7 @@ namespace ActorTemplates
 
     // From XML to Struct
 
-    ActorFixtureDef ParseActorFixtureDef(TiXmlElement* pActorFixtureDefElem)
+    ActorFixtureDef XmlToActorFixtureDef(TiXmlElement* pActorFixtureDefElem)
     {
         assert(pActorFixtureDefElem != NULL);
 
@@ -1716,5 +1724,50 @@ namespace ActorTemplates
         ParseValueFromXmlElem(&fixtureDef.restitution, pActorFixtureDefElem->FirstChildElement("Restitution"));
 
         return fixtureDef;
+    }
+
+    TiXmlElement* ActorFixtureDefToXml(const ActorFixtureDef* pFixtureDef)
+    {
+        assert(pFixtureDef != NULL);
+
+        TiXmlElement* pFixtureElem = new TiXmlElement("ActorFixture");
+
+        XML_ADD_TEXT_ELEMENT("FixtureType", FixtureTypeToString(pFixtureDef->fixtureType).c_str(), pFixtureElem);
+        XML_ADD_TEXT_ELEMENT("CollisionShape", pFixtureDef->collisionShape.c_str(), pFixtureElem);
+        XML_ADD_TEXT_ELEMENT("IsSensor", ToStr(pFixtureDef->isSensor).c_str(), pFixtureElem);
+        XML_ADD_2_PARAM_ELEMENT("Size", "width", pFixtureDef->size.x, "height", pFixtureDef->size.y, pFixtureElem);
+        XML_ADD_2_PARAM_ELEMENT("Offset", "x", pFixtureDef->offset.x, "y", pFixtureDef->offset.y, pFixtureElem);
+        XML_ADD_TEXT_ELEMENT("CollisionFlag", ToStr(pFixtureDef->collisionFlag).c_str(), pFixtureElem);
+        XML_ADD_TEXT_ELEMENT("CollisionMask", ToStr(pFixtureDef->collisionMask).c_str(), pFixtureElem);
+        XML_ADD_TEXT_ELEMENT("Friction", ToStr(pFixtureDef->friction).c_str(), pFixtureElem);
+        XML_ADD_TEXT_ELEMENT("Density", ToStr(pFixtureDef->density).c_str(), pFixtureElem);
+        XML_ADD_TEXT_ELEMENT("Restitution", ToStr(pFixtureDef->restitution).c_str(), pFixtureElem);
+
+        return pFixtureElem;
+    }
+
+    void AppendBaseAuraComponentDefToXml(const BaseAuraComponentDef* pAuraDef, TiXmlElement* pRoot)
+    {
+        XML_ADD_TEXT_ELEMENT("IsPulsating", ToStr(pAuraDef->isPulsating).c_str(), pRoot);
+        XML_ADD_TEXT_ELEMENT("IsGroupPulse", ToStr(pAuraDef->isGroupPulse).c_str(), pRoot);
+        XML_ADD_TEXT_ELEMENT("ApplyAuraOnEnter", ToStr(pAuraDef->applyAuraOnEnter).c_str(), pRoot);
+        XML_ADD_TEXT_ELEMENT("RemoveActorAfterPulse", ToStr(pAuraDef->removeActorAfterPulse).c_str(), pRoot);
+        XML_ADD_TEXT_ELEMENT("PulseInterval", ToStr(pAuraDef->pulseIntrval).c_str(), pRoot);
+
+        // Fixture
+        pRoot->LinkEndChild(ActorFixtureDefToXml(&pAuraDef->auraFixtureDef));
+    }
+
+    TiXmlElement* DamageAuraComponentDefToXml(const DamageAuraComponentDef* pAuraDef)
+    {
+        TiXmlElement* pRoot = new TiXmlElement("DamageAuraComponent");
+
+        // Base
+        AppendBaseAuraComponentDefToXml(&pAuraDef->baseAuraComponentDef, pRoot);
+
+        // Specific aura
+        XML_ADD_TEXT_ELEMENT("Damage", ToStr(pAuraDef->damage).c_str(), pRoot);
+
+        return pRoot;
     }
 };

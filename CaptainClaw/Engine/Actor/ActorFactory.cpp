@@ -41,6 +41,7 @@
 #include "Components/TriggerComponents/SoundTriggerComponent.h"
 #include "Components/GlobalAmbientSoundComponent.h"
 #include "Components/FollowableComponent.h"
+#include "Components/AuraComponents/AuraComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -87,6 +88,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<SoundTriggerComponent>(SoundTriggerComponent::GetIdFromName(SoundTriggerComponent::g_Name));
     _componentFactory.Register<GlobalAmbientSoundComponent>(GlobalAmbientSoundComponent::GetIdFromName(GlobalAmbientSoundComponent::g_Name));
     _componentFactory.Register<FollowableComponent>(FollowableComponent::GetIdFromName(FollowableComponent::g_Name));
+    _componentFactory.Register<DamageAuraComponent>(DamageAuraComponent::GetIdFromName(DamageAuraComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

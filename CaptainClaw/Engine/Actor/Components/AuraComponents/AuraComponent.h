@@ -60,6 +60,7 @@ protected:
     bool m_bApplyAuraOnEnter;
     bool m_bRemoveActorAfterPulse;
     int m_PulseInterval;
+    ActorFixtureDef m_AuraFixtureDef;
 
     // Internal members
     ActivePulseList m_ActivePulseList;

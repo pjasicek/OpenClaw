@@ -600,11 +600,13 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
         {
             knockback = Point(knockback.x * -1.0, knockback.y);
         }
-        m_pPositionComponent->SetPosition(m_pPositionComponent->GetX() + knockback.x, m_pPositionComponent->GetY() + knockback.y);
+
+        // TODO: How to make this work well with enemy damage auras ?
+        /*m_pPositionComponent->SetPosition(m_pPositionComponent->GetX() + knockback.x, m_pPositionComponent->GetY() + knockback.y);
 
         shared_ptr<EventData_Teleport_Actor> pEvent(new EventData_Teleport_Actor
             (_owner->GetGUID(), m_pPositionComponent->GetPosition()));
-        IEventMgr::Get()->VQueueEvent(pEvent);
+        IEventMgr::Get()->VQueueEvent(pEvent);*/
 
         m_pHealthComponent->SetInvulnerable(true);
         m_pPhysicsComponent->SetGravityScale(0.0f);

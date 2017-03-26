@@ -1,6 +1,8 @@
 #include "AuraComponent.h"
 #include "../ControllerComponents/HealthComponent.h"
 #include "../../Actor.h"
+#include "../../../GameApp/BaseGameApp.h"
+#include "../../../GameApp/BaseGameLogic.h"
 
 const char* BaseAuraComponent::g_Name = "BaseAuraComponent";
 const char* DamageAuraComponent::g_Name = "DamageAuraComponent";
@@ -26,11 +28,13 @@ BaseAuraComponent::BaseAuraComponent()
 
 bool BaseAuraComponent::VInit(TiXmlElement* data)
 {
-    SetBoolIfDefined(&m_bIsPulsating, data->FirstChildElement("IsPulsating"));
-    SetBoolIfDefined(&m_bIsGroupPulse, data->FirstChildElement("IsGroupPulse"));
-    SetBoolIfDefined(&m_bApplyAuraOnEnter, data->FirstChildElement("ApplyAuraOnEnter"));
-    SetBoolIfDefined(&m_bRemoveActorAfterPulse, data->FirstChildElement("RemoveAfterPulse"));
-    SetIntIfDefined(&m_PulseInterval, data->FirstChildElement("PulseInterval"));
+    ParseValueFromXmlElem(&m_bIsPulsating, data->FirstChildElement("IsPulsating"));
+    ParseValueFromXmlElem(&m_bIsGroupPulse, data->FirstChildElement("IsGroupPulse"));
+    ParseValueFromXmlElem(&m_bApplyAuraOnEnter, data->FirstChildElement("ApplyAuraOnEnter"));
+    ParseValueFromXmlElem(&m_bRemoveActorAfterPulse, data->FirstChildElement("RemoveAfterPulse"));
+    ParseValueFromXmlElem(&m_PulseInterval, data->FirstChildElement("PulseInterval"));
+
+    m_AuraFixtureDef = ActorTemplates::XmlToActorFixtureDef(data->FirstChildElement("ActorFixture"));
 
     if (!VDelegateInit(data))
     {
@@ -47,7 +51,9 @@ void BaseAuraComponent::VPostInit()
 
 void BaseAuraComponent::VPostPostInit()
 {
+    assert(g_pApp->GetGameLogic()->VGetGamePhysics() != nullptr);
 
+    g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(_owner->GetGUID(), &m_AuraFixtureDef);
 }
 
 TiXmlElement* BaseAuraComponent::VGenerateXml()
@@ -68,7 +74,7 @@ void BaseAuraComponent::VUpdate(uint32 msDiff)
         m_TimeSinceLastPulse += msDiff;
         if (m_TimeSinceLastPulse >= m_PulseInterval)
         {
-            for (PulseInfo actorPulse : m_ActivePulseList)
+            for (PulseInfo& actorPulse : m_ActivePulseList)
             {
                 if (actorPulse.pActor == NULL)
                 {
@@ -83,7 +89,7 @@ void BaseAuraComponent::VUpdate(uint32 msDiff)
     }
     else
     {
-        for (PulseInfo actorPulse : m_ActivePulseList)
+        for (PulseInfo& actorPulse : m_ActivePulseList)
         {
             actorPulse.timeSinceLastPulseMs += msDiff;
             if (actorPulse.timeSinceLastPulseMs >= m_PulseInterval)
@@ -92,7 +98,7 @@ void BaseAuraComponent::VUpdate(uint32 msDiff)
                 {
                     continue;
                 }
-
+                
                 VOnAuraApply(actorPulse.pActor);
                 actorPulse.timeSinceLastPulseMs = 0;
 
@@ -127,6 +133,9 @@ void BaseAuraComponent::OnActorEntered(Actor* pActor)
     {
         VOnAuraApply(pActor);
     }
+
+    LOG("Entered");
+    LOG("Size: " + ToStr(m_ActivePulseList.size()));
 }
 
 void BaseAuraComponent::OnActorLeft(Actor* pActor)
@@ -137,6 +146,7 @@ void BaseAuraComponent::OnActorLeft(Actor* pActor)
     {
         if (iter->pActor == pActor)
         {
+            LOG("Left");
             m_ActivePulseList.erase(iter);
             return;
         }

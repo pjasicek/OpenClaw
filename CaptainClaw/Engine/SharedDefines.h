@@ -463,6 +463,7 @@ inline FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
     else if (fixtureTypeStr == "EnemyAI") { fixtureType = FixtureType_EnemyAI; }
     else if (fixtureTypeStr == "EnemyAIMeleeSensor") { fixtureType = FixtureType_EnemyAIMeleeSensor; }
     else if (fixtureTypeStr == "EnemyAIRangedSensor") { fixtureType = FixtureType_EnemyAIRangedSensor; }
+    else if (fixtureTypeStr == "DamageAura") { fixtureType = FixtureType_DamageAura; }
     else
     {
         assert(false && "Unknown body type");

@@ -57,7 +57,8 @@ enum CollisionFlag
     CollisionFlag_Checkpoint        = 0x8000,
     CollisionFlag_ClawAttack        = 0x10000,
     CollisionFlag_EnemyAIAttack     = 0x20000,
-    CollisionFlag_EnemyAIProjectile = 0x40000
+    CollisionFlag_EnemyAIProjectile = 0x40000,
+    CollisionFlag_DamageAura        = 0x40000,
 };
 
 enum FixtureType
@@ -80,7 +81,8 @@ enum FixtureType
     FixtureType_Explosion,
     FixtureType_EnemyAI,
     FixtureType_EnemyAIMeleeSensor,
-    FixtureType_EnemyAIRangedSensor
+    FixtureType_EnemyAIRangedSensor,
+    FixtureType_DamageAura
 };
 
 enum PlayerStat

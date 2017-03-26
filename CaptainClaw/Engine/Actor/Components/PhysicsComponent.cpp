@@ -171,7 +171,7 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
     for (TiXmlElement* pFixtureElem = data->FirstChildElement("ActorFixture");
         pFixtureElem != NULL; pFixtureElem = pFixtureElem->NextSiblingElement("ActorFixture"))
     {
-        ActorFixtureDef fixtureDef = ActorTemplates::ParseActorFixtureDef(pFixtureElem);
+        ActorFixtureDef fixtureDef = ActorTemplates::XmlToActorFixtureDef(pFixtureElem);
 
         m_ActorBodyDef.fixtureList.push_back(fixtureDef);
     }

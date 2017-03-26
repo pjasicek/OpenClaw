@@ -11,6 +11,7 @@
 #include "../Actor/Components/EnemyAI/EnemyAIComponent.h"
 #include "../Actor/Components/ControllableComponent.h"
 #include "../Actor/Components/PositionComponent.h"
+#include "../Actor/Components/AuraComponents/AuraComponent.h"
 
 int numFootContacts = 0;
 
@@ -358,6 +359,32 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
             }
         }
     }
+    // Damage aura
+    {
+        if (pFixtureB->GetUserData() == (void*)FixtureType_DamageAura)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_DamageAura)
+        {
+            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            {
+                Actor* pActorwhoEntered = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                Actor* pActorWithDamageAura = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
+
+                if (pActorwhoEntered && pActorWithDamageAura)
+                {
+                    shared_ptr<DamageAuraComponent> pDamageAuraComponent =
+                        MakeStrongPtr(pActorWithDamageAura->GetComponent<DamageAuraComponent>(DamageAuraComponent::g_Name));
+                    if (pDamageAuraComponent)
+                    {
+                        pDamageAuraComponent->OnActorEntered(pActorwhoEntered);
+                    }
+                }
+            }
+        }
+    }
 }
 
 //=====================================================================================================================
@@ -526,6 +553,32 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                     if (pEnemyAIComponent)
                     {
                         pEnemyAIComponent->OnEnemyLeftRangedZone(pActorWhoLeft);
+                    }
+                }
+            }
+        }
+    }
+    // Damage aura
+    {
+        if (pFixtureB->GetUserData() == (void*)FixtureType_DamageAura)
+        {
+            std::swap(pFixtureA, pFixtureB);
+        }
+
+        if (pFixtureA->GetUserData() == (void*)FixtureType_DamageAura)
+        {
+            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            {
+                Actor* pActorwhoEntered = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                Actor* pActorWithDamageAura = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
+
+                if (pActorwhoEntered && pActorWithDamageAura)
+                {
+                    shared_ptr<DamageAuraComponent> pDamageAuraComponent =
+                        MakeStrongPtr(pActorWithDamageAura->GetComponent<DamageAuraComponent>(DamageAuraComponent::g_Name));
+                    if (pDamageAuraComponent)
+                    {
+                        pDamageAuraComponent->OnActorLeft(pActorwhoEntered);
                     }
                 }
             }
