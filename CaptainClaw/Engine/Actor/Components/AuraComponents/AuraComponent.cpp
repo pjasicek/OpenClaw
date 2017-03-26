@@ -133,9 +133,6 @@ void BaseAuraComponent::OnActorEntered(Actor* pActor)
     {
         VOnAuraApply(pActor);
     }
-
-    LOG("Entered");
-    LOG("Size: " + ToStr(m_ActivePulseList.size()));
 }
 
 void BaseAuraComponent::OnActorLeft(Actor* pActor)
@@ -146,7 +143,6 @@ void BaseAuraComponent::OnActorLeft(Actor* pActor)
     {
         if (iter->pActor == pActor)
         {
-            LOG("Left");
             m_ActivePulseList.erase(iter);
             return;
         }
