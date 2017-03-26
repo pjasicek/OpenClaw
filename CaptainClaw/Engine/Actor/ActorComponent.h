@@ -22,6 +22,7 @@ public:
     // These functions are meant to be overriden by the implementation classes of the components
     virtual bool VInit(TiXmlElement* data) = 0;
     virtual void VPostInit() { }
+    virtual void VPostPostInit() { }
     virtual void VUpdate(uint32 msDiff) { }
     virtual void VOnChanged() { }
 

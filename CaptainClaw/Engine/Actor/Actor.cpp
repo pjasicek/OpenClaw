@@ -40,6 +40,14 @@ void Actor::PostInit()
     m_pPositionComponent = MakeStrongPtr(GetComponent<PositionComponent>(PositionComponent::g_Name));
 }
 
+void Actor::PostPostInit()
+{
+    for (auto component : _components)
+    {
+        component.second->VPostPostInit();
+    }
+}
+
 void Actor::Destroy()
 {
     //LOG("Destroying actor: " + _name);

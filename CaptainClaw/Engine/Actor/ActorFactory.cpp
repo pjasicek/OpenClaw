@@ -125,6 +125,7 @@ StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement*
     // Place for some hacks
 
     actor->PostInit();
+    actor->PostPostInit();
 
     return actor;
 }

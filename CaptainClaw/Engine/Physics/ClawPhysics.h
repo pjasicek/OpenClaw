@@ -35,6 +35,7 @@ public:
     virtual void VRemoveActor(uint32_t actorId) override;
 
     virtual void VAddActorBody(const ActorBodyDef* actorBodyDef) override;
+    virtual void VAddActorFixtureToBody(uint32_t actorId, const ActorFixtureDef* pFixtureDef) override;
 
     // Debugging
     virtual void VRenderDiagnostics(SDL_Renderer* pRenderer, shared_ptr<CameraNode> pCamera) override;
@@ -74,6 +75,7 @@ private:
     b2Body* FindBox2DBody(uint32 actorId);
     uint32 FindActorId(b2Body* pBody);
     void ScheduleActorForRemoval(uint32 actorId) { m_ActorsToBeDestroyed.push_back(actorId); }
+    void AddActorFixtureToBody(b2Body* pBody, const ActorFixtureDef* pFixtureDef);
     
     unique_ptr<b2World> m_pWorld;
     unique_ptr<PhysicsDebugDrawer> m_pDebugDrawer;

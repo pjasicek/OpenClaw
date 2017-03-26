@@ -209,6 +209,7 @@ struct RaycastResult
 };
 
 struct ActorBodyDef;
+struct ActorFixtureDef;
 class CameraNode;
 class Point;
 class IGamePhysics
@@ -232,6 +233,7 @@ public:
     virtual void VRemoveActor(uint32_t actorId) = 0;
 
     virtual void VAddActorBody(const ActorBodyDef* actorBodyDef) = 0;
+    virtual void VAddActorFixtureToBody(uint32_t actorId, const ActorFixtureDef* pFixtureDef) = 0;
 
     // Debugging
     virtual void VRenderDiagnostics(SDL_Renderer* pRenderer, std::shared_ptr<CameraNode> pCamera) = 0;

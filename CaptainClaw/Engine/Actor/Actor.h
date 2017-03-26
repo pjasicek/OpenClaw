@@ -22,6 +22,7 @@ public:
 
     bool Init(TiXmlElement* data);
     void PostInit();
+    void PostPostInit();
     void Destroy();
     void Update(uint32_t msDiff);
 

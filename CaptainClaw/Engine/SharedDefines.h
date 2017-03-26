@@ -323,4 +323,125 @@ inline void SetDoubleIfDefined(double* dest, TiXmlElement* elem)
     }
 }
 
+inline void SetFloatIfDefined(float* dest, TiXmlElement* elem)
+{
+    if (elem && elem->GetText())
+    {
+        *dest = std::stof(elem->GetText());
+    }
+}
+
+// Rather overload it than 10 different functions ?
+
+inline bool ParseValueFromXmlElem(bool* pDest, TiXmlElement* pElemSource)
+{
+    if (pElemSource && pElemSource->GetText())
+    {
+        std::string opt = pElemSource->GetText();
+        if (opt == "true")
+        {
+            *pDest = true;
+        }
+        else if (opt == "false")
+        {
+            *pDest = false;
+        }
+        return true;
+    }
+
+    return false;
+}
+
+inline bool ParseValueFromXmlElem(unsigned* pDest, TiXmlElement* pElemSource)
+{
+    if (pElemSource && pElemSource->GetText())
+    {
+        *pDest = std::stoi(pElemSource->GetText());
+        return true;
+    }
+
+    return false;
+}
+
+inline bool ParseValueFromXmlElem(unsigned long* pDest, TiXmlElement* pElemSource)
+{
+    if (pElemSource && pElemSource->GetText())
+    {
+        *pDest = std::stoul(pElemSource->GetText());
+        return true;
+    }
+
+    return false;
+}
+
+inline bool ParseValueFromXmlElem(long* pDest, TiXmlElement* pElemSource)
+{
+    if (pElemSource && pElemSource->GetText())
+    {
+        *pDest = std::stol(pElemSource->GetText());
+        return true;
+    }
+
+    return false;
+}
+
+inline bool ParseValueFromXmlElem(int* pDest, TiXmlElement* pElemSource)
+{
+    if (pElemSource && pElemSource->GetText())
+    {
+        *pDest = std::stoi(pElemSource->GetText());
+        return true;
+    }
+
+    return false;
+}
+
+inline bool ParseValueFromXmlElem(float* pDest, TiXmlElement* pElemSource)
+{
+    if (pElemSource && pElemSource->GetText())
+    {
+        *pDest = std::stof(pElemSource->GetText());
+        return true;
+    }
+
+    return false;
+}
+
+inline bool ParseValueFromXmlElem(double* pDest, TiXmlElement* pElemSource)
+{
+    if (pElemSource && pElemSource->GetText())
+    {
+        *pDest = std::stof(pElemSource->GetText());
+        return true;
+    }
+
+    return false;
+}
+
+inline bool ParseValueFromXmlElem(std::string* pDest, TiXmlElement* pElemSource)
+{
+    if (pElemSource && pElemSource->GetText())
+    {
+        *pDest = std::string(pElemSource->GetText());
+        return true;
+    }
+
+    return false;
+}
+
+inline void SetPointIfDefined(Point* pDest, TiXmlElement* pElem, const char* elemAttrNameX, const char* elemAttrNameY)
+{
+    if (pElem)
+    {
+        pElem->Attribute(elemAttrNameX, &pDest->x);
+        pElem->Attribute(elemAttrNameY, &pDest->y);
+    }
+}
+
+#define SetEnumIfDefined(pDest, pElem, enumType) \
+    if (pElem && pElem->GetText()) \
+    { \
+        *pDest = enumType(std::stoi(pElem->GetText())); \
+    } \
+
 #endif

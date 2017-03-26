@@ -76,6 +76,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActorController.cpp" />
+    <ClCompile Include="Engine\Actor\Components\AuraComponents\AuraComponent.cpp" />
     <ClCompile Include="ClawEvents.cpp" />
     <ClCompile Include="Engine\Actor\ActorTemplates.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.cpp" />
@@ -164,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActorController.h" />
+    <ClInclude Include="Engine\Actor\Components\AuraComponents\AuraComponent.h" />
     <ClInclude Include="ClawEvents.h" />
     <ClInclude Include="Engine\Actor\ActorTemplates.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.h" />

@@ -11,6 +11,8 @@ namespace ActorTemplates
     TiXmlElement* CreatePredefinedMoveComponent(std::vector<PredefinedMove>& moves, bool isInfinite);
     TiXmlElement* CreateFollowableComponent(Point offset, std::string imageSet, std::string animPath);
 
+    TiXmlElement* CreateDamageAuraComponent();
+
     // Exposed Actor Xml data generating functions.
     TiXmlElement* CreateXmlData_CrateActor(std::string imageSet, Point position, const std::vector<PickupType>& loot, uint32 health, int32 zCoord);
     TiXmlElement* CreateXmlData_PowderKegActor(std::string imageSet, Point position, int32 damage, int32 zCoord);
@@ -39,6 +41,39 @@ namespace ActorTemplates
     //StrongActorPtr CreatePopupActor(Point position, std::string imageSet, std::vector<PredefinedMove>& moves, int32 zCoord = 0);
     StrongActorPtr CreateScorePopupActor(Point position, int score);
     StrongActorPtr CreateRenderedActor(Point position, std::string imageSet, std::string animPath, int zCoord);
+
+
+    // Structs for creating components
+    struct BaseAuraComponentDef
+    {
+        BaseAuraComponentDef()
+        {
+            isPulsating = false;
+            isGroupPulse = false;
+            applyAuraOnEnter = true;
+            removeActorAfterPulse = false;
+            pulseIntrval = 0;
+        }
+
+        bool isPulsating;
+        bool isGroupPulse;
+        bool applyAuraOnEnter;
+        bool removeActorAfterPulse;
+        int pulseIntrval;
+    };
+
+    struct DamageAuraComponentDef
+    {
+        DamageAuraComponentDef()
+        {
+            damage = 0;
+        }
+
+        BaseAuraComponentDef baseAuraComponentDef;
+        int damage;
+    };
+
+    ActorFixtureDef ParseActorFixtureDef(TiXmlElement* pActorFixtureDefElem);
 };
 
 #endif

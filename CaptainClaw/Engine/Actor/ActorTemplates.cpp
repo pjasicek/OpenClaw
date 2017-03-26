@@ -1692,4 +1692,71 @@ namespace ActorTemplates
     {
         return CreateAndReturnActor(CreateXmlData_ScorePopupActor(position, score));
     }
+
+    // From XML to Struct
+
+    static FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
+    {
+        FixtureType fixtureType = FixtureType_None;
+
+        if (fixtureTypeStr == "Solid") { fixtureType = FixtureType_Solid; }
+        else if (fixtureTypeStr == "Ground") { fixtureType = FixtureType_Ground; }
+        else if (fixtureTypeStr == "Climb") { fixtureType = FixtureType_Climb; }
+        else if (fixtureTypeStr == "Death") { fixtureType = FixtureType_Death; }
+        else if (fixtureTypeStr == "Trigger") { fixtureType = FixtureType_Trigger; }
+        else if (fixtureTypeStr == "Projectile") { fixtureType = FixtureType_Projectile; }
+        else if (fixtureTypeStr == "Crate") { fixtureType = FixtureType_Crate; }
+        else if (fixtureTypeStr == "Pickup") { fixtureType = FixtureType_Pickup; }
+        else if (fixtureTypeStr == "Trigger") { fixtureType = FixtureType_Trigger; }
+        else if (fixtureTypeStr == "Controller") { fixtureType = FixtureType_Controller; }
+        else if (fixtureTypeStr == "PowderKeg") { fixtureType = FixtureType_PowderKeg; }
+        else if (fixtureTypeStr == "Explosion") { fixtureType = FixtureType_Explosion; }
+        else if (fixtureTypeStr == "EnemyAI") { fixtureType = FixtureType_EnemyAI; }
+        else if (fixtureTypeStr == "EnemyAIMeleeSensor") { fixtureType = FixtureType_EnemyAIMeleeSensor; }
+        else if (fixtureTypeStr == "EnemyAIRangedSensor") { fixtureType = FixtureType_EnemyAIRangedSensor; }
+        else
+        {
+            assert(false && "Unknown body type");
+        }
+
+        return fixtureType;
+    }
+
+    static b2BodyType BodyTypeStringToEnum(std::string bodyTypeStr)
+    {
+        b2BodyType bodyType;
+
+        if (bodyTypeStr == "Static") { bodyType = b2_staticBody; }
+        else if (bodyTypeStr == "Kinematic") { bodyType = b2_kinematicBody; }
+        else if (bodyTypeStr == "Dynamic") { bodyType = b2_dynamicBody; }
+        else
+        {
+            assert(false && "Unknown body type");
+        }
+
+        return bodyType;
+    }
+
+    ActorFixtureDef ParseActorFixtureDef(TiXmlElement* pActorFixtureDefElem)
+    {
+        assert(pActorFixtureDefElem != NULL);
+
+        ActorFixtureDef fixtureDef;
+
+        std::string fixtureTypeStr;
+        SetStringIfDefined(&fixtureTypeStr, pActorFixtureDefElem->FirstChildElement("FixtureType"));
+        fixtureDef.fixtureType = FixtureTypeStringToEnum(fixtureTypeStr);
+
+        ParseValueFromXmlElem(&fixtureDef.collisionShape, pActorFixtureDefElem->FirstChildElement("CollisionShape"));
+        ParseValueFromXmlElem(&fixtureDef.isSensor, pActorFixtureDefElem->FirstChildElement("IsSensor"));
+        SetPointIfDefined(&fixtureDef.size, pActorFixtureDefElem->FirstChildElement("Size"), "width", "height");
+        SetPointIfDefined(&fixtureDef.offset, pActorFixtureDefElem->FirstChildElement("Offset"), "x", "y");
+        SetEnumIfDefined(&fixtureDef.collisionFlag, pActorFixtureDefElem->FirstChildElement("CollisionFlag"), CollisionFlag);
+        ParseValueFromXmlElem(&fixtureDef.collisionMask, pActorFixtureDefElem->FirstChildElement("CollisionMask"));
+        ParseValueFromXmlElem(&fixtureDef.friction, pActorFixtureDefElem->FirstChildElement("Friction"));
+        ParseValueFromXmlElem(&fixtureDef.density, pActorFixtureDefElem->FirstChildElement("Density"));
+        ParseValueFromXmlElem(&fixtureDef.restitution, pActorFixtureDefElem->FirstChildElement("Restitution"));
+
+        return fixtureDef;
+    }
 };

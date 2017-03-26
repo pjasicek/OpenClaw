@@ -217,50 +217,7 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
     for (TiXmlElement* pFixtureElem = data->FirstChildElement("ActorFixture");
         pFixtureElem != NULL; pFixtureElem = pFixtureElem->NextSiblingElement("ActorFixture"))
     {
-        ActorFixtureDef fixtureDef;
-
-        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("FixtureType"))
-        {
-            fixtureDef.fixtureType = FixtureTypeStringToEnum(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("CollisionShape"))
-        {
-            fixtureDef.collisionShape = pElem->GetText();
-        }
-        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("IsSensor"))
-        {
-            fixtureDef.isSensor = std::string(pElem->GetText()) == "true";
-        }
-        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("Size"))
-        {
-            pElem->Attribute("width", &fixtureDef.size.x);
-            pElem->Attribute("height", &fixtureDef.size.y);
-        }
-        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("Offset"))
-        {
-            pElem->Attribute("x", &fixtureDef.offset.x);
-            pElem->Attribute("y", &fixtureDef.offset.y);
-        }
-        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("CollisionFlag"))
-        {
-            fixtureDef.collisionFlag = CollisionFlag(std::stoi(pElem->GetText()));
-        }
-        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("CollisionMask"))
-        {
-            fixtureDef.collisionMask = std::stoi(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("Friction"))
-        {
-            fixtureDef.friction = std::stof(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("Density"))
-        {
-            fixtureDef.density = std::stof(pElem->GetText());
-        }
-        if (TiXmlElement* pElem = pFixtureElem->FirstChildElement("Restitution"))
-        {
-            fixtureDef.restitution = std::stof(pElem->GetText());
-        }
+        ActorFixtureDef fixtureDef = ActorTemplates::ParseActorFixtureDef(pFixtureElem);
 
         m_ActorBodyDef.fixtureList.push_back(fixtureDef);
     }
