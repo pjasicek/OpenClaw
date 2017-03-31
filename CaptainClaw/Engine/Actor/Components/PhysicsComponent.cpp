@@ -298,7 +298,8 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     }
 
     if (m_pControllableComponent && 
-        (!m_pControllableComponent->CanMove() || (m_pControllableComponent->IsDucking() && m_ClimbingSpeed.y > DBL_EPSILON)))
+        (!m_pControllableComponent->CanMove() || 
+        (m_pControllableComponent->IsDucking() && m_ClimbingSpeed.y > DBL_EPSILON)))
     {
         if (fabs(m_CurrentSpeed.x) > DBL_EPSILON)
         {
@@ -307,7 +308,9 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         }
 
         //LOG("RETURN 1");
-        SetVelocity(Point(0, 0));
+        // Gravity should be always applied
+        Point currSpeed = GetVelocity();
+        SetVelocity(Point(0, currSpeed.y));
         m_CurrentSpeed = Point(0, 0);
         m_ClimbingSpeed = Point(0, 0);
         return;
@@ -401,7 +404,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     if (m_pControllableComponent)
     {
         if (!m_IsClimbing && !IsInAir() && m_ClimbingSpeed.y > DBL_EPSILON &&
-            GetVelocity().y < 0.1)
+            (GetVelocity().y < 0.1 || IsOnGround()))
         {
             m_pControllableComponent->OnDuck();
             // TODO: HACK: one of the biggest hacks so far
