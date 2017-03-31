@@ -127,6 +127,9 @@ private:
     void SetCurrentPhysicsState();
     bool IsAttackingOrShooting();
 
+    int m_TakeDamageDuration;
+    int m_TakeDamageTimeLeftMs;
+
     ClawState m_State;
     ClawState m_LastState;
 

@@ -71,6 +71,8 @@ ClawControllableComponent::ClawControllableComponent()
     m_LastState = ClawState_None;
     m_Direction = Direction_Right;
     m_IdleTime = 0;
+    m_TakeDamageDuration = 500; // TODO: Data drive
+    m_TakeDamageTimeLeftMs = 0;
 }
 
 ClawControllableComponent::~ClawControllableComponent()
@@ -164,10 +166,14 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_IdleTime = 0;
     }
 
-    std::string currAnimName = m_pClawAnimationComponent->GetCurrentAnimationName();
-    if (currAnimName != "damage1" && currAnimName != "damage2")
+    if (m_TakeDamageTimeLeftMs > 0)
     {
-        m_pHealthComponent->SetInvulnerable(false);
+        m_TakeDamageTimeLeftMs -= msDiff;
+        if (m_TakeDamageTimeLeftMs <= 0)
+        {
+            m_pHealthComponent->SetInvulnerable(false);
+            m_TakeDamageTimeLeftMs = 0;
+        }
     }
 
     m_LastState = m_State;
@@ -453,7 +459,6 @@ void ClawControllableComponent::SetCurrentPhysicsState()
     }
 
     m_pPhysicsComponent->RestoreGravityScale();
-    m_pHealthComponent->SetInvulnerable(false);
 }
 
 void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
@@ -541,8 +546,6 @@ void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
     {
         SetCurrentPhysicsState();
     }
-
-    m_pHealthComponent->SetInvulnerable(false);
 }
 
 bool ClawControllableComponent::IsAttackingOrShooting()
@@ -609,6 +612,7 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
         IEventMgr::Get()->VQueueEvent(pEvent);*/
 
         m_pHealthComponent->SetInvulnerable(true);
+        m_TakeDamageTimeLeftMs = m_TakeDamageDuration;
         m_pPhysicsComponent->SetGravityScale(0.0f);
         
         m_State = ClawState_TakingDamage;
