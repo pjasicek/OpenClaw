@@ -16,7 +16,24 @@ For all platforms you will need original CLAW.REZ game archive from original gam
   - Project contains VS2013 solution with all libraries and include directories preset
 
 ### Linux
-  - CMake is on the way
+  **Prerequisites for Ubuntu 16.04 (should be almost identical for Fedora/CentOS/*):**
+  
+  `sudo apt install libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev libtinyxml-dev` 
+  
+  **Compilation:**
+  
+  - git clone https://github.com/pjasicek/CaptainClaw.git
+  - cd CaptainClaw
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make -j4
+  - cd ../Build_Release
+  - ./captainclaw (Considering you have CLAW.REZ from original game in the same folder)
+  
+### Android
+  
+  - Compilation / Deployment steps will be updated in near future, game itself is successfully running on Android
  
 # In-game images
 ![alt tag](http://s2.postimg.org/gwdm0ii7t/screenshot_26.png)
