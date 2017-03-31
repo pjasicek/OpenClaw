@@ -9,7 +9,7 @@
 class ScreenElementScene : public IScreenElement, public Scene
 {
 public:
-    ScreenElementScene(SDL_Renderer* renderer) : Scene(renderer) { }
+    ScreenElementScene(SDL_Renderer* pRenderer) : Scene(pRenderer) { }
     virtual ~ScreenElementScene() { }
 
     // IScreenElement implementation
@@ -23,6 +23,91 @@ public:
     virtual void VSetVisible(bool visible) { }
 
     virtual bool VOnEvent(SDL_Event& evt) { return false; }
+};
+
+// These are PAGES - they define what buttons are present in given page
+enum MenuPage
+{
+    // First page you see when you launch the game
+    MenuPage_Main,
+
+    // Pages accessible from MenuPage_Main
+    MenuPage_SinglePlayer,
+    MenuPage_Multiplayer,                  // Unused
+    MenuPage_ReplayMovies,                 // Unused
+    MenuPage_Options, 
+    MenuPage_Credits,                      // Unused
+    MenuPage_Help,                         // Unused
+    
+    // Pages accessible from MenuPage_SinglePlayer
+    MenuPage_SinglePlayer_NewGame,
+    MenuPage_SinglePlayer_LoadGame,
+    MenuPage_SinglePlayer_LoadCustomLevel, // Unused
+    MenuPage_SinglePlayer_SaveGame,        // Unused
+    MenuPage_SinglePlayer_UploadScores,     // Unused
+
+    // Some more but currently unusable...
+    MenuPage_Options_EditPlayers,
+    MenuPage_Options_Controls,
+    MenuPage_Options_Display,
+    MenuPage_Options_Audio,
+
+    MenuPage_Multiplayer_LevelRacing,
+    MenuPage_Multiplayer_EditMacros
+};
+
+// These are MENU ITEMS - Buttons, sliders and such
+enum MenuItem
+{
+    // Items in main menu (MenuPage_Main)
+    MenuItem_MainMenu_Text,
+    MenuItem_MainMenu_SinglePlayer_Button,
+    MenuItem_MainMenu_Multiplayer_Button,
+    MenuItem_MainMenu_ReplayMovies_Button,
+    MenuItem_MainMenu_Options_Button,
+    MenuItem_MainMenu_Credicts_Button,
+    MenuItem_MainMenu_Help_Button,
+    MenuItem_MainMenu_Quit_Button,
+
+    // Items in single player menu (MenuPage_SinglePlayer)
+    MenuItem_SinglePlayer_Text,
+    MenuItem_SinglePlayer_NewGame_Button,
+    MenuItem_SinglePlayer_LoadGame_Button,
+    MenuItem_SinglePlayer_LoadCustomLevel_Button,
+    MenuItem_SinglePlayer_SaveGame_Button,
+    MenuItem_SinglePlayer_UploadScores_Button,
+    MenuItem_SinglePlayer_Back_Button
+
+    //....
+};
+
+// This is encapsulates menu background and its children (buttons)
+class ScreenElementMenu : public IScreenElement
+{
+    typedef std::map<MenuItem, shared_ptr<IScreenElement>> MenuElementsMap;
+    typedef std::vector<shared_ptr<IScreenElement>> MenuElementsList;
+public:
+    ScreenElementMenu(SDL_Renderer* pRenderer);
+    virtual ~ScreenElementMenu();
+
+    // IScreenElement implementation
+    virtual void VOnLostDevice() { }
+    virtual void VOnUpdate(uint32 msDiff);
+    virtual void VOnRender(uint32 msDiff);
+
+    virtual int32 VGetZOrder() const { return 0; }
+    virtual void VSetZOrder(int32 const zOrder) { }
+    virtual bool VIsVisible() { return true; }
+    virtual void VSetVisible(bool visible) { }
+
+    virtual bool VOnEvent(SDL_Event& evt);
+
+private:
+    SDL_Texture* m_pBackground;
+    SDL_Renderer* m_pRenderer;
+
+    MenuElementsMap m_MenuElementsMap;
+    MenuElementsList m_DisplayedElementsList;
 };
 
 #endif
