@@ -308,9 +308,12 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         }
 
         //LOG("RETURN 1");
-        // Gravity should be always applied
         Point currSpeed = GetVelocity();
         SetVelocity(Point(0, currSpeed.y));
+        if (m_pMovingPlatformContact)
+        {
+            m_pMovingPlatformContact->SetFriction(100.0f);
+        }
         m_CurrentSpeed = Point(0, 0);
         m_ClimbingSpeed = Point(0, 0);
         return;
