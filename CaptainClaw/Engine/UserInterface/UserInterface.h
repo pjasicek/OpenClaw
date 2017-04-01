@@ -81,11 +81,14 @@ enum MenuItem
     //....
 };
 
-// This is encapsulates menu background and its children (buttons)
+class Image;
+class ScreenElementMenuPage;
+
+typedef std::map<MenuPage, shared_ptr<ScreenElementMenuPage>> MenuPageMap;
+
+// This encapsulates menu background and its children (buttons)
 class ScreenElementMenu : public IScreenElement
 {
-    typedef std::map<MenuItem, shared_ptr<IScreenElement>> MenuElementsMap;
-    typedef std::vector<shared_ptr<IScreenElement>> MenuElementsList;
 public:
     ScreenElementMenu(SDL_Renderer* pRenderer);
     virtual ~ScreenElementMenu();
@@ -102,12 +105,92 @@ public:
 
     virtual bool VOnEvent(SDL_Event& evt);
 
+    bool Initialize(TiXmlElement* pElem);
+    bool Initialize(const char* menuXmlPath);
+
 private:
-    SDL_Texture* m_pBackground;
+    shared_ptr<Image> m_pBackground;
     SDL_Renderer* m_pRenderer;
 
-    MenuElementsMap m_MenuElementsMap;
-    MenuElementsList m_DisplayedElementsList;
+    MenuPageMap m_MenuPageMap;
+    shared_ptr<ScreenElementMenuPage> m_pActiveMenuPage;
+};
+
+class ScreenElementMenuItem;
+
+typedef std::vector<shared_ptr<ScreenElementMenuItem>> MenuItemList;
+
+// This is menupage like MenuPage_Main, MenuPage_SinglePlayer, etc.
+class ScreenElementMenuPage : public IScreenElement
+{
+public:
+    ScreenElementMenuPage(SDL_Renderer* pRenderer);
+    virtual ~ScreenElementMenuPage();
+
+    // IScreenElement implementation
+    virtual void VOnLostDevice() { }
+    virtual void VOnUpdate(uint32 msDiff);
+    virtual void VOnRender(uint32 msDiff);
+
+    virtual int32 VGetZOrder() const { return 0; }
+    virtual void VSetZOrder(int32 const zOrder) { }
+    virtual bool VIsVisible() { return true; }
+    virtual void VSetVisible(bool visible) { }
+
+    virtual bool VOnEvent(SDL_Event& evt);
+
+    bool Initialize(TiXmlElement* pElem);
+
+private:
+    MenuItemList m_MenuItems;
+
+    shared_ptr<Image> m_pBackground;
+    SDL_Renderer* m_pRenderer;
+};
+
+enum MenuItemType
+{
+    MenuItemType_Text,
+    MenuItemType_Button,
+    MenuItemType_Slider
+};
+
+enum MenuItemState
+{
+    MenuItemState_Disabled,
+    MenuItemState_Inactive,
+    MenuItemState_Active
+};
+
+// This is menu item like button, slider, text, etc.
+class ScreenElementMenuItem : public IScreenElement
+{
+    typedef std::map<MenuItemState, shared_ptr<Image>> MenuItemImageMap;
+
+public:
+    ScreenElementMenuItem(SDL_Renderer* pRenderer);
+    virtual ~ScreenElementMenuItem();
+
+    // IScreenElement implementation
+    virtual void VOnLostDevice() { }
+    virtual void VOnUpdate(uint32 msDiff);
+    virtual void VOnRender(uint32 msDiff);
+
+    virtual int32 VGetZOrder() const { return 0; }
+    virtual void VSetZOrder(int32 const zOrder) { }
+    virtual bool VIsVisible() { return true; }
+    virtual void VSetVisible(bool visible) { }
+
+    virtual bool VOnEvent(SDL_Event& evt);
+
+    bool Initialize(TiXmlElement* pElem);
+    void SetState(MenuItemState state) { m_State = state; }
+
+private:
+    MenuItemState m_State;
+
+    MenuItemImageMap m_pImages;
+    SDL_Renderer* m_pRenderer;
 };
 
 #endif

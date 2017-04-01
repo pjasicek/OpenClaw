@@ -398,7 +398,7 @@ StrongActorPtr BaseGameLogic::VCreateActor(const std::string& xmlActorResource, 
     if (pActor)
     {
         m_ActorMap.insert(std::make_pair(pActor->GetGUID(), pActor));
-        if ((m_GameState == GameState_LoadSaveMenu) || (m_GameState == GameState_IngameRunning))
+        if (m_GameState == GameState_IngameRunning)
         {
             // Create event that actor was created
         }
@@ -418,7 +418,7 @@ StrongActorPtr BaseGameLogic::VCreateActor(TiXmlElement* pActorRoot, TiXmlElemen
     if (pActor)
     {
         m_ActorMap.insert(std::make_pair(pActor->GetGUID(), pActor));
-        if ((m_GameState == GameState_LoadSaveMenu) || (m_GameState == GameState_IngameRunning))
+        if (m_GameState == GameState_IngameRunning)
         {
             // Create event that actor was created
         }
@@ -473,7 +473,13 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
     {
         case GameState_Initializing:
         {
+            //VChangeState(GameState_Menu);
             VChangeState(GameState_LoadingLevel);
+            break;
+        }
+
+        case GameState_Menu:
+        {
             break;
         }
 
@@ -550,7 +556,12 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
 
 void BaseGameLogic::VChangeState(GameState newState)
 {
-    if (newState == GameState_LoadingLevel)
+
+    if (newState == GameState_Menu)
+    {
+
+    }
+    else if (newState == GameState_LoadingLevel)
     {
         // TODO: Remove hardcoding this value later when Menu GUI will be in place
         m_SelectedLevel = 1;
@@ -569,7 +580,7 @@ void BaseGameLogic::VChangeState(GameState newState)
         // Save converted level to file, e.g. LEVEL1.xml
         TiXmlDocument xmlDoc;
         xmlDoc.LinkEndChild(pXmlLevel);
-        std::string outFileLevelName = g_pApp->GetGameConfig()->tempDir + "/" +  levelName + ".xml";
+        std::string outFileLevelName = g_pApp->GetGameConfig()->tempDir + "/" + levelName + ".xml";
         xmlDoc.SaveFile(outFileLevelName.c_str());
 
         // Load saved level file, e.g. LEVEL1.xml

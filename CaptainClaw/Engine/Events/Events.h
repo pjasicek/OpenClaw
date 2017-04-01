@@ -2060,4 +2060,80 @@ public:
     virtual const char* GetName(void) const { return "EventData_Request_Reset_Level"; }
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Menu_ButtonPress_SwitchPage
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Menu_ButtonPress_SwitchPage : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Menu_ButtonPress_SwitchPage()
+    {
+        
+    }
+
+    EventData_Menu_ButtonPress_SwitchPage(std::string newPageName)
+    {
+        m_NewPageName = newPageName;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Menu_ButtonPress_SwitchPage(m_NewPageName));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_NewPageName; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_NewPageName; }
+
+    std::string GetNewPageName() const { return m_NewPageName; }
+
+    virtual const char* GetName(void) const { return "EventData_Menu_ButtonPress_SwitchPage"; }
+
+private:
+    std::string m_NewPageName;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Menu_ButtonPress_LoadGame
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Menu_ButtonPress_LoadGame : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Menu_ButtonPress_LoadGame()
+    {
+        m_bIsNewGame = false;
+        m_LevelNumber = -1;
+        m_CheckpointNumber = -1;
+    }
+
+    EventData_Menu_ButtonPress_LoadGame(int levelNumber, bool isNewGame, int checkpointNumber)
+    {
+        m_bIsNewGame = isNewGame;
+        m_LevelNumber = levelNumber;
+        m_CheckpointNumber = checkpointNumber;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Menu_ButtonPress_LoadGame(m_LevelNumber, m_bIsNewGame, m_CheckpointNumber));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_LevelNumber << m_bIsNewGame << m_CheckpointNumber; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_LevelNumber >> m_bIsNewGame >> m_CheckpointNumber; }
+
+    bool GetIsNewGame() { return m_bIsNewGame; }
+    int GetLevelNumber() { return m_LevelNumber; }
+    int GetCheckpointNumber() { return m_CheckpointNumber; }
+
+    virtual const char* GetName(void) const { return "EventData_Menu_ButtonPress_LoadGame"; }
+
+private:
+    bool m_bIsNewGame;
+    int m_LevelNumber;
+    int m_CheckpointNumber;
+};
+
 #endif
