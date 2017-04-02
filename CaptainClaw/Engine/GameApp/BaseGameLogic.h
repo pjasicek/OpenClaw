@@ -58,6 +58,7 @@ public:
 
     // Subclasses can't override this function, they have to use VLoadGameDelegate() instead
     virtual bool VLoadGame(const char* xmlLevelResource);
+    virtual bool VEnterMenu(const char* xmlMenuResource);
     virtual void VSetProxy();
 
     // Logic update
@@ -118,6 +119,7 @@ protected:
 
 private:
     void ExecuteStartupCommands(const std::string& startupCommandsFile);
+    void UnloadLevel();
     //void LoadGameWorkerThread(const char* pXmlLevelPath, float* pProgress, bool* pRet);
 
     void RegisterAllDelegates();

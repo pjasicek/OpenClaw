@@ -3,6 +3,7 @@
 
 #include "../Scene/Scene.h"
 #include "../SharedDefines.h"
+#include <SDL2/SDL.h>
 
 // Doesnt really do anything, just implementation of empty methods to conform to
 // IScreenElement interface
@@ -28,6 +29,8 @@ public:
 // These are PAGES - they define what buttons are present in given page
 enum MenuPage
 {
+    MenuPage_None,
+
     // First page you see when you launch the game
     MenuPage_Main,
 
@@ -106,7 +109,6 @@ public:
     virtual bool VOnEvent(SDL_Event& evt);
 
     bool Initialize(TiXmlElement* pElem);
-    bool Initialize(const char* menuXmlPath);
 
 private:
     shared_ptr<Image> m_pBackground;
@@ -142,6 +144,7 @@ public:
     bool Initialize(TiXmlElement* pElem);
 
 private:
+    MenuPage m_PageType;
     MenuItemList m_MenuItems;
 
     shared_ptr<Image> m_pBackground;
@@ -150,6 +153,7 @@ private:
 
 enum MenuItemType
 {
+    MenuItemType_None,
     MenuItemType_Text,
     MenuItemType_Button,
     MenuItemType_Slider
@@ -157,6 +161,7 @@ enum MenuItemType
 
 enum MenuItemState
 {
+    MenuItemState_None,
     MenuItemState_Disabled,
     MenuItemState_Inactive,
     MenuItemState_Active
@@ -187,9 +192,13 @@ public:
     void SetState(MenuItemState state) { m_State = state; }
 
 private:
+    std::string m_Name;
     MenuItemState m_State;
+    Point m_Position;
 
-    MenuItemImageMap m_pImages;
+    shared_ptr<IEventData> m_pGeneratedEvent;
+
+    MenuItemImageMap m_Images;
     SDL_Renderer* m_pRenderer;
 };
 

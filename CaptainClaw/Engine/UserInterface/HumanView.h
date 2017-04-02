@@ -42,6 +42,7 @@ public:
     shared_ptr<CameraNode> GetCamera() const { return m_pCamera; }
     shared_ptr<Scene> GetScene() const { return m_pScene; }
 
+    bool EnterMenu(TiXmlElement* pMenuData);
     bool LoadGame(TiXmlElement* pLevelData);
 
     void RegisterConsoleCommandHandler(void(*handler)(const char*, void*), void* userdata);
@@ -72,6 +73,7 @@ protected:
     uint64 m_LastDraw;
     bool m_RunFullSpeed;
 
+    shared_ptr<ScreenElementMenu> m_pMenu;
     shared_ptr<ScreenElementScene> m_pScene;
     shared_ptr<ScreenElementHUD> m_pHUD;
     shared_ptr<CameraNode> m_pCamera;

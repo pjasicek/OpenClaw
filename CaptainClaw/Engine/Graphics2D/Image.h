@@ -13,7 +13,7 @@ public:
 
     static SDL_Texture* GetTextureFromPid(WapPid* pid, SDL_Renderer* renderer);
     static Image* CreateImage(WapPid* pid, SDL_Renderer* renderer);
-    static Image* CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer);
+    static Image* CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer, bool useColorKey = false, SDL_Color colorKey = { 0, 0, 0, 0 });
 
     inline SDL_Texture* GetTexture() { return _texture; }
     inline int GetWidth() { return _width; }

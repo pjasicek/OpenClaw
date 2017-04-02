@@ -9,11 +9,11 @@
 //     This class implements the IResourceExtraData
 //
 
-void PcxResourceExtraData::LoadImage(char* rawBuffer, uint32 size)
+void PcxResourceExtraData::LoadImage(char* rawBuffer, uint32 size, bool useColorKey, SDL_Color colorKey)
 {
     if (m_pImage == nullptr)
     {
-        m_pImage.reset(Image::CreatePcxImage(rawBuffer, size, g_pApp->GetRenderer()));
+        m_pImage.reset(Image::CreatePcxImage(rawBuffer, size, g_pApp->GetRenderer(), useColorKey, colorKey));
     }
 }
 
@@ -23,7 +23,7 @@ void PcxResourceExtraData::LoadImage(char* rawBuffer, uint32 size)
 //     This class implements the IResourceLoader interface with PCX file loading
 //
 
-shared_ptr<Image> PcxResourceLoader::LoadAndReturnImage(const char* resourceString)
+shared_ptr<Image> PcxResourceLoader::LoadAndReturnImage(const char* resourceString, bool useColorKey, SDL_Color colorKey)
 {
     Resource resource(resourceString);
 
@@ -33,11 +33,11 @@ shared_ptr<Image> PcxResourceLoader::LoadAndReturnImage(const char* resourceStri
     if (!extraData)
     {
         extraData = shared_ptr<PcxResourceExtraData>(new PcxResourceExtraData());
-        extraData->LoadImage(handle->GetDataBuffer(), handle->GetSize());
+        extraData->LoadImage(handle->GetDataBuffer(), handle->GetSize(), useColorKey, colorKey);
 
         if (!extraData->GetImage())
         {
-            LOG_ERROR(extraData->VToString() + ": GetImage() returned nullptr. Check if PidResourceLoader is registered.");
+            LOG_ERROR(extraData->VToString() + ": GetImage() returned nullptr. Check if PcxResourceLoader is registered.");
             return nullptr;
         }
 

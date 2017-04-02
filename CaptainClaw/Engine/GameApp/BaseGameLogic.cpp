@@ -110,6 +110,33 @@ std::string BaseGameLogic::GetActorXml(uint32 actorId)
     return "";
 }
 
+bool BaseGameLogic::VEnterMenu(const char* xmlMenuResource)
+{
+    TiXmlElement* pXmlLevelRoot = XmlResourceLoader::LoadAndReturnRootXmlElement(xmlMenuResource, true);
+    if (pXmlLevelRoot == NULL)
+    {
+        LOG_ERROR("Could not load menu resource file: " + std::string(xmlMenuResource));
+        return false;
+    }
+
+    for (auto pGameView : m_GameViews)
+    {
+        if (pGameView->VGetType() == GameView_Human)
+        {
+            shared_ptr<HumanView> pHumanView = static_pointer_cast<HumanView>(pGameView);
+            if (!pHumanView->EnterMenu(pXmlLevelRoot))
+            {
+                SAFE_DELETE(pXmlLevelRoot);
+                return false;
+            }
+        }
+    }
+
+    SAFE_DELETE(pXmlLevelRoot);
+
+    return true;
+}
+
 SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer)
 {
     SDL_Surface* pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
@@ -138,8 +165,8 @@ void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Po
     int progressFullLength = renderRect.w / 2;
     int progressCurrLength = (int)((progressFullLength * progress) / 100.0f);
     int progressHeight = (int)(30 * scale.x);
-    SDL_Rect totalProgressBarRect = { renderRect.w / 4, renderRect.h * 0.75, progressFullLength, progressHeight };
-    SDL_Rect remainingProgressBarRect = { renderRect.w / 4, renderRect.h * 0.75, progressCurrLength, progressHeight };
+    SDL_Rect totalProgressBarRect = { renderRect.w / 4, (int)(renderRect.h * 0.75), progressFullLength, progressHeight };
+    SDL_Rect remainingProgressBarRect = { renderRect.w / 4, (int)(renderRect.h * 0.75), progressCurrLength, progressHeight };
 
     SDL_Texture* pTotalProgressBar = CreateSDLTextureRect(
         progressFullLength, progressHeight, COLOR_BLACK, pRenderer);
@@ -559,7 +586,13 @@ void BaseGameLogic::VChangeState(GameState newState)
 
     if (newState == GameState_Menu)
     {
-
+        // Unload level if applicable
+        UnloadLevel();
+        if (!VEnterMenu("MENU.xml"))
+        {
+            g_pApp->Terminate();
+            exit(1);
+        }
     }
     else if (newState == GameState_LoadingLevel)
     {
@@ -679,6 +712,28 @@ StrongActorPtr BaseGameLogic::GetClawActor()
     }
 
     return nullptr;
+}
+
+void BaseGameLogic::UnloadLevel()
+{
+    // Handle all pending events before reset
+    IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
+
+    for (auto actorIter : m_ActorMap)
+    {
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(actorIter.second->GetGUID()));
+        IEventMgr::Get()->VTriggerEvent(pEvent);
+    }
+
+    assert(m_ActorMap.empty());
+
+    // Process any pending events which could have arose from deleting all actors
+    IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
+
+    // Reset level info
+    m_pCurrentLevel.reset();
+
+    m_pPhysics.reset();
 }
 
 void BaseGameLogic::VResetLevel()

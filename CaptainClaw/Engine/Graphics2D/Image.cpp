@@ -121,7 +121,7 @@ Image* Image::CreateImage(WapPid* pid, SDL_Renderer* renderer)
     return image;
 }
 
-Image* Image::CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer)
+Image* Image::CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer, bool useColorKey, SDL_Color colorKey)
 {
     Image* pImage = new Image();
     SDL_RWops* pRWops = SDL_RWFromMem((void*)rawBuffer, size);
@@ -129,6 +129,11 @@ Image* Image::CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* rende
     if (pSurface == NULL)
     {
         return NULL;
+    }
+
+    if (useColorKey)
+    {
+        SDL_SetColorKey(pSurface, SDL_TRUE, SDL_MapRGB(pSurface->format, colorKey.r, colorKey.g, colorKey.b));
     }
 
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);

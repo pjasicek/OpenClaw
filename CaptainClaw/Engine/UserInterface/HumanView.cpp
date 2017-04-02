@@ -216,6 +216,24 @@ void HumanView::VOnLostDevice()
 
 }
 
+bool HumanView::EnterMenu(TiXmlElement* pMenuData)
+{
+    if (m_pMenu == nullptr)
+    {
+        m_pMenu.reset(new ScreenElementMenu(g_pApp->GetRenderer()));
+        if (!m_pMenu->Initialize(pMenuData))
+        {
+            LOG_ERROR("Could not initialize ScreenElementMenu");
+            return false;
+        }
+    }
+
+    m_ScreenElements.clear();
+    VPushElement(m_pMenu);
+
+    return true;
+}
+
 bool HumanView::LoadGame(TiXmlElement* pLevelData)
 {
     m_pScene->SortSceneNodesByZCoord();

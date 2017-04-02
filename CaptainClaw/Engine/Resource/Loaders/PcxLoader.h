@@ -12,7 +12,7 @@ public:
     PcxResourceExtraData() { m_pImage = nullptr; }
 
     virtual std::string VToString() { return "PcxResourceExtraData"; }
-    void LoadImage(char* rawBuffer, uint32 size);
+    void LoadImage(char* rawBuffer, uint32 size, bool useColorKey = false, SDL_Color colorKey = { 0, 0, 0, 0 });
     shared_ptr<Image> GetImage() { return m_pImage; }
 
 private:
@@ -28,7 +28,7 @@ public:
     virtual uint32 VGetLoadedResourceSize(char* rawBuffer, uint32 rawSize) { return rawSize; }
     virtual bool VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle) { return true; }
 
-    static shared_ptr<Image> LoadAndReturnImage(const char* resourceString);
+    static shared_ptr<Image> LoadAndReturnImage(const char* resourceString, bool useColorKey = false, SDL_Color colorKey = { 0, 0, 0, 0 });
     static std::shared_ptr<PcxResourceLoader> Create();
 };
 

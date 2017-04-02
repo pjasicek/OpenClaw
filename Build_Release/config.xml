@@ -1,6 +1,6 @@
 <Configuration>
     <Display>
-        <Size width="1600" height="900" />
+        <Size width="1200" height="800" />
         <Scale>1</Scale>
         <UseVerticalSync>false</UseVerticalSync>
         <IsFullscreen>false</IsFullscreen>
