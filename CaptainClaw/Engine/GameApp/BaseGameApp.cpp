@@ -405,6 +405,28 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
         LOG_ERROR("Console configuration is missing.");
         return false;
     }
+    //-------------------------------------------------------------------------
+    // Global options
+    //-------------------------------------------------------------------------
+    if (TiXmlElement* pGlobalOptionsRootElem = configRoot->FirstChildElement("GlobalOptions"))
+    {
+        ParseValueFromXmlElem(&m_GlobalOptions.cpuDelayMs, 
+            pGlobalOptionsRootElem->FirstChildElement("CpuDelay"));
+        ParseValueFromXmlElem(&m_GlobalOptions.maxJumpSpeed,
+            pGlobalOptionsRootElem->FirstChildElement("MaxJumpSpeed"));
+        ParseValueFromXmlElem(&m_GlobalOptions.maxFallSpeed,
+            pGlobalOptionsRootElem->FirstChildElement("MaxFallSpeed"));
+        ParseValueFromXmlElem(&m_GlobalOptions.idleSoundQuoteIntervalMs,
+            pGlobalOptionsRootElem->FirstChildElement("IdleSoundQuoteInterval"));
+        ParseValueFromXmlElem(&m_GlobalOptions.platformSpeedModifier,
+            pGlobalOptionsRootElem->FirstChildElement("PlatformSpeedModifier"));
+        ParseValueFromXmlElem(&m_GlobalOptions.maxJumpHeight,
+            pGlobalOptionsRootElem->FirstChildElement("MaxJumpHeight"));
+        ParseValueFromXmlElem(&m_GlobalOptions.powerupMaxJumpHeight,
+            pGlobalOptionsRootElem->FirstChildElement("PowerupMaxJumpHeight"));
+        ParseValueFromXmlElem(&m_GlobalOptions.skipMenu,
+            pGlobalOptionsRootElem->FirstChildElement("SkipMenu"));
+    }
 
     return true;
 }
@@ -495,7 +517,7 @@ bool BaseGameApp::InitializeDisplay(GameOptions& gameOptions)
         return false;
     }
 
-    SDL_RenderSetScale(m_pRenderer, gameOptions.scale, gameOptions.scale);
+    SDL_RenderSetScale(m_pRenderer, (float)gameOptions.scale, (float)gameOptions.scale);
 
     LOG("Display successfully initialized.");
 

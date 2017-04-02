@@ -505,7 +505,14 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
 #ifdef ANDROID
             VChangeState(GameState_LoadingLevel);
 #else
-            VChangeState(GameState_Menu);
+            if (g_pApp->GetGlobalOptions()->skipMenu)
+            {
+                VChangeState(GameState_LoadingLevel);
+            }
+            else
+            {
+                VChangeState(GameState_Menu);
+            }
 #endif
             break;
         }
@@ -745,9 +752,6 @@ void BaseGameLogic::UnloadLevel()
     // Process any pending events which could have arose from deleting all actors
     IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
 
-    // Reset level info
-    //m_pCurrentLevel.reset();
-
     m_pPhysics.reset();
 }
 
@@ -766,9 +770,6 @@ void BaseGameLogic::VResetLevel()
 
     // Process any pending events which could have arose from deleting all actors
     IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
-
-    // Reset level info
-    //m_pCurrentLevel.reset();
 
     // Reset physics. TODO: is replacing pointer which is shared between multiple classes OK like this ?
     m_pPhysics.reset(CreateClawPhysics());

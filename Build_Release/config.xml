@@ -21,7 +21,7 @@
     </Font>
     <Assets>
         <RezArchive>CLAW.REZ</RezArchive>
-        <ResourceCacheSize>50</ResourceCacheSize>
+        <ResourceCacheSize>150</ResourceCacheSize>
         <TempDir></TempDir>
         <SavesFile>SAVES.XML</SavesFile>
     </Assets>
@@ -39,4 +39,14 @@
         <LeftOffset>5</LeftOffset>
         <CommandPrompt>> </CommandPrompt>
     </Console>
+    <GlobalOptions>
+        <CpuDelay>0</CpuDelay>
+        <MaxJumpSpeed>8.8</MaxJumpSpeed>
+        <MaxFallSpeed>14.0</MaxFallSpeed>
+        <IdleSoundQuoteInterval>15000</IdleSoundQuoteInterval>
+        <PlatformSpeedModifier>0.015</PlatformSpeedModifier>
+        <MaxJumpHeight>130</MaxJumpHeight>
+        <PowerupMaxJumpHeight>200</PowerupMaxJumpHeight>
+        <SkipMenu>true</SkipMenu>
+    </GlobalOptions>
 </Configuration>

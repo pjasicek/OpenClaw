@@ -117,6 +117,7 @@ struct GlobalOptions
         platformSpeedModifier = 0.015;
         maxJumpHeight = 130;
         powerupMaxJumpHeight = 200;
+        skipMenu = false;
     }
 
     int cpuDelayMs;
@@ -126,6 +127,7 @@ struct GlobalOptions
     double platformSpeedModifier;
     float maxJumpHeight;
     float powerupMaxJumpHeight;
+    bool skipMenu;
 };
 
 class EventMgr;
