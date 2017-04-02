@@ -81,6 +81,9 @@ public:
     shared_ptr<LevelData> GetCurrentLevelData() { return m_pCurrentLevel; }
     shared_ptr<GameSaveMgr> GetGameSaveMgr() { return m_pGameSaveMgr; }
 
+    void UnloadLevel();
+    void SetLevelData(shared_ptr<LevelData> pLevelData) { m_pCurrentLevel = pLevelData; }
+
 protected:
     virtual ActorFactory* VCreateActorFactory();
 
@@ -119,7 +122,7 @@ protected:
 
 private:
     void ExecuteStartupCommands(const std::string& startupCommandsFile);
-    void UnloadLevel();
+    
     //void LoadGameWorkerThread(const char* pXmlLevelPath, float* pProgress, bool* pRet);
 
     void RegisterAllDelegates();
@@ -172,12 +175,20 @@ class LevelData
     friend class BaseGameLogic;
 
 public:
+    LevelData(int levelNumber, bool isNewGame, int loadedCheckpoint)
+    {
+        m_bIsNewGame = isNewGame;
+        m_LeveNumber = levelNumber;
+        m_LoadedCheckpoint = loadedCheckpoint;
+    }
+
     LevelData()
     {
         m_LevelName = "Unknown";
         m_LevelAuthor = "Unknown";
         m_LevelCreatedDate = "Unknown";
 
+        m_bIsNewGame = true;
         m_LeveNumber = -1;
         m_LoadedCheckpoint = -1;
     }
@@ -193,6 +204,7 @@ private:
     std::string m_LevelAuthor;
     std::string m_LevelCreatedDate;
 
+    bool m_bIsNewGame;
     uint32 m_LeveNumber;
     uint32 m_LoadedCheckpoint;
 

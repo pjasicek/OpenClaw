@@ -107,11 +107,12 @@ ScreenElementMenu::ScreenElementMenu(SDL_Renderer* pRenderer)
 }
 
 ScreenElementMenu::~ScreenElementMenu()
-
 {
     // Restore scale
     Point scale = g_pApp->GetScale();
     SDL_RenderSetScale(m_pRenderer, (float)scale.x, (float)scale.y);
+
+    m_MenuPageMap.clear();
 }
 
 void ScreenElementMenu::VOnUpdate(uint32 msDiff)
@@ -200,7 +201,7 @@ ScreenElementMenuPage::ScreenElementMenuPage(SDL_Renderer* pRenderer)
 
 ScreenElementMenuPage::~ScreenElementMenuPage()
 {
-
+    m_MenuItems.clear();
 }
 
 void ScreenElementMenuPage::VOnUpdate(uint32 msDiff)
@@ -229,6 +230,57 @@ void ScreenElementMenuPage::VOnRender(uint32 msDiff)
 
 bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
 {
+    int activeMenuItemIdx = GetActiveMenuItemIdx();
+    assert(activeMenuItemIdx >= 0);
+
+    //LOG("Event");
+
+    // Cannot be switch-case since I have to check the "repeat" aswell
+    if (evt.type == SDL_KEYDOWN)
+    {
+        if (evt.key.repeat != 0)
+        {
+            return false;
+        }
+
+        if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_DOWN)
+        {
+            MoveToMenuItemIdx(activeMenuItemIdx, 1);
+            return true;
+        }
+        else if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_UP)
+        {
+            MoveToMenuItemIdx(activeMenuItemIdx, -1);
+            return true;
+        }
+        else if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_LEFT)
+        {
+            LOG_WARNING("Left arrow not handled at this time !")
+        }
+        else if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_RIGHT)
+        {
+            LOG_WARNING("Right arrow not handled at this time !")
+        }
+        else if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_SPACE ||
+                 SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_RETURN ||
+                 SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_KP_ENTER)
+        {
+            if (shared_ptr<ScreenElementMenuItem> pActiveMenuItem = GetActiveMenuItem())
+            {
+                if (!pActiveMenuItem->Press())
+                {
+                    LOG_WARNING("No event is assigned to button: " + pActiveMenuItem->GetName());
+                }
+            }
+            else
+            {
+                LOG_WARNING("Could not find any active menu item !");
+            }
+            return true;
+        }
+    }
+    
+
     for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
     {
         if (pMenuItem->VOnEvent(evt))
@@ -264,6 +316,80 @@ bool ScreenElementMenuPage::Initialize(TiXmlElement* pElem)
     return true;
 }
 
+void ScreenElementMenuPage::DeactivateAllMenuItems()
+{
+    for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
+    {
+        if (pMenuItem->GetState() == MenuItemState_Active)
+        {
+            pMenuItem->SetState(MenuItemState_Inactive);
+        }
+    }
+}
+
+int ScreenElementMenuPage::GetActiveMenuItemIdx()
+{
+    int idx = 0;
+    for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
+    {
+        if (pMenuItem->GetState() == MenuItemState_Active)
+        {
+            return idx;
+        }
+        idx++;
+    }
+
+    return -1;
+}
+
+shared_ptr<ScreenElementMenuItem> ScreenElementMenuPage::GetActiveMenuItem()
+{
+    for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
+    {
+        if (pMenuItem->GetState() == MenuItemState_Active)
+        {
+            return pMenuItem;
+        }
+    }
+
+    return nullptr;
+}
+
+bool ScreenElementMenuPage::MoveToMenuItemIdx(int oldIdx, int idxIncrement)
+{
+    DeactivateAllMenuItems();
+
+    // Moving up
+    int buttonIdx = oldIdx + idxIncrement;
+    int tryCount = 0;
+
+    while (true)
+    {
+        assert(tryCount <= (int)m_MenuItems.size() && "Could not find any button to switch focus to");
+
+        // At first button and we pressed "up" -> move to last button
+        if (buttonIdx < 0 && idxIncrement < 0)
+        {
+            buttonIdx = m_MenuItems.size() - 1;
+        }
+        // At last button
+        if (buttonIdx >= (int)m_MenuItems.size() && idxIncrement > 0)
+        {
+            buttonIdx = 0;
+        }
+
+        if (m_MenuItems[buttonIdx]->Focus())
+        {
+            break;
+        }
+
+        buttonIdx += idxIncrement;
+        tryCount++;
+    }
+
+    return true;
+}
+
 //-----------------------------------------------------------------------------
 //
 // ScreenElementMenuItem implementation
@@ -272,7 +398,8 @@ bool ScreenElementMenuPage::Initialize(TiXmlElement* pElem)
 
 ScreenElementMenuItem::ScreenElementMenuItem(SDL_Renderer* pRenderer)
     :
-    m_pRenderer(pRenderer)
+    m_pRenderer(pRenderer),
+    m_State(MenuItemState_None)
 {
 
 }
@@ -290,6 +417,7 @@ void ScreenElementMenuItem::VOnUpdate(uint32 msDiff)
 void ScreenElementMenuItem::VOnRender(uint32 msDiff)
 {
     shared_ptr<Image> pCurrImage = m_Images[m_State];
+    assert(pCurrImage != nullptr && "Image is in invalid state - no image for given state was found");
 
     SDL_Rect renderRect;
     renderRect.x = (int)(m_Position.x * g_MenuScale.x);
@@ -346,11 +474,21 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
             std::string pageName;
             ParseValueFromXmlElem(&pageName, pGeneratedEventElem->FirstChildElement("PageName"));
 
-            m_pGeneratedEvent.reset(new EventData_Menu_ButtonPress_SwitchPage(pageName));
+            m_pGeneratedEvent.reset(new EventData_Menu_SwitchPage(pageName));
         }
         else if (eventType == "LoadGame")
         {
+            bool isNewGame;
+            int levelNumber, checkpointNumber;
+            ParseValueFromXmlElem(&isNewGame, pGeneratedEventElem->FirstChildElement("IsNewGame"));
+            ParseValueFromXmlElem(&levelNumber, pGeneratedEventElem->FirstChildElement("LevelNumber"));
+            ParseValueFromXmlElem(&checkpointNumber, pGeneratedEventElem->FirstChildElement("CheckpointNumber"));
 
+            m_pGeneratedEvent.reset(new EventData_Menu_LoadGame(levelNumber, isNewGame, checkpointNumber));
+        }
+        else if (eventType == "QuitGame")
+        {
+            m_pGeneratedEvent.reset(new EventData_Quit_Game());
         }
         else
         {
@@ -365,5 +503,44 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
         return false;
     }
 
+    return true;
+}
+
+bool ScreenElementMenuItem::Press()
+{
+    if (m_pGeneratedEvent)
+    {
+        IEventMgr::Get()->VQueueEvent(m_pGeneratedEvent);
+        return true;
+    }
+
+    return false;
+}
+
+bool ScreenElementMenuItem::SetState(MenuItemState state)
+{
+    if (m_Images.find(state) != m_Images.end())
+    {
+        m_State = state;
+        return true;
+    }
+
+    return false;
+}
+
+bool ScreenElementMenuItem::CanBeFocused()
+{
+    return (m_Images.find(MenuItemState_Active) != m_Images.end() &&
+            m_State != MenuItemState_Disabled);
+}
+
+bool ScreenElementMenuItem::Focus()
+{
+    if (!CanBeFocused())
+    {
+        return false;
+    }
+
+    m_State = MenuItemState_Active;
     return true;
 }

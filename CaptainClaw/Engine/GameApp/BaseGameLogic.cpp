@@ -190,11 +190,13 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     // Stop all audio
     g_pApp->GetAudio()->StopAllSounds();
 
-    m_pCurrentLevel.reset(new LevelData);
+    m_pPhysics.reset(CreateClawPhysics());
+
+    /*m_pCurrentLevel.reset(new LevelData);
 
     // TODO: This should not be here. This will be set when we select level from GUI
     m_pCurrentLevel->m_LeveNumber = 1;
-    m_pCurrentLevel->m_LoadedCheckpoint = 0;
+    m_pCurrentLevel->m_LoadedCheckpoint = 0;*/
 
     float loadingProgress = 0.0f;
     float lastProgress = 0.0f;
@@ -500,8 +502,11 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
     {
         case GameState_Initializing:
         {
-            //VChangeState(GameState_Menu);
+#ifdef ANDROID
             VChangeState(GameState_LoadingLevel);
+#else
+            VChangeState(GameState_Menu);
+#endif
             break;
         }
 
@@ -596,12 +601,22 @@ void BaseGameLogic::VChangeState(GameState newState)
     }
     else if (newState == GameState_LoadingLevel)
     {
-        // TODO: Remove hardcoding this value later when Menu GUI will be in place
-        m_SelectedLevel = 1;
-        assert(m_SelectedLevel >= 0 && m_SelectedLevel <= 14);
+        // In case of debugging set it to level 1
+        if (m_pCurrentLevel == nullptr)
+        {
+            m_pCurrentLevel.reset(new LevelData);
+
+            m_pCurrentLevel->m_bIsNewGame = false;
+            m_pCurrentLevel->m_LeveNumber = 1;
+            m_pCurrentLevel->m_LoadedCheckpoint = 0;
+        }
+
+        int levelNumber = m_pCurrentLevel->GetLevelNumber();
+        assert(levelNumber == 1 && "Only level 1 is supported at this time");
+        assert(levelNumber >= 0 && levelNumber <= 14);
 
         // Load Monolith's WWD, they are located in /LEVEL[1-14]/WORLDS/WORLD.WWD
-        std::string levelName = "LEVEL" + ToStr(m_SelectedLevel);
+        std::string levelName = "LEVEL" + ToStr(levelNumber);
         std::string pathToLevelWwd = "/" + levelName + "/WORLDS/WORLD.WWD";
         WapWwd* pWwd = WwdResourceLoader::LoadAndReturnWwd(pathToLevelWwd.c_str());
         assert(pWwd != NULL);
@@ -731,7 +746,7 @@ void BaseGameLogic::UnloadLevel()
     IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
 
     // Reset level info
-    m_pCurrentLevel.reset();
+    //m_pCurrentLevel.reset();
 
     m_pPhysics.reset();
 }
@@ -753,7 +768,7 @@ void BaseGameLogic::VResetLevel()
     IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
 
     // Reset level info
-    m_pCurrentLevel.reset();
+    //m_pCurrentLevel.reset();
 
     // Reset physics. TODO: is replacing pointer which is shared between multiple classes OK like this ?
     m_pPhysics.reset(CreateClawPhysics());

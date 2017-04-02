@@ -18,8 +18,6 @@
 ClawGameLogic::ClawGameLogic()
 {
     RegisterAllDelegates();
-
-    m_pPhysics.reset(CreateClawPhysics());
 }
 
 ClawGameLogic::~ClawGameLogic()

@@ -276,6 +276,8 @@ void HumanView::RegisterAllDelegates()
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::PowerupUpdatedStatusDelegate), EventData_Updated_Powerup_Status::sk_EventType);
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::RequestPlaySoundDelegate), EventData_Request_Play_Sound::sk_EventType);
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::RequestResetLevelDelegate), EventData_Request_Reset_Level::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::LoadGameDelegate), EventData_Menu_LoadGame::sk_EventType);
 }
 
 void HumanView::RemoveAllDelegates()
@@ -291,6 +293,8 @@ void HumanView::RemoveAllDelegates()
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::PowerupUpdatedStatusDelegate), EventData_Updated_Powerup_Status::sk_EventType);
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::RequestPlaySoundDelegate), EventData_Request_Play_Sound::sk_EventType);
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::RequestResetLevelDelegate), EventData_Request_Reset_Level::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &HumanView::LoadGameDelegate), EventData_Menu_LoadGame::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -490,4 +494,33 @@ void HumanView::RequestResetLevelDelegate(IEventDataPtr pEventData)
     //m_pCamera->SetSize(g_pApp->GetWindowSize().x, g_pApp->GetWindowSize().y);
 
     g_pApp->GetGameLogic()->VResetLevel();
+}
+
+void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Menu_LoadGame> pCastEventData =
+        static_pointer_cast<EventData_Menu_LoadGame>(pEventData);
+
+    if (pCastEventData)
+    {
+        bool isNewGame = pCastEventData->GetIsNewGame();
+        int levelNumber = pCastEventData->GetLevelNumber();
+        int checkpointNumber = pCastEventData->GetCheckpointNumber();
+
+        shared_ptr<LevelData> pLevelData(new LevelData(levelNumber, isNewGame, checkpointNumber));
+
+        g_pApp->GetGameLogic()->SetLevelData(pLevelData);
+
+        // Reset Graphical representation of level
+        m_ScreenElements.clear();
+        m_pMenu.reset();
+
+        m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
+        //m_pCamera.reset(new CameraNode(Point(0, 0), 0, 0));
+        m_pHUD.reset(new ScreenElementHUD());
+        m_pScene->AddChild(INVALID_ACTOR_ID, m_pCamera);
+        m_pScene->SetCamera(m_pCamera);
+
+        g_pApp->GetGameLogic()->VChangeState(GameState_LoadingLevel);
+    }
 }

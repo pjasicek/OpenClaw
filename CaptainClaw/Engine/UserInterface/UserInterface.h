@@ -144,6 +144,11 @@ public:
     bool Initialize(TiXmlElement* pElem);
 
 private:
+    void DeactivateAllMenuItems();
+    int GetActiveMenuItemIdx();
+    bool MoveToMenuItemIdx(int oldIdx, int idxIncrement);
+    shared_ptr<ScreenElementMenuItem> GetActiveMenuItem();
+
     MenuPage m_PageType;
     MenuItemList m_MenuItems;
 
@@ -189,7 +194,14 @@ public:
     virtual bool VOnEvent(SDL_Event& evt);
 
     bool Initialize(TiXmlElement* pElem);
-    void SetState(MenuItemState state) { m_State = state; }
+
+    std::string GetName() { return m_Name; }
+
+    MenuItemState GetState() { return m_State; }
+    bool SetState(MenuItemState state);
+    bool Focus();
+    bool CanBeFocused();
+    bool Press();
 
 private:
     std::string m_Name;

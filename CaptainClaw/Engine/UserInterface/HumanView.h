@@ -63,6 +63,7 @@ protected:
     void PowerupUpdatedStatusDelegate(IEventDataPtr pEventData);
     void RequestPlaySoundDelegate(IEventDataPtr pEventData);
     void RequestResetLevelDelegate(IEventDataPtr pEventData);
+    void LoadGameDelegate(IEventDataPtr pEventData);
 
     uint32 m_ViewId;
     uint32 m_ActorId;

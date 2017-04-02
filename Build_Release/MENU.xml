@@ -6,8 +6,8 @@
         <MenuItem>
             <Name>MAIN_MENU</Name>
             <Type>Text</Type>
-            <State>Active</State>
-            <ActiveImage>/STATES/MENU/IMAGES/MAIN/014_TITLE.PCX</ActiveImage>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/014_TITLE.PCX</InactiveImage>
             <Position x="188" y="160" />
         </MenuItem>
         <MenuItem>
@@ -18,8 +18,10 @@
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/002_SINGLEPLAYER.PCX</ActiveImage>
             <Position x="174" y="210" />
             <GeneratedEvent>
-                <Type>SwitchPage</Type>
-                <PageName>MenuPage_SinglePlayer</PageName>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>1</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
@@ -91,8 +93,7 @@
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/013_QUIT.PCX</ActiveImage>
             <Position x="272" y="420" />
             <GeneratedEvent>
-                <Type>SwitchPage</Type>
-                <PageName>MenuPage_Quit</PageName>
+                <Type>QuitGame</Type>
             </GeneratedEvent>
         </MenuItem>
     </MenuPage>

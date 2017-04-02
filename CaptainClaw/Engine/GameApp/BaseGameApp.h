@@ -228,6 +228,12 @@ private:
 
     void RegisterEngineEvents();
 
+    // Event delegates
+    void RegisterAllDelegates();
+    void RemoveAllDelegates();
+
+    void QuitGameDelegate(IEventDataPtr pEventData);
+
     TiXmlDocument CreateAndReturnDefaultConfig(const char* inConfigFile);
 
     SDL_Window* m_pWindow;

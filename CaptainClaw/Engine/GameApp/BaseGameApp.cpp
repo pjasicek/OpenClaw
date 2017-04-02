@@ -57,6 +57,8 @@ bool BaseGameApp::Initialize(int argc, char** argv)
     if (!InitializeLocalization(m_GameOptions)) return false;
     if (!InitializeEventMgr()) return false;
 
+    RegisterAllDelegates();
+
     m_pGame = VCreateGameAndView();
     if (!m_pGame)
     {
@@ -76,6 +78,8 @@ bool BaseGameApp::Initialize(int argc, char** argv)
 void BaseGameApp::Terminate()
 {
     LOG("Terminating...");
+
+    RemoveAllDelegates();
 
     SAFE_DELETE(m_pGame);
     SDL_DestroyRenderer(m_pRenderer);
@@ -622,6 +626,29 @@ Point BaseGameApp::GetScale()
 uint32 BaseGameApp::GetWindowFlags()
 {
     return SDL_GetWindowFlags(m_pWindow);
+}
+
+//=====================================================================================================================
+// Events
+//=====================================================================================================================
+
+
+void BaseGameApp::RegisterAllDelegates()
+{
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &BaseGameApp::QuitGameDelegate), EventData_Quit_Game::sk_EventType);
+}
+
+void BaseGameApp::RemoveAllDelegates()
+{
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &BaseGameApp::QuitGameDelegate), EventData_Quit_Game::sk_EventType);
+}
+
+void BaseGameApp::QuitGameDelegate(IEventDataPtr pEventData)
+{
+    Terminate();
+    exit(0);
 }
 
 //=====================================================================================================================

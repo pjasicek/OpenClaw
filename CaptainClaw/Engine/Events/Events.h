@@ -2061,19 +2061,19 @@ public:
 };
 
 //---------------------------------------------------------------------------------------------------------------------
-// EventData_Menu_ButtonPress_SwitchPage
+// EventData_Menu_SwitchPage
 //---------------------------------------------------------------------------------------------------------------------
-class EventData_Menu_ButtonPress_SwitchPage : public BaseEventData
+class EventData_Menu_SwitchPage : public BaseEventData
 {
 public:
     static const EventType sk_EventType;
 
-    EventData_Menu_ButtonPress_SwitchPage()
+    EventData_Menu_SwitchPage()
     {
         
     }
 
-    EventData_Menu_ButtonPress_SwitchPage(std::string newPageName)
+    EventData_Menu_SwitchPage(std::string newPageName)
     {
         m_NewPageName = newPageName;
     }
@@ -2081,35 +2081,35 @@ public:
     virtual const EventType& VGetEventType(void) const { return sk_EventType; }
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Menu_ButtonPress_SwitchPage(m_NewPageName));
+        return IEventDataPtr(new EventData_Menu_SwitchPage(m_NewPageName));
     }
     virtual void VSerialize(std::ostringstream& out) const { out << m_NewPageName; }
     virtual void VDeserialize(std::istringstream& in) { in >> m_NewPageName; }
 
     std::string GetNewPageName() const { return m_NewPageName; }
 
-    virtual const char* GetName(void) const { return "EventData_Menu_ButtonPress_SwitchPage"; }
+    virtual const char* GetName(void) const { return "EventData_Menu_SwitchPage"; }
 
 private:
     std::string m_NewPageName;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
-// EventData_Menu_ButtonPress_LoadGame
+// EventData_Menu_LoadGame
 //---------------------------------------------------------------------------------------------------------------------
-class EventData_Menu_ButtonPress_LoadGame : public BaseEventData
+class EventData_Menu_LoadGame : public BaseEventData
 {
 public:
     static const EventType sk_EventType;
 
-    EventData_Menu_ButtonPress_LoadGame()
+    EventData_Menu_LoadGame()
     {
         m_bIsNewGame = false;
         m_LevelNumber = -1;
         m_CheckpointNumber = -1;
     }
 
-    EventData_Menu_ButtonPress_LoadGame(int levelNumber, bool isNewGame, int checkpointNumber)
+    EventData_Menu_LoadGame(int levelNumber, bool isNewGame, int checkpointNumber)
     {
         m_bIsNewGame = isNewGame;
         m_LevelNumber = levelNumber;
@@ -2119,7 +2119,7 @@ public:
     virtual const EventType& VGetEventType(void) const { return sk_EventType; }
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Menu_ButtonPress_LoadGame(m_LevelNumber, m_bIsNewGame, m_CheckpointNumber));
+        return IEventDataPtr(new EventData_Menu_LoadGame(m_LevelNumber, m_bIsNewGame, m_CheckpointNumber));
     }
     virtual void VSerialize(std::ostringstream& out) const { out << m_LevelNumber << m_bIsNewGame << m_CheckpointNumber; }
     virtual void VDeserialize(std::istringstream& in) { in >> m_LevelNumber >> m_bIsNewGame >> m_CheckpointNumber; }
@@ -2128,12 +2128,30 @@ public:
     int GetLevelNumber() { return m_LevelNumber; }
     int GetCheckpointNumber() { return m_CheckpointNumber; }
 
-    virtual const char* GetName(void) const { return "EventData_Menu_ButtonPress_LoadGame"; }
+    virtual const char* GetName(void) const { return "EventData_Menu_LoadGame"; }
 
 private:
     bool m_bIsNewGame;
     int m_LevelNumber;
     int m_CheckpointNumber;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Quit_Game
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Quit_Game : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Quit_Game() { }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const { return IEventDataPtr(new EventData_Request_Reset_Level()); }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "This event CANNOT be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "This event CANNOT be deserialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_Quit_Game"; }
 };
 
 #endif
