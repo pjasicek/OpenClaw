@@ -4,28 +4,26 @@
     <MenuPage>
         <PageName>MenuPage_Main</PageName>
         <MenuItem>
-            <Name>MAIN_MENU</Name>
+            <Name>MAIN_MENU_TEXT</Name>
             <Type>Text</Type>
             <State>Inactive</State>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/014_TITLE.PCX</InactiveImage>
             <Position x="188" y="160" />
         </MenuItem>
         <MenuItem>
-            <Name>SINGLE_PLAYER</Name>
+            <Name>SINGLE_PLAYER_BUTTON</Name>
             <Type>Button</Type>
             <State>Active</State>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/001_SINGLEPLAYER.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/002_SINGLEPLAYER.PCX</ActiveImage>
             <Position x="174" y="210" />
             <GeneratedEvent>
-                <Type>LoadGame</Type>
-                <IsNewGame>true</IsNewGame>
-                <LevelNumber>1</LevelNumber>
-                <CheckpointNumber>0</CheckpointNumber>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer</PageName>
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
-            <Name>MULTIPLAYER</Name>
+            <Name>MULTIPLAYER_BUTTON</Name>
             <Type>Button</Type>
             <State>Inactive</State>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/003_MULTIPLAYER.PCX</InactiveImage>
@@ -37,7 +35,7 @@
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
-            <Name>REPLAY_MOVIES</Name>
+            <Name>REPLAY_MOVIES_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/005_REPLAYMOVIES.PCX</InactiveImage>
@@ -50,7 +48,7 @@
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
-            <Name>OPTIONS</Name>
+            <Name>OPTIONS_BUTTON</Name>
             <Type>Button</Type>
             <State>Inactive</State>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/008_OPTIONS.PCX</InactiveImage>
@@ -62,7 +60,7 @@
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
-            <Name>CREDITS</Name>
+            <Name>CREDITS_BUTTON</Name>
             <Type>Button</Type>
             <State>Inactive</State>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/015_CREDITS.PCX</InactiveImage>
@@ -74,7 +72,7 @@
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
-            <Name>HELP</Name>
+            <Name>HELP_BUTTON</Name>
             <Type>Button</Type>
             <State>Inactive</State> 
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/010_HELP.PCX</InactiveImage>
@@ -86,7 +84,7 @@
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
-            <Name>QUIT</Name>
+            <Name>QUIT_BUTTON</Name>
             <Type>Button</Type>
             <State>Inactive</State>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/012_QUIT.PCX</InactiveImage>
@@ -94,6 +92,91 @@
             <Position x="272" y="420" />
             <GeneratedEvent>
                 <Type>QuitGame</Type>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer</PageName>
+        <MenuItem>
+            <Name>SINGLE_PLAYER_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/014_TITLE.PCX</InactiveImage>
+            <Position x="160" y="160" />
+        </MenuItem>
+        <MenuItem>
+            <Name>NEW_GAME_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/001_NEWGAME.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/002_NEWGAME.PCX</ActiveImage>
+            <Position x="218" y="210" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>1</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LOAD_GAME_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/003_LOADGAME.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/004_LOADGAME.PCX</ActiveImage>
+            <Position x="210" y="245" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LOAD_CUSTOM_LEVEL_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/005_LOADCUSTOM.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/006_LOADCUSTOM.PCX</ActiveImage>
+            <Position x="124" y="280" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadCustomLevel</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>SAVE_GAME_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/007_SAVEGAME.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/008_SAVEGAME.PCX</ActiveImage>
+            <Position x="210" y="315" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_SaveGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>UPLOAD_SCORES_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/009_UPLOADSCORES.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/010_UPLOADSCORES.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/011_UPLOADSCORES.PCX</DisabledImage>
+            <Position x="168" y="350" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_UploadScores</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/012_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/013_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="385" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
             </GeneratedEvent>
         </MenuItem>
     </MenuPage>

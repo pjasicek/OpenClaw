@@ -1,10 +1,7 @@
 #include "UserInterface.h"
 
 #include "../Graphics2D/Image.h"
-#include "../Events/Events.h"
-#include "../Events/EventMgr.h"
 #include "../GameApp/BaseGameApp.h"
-
 #include "../Resource/Loaders/PcxLoader.h"
 
 static SDL_Rect GetScreenRect()
@@ -62,7 +59,70 @@ static MenuPage StringToMenuPageEnum(const std::string& str)
     {
         return MenuPage_SinglePlayer;
     }
-    // Rest ...
+    else if (str == "MenuPage_Multiplayer")
+    {
+        return MenuPage_Multiplayer;
+    }
+    else if (str == "MenuPage_ReplayMovies")
+    {
+        return MenuPage_ReplayMovies;
+    }
+    else if (str == "MenuPage_Options")
+    {
+        return MenuPage_Options;
+    }
+    else if (str == "MenuPage_Credits")
+    {
+        return MenuPage_Credits;
+    }
+    else if (str == "MenuPage_Help")
+    {
+        return MenuPage_Help;
+    }
+    else if (str == "MenuPage_SinglePlayer_NewGame")
+    {
+        return MenuPage_SinglePlayer_NewGame;
+    }
+    else if (str == "MenuPage_SinglePlayer_LoadGame")
+    {
+        return MenuPage_SinglePlayer_LoadGame;
+    }
+    else if (str == "MenuPage_SinglePlayer_LoadCustomLevel")
+    {
+        return MenuPage_SinglePlayer_LoadCustomLevel;
+    }
+    else if (str == "MenuPage_SinglePlayer_SaveGame")
+    {
+        return MenuPage_SinglePlayer_SaveGame;
+    }
+    else if (str == "MenuPage_SinglePlayer_UploadScores")
+    {
+        return MenuPage_SinglePlayer_UploadScores;
+    }
+    else if (str == "MenuPage_Options_EditPlayers")
+    {
+        return MenuPage_Options_EditPlayers;
+    }
+    else if (str == "MenuPage_Options_Controls")
+    {
+        return MenuPage_Options_Controls;
+    }
+    else if (str == "MenuPage_Options_Display")
+    {
+        return MenuPage_Options_Display;
+    }
+    else if (str == "MenuPage_Options_Audio")
+    {
+        return MenuPage_Options_Audio;
+    }
+    else if (str == "MenuPage_Multiplayer_LevelRacing")
+    {
+        return MenuPage_Multiplayer_LevelRacing;
+    }
+    else if (str == "MenuPage_Multiplayer_EditMacros")
+    {
+        return MenuPage_Multiplayer_EditMacros;
+    }
 
     LOG_ERROR("Conflicting string: " + str);
     assert(false && "Unknown menu page string");
@@ -103,7 +163,8 @@ ScreenElementMenu::ScreenElementMenu(SDL_Renderer* pRenderer)
     :
     m_pRenderer(pRenderer)
 {
-
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &ScreenElementMenu::SwitchPageDelegate), EventData_Menu_SwitchPage::sk_EventType);
 }
 
 ScreenElementMenu::~ScreenElementMenu()
@@ -113,6 +174,9 @@ ScreenElementMenu::~ScreenElementMenu()
     SDL_RenderSetScale(m_pRenderer, (float)scale.x, (float)scale.y);
 
     m_MenuPageMap.clear();
+
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &ScreenElementMenu::SwitchPageDelegate), EventData_Menu_SwitchPage::sk_EventType);
 }
 
 void ScreenElementMenu::VOnUpdate(uint32 msDiff)
@@ -183,6 +247,24 @@ bool ScreenElementMenu::Initialize(TiXmlElement* pElem)
     g_MenuScale.Set(windowSize.x / m_pBackground->GetWidth(), windowSize.y / m_pBackground->GetHeight());
 
     return true;
+}
+
+void ScreenElementMenu::SwitchPageDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Menu_SwitchPage> pCastEventData = 
+        static_pointer_cast<EventData_Menu_SwitchPage>(pEventData);
+
+    MenuPage pageType = StringToMenuPageEnum(pCastEventData->GetNewPageName());
+    auto findIt = m_MenuPageMap.find(pageType);
+    if (findIt != m_MenuPageMap.end())
+    {
+        m_pActiveMenuPage = findIt->second;
+        m_pActiveMenuPage->OnPageLoaded();
+    }
+    else
+    {
+        LOG_ERROR("Could not switch to page: " + pCastEventData->GetNewPageName() + ", Probably not implemented yet");
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -396,6 +478,12 @@ bool ScreenElementMenuPage::MoveToMenuItemIdx(int oldIdx, int idxIncrement)
         new EventData_Request_Play_Sound(SOUND_MENU_CHANGE_MENU_ITEM, 100)));
 
     return true;
+}
+
+void ScreenElementMenuPage::OnPageLoaded()
+{
+    // Focus on first active button
+    MoveToMenuItemIdx(m_MenuItems.size() - 1, 1);
 }
 
 //-----------------------------------------------------------------------------

@@ -3,6 +3,8 @@
 
 #include "../Scene/Scene.h"
 #include "../SharedDefines.h"
+#include "../Events/Events.h"
+#include "../Events/EventMgr.h"
 #include <SDL2/SDL.h>
 
 // Doesnt really do anything, just implementation of empty methods to conform to
@@ -111,6 +113,8 @@ public:
     bool Initialize(TiXmlElement* pElem);
 
 private:
+    void SwitchPageDelegate(IEventDataPtr pEventData);
+
     shared_ptr<Image> m_pBackground;
     SDL_Renderer* m_pRenderer;
 
@@ -142,6 +146,8 @@ public:
     virtual bool VOnEvent(SDL_Event& evt);
 
     bool Initialize(TiXmlElement* pElem);
+
+    void OnPageLoaded();
 
 private:
     void DeactivateAllMenuItems();
