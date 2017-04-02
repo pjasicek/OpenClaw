@@ -109,7 +109,7 @@ ScreenElementMenu::ScreenElementMenu(SDL_Renderer* pRenderer)
 ScreenElementMenu::~ScreenElementMenu()
 {
     // Restore scale
-    Point scale = g_pApp->GetScale();
+    Point scale = Point(g_pApp->GetGameConfig()->scale, g_pApp->GetGameConfig()->scale);
     SDL_RenderSetScale(m_pRenderer, (float)scale.x, (float)scale.y);
 
     m_MenuPageMap.clear();
