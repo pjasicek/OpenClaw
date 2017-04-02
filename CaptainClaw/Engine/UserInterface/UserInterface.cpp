@@ -313,6 +313,10 @@ bool ScreenElementMenuPage::Initialize(TiXmlElement* pElem)
         m_MenuItems.push_back(pItem);
     }
 
+    // Play some music
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+        new EventData_Request_Play_Sound(SOUND_MENU_MENUMUSIC, 100, false, -1)));
+
     return true;
 }
 
@@ -386,6 +390,10 @@ bool ScreenElementMenuPage::MoveToMenuItemIdx(int oldIdx, int idxIncrement)
         buttonIdx += idxIncrement;
         tryCount++;
     }
+
+    // Play sound
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+        new EventData_Request_Play_Sound(SOUND_MENU_CHANGE_MENU_ITEM, 100)));
 
     return true;
 }
@@ -511,6 +519,8 @@ bool ScreenElementMenuItem::Press()
     if (m_pGeneratedEvent)
     {
         IEventMgr::Get()->VQueueEvent(m_pGeneratedEvent);
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(SOUND_MENU_SELECT_MENU_ITEM, 100)));
         return true;
     }
 
