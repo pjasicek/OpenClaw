@@ -102,6 +102,7 @@ int32 BaseGameApp::Run()
 {
     static uint32 lastTime = SDL_GetTicks();
     SDL_Event event;
+    int consecutiveLagSpikes = 0;
 
     while (m_IsRunning)
     {
@@ -110,6 +111,19 @@ int32 BaseGameApp::Run()
         uint32 now = SDL_GetTicks();
         uint32 elapsedTime = now - lastTime;
         lastTime = now;
+
+        // This occurs when recovering program from background or after load
+        // We want to ignore these situations
+        if (elapsedTime > 1000)
+        {
+            consecutiveLagSpikes++;
+            if (consecutiveLagSpikes > 10)
+            {
+                LOG_ERROR("Experiencing lag spikes, " + ToStr(consecutiveLagSpikes) + "high latency frames in a row");
+            }
+            continue;
+        }
+        consecutiveLagSpikes = 0;
 
         // Handle all input events
         while (SDL_PollEvent(&event))

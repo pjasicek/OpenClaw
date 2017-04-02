@@ -47,6 +47,6 @@
         <PlatformSpeedModifier>0.015</PlatformSpeedModifier>
         <MaxJumpHeight>130</MaxJumpHeight>
         <PowerupMaxJumpHeight>200</PowerupMaxJumpHeight>
-        <SkipMenu>true</SkipMenu>
+        <SkipMenu>false</SkipMenu>
     </GlobalOptions>
 </Configuration>

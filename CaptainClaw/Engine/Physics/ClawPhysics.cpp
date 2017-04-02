@@ -165,7 +165,7 @@ ClawPhysics::ClawPhysics()
 //
 ClawPhysics::~ClawPhysics()
 {
-
+    LOG("Destroying current ClawPhysics");
 }
 
 //-----------------------------------------------------------------------------
