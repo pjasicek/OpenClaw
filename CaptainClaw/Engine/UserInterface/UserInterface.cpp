@@ -4,6 +4,42 @@
 #include "../GameApp/BaseGameApp.h"
 #include "../Resource/Loaders/PcxLoader.h"
 
+std::map<std::string, MenuPage> g_StringToMenuPageEnumMap =
+{
+    { "MenuPage_Main",                          MenuPage_Main },
+    { "MenuPage_SinglePlayer",                  MenuPage_SinglePlayer },
+    { "MenuPage_Multiplayer",                   MenuPage_Multiplayer },
+    { "MenuPage_ReplayMovies",                  MenuPage_ReplayMovies },
+    { "MenuPage_Options",                       MenuPage_Options },
+    { "MenuPage_Credits",                       MenuPage_Credits },
+    { "MenuPage_Help",                          MenuPage_Help },
+    { "MenuPage_SinglePlayer_NewGame",          MenuPage_SinglePlayer_NewGame },
+    { "MenuPage_SinglePlayer_LoadGame",         MenuPage_SinglePlayer_LoadGame },
+    { "MenuPage_SinglePlayer_LoadCustomLevel",  MenuPage_SinglePlayer_LoadCustomLevel },
+    { "MenuPage_SinglePlayer_SaveGame",         MenuPage_SinglePlayer_SaveGame },
+    { "MenuPage_SinglePlayer_UploadScores",     MenuPage_SinglePlayer_UploadScores },
+    { "MenuPage_SinglePlayer_LoadGame_Level1",  MenuPage_SinglePlayer_LoadGame_Level1 },
+    { "MenuPage_SinglePlayer_LoadGame_Level2",  MenuPage_SinglePlayer_LoadGame_Level2 },
+    { "MenuPage_SinglePlayer_LoadGame_Level3",  MenuPage_SinglePlayer_LoadGame_Level3 },
+    { "MenuPage_SinglePlayer_LoadGame_Level4",  MenuPage_SinglePlayer_LoadGame_Level4 },
+    { "MenuPage_SinglePlayer_LoadGame_Level5",  MenuPage_SinglePlayer_LoadGame_Level5 },
+    { "MenuPage_SinglePlayer_LoadGame_Level6",  MenuPage_SinglePlayer_LoadGame_Level6 },
+    { "MenuPage_SinglePlayer_LoadGame_Level7",  MenuPage_SinglePlayer_LoadGame_Level7 },
+    { "MenuPage_SinglePlayer_LoadGame_Level8",  MenuPage_SinglePlayer_LoadGame_Level8 },
+    { "MenuPage_SinglePlayer_LoadGame_Level9",  MenuPage_SinglePlayer_LoadGame_Level9 },
+    { "MenuPage_SinglePlayer_LoadGame_Level10", MenuPage_SinglePlayer_LoadGame_Level10 },
+    { "MenuPage_SinglePlayer_LoadGame_Level11", MenuPage_SinglePlayer_LoadGame_Level11 },
+    { "MenuPage_SinglePlayer_LoadGame_Level12", MenuPage_SinglePlayer_LoadGame_Level12 },
+    { "MenuPage_SinglePlayer_LoadGame_Level13", MenuPage_SinglePlayer_LoadGame_Level13 },
+    { "MenuPage_SinglePlayer_LoadGame_Level14", MenuPage_SinglePlayer_LoadGame_Level14 },
+    { "MenuPage_Options_EditPlayers",           MenuPage_Options_EditPlayers },
+    { "MenuPage_Options_Controls",              MenuPage_Options_Controls },
+    { "MenuPage_Options_Display",               MenuPage_Options_Display },
+    { "MenuPage_Options_Audio",                 MenuPage_Options_Audio },
+    { "MenuPage_Multiplayer_LevelRacing",       MenuPage_Multiplayer_LevelRacing },
+    { "MenuPage_Multiplayer_EditMacros",        MenuPage_Multiplayer_EditMacros }
+};
+
 static SDL_Rect GetScreenRect()
 {
     Point windowSize = g_pApp->GetWindowSize();
@@ -51,83 +87,14 @@ static MenuItemType StringToMenuItemTypeEnum(const std::string& str)
 
 static MenuPage StringToMenuPageEnum(const std::string& str)
 {
-    if (str == "MenuPage_Main")
+    auto findIt = g_StringToMenuPageEnumMap.find(str);
+    if (findIt == g_StringToMenuPageEnumMap.end())
     {
-        return MenuPage_Main;
-    }
-    else if (str == "MenuPage_SinglePlayer")
-    {
-        return MenuPage_SinglePlayer;
-    }
-    else if (str == "MenuPage_Multiplayer")
-    {
-        return MenuPage_Multiplayer;
-    }
-    else if (str == "MenuPage_ReplayMovies")
-    {
-        return MenuPage_ReplayMovies;
-    }
-    else if (str == "MenuPage_Options")
-    {
-        return MenuPage_Options;
-    }
-    else if (str == "MenuPage_Credits")
-    {
-        return MenuPage_Credits;
-    }
-    else if (str == "MenuPage_Help")
-    {
-        return MenuPage_Help;
-    }
-    else if (str == "MenuPage_SinglePlayer_NewGame")
-    {
-        return MenuPage_SinglePlayer_NewGame;
-    }
-    else if (str == "MenuPage_SinglePlayer_LoadGame")
-    {
-        return MenuPage_SinglePlayer_LoadGame;
-    }
-    else if (str == "MenuPage_SinglePlayer_LoadCustomLevel")
-    {
-        return MenuPage_SinglePlayer_LoadCustomLevel;
-    }
-    else if (str == "MenuPage_SinglePlayer_SaveGame")
-    {
-        return MenuPage_SinglePlayer_SaveGame;
-    }
-    else if (str == "MenuPage_SinglePlayer_UploadScores")
-    {
-        return MenuPage_SinglePlayer_UploadScores;
-    }
-    else if (str == "MenuPage_Options_EditPlayers")
-    {
-        return MenuPage_Options_EditPlayers;
-    }
-    else if (str == "MenuPage_Options_Controls")
-    {
-        return MenuPage_Options_Controls;
-    }
-    else if (str == "MenuPage_Options_Display")
-    {
-        return MenuPage_Options_Display;
-    }
-    else if (str == "MenuPage_Options_Audio")
-    {
-        return MenuPage_Options_Audio;
-    }
-    else if (str == "MenuPage_Multiplayer_LevelRacing")
-    {
-        return MenuPage_Multiplayer_LevelRacing;
-    }
-    else if (str == "MenuPage_Multiplayer_EditMacros")
-    {
-        return MenuPage_Multiplayer_EditMacros;
+        LOG_ERROR("Conflicting string: " + str);
+        assert(false && "Unknown menu page string");
     }
 
-    LOG_ERROR("Conflicting string: " + str);
-    assert(false && "Unknown menu page string");
-
-    return MenuPage_None;
+    return findIt->second;
 }
 
 static MenuItemState StringToMenuItemStateEnum(const std::string& str)

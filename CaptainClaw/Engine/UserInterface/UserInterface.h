@@ -51,6 +51,21 @@ enum MenuPage
     MenuPage_SinglePlayer_SaveGame,        // Unused
     MenuPage_SinglePlayer_UploadScores,     // Unused
 
+    MenuPage_SinglePlayer_LoadGame_Level1,
+    MenuPage_SinglePlayer_LoadGame_Level2,
+    MenuPage_SinglePlayer_LoadGame_Level3,
+    MenuPage_SinglePlayer_LoadGame_Level4,
+    MenuPage_SinglePlayer_LoadGame_Level5,
+    MenuPage_SinglePlayer_LoadGame_Level6,
+    MenuPage_SinglePlayer_LoadGame_Level7,
+    MenuPage_SinglePlayer_LoadGame_Level8,
+    MenuPage_SinglePlayer_LoadGame_Level9,
+    MenuPage_SinglePlayer_LoadGame_Level10,
+    MenuPage_SinglePlayer_LoadGame_Level11,
+    MenuPage_SinglePlayer_LoadGame_Level12,
+    MenuPage_SinglePlayer_LoadGame_Level13,
+    MenuPage_SinglePlayer_LoadGame_Level14,
+
     // Some more but currently unusable...
     MenuPage_Options_EditPlayers,
     MenuPage_Options_Controls,
