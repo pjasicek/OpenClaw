@@ -513,7 +513,11 @@ void ScreenElementMenuItem::VOnUpdate(uint32 msDiff)
 void ScreenElementMenuItem::VOnRender(uint32 msDiff)
 {
     shared_ptr<Image> pCurrImage = m_Images[m_State];
-    assert(pCurrImage != nullptr && "Image is in invalid state - no image for given state was found");
+    if (pCurrImage == nullptr)
+    {
+        LOG_ERROR("Offending button: " + m_Name + " for state: " + ToStr(m_State));
+        assert(false && "Image is in invalid state - no image for given state was found");
+    }
 
     SDL_Rect renderRect;
     renderRect.x = (int)(m_Position.x * g_MenuScale.x);

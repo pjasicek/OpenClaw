@@ -102,7 +102,7 @@
             <Type>Text</Type>
             <State>Inactive</State>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/014_TITLE.PCX</InactiveImage>
-            <Position x="160" y="160" />
+            <Position x="160" y="161" />
         </MenuItem>
         <MenuItem>
             <Name>NEW_GAME_BUTTON</Name>
@@ -112,10 +112,8 @@
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/002_NEWGAME.PCX</ActiveImage>
             <Position x="218" y="210" />
             <GeneratedEvent>
-                <Type>LoadGame</Type>
-                <IsNewGame>true</IsNewGame>
-                <LevelNumber>1</LevelNumber>
-                <CheckpointNumber>0</CheckpointNumber>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_NewGame</PageName>
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
@@ -177,6 +175,240 @@
             <GeneratedEvent>
                 <Type>SwitchPage</Type>
                 <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_NewGame</PageName>
+        <Columns>2</Columns>
+        <ItemsInColumn>7</ItemsInColumn>
+        <MenuItem>
+            <Name>NEW_GAME_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/NEW/001_TITLE.PCX</InactiveImage>
+            <Position x="196" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LA_ROCA_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/001_LEVELONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/002_LEVELONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/003_LEVELONE.PCX</DisabledImage>
+            <Position x="38" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>1</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BATTLEMENTS_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/004_LEVELTWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/005_LEVELTWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/006_LEVELTWO.PCX</DisabledImage>
+            <Position x="38" y="243" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>2</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>FOOTPATH_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/007_LEVELTHREE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/008_LEVELTHREE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/009_LEVELTHREE.PCX</DisabledImage>
+            <Position x="38" y="271" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>3</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>DARK_WOODS_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/010_LEVELFOUR.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/011_LEVELFOUR.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/012_LEVELFOUR.PCX</DisabledImage>
+            <Position x="38" y="299" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>4</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>TOWNSHIP_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/013_LEVELFIVE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/014_LEVELFIVE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/015_LEVELFIVE.PCX</DisabledImage>
+            <Position x="38" y="327" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>5</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>PUERTO_LOBOS_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/016_LEVELSIX.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/017_LEVELSIX.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/018_LEVELSIX.PCX</DisabledImage>
+            <Position x="38" y="355" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>6</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>DOCKS_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/019_LEVELSEVEN.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/020_LEVELSEVEN.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/021_LEVELSEVEN.PCX</DisabledImage>
+            <Position x="38" y="383" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>7</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>SHIPYARDS_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/022_LEVELEIGHT.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/023_LEVELEIGHT.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/024_LEVELEIGHT.PCX</DisabledImage>
+            <Position x="308" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>8</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>PIRATES_COVE_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/025_LEVELNINE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/026_LEVELNINE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/027_LEVELNINE.PCX</DisabledImage>
+            <Position x="308" y="243" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>9</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>CLIFFS_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/028_LEVELTEN.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/029_LEVELTEN.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/030_LEVELTEN.PCX</DisabledImage>
+            <Position x="308" y="271" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>10</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>CAVERNS_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/031_LEVELELEVEN.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/032_LEVELELEVEN.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/033_LEVELELEVEN.PCX</DisabledImage>
+            <Position x="308" y="299" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>11</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>UNDERSEA_CAVES_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/034_LEVELTWELVE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/035_LEVELTWELVE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/036_LEVELTWELVE.PCX</DisabledImage>
+            <Position x="308" y="327" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>12</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>TIGER_ISLAND_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/037_LEVELTHIRTEEN.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/038_LEVELTHIRTEEN.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/039_LEVELTHIRTEEN.PCX</DisabledImage>
+            <Position x="308" y="355" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>13</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>TEMPLE_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/040_LEVELFOURTEEN.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/041_LEVELFOURTEEN.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/042_LEVELFOURTEEN.PCX</DisabledImage>
+            <Position x="308" y="383" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>14</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/043_BACK.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/044_BACK.PCX</ActiveImage>
+            <Position x="278" y="420" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer</PageName>
             </GeneratedEvent>
         </MenuItem>
     </MenuPage>
