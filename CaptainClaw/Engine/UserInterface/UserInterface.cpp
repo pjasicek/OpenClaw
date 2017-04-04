@@ -2,6 +2,8 @@
 
 #include "../Graphics2D/Image.h"
 #include "../GameApp/BaseGameApp.h"
+#include "../GameApp/BaseGameLogic.h"
+#include "../GameApp/GameSaves.h"
 #include "../Resource/Loaders/PcxLoader.h"
 
 std::map<std::string, MenuPage> g_StringToMenuPageEnumMap =
@@ -518,6 +520,27 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
         return false;
     }
     m_State = StringToMenuItemStateEnum(menuItemStateStr);
+
+    if (TiXmlElement* pStateConditionElem = pElem->FirstChildElement("StateCondition"))
+    {
+        std::string conditionForStateStr, conditionTypeStr;
+        ParseValueFromXmlElem(&conditionForStateStr, pStateConditionElem->FirstChildElement("ConditionForState"));
+        ParseValueFromXmlElem(&conditionTypeStr, pStateConditionElem->FirstChildElement("ConditionType"));
+        if (conditionTypeStr == "CheckpointReached")
+        {
+            int level = -1;
+            int checkpoint = -1;
+            ParseValueFromXmlElem(&level, pStateConditionElem->FirstChildElement("Level"));
+            ParseValueFromXmlElem(&checkpoint, pStateConditionElem->FirstChildElement("Checkpoint"));
+            assert(level != -1 && checkpoint != -1);
+
+            if (g_pApp->GetGameLogic()->GetGameSaveMgr()->HasCheckpointSave(level, checkpoint))
+            {
+                ParseValueFromXmlElem(&menuItemStateStr, pStateConditionElem->FirstChildElement("ConditionForState"));
+                m_State = StringToMenuItemStateEnum(menuItemStateStr);
+            }
+        }
+    }
 
     if (shared_ptr<Image> pImage = TryLoadPcxImageFromXmlElement(pElem->FirstChildElement("DisabledImage")))
     {

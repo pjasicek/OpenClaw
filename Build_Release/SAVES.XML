@@ -5,11 +5,29 @@
         <Checkpoint>
             <CheckpointNumber>0</CheckpointNumber>
             <Score>0</Score>
-            <Health>110</Health>
-            <Lives>1</Lives>
-            <BulletCount>5</BulletCount>
-            <MagicCount>5</MagicCount>
-            <DynamiteCount>5</DynamiteCount>
+            <Health>100</Health>
+            <Lives>3</Lives>
+            <BulletCount>15</BulletCount>
+            <MagicCount>10</MagicCount>
+            <DynamiteCount>10</DynamiteCount>
+        </Checkpoint>
+        <Checkpoint>
+            <CheckpointNumber>1</CheckpointNumber>
+            <Score>10000</Score>
+            <Health>50</Health>
+            <Lives>5</Lives>
+            <BulletCount>15</BulletCount>
+            <MagicCount>15</MagicCount>
+            <DynamiteCount>15</DynamiteCount>
+        </Checkpoint>
+        <Checkpoint>
+            <CheckpointNumber>2</CheckpointNumber>
+            <Score>50000</Score>
+            <Health>100</Health>
+            <Lives>6</Lives>
+            <BulletCount>55</BulletCount>
+            <MagicCount>55</MagicCount>
+            <DynamiteCount>55</DynamiteCount>
         </Checkpoint>
     </Level>
 </GameSaves>

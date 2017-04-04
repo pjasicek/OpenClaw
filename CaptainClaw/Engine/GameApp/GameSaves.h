@@ -166,14 +166,16 @@ struct LevelSave
         return &checkpointMap[lastCheckpoint];
     }
 
+    // Can return NULL
     CheckpointSave* GetCheckpointSave(uint32 checkpointNumber)
     {
-        assert(!checkpointMap.empty());
-
         auto findIt = checkpointMap.find(checkpointNumber);
-        assert(findIt != checkpointMap.end() && "Requested checkpoint save was not found");
+        if (findIt == checkpointMap.end())
+        {
+            return NULL;
+        }
 
-        return &checkpointMap[checkpointNumber];
+        return &(findIt->second);
     }
 
     uint32 levelNumber;
@@ -242,22 +244,40 @@ public:
         m_LevelSaveMap[levelNumber].checkpointMap[save.checkpointIdx] = save;
     }
 
+    // Can return NULL
     LevelSave* GetLevelSave(uint32 levelNumber)
     {
         assert(levelNumber <= LEVELS_COUNT);
 
         auto findIt = m_LevelSaveMap.find(levelNumber);
-        assert(findIt != m_LevelSaveMap.end() && "Requested level save was not found");
+        if (findIt == m_LevelSaveMap.end())
+        {
+            return NULL;
+        }
 
-        return &m_LevelSaveMap[levelNumber];
+        return &(findIt->second);
     }
 
+    bool HasLevelSave(uint32 levelNumber)
+    {
+        return (GetLevelSave(levelNumber) != NULL);
+    }
+
+    // Can return NULL
     const CheckpointSave* GetCheckpointSave(uint32 levelNumber, uint32 checkpointNumber)
     {
         LevelSave* pLevelSave = GetLevelSave(levelNumber);
-        assert(pLevelSave);
-
+        if (pLevelSave == NULL)
+        {
+            return NULL;
+        }
+        
         return pLevelSave->GetCheckpointSave(checkpointNumber);
+    }
+
+    bool HasCheckpointSave(uint32 levelNumber, uint32 checkpointNumber)
+    {
+        return (GetCheckpointSave(levelNumber, checkpointNumber) != NULL);
     }
 
 private:

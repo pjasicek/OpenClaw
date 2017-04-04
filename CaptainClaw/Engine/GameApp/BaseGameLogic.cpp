@@ -192,12 +192,6 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
 
     m_pPhysics.reset(CreateClawPhysics());
 
-    /*m_pCurrentLevel.reset(new LevelData);
-
-    // TODO: This should not be here. This will be set when we select level from GUI
-    m_pCurrentLevel->m_LeveNumber = 1;
-    m_pCurrentLevel->m_LoadedCheckpoint = 0;*/
-
     float loadingProgress = 0.0f;
     float lastProgress = 0.0f;
 
@@ -277,16 +271,6 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
                 tileDesc.outsideAttrib = std::stoi(pTileDescElem->FirstChildElement("OutsideAttrib")->GetText());
             }
             tileDesc.insideAttrib = std::stoi(pTileDescElem->FirstChildElement("InsideAttrib")->GetText());
-
-            // HACK: Convert static ground tiles to solid (ground introduced many bugs)
-            // TODO: Rehaul ground behaviour so that it behaves like it should
-            if (m_pCurrentLevel->GetLevelNumber() == 1)
-            {
-                /*if (tileDesc.tileId == 331 || tileDesc.tileId == 332 || tileDesc.tileId == 334)
-                {
-                tileDesc.insideAttrib = CollisionType_Solid;
-                }*/
-            }
 
             TiXmlElement* pTileRectElem = pTileDescElem->FirstChildElement("TileRect");
             tileDesc.rect.left = std::stoi(pTileRectElem->Attribute("left"));
@@ -389,7 +373,7 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
 
     // Set claw to spawn location
     m_CurrentSpawnPosition = GetSpawnPosition(m_pCurrentLevel->m_LeveNumber, m_pCurrentLevel->m_LoadedCheckpoint);
-    //pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(clawId, m_CurrentSpawnPosition)));
+    pEventMgr->VTriggerEvent(IEventDataPtr(new EventData_Teleport_Actor(clawId, m_CurrentSpawnPosition)));
 
     // Start playing background music
     std::string backgroundMusicPath = "/LEVEL" + ToStr(m_pCurrentLevel->GetLevelNumber()) +
@@ -397,7 +381,7 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Request_Play_Sound(
         backgroundMusicPath, g_pApp->GetGameConfig()->musicVolume, true)));
 
-    loadingProgress = 100.0f;
+    loadingProgress = 100.0f;   
     RenderLoadingScreen(pBackgroundImage, backgroundRect, scale, loadingProgress);
 
     LOG("Level loaded !");

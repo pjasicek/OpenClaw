@@ -626,4 +626,84 @@
             </GeneratedEvent>
         </MenuItem>
     </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 1 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level1</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL1_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/011_TITLE.PCX</InactiveImage>
+            <Position x="196" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LA_ROCA_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>1</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LA_ROCA_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>1</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>1</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LA_ROCA_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>1</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>1</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
 </GameMenu>
