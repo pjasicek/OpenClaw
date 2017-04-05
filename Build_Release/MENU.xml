@@ -214,6 +214,12 @@
             <Name>BATTLEMENTS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>2</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/004_LEVELTWO.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/005_LEVELTWO.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/006_LEVELTWO.PCX</DisabledImage>
@@ -229,6 +235,12 @@
             <Name>FOOTPATH_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>3</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/007_LEVELTHREE.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/008_LEVELTHREE.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/009_LEVELTHREE.PCX</DisabledImage>
@@ -244,6 +256,12 @@
             <Name>DARK_WOODS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>4</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/010_LEVELFOUR.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/011_LEVELFOUR.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/012_LEVELFOUR.PCX</DisabledImage>
@@ -259,6 +277,12 @@
             <Name>TOWNSHIP_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>5</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/013_LEVELFIVE.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/014_LEVELFIVE.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/015_LEVELFIVE.PCX</DisabledImage>
@@ -274,6 +298,12 @@
             <Name>PUERTO_LOBOS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>6</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/016_LEVELSIX.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/017_LEVELSIX.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/018_LEVELSIX.PCX</DisabledImage>
@@ -289,6 +319,12 @@
             <Name>DOCKS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>7</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/019_LEVELSEVEN.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/020_LEVELSEVEN.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/021_LEVELSEVEN.PCX</DisabledImage>
@@ -304,6 +340,12 @@
             <Name>SHIPYARDS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>8</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/022_LEVELEIGHT.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/023_LEVELEIGHT.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/024_LEVELEIGHT.PCX</DisabledImage>
@@ -319,6 +361,12 @@
             <Name>PIRATES_COVE_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>9</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/025_LEVELNINE.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/026_LEVELNINE.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/027_LEVELNINE.PCX</DisabledImage>
@@ -334,6 +382,12 @@
             <Name>CLIFFS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>10</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/028_LEVELTEN.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/029_LEVELTEN.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/030_LEVELTEN.PCX</DisabledImage>
@@ -349,6 +403,12 @@
             <Name>CAVERNS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>11</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/031_LEVELELEVEN.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/032_LEVELELEVEN.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/033_LEVELELEVEN.PCX</DisabledImage>
@@ -364,6 +424,12 @@
             <Name>UNDERSEA_CAVES_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>12</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/034_LEVELTWELVE.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/035_LEVELTWELVE.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/036_LEVELTWELVE.PCX</DisabledImage>
@@ -379,6 +445,12 @@
             <Name>TIGER_ISLAND_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>13</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/037_LEVELTHIRTEEN.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/038_LEVELTHIRTEEN.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/039_LEVELTHIRTEEN.PCX</DisabledImage>
@@ -394,6 +466,12 @@
             <Name>TEMPLE_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>14</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/040_LEVELFOURTEEN.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/041_LEVELFOURTEEN.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/042_LEVELFOURTEEN.PCX</DisabledImage>
@@ -435,6 +513,12 @@
             <Name>LA_ROCA_BUTTON</Name>
             <Type>Button</Type>
             <State>Active</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>1</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/001_LEVELONE.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/002_LEVELONE.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/003_LEVELONE.PCX</DisabledImage>
@@ -448,6 +532,12 @@
             <Name>BATTLEMENTS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>2</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/004_LEVELTWO.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/005_LEVELTWO.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/006_LEVELTWO.PCX</DisabledImage>
@@ -461,6 +551,12 @@
             <Name>FOOTPATH_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>3</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/007_LEVELTHREE.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/008_LEVELTHREE.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/009_LEVELTHREE.PCX</DisabledImage>
@@ -474,6 +570,12 @@
             <Name>DARK_WOODS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>4</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/010_LEVELFOUR.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/011_LEVELFOUR.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/012_LEVELFOUR.PCX</DisabledImage>
@@ -487,6 +589,12 @@
             <Name>TOWNSHIP_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>5</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/013_LEVELFIVE.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/014_LEVELFIVE.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/015_LEVELFIVE.PCX</DisabledImage>
@@ -500,6 +608,12 @@
             <Name>PUERTO_LOBOS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>6</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/016_LEVELSIX.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/017_LEVELSIX.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/018_LEVELSIX.PCX</DisabledImage>
@@ -513,6 +627,12 @@
             <Name>DOCKS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>7</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/019_LEVELSEVEN.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/020_LEVELSEVEN.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/021_LEVELSEVEN.PCX</DisabledImage>
@@ -526,6 +646,12 @@
             <Name>SHIPYARDS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>8</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/022_LEVELEIGHT.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/023_LEVELEIGHT.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/024_LEVELEIGHT.PCX</DisabledImage>
@@ -539,6 +665,12 @@
             <Name>PIRATES_COVE_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>9</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/025_LEVELNINE.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/026_LEVELNINE.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/027_LEVELNINE.PCX</DisabledImage>
@@ -552,6 +684,12 @@
             <Name>CLIFFS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>10</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/028_LEVELTEN.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/029_LEVELTEN.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/030_LEVELTEN.PCX</DisabledImage>
@@ -565,6 +703,12 @@
             <Name>CAVERNS_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>11</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/031_LEVELELEVEN.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/032_LEVELELEVEN.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/033_LEVELELEVEN.PCX</DisabledImage>
@@ -578,6 +722,12 @@
             <Name>UNDERSEA_CAVES_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>12</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/034_LEVELTWELVE.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/035_LEVELTWELVE.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/036_LEVELTWELVE.PCX</DisabledImage>
@@ -591,6 +741,12 @@
             <Name>TIGER_ISLAND_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>13</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/037_LEVELTHIRTEEN.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/038_LEVELTHIRTEEN.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/039_LEVELTHIRTEEN.PCX</DisabledImage>
@@ -604,6 +760,12 @@
             <Name>TEMPLE_BUTTON</Name>
             <Type>Button</Type>
             <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>14</Level>
+                <Checkpoint>0</Checkpoint>
+            </StateCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/040_LEVELFOURTEEN.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/041_LEVELFOURTEEN.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LEVELS/042_LEVELFOURTEEN.PCX</DisabledImage>
@@ -690,6 +852,1046 @@
                 <Type>LoadGame</Type>
                 <IsNewGame>false</IsNewGame>
                 <LevelNumber>1</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 2 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level2</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL2_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/012_TITLE.PCX</InactiveImage>
+            <Position x="130" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_2_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>2</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_2_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>2</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>2</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_2_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>2</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>2</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 3 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level3</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL3_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/013_TITLE.PCX</InactiveImage>
+            <Position x="174" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_3_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>3</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_3_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>3</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>3</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_3_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>3</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>3</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 4 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level4</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL4_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/014_TITLE.PCX</InactiveImage>
+            <Position x="148" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_4_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>4</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_4_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>4</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>4</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_4_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>4</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>4</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 5 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level5</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL5_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/015_TITLE.PCX</InactiveImage>
+            <Position x="176" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_5_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>5</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_5_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>5</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>5</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_5_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>5</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>5</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 6 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level6</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL6_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/016_TITLE.PCX</InactiveImage>
+            <Position x="134" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_6_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>6</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_6_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>6</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>6</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_6_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>6</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>6</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 7 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level7</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL7_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/017_TITLE.PCX</InactiveImage>
+            <Position x="216" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_7_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>7</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_7_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>7</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>7</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_7_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>7</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>7</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 8 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level8</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL8_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/018_TITLE.PCX</InactiveImage>
+            <Position x="166" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_8_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>8</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_8_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>8</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>8</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_8_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>8</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>8</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 9 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level9</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL9_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/019_TITLE.PCX</InactiveImage>
+            <Position x="124" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_9_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>9</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_9_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>9</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>9</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_9_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>9</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>9</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 10 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level10</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL10_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/020_TITLE.PCX</InactiveImage>
+            <Position x="202" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_10_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>10</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_10_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>10</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>10</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_10_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>10</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>10</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 11 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level11</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL11_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/021_TITLE.PCX</InactiveImage>
+            <Position x="176" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_11_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>11</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_11_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>11</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>11</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_11_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>11</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>11</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 12 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level12</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL12_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/022_TITLE.PCX</InactiveImage>
+            <Position x="78" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_12_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>12</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_12_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>12</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>12</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_12_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>12</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>12</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 13 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level13</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL13_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/023_TITLE.PCX</InactiveImage>
+            <Position x="122" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_13_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>13</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_13_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>13</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>13</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_13_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>13</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>13</LevelNumber>
+                <CheckpointNumber>2</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/009_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/010_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="326" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- LOAD GAME LEVEL 14 PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_LoadGame_Level14</PageName>
+        <MenuItem>
+            <Name>LOAD_LEVEL14_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/024_TITLE.PCX</InactiveImage>
+            <Position x="192" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_14_START_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/001_START.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/002_START.PCX</ActiveImage>
+            <Position x="256" y="215" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>true</IsNewGame>
+                <LevelNumber>14</LevelNumber>
+                <CheckpointNumber>0</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_14_LOAD_CHECKPOINT_1_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>14</Level>
+                <Checkpoint>1</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/003_SAVEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/004_SAVEONE.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/005_SAVEONE.PCX</DisabledImage>
+            <Position x="194" y="252" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>14</LevelNumber>
+                <CheckpointNumber>1</CheckpointNumber>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>LEVEL_14_LOAD_CHECKPOINT_2_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <StateCondition>
+                <ConditionForState>Inactive</ConditionForState>
+                <ConditionType>CheckpointReached</ConditionType>
+                <Level>14</Level>
+                <Checkpoint>2</Checkpoint>
+            </StateCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/006_SAVETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/007_SAVETWO.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/LOAD/CHECKPOINTS/008_SAVETWO.PCX</DisabledImage>
+            <Position x="194" y="289" />
+            <GeneratedEvent>
+                <Type>LoadGame</Type>
+                <IsNewGame>false</IsNewGame>
+                <LevelNumber>14</LevelNumber>
                 <CheckpointNumber>2</CheckpointNumber>
             </GeneratedEvent>
         </MenuItem>
