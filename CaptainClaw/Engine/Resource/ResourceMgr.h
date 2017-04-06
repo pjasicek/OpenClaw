@@ -26,11 +26,11 @@ public:
     virtual ~ResourceMgrImpl();
 
     virtual void VAddResourceCache(ResourceCache* pCache);
-    virtual std::shared_ptr<ResourceHandle> VGetHandle(Resource* r, std::string resCacheName = "");
-    virtual int32 VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), std::string resCacheName = "");
-    virtual std::vector<std::string> VMatch(const std::string pattern, std::string resCacheName = "");
-    virtual std::vector<std::string> VGetAllFilesInDirectory(const char* directoryPath, std::string resCacheName = "");
-    virtual void VFlush(std::string resCacheName = "");
+    virtual std::shared_ptr<ResourceHandle> VGetHandle(Resource* r, std::string resCacheName = ORIGINAL_RESOURCE);
+    virtual int32 VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), std::string resCacheName = ORIGINAL_RESOURCE);
+    virtual std::vector<std::string> VMatch(const std::string pattern, std::string resCacheName = ORIGINAL_RESOURCE);
+    virtual std::vector<std::string> VGetAllFilesInDirectory(const char* directoryPath, std::string resCacheName = ORIGINAL_RESOURCE);
+    virtual void VFlush(std::string resCacheName = ORIGINAL_RESOURCE);
 
 private:
     ResourceCacheMap m_ResourceCacheMap;

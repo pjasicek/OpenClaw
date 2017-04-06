@@ -36,6 +36,7 @@ struct GameOptions
         consoleFontSize = 20;
 
         rezArchivePath = "CLAW.REZ";
+        customArchivePath = "ASSETS.ZIP";
         resourceCacheSize = 50;
         tempDir = ".";
         savesFile = "SAVES.XML";
@@ -72,6 +73,7 @@ struct GameOptions
 
     // Assets
     std::string rezArchivePath;
+    std::string customArchivePath;
     unsigned resourceCacheSize;
     std::string tempDir;
     std::string savesFile;

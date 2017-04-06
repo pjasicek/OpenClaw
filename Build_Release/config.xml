@@ -21,6 +21,7 @@
     </Font>
     <Assets>
         <RezArchive>CLAW.REZ</RezArchive>
+        <CustomArchive>ASSETS.ZIP</CustomArchive>
         <ResourceCacheSize>150</ResourceCacheSize>
         <TempDir></TempDir>
         <SavesFile>SAVES.XML</SavesFile>

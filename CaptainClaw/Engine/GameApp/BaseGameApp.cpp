@@ -342,6 +342,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     {
         SetStringIfDefined(&m_GameOptions.rezArchivePath,
             assetsElem->FirstChildElement("RezArchive"));
+        ParseValueFromXmlElem(&m_GameOptions.customArchivePath,
+            assetsElem->FirstChildElement("CustomArchive"));
         SetUintIfDefined(&m_GameOptions.resourceCacheSize,
             assetsElem->FirstChildElement("ResourceCacheSize"));
         SetStringIfDefined(&m_GameOptions.tempDir,
@@ -577,7 +579,7 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
 
     IResourceFile* rezArchive = new ResourceRezArchive(gameOptions.rezArchivePath);
 
-    m_pResourceCache = new ResourceCache(gameOptions.resourceCacheSize, rezArchive, "REZ");
+    m_pResourceCache = new ResourceCache(gameOptions.resourceCacheSize, rezArchive, ORIGINAL_RESOURCE);
     if (!m_pResourceCache->Init())
     {
         LOG_ERROR("Failed to initialize resource cachce from resource file: " + std::string(gameOptions.rezArchivePath));
@@ -594,20 +596,22 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
     m_pResourceCache->RegisterLoader(MidiResourceLoader::Create());
     m_pResourceCache->RegisterLoader(PcxResourceLoader::Create());
 
-    m_pResourceMgr = new ResourceMgrImpl();
-    m_pResourceMgr->VAddResourceCache(m_pResourceCache);
-
-    /*IResourceFile* pZipArchive = new ResourceZipArchive("TEST_ZIP.zip");
-    ResourceCache* pZipCache = new ResourceCache(30, pZipArchive, "ZIP");
-    if (!pZipCache->Init())
+    IResourceFile* pCustomArchive = new ResourceZipArchive(gameOptions.customArchivePath);
+    ResourceCache* pCustomCache = new ResourceCache(50, pCustomArchive, CUSTOM_RESOURCE);
+    if (!pCustomCache->Init())
     {
-        LOG_ERROR("Failed to initialize resource cachce from resource file: TEST_ZIP.zip");
+        LOG_ERROR("Failed to initialize resource cachce from resource file: " + gameOptions.customArchivePath);
         return false;
     }
 
-    pZipCache->RegisterLoader(DefaultResourceLoader::Create());
-    
-    m_pResourceMgr->VAddResourceCache(pZipCache);*/
+    pCustomCache->RegisterLoader(DefaultResourceLoader::Create());
+    pCustomCache->RegisterLoader(XmlResourceLoader::Create());
+    pCustomCache->RegisterLoader(WavResourceLoader::Create());
+    pCustomCache->RegisterLoader(PcxResourceLoader::Create());
+
+    m_pResourceMgr = new ResourceMgrImpl();
+    m_pResourceMgr->VAddResourceCache(m_pResourceCache);
+    m_pResourceMgr->VAddResourceCache(pCustomCache);
 
     LOG("Resource cache successfully initialized");
 

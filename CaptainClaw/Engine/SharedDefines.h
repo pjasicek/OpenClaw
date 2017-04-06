@@ -56,6 +56,11 @@ typedef int8_t int8;
 #define max(a, b) ((a) < (b) ? (b) : (a))
 #endif
 
+// Resource caches
+// Hardcoding this saves A LOT of headaches
+#define ORIGINAL_RESOURCE "CLAW_REZ"
+#define CUSTOM_RESOURCE   "ASSETS_ZIP"
+
 const uint32 INVALID_ACTOR_ID = 0;
 const uint32 INVALID_GAME_VIEW_ID = 0xFFFFFFFF;
 
