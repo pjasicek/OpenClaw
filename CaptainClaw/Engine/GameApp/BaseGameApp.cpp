@@ -6,6 +6,7 @@
 #include "BaseGameLogic.h"
 #include "../UserInterface/HumanView.h"
 #include "../Resource/ResourceMgr.h"
+#include "../Graphics2D/Image.h"
 
 // Resource loaders
 #include "../Resource/Loaders/DefaultLoader.h"
@@ -17,6 +18,7 @@
 #include "../Resource/Loaders/WavLoader.h"
 #include "../Resource/Loaders/MidiLoader.h"
 #include "../Resource/Loaders/PcxLoader.h"
+#include "../Resource/Loaders/PngLoader.h"
 
 #include "BaseGameApp.h"
 
@@ -70,6 +72,8 @@ bool BaseGameApp::Initialize(int argc, char** argv)
     m_pResourceCache->Preload("/CLAW/*", NULL);
     m_pResourceCache->Preload("/GAME/*", NULL);
     m_pResourceCache->Preload("/STATES/*", NULL);
+
+    m_pResourceMgr->VPreload("*", NULL, CUSTOM_RESOURCE);
 
     m_IsRunning = true;
 
@@ -608,6 +612,7 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
     pCustomCache->RegisterLoader(XmlResourceLoader::Create());
     pCustomCache->RegisterLoader(WavResourceLoader::Create());
     pCustomCache->RegisterLoader(PcxResourceLoader::Create());
+    pCustomCache->RegisterLoader(PngResourceLoader::Create());
 
     m_pResourceMgr = new ResourceMgrImpl();
     m_pResourceMgr->VAddResourceCache(m_pResourceCache);

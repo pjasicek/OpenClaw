@@ -285,6 +285,9 @@
     <ClCompile Include="Engine\Resource\Miniz.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Resource\Loaders\PngLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Process\Process.h">
@@ -579,6 +582,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Resource\Miniz.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Resource\Loaders\PngLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

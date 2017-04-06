@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <SDL2/SDL_image.h>
 #include "Image.h"
+#include "../SharedDefines.h"
 
 Image::Image()
 {
@@ -128,6 +129,7 @@ Image* Image::CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* rende
     SDL_Surface* pSurface = IMG_LoadPCX_RW(pRWops);
     if (pSurface == NULL)
     {
+        LOG_ERROR(IMG_GetError());
         return NULL;
     }
 
@@ -141,11 +143,42 @@ Image* Image::CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* rende
 
     if (pTexture == NULL)
     {
+        LOG_ERROR(IMG_GetError());
         return NULL;
     }
 
-    if (!pImage->InitializePcx(pTexture))
+    if (!pImage->Initialize(pTexture))
     {
+        LOG_ERROR(IMG_GetError());
+        return NULL;
+    }
+
+    return pImage;
+}
+
+Image* Image::CreatePngImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer)
+{
+    Image* pImage = new Image();
+    SDL_RWops* pRWops = SDL_RWFromMem((void*)rawBuffer, size);
+    SDL_Surface* pSurface = IMG_LoadPNG_RW(pRWops);
+    if (pSurface == NULL)
+    {
+        LOG_ERROR(IMG_GetError());
+        return NULL;
+    }
+
+    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, pSurface);
+    SDL_FreeSurface(pSurface);
+
+    if (pTexture == NULL)
+    {
+        LOG_ERROR(IMG_GetError());
+        return NULL;
+    }
+
+    if (!pImage->Initialize(pTexture))
+    {
+        LOG_ERROR(IMG_GetError());
         return NULL;
     }
 
@@ -173,7 +206,7 @@ bool Image::Initialize(WapPid* pid, SDL_Renderer* renderer)
     return true;
 }
 
-bool Image::InitializePcx(SDL_Texture* pTexture)
+bool Image::Initialize(SDL_Texture* pTexture)
 {
     if (pTexture == NULL)
     {
