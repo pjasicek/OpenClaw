@@ -117,7 +117,9 @@
     <ClCompile Include="Engine\Process\PowerupProcess.cpp" />
     <ClCompile Include="Engine\Resource\Loaders\MidiLoader.cpp" />
     <ClCompile Include="Engine\Resource\Loaders\PcxLoader.cpp" />
+    <ClCompile Include="Engine\Resource\Miniz.cpp" />
     <ClCompile Include="Engine\Resource\ResourceMgr.cpp" />
+    <ClCompile Include="Engine\Resource\ZipFile.cpp" />
     <ClCompile Include="Engine\Scene\HUDSceneNode.cpp" />
     <ClCompile Include="Engine\UserInterface\Console.cpp" />
     <ClCompile Include="Engine\Actor\Actor.cpp" />
@@ -196,7 +198,9 @@
     <ClInclude Include="Engine\Audio\Audio.h" />
     <ClInclude Include="ClawGameLogic.h" />
     <ClInclude Include="ClawHumanView.h" />
+    <ClInclude Include="Engine\Resource\Miniz.h" />
     <ClInclude Include="Engine\Resource\ResourceMgr.h" />
+    <ClInclude Include="Engine\Resource\ZipFile.h" />
     <ClInclude Include="Engine\Util\Converters.h" />
     <ClInclude Include="Engine\GameApp\CommandHandler.h" />
     <ClInclude Include="Engine\GameApp\GameSaves.h" />

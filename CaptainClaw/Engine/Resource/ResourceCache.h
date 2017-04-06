@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <libwap.h>
 #include "../SharedDefines.h"
+#include "ZipFile.h"
 
 class Resource
 {
@@ -106,6 +107,28 @@ private:
     RezArchive* _rezArchive;
     std::string _rezArchiveFileName;
 };
+
+class ResourceZipArchive : public IResourceFile
+{
+public:
+    ResourceZipArchive(const std::string resFileName) { m_pZipFile = NULL; m_FileName = resFileName; }
+    virtual ~ResourceZipArchive();
+
+    virtual bool VOpen();
+    virtual std::string VGetName() const { return m_FileName; }
+    virtual int VGetRawResourceSize(Resource* r);
+    virtual int VGetRawResource(Resource* r, char *buffer);
+    virtual int VGetNumResources() const;
+    virtual std::string VGetResourceName(int num) const;
+    virtual bool VIsUsingDevelopmentDirectories(void) const { return false; }
+    virtual std::vector<std::string> GetAllFilesInDirectory(const char* directoryPath);
+
+private:
+    ZipFile *m_pZipFile;
+    std::string m_FileName;
+};
+
+//------------------------------------------------------------------------------------------------
 
 class ResourceCache;
 class ResourceHandle

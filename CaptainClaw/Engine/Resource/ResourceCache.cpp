@@ -128,6 +128,77 @@ std::vector<std::string> ResourceRezArchive::GetAllFilesInDirectory(const char* 
 }
 
 //=================================================================================================
+// class ResourceZipArchive
+//
+//     This class implements the IResourceFile interface with ZipFile
+//
+
+ResourceZipArchive::~ResourceZipArchive()
+{
+    SAFE_DELETE(m_pZipFile);
+}
+
+bool ResourceZipArchive::VOpen()
+{
+    m_pZipFile = new ZipFile;
+    if (m_pZipFile)
+    {
+        return m_pZipFile->Init(m_FileName.c_str());
+    }
+    return false;
+}
+
+int ResourceZipArchive::VGetRawResourceSize(Resource* r)
+{
+    std::string path = r->GetName().c_str();
+    int resourceNum = m_pZipFile->Find(path);
+    if (resourceNum == -1)
+    {
+        return -1;
+    }
+
+    return m_pZipFile->GetFileLen(resourceNum);
+}
+
+int ResourceZipArchive::VGetRawResource(Resource* r, char *buffer)
+{
+    int size = 0;
+    std::string path = r->GetName();
+    int resourceNum = m_pZipFile->Find(path);
+    size = m_pZipFile->GetFileLen(resourceNum);
+    if (size >= 0)
+    {
+        m_pZipFile->ReadFile(resourceNum, buffer);
+    }
+
+    return size;
+}
+
+int ResourceZipArchive::VGetNumResources() const
+{
+    return (m_pZipFile == NULL) ? 0 : m_pZipFile->GetNumFiles();
+}
+
+std::string ResourceZipArchive::VGetResourceName(int num) const
+{
+    std::string resName = "";
+    if (m_pZipFile != NULL && num >= 0 && num < m_pZipFile->GetNumFiles())
+    {
+        resName = m_pZipFile->GetFilename(num);
+    }
+    return resName;
+}
+
+std::vector<std::string> ResourceZipArchive::GetAllFilesInDirectory(const char* directoryPath)
+{
+    assert(false && "Not Implemented !");
+
+    std::vector<std::string> filesInDirectory;
+
+    return filesInDirectory;
+}
+
+//=================================================================================================
 // class ResourceHandle
 //
 
