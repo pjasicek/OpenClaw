@@ -5,6 +5,8 @@
 #include "../GameApp/BaseGameLogic.h"
 #include "../GameApp/GameSaves.h"
 #include "../Resource/Loaders/PcxLoader.h"
+#include "../Resource/Loaders/PngLoader.h"
+#include "../Resource/ResourceMgr.h"
 
 std::map<std::string, MenuPage> g_StringToMenuPageEnumMap =
 {
@@ -553,6 +555,14 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
     if (shared_ptr<Image> pImage = TryLoadPcxImageFromXmlElement(pElem->FirstChildElement("ActiveImage")))
     {
         m_Images.insert(std::make_pair(MenuItemState_Active, pImage));
+    }
+    // TODO: Think of a better way. Should be probably MenuItemState_Custom, not inactive
+    if (TiXmlElement* pCustomImageElem = pElem->FirstChildElement("CustomImage"))
+    {
+        std::string imagePath = pCustomImageElem->GetText();
+        shared_ptr<Image> pImage = PngResourceLoader::LoadAndReturnImage(imagePath.c_str());
+        assert(pImage != nullptr);
+        m_Images.insert(std::make_pair(MenuItemState_Inactive, pImage));
     }
 
     if (TiXmlElement* pGeneratedEventElem = pElem->FirstChildElement("GeneratedEvent"))

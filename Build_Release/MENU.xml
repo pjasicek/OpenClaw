@@ -1932,4 +1932,35 @@
             </GeneratedEvent>
         </MenuItem>
     </MenuPage>
+    
+    <!-- CREDITS PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_Credits</PageName>
+        <MenuItem>
+            <Name>CREDITS_IMAGE_PETR</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <CustomImage>/Credits/credits_ja.png</CustomImage>
+            <Position x="44" y="150" />
+        </MenuItem>
+        <MenuItem>
+            <Name>CREDITS_IMAGE_PETR</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <CustomImage>/Credits/credits_pavel.png</CustomImage>
+            <Position x="340" y="150" />
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/SAVE/001_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/SAVE/002_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="420" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
 </GameMenu>
