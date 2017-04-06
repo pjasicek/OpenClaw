@@ -159,7 +159,7 @@
         <MenuItem>
             <Name>UPLOAD_SCORES_BUTTON</Name>
             <Type>Button</Type>
-            <State>Inactive</State>
+            <State>Disabled</State>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/009_UPLOADSCORES.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/010_UPLOADSCORES.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/011_UPLOADSCORES.PCX</DisabledImage>
@@ -1905,6 +1905,30 @@
             <GeneratedEvent>
                 <Type>SwitchPage</Type>
                 <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    
+    <!-- SAVE GAME LPAGE -->
+    <MenuPage>
+        <PageName>MenuPage_SinglePlayer_SaveGame</PageName>
+        <MenuItem>
+            <Name>SAVE_GAME_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/SAVE/003_EXPLANATION.PCX</InactiveImage>
+            <Position x="44" y="161" />
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type> 
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/SAVE/001_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/SAVE/002_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="320" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer</PageName>
             </GeneratedEvent>
         </MenuItem>
     </MenuPage>
