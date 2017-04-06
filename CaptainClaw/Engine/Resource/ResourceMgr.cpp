@@ -8,26 +8,43 @@ ResourceMgrImpl::~ResourceMgrImpl()
 
 void ResourceMgrImpl::VAddResourceCache(ResourceCache* pCache)
 {
-    m_ResourceCacheMap.insert(std::make_pair(pCache->GetName(), pCache));
+    m_ResourceCacheList.push_back(pCache);
 }
 
-std::shared_ptr<ResourceHandle> ResourceMgrImpl::VGetHandle(Resource* r, std::string resCacheName)
+ResourceCache* ResourceMgrImpl::GetResourceCacheFromName(const std::string& resCacheName)
 {
-    assert(!m_ResourceCacheMap.empty());
+    assert(m_ResourceCacheList.size() > 0);
+
+    for (ResourceCache* pResCache : m_ResourceCacheList)
+    {
+        if (pResCache->GetName() == resCacheName)
+        {
+            return pResCache;
+        }
+    }
+
+    return NULL;
+}
+
+std::shared_ptr<ResourceHandle> ResourceMgrImpl::VGetHandle(Resource* r, const std::string& resCacheName)
+{
+    assert(!m_ResourceCacheList.empty());
+
+
 
     // Find res cache by name
     if (!resCacheName.empty())
     {
-        auto findIt = m_ResourceCacheMap.find(resCacheName);
-        assert(findIt != m_ResourceCacheMap.end());
+        ResourceCache* pResCache = GetResourceCacheFromName(resCacheName);
+        assert(pResCache != NULL);
 
-        return findIt->second->GetHandle(r);
+        return pResCache->GetHandle(r);
     }
     else // Find in all available res caches
     {
-        for (auto iter : m_ResourceCacheMap)
+        for (ResourceCache* pResCache : m_ResourceCacheList)
         {
-            if (std::shared_ptr<ResourceHandle> pHandle = iter.second->GetHandle(r))
+            if (std::shared_ptr<ResourceHandle> pHandle = pResCache->GetHandle(r))
             {
                 return pHandle;
             }
@@ -37,49 +54,49 @@ std::shared_ptr<ResourceHandle> ResourceMgrImpl::VGetHandle(Resource* r, std::st
     return nullptr;
 }
 
-int32 ResourceMgrImpl::VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), std::string resCacheName)
+int32 ResourceMgrImpl::VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), const std::string& resCacheName)
 {
-    assert(!m_ResourceCacheMap.empty());
+    assert(!m_ResourceCacheList.empty());
 
     int32 totalLoaded = 0;
 
     // Preload res cache by name
     if (!resCacheName.empty())
     {
-        auto findIt = m_ResourceCacheMap.find(resCacheName);
-        assert(findIt != m_ResourceCacheMap.end());
+        ResourceCache* pResCache = GetResourceCacheFromName(resCacheName);
+        assert(pResCache != NULL);
 
-        totalLoaded = findIt->second->Preload(pattern, progressCallback);
+        return pResCache->Preload(pattern, progressCallback);
     }
     else // Preload all available res caches
     {
-        for (auto iter : m_ResourceCacheMap)
+        for (ResourceCache* pResCache : m_ResourceCacheList)
         {
-            totalLoaded += iter.second->Preload(pattern, progressCallback);
+            totalLoaded += pResCache->Preload(pattern, progressCallback);
         }
     }
 
     return totalLoaded;
 }
 
-std::vector<std::string> ResourceMgrImpl::VMatch(const std::string pattern, std::string resCacheName)
+std::vector<std::string> ResourceMgrImpl::VMatch(const std::string pattern, const std::string& resCacheName)
 {
-    assert(!m_ResourceCacheMap.empty());
+    assert(!m_ResourceCacheList.empty());
 
     std::vector<std::string> matchedStrings;
 
     if (!resCacheName.empty())
     {
-        auto findIt = m_ResourceCacheMap.find(resCacheName);
-        assert(findIt != m_ResourceCacheMap.end());
+        ResourceCache* pResCache = GetResourceCacheFromName(resCacheName);
+        assert(pResCache != NULL);
 
-        matchedStrings = findIt->second->Match(pattern);
+        matchedStrings = pResCache->Match(pattern);
     }
     else
     {
-        for (auto iter : m_ResourceCacheMap)
+        for (ResourceCache* pResCache : m_ResourceCacheList)
         {
-            std::vector<std::string> matched = iter.second->Match(pattern);
+            std::vector<std::string> matched = pResCache->Match(pattern);
             matchedStrings.insert(matchedStrings.end(), matched.begin(), matched.end());
         }
     }
@@ -87,24 +104,24 @@ std::vector<std::string> ResourceMgrImpl::VMatch(const std::string pattern, std:
     return matchedStrings;
 }
 
-std::vector<std::string> ResourceMgrImpl::VGetAllFilesInDirectory(const char* directoryPath, std::string resCacheName)
+std::vector<std::string> ResourceMgrImpl::VGetAllFilesInDirectory(const char* directoryPath, const std::string& resCacheName)
 {
-    assert(!m_ResourceCacheMap.empty());
+    assert(!m_ResourceCacheList.empty());
 
     std::vector<std::string> allFiles;
 
     if (!resCacheName.empty())
     {
-        auto findIt = m_ResourceCacheMap.find(resCacheName);
-        assert(findIt != m_ResourceCacheMap.end());
+        ResourceCache* pResCache = GetResourceCacheFromName(resCacheName);
+        assert(pResCache != NULL);
 
-        allFiles = findIt->second->GetAllFilesInDirectory(directoryPath);
+        allFiles = pResCache->GetAllFilesInDirectory(directoryPath);
     }
     else
     {
-        for (auto iter : m_ResourceCacheMap)
+        for (ResourceCache* pResCache : m_ResourceCacheList)
         {
-            std::vector<std::string> files = iter.second->GetAllFilesInDirectory(directoryPath);
+            std::vector<std::string> files = pResCache->GetAllFilesInDirectory(directoryPath);
             allFiles.insert(allFiles.end(), files.begin(), files.end());
         }
     }
@@ -112,24 +129,24 @@ std::vector<std::string> ResourceMgrImpl::VGetAllFilesInDirectory(const char* di
     return allFiles;
 }
 
-void ResourceMgrImpl::VFlush(std::string resCacheName)
+void ResourceMgrImpl::VFlush(const std::string& resCacheName)
 {
-    assert(!m_ResourceCacheMap.empty());
+    assert(!m_ResourceCacheList.empty());
 
     std::vector<std::string> allFiles;
 
     if (!resCacheName.empty())
     {
-        auto findIt = m_ResourceCacheMap.find(resCacheName);
-        assert(findIt != m_ResourceCacheMap.end());
+        ResourceCache* pResCache = GetResourceCacheFromName(resCacheName);
+        assert(pResCache != NULL);
 
-        findIt->second->Flush();
+        pResCache->Flush();
     }
     else
     {
-        for (auto iter : m_ResourceCacheMap)
+        for (ResourceCache* pResCache : m_ResourceCacheList)
         {
-            iter.second->Flush();
+            pResCache->Flush();
         }
     }
 }

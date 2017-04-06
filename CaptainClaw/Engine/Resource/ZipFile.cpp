@@ -177,7 +177,7 @@ bool ZipFile::Init(const std::string &resFileName)
             spath.insert(0, "/");
             m_ZipContentsMap[spath] = i;
 
-            LOG("spath: " + spath);
+            //LOG("spath: " + spath);
 
             // Skip name, extra and comment fields.
             pfh += fh.fnameLen + fh.xtraLen + fh.cmntLen;

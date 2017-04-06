@@ -12,28 +12,30 @@ public:
     virtual ~IResourceMgr() { }
 
     virtual void VAddResourceCache(ResourceCache* pCache) = 0;
-    virtual std::shared_ptr<ResourceHandle> VGetHandle(Resource* r, std::string resCacheName = "") = 0;
-    virtual int32 VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), std::string resCacheName = "") = 0;
-    virtual std::vector<std::string> VMatch(const std::string pattern, std::string resCacheName = "") = 0;
-    virtual std::vector<std::string> VGetAllFilesInDirectory(const char* directoryPath, std::string resCacheName = "") = 0;
-    virtual void VFlush(std::string resCacheName = "") = 0;
+    virtual std::shared_ptr<ResourceHandle> VGetHandle(Resource* r, const std::string& resCacheName = "") = 0;
+    virtual int32 VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), const std::string& resCacheName = "") = 0;
+    virtual std::vector<std::string> VMatch(const std::string pattern, const std::string& resCacheName = "") = 0;
+    virtual std::vector<std::string> VGetAllFilesInDirectory(const char* directoryPath, const std::string& resCacheName = "") = 0;
+    virtual void VFlush(const std::string& resCacheName = "") = 0;
 };
 
-typedef std::map<std::string, ResourceCache*> ResourceCacheMap;
+typedef std::vector<ResourceCache*> ResourceCacheList;
 class ResourceMgrImpl : public IResourceMgr
 {
 public:
     virtual ~ResourceMgrImpl();
 
     virtual void VAddResourceCache(ResourceCache* pCache);
-    virtual std::shared_ptr<ResourceHandle> VGetHandle(Resource* r, std::string resCacheName = ORIGINAL_RESOURCE);
-    virtual int32 VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), std::string resCacheName = ORIGINAL_RESOURCE);
-    virtual std::vector<std::string> VMatch(const std::string pattern, std::string resCacheName = ORIGINAL_RESOURCE);
-    virtual std::vector<std::string> VGetAllFilesInDirectory(const char* directoryPath, std::string resCacheName = ORIGINAL_RESOURCE);
-    virtual void VFlush(std::string resCacheName = ORIGINAL_RESOURCE);
+    virtual std::shared_ptr<ResourceHandle> VGetHandle(Resource* r, const std::string& resCacheName = "");
+    virtual int32 VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), const std::string& resCacheName = "");
+    virtual std::vector<std::string> VMatch(const std::string pattern, const std::string& resCacheName = "");
+    virtual std::vector<std::string> VGetAllFilesInDirectory(const char* directoryPath, const std::string& resCacheName = "");
+    virtual void VFlush(const std::string& resCacheName = "");
 
 private:
-    ResourceCacheMap m_ResourceCacheMap;
+    ResourceCache* GetResourceCacheFromName(const std::string& resCacheName);
+
+    ResourceCacheList m_ResourceCacheList;
 };
 
 #endif
