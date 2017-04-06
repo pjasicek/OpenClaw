@@ -1909,7 +1909,7 @@
         </MenuItem>
     </MenuPage>
     
-    <!-- SAVE GAME LPAGE -->
+    <!-- SAVE GAME PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_SaveGame</PageName>
         <MenuItem>

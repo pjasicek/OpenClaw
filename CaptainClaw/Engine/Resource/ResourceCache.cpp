@@ -151,8 +151,9 @@ ResourceHandle::~ResourceHandle()
 // class ResourceCache
 //
 
-ResourceCache::ResourceCache(const uint32 sizeInMB, IResourceFile* resourceFile)
+ResourceCache::ResourceCache(const uint32 sizeInMB, IResourceFile* resourceFile, std::string name)
 {
+	m_Name = name;
     _cacheSize = sizeInMB * 1024 * 1024;
     _allocated = 0;
     _resourceFile = resourceFile;
@@ -186,10 +187,9 @@ void ResourceCache::RegisterLoader(std::shared_ptr<IResourceLoader> loader)
 std::shared_ptr<ResourceHandle> ResourceCache::GetHandle(Resource* r)
 {
     std::shared_ptr<ResourceHandle> handle(Find(r));
-    if (handle == NULL)
+    if (handle == nullptr)
     {
         handle = Load(r);
-        assert(handle);
     }
     else
     {
@@ -218,14 +218,14 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
     if (!loader)
     {
         LOG_ERROR("Default resource loader for resource: " + r->GetName() + " not found");
-        return NULL;
+        return nullptr;
     }
 
     int32 rawSize = _resourceFile->VGetRawResourceSize(r);
     if (rawSize < 0)
     {
         LOG_ERROR("Resource size return -1 => Resource not found. Resource: " + r->GetName());
-        return NULL;
+		return nullptr;
     }
 
     int32 allocSize = rawSize + ((loader->VAddNullZero()) ? (1) : (0));
@@ -234,7 +234,7 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
     {
         LOG_ERROR("Could not allocate enough memory for resource: " + r->GetName() + 
             " in resource file: " + _resourceFile->VGetName());
-        return NULL;
+		return nullptr;
     }
     memset(rawBuffer, 0, allocSize);
 
@@ -242,7 +242,7 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
     {
         LOG_ERROR("Could not retrieve data buffer from resource: " + r->GetName() + 
             " in resource file: " + _resourceFile->VGetName());
-        return NULL;
+		return nullptr;
     }
 
     char* buffer = NULL;
@@ -276,7 +276,7 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
         if (!success)
         {
             LOG_ERROR("Could not load resource from raw data");
-            return NULL;
+			return nullptr;
         }
     }
 
@@ -284,7 +284,7 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
     {
         LOG_ERROR("Could not load any handle from resource: " + r->GetName() +
             " in resource file: " + _resourceFile->VGetName());
-        return NULL;
+		return nullptr;
     }
 
     _lruList.push_front(handle);

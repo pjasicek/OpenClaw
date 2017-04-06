@@ -139,10 +139,12 @@ typedef std::map<std::string, std::shared_ptr<ResourceHandle>> ResourceHandleMap
 class ResourceCache
 {
 public:
-    ResourceCache(const uint32 sizeInMb, IResourceFile* resourceFile);
+    ResourceCache(const uint32 sizeInMb, IResourceFile* resourceFile, std::string name = "");
     virtual ~ResourceCache();
 
     bool Init();
+
+	std::string GetName() { return m_Name; }
 
     void RegisterLoader(std::shared_ptr<IResourceLoader> loader);
 
@@ -170,6 +172,7 @@ protected:
     void FreeOneResource();
 
 private:
+	std::string m_Name;
     IResourceFile* _resourceFile;
 
     uint64 _cacheSize;
