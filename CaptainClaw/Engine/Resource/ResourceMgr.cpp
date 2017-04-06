@@ -6,7 +6,7 @@ ResourceMgrImpl::~ResourceMgrImpl()
 
 }
 
-void ResourceMgrImpl::VAddResourceCache(shared_ptr<ResourceCache> pCache)
+void ResourceMgrImpl::VAddResourceCache(ResourceCache* pCache)
 {
     m_ResourceCacheMap.insert(std::make_pair(pCache->GetName(), pCache));
 }
@@ -29,7 +29,7 @@ std::shared_ptr<ResourceHandle> ResourceMgrImpl::VGetHandle(Resource* r, std::st
         {
             if (std::shared_ptr<ResourceHandle> pHandle = iter.second->GetHandle(r))
             {
-                pHandle;
+                return pHandle;
             }
         }
     }

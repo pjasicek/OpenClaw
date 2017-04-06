@@ -2,6 +2,7 @@
 
 #include "../../Graphics2D/Image.h"
 #include "../../GameApp/BaseGameApp.h"
+#include "../ResourceMgr.h"
 
 //=================================================================================================
 // class PcxResourceExtraData
@@ -28,8 +29,10 @@ shared_ptr<Image> PcxResourceLoader::LoadAndReturnImage(const char* resourceStri
     Resource resource(resourceString);
 
     shared_ptr<ResourceHandle> handle = g_pApp->GetResourceCache()->GetHandle(&resource);
-    shared_ptr<PcxResourceExtraData> extraData = std::static_pointer_cast<PcxResourceExtraData>(handle->GetExtraData());
+    //shared_ptr<ResourceHandle> handle = g_pApp->GetResourceMgr()->VGetHandle(&resource);
+    assert(handle != nullptr);
 
+    shared_ptr<PcxResourceExtraData> extraData = std::static_pointer_cast<PcxResourceExtraData>(handle->GetExtraData());
     if (!extraData)
     {
         extraData = shared_ptr<PcxResourceExtraData>(new PcxResourceExtraData());

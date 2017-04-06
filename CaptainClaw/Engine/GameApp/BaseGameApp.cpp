@@ -5,6 +5,7 @@
 #include "../Events/Events.h"
 #include "BaseGameLogic.h"
 #include "../UserInterface/HumanView.h"
+#include "../Resource/ResourceMgr.h"
 
 // Resource loaders
 #include "../Resource/Loaders/DefaultLoader.h"
@@ -576,7 +577,7 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
 
     IResourceFile* rezArchive = new ResourceRezArchive(gameOptions.rezArchivePath);
 
-    m_pResourceCache = new ResourceCache(gameOptions.resourceCacheSize, rezArchive);
+    m_pResourceCache = new ResourceCache(gameOptions.resourceCacheSize, rezArchive, "REZ");
     if (!m_pResourceCache->Init())
     {
         LOG_ERROR("Failed to initialize resource cachce from resource file: " + std::string(gameOptions.rezArchivePath));
@@ -592,6 +593,9 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
     m_pResourceCache->RegisterLoader(WavResourceLoader::Create());
     m_pResourceCache->RegisterLoader(MidiResourceLoader::Create());
     m_pResourceCache->RegisterLoader(PcxResourceLoader::Create());
+
+    m_pResourceMgr = new ResourceMgrImpl();
+    m_pResourceMgr->VAddResourceCache(m_pResourceCache);
 
     LOG("Resource cache successfully initialized");
 

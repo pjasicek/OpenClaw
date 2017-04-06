@@ -134,6 +134,7 @@ class EventMgr;
 class BaseGameLogic;
 class HumanView;
 class ResourceCache;
+class IResourceMgr;
 class Audio;
 
 typedef std::map<std::string, std::string> LocalizedStringsMap;
@@ -177,6 +178,7 @@ public:
     inline WapPal* GetCurrentPalette() const { return m_pPalette; }
     void SetCurrentPalette(WapPal* palette) { m_pPalette = palette; }
     inline ResourceCache* GetResourceCache() const { return m_pResourceCache; }
+    inline IResourceMgr* GetResourceMgr() const { return m_pResourceMgr; }
 
     BaseGameLogic* GetGameLogic() const { return m_pGame; }
     HumanView* GetHumanView() const;
@@ -208,6 +210,7 @@ protected:
 
     BaseGameLogic* m_pGame;
     ResourceCache* m_pResourceCache;
+    IResourceMgr* m_pResourceMgr; // This should replace m_pResourceCache since it wraps it
     EventMgr* m_pEventMgr;
     TTF_Font* m_pConsoleFont;
     Audio* m_pAudio;
