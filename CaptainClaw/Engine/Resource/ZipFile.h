@@ -23,6 +23,8 @@
 #include "../SharedDefines.h"
 
 typedef std::map<std::string, int> ZipContentsMap;		// maps path to a zip content id
+typedef std::vector<std::string> FileList;
+typedef std::map<std::string, FileList> DirToFileListMap;
 
 class ZipFile
 {
@@ -37,6 +39,7 @@ public:
     std::string GetFilename(int i) const;
     int GetFileLen(int i) const;
     bool ReadFile(int i, void *pBuf);
+    std::vector<std::string> GetAllFilesInDirectory(const std::string& dirPath);
 
     // Added to show multi-threaded decompression
     bool ReadLargeFile(int i, void *pBuf, void(*progressCallback)(int, bool &));
@@ -44,6 +47,7 @@ public:
     int Find(const std::string &path) const;
 
     ZipContentsMap m_ZipContentsMap;
+    DirToFileListMap m_DirToFileListMap;
 
 private:
     struct TZipDirHeader;

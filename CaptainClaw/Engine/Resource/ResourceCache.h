@@ -120,7 +120,7 @@ public:
     virtual int VGetRawResource(Resource* r, char *buffer);
     virtual int VGetNumResources() const;
     virtual std::string VGetResourceName(int num) const;
-    virtual bool VIsUsingDevelopmentDirectories(void) const { return false; }
+    virtual bool VIsUsingDevelopmentDIrectories() const { return false; }
     virtual std::vector<std::string> GetAllFilesInDirectory(const char* directoryPath);
 
 private:

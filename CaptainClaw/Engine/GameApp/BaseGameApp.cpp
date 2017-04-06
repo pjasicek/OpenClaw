@@ -597,6 +597,18 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
     m_pResourceMgr = new ResourceMgrImpl();
     m_pResourceMgr->VAddResourceCache(m_pResourceCache);
 
+    /*IResourceFile* pZipArchive = new ResourceZipArchive("TEST_ZIP.zip");
+    ResourceCache* pZipCache = new ResourceCache(30, pZipArchive, "ZIP");
+    if (!pZipCache->Init())
+    {
+        LOG_ERROR("Failed to initialize resource cachce from resource file: TEST_ZIP.zip");
+        return false;
+    }
+
+    pZipCache->RegisterLoader(DefaultResourceLoader::Create());
+    
+    m_pResourceMgr->VAddResourceCache(pZipCache);*/
+
     LOG("Resource cache successfully initialized");
 
     return true;

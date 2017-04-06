@@ -105,6 +105,11 @@ struct ZipFile::TZipDirFileHeader
 
 #pragma pack()
 
+static bool IsZipDir(const std::string& node)
+{
+    return node.back() == '/';
+}
+
 // --------------------------------------------------------------------------
 // Function:      Init
 // Purpose:       Initialize the object and read the zip file directory.
@@ -147,6 +152,9 @@ bool ZipFile::Init(const std::string &resFileName)
 
     bool success = true;
 
+    //std::string lastDirPath = "/";
+    std::string dirPath;
+
     for (int i = 0; i < dh.nDirEntries && success; i++)
     {
         TZipDirFileHeader &fh = *(TZipDirFileHeader*)pfh;
@@ -161,20 +169,35 @@ bool ZipFile::Init(const std::string &resFileName)
         {
             pfh += sizeof(fh);
 
-            // Convert UNIX slashes to DOS backlashes.
-            for (int j = 0; j < fh.fnameLen; j++)
-                if (pfh[j] == '/')
-                    pfh[j] = '\\';
-
             char fileName[_MAX_PATH];
             memcpy(fileName, pfh, fh.fnameLen);
             fileName[fh.fnameLen] = 0;
             _strlwr_s(fileName, _MAX_PATH);
             std::string spath = fileName;
+            spath.insert(0, "/");
             m_ZipContentsMap[spath] = i;
+
+            LOG("spath: " + spath);
 
             // Skip name, extra and comment fields.
             pfh += fh.fnameLen + fh.xtraLen + fh.cmntLen;
+
+            std::string dirName = spath;
+            auto pos = dirName.rfind("/");
+            if (pos != std::string::npos)
+            {
+                dirName.erase(pos);
+            }
+            if (dirName.back() != '/')
+            {
+                dirName += '/';
+            }
+            //LOG("DirName: " + dirName);
+
+            if (!IsZipDir(spath))
+            {
+                m_DirToFileListMap[dirName].push_back(spath);
+            }
         }
     }
     if (!success)
@@ -186,6 +209,17 @@ bool ZipFile::Init(const std::string &resFileName)
         m_nEntries = dh.nDirEntries;
     }
 
+    /*for (auto it : m_DirToFileListMap)
+    {
+        LOG("DIR: " + it.first);
+        LOG("--------------");
+        for (auto it2 : it.second)
+        {
+            LOG("FILE: " + it2);
+        }
+        LOG("==============");
+    }*/
+
     return success;
 }
 
@@ -193,6 +227,12 @@ int ZipFile::Find(const std::string &path) const
 {
     std::string lowerCase = path;
     std::transform(lowerCase.begin(), lowerCase.end(), lowerCase.begin(), (int(*)(int)) std::tolower);
+    // In case the name doesnt start with forward flash, e.g. path == "folder1/folder2/file1", convert it
+    // to "/folder1/folder2/file1 format
+    if (lowerCase.size() > 0 && lowerCase[0] != '/')
+    {
+        lowerCase.insert(0, "/");
+    }
     ZipContentsMap::const_iterator i = m_ZipContentsMap.find(lowerCase);
     if (i == m_ZipContentsMap.end())
         return -1;
@@ -200,7 +240,10 @@ int ZipFile::Find(const std::string &path) const
     return i->second;
 }
 
+std::vector<std::string>  ZipFile::GetAllFilesInDirectory(const std::string& dirPath)
+{
 
+}
 
 // --------------------------------------------------------------------------
 // Function:      End

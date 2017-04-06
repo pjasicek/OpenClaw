@@ -191,9 +191,23 @@ std::string ResourceZipArchive::VGetResourceName(int num) const
 
 std::vector<std::string> ResourceZipArchive::GetAllFilesInDirectory(const char* directoryPath)
 {
-    assert(false && "Not Implemented !");
-
     std::vector<std::string> filesInDirectory;
+
+    std::string dirPath = directoryPath;
+    // Our directories beging and end with "/"
+    if (dirPath.size() > 0 && dirPath[0] != '/')
+    {
+        dirPath.insert(0, "/");
+    }
+    if (dirPath.back() != '/')
+    {
+        dirPath += "/";
+    }
+    auto findIt = m_pZipFile->m_DirToFileListMap.find(dirPath);
+    if (findIt != m_pZipFile->m_DirToFileListMap.end())
+    {
+        filesInDirectory.insert(filesInDirectory.end(), findIt->second.begin(), findIt->second.end());
+    }
 
     return filesInDirectory;
 }
