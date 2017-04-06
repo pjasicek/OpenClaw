@@ -215,6 +215,10 @@ bool ScreenElementMenu::Initialize(TiXmlElement* pElem)
     Point windowSize = g_pApp->GetWindowSize();
     g_MenuScale.Set(windowSize.x / m_pBackground->GetWidth(), windowSize.y / m_pBackground->GetHeight());
 
+    // Play some music
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+        new EventData_Request_Play_Sound(SOUND_MENU_MENUMUSIC, 100, false, -1)));
+
     return true;
 }
 
@@ -363,10 +367,6 @@ bool ScreenElementMenuPage::Initialize(TiXmlElement* pElem)
 
         m_MenuItems.push_back(pItem);
     }
-
-    // Play some music
-    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-        new EventData_Request_Play_Sound(SOUND_MENU_MENUMUSIC, 100, false, -1)));
 
     return true;
 }
