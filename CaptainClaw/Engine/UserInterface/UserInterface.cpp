@@ -44,6 +44,47 @@ std::map<std::string, MenuPage> g_StringToMenuPageEnumMap =
     { "MenuPage_Multiplayer_EditMacros",        MenuPage_Multiplayer_EditMacros }
 };
 
+std::map<std::string, SDL_Keycode> g_StringToSDLKeyCodeMap =
+{
+    { "Escape", SDL_SCANCODE_ESCAPE },
+    { "A", SDL_SCANCODE_A },
+    { "B", SDL_SCANCODE_B },
+    { "C", SDL_SCANCODE_C },
+    { "D", SDL_SCANCODE_D },
+    { "E", SDL_SCANCODE_E },
+    { "F", SDL_SCANCODE_F },
+    { "G", SDL_SCANCODE_G },
+    { "H", SDL_SCANCODE_H },
+    { "I", SDL_SCANCODE_I },
+    { "J", SDL_SCANCODE_J },
+    { "K", SDL_SCANCODE_K },
+    { "L", SDL_SCANCODE_L },
+    { "M", SDL_SCANCODE_M },
+    { "N", SDL_SCANCODE_N },
+    { "O", SDL_SCANCODE_O },
+    { "P", SDL_SCANCODE_P },
+    { "Q", SDL_SCANCODE_Q },
+    { "R", SDL_SCANCODE_R },
+    { "S", SDL_SCANCODE_S },
+    { "T", SDL_SCANCODE_T },
+    { "U", SDL_SCANCODE_U },
+    { "V", SDL_SCANCODE_V },
+    { "W", SDL_SCANCODE_W },
+    { "X", SDL_SCANCODE_X },
+    { "Y", SDL_SCANCODE_Y },
+    { "Z", SDL_SCANCODE_Z },
+    { "0", SDL_SCANCODE_0 },
+    { "1", SDL_SCANCODE_1 },
+    { "2", SDL_SCANCODE_2 },
+    { "3", SDL_SCANCODE_3 },
+    { "4", SDL_SCANCODE_4 },
+    { "5", SDL_SCANCODE_5 },
+    { "6", SDL_SCANCODE_6 },
+    { "7", SDL_SCANCODE_7 },
+    { "8", SDL_SCANCODE_8 },
+    { "9", SDL_SCANCODE_9 },
+};
+
 static SDL_Rect GetScreenRect()
 {
     Point windowSize = g_pApp->GetWindowSize();
@@ -120,6 +161,45 @@ static MenuItemState StringToMenuItemStateEnum(const std::string& str)
     assert(false && "Unknown menu item state string");
 
     return MenuItemState_None;
+}
+
+static IEventDataPtr XmlElemToGeneratedEvent(TiXmlElement* pElem)
+{
+    if (pElem == NULL)
+    {
+        return nullptr;
+    }
+
+    IEventDataPtr pEventData;
+    std::string eventType;
+    ParseValueFromXmlElem(&eventType, pElem->FirstChildElement("Type"));
+    if (eventType == "SwitchPage")
+    {
+        std::string pageName;
+        ParseValueFromXmlElem(&pageName, pElem->FirstChildElement("PageName"));
+
+        pEventData.reset(new EventData_Menu_SwitchPage(pageName));
+    }
+    else if (eventType == "LoadGame")
+    {
+        bool isNewGame;
+        int levelNumber, checkpointNumber;
+        ParseValueFromXmlElem(&isNewGame, pElem->FirstChildElement("IsNewGame"));
+        ParseValueFromXmlElem(&levelNumber, pElem->FirstChildElement("LevelNumber"));
+        ParseValueFromXmlElem(&checkpointNumber, pElem->FirstChildElement("CheckpointNumber"));
+
+        pEventData.reset(new EventData_Menu_LoadGame(levelNumber, isNewGame, checkpointNumber));
+    }
+    else if (eventType == "QuitGame")
+    {
+        pEventData.reset(new EventData_Quit_Game());
+    }
+    else
+    {
+        return nullptr;
+    }
+
+    return pEventData;
 }
 
 Point g_MenuScale = Point(1.0, 1.0);
@@ -300,27 +380,28 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
             return false;
         }
 
-        if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_DOWN)
+        SDL_Keycode keyCode = SDL_GetScancodeFromKey(evt.key.keysym.sym);
+        if (keyCode == SDL_SCANCODE_DOWN)
         {
             MoveToMenuItemIdx(activeMenuItemIdx, 1);
             return true;
         }
-        else if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_UP)
+        else if (keyCode == SDL_SCANCODE_UP)
         {
             MoveToMenuItemIdx(activeMenuItemIdx, -1);
             return true;
         }
-        else if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_LEFT)
+        else if (keyCode == SDL_SCANCODE_LEFT)
         {
             LOG_WARNING("Left arrow not handled at this time !")
         }
-        else if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_RIGHT)
+        else if (keyCode == SDL_SCANCODE_RIGHT)
         {
             LOG_WARNING("Right arrow not handled at this time !")
         }
-        else if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_SPACE ||
-                 SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_RETURN ||
-                 SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_KP_ENTER)
+        else if (keyCode == SDL_SCANCODE_SPACE ||
+                 keyCode == SDL_SCANCODE_RETURN ||
+                 keyCode == SDL_SCANCODE_KP_ENTER)
         {
             if (shared_ptr<ScreenElementMenuItem> pActiveMenuItem = GetActiveMenuItem())
             {
@@ -334,6 +415,10 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
                 LOG_WARNING("Could not find any active menu item !");
             }
             return true;
+        }
+        else if (m_KeyToEventMap.find(keyCode) != m_KeyToEventMap.end())
+        {
+            IEventMgr::Get()->VQueueEvent(m_KeyToEventMap[keyCode]);
         }
     }
     
@@ -368,6 +453,31 @@ bool ScreenElementMenuPage::Initialize(TiXmlElement* pElem)
         }
 
         m_MenuItems.push_back(pItem);
+    }
+
+    // Load all key events
+    for (TiXmlElement* pKeyboardEvent = pElem->FirstChildElement("KeyboardEvent");
+        pKeyboardEvent != NULL;
+        pKeyboardEvent = pKeyboardEvent->NextSiblingElement("KeyboardEvent"))
+    {
+        std::string keyStr;
+        ParseValueFromXmlElem(&keyStr, pKeyboardEvent->FirstChildElement("KeyType"));
+        auto findIt = g_StringToSDLKeyCodeMap.find(keyStr);
+        if (findIt == g_StringToSDLKeyCodeMap.end())
+        {
+            LOG_ERROR("Failed to find corresponding SDL key to : " + keyStr);
+            return false;
+        }
+
+        IEventDataPtr pGeneratedEvent = 
+            XmlElemToGeneratedEvent(pKeyboardEvent->FirstChildElement("GeneratedEvent"));
+        if (pGeneratedEvent == nullptr)
+        {
+            LOG_ERROR("Failed to create generated event for menu keyboard key: " + keyStr);
+            return false;
+        }
+
+        m_KeyToEventMap.insert(std::make_pair(findIt->second, pGeneratedEvent));
     }
 
     return true;
@@ -567,32 +677,10 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
 
     if (TiXmlElement* pGeneratedEventElem = pElem->FirstChildElement("GeneratedEvent"))
     {
-        std::string eventType;
-        ParseValueFromXmlElem(&eventType, pGeneratedEventElem->FirstChildElement("Type"));
-        if (eventType == "SwitchPage")
+        m_pGeneratedEvent = XmlElemToGeneratedEvent(pGeneratedEventElem);
+        if (m_pGeneratedEvent == nullptr)
         {
-            std::string pageName;
-            ParseValueFromXmlElem(&pageName, pGeneratedEventElem->FirstChildElement("PageName"));
-
-            m_pGeneratedEvent.reset(new EventData_Menu_SwitchPage(pageName));
-        }
-        else if (eventType == "LoadGame")
-        {
-            bool isNewGame;
-            int levelNumber, checkpointNumber;
-            ParseValueFromXmlElem(&isNewGame, pGeneratedEventElem->FirstChildElement("IsNewGame"));
-            ParseValueFromXmlElem(&levelNumber, pGeneratedEventElem->FirstChildElement("LevelNumber"));
-            ParseValueFromXmlElem(&checkpointNumber, pGeneratedEventElem->FirstChildElement("CheckpointNumber"));
-
-            m_pGeneratedEvent.reset(new EventData_Menu_LoadGame(levelNumber, isNewGame, checkpointNumber));
-        }
-        else if (eventType == "QuitGame")
-        {
-            m_pGeneratedEvent.reset(new EventData_Quit_Game());
-        }
-        else
-        {
-            LOG_ERROR("Unknown event type: " + eventType + " for menu item: " + m_Name);
+            LOG_ERROR("Failed to create generated event for menu item: " + m_Name);
             return false;
         }
     }

@@ -101,6 +101,13 @@
     <!-- SINGLE PLAYER PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>SINGLE_PLAYER_TEXT</Name>
             <Type>Text</Type>
@@ -188,6 +195,13 @@
         <PageName>MenuPage_SinglePlayer_NewGame</PageName>
         <Columns>2</Columns>
         <ItemsInColumn>7</ItemsInColumn>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>NEW_GAME_TEXT</Name>
             <Type>Text</Type>
@@ -502,6 +516,13 @@
         <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
         <Columns>2</Columns>
         <ItemsInColumn>7</ItemsInColumn>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_GAME_TEXT</Name>
             <Type>Text</Type>
@@ -792,6 +813,13 @@
     <!-- LOAD GAME LEVEL 1 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level1</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL1_TEXT</Name>
             <Type>Text</Type>
@@ -872,6 +900,13 @@
     <!-- LOAD GAME LEVEL 2 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level2</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL2_TEXT</Name>
             <Type>Text</Type>
@@ -952,6 +987,13 @@
     <!-- LOAD GAME LEVEL 3 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level3</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL3_TEXT</Name>
             <Type>Text</Type>
@@ -1032,6 +1074,13 @@
     <!-- LOAD GAME LEVEL 4 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level4</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL4_TEXT</Name>
             <Type>Text</Type>
@@ -1112,6 +1161,13 @@
     <!-- LOAD GAME LEVEL 5 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level5</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL5_TEXT</Name>
             <Type>Text</Type>
@@ -1192,6 +1248,13 @@
     <!-- LOAD GAME LEVEL 6 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level6</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL6_TEXT</Name>
             <Type>Text</Type>
@@ -1272,6 +1335,13 @@
     <!-- LOAD GAME LEVEL 7 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level7</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL7_TEXT</Name>
             <Type>Text</Type>
@@ -1352,6 +1422,13 @@
     <!-- LOAD GAME LEVEL 8 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level8</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL8_TEXT</Name>
             <Type>Text</Type>
@@ -1432,6 +1509,13 @@
     <!-- LOAD GAME LEVEL 9 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level9</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL9_TEXT</Name>
             <Type>Text</Type>
@@ -1512,6 +1596,13 @@
     <!-- LOAD GAME LEVEL 10 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level10</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL10_TEXT</Name>
             <Type>Text</Type>
@@ -1592,6 +1683,13 @@
     <!-- LOAD GAME LEVEL 11 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level11</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL11_TEXT</Name>
             <Type>Text</Type>
@@ -1672,6 +1770,13 @@
     <!-- LOAD GAME LEVEL 12 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level12</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL12_TEXT</Name>
             <Type>Text</Type>
@@ -1752,6 +1857,13 @@
     <!-- LOAD GAME LEVEL 13 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level13</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL13_TEXT</Name>
             <Type>Text</Type>
@@ -1832,6 +1944,13 @@
     <!-- LOAD GAME LEVEL 14 PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_LoadGame_Level14</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer_LoadGame</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>LOAD_LEVEL14_TEXT</Name>
             <Type>Text</Type>
@@ -1912,6 +2031,13 @@
     <!-- SAVE GAME PAGE -->
     <MenuPage>
         <PageName>MenuPage_SinglePlayer_SaveGame</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>SAVE_GAME_TEXT</Name>
             <Type>Text</Type>
@@ -1936,6 +2062,13 @@
     <!-- CREDITS PAGE -->
     <MenuPage>
         <PageName>MenuPage_Credits</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
         <MenuItem>
             <Name>CREDITS_IMAGE_PETR</Name>
             <Type>Text</Type>

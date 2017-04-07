@@ -140,6 +140,7 @@ private:
 class ScreenElementMenuItem;
 
 typedef std::vector<shared_ptr<ScreenElementMenuItem>> MenuItemList;
+typedef std::map<SDL_Keycode, IEventDataPtr> KeyToEventMap;
 
 // This is menupage like MenuPage_Main, MenuPage_SinglePlayer, etc.
 class ScreenElementMenuPage : public IScreenElement
@@ -169,6 +170,8 @@ private:
     int GetActiveMenuItemIdx();
     bool MoveToMenuItemIdx(int oldIdx, int idxIncrement);
     shared_ptr<ScreenElementMenuItem> GetActiveMenuItem();
+
+    KeyToEventMap m_KeyToEventMap;
 
     MenuPage m_PageType;
     MenuItemList m_MenuItems;
