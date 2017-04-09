@@ -612,7 +612,7 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
             clickRect.h = 1;
 
             SDL_Rect dummy;
-
+            //
             for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
             {
                 SDL_Rect itemRect = pMenuItem->GetMenuItemRect();
