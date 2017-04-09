@@ -278,6 +278,10 @@ void HumanView::RegisterAllDelegates()
     pEventMgr->VAddListener(MakeDelegate(this, &HumanView::RequestResetLevelDelegate), EventData_Request_Reset_Level::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &HumanView::LoadGameDelegate), EventData_Menu_LoadGame::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::SetVolumeDelegate), EventData_Set_Volume::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::SoundEnabledChangedDelegate), EventData_Sound_Enabled_Changed::sk_EventType);
 }
 
 void HumanView::RemoveAllDelegates()
@@ -295,6 +299,10 @@ void HumanView::RemoveAllDelegates()
     pEventMgr->VRemoveListener(MakeDelegate(this, &HumanView::RequestResetLevelDelegate), EventData_Request_Reset_Level::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
         this, &HumanView::LoadGameDelegate), EventData_Menu_LoadGame::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &HumanView::SetVolumeDelegate), EventData_Set_Volume::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &HumanView::SoundEnabledChangedDelegate), EventData_Sound_Enabled_Changed::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -461,8 +469,8 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
             shared_ptr<MidiFile> pMidiFile = MidiResourceLoader::LoadAndReturnMidiFile(pCastEventData->GetSoundPath().c_str());
             assert(pMidiFile != nullptr);
 
-            g_pApp->GetAudio()->PlayMusic(pMidiFile->data, pMidiFile->size, true);
-            g_pApp->GetAudio()->SetMusicVolume(pCastEventData->GetVolume());
+            g_pApp->GetAudio()->PlayMusic(pMidiFile->data, pMidiFile->size, pCastEventData->GetNumLoops() != 0);
+            //g_pApp->GetAudio()->SetMusicVolume(pCastEventData->GetVolume());
         }
         else // Effect / Speech etc. - WAV
         {
@@ -522,5 +530,57 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         m_pScene->SetCamera(m_pCamera);
 
         g_pApp->GetGameLogic()->VChangeState(GameState_LoadingLevel);
+    }
+}
+
+void HumanView::SetVolumeDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Set_Volume> pCastEventData =
+        static_pointer_cast<EventData_Set_Volume>(pEventData);
+
+    if (pCastEventData)
+    {
+        if (pCastEventData->GetIsMusicVolume())
+        {
+            if (pCastEventData->GetIsDelta())
+            {
+                int currentVolume = g_pApp->GetAudio()->GetMusicVolume();
+                g_pApp->GetAudio()->SetMusicVolume(currentVolume + pCastEventData->GetVolume());
+            }
+            else
+            {
+                g_pApp->GetAudio()->SetMusicVolume(pCastEventData->GetVolume());
+            }
+        }
+        else
+        {
+            if (pCastEventData->GetIsDelta())
+            {
+                int currentVolume = g_pApp->GetAudio()->GetSoundVolume();
+                g_pApp->GetAudio()->SetSoundVolume(currentVolume + pCastEventData->GetVolume());
+            }
+            else
+            {
+                g_pApp->GetAudio()->SetSoundVolume(pCastEventData->GetVolume());
+            }
+        }
+    }
+}
+
+void HumanView::SoundEnabledChangedDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Sound_Enabled_Changed> pCastEventData =
+        static_pointer_cast<EventData_Sound_Enabled_Changed>(pEventData);
+
+    if (pCastEventData)
+    {
+        if (pCastEventData->GetIsMusic())
+        {
+            g_pApp->GetAudio()->SetMusicActive(pCastEventData->GetIsEnabled());
+        }
+        else
+        {
+            g_pApp->GetAudio()->SetSoundActive(pCastEventData->GetIsEnabled());
+        }
     }
 }

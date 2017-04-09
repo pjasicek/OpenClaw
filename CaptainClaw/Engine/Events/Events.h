@@ -2095,6 +2095,80 @@ private:
 };
 
 //---------------------------------------------------------------------------------------------------------------------
+// EventData_Menu_Modifiy_Item_Visibility
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Menu_Modifiy_Item_Visibility : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Menu_Modifiy_Item_Visibility()
+    {
+
+    }
+
+    EventData_Menu_Modifiy_Item_Visibility(std::string menuItemName, bool visible)
+    {
+        m_MenuItemName = menuItemName;
+        m_bVisible = visible;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Menu_Modifiy_Item_Visibility(m_MenuItemName, m_bVisible));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_MenuItemName << m_bVisible; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_MenuItemName >> m_bVisible; }
+
+    std::string GetMenuItemName() const { return m_MenuItemName; }
+    bool GetIsVisible() { return m_bVisible; }
+
+    virtual const char* GetName(void) const { return "EventData_Menu_Modifiy_Item_Visibility"; }
+
+private:
+    std::string m_MenuItemName;
+    bool m_bVisible;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Menu_Modifiy_Item_State
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Menu_Modify_Item_State : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Menu_Modify_Item_State()
+    {
+
+    }
+
+    EventData_Menu_Modify_Item_State(std::string menuItemName, std::string menuItemStateStr)
+    {
+        m_MenuItemName = menuItemName;
+        m_MenuItemStateStr = menuItemStateStr;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Menu_Modify_Item_State(m_MenuItemName, m_MenuItemStateStr));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_MenuItemName << m_MenuItemStateStr; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_MenuItemName >> m_MenuItemStateStr; }
+
+    std::string GetMenuItemName() const { return m_MenuItemName; }
+    std::string GetMenuItemState() const { return m_MenuItemStateStr; }
+
+    virtual const char* GetName(void) const { return "EventData_Menu_Modify_Item_State"; }
+
+private:
+    std::string m_MenuItemName;
+    std::string m_MenuItemStateStr;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
 // EventData_Menu_LoadGame
 //---------------------------------------------------------------------------------------------------------------------
 class EventData_Menu_LoadGame : public BaseEventData
@@ -2152,6 +2226,86 @@ public:
     virtual void VDeserialize(std::istringstream& in) { assert(false && "This event CANNOT be deserialized"); }
 
     virtual const char* GetName(void) const { return "EventData_Quit_Game"; }
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Set_Volume
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Set_Volume : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Set_Volume()
+    {
+        m_bIsMusicVolume = false;
+        m_bIsDelta = false;
+        m_Volume = -1;
+    }
+
+    EventData_Set_Volume(int volume, bool isDelta, bool isForMusic)
+    {
+        m_bIsMusicVolume = isForMusic;
+        m_bIsDelta = isDelta;
+        m_Volume = volume;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Set_Volume(m_Volume, m_bIsDelta, m_bIsMusicVolume));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_Volume << m_bIsDelta << m_bIsMusicVolume; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_Volume >> m_bIsDelta >> m_bIsMusicVolume; }
+
+    bool GetIsMusicVolume() { return m_bIsMusicVolume; }
+    bool GetIsDelta() { return m_bIsDelta; }
+    int GetVolume() { return m_Volume; }
+
+    virtual const char* GetName(void) const { return "EventData_Set_Volume"; }
+
+private:
+    bool m_bIsMusicVolume;
+    bool m_bIsDelta;
+    int m_Volume;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Sound_Enabled_Changed
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Sound_Enabled_Changed : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Sound_Enabled_Changed()
+    {
+        m_bIsEnabled = false;
+        m_bIsMusic = false;
+    }
+
+    EventData_Sound_Enabled_Changed(bool isEnabled, bool isMusic)
+    {
+        m_bIsEnabled = isEnabled;
+        m_bIsMusic = isMusic;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Sound_Enabled_Changed(m_bIsEnabled, m_bIsMusic));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_bIsEnabled << m_bIsMusic; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_bIsEnabled >> m_bIsMusic; }
+
+    bool GetIsEnabled() { return m_bIsEnabled; }
+    bool GetIsMusic() { return m_bIsMusic; }
+
+    virtual const char* GetName(void) const { return "EventData_Sound_Enabled_Changed"; }
+
+private:
+    bool m_bIsEnabled;
+    bool m_bIsMusic;
 };
 
 #endif

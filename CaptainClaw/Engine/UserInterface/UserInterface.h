@@ -41,8 +41,9 @@ enum MenuPage
     MenuPage_Multiplayer,                  // Unused
     MenuPage_ReplayMovies,                 // Unused
     MenuPage_Options, 
-    MenuPage_Credits,                      // Unused
-    MenuPage_Help,                         // Unused
+    MenuPage_Credits,                      
+    MenuPage_Help,                         
+    MenuPage_QuitGame,                         
     
     // Pages accessible from MenuPage_SinglePlayer
     MenuPage_SinglePlayer_NewGame,
@@ -66,8 +67,8 @@ enum MenuPage
     MenuPage_SinglePlayer_LoadGame_Level13,
     MenuPage_SinglePlayer_LoadGame_Level14,
 
-    // Some more but currently unusable...
     MenuPage_Options_EditPlayers,
+    MenuPage_Options_Difficulty,
     MenuPage_Options_Controls,
     MenuPage_Options_Display,
     MenuPage_Options_Audio,
@@ -129,6 +130,8 @@ public:
 
 private:
     void SwitchPageDelegate(IEventDataPtr pEventData);
+    void ModifyMenuItemVisibilityDelegate(IEventDataPtr pEventData);
+    void ModifyMenuItemStateDelegate(IEventDataPtr pEventData);
 
     shared_ptr<Image> m_pBackground;
     SDL_Renderer* m_pRenderer;
@@ -165,10 +168,12 @@ public:
 
     void OnPageLoaded();
 
+    shared_ptr<ScreenElementMenuItem> FindMenuItemByName(std::string name);
+
 private:
     void DeactivateAllMenuItems();
     int GetActiveMenuItemIdx();
-    bool MoveToMenuItemIdx(int oldIdx, int idxIncrement);
+    bool MoveToMenuItemIdx(int oldIdx, int idxIncrement, bool playSound = true);
     shared_ptr<ScreenElementMenuItem> GetActiveMenuItem();
 
     KeyToEventMap m_KeyToEventMap;
@@ -185,7 +190,8 @@ enum MenuItemType
     MenuItemType_None,
     MenuItemType_Text,
     MenuItemType_Button,
-    MenuItemType_Slider
+    MenuItemType_Slider,
+    MenuItemType_Image
 };
 
 enum MenuItemState
@@ -196,10 +202,36 @@ enum MenuItemState
     MenuItemState_Active
 };
 
+/*
+// This is a single image with given state
+struct MenuItemImage
+{
+    MenuItemImage()
+    {
+        pImage = nullptr;
+        imageState = MenuItemState_None;
+    }
+
+    shared_ptr<Image> pImage;
+    MenuItemState imageState;
+};
+
+// This is a defined menu item with its images, e.g. menu item with active image and inactive image
+struct MenuItemImageContainer
+{
+    std::string name;
+    std::vector<shared_ptr<MenuItemImage>> imageList;
+};
+*/
+
 // This is menu item like button, slider, text, etc.
 class ScreenElementMenuItem : public IScreenElement
 {
     typedef std::map<MenuItemState, shared_ptr<Image>> MenuItemImageMap;
+    typedef std::vector<IEventDataPtr> EventList;
+    typedef std::map<MenuItemState, EventList> StateChangeEventMap;
+    typedef std::map<SDL_Keycode, EventList> KeyToEventMap;
+    //typedef std::vector<shared_ptr<MenuItemImageContainer>> MenuItemImageContainerList;
 
 public:
     ScreenElementMenuItem(SDL_Renderer* pRenderer);
@@ -212,14 +244,14 @@ public:
 
     virtual int32 VGetZOrder() const { return 0; }
     virtual void VSetZOrder(int32 const zOrder) { }
-    virtual bool VIsVisible() { return true; }
-    virtual void VSetVisible(bool visible) { }
+    virtual bool VIsVisible() { return m_bVisible; }
+    virtual void VSetVisible(bool visible) { m_bVisible = visible; }
 
     virtual bool VOnEvent(SDL_Event& evt);
 
     bool Initialize(TiXmlElement* pElem);
 
-    std::string GetName() { return m_Name; }
+    std::string GetName() const { return m_Name; }
 
     MenuItemState GetState() { return m_State; }
     bool SetState(MenuItemState state);
@@ -227,14 +259,24 @@ public:
     bool CanBeFocused();
     bool Press();
 
+    void OnStateChanged(MenuItemState newState, MenuItemState oldState);
+
 private:
     std::string m_Name;
     MenuItemState m_State;
+    Point m_DefaultPosition;
     Point m_Position;
+    bool m_bVisible;
+    MenuItemType m_Type;
 
-    shared_ptr<IEventData> m_pGeneratedEvent;
+    EventList m_GeneratedEventList;
+    StateChangeEventMap m_StateEnterEventMap;
+    StateChangeEventMap m_StateLeaveEventMap;
+    KeyToEventMap m_KeyToEventMap;
+    SDL_Scancode m_Hotkey;
 
     MenuItemImageMap m_Images;
+    //MenuItemImageContainerList m_MenuItemImageContainerList;
     SDL_Renderer* m_pRenderer;
 };
 

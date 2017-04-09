@@ -306,13 +306,13 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             windowSizeElem->Attribute("height", &m_GameOptions.windowHeight);
         }
 
-        SetDoubleIfDefined(&m_GameOptions.scale,
+        ParseValueFromXmlElem(&m_GameOptions.scale,
             displayElem->FirstChildElement("Scale"));
-        SetBoolIfDefined(&m_GameOptions.useVerticalSync,
+        ParseValueFromXmlElem(&m_GameOptions.useVerticalSync,
             displayElem->FirstChildElement("UseVerticalSync"));
-        SetBoolIfDefined(&m_GameOptions.isFullscreen,
+        ParseValueFromXmlElem(&m_GameOptions.isFullscreen,
             displayElem->FirstChildElement("IsFullscreen"));
-        SetBoolIfDefined(&m_GameOptions.isFullscreenDesktop,
+        ParseValueFromXmlElem(&m_GameOptions.isFullscreenDesktop,
             displayElem->FirstChildElement("IsFullscreenDesktop"));
     }
 
@@ -322,20 +322,24 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     TiXmlElement* audioElem = configRoot->FirstChildElement("Audio");
     if (audioElem)
     {
-        SetUintIfDefined(&m_GameOptions.frequency,
+        ParseValueFromXmlElem(&m_GameOptions.frequency,
             audioElem->FirstChildElement("Frequency"));
-        SetUintIfDefined(&m_GameOptions.soundChannels,
+        ParseValueFromXmlElem(&m_GameOptions.soundChannels,
             audioElem->FirstChildElement("SoundChannels"));
-        SetUintIfDefined(&m_GameOptions.mixingChannels,
+        ParseValueFromXmlElem(&m_GameOptions.mixingChannels,
             audioElem->FirstChildElement("MixingChannels"));
-        SetUintIfDefined(&m_GameOptions.chunkSize,
+        ParseValueFromXmlElem(&m_GameOptions.chunkSize,
             audioElem->FirstChildElement("ChunkSize"));
-        SetStringIfDefined(&m_GameOptions.midiRpcServerPath,
+        ParseValueFromXmlElem(&m_GameOptions.midiRpcServerPath,
             audioElem->FirstChildElement("MusiscRpcServerPath"));
-        SetIntIfDefined(&m_GameOptions.soundVolume,
+        ParseValueFromXmlElem(&m_GameOptions.soundVolume,
             audioElem->FirstChildElement("SoundVolume"));
-        SetIntIfDefined(&m_GameOptions.musicVolume,
+        ParseValueFromXmlElem(&m_GameOptions.musicVolume,
             audioElem->FirstChildElement("MusicVolume"));
+        ParseValueFromXmlElem(&m_GameOptions.soundOn,
+            audioElem->FirstChildElement("SoundOn"));
+        ParseValueFromXmlElem(&m_GameOptions.musicOn,
+            audioElem->FirstChildElement("MusicOn"));
     }
 
     //-------------------------------------------------------------------------
@@ -344,15 +348,15 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     TiXmlElement* assetsElem = configRoot->FirstChildElement("Assets");
     if (assetsElem)
     {
-        SetStringIfDefined(&m_GameOptions.rezArchivePath,
+        ParseValueFromXmlElem(&m_GameOptions.rezArchivePath,
             assetsElem->FirstChildElement("RezArchive"));
         ParseValueFromXmlElem(&m_GameOptions.customArchivePath,
             assetsElem->FirstChildElement("CustomArchive"));
-        SetUintIfDefined(&m_GameOptions.resourceCacheSize,
+        ParseValueFromXmlElem(&m_GameOptions.resourceCacheSize,
             assetsElem->FirstChildElement("ResourceCacheSize"));
-        SetStringIfDefined(&m_GameOptions.tempDir,
+        ParseValueFromXmlElem(&m_GameOptions.tempDir,
             assetsElem->FirstChildElement("TempDir"));
-        SetStringIfDefined(&m_GameOptions.savesFile,
+        ParseValueFromXmlElem(&m_GameOptions.savesFile,
             assetsElem->FirstChildElement("SavesFile"));
     }
 
@@ -388,19 +392,19 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     //-------------------------------------------------------------------------
     if (TiXmlElement* pConsoleRootElem = configRoot->FirstChildElement("Console"))
     {
-        SetStringIfDefined(&m_GameOptions.consoleConfig.backgroundImagePath,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.backgroundImagePath,
             pConsoleRootElem->FirstChildElement("BackgroundImagePath"));
-        SetBoolIfDefined(&m_GameOptions.consoleConfig.stretchBackgroundImage,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.stretchBackgroundImage,
             pConsoleRootElem->FirstChildElement("StretchBackgroundImage"));
-        SetDoubleIfDefined(&m_GameOptions.consoleConfig.widthRatio,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.widthRatio,
             pConsoleRootElem->FirstChildElement("WidthRatio"));
-        SetDoubleIfDefined(&m_GameOptions.consoleConfig.heightRatio,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.heightRatio,
             pConsoleRootElem->FirstChildElement("HeightRatio"));
-        SetUintIfDefined(&m_GameOptions.consoleConfig.lineSeparatorHeight,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.lineSeparatorHeight,
             pConsoleRootElem->FirstChildElement("LineSeparatorHeight"));
-        SetUintIfDefined(&m_GameOptions.consoleConfig.commandPromptOffsetY,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.commandPromptOffsetY,
             pConsoleRootElem->FirstChildElement("CommandPromptOffsetY"));
-        SetDoubleIfDefined(&m_GameOptions.consoleConfig.consoleAnimationSpeed,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.consoleAnimationSpeed,
             pConsoleRootElem->FirstChildElement("ConsoleAnimationSpeed"));
         if (TiXmlElement* pElem = pConsoleRootElem->FirstChildElement("FontColor"))
         {
@@ -412,13 +416,13 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             m_GameOptions.consoleConfig.fontColor.g = g;
             m_GameOptions.consoleConfig.fontColor.b = b;
         }
-        SetUintIfDefined(&m_GameOptions.consoleConfig.fontHeight,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.fontHeight,
             pConsoleRootElem->FirstChildElement("FontHeight"));
-        SetUintIfDefined(&m_GameOptions.consoleConfig.leftOffset,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.leftOffset,
             pConsoleRootElem->FirstChildElement("LeftOffset"));
-        SetStringIfDefined(&m_GameOptions.consoleConfig.commandPrompt,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.commandPrompt,
             pConsoleRootElem->FirstChildElement("CommandPrompt"));
-        SetStringIfDefined(&m_GameOptions.consoleConfig.fontPath,
+        ParseValueFromXmlElem(&m_GameOptions.consoleConfig.fontPath,
             pConsoleRootElem->FirstChildElement("FontPath"));
     }
     else

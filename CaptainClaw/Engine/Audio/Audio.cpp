@@ -23,6 +23,21 @@ const uint32_t MIDI_RPC_MAX_HANDSHAKE_TRIES = 250;
 //################# API ######################
 //############################################
 
+Audio::Audio()
+    :
+    m_bIsServerInitialized(false),
+    m_bIsClientInitialized(false),
+    m_bIsMidiRpcInitialized(false),
+    m_bIsAudioInitialized(false),
+    m_RpcBindingString(NULL),
+    m_SoundVolume(0),
+    m_MusicVolume(0),
+    m_bSoundOn(true),
+    m_bMusicOn(true)
+{
+
+}
+
 Audio::~Audio()
 {
     Terminate();
@@ -30,12 +45,6 @@ Audio::~Audio()
 
 bool Audio::Initialize(const GameOptions& config)
 {
-    _isServerInitialized = false;
-    _isClientInitialized = false;
-    _isMidiRpcInitialized = false;
-    _isAudioInitialized = false;
-    _rpcBindingString = NULL;
-
     if (!SDL_WasInit(SDL_INIT_AUDIO))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Attempted to initialize Audio subsystem before SDL2 was initialized");
@@ -53,10 +62,15 @@ bool Audio::Initialize(const GameOptions& config)
 
     m_SoundVolume = config.soundVolume;
     m_MusicVolume = config.musicVolume;
+    m_bSoundOn = config.soundOn;
+    m_bMusicOn = config.musicOn;
+
+    LOG("MusicOn : " + ToStr(m_bMusicOn));
+    LOG("SoundOn : " + ToStr(m_bSoundOn));
 
 #ifdef _WIN32
-    _isMidiRpcInitialized = InitializeMidiRPC(config.midiRpcServerPath);
-    if (!_isMidiRpcInitialized)
+    m_bIsMidiRpcInitialized = InitializeMidiRPC(config.midiRpcServerPath);
+    if (!m_bIsMidiRpcInitialized)
     {
         return false;
     }
@@ -65,7 +79,7 @@ bool Audio::Initialize(const GameOptions& config)
     SetSoundVolume(m_SoundVolume);
     SetMusicVolume(m_MusicVolume);
 
-    _isAudioInitialized = true;
+    m_bIsAudioInitialized = true;
 
     return true;
 }
@@ -79,6 +93,11 @@ void Audio::Terminate()
 
 void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
 {
+    if (!m_bMusicOn)
+    {
+        return;
+    }
+
 #ifdef _WIN32
     RpcTryExcept
     {
@@ -104,6 +123,11 @@ void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
 // This is probably slow as fuck, should be removed, only used for debugging afaik
 void Audio::PlayMusic(const char* musicPath, bool looping)
 {
+    if (!m_bMusicOn)
+    {
+        return;
+    }
+
     std::ifstream musicFileStream(musicPath, std::ios::binary);
     if (!musicFileStream.is_open())
     {
@@ -171,8 +195,14 @@ void Audio::StopMusic()
 #endif //_WIN32
 }
 
-void Audio::SetMusicVolume(uint32_t volumePercentage)
+void Audio::SetMusicVolume(int volumePercentage)
 {
+    // Music has ~ 5x more potency than sound, so max is 20 instead of 100
+    volumePercentage = min(volumePercentage, 20);
+    if (volumePercentage < 0)
+    {
+        volumePercentage = 0;
+    }
     m_MusicVolume = (int)((((float)volumePercentage) / 100.0f) * (float)MIX_MAX_VOLUME);
 
 #ifdef _WIN32
@@ -190,6 +220,11 @@ void Audio::SetMusicVolume(uint32_t volumePercentage)
 #endif //_WIN32
 }
 
+int Audio::GetMusicVolume()
+{
+    return ceil(((float)m_MusicVolume / (float)MIX_MAX_VOLUME) * 100.0f);
+}
+
 bool Audio::PlaySound(const char* soundData, size_t soundSize, int volumePercentage, int loops)
 {
     SDL_RWops* soundRwOps = SDL_RWFromMem((void*)soundData, soundSize);
@@ -200,6 +235,11 @@ bool Audio::PlaySound(const char* soundData, size_t soundSize, int volumePercent
 
 bool Audio::PlaySound(Mix_Chunk* sound, int volumePercentage, int loops)
 {
+    if (!m_bSoundOn)
+    {
+        return true;
+    }
+
     int chunkVolume = (int)((((float)volumePercentage) / 100.0f) * (float)m_SoundVolume);
 
     Mix_VolumeChunk(sound, chunkVolume);
@@ -212,11 +252,21 @@ bool Audio::PlaySound(Mix_Chunk* sound, int volumePercentage, int loops)
     return true;
 }
 
-void Audio::SetSoundVolume(uint32_t volumePercentage)
+void Audio::SetSoundVolume(int volumePercentage)
 {
+    volumePercentage = min(volumePercentage, 100);
+    if (volumePercentage < 0)
+    {
+        volumePercentage = 0;
+    }
     m_SoundVolume = (int)((((float)volumePercentage) / 100.0f) * (float)MIX_MAX_VOLUME);
 
     Mix_Volume(-1, m_SoundVolume);
+}
+
+int Audio::GetSoundVolume()
+{
+    return ceil(((float)m_SoundVolume / (float)MIX_MAX_VOLUME) * 100.0f);
 }
 
 void Audio::StopAllSounds()
@@ -270,7 +320,7 @@ bool Audio::InitializeMidiRPCServer(const std::string& midiRpcServerPath)
                                            0, NULL, NULL, &si, &pi);
     if (doneCreateProc)
     {
-        _isServerInitialized = true;
+        m_bIsServerInitialized = true;
         LOG("MIDI RPC Server started. [" + std::string(midiRpcServerPath) + "]");
     }
     else
@@ -285,7 +335,7 @@ bool Audio::InitializeMidiRPCClient()
 {
     RPC_STATUS rpcStatus;
 
-    if (!_isServerInitialized)
+    if (!m_bIsServerInitialized)
     {
         LOG_ERROR("Failed to initialize RPC MIDI Client - server was was not initialized");
         return false;
@@ -296,7 +346,7 @@ bool Audio::InitializeMidiRPCClient()
                                        NULL,
                                        (RPC_CSTR)("2d4dc2f9-ce90-4080-8a00-1cb819086970"),
                                        NULL,
-                                       &_rpcBindingString);
+                                       &m_RpcBindingString);
 
     if (rpcStatus != 0)
     {
@@ -304,7 +354,7 @@ bool Audio::InitializeMidiRPCClient()
         return false;
     }
 
-    rpcStatus = RpcBindingFromStringBinding(_rpcBindingString, &hMidiRPCBinding);
+    rpcStatus = RpcBindingFromStringBinding(m_RpcBindingString, &hMidiRPCBinding);
 
     if (rpcStatus != 0)
     {
@@ -314,7 +364,7 @@ bool Audio::InitializeMidiRPCClient()
 
     LOG("RPC Client successfully initialized");
 
-    _isClientInitialized = true;
+    m_bIsClientInitialized = true;
 
     bool isServerListening = IsRPCServerListening();
     if (!isServerListening)
@@ -332,7 +382,7 @@ bool Audio::InitializeMidiRPCClient()
 
 bool Audio::IsRPCServerListening()
 {
-    if (!_isClientInitialized || !_isServerInitialized)
+    if (!m_bIsClientInitialized || !m_bIsServerInitialized)
     {
         return false;
     }

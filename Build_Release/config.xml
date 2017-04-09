@@ -12,7 +12,9 @@
         <MixingChannels>24</MixingChannels>
         <ChunkSize>2048</ChunkSize>
         <SoundVolume>50</SoundVolume>
-        <MusicVolume>10</MusicVolume>
+        <MusicVolume>8</MusicVolume>
+        <SoundOn>true</SoundOn>
+        <MusicOn>true</MusicOn>
         <MusicRpcServerPath>MidiProc.exe</MusicRpcServerPath>
     </Audio>
     <Font>
@@ -46,7 +48,7 @@
         <MaxFallSpeed>14.0</MaxFallSpeed>
         <IdleSoundQuoteInterval>15000</IdleSoundQuoteInterval>
         <PlatformSpeedModifier>0.015</PlatformSpeedModifier>
-        <MaxJumpHeight>130</MaxJumpHeight>
+        <MaxJumpHeight>142</MaxJumpHeight>
         <PowerupMaxJumpHeight>200</PowerupMaxJumpHeight>
         <SkipMenu>false</SkipMenu>
     </GlobalOptions>

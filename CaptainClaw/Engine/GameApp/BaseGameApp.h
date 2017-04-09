@@ -29,6 +29,8 @@ struct GameOptions
         chunkSize = 2048;
         soundVolume = 50; // In percents
         musicVolume = 50; // In percents
+        soundOn = true;
+        musicOn = true;
         midiRpcServerPath = "MidiProc.exe";
 
         fontNames.push_back("clacon.ttf");
@@ -64,6 +66,8 @@ struct GameOptions
     unsigned chunkSize;
     int soundVolume;
     int musicVolume;
+    bool soundOn;
+    bool musicOn;
     std::string midiRpcServerPath;
 
     // Font
@@ -117,7 +121,7 @@ struct GlobalOptions
         maxFallSpeed = 14.0;
         idleSoundQuoteIntervalMs = 15000;
         platformSpeedModifier = 0.015;
-        maxJumpHeight = 130;
+        maxJumpHeight = 150;
         powerupMaxJumpHeight = 200;
         skipMenu = false;
     }

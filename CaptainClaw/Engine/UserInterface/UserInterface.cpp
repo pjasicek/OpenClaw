@@ -7,6 +7,9 @@
 #include "../Resource/Loaders/PcxLoader.h"
 #include "../Resource/Loaders/PngLoader.h"
 #include "../Resource/ResourceMgr.h"
+#include "../Audio/Audio.h"
+
+#include <cctype>
 
 std::map<std::string, MenuPage> g_StringToMenuPageEnumMap =
 {
@@ -17,6 +20,7 @@ std::map<std::string, MenuPage> g_StringToMenuPageEnumMap =
     { "MenuPage_Options",                       MenuPage_Options },
     { "MenuPage_Credits",                       MenuPage_Credits },
     { "MenuPage_Help",                          MenuPage_Help },
+    { "MenuPage_QuitGame",                      MenuPage_QuitGame },
     { "MenuPage_SinglePlayer_NewGame",          MenuPage_SinglePlayer_NewGame },
     { "MenuPage_SinglePlayer_LoadGame",         MenuPage_SinglePlayer_LoadGame },
     { "MenuPage_SinglePlayer_LoadCustomLevel",  MenuPage_SinglePlayer_LoadCustomLevel },
@@ -37,6 +41,7 @@ std::map<std::string, MenuPage> g_StringToMenuPageEnumMap =
     { "MenuPage_SinglePlayer_LoadGame_Level13", MenuPage_SinglePlayer_LoadGame_Level13 },
     { "MenuPage_SinglePlayer_LoadGame_Level14", MenuPage_SinglePlayer_LoadGame_Level14 },
     { "MenuPage_Options_EditPlayers",           MenuPage_Options_EditPlayers },
+    { "MenuPage_Options_Difficulty",            MenuPage_Options_Difficulty },
     { "MenuPage_Options_Controls",              MenuPage_Options_Controls },
     { "MenuPage_Options_Display",               MenuPage_Options_Display },
     { "MenuPage_Options_Audio",                 MenuPage_Options_Audio },
@@ -44,7 +49,7 @@ std::map<std::string, MenuPage> g_StringToMenuPageEnumMap =
     { "MenuPage_Multiplayer_EditMacros",        MenuPage_Multiplayer_EditMacros }
 };
 
-std::map<std::string, SDL_Keycode> g_StringToSDLKeyCodeMap =
+std::map<std::string, SDL_Scancode> g_StringToSDLKeyCodeMap =
 {
     { "Escape", SDL_SCANCODE_ESCAPE },
     { "A", SDL_SCANCODE_A },
@@ -82,7 +87,16 @@ std::map<std::string, SDL_Keycode> g_StringToSDLKeyCodeMap =
     { "6", SDL_SCANCODE_6 },
     { "7", SDL_SCANCODE_7 },
     { "8", SDL_SCANCODE_8 },
-    { "9", SDL_SCANCODE_9 },
+    { "LeftArrow", SDL_SCANCODE_LEFT },
+    { "RightArrow", SDL_SCANCODE_RIGHT },
+};
+
+std::map<std::string, MenuItemType> g_StringToMenuItemType =
+{
+    { "Text",       MenuItemType_Text },
+    { "Button",     MenuItemType_Button },
+    { "Slider",     MenuItemType_Slider },
+    { "Image",      MenuItemType_Image },
 };
 
 static SDL_Rect GetScreenRect()
@@ -107,6 +121,47 @@ static shared_ptr<Image> TryLoadPcxImageFromXmlElement(TiXmlElement* pElem)
     assert(!imagePath.empty());
 
     return PcxResourceLoader::LoadAndReturnImage(imagePath.c_str(), true, { 0, 0, 0, 0 });
+}
+
+static shared_ptr<Image> LoadImageFromXmlElement(TiXmlElement* pElem)
+{
+    if (pElem == NULL)
+    {
+        return nullptr;
+    }
+
+    std::string imagePath = pElem->GetText();
+    // Length has to be atleast 5: A.BCD - one char for name, dot and 3 chars extension
+    if (imagePath.length() <= 5)
+    {
+        return nullptr;
+    }
+
+    // Transform to lowercase to support all naming conventions
+    std::transform(imagePath.begin(), imagePath.end(), imagePath.begin(), (int(*)(int)) std::tolower);
+
+    // We are ASSUMING here that all PCXs are from original CLAW.REZ archive
+    // For our own purpose we will use PNGs or JPEGs
+    std::string extension = imagePath.substr(imagePath.length() - 4);
+    shared_ptr<Image> pImage;
+    if (extension == ".pcx")
+    {
+        pImage = PcxResourceLoader::LoadAndReturnImage(imagePath.c_str(), true, { 0, 0, 0, 0 });
+    }
+    else if (extension == ".png")
+    {
+        pImage = PngResourceLoader::LoadAndReturnImage(imagePath.c_str());
+    }
+    else if (extension == ".jpg")
+    {
+        assert(false && "Unsupported");
+    }
+    else if (extension == ".jpeg")
+    {
+        assert(false && "Unsupported");
+    }
+
+    return pImage;
 }
 
 static MenuItemType StringToMenuItemTypeEnum(const std::string& str)
@@ -142,6 +197,18 @@ static MenuPage StringToMenuPageEnum(const std::string& str)
     return findIt->second;
 }
 
+static SDL_Scancode StringToSDLKeycode(const std::string& str)
+{
+    auto findIt = g_StringToSDLKeyCodeMap.find(str);
+    if (findIt == g_StringToSDLKeyCodeMap.end())
+    {
+        LOG_ERROR("Conflicting string: " + str);
+        assert(false && "Unknown hotkey string");
+    }
+
+    return findIt->second;
+}
+
 static MenuItemState StringToMenuItemStateEnum(const std::string& str)
 {
     if (str == "Active")
@@ -161,6 +228,18 @@ static MenuItemState StringToMenuItemStateEnum(const std::string& str)
     assert(false && "Unknown menu item state string");
 
     return MenuItemState_None;
+}
+
+static MenuItemType StringToMenuItemType(const std::string& str)
+{
+    auto findIt = g_StringToMenuItemType.find(str);
+    if (findIt == g_StringToMenuItemType.end())
+    {
+        LOG_ERROR("Conflicting string: " + str);
+        assert(false && "Unknown menu item type");
+    }
+
+    return findIt->second;
 }
 
 static IEventDataPtr XmlElemToGeneratedEvent(TiXmlElement* pElem)
@@ -194,6 +273,63 @@ static IEventDataPtr XmlElemToGeneratedEvent(TiXmlElement* pElem)
     {
         pEventData.reset(new EventData_Quit_Game());
     }
+    else if (eventType == "ChangeSoundEnabled")
+    {
+        bool isEnabled;
+        bool isMusic;
+        ParseValueFromXmlElem(&isEnabled, pElem->FirstChildElement("IsEnabled"));
+        ParseValueFromXmlElem(&isMusic, pElem->FirstChildElement("IsMusic"));
+
+        pEventData.reset(new EventData_Sound_Enabled_Changed(isEnabled, isMusic));
+    }
+    else if (eventType == "ModifyMenuItemVisibility")
+    {
+        std::string menuItemName;
+        bool isVisible;
+        ParseValueFromXmlElem(&menuItemName, pElem->FirstChildElement("MenuItemName"));
+        ParseValueFromXmlElem(&isVisible, pElem->FirstChildElement("IsVisible"));
+
+        pEventData.reset(new EventData_Menu_Modifiy_Item_Visibility(menuItemName, isVisible));
+    }
+    else if (eventType == "PlaySound")
+    {
+        std::string soundName;
+        int volume = 100;
+        bool isMusic;
+        int loops = 0;
+        ParseValueFromXmlElem(&soundName, pElem->FirstChildElement("SoundName"));
+        ParseValueFromXmlElem(&volume, pElem->FirstChildElement("Volume"));
+        ParseValueFromXmlElem(&isMusic, pElem->FirstChildElement("IsMusic"));
+        ParseValueFromXmlElem(&loops, pElem->FirstChildElement("Loops"));
+
+        pEventData.reset(new EventData_Request_Play_Sound(soundName, volume, isMusic, loops));
+    }
+    else if (eventType == "ModifyMenuItemState")
+    {
+        std::string menuItemName;
+        std::string menuItemState;
+        ParseValueFromXmlElem(&menuItemName, pElem->FirstChildElement("MenuItemName"));
+        ParseValueFromXmlElem(&menuItemState, pElem->FirstChildElement("State"));
+
+        pEventData.reset(new EventData_Menu_Modify_Item_State(menuItemName, menuItemState));
+    }
+    else if (eventType == "ModifyVolume")
+    {
+        int deltaVolume;
+        if (!ParseValueFromXmlElem(&deltaVolume, pElem->FirstChildElement("DeltaVolume")))
+        {
+            LOG_ERROR("No delta volume defined in ModifyVolume event !");
+            return nullptr;
+        }
+        bool isMusic;
+        if (!ParseValueFromXmlElem(&isMusic, pElem->FirstChildElement("IsMusic")))
+        {
+            LOG_ERROR("No sound specification (sound X music) defined in ModifyVolume event !");
+            return nullptr;
+        }
+
+        pEventData.reset(new EventData_Set_Volume(deltaVolume, true, isMusic));
+    }
     else
     {
         return nullptr;
@@ -216,6 +352,10 @@ ScreenElementMenu::ScreenElementMenu(SDL_Renderer* pRenderer)
 {
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &ScreenElementMenu::SwitchPageDelegate), EventData_Menu_SwitchPage::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &ScreenElementMenu::ModifyMenuItemVisibilityDelegate), EventData_Menu_Modifiy_Item_Visibility::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &ScreenElementMenu::ModifyMenuItemStateDelegate), EventData_Menu_Modify_Item_State::sk_EventType);
 }
 
 ScreenElementMenu::~ScreenElementMenu()
@@ -228,6 +368,10 @@ ScreenElementMenu::~ScreenElementMenu()
 
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
         this, &ScreenElementMenu::SwitchPageDelegate), EventData_Menu_SwitchPage::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &ScreenElementMenu::ModifyMenuItemVisibilityDelegate), EventData_Menu_Modifiy_Item_Visibility::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &ScreenElementMenu::ModifyMenuItemStateDelegate), EventData_Menu_Modify_Item_State::sk_EventType);
 }
 
 void ScreenElementMenu::VOnUpdate(uint32 msDiff)
@@ -322,6 +466,43 @@ void ScreenElementMenu::SwitchPageDelegate(IEventDataPtr pEventData)
     }
 }
 
+void ScreenElementMenu::ModifyMenuItemVisibilityDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Menu_Modifiy_Item_Visibility> pCastEventData =
+        static_pointer_cast<EventData_Menu_Modifiy_Item_Visibility>(pEventData);
+
+    std::string menuItemName = pCastEventData->GetMenuItemName();
+    bool isVisible = pCastEventData->GetIsVisible();
+
+    shared_ptr<ScreenElementMenuItem> pMenuItem = m_pActiveMenuPage->FindMenuItemByName(menuItemName);
+    if (pMenuItem)
+    {
+        pMenuItem->VSetVisible(isVisible);
+    }
+    else
+    {
+        LOG_ERROR("Could not find menu item: " + menuItemName);
+    }
+}
+
+void ScreenElementMenu::ModifyMenuItemStateDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Menu_Modify_Item_State> pCastEventData =
+        static_pointer_cast<EventData_Menu_Modify_Item_State>(pEventData);
+
+    MenuItemState state = StringToMenuItemStateEnum(pCastEventData->GetMenuItemState());
+    shared_ptr<ScreenElementMenuItem> pMenuItem =
+        m_pActiveMenuPage->FindMenuItemByName(pCastEventData->GetMenuItemName());
+    if (pMenuItem)
+    {
+        pMenuItem->SetState(state);
+    }
+    else
+    {
+        LOG_ERROR("Could not find menu item: " + pCastEventData->GetMenuItemName());
+    }
+}
+
 //-----------------------------------------------------------------------------
 //
 // ScreenElementMenuPage implementation
@@ -361,7 +542,10 @@ void ScreenElementMenuPage::VOnRender(uint32 msDiff)
 
     for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
     {
-        pMenuItem->VOnRender(msDiff);
+        if (pMenuItem->VIsVisible())
+        {
+            pMenuItem->VOnRender(msDiff);
+        }
     }
 }
 
@@ -391,14 +575,6 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
             MoveToMenuItemIdx(activeMenuItemIdx, -1);
             return true;
         }
-        else if (keyCode == SDL_SCANCODE_LEFT)
-        {
-            LOG_WARNING("Left arrow not handled at this time !")
-        }
-        else if (keyCode == SDL_SCANCODE_RIGHT)
-        {
-            LOG_WARNING("Right arrow not handled at this time !")
-        }
         else if (keyCode == SDL_SCANCODE_SPACE ||
                  keyCode == SDL_SCANCODE_RETURN ||
                  keyCode == SDL_SCANCODE_KP_ENTER)
@@ -418,6 +594,12 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
         }
         else if (m_KeyToEventMap.find(keyCode) != m_KeyToEventMap.end())
         {
+            // HACK:
+            if (keyCode == SDL_SCANCODE_ESCAPE)
+            {
+                IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                    new EventData_Request_Play_Sound(SOUND_MENU_SELECT_MENU_ITEM, 100)));
+            }
             IEventMgr::Get()->VQueueEvent(m_KeyToEventMap[keyCode]);
         }
     }
@@ -522,7 +704,7 @@ shared_ptr<ScreenElementMenuItem> ScreenElementMenuPage::GetActiveMenuItem()
     return nullptr;
 }
 
-bool ScreenElementMenuPage::MoveToMenuItemIdx(int oldIdx, int idxIncrement)
+bool ScreenElementMenuPage::MoveToMenuItemIdx(int oldIdx, int idxIncrement, bool playSound)
 {
     DeactivateAllMenuItems();
 
@@ -554,9 +736,12 @@ bool ScreenElementMenuPage::MoveToMenuItemIdx(int oldIdx, int idxIncrement)
         tryCount++;
     }
 
-    // Play sound
-    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-        new EventData_Request_Play_Sound(SOUND_MENU_CHANGE_MENU_ITEM, 100)));
+    if (playSound)
+    {
+        // Play sound
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(SOUND_MENU_CHANGE_MENU_ITEM, 100)));
+    }
 
     return true;
 }
@@ -564,7 +749,20 @@ bool ScreenElementMenuPage::MoveToMenuItemIdx(int oldIdx, int idxIncrement)
 void ScreenElementMenuPage::OnPageLoaded()
 {
     // Focus on first active button
-    MoveToMenuItemIdx(m_MenuItems.size() - 1, 1);
+    MoveToMenuItemIdx(m_MenuItems.size() - 1, 1, false);
+}
+
+shared_ptr<ScreenElementMenuItem> ScreenElementMenuPage::FindMenuItemByName(std::string name)
+{
+    for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
+    {
+        if (pMenuItem->GetName() == name)
+        {
+            return pMenuItem;
+        }
+    }
+
+    return nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -576,7 +774,9 @@ void ScreenElementMenuPage::OnPageLoaded()
 ScreenElementMenuItem::ScreenElementMenuItem(SDL_Renderer* pRenderer)
     :
     m_pRenderer(pRenderer),
-    m_State(MenuItemState_None)
+    m_State(MenuItemState_None),
+    m_Hotkey(SDL_SCANCODE_UNKNOWN),
+    m_bVisible(true)
 {
 
 }
@@ -588,7 +788,18 @@ ScreenElementMenuItem::~ScreenElementMenuItem()
 
 void ScreenElementMenuItem::VOnUpdate(uint32 msDiff)
 {
-
+    LOG("Music volume: " + ToStr(g_pApp->GetAudio()->GetMusicVolume()));
+    // This is a bit hacky but implementing this via XML would be pain in the ass right now...
+    if (m_Name == "SOUND_KNOB")
+    {
+        int soundVolume = g_pApp->GetAudio()->GetSoundVolume();
+        m_Position.SetX(m_DefaultPosition.x + (soundVolume / 10) * 20);
+    }
+    else if (m_Name == "MUSIC_KNOB")
+    {
+        int musicVolume = g_pApp->GetAudio()->GetMusicVolume();
+        m_Position.SetX(m_DefaultPosition.x + (musicVolume / 2) * 20);
+    }
 }
 
 void ScreenElementMenuItem::VOnRender(uint32 msDiff)
@@ -611,10 +822,27 @@ void ScreenElementMenuItem::VOnRender(uint32 msDiff)
 
 bool ScreenElementMenuItem::VOnEvent(SDL_Event& evt)
 {
+    if (evt.type == SDL_KEYDOWN && SDL_GetScancodeFromKey(evt.key.keysym.sym) == m_Hotkey)
+    {
+        return Press();
+    }
+
     // Does not make sense to try to process event on inactive menu item
     if (m_State != MenuItemState_Active)
     {
         return false;
+    }
+
+    if (evt.type == SDL_KEYDOWN)
+    {
+        auto findIt = m_KeyToEventMap.find(SDL_GetScancodeFromKey(evt.key.keysym.sym));
+        if (findIt != m_KeyToEventMap.end())
+        {
+            for (IEventDataPtr pEvent : findIt->second)
+            {
+                IEventMgr::Get()->VQueueEvent(pEvent);
+            }
+        }
     }
 
     return false;
@@ -623,6 +851,7 @@ bool ScreenElementMenuItem::VOnEvent(SDL_Event& evt)
 bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
 {
     SetPointIfDefined(&m_Position, pElem->FirstChildElement("Position"), "x", "y");
+    SetPointIfDefined(&m_DefaultPosition, pElem->FirstChildElement("Position"), "x", "y");
     ParseValueFromXmlElem(&m_Name, pElem->FirstChildElement("Name"));
 
     std::string menuItemStateStr;
@@ -654,34 +883,196 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
         }
     }
 
-    if (shared_ptr<Image> pImage = TryLoadPcxImageFromXmlElement(pElem->FirstChildElement("DisabledImage")))
+    if (TiXmlElement* pVisibilityConditionElem = pElem->FirstChildElement("VisibilityCondition"))
+    {
+        std::string conditionTypeStr;
+        ParseValueFromXmlElem(&conditionTypeStr, pVisibilityConditionElem->FirstChildElement("ConditionType"));
+        
+        // This element is visible only when certain condition is met
+        // so it is safe to assume it is not visible by default
+        m_bVisible = false;
+
+        if (conditionTypeStr == "SoundOn")
+        {
+            if (g_pApp->GetAudio()->IsSoundActive())
+            {
+                m_bVisible = true;
+            }
+        }
+        else if (conditionTypeStr == "SoundOff")
+        {
+            if (!g_pApp->GetAudio()->IsSoundActive())
+            {
+                m_bVisible = true;
+            }
+        }
+        else if (conditionTypeStr == "MusicOn")
+        {
+            if (g_pApp->GetAudio()->IsMusicActive())
+            {
+                m_bVisible = true;
+            }
+        }
+        else if (conditionTypeStr == "MusicOff")
+        {
+            if (!g_pApp->GetAudio()->IsMusicActive())
+            {
+                m_bVisible = true;
+            }
+        }
+        // TODO: Implement these ones
+        else if (conditionTypeStr == "VoiceOn")
+        {
+            m_bVisible = true;
+        }
+        else if (conditionTypeStr == "VoiceOn")
+        {
+            m_bVisible = false;
+        }
+        else if (conditionTypeStr == "AmbientOn")
+        {
+            m_bVisible = true;
+        }
+        else if (conditionTypeStr == "AmbientOff")
+        {
+            m_bVisible = false;
+        }
+    }
+    std::string menuItemTypeStr;
+    ParseValueFromXmlElem(&menuItemTypeStr, pElem->FirstChildElement("Type"));
+    m_Type = StringToMenuItemType(menuItemTypeStr);
+
+    ParseValueFromXmlElem(&m_bVisible, pElem->FirstChildElement("IsVisible"));
+
+    if (shared_ptr<Image> pImage = LoadImageFromXmlElement(pElem->FirstChildElement("DisabledImage")))
     {
         m_Images.insert(std::make_pair(MenuItemState_Disabled, pImage));
     }
-    if (shared_ptr<Image> pImage = TryLoadPcxImageFromXmlElement(pElem->FirstChildElement("InactiveImage")))
+    if (shared_ptr<Image> pImage = LoadImageFromXmlElement(pElem->FirstChildElement("InactiveImage")))
     {
         m_Images.insert(std::make_pair(MenuItemState_Inactive, pImage));
     }
-    if (shared_ptr<Image> pImage = TryLoadPcxImageFromXmlElement(pElem->FirstChildElement("ActiveImage")))
+    if (shared_ptr<Image> pImage = LoadImageFromXmlElement(pElem->FirstChildElement("ActiveImage")))
     {
         m_Images.insert(std::make_pair(MenuItemState_Active, pImage));
     }
-    // TODO: Think of a better way. Should be probably MenuItemState_Custom, not inactive
-    if (TiXmlElement* pCustomImageElem = pElem->FirstChildElement("CustomImage"))
+
+    /*for (TiXmlElement* pMenuItemImageElem = pElem->FirstChildElement("MenuItemImage");
+        pMenuItemImageElem != NULL;
+        pMenuItemImageElem = pMenuItemImageElem->NextSiblingElement("MenuItemImage"))
     {
-        std::string imagePath = pCustomImageElem->GetText();
-        shared_ptr<Image> pImage = PngResourceLoader::LoadAndReturnImage(imagePath.c_str());
-        assert(pImage != nullptr);
-        m_Images.insert(std::make_pair(MenuItemState_Inactive, pImage));
+        shared_ptr<MenuItemImage> pMenuItemImage(new MenuItemImage);
+        pMenuItemImage->pImage = LoadImageFromXmlElement(pMenuItemImageElem->FirstChildElement("Image"));
+        ParseValueFromXmlElem(&pMenuItemImage->imageTag, pMenuItemImageElem->FirstChildElement("ImageTag"));
+
+        std::string stateStr;
+        pMenuItemImage->currentState = StringToMenuItemStateEnum(stateStr);
+
+        if (pMenuItemImage->pImage == nullptr)
+        {
+            LOG_ERROR("Failed to load image with tag: " + pMenuItemImage->imageTag);
+            return false;
+        }
+
+        m_MenuItemImageList.push_back(pMenuItemImage);
+    }*/
+
+    std::string hotkeyStr;
+    if (ParseValueFromXmlElem(&hotkeyStr, pElem->FirstChildElement("Hotkey")))
+    {
+        m_Hotkey = StringToSDLKeycode(hotkeyStr);
     }
 
-    if (TiXmlElement* pGeneratedEventElem = pElem->FirstChildElement("GeneratedEvent"))
+    for (TiXmlElement* pGeneratedEventElem = pElem->FirstChildElement("GeneratedEvent");
+         pGeneratedEventElem != NULL;
+         pGeneratedEventElem = pGeneratedEventElem->NextSiblingElement("GeneratedEvent"))
     {
-        m_pGeneratedEvent = XmlElemToGeneratedEvent(pGeneratedEventElem);
-        if (m_pGeneratedEvent == nullptr)
+        IEventDataPtr pEvent = XmlElemToGeneratedEvent(pGeneratedEventElem);
+        if (pEvent == nullptr)
         {
             LOG_ERROR("Failed to create generated event for menu item: " + m_Name);
             return false;
+        }
+        m_GeneratedEventList.push_back(pEvent);
+    }
+
+    if (TiXmlElement* pStateEnterEventsElem = pElem->FirstChildElement("StateEnterEvents"))
+    {
+        for (TiXmlElement* pEventElem = pStateEnterEventsElem->FirstChildElement("Event");
+            pEventElem != NULL;
+            pEventElem = pEventElem->NextSiblingElement("Event"))
+        {
+            std::string forStateStr;
+            if (!ParseValueFromXmlElem(&forStateStr, pEventElem->FirstChildElement("ForState")))
+            {
+                LOG_ERROR("StateEnterEvent is missing state element !");
+                return false;
+            }
+            MenuItemState forState = StringToMenuItemStateEnum(forStateStr);
+
+            IEventDataPtr pEvent = XmlElemToGeneratedEvent(pEventElem);
+            if (pEvent == nullptr)
+            {
+                LOG_ERROR("Failed to create generated event for menu item: " + m_Name);
+                return false;
+            }
+            
+            m_StateEnterEventMap[forState].push_back(pEvent);
+        }
+    }
+
+    if (TiXmlElement* pStateEnterEventsElem = pElem->FirstChildElement("StateLeaveEvents"))
+    {
+        for (TiXmlElement* pEventElem = pStateEnterEventsElem->FirstChildElement("Event");
+            pEventElem != NULL;
+            pEventElem = pEventElem->NextSiblingElement("Event"))
+        {
+            std::string forStateStr;
+            if (!ParseValueFromXmlElem(&forStateStr, pEventElem->FirstChildElement("ForState")))
+            {
+                LOG_ERROR("StateEnterEvent is missing state element !");
+                return false;
+            }
+            MenuItemState forState = StringToMenuItemStateEnum(forStateStr);
+
+            IEventDataPtr pEvent = XmlElemToGeneratedEvent(pEventElem);
+            if (pEvent == nullptr)
+            {
+                LOG_ERROR("Failed to create generated event for menu item: " + m_Name);
+                return false;
+            }
+
+            m_StateLeaveEventMap[forState].push_back(pEvent);
+        }
+    }
+
+    if (TiXmlElement* pKeyAllKeyEventsElem = pElem->FirstChildElement("KeyEvents"))
+    {
+        for (TiXmlElement* pKeyEventElem = pKeyAllKeyEventsElem->FirstChildElement("KeyEvent");
+            pKeyEventElem != NULL;
+            pKeyEventElem = pKeyEventElem->NextSiblingElement("KeyEvent"))
+        {
+            std::string keyStr;
+            if (!ParseValueFromXmlElem(&keyStr, pKeyEventElem->FirstChildElement("Key")))
+            {
+                LOG_ERROR("KeyEvent has no Key defined !");
+                return false;
+            }
+            SDL_Scancode keyCode = StringToSDLKeycode(keyStr);
+
+            for (TiXmlElement* pEventElem = pKeyEventElem->FirstChildElement("Event");
+                pEventElem != NULL;
+                pEventElem = pEventElem->NextSiblingElement("Event"))
+            {
+                IEventDataPtr pEvent = XmlElemToGeneratedEvent(pEventElem);
+                if (pEvent == nullptr)
+                {
+                    LOG_ERROR("Failed to create KeyEvent for menu item: " + m_Name);
+                    return false;
+                }
+
+                m_KeyToEventMap[keyCode].push_back(pEvent);
+            }
         }
     }
 
@@ -696,9 +1087,15 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
 
 bool ScreenElementMenuItem::Press()
 {
-    if (m_pGeneratedEvent)
+    if (CanBeFocused() && !m_GeneratedEventList.empty())
     {
-        IEventMgr::Get()->VQueueEvent(m_pGeneratedEvent);
+        Focus();
+
+        for (IEventDataPtr pEvent : m_GeneratedEventList)
+        {
+            IEventMgr::Get()->VQueueEvent(pEvent);
+        }
+        
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(SOUND_MENU_SELECT_MENU_ITEM, 100)));
         return true;
@@ -711,6 +1108,11 @@ bool ScreenElementMenuItem::SetState(MenuItemState state)
 {
     if (m_Images.find(state) != m_Images.end())
     {
+        if (state != m_State)
+        {
+            OnStateChanged(state, m_State);
+        }
+
         m_State = state;
         return true;
     }
@@ -720,6 +1122,17 @@ bool ScreenElementMenuItem::SetState(MenuItemState state)
 
 bool ScreenElementMenuItem::CanBeFocused()
 {
+    if (!m_bVisible)
+    {
+        return false;
+    }
+
+    // Only buttons at this time can be focued
+    if (m_Type != MenuItemType_Button)
+    {
+        return false;
+    }
+
     return (m_Images.find(MenuItemState_Active) != m_Images.end() &&
             m_State != MenuItemState_Disabled);
 }
@@ -731,6 +1144,27 @@ bool ScreenElementMenuItem::Focus()
         return false;
     }
 
-    m_State = MenuItemState_Active;
+    SetState(MenuItemState_Active);
     return true;
+}
+
+void ScreenElementMenuItem::OnStateChanged(MenuItemState newState, MenuItemState oldState)
+{
+    auto stateEnterFindIt = m_StateEnterEventMap.find(newState);
+    if (stateEnterFindIt != m_StateEnterEventMap.end())
+    {
+        for (IEventDataPtr pEvent : stateEnterFindIt->second)
+        {
+            IEventMgr::Get()->VQueueEvent(pEvent);
+        }
+    }
+
+    auto stateLeaveFindIt = m_StateLeaveEventMap.find(oldState);
+    if (stateLeaveFindIt != m_StateLeaveEventMap.end())
+    {
+        for (IEventDataPtr pEvent : stateLeaveFindIt->second)
+        {
+            IEventMgr::Get()->VQueueEvent(pEvent);
+        }
+    }
 }

@@ -64,6 +64,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\SDL2\include;$(SolutionDir)\libwap;$(SolutionDir)\ThirdParty\tinyxml;$(SolutionDir)\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

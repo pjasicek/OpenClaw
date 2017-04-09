@@ -405,7 +405,8 @@ namespace ActorTemplates
         }
         else if (soundName.find("LEVEL/") != std::string::npos)
         {
-            std::string levelName = "LEVEL" + ToStr(1);
+            int currentLevel = g_pApp->GetGameLogic()->GetCurrentLevelData()->GetLevelNumber();
+            std::string levelName = "LEVEL" + ToStr(currentLevel);
             soundName.replace(soundName.begin(), soundName.begin() + strlen("LEVEL/"), 
                 "/" + levelName + "/SOUNDS/");
             soundName += ".WAV";

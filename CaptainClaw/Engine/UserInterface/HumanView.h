@@ -64,6 +64,8 @@ protected:
     void RequestPlaySoundDelegate(IEventDataPtr pEventData);
     void RequestResetLevelDelegate(IEventDataPtr pEventData);
     void LoadGameDelegate(IEventDataPtr pEventData);
+    void SetVolumeDelegate(IEventDataPtr pEventData);
+    void SoundEnabledChangedDelegate(IEventDataPtr pEventData);
 
     uint32 m_ViewId;
     uint32 m_ActorId;
