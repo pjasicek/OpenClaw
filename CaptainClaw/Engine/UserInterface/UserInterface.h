@@ -258,6 +258,7 @@ public:
     bool Focus();
     bool CanBeFocused();
     bool Press();
+    SDL_Rect GetMenuItemRect();
 
     void OnStateChanged(MenuItemState newState, MenuItemState oldState);
 

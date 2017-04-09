@@ -601,7 +601,33 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
             IEventMgr::Get()->VQueueEvent(m_KeyToEventMap[keyCode]);
         }
     }
-    
+    else if (evt.type == SDL_MOUSEBUTTONDOWN)
+    {
+        if (evt.button.button == SDL_BUTTON_LEFT)
+        {
+            SDL_Rect clickRect;
+            clickRect.x = (int)(evt.button.x / g_MenuScale.x);
+            clickRect.y = (int)(evt.button.y / g_MenuScale.y);
+            clickRect.w = 1;
+            clickRect.h = 1;
+
+            SDL_Rect dummy;
+
+            for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
+            {
+                SDL_Rect itemRect = pMenuItem->GetMenuItemRect();
+                if (SDL_IntersectRect(&clickRect, &itemRect, &dummy))
+                {
+                    if (pMenuItem->CanBeFocused())
+                    {
+                        DeactivateAllMenuItems();
+                        pMenuItem->Press();
+                        return true;
+                    }
+                }
+            }
+        }
+    }
 
     for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
     {
@@ -1084,8 +1110,13 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
 
 bool ScreenElementMenuItem::Press()
 {
-    if (CanBeFocused() && !m_GeneratedEventList.empty())
+    if (CanBeFocused())
     {
+        if (m_GeneratedEventList.empty())
+        {
+            LOG_WARNING("No press events for item: " + m_Name);
+        }
+
         Focus();
 
         for (IEventDataPtr pEvent : m_GeneratedEventList)
@@ -1095,6 +1126,7 @@ bool ScreenElementMenuItem::Press()
         
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(SOUND_MENU_SELECT_MENU_ITEM, 100)));
+
         return true;
     }
 
@@ -1164,4 +1196,18 @@ void ScreenElementMenuItem::OnStateChanged(MenuItemState newState, MenuItemState
             IEventMgr::Get()->VQueueEvent(pEvent);
         }
     }
+}
+
+SDL_Rect ScreenElementMenuItem::GetMenuItemRect()
+{
+    int itemWidth, itemHeight;
+    SDL_QueryTexture(m_Images[m_State]->GetTexture(), NULL, NULL, &itemWidth, &itemHeight);
+
+    SDL_Rect itemRect;
+    itemRect.x = (int)m_Position.x;
+    itemRect.y = (int)m_Position.y;
+    itemRect.w = itemWidth;
+    itemRect.h = itemHeight;
+
+    return itemRect;
 }
