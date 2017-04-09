@@ -3,6 +3,8 @@
 #include <vector>
 
 #include "Audio.h"
+#include "../Events/EventMgr.h"
+#include "../Events/Events.h"
 
 #include <iostream>
 
@@ -65,9 +67,6 @@ bool Audio::Initialize(const GameOptions& config)
     m_bSoundOn = config.soundOn;
     m_bMusicOn = config.musicOn;
 
-    LOG("MusicOn : " + ToStr(m_bMusicOn));
-    LOG("SoundOn : " + ToStr(m_bSoundOn));
-
 #ifdef _WIN32
     m_bIsMidiRpcInitialized = InitializeMidiRPC(config.midiRpcServerPath);
     if (!m_bIsMidiRpcInitialized)
@@ -97,13 +96,14 @@ void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
     {
         return;
     }
-
+    
 #ifdef _WIN32
     RpcTryExcept
     {
         MidiRPC_PrepareNewSong();
         MidiRPC_AddChunk(musicSize, (byte*)musicData);
         MidiRPC_PlaySong(looping);
+        MidiRPC_ChangeVolume(m_MusicVolume);
     }
     RpcExcept(1)
     {
@@ -116,7 +116,7 @@ void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
     if(!pMusic) {
         LOG_ERROR("Mix_LoadMUS_RW: " + std::string(Mix_GetError()));
     }
-    Mix_PlayMusic(pMusic, looping ? -1 : 1);
+    Mix_PlayMusic(pMusic, looping ? -1 : 0);
 #endif //_WIN32
 }
 

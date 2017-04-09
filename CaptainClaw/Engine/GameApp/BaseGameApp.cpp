@@ -53,12 +53,12 @@ bool BaseGameApp::Initialize(int argc, char** argv)
     VRegisterGameEvents();
 
     // Initialization sequence
+    if (!InitializeEventMgr()) return false;
     if (!InitializeDisplay(m_GameOptions)) return false;
     if (!InitializeAudio(m_GameOptions)) return false;
     if (!InitializeFont(m_GameOptions)) return false;
     if (!InitializeResources(m_GameOptions)) return false;
     if (!InitializeLocalization(m_GameOptions)) return false;
-    if (!InitializeEventMgr()) return false;
 
     RegisterAllDelegates();
 

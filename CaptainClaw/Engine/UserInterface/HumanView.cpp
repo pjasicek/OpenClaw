@@ -470,7 +470,6 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
             assert(pMidiFile != nullptr);
 
             g_pApp->GetAudio()->PlayMusic(pMidiFile->data, pMidiFile->size, pCastEventData->GetNumLoops() != 0);
-            //g_pApp->GetAudio()->SetMusicVolume(pCastEventData->GetVolume());
         }
         else // Effect / Speech etc. - WAV
         {

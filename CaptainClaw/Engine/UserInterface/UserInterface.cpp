@@ -554,8 +554,6 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
     int activeMenuItemIdx = GetActiveMenuItemIdx();
     assert(activeMenuItemIdx >= 0);
 
-    //LOG("Event");
-
     // Cannot be switch-case since I have to check the "repeat" aswell
     if (evt.type == SDL_KEYDOWN)
     {
@@ -788,7 +786,6 @@ ScreenElementMenuItem::~ScreenElementMenuItem()
 
 void ScreenElementMenuItem::VOnUpdate(uint32 msDiff)
 {
-    LOG("Music volume: " + ToStr(g_pApp->GetAudio()->GetMusicVolume()));
     // This is a bit hacky but implementing this via XML would be pain in the ass right now...
     if (m_Name == "SOUND_KNOB")
     {
