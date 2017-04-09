@@ -10,6 +10,8 @@
 const uint32 g_InvalidGameViewId = 0xFFFFFFFF;
 
 HumanView::HumanView(SDL_Renderer* renderer)
+    :
+    m_bRendering(true)
 {
     m_pProcessMgr = new ProcessMgr();
 
@@ -59,6 +61,11 @@ void HumanView::VOnRender(uint32 msDiff)
 
     m_CurrentTick = SDL_GetTicks();
     if (m_CurrentTick == m_LastDraw)
+    {
+        return;
+    }
+
+    if (!m_bRendering)
     {
         return;
     }
@@ -582,4 +589,70 @@ void HumanView::SoundEnabledChangedDelegate(IEventDataPtr pEventData)
             g_pApp->GetAudio()->SetSoundActive(pCastEventData->GetIsEnabled());
         }
     }
+}
+
+//=================================================================================================
+// 
+// class DeathFadeInOutProcess
+//
+//=================================================================================================
+
+DeathFadeInOutProcess::DeathFadeInOutProcess(Point epicenter, int fadeInDuration, int fadeOutDuration)
+    :
+    Process(),
+    m_Epicenter(epicenter),
+    m_FadeInDuration(fadeInDuration),
+    m_FadeOutDuration(fadeOutDuration),
+    m_DeathFadeState(DeathFadeState_FadingIn),
+    m_CurrentTime(0)
+{
+
+}
+
+DeathFadeInOutProcess::~DeathFadeInOutProcess()
+{
+
+}
+
+void DeathFadeInOutProcess::VOnInit()
+{
+    Process::VOnInit();
+
+    // Stop game logic update during fade in/out
+    g_pApp->GetGameLogic()->SetRunning(false);
+
+    // Also we will render as we want to
+    g_pApp->GetHumanView()->SetRendering(false);
+}
+
+void DeathFadeInOutProcess::VOnUpdate(uint32 msDiff)
+{
+    
+}
+
+void DeathFadeInOutProcess::VOnSuccess()
+{
+    Process::VOnSuccess();
+
+    RestoreStates();
+}
+
+void DeathFadeInOutProcess::VOnFail()
+{
+    Process::VOnFail();
+
+    RestoreStates();
+}
+
+void DeathFadeInOutProcess::VOnAbort()
+{
+    Process::VOnAbort();
+
+    RestoreStates();
+}
+
+void DeathFadeInOutProcess::RestoreStates()
+{
+    g_pApp->GetGameLogic()->SetRunning(true);
+    g_pApp->GetHumanView()->SetRendering(true);
 }

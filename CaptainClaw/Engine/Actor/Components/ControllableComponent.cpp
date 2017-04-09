@@ -116,7 +116,7 @@ void ClawControllableComponent::VPostInit()
 
     // Sounds that play when claw is idle for some time
     m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE1);
-    m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE2);
+    //m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE2);
     m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE3);
     m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE4);
     m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE5);

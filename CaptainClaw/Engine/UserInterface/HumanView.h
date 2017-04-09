@@ -49,6 +49,9 @@ public:
 
     shared_ptr<Console> GetConsole() const { return m_pConsole; }
 
+    void SetRendering(bool rendering) { m_bRendering = rendering; }
+    bool IsRendering() { return m_bRendering; }
+
 protected:
     virtual bool VLoadGameDelegate(TiXmlElement* levelData) { VPushElement(m_pScene); return true; }
 
@@ -87,9 +90,45 @@ protected:
 
     ScreenElementList m_ScreenElements;
 
+    bool m_bRendering;
+
 private:
     void RegisterAllDelegates();
     void RemoveAllDelegates();
 };
+
+class DeathFadeInOutProcess : public Process
+{
+public:
+    enum DeathFadeState
+    {
+        DeathFadeState_FadingIn,
+        DeathFadeState_FadingOut
+    };
+
+    DeathFadeInOutProcess(Point epicenter, int fadeInDuration, int fadeOutDuration);
+    virtual ~DeathFadeInOutProcess();
+
+    virtual void VOnInit() override;
+    virtual void VOnUpdate(uint32 msDiff) override;
+    virtual void VOnSuccess() override;
+    virtual void VOnFail() override;
+    virtual void VOnAbort() override;
+
+    void RestoreStates();
+
+private:
+    Point m_Epicenter;
+    int m_FadeInDuration;
+    int m_FadeOutDuration;
+
+    DeathFadeState m_DeathFadeState;
+    int m_CurrentTime;
+};
+
+/*class TeleportFadeInOutProcess : public Process
+{
+
+};*/
 
 #endif

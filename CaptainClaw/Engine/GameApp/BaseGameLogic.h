@@ -84,6 +84,9 @@ public:
     void UnloadLevel();
     void SetLevelData(shared_ptr<LevelData> pLevelData) { m_pCurrentLevel = pLevelData; }
 
+    void SetRunning(bool running) { m_bRunning = running; }
+    bool IsRunning() { return m_bRunning; }
+
 protected:
     virtual ActorFactory* VCreateActorFactory();
 
@@ -110,6 +113,7 @@ protected:
     ActorFactory* m_pActorFactory;
 
     bool m_Proxy;
+    bool m_bRunning;
 
     bool m_RenderDiagnostics;
     shared_ptr<IGamePhysics> m_pPhysics;

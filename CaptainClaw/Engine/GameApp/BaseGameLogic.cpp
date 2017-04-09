@@ -40,6 +40,7 @@ BaseGameLogic::BaseGameLogic()
     m_Proxy = false;
     m_RenderDiagnostics = true;
     m_SelectedLevel = -1;
+    m_bRunning = true;
 
     m_pGameSaveMgr.reset(new GameSaveMgr());
 
@@ -481,6 +482,11 @@ void BaseGameLogic::VModifyActor(const uint32 actorId, TiXmlElement* overrides)
 void BaseGameLogic::VOnUpdate(uint32 msDiff)
 {
     m_Lifetime += msDiff;
+
+    if (!m_bRunning)
+    {
+        return;
+    }
 
     switch (m_GameState)
     {

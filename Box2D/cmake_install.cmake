@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D
+# Install script for directory: D:/CaptainClaw_git/CaptainClaw/Box2D
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "Box2D_Install/")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/Box2D")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -29,7 +29,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/Box2D/cmake_install.cmake")
+  include("D:/CaptainClaw_git/CaptainClaw/Box2D/Box2D/cmake_install.cmake")
 
 endif()
 
@@ -41,7 +41,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/Petr/Documents/Visual Studio 2013/Projects/CaptainClaw/Box2D/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/CaptainClaw_git/CaptainClaw/Box2D/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
-
-# install(FILES ${CMAKE_CURRENT_LIST_DIR}/Box2D_Install/lib/ DESTINATION ${CMAKE_CURRENT_LIST_DIR}/../Build_Release FILES_MATCHING PATTERN "*.lib")
