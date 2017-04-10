@@ -69,6 +69,7 @@ protected:
     void LoadGameDelegate(IEventDataPtr pEventData);
     void SetVolumeDelegate(IEventDataPtr pEventData);
     void SoundEnabledChangedDelegate(IEventDataPtr pEventData);
+    void ClawDiedDelegate(IEventDataPtr pEventData);
 
     uint32 m_ViewId;
     uint32 m_ActorId;
@@ -102,11 +103,13 @@ class DeathFadeInOutProcess : public Process
 public:
     enum DeathFadeState
     {
+        DeathFadeState_Started,
         DeathFadeState_FadingIn,
-        DeathFadeState_FadingOut
+        DeathFadeState_FadingOut,
+        DeathFadeState_Ended
     };
 
-    DeathFadeInOutProcess(Point epicenter, int fadeInDuration, int fadeOutDuration);
+    DeathFadeInOutProcess(Point epicenter, int fadeInDuration, int fadeOutDuration, int startDelay, int endDelay);
     virtual ~DeathFadeInOutProcess();
 
     virtual void VOnInit() override;
@@ -116,11 +119,14 @@ public:
     virtual void VOnAbort() override;
 
     void RestoreStates();
+    void Render(uint32 msDiff);
 
 private:
     Point m_Epicenter;
+    int m_StartDelay;
     int m_FadeInDuration;
     int m_FadeOutDuration;
+    int m_EndDelay;
 
     DeathFadeState m_DeathFadeState;
     int m_CurrentTime;

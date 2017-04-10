@@ -483,8 +483,14 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
 {
     m_Lifetime += msDiff;
 
+    // TODO: This is code duplication, should think of better way
     if (!m_bRunning)
     {
+        for (auto pGameView : m_GameViews)
+        {
+            pGameView->VOnUpdate(msDiff);
+        }
+
         return;
     }
 

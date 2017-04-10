@@ -37,14 +37,16 @@ HumanView::HumanView(SDL_Renderer* renderer)
 
 HumanView::~HumanView()
 {
+    LOG_ERROR("1");
     RemoveAllDelegates();
 
     while (!m_ScreenElements.empty())
     {
         m_ScreenElements.pop_front();
     }
-
+    LOG_ERROR("2");
     SAFE_DELETE(m_pProcessMgr);
+    LOG_ERROR("3");
 }
 
 void HumanView::RegisterConsoleCommandHandler(void(*handler)(const char*, void*), void* userdata)
@@ -289,6 +291,8 @@ void HumanView::RegisterAllDelegates()
         this, &HumanView::SetVolumeDelegate), EventData_Set_Volume::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &HumanView::SoundEnabledChangedDelegate), EventData_Sound_Enabled_Changed::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
 }
 
 void HumanView::RemoveAllDelegates()
@@ -310,6 +314,8 @@ void HumanView::RemoveAllDelegates()
         this, &HumanView::SetVolumeDelegate), EventData_Set_Volume::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
         this, &HumanView::SoundEnabledChangedDelegate), EventData_Sound_Enabled_Changed::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &HumanView::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -591,19 +597,31 @@ void HumanView::SoundEnabledChangedDelegate(IEventDataPtr pEventData)
     }
 }
 
+void HumanView::ClawDiedDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Claw_Died> pCastEventData =
+        static_pointer_cast<EventData_Claw_Died>(pEventData);
+
+    StrongProcessPtr pDeathProcess(
+        new DeathFadeInOutProcess(pCastEventData->GetDeathPosition(), 3000, 3000, 500, 500));
+    m_pProcessMgr->AttachProcess(pDeathProcess);
+}
+
 //=================================================================================================
 // 
 // class DeathFadeInOutProcess
 //
 //=================================================================================================
 
-DeathFadeInOutProcess::DeathFadeInOutProcess(Point epicenter, int fadeInDuration, int fadeOutDuration)
+DeathFadeInOutProcess::DeathFadeInOutProcess(Point epicenter, int fadeInDuration, int fadeOutDuration, int startDelay, int endDelay)
     :
     Process(),
     m_Epicenter(epicenter),
     m_FadeInDuration(fadeInDuration),
     m_FadeOutDuration(fadeOutDuration),
-    m_DeathFadeState(DeathFadeState_FadingIn),
+    m_StartDelay(startDelay),
+    m_EndDelay(endDelay),
+    m_DeathFadeState(DeathFadeState_Started),
     m_CurrentTime(0)
 {
 
@@ -611,12 +629,16 @@ DeathFadeInOutProcess::DeathFadeInOutProcess(Point epicenter, int fadeInDuration
 
 DeathFadeInOutProcess::~DeathFadeInOutProcess()
 {
-
+    RestoreStates();
 }
 
 void DeathFadeInOutProcess::VOnInit()
 {
     Process::VOnInit();
+
+    assert(g_pApp);
+    assert(g_pApp->GetGameLogic());
+    assert(g_pApp->GetHumanView());
 
     // Stop game logic update during fade in/out
     g_pApp->GetGameLogic()->SetRunning(false);
@@ -627,7 +649,57 @@ void DeathFadeInOutProcess::VOnInit()
 
 void DeathFadeInOutProcess::VOnUpdate(uint32 msDiff)
 {
-    
+    m_CurrentTime += msDiff;
+
+    switch (m_DeathFadeState)
+    {
+        case DeathFadeState_Started:
+        {
+            if (m_CurrentTime >= m_StartDelay)
+            {
+                m_CurrentTime = 0;
+                m_DeathFadeState = DeathFadeState_FadingIn;
+            }
+            break;
+        }
+
+        case DeathFadeState_FadingIn:
+        {
+            if (m_CurrentTime >= m_FadeInDuration)
+            {
+                m_CurrentTime = 0;
+                m_DeathFadeState = DeathFadeState_FadingOut;
+            }
+            break;
+        }
+
+        case DeathFadeState_FadingOut:
+        {
+            if (m_CurrentTime >= m_FadeOutDuration)
+            {
+                m_CurrentTime = 0;
+                m_DeathFadeState = DeathFadeState_Ended;
+            }
+            break;
+        }
+
+        case DeathFadeState_Ended:
+        {
+            if (m_CurrentTime >= m_EndDelay)
+            {
+                Succeed();
+            }
+            break;
+        }
+
+        default:
+            LOG_ERROR("Unknown DeathFadeState: " + ToStr((int)m_DeathFadeState));
+            break;
+    }
+
+    //LOG("State: " + ToStr((int)m_DeathFadeState));
+
+    Render(msDiff);
 }
 
 void DeathFadeInOutProcess::VOnSuccess()
@@ -653,6 +725,32 @@ void DeathFadeInOutProcess::VOnAbort()
 
 void DeathFadeInOutProcess::RestoreStates()
 {
-    g_pApp->GetGameLogic()->SetRunning(true);
+    if (g_pApp && g_pApp->GetGameLogic())
+    {
+        g_pApp->GetGameLogic()->SetRunning(true);
+    }
+    if (g_pApp && g_pApp->GetHumanView())
+    {
+        g_pApp->GetHumanView()->SetRendering(true);
+    }
+}
+
+void DeathFadeInOutProcess::Render(uint32 msDiff)
+{
+    SDL_Renderer* pRenderer = g_pApp->GetRenderer();
+
+    // Render single frame manually
     g_pApp->GetHumanView()->SetRendering(true);
+    g_pApp->GetHumanView()->VOnRender(msDiff);
+    g_pApp->GetHumanView()->SetRendering(false);
+
+    // Render fade in/outs according to current state
+    if (m_DeathFadeState == DeathFadeState_FadingIn)
+    {
+
+    }
+    else if (m_DeathFadeState == DeathFadeState_FadingOut)
+    {
+
+    }
 }

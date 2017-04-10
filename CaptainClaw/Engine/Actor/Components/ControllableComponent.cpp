@@ -535,7 +535,8 @@ void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
     std::string animName = pAnimation->GetName();
     if (pAnimation->GetName().find("death") != std::string::npos)
     {
-        shared_ptr<EventData_Claw_Died> pEvent(new EventData_Claw_Died(_owner->GetGUID()));
+        shared_ptr<EventData_Claw_Died> pEvent(
+            new EventData_Claw_Died(_owner->GetGUID(), m_pPositionComponent->GetPosition()));
         IEventMgr::Get()->VTriggerEvent(pEvent);
 
         SetCurrentPhysicsState();

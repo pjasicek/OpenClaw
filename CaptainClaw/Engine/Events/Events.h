@@ -1984,7 +1984,7 @@ class EventData_Claw_Died : public BaseEventData
 public:
     static const EventType sk_EventType;
 
-    EventData_Claw_Died(uint32 actorId)
+    EventData_Claw_Died(uint32 actorId, Point deathPosition)
     {
         m_ActorId = actorId;
     }
@@ -1992,16 +1992,18 @@ public:
     virtual const EventType& VGetEventType(void) const { return sk_EventType; }
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Claw_Died(m_ActorId));
+        return IEventDataPtr(new EventData_Claw_Died(m_ActorId, m_DeathPosition));
     }
-    virtual void VSerialize(std::ostringstream& out) const { out << m_ActorId; }
-    virtual void VDeserialize(std::istringstream& in) { in >> m_ActorId; }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_ActorId << m_DeathPosition.x << m_DeathPosition.y; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_ActorId >> m_DeathPosition.x >> m_DeathPosition.y; }
 
     uint32 GetActorId(void) const { return m_ActorId; }
+    Point GetDeathPosition() { return m_DeathPosition; }
     virtual const char* GetName(void) const { return "EventData_Claw_Died"; }
 
 private:
     uint32 m_ActorId;
+    Point m_DeathPosition;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
