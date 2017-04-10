@@ -18,12 +18,19 @@
 //
 //========================================================================
 
+#define _CRT_SECURE_NO_DEPRECATE
+
 #include <cctype>			// for std::tolower
 
 #include "ZipFile.h"
 
 #include "Miniz.h"
 #include <string.h>
+
+// Windows...
+#ifndef _MAX_PATH
+#define _MAX_PATH 260
+#endif
 
 // --------------------------------------------------------------------------
 // ZIP file structures. Note these have to be packed.
@@ -119,7 +126,7 @@ bool ZipFile::Init(const std::string &resFileName)
 {
     End();
 
-    fopen_s(&m_pFile, resFileName.c_str(), "rb");
+    m_pFile = fopen(resFileName.c_str(), "rb");
     //_wfopen_s(&m_pFile, resFileName.c_str(), "rb"));
     if (!m_pFile)
         return false;
@@ -172,7 +179,7 @@ bool ZipFile::Init(const std::string &resFileName)
             char fileName[_MAX_PATH];
             memcpy(fileName, pfh, fh.fnameLen);
             fileName[fh.fnameLen] = 0;
-            _strlwr_s(fileName, _MAX_PATH);
+            _strlwr(fileName);
             std::string spath = fileName;
             spath.insert(0, "/");
             m_ZipContentsMap[spath] = i;
