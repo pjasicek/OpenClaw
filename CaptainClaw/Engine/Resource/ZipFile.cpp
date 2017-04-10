@@ -117,6 +117,17 @@ static bool IsZipDir(const std::string& node)
     return node.back() == '/';
 }
 
+static char* string_to_lowercase(char* s)
+{
+    char* tmp = s;
+
+    for (; *tmp; ++tmp) {
+        *tmp = tolower((unsigned char)*tmp);
+    }
+
+    return s;
+}
+
 // --------------------------------------------------------------------------
 // Function:      Init
 // Purpose:       Initialize the object and read the zip file directory.
@@ -179,7 +190,7 @@ bool ZipFile::Init(const std::string &resFileName)
             char fileName[_MAX_PATH];
             memcpy(fileName, pfh, fh.fnameLen);
             fileName[fh.fnameLen] = 0;
-            _strlwr(fileName);
+            string_to_lowercase(fileName);
             std::string spath = fileName;
             spath.insert(0, "/");
             m_ZipContentsMap[spath] = i;
