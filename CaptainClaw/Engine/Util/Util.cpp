@@ -388,4 +388,14 @@ namespace Util
         frames = points / channels;
         return ((frames * 1000) / frequency);
     }
+
+    SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer)
+    {
+        SDL_Surface* pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+        SDL_FillRect(pSurface, NULL, SDL_MapRGB(pSurface->format, color.r, color.g, color.b));
+        SDL_Texture* pTextureRect = SDL_CreateTextureFromSurface(pRenderer, pSurface);
+
+        SDL_FreeSurface(pSurface);
+        return pTextureRect;
+    }
 };

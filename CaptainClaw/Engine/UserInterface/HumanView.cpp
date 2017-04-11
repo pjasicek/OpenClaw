@@ -11,7 +11,8 @@ const uint32 g_InvalidGameViewId = 0xFFFFFFFF;
 
 HumanView::HumanView(SDL_Renderer* renderer)
     :
-    m_bRendering(true)
+    m_bRendering(true),
+    m_bPostponeRenderPresent(false)
 {
     m_pProcessMgr = new ProcessMgr();
 
@@ -37,16 +38,14 @@ HumanView::HumanView(SDL_Renderer* renderer)
 
 HumanView::~HumanView()
 {
-    LOG_ERROR("1");
     RemoveAllDelegates();
 
     while (!m_ScreenElements.empty())
     {
         m_ScreenElements.pop_front();
     }
-    LOG_ERROR("2");
+
     SAFE_DELETE(m_pProcessMgr);
-    LOG_ERROR("3");
 }
 
 void HumanView::RegisterConsoleCommandHandler(void(*handler)(const char*, void*), void* userdata)
@@ -96,7 +95,10 @@ void HumanView::VOnRender(uint32 msDiff)
 
         m_pConsole->OnRender(renderer);
 
-        SDL_RenderPresent(renderer);
+        if (!m_bPostponeRenderPresent)
+        {
+            SDL_RenderPresent(renderer);
+        }
     }
 }
 
@@ -603,8 +605,10 @@ void HumanView::ClawDiedDelegate(IEventDataPtr pEventData)
         static_pointer_cast<EventData_Claw_Died>(pEventData);
 
     StrongProcessPtr pDeathProcess(
-        new DeathFadeInOutProcess(pCastEventData->GetDeathPosition(), 3000, 3000, 500, 500));
+        new DeathFadeInOutProcess(pCastEventData->GetDeathPosition(), 1450, 1450, 0, 0));
     m_pProcessMgr->AttachProcess(pDeathProcess);
+    // Needs to be called here
+    pDeathProcess->VOnInit();
 }
 
 //=================================================================================================
@@ -624,7 +628,7 @@ DeathFadeInOutProcess::DeathFadeInOutProcess(Point epicenter, int fadeInDuration
     m_DeathFadeState(DeathFadeState_Started),
     m_CurrentTime(0)
 {
-
+    m_Epicenter.Set(epicenter.x, epicenter.y);
 }
 
 DeathFadeInOutProcess::~DeathFadeInOutProcess()
@@ -639,12 +643,28 @@ void DeathFadeInOutProcess::VOnInit()
     assert(g_pApp);
     assert(g_pApp->GetGameLogic());
     assert(g_pApp->GetHumanView());
+    assert(g_pApp->GetHumanView()->GetCamera());
+
+    // Recalc epicenter to screen-local coordinates
+    Point windowSize = g_pApp->GetWindowSize();
+    shared_ptr<CameraNode> pCamera = g_pApp->GetHumanView()->GetCamera();
+    Point cameraPos = pCamera->GetPosition();
+
+    m_Epicenter.Set(m_Epicenter.x - cameraPos.x, m_Epicenter.y - cameraPos.y);
 
     // Stop game logic update during fade in/out
     g_pApp->GetGameLogic()->SetRunning(false);
 
     // Also we will render as we want to
     g_pApp->GetHumanView()->SetRendering(false);
+    g_pApp->GetHumanView()->SetPostponeRenderPresent(true);
+
+    // Calculate graphics fade speed
+    m_FadeInSpeed.x = (windowSize.x / (double)m_FadeInDuration) / 2.0;
+    m_FadeInSpeed.y = (windowSize.y / (double)m_FadeInDuration) / 2.0;
+
+    m_FadeOutSpeed.x = (windowSize.x / (double)m_FadeOutDuration) / 2.0;
+    m_FadeOutSpeed.y = (windowSize.y / (double)m_FadeOutDuration) / 2.0;
 }
 
 void DeathFadeInOutProcess::VOnUpdate(uint32 msDiff)
@@ -657,6 +677,9 @@ void DeathFadeInOutProcess::VOnUpdate(uint32 msDiff)
         {
             if (m_CurrentTime >= m_StartDelay)
             {
+                IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                    new EventData_Request_Play_Sound(SOUND_GAME_DEATH_FADE_IN_SOUND, 100, false)));
+
                 m_CurrentTime = 0;
                 m_DeathFadeState = DeathFadeState_FadingIn;
             }
@@ -667,6 +690,10 @@ void DeathFadeInOutProcess::VOnUpdate(uint32 msDiff)
         {
             if (m_CurrentTime >= m_FadeInDuration)
             {
+                IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                    new EventData_Request_Play_Sound(SOUND_GAME_DEATH_FADE_OUT_SOUND, 100, false)));
+
+                g_pApp->GetHumanView()->SetRendering(true);
                 m_CurrentTime = 0;
                 m_DeathFadeState = DeathFadeState_FadingOut;
             }
@@ -691,7 +718,6 @@ void DeathFadeInOutProcess::VOnUpdate(uint32 msDiff)
             }
             break;
         }
-
         default:
             LOG_ERROR("Unknown DeathFadeState: " + ToStr((int)m_DeathFadeState));
             break;
@@ -731,6 +757,7 @@ void DeathFadeInOutProcess::RestoreStates()
     }
     if (g_pApp && g_pApp->GetHumanView())
     {
+        g_pApp->GetHumanView()->SetPostponeRenderPresent(false);
         g_pApp->GetHumanView()->SetRendering(true);
     }
 }
@@ -739,18 +766,50 @@ void DeathFadeInOutProcess::Render(uint32 msDiff)
 {
     SDL_Renderer* pRenderer = g_pApp->GetRenderer();
 
-    // Render single frame manually
-    g_pApp->GetHumanView()->SetRendering(true);
+    Point windowSize = g_pApp->GetWindowSize();
+    
+    /*g_pApp->GetHumanView()->SetRendering(true);
     g_pApp->GetHumanView()->VOnRender(msDiff);
-    g_pApp->GetHumanView()->SetRendering(false);
+    g_pApp->GetHumanView()->SetRendering(false);*/
 
     // Render fade in/outs according to current state
+    int referenceTime = 0;
     if (m_DeathFadeState == DeathFadeState_FadingIn)
     {
-
+        referenceTime = m_CurrentTime;
     }
     else if (m_DeathFadeState == DeathFadeState_FadingOut)
     {
-
+        referenceTime = m_FadeOutDuration - m_CurrentTime;
     }
+
+    // Left -> right rect
+    int currentWidth = (int)((double)referenceTime * m_FadeInSpeed.x);
+    //LOG("Current width: " + ToStr(currentWidth));
+    SDL_Rect leftRect = { 0, 0, currentWidth, (int)windowSize.y };
+    SDL_Texture* pLeftRectTexture = Util::CreateSDLTextureRect(leftRect.w, leftRect.h, COLOR_BLACK, pRenderer);
+    SDL_RenderCopy(pRenderer, pLeftRectTexture, NULL, &leftRect);
+
+    // Right -> left rect
+    SDL_Rect rightRect = { (int)windowSize.x - currentWidth , 0, currentWidth, (int)windowSize.y };
+    SDL_Texture* pRightRectTexture = Util::CreateSDLTextureRect(rightRect.w, rightRect.h, COLOR_BLACK, pRenderer);
+    SDL_RenderCopy(pRenderer, pRightRectTexture, NULL, &rightRect);
+
+    int currentHeight = (int)((double)referenceTime * m_FadeInSpeed.y);
+    // Top -> Down
+    SDL_Rect topRect = { 0, 0, (int)windowSize.x, currentHeight };
+    SDL_Texture* pTopTexture = Util::CreateSDLTextureRect(topRect.w, topRect.h, COLOR_BLACK, pRenderer);
+    SDL_RenderCopy(pRenderer, pTopTexture, NULL, &topRect);
+
+    // Down -> Top
+    SDL_Rect bottomRect = { 0, (int)windowSize.y - currentHeight, (int)windowSize.x, currentHeight };
+    SDL_Texture* pBottomTexture = Util::CreateSDLTextureRect(bottomRect.w, bottomRect.h, COLOR_BLACK, pRenderer);
+    SDL_RenderCopy(pRenderer, pBottomTexture, NULL, &bottomRect);
+
+    SDL_DestroyTexture(pLeftRectTexture);
+    SDL_DestroyTexture(pRightRectTexture);
+    SDL_DestroyTexture(pTopTexture);
+    SDL_DestroyTexture(pBottomTexture);
+
+    SDL_RenderPresent(pRenderer);
 }

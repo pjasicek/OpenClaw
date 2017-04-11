@@ -1987,6 +1987,7 @@ public:
     EventData_Claw_Died(uint32 actorId, Point deathPosition)
     {
         m_ActorId = actorId;
+        m_DeathPosition = deathPosition;
     }
 
     virtual const EventType& VGetEventType(void) const { return sk_EventType; }

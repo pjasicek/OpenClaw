@@ -138,16 +138,6 @@ bool BaseGameLogic::VEnterMenu(const char* xmlMenuResource)
     return true;
 }
 
-SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer)
-{
-    SDL_Surface* pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-    SDL_FillRect(pSurface, NULL, SDL_MapRGB(pSurface->format, color.r, color.g, color.b));
-    SDL_Texture* pTextureRect = SDL_CreateTextureFromSurface(pRenderer, pSurface);
-
-    SDL_FreeSurface(pSurface);
-    return pTextureRect;
-}
-
 void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Point& scale, float progress)
 {
     // While we are at it, eat incoming events
@@ -169,9 +159,9 @@ void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Po
     SDL_Rect totalProgressBarRect = { renderRect.w / 4, (int)(renderRect.h * 0.75), progressFullLength, progressHeight };
     SDL_Rect remainingProgressBarRect = { renderRect.w / 4, (int)(renderRect.h * 0.75), progressCurrLength, progressHeight };
 
-    SDL_Texture* pTotalProgressBar = CreateSDLTextureRect(
+    SDL_Texture* pTotalProgressBar = Util::CreateSDLTextureRect(
         progressFullLength, progressHeight, COLOR_BLACK, pRenderer);
-    SDL_Texture* pRemainingProgressBar = CreateSDLTextureRect(
+    SDL_Texture* pRemainingProgressBar = Util::CreateSDLTextureRect(
         remainingProgressBarRect.w, remainingProgressBarRect.h, COLOR_RED, pRenderer);
 
     SDL_RenderCopy(pRenderer, pTotalProgressBar, NULL, &totalProgressBarRect);

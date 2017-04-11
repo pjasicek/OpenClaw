@@ -29,6 +29,8 @@ namespace Util
     void PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume = 100);
 
     int GetSoundDurationMs(Mix_Chunk* pSound);
+
+    SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer);
 }
 
 #endif

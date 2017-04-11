@@ -340,6 +340,9 @@ bool TeleportPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
     shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
     IEventMgr::Get()->VQueueEvent(pEvent);
 
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+        new EventData_Request_Play_Sound(SOUND_GAME_ENTER_WARP, 100, false)));
+
     return true;
 }
 

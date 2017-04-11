@@ -51,6 +51,7 @@ public:
 
     void SetRendering(bool rendering) { m_bRendering = rendering; }
     bool IsRendering() { return m_bRendering; }
+    void SetPostponeRenderPresent(bool postpone) { m_bPostponeRenderPresent = postpone; }
 
 protected:
     virtual bool VLoadGameDelegate(TiXmlElement* levelData) { VPushElement(m_pScene); return true; }
@@ -92,6 +93,7 @@ protected:
     ScreenElementList m_ScreenElements;
 
     bool m_bRendering;
+    bool m_bPostponeRenderPresent;
 
 private:
     void RegisterAllDelegates();
@@ -130,6 +132,9 @@ private:
 
     DeathFadeState m_DeathFadeState;
     int m_CurrentTime;
+
+    Point m_FadeInSpeed;
+    Point m_FadeOutSpeed;
 };
 
 /*class TeleportFadeInOutProcess : public Process

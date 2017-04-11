@@ -577,6 +577,9 @@ void ClawControllableComponent::VOnHealthBelowZero()
         m_pClawAnimationComponent->SetAnimation("spikedeath");
         m_pPhysicsComponent->SetGravityScale(0.0f);
         m_State = ClawState_Dying;
+
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(SOUND_CLAW_DEATH_SPIKES, 100, false)));
     }
 }
 
