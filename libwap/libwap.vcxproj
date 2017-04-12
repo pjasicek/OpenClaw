@@ -60,7 +60,7 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.dll</TargetExt>
     <OutDir>$(SolutionDir)Build_$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Build_$(Configuration)\libwap_obj\</IntDir>
+    <IntDir>$(SolutionDir)Build_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
