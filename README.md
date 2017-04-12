@@ -6,6 +6,10 @@
 
 # Build status
 
+### Windows:
+
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/pjasicek/CaptainClaw?svg=true)](https://ci.appveyor.com/project/pjasicek/captainclaw)
+
 ### Linux (debian):
 
 [![Build Status](https://travis-ci.org/pjasicek/CaptainClaw.svg?branch=master)](https://travis-ci.org/pjasicek/CaptainClaw)
