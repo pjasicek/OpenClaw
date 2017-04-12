@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "Catch.hpp"
 
-#include "../libwap/libwap.h"
+#include <libwap.h>
 #include "TestUtil.h"
 
 TEST_CASE("----- REZ ARCHIVE FILE -----")
