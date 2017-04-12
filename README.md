@@ -18,7 +18,7 @@ For all platforms you will need original CLAW.REZ game archive from original gam
 ### Linux
   **Prerequisites for Ubuntu 16.04 (should be almost identical for Fedora/CentOS/*):**
   
-  `sudo apt install libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev libtinyxml-dev` 
+  `sudo apt install libsdl2-dev  libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev libtinyxml-dev` 
   
   **Compilation:**
   
