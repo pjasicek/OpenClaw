@@ -1,7 +1,4 @@
 os: Visual Studio 2013
-configuration: Release
-platform:
-- x86
 build:
   project: CaptainClaw.sln
   parallel: true
