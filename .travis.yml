@@ -21,5 +21,4 @@ install:
     - cmake ..
 
 script:
-    - cd build
     - make -j8
