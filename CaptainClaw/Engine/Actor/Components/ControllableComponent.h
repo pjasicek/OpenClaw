@@ -16,7 +16,7 @@ public:
     ControllableComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
 
     virtual bool VInit(TiXmlElement* data) override;
     virtual bool VInitDelegate(TiXmlElement* pData) { return true; }
@@ -86,7 +86,7 @@ public:
     virtual ~ClawControllableComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
 
     virtual bool VInitDelegate(TiXmlElement* data) override;
     virtual void VPostInit() override; 
@@ -109,7 +109,7 @@ public:
     virtual bool IsDucking() override;
     virtual void OnStand() override;
 
-    virtual bool IsDying() { return m_State == ClawState_Dying; }
+    virtual bool IsDying() override { return m_State == ClawState_Dying; }
     virtual bool InPhysicsCapableState() override { return (m_State != ClawState_Dying && m_State != ClawState_TakingDamage); }
 
     // Feels abit hacky

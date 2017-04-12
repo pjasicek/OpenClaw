@@ -12,15 +12,15 @@ public:
     CheckpointComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
 
-    virtual bool VOnApply(Actor* pActorWhoPickedThis);
+    virtual bool VOnApply(Actor* pActorWhoPickedThis) override;
 
     virtual void VOnAnimationAtLastFrame(Animation* pAnimation) override;
 
 protected:
-    virtual bool VDelegateInit(TiXmlElement* data);
-    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
+    virtual bool VDelegateInit(TiXmlElement* data) override;
+    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) override;
 
 private:
     Point m_SpawnPosition;

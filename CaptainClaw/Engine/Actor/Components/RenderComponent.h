@@ -62,7 +62,7 @@ public:
     ActorRenderComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
 
     virtual bool VDelegateInit(TiXmlElement* pXmlData) override;
 
@@ -82,7 +82,7 @@ protected:
     virtual shared_ptr<SceneNode> VCreateSceneNode() override;
 
     // Editor stuff
-    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
+    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) override;
 
     shared_ptr<Image> m_CurrentImage;
 
@@ -140,7 +140,7 @@ class TilePlaneRenderComponent : public BaseRenderComponent
 {
 public:
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
 
     virtual bool VDelegateInit(TiXmlElement* pXmlData) override;
 
@@ -153,7 +153,7 @@ protected:
     virtual shared_ptr<SceneNode> VCreateSceneNode() override;
 
     // Editor stuff
-    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
+    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) override;
 
 private:
     // Background, action, foreground
@@ -182,7 +182,7 @@ public:
     HUDRenderComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
     virtual bool VDelegateInit(TiXmlElement* pXmlData) override;
 
     virtual SDL_Rect VGetPositionRect() const override;
@@ -194,7 +194,7 @@ protected:
     virtual shared_ptr<SceneNode> VCreateSceneNode() override;
 
     // Editor stuff
-    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
+    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) override;
 
 private:
     bool m_IsAnchoredRight;

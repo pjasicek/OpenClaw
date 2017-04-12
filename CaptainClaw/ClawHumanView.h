@@ -12,11 +12,11 @@ public:
     ClawHumanView(SDL_Renderer* renderer);
     virtual ~ClawHumanView();
 
-    virtual bool VOnEvent(SDL_Event& event);
-    virtual void VOnUpdate(uint32 msDiff);
-    virtual void VOnAttach(uint32 gameViewId, uint32 actorId);
+    virtual bool VOnEvent(SDL_Event& event) override;
+    virtual void VOnUpdate(uint32 msDiff) override;
+    virtual void VOnAttach(uint32 gameViewId, uint32 actorId) override;
 
-    virtual void VSetControlledActor(uint32 actorId);
+    virtual void VSetControlledActor(uint32 actorId) override;
 
     virtual bool VLoadGameDelegate(TiXmlElement* pLevelData) override;
 

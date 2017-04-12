@@ -14,7 +14,7 @@ class PickupComponent : public ActorComponent, public TriggerObserver
 {
 public:
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
 
     virtual bool VInit(TiXmlElement* data) override;
     virtual void VPostInit() override;
@@ -40,15 +40,15 @@ public:
     TreasurePickupComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
-    virtual void VUpdate(uint32 msDiff);
+    virtual const char* VGetName() const override { return g_Name; }
+    virtual void VUpdate(uint32 msDiff) override;
     virtual void VPostInit() override;
 
-    virtual bool VOnApply(Actor* pActorWhoPickedThis);
+    virtual bool VOnApply(Actor* pActorWhoPickedThis) override;
 
 protected:
-    virtual bool VDelegateInit(TiXmlElement* data);
-    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
+    virtual bool VDelegateInit(TiXmlElement* data) override;
+    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) override;
 
 private:
     int32 m_ScorePoints;

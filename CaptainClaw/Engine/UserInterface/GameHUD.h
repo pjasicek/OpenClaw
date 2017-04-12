@@ -30,7 +30,7 @@ public:
     virtual int32_t VGetZOrder() const override { return 9000; }
     virtual void VSetZOrder(int32 const zOrder) override { }
     virtual bool VIsVisible() override { return m_IsVisible; }
-    virtual void VSetVisible(bool visible) { m_IsVisible = visible; }
+    virtual void VSetVisible(bool visible) override { m_IsVisible = visible; }
 
     virtual bool VOnEvent(SDL_Event& evt) override;
 

@@ -53,18 +53,18 @@ public:
     virtual ~BaseEnemyAIStateComponent() { }
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
 
     virtual bool VInit(TiXmlElement* pData) override;
     virtual bool VDelegateInit(TiXmlElement* pData) = 0;
     virtual void VPostInit() override;
 
-    virtual TiXmlElement* VGenerateXml() { return NULL; }
+    virtual TiXmlElement* VGenerateXml() override { return NULL; }
 
     bool IsActive() { return m_IsActive; }
 
     // EnemyAIStateComponent API
-    virtual void VUpdate(uint32 msDiff) = 0;
+    virtual void VUpdate(uint32 msDiff) override = 0;
     virtual void VOnStateEnter() = 0;
     virtual void VOnStateLeave() = 0;
     virtual EnemyAIState VGetStateType() const = 0;
@@ -92,7 +92,7 @@ public:
     virtual ~PatrolEnemyAIStateComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
     virtual void VPostInit() override;
@@ -101,7 +101,7 @@ public:
     virtual void VUpdate(uint32 msDiff) override;
     virtual void VOnStateEnter() override;
     virtual void VOnStateLeave() override;
-    virtual EnemyAIState VGetStateType() const { return EnemyAIState_Patrolling; }
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_Patrolling; }
 
     // AnimationObserver API
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
@@ -144,7 +144,7 @@ public:
     virtual ~MeleeAttackAIStateComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
     virtual void VPostInit() override;
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
@@ -153,7 +153,7 @@ public:
     virtual void VUpdate(uint32 msDiff) override;
     virtual void VOnStateEnter() override;
     virtual void VOnStateLeave() override;
-    virtual EnemyAIState VGetStateType() const { return EnemyAIState_MeleeAttacking; }
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_MeleeAttacking; }
 
     // AnimationObserver API
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
@@ -175,7 +175,7 @@ public:
     virtual ~RangedAttackAIStateComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
     virtual void VPostInit() override;
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
@@ -184,7 +184,7 @@ public:
     virtual void VUpdate(uint32 msDiff) override;
     virtual void VOnStateEnter() override;
     virtual void VOnStateLeave() override;
-    virtual EnemyAIState VGetStateType() const { return EnemyAIState_RangedAttacking; }
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_RangedAttacking; }
 
     // AnimationObserver API
     virtual void VOnAnimationLooped(Animation* pAnimation) override;

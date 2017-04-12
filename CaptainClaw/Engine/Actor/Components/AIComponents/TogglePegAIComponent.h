@@ -14,7 +14,7 @@ public:
     virtual ~TogglePegAIComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
     virtual void VPostInit() override;
     virtual void VUpdate(uint32 msDiff) override;
 

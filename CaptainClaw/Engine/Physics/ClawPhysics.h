@@ -69,7 +69,7 @@ public:
 
     virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32 filterMask) override;
 
-    virtual void VScaleActor(uint32_t actorId, double scale);
+    virtual void VScaleActor(uint32_t actorId, double scale) override;
 
 private:
     b2Body* FindBox2DBody(uint32 actorId);

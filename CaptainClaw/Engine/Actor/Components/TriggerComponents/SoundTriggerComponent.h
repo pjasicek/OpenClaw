@@ -15,7 +15,7 @@ public:
     SoundTriggerComponent();
 
     static const char* g_Name;
-    virtual const char* VGetName() const { return g_Name; }
+    virtual const char* VGetName() const override { return g_Name; }
 
     virtual bool VInit(TiXmlElement* data) override;
     virtual void VPostInit() override;
