@@ -11,6 +11,7 @@ git:
 before_install:
     - sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev
     - sudo apt-get install libtinyxml-dev
+    - sudo apt-get install cmake
     - git config user.email "travis@build.bot" && git config user.name "Travis CI"
     - git tag -a -m "Travis build" init
 
