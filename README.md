@@ -4,6 +4,12 @@
  - Whole codebase was written from scratch
  - Game uses assets from original game archive (CLAW.REZ)
 
+# Build status
+
+### Linux (debian):
+
+[![Build Status](https://travis-ci.org/pjasicek/CaptainClaw.svg?branch=master)](https://travis-ci.org/pjasicek/CaptainClaw)
+
 # Tech
 
   - SDL2 Libraries (SDL2, SDL_Image, SDL_TTF, SDL_Mixer, SDL2_Gfx) for graphics, input, font and audio
