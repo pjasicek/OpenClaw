@@ -1,0 +1,24 @@
+sudo: required
+dist: trusty
+
+language: cpp
+compiler:
+    - clang
+
+git:
+    depth: 1
+
+before_install:
+    - sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev
+    - sudo apt-get install libtinyxml-dev
+    - git config user.email "travis@build.bot" && git config user.name "Travis CI"
+    - git tag -a -m "Travis build" init
+
+install:
+    - mkdir build
+    - cd build
+    - cmake ..
+
+script:
+    - cd build
+    - make -j8
