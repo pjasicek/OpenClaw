@@ -33,9 +33,7 @@ before_install:
     - git tag -a -m "Travis build" init
 
 install:
-    - mkdir build
-    - cd build
-    - cmake ..
+    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build; cd build; cmake.. ; fi
 
 script:
-    - make -j8
+    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make -j8 ; fi
