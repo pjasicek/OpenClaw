@@ -22,7 +22,7 @@ addons:
     notification_email: pjasicek@gmail.com
     build_command_prepend: "mkdir build; cd build; cmake .."
     build_command:   "make -j 4"
-    branch_pattern: master
+    branch_pattern: coverity_scan
 
 before_install:
     - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
@@ -32,8 +32,8 @@ before_install:
     - git config user.email "travis@build.bot" && git config user.name "Travis CI"
     - git tag -a -m "Travis build" init
 
-#install:
+install:
+    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build; cd build; cmake .. ; fi
 
 script:
-    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build; cd build; cmake .. ; fi
     - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make -j8 ; fi
