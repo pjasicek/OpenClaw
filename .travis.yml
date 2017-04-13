@@ -32,8 +32,8 @@ before_install:
     - git config user.email "travis@build.bot" && git config user.name "Travis CI"
     - git tag -a -m "Travis build" init
 
-install:
-    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build; cd build; cmake .. ; fi
+#install:
 
 script:
+    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build; cd build; cmake .. ; fi
     - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make -j8 ; fi
