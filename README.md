@@ -14,6 +14,10 @@
 
 [![Build Status](https://travis-ci.org/pjasicek/CaptainClaw.svg?branch=master)](https://travis-ci.org/pjasicek/CaptainClaw)
 
+### Static analysis / Code coverage:
+
+[![Static analysis](https://scan.coverity.com/projects/12422/badge.svg?flat=1)](https://scan.coverity.com/projects/pjasicek-captainclaw)
+
 # Tech
 
   - SDL2 Libraries (SDL2, SDL_Image, SDL_TTF, SDL_Mixer, SDL2_Gfx) for graphics, input, font and audio
