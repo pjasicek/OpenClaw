@@ -4,31 +4,28 @@
 #include "../SharedDefines.h"
 
 Image::Image()
+    :
+    m_Width(0),
+    m_Height(0),
+    m_OffsetX(0),
+    m_OffsetY(0),
+    m_pTexture(NULL)
 {
-    /*assert(pid != NULL);
-    assert(renderer != NULL);
-
-    _width = pid->width;
-    _height = pid->height;
-    _offsetX = pid->offsetX;
-    _offsetY = pid->offsetY;
-
-    _texture = GetTextureFromPid(pid, renderer);
-    assert(_texture != NULL);*/
+    
 }
 
 Image::~Image()
 {
-    SDL_DestroyTexture(_texture);
-    _texture = NULL;
+    SDL_DestroyTexture(m_pTexture);
+    m_pTexture = NULL;
 }
 
 SDL_Rect Image::GetPositonRect(int32_t x, int32_t y)
 {
-    int positionX = x - _width / 2 + _offsetX;
-    int positionY = y - _height / 2 + _offsetY;
+    int positionX = x - m_Width / 2 + m_OffsetX;
+    int positionY = y - m_Height / 2 + m_OffsetY;
 
-    SDL_Rect rect = { positionX, positionY, _width, _height };
+    SDL_Rect rect = { positionX, positionY, m_Width, m_Height };
 
     return rect;
 }
@@ -192,13 +189,13 @@ bool Image::Initialize(WapPid* pid, SDL_Renderer* renderer)
         return false;
     }
 
-    _width = pid->width;
-    _height = pid->height;
-    _offsetX = pid->offsetX;
-    _offsetY = pid->offsetY;
+    m_Width = pid->width;
+    m_Height = pid->height;
+    m_OffsetX = pid->offsetX;
+    m_OffsetY = pid->offsetY;
 
-    _texture = GetTextureFromPid(pid, renderer);
-    if (_texture == NULL)
+    m_pTexture = GetTextureFromPid(pid, renderer);
+    if (m_pTexture == NULL)
     {
         return false;
     }
@@ -213,9 +210,9 @@ bool Image::Initialize(SDL_Texture* pTexture)
         return false;
     }
 
-    SDL_QueryTexture(pTexture, NULL, NULL, &_width, &_height);
-    _offsetX = _offsetY = 0;
-    _texture = pTexture;
+    SDL_QueryTexture(pTexture, NULL, NULL, &m_Width, &m_Height);
+    m_OffsetX = m_OffsetY = 0;
+    m_pTexture = pTexture;
 
     return true;
 }

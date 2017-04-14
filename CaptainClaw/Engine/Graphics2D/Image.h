@@ -16,13 +16,13 @@ public:
     static Image* CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer, bool useColorKey = false, SDL_Color colorKey = { 0, 0, 0, 0 });
     static Image* CreatePngImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer);
 
-    inline SDL_Texture* GetTexture() { return _texture; }
-    inline int GetWidth() { return _width; }
-    inline int GetHeight() { return _height; }
-    inline int GetOffsetX() { return _offsetX; }
-    inline int GetOffsetY() { return _offsetY; }
+    inline SDL_Texture* GetTexture() { return m_pTexture; }
+    inline int GetWidth() { return m_Width; }
+    inline int GetHeight() { return m_Height; }
+    inline int GetOffsetX() { return m_OffsetX; }
+    inline int GetOffsetY() { return m_OffsetY; }
 
-    void SetOffset(int x, int y) { _offsetX = x; _offsetY = y; }
+    void SetOffset(int x, int y) { m_OffsetX = x; m_OffsetY = y; }
 
     SDL_Rect GetPositonRect(int32_t x, int32_t y);
 
@@ -30,11 +30,11 @@ private:
     bool Initialize(WapPid* pid, SDL_Renderer* renderer);
     bool Initialize(SDL_Texture* pTexture);
 
-    SDL_Texture* _texture;
-    int _width;
-    int _height;
-    int _offsetX;
-    int _offsetY;
+    SDL_Texture* m_pTexture;
+    int m_Width;
+    int m_Height;
+    int m_OffsetX;
+    int m_OffsetY;
 };
 
 #endif
