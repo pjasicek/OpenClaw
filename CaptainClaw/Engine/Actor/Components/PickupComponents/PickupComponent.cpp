@@ -334,7 +334,7 @@ void TeleportPickupComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseEle
 
 bool TeleportPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
 {
-    shared_ptr<EventData_Teleport_Actor> pTeleportEvent(new EventData_Teleport_Actor(pActorWhoPickedThis->GetGUID(), m_Destination));
+    shared_ptr<EventData_Teleport_Actor> pTeleportEvent(new EventData_Teleport_Actor(pActorWhoPickedThis->GetGUID(), m_Destination, true));
     IEventMgr::Get()->VQueueEvent(pTeleportEvent);
 
     shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));

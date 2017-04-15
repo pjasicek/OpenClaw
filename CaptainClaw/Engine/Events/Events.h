@@ -1760,10 +1760,11 @@ class EventData_Teleport_Actor : public BaseEventData
 public:
     static const EventType sk_EventType;
 
-    EventData_Teleport_Actor(uint32 actorId, const Point& destination)
+    EventData_Teleport_Actor(uint32 actorId, const Point& destination, bool hasScreenSfx = false)
     {
         m_ActorId = actorId;
         m_Destination = destination;
+        m_bHasScreenSfx = hasScreenSfx;
     }
 
     virtual const EventType& VGetEventType(void) const
@@ -1773,17 +1774,17 @@ public:
 
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Teleport_Actor(m_ActorId, m_Destination));
+        return IEventDataPtr(new EventData_Teleport_Actor(m_ActorId, m_Destination, m_bHasScreenSfx));
     }
 
     virtual void VSerialize(std::ostringstream& out) const
     {
-        out << m_ActorId << m_Destination.x << m_Destination.y;
+        out << m_ActorId << m_Destination.x << m_Destination.y << m_bHasScreenSfx;
     }
 
     virtual void VDeserialize(std::istringstream& in)
     {
-        in >> m_ActorId >> m_Destination.x >> m_Destination.y;
+        in >> m_ActorId >> m_Destination.x >> m_Destination.y >> m_bHasScreenSfx;
     }
 
     uint32 GetActorId(void) const
@@ -1796,6 +1797,11 @@ public:
         return m_Destination;
     }
 
+    bool GetHasScreenSfx() const
+    {
+        return m_bHasScreenSfx;
+    }
+
     virtual const char* GetName(void) const
     {
         return "EventData_Teleport_Actor";
@@ -1804,6 +1810,7 @@ public:
 private:
     uint32 m_ActorId;
     Point m_Destination;
+    bool m_bHasScreenSfx;
 };
 
 //---------------------------------------------------------------------------------------------------------------------

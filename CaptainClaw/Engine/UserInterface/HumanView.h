@@ -71,6 +71,7 @@ protected:
     void SetVolumeDelegate(IEventDataPtr pEventData);
     void SoundEnabledChangedDelegate(IEventDataPtr pEventData);
     void ClawDiedDelegate(IEventDataPtr pEventData);
+    void TeleportActorDelegate(IEventDataPtr pEventData);
 
     uint32 m_ViewId;
     uint32 m_ActorId;
@@ -100,7 +101,29 @@ private:
     void RemoveAllDelegates();
 };
 
-class DeathFadeInOutProcess : public Process
+// TODO: Make generic way of making new special effects
+// Should be constructed from 1 parameter - struct SpecialEffectDef
+// This should contain all informations about transitions (could be like 20 transitions) -
+// - struct SpecialEffectTransitionDef or struct SfxTransitionDef - duration, what to do in this
+// transition etc.
+//
+// Right now I am only interested in death and teleport special effects so this is fine albeit
+// unflexible
+
+class SpecialEffectProcess : public Process
+{
+public:
+    virtual ~SpecialEffectProcess() { VRestoreStates(); }
+
+    virtual void VOnSuccess() override { VRestoreStates(); }
+    virtual void VOnFail() override { VRestoreStates(); }
+    virtual void VOnAbort() override { VRestoreStates(); }
+
+    virtual void VRestoreStates();
+    virtual void VRender(uint32 msDiff) = 0;
+};
+
+class DeathFadeInOutProcess : public SpecialEffectProcess
 {
 public:
     enum DeathFadeState
@@ -116,12 +139,7 @@ public:
 
     virtual void VOnInit() override;
     virtual void VOnUpdate(uint32 msDiff) override;
-    virtual void VOnSuccess() override;
-    virtual void VOnFail() override;
-    virtual void VOnAbort() override;
-
-    void RestoreStates();
-    void Render(uint32 msDiff);
+    virtual void VRender(uint32 msDiff) override;
 
 private:
     Point m_Epicenter;
@@ -137,9 +155,66 @@ private:
     Point m_FadeOutSpeed;
 };
 
-/*class TeleportFadeInOutProcess : public Process
+class PrimeSearch;
+class FadingLine
 {
+public:
+    FadingLine(int length, Point fragmentSize, int fadeDelay, int fadeDuration, bool isFadingIn);
+    ~FadingLine();
 
-};*/
+    void Update(uint32 msDiff);
+    void Reset(int fadeDelay, bool isFadingIn);
+
+    void Activate() { m_bIsActive = true; }
+    bool IsDone() { return m_bIsDone; }
+
+    void Render(SDL_Renderer* pRenderer, SDL_Texture* pFragmentTexture, Point& lineOffset, bool asRow);
+
+private:
+    int m_Length;
+    Point m_FragmentSize;
+    int m_FadeDuration;
+    int m_FadeDelay;
+    bool m_bIsFadingIn;
+
+    int m_CurrentTime;
+    int m_SingleFragmentFadeTime;
+
+    bool m_bIsActive;
+    bool m_bIsDone;
+    int m_FragmentCount;
+    unique_ptr<PrimeSearch> m_pPrimeSearch;
+    std::vector<bool> m_FadedFragments;
+};
+
+class TeleportFadeInOutProcess : public SpecialEffectProcess
+{
+public:
+    enum TeleportState
+    {
+        TeleportState_FadingIn,
+        TeleportState_FadingOut,
+    };
+
+    TeleportFadeInOutProcess(int fadeInDuration, int fadeOutDuration);
+    virtual ~TeleportFadeInOutProcess();
+
+    virtual void VOnInit() override;
+    virtual void VOnUpdate(uint32 msDiff) override;
+    virtual void VRender(uint32 msDiff) override;
+
+private:
+    int m_FadeInDuration;
+    int m_FadeOutDuration;
+    Point m_FadeInSpeed;
+    Point m_FadeOutSpeed;
+
+    TeleportState m_TeleportState;
+    int m_CurrentTime;
+
+    Point m_FragmentSize;
+    SDL_Texture* m_pFadingTexture;
+    std::vector<shared_ptr<FadingLine>> m_Lines;
+};
 
 #endif

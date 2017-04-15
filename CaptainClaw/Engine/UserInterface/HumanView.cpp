@@ -6,6 +6,7 @@
 #include "../Audio/Audio.h"
 #include "../Resource/Loaders/MidiLoader.h"
 #include "../Resource/Loaders/WavLoader.h"
+#include "../Util/PrimeSearch.h"
 
 const uint32 g_InvalidGameViewId = 0xFFFFFFFF;
 
@@ -295,6 +296,8 @@ void HumanView::RegisterAllDelegates()
         this, &HumanView::SoundEnabledChangedDelegate), EventData_Sound_Enabled_Changed::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &HumanView::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::TeleportActorDelegate), EventData_Teleport_Actor::sk_EventType);
 }
 
 void HumanView::RemoveAllDelegates()
@@ -318,6 +321,8 @@ void HumanView::RemoveAllDelegates()
         this, &HumanView::SoundEnabledChangedDelegate), EventData_Sound_Enabled_Changed::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
         this, &HumanView::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &HumanView::TeleportActorDelegate), EventData_Teleport_Actor::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -611,6 +616,40 @@ void HumanView::ClawDiedDelegate(IEventDataPtr pEventData)
     pDeathProcess->VOnInit();
 }
 
+void HumanView::TeleportActorDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Teleport_Actor> pCastEventData =
+        static_pointer_cast<EventData_Teleport_Actor>(pEventData);
+
+    if (pCastEventData->GetHasScreenSfx())
+    {
+        StrongProcessPtr pTeleportSfxProcess(
+            new TeleportFadeInOutProcess(1150, 1150));
+        m_pProcessMgr->AttachProcess(pTeleportSfxProcess);
+        // Needs to be called here
+        pTeleportSfxProcess->VOnInit();
+    }
+}
+
+//=================================================================================================
+// 
+// class SpecialEffectProcess
+//
+//=================================================================================================
+
+void SpecialEffectProcess::VRestoreStates()
+{
+    if (g_pApp && g_pApp->GetGameLogic())
+    {
+        g_pApp->GetGameLogic()->SetRunning(true);
+    }
+    if (g_pApp && g_pApp->GetHumanView())
+    {
+        g_pApp->GetHumanView()->SetPostponeRenderPresent(false);
+        g_pApp->GetHumanView()->SetRendering(true);
+    }
+}
+
 //=================================================================================================
 // 
 // class DeathFadeInOutProcess
@@ -619,7 +658,7 @@ void HumanView::ClawDiedDelegate(IEventDataPtr pEventData)
 
 DeathFadeInOutProcess::DeathFadeInOutProcess(Point epicenter, int fadeInDuration, int fadeOutDuration, int startDelay, int endDelay)
     :
-    Process(),
+    SpecialEffectProcess(),
     m_Epicenter(epicenter),
     m_FadeInDuration(fadeInDuration),
     m_FadeOutDuration(fadeOutDuration),
@@ -633,7 +672,7 @@ DeathFadeInOutProcess::DeathFadeInOutProcess(Point epicenter, int fadeInDuration
 
 DeathFadeInOutProcess::~DeathFadeInOutProcess()
 {
-    RestoreStates();
+
 }
 
 void DeathFadeInOutProcess::VOnInit()
@@ -725,44 +764,10 @@ void DeathFadeInOutProcess::VOnUpdate(uint32 msDiff)
 
     //LOG("State: " + ToStr((int)m_DeathFadeState));
 
-    Render(msDiff);
+    VRender(msDiff);
 }
 
-void DeathFadeInOutProcess::VOnSuccess()
-{
-    Process::VOnSuccess();
-
-    RestoreStates();
-}
-
-void DeathFadeInOutProcess::VOnFail()
-{
-    Process::VOnFail();
-
-    RestoreStates();
-}
-
-void DeathFadeInOutProcess::VOnAbort()
-{
-    Process::VOnAbort();
-
-    RestoreStates();
-}
-
-void DeathFadeInOutProcess::RestoreStates()
-{
-    if (g_pApp && g_pApp->GetGameLogic())
-    {
-        g_pApp->GetGameLogic()->SetRunning(true);
-    }
-    if (g_pApp && g_pApp->GetHumanView())
-    {
-        g_pApp->GetHumanView()->SetPostponeRenderPresent(false);
-        g_pApp->GetHumanView()->SetRendering(true);
-    }
-}
-
-void DeathFadeInOutProcess::Render(uint32 msDiff)
+void DeathFadeInOutProcess::VRender(uint32 msDiff)
 {
     SDL_Renderer* pRenderer = g_pApp->GetRenderer();
 
@@ -810,6 +815,281 @@ void DeathFadeInOutProcess::Render(uint32 msDiff)
     SDL_DestroyTexture(pRightRectTexture);
     SDL_DestroyTexture(pTopTexture);
     SDL_DestroyTexture(pBottomTexture);
+
+    SDL_RenderPresent(pRenderer);
+}
+
+//=================================================================================================
+// 
+// class FadingLine - helper that represents line on the screen that is fading in or out
+//
+//=================================================================================================
+
+FadingLine::FadingLine(int length, Point fragmentSize, int fadeDelay, int fadeDuration, bool isFadingIn)
+    :
+    m_Length(length),
+    m_FragmentSize(fragmentSize),
+    m_FadeDelay(fadeDelay),
+    m_FadeDuration(fadeDuration),
+    m_bIsFadingIn(isFadingIn),
+    m_CurrentTime(0),
+    m_SingleFragmentFadeTime(0),
+    m_bIsActive(false),
+    m_bIsDone(false),
+    m_FragmentCount(0)
+{
+    m_FragmentCount = (length / (int)fragmentSize.x) + 1;
+    m_SingleFragmentFadeTime = fadeDuration / m_FragmentCount;
+    m_pPrimeSearch.reset(new PrimeSearch(m_FragmentCount));
+
+    for (int fragIdx = 0; fragIdx < m_FragmentCount; fragIdx++)
+    {
+        m_FadedFragments.push_back(!m_bIsFadingIn);
+    }
+
+    LOG("length: " + ToStr(m_Length) + ", fadeDelay: " + ToStr(m_FadeDelay) + 
+        ", fadeDuration: " + ToStr(m_FadeDuration) + ", fragmentCount: " + ToStr(m_FragmentCount) + 
+        ", isFadingIn: " + ToStr(m_bIsFadingIn));
+}
+
+FadingLine::~FadingLine()
+{
+
+}
+
+void FadingLine::Update(uint32 msDiff)
+{
+    if (m_bIsDone)
+    {
+        return;
+    }
+
+    m_CurrentTime += msDiff;
+    if (!m_bIsActive)
+    {
+        if (m_CurrentTime >= m_FadeDelay)
+        {
+            m_bIsActive = true;
+            //m_CurrentTime = m_CurrentTime - m_FadeDelay;
+            LOG("Activated");
+            m_CurrentTime = 0;
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    if (m_CurrentTime >= m_SingleFragmentFadeTime)
+    {
+        // TODO: Handle possible overflow
+        //m_CurrentTime -= m_SingleFragmentFadeTime;
+        m_CurrentTime = 0;
+        int fadedElemIdx = m_pPrimeSearch->GetNext();
+        if (fadedElemIdx == -1)
+        {
+            m_bIsDone = true;
+            return;
+        }
+
+        m_FadedFragments[fadedElemIdx] = m_bIsFadingIn;
+    }
+}
+
+void FadingLine::Reset(int fadeDelay, bool isFadingIn)
+{
+    m_bIsActive = false;
+    m_bIsDone = false;
+    m_bIsFadingIn = isFadingIn;
+    m_FadeDelay = fadeDelay;
+
+    m_FadedFragments.clear();
+    for (int fragIdx = 0; fragIdx < m_FragmentCount; fragIdx++)
+    {
+        m_FadedFragments.push_back(!m_bIsFadingIn);
+    }
+
+    m_pPrimeSearch.reset(new PrimeSearch(m_FragmentCount));
+}
+
+void FadingLine::Render(SDL_Renderer* pRenderer, SDL_Texture* pFragmentTexture, Point& lineOffset, bool asRow)
+{
+    assert(pRenderer != NULL);
+    assert(pFragmentTexture != NULL);
+
+    int fragIdx = 0;
+    for (bool shouldRender : m_FadedFragments)
+    {
+        if (!shouldRender)
+        {
+            fragIdx++;
+            //LOG("Should NOT render");
+            continue;
+        }
+        else
+        {
+            //LOG("Should render")
+        }
+
+        SDL_Rect renderRect;
+        renderRect.w = (int)m_FragmentSize.x;
+        renderRect.y = (int)m_FragmentSize.y;
+        if (asRow)
+        {
+            renderRect.x = (int)lineOffset.x + fragIdx * (int)m_FragmentSize.x;
+            renderRect.y = (int)lineOffset.y;
+        }
+        else
+        {
+            renderRect.x = (int)lineOffset.x;
+            renderRect.y = (int)lineOffset.y + fragIdx * (int)m_FragmentSize.y;
+        }
+
+        SDL_RenderCopy(pRenderer, pFragmentTexture, NULL, &renderRect);
+
+        fragIdx++;
+    }
+}
+
+//=================================================================================================
+// 
+// class TeleportFadeInOutProcess
+//
+//=================================================================================================
+
+TeleportFadeInOutProcess::TeleportFadeInOutProcess(int fadeInDuration, int fadeOutDuration)
+    :
+    SpecialEffectProcess(),
+    m_FadeInDuration(fadeInDuration),
+    m_FadeOutDuration(fadeOutDuration),
+    m_TeleportState(TeleportState_FadingIn),
+    m_CurrentTime(0)
+{
+}
+
+TeleportFadeInOutProcess::~TeleportFadeInOutProcess()
+{
+
+}
+
+void TeleportFadeInOutProcess::VOnInit()
+{
+    SpecialEffectProcess::VOnInit();
+
+    assert(g_pApp);
+    assert(g_pApp->GetGameLogic());
+    assert(g_pApp->GetHumanView());
+    assert(g_pApp->GetHumanView()->GetCamera());
+
+    // Stop game logic update during fade in/out
+    g_pApp->GetGameLogic()->SetRunning(false);
+    g_pApp->GetHumanView()->SetPostponeRenderPresent(true);
+    g_pApp->GetHumanView()->SetRendering(false);
+
+    Point windowSize = g_pApp->GetWindowSize();
+
+    // Calculate graphics fade speed
+    m_FadeInSpeed.x = (windowSize.x / (double)m_FadeInDuration) / 2.0;
+    m_FadeInSpeed.y = (windowSize.y / (double)m_FadeInDuration) / 2.0;
+
+    m_FadeOutSpeed.x = (windowSize.x / (double)m_FadeOutDuration) / 2.0;
+    m_FadeOutSpeed.y = (windowSize.y / (double)m_FadeOutDuration) / 2.0;
+
+    /*m_FragmentSize.Set(8, 8);
+
+    m_pFadingTexture = Util::CreateSDLTextureRect(
+        (int)m_FragmentSize.x, (int)m_FragmentSize.y, COLOR_BLACK, g_pApp->GetRenderer());
+    assert(m_pFadingTexture != NULL);
+    if (m_pFadingTexture == NULL)
+    {
+        LOG_ERROR("Could not create fading texture for TeleportFadeInOutProcess");
+       Fail();
+    }
+
+    int numLines = (int)(windowSize.y / m_FragmentSize.y);
+    int msPerLine = (m_FadeInDuration / numLines) + 1;
+    for (int lineIdx = 0; lineIdx < numLines; lineIdx++)
+    {
+        int fadeDelay = (m_FadeInDuration - (lineIdx * msPerLine)) / 2;
+        LOG("FadeDelay: " + ToStr(fadeDelay));
+        shared_ptr<FadingLine> pLine(new FadingLine((int)windowSize.x, m_FragmentSize, fadeDelay, msPerLine, true));
+        m_Lines.push_back(pLine);
+    }*/
+}
+
+void TeleportFadeInOutProcess::VOnUpdate(uint32 msDiff)
+{
+    m_CurrentTime += msDiff;
+
+    switch (m_TeleportState)
+    {
+        case TeleportState_FadingIn:
+            /*for (shared_ptr<FadingLine> pLine : m_Lines)
+            {
+                pLine->Update(msDiff);
+            }*/
+
+            if (m_CurrentTime >= m_FadeInDuration)
+            {
+                m_CurrentTime = 0;
+                m_TeleportState = TeleportState_FadingOut;
+                g_pApp->GetHumanView()->SetRendering(true);
+
+                /*for (shared_ptr<FadingLine> pLine : m_Lines)
+                {
+                    pLine->Reset(false);
+                }*/
+
+                //Succeed();
+            }
+            break;
+
+        case TeleportState_FadingOut:
+            if (m_CurrentTime >= m_FadeOutDuration)
+            {
+                Succeed();
+            }
+            break;
+
+        default:
+            LOG_ERROR("Unknown TeleportState: " + ToStr((int)m_TeleportState));
+            break;
+    }
+
+    VRender(msDiff);
+}
+
+void TeleportFadeInOutProcess::VRender(uint32 msDiff)
+{
+    SDL_Renderer* pRenderer = g_pApp->GetRenderer();
+
+    Point windowSize = g_pApp->GetWindowSize();
+
+    // Render fade in/outs according to current state
+    int referenceTime = 0;
+    if (m_TeleportState == TeleportState_FadingIn)
+    {
+        referenceTime = m_CurrentTime;
+    }
+    else if (m_TeleportState == TeleportState_FadingOut)
+    {
+        referenceTime = m_FadeOutDuration - m_CurrentTime;
+    }
+
+    // Left -> right rect
+    int currentWidth = (int)((double)referenceTime * m_FadeInSpeed.x);
+    //LOG("Current width: " + ToStr(currentWidth));
+    SDL_Rect leftRect = { 0, 0, currentWidth, (int)windowSize.y };
+    SDL_Texture* pLeftRectTexture = Util::CreateSDLTextureRect(leftRect.w, leftRect.h, COLOR_BLACK, pRenderer);
+    SDL_RenderCopy(pRenderer, pLeftRectTexture, NULL, &leftRect);
+
+    // Right -> left rect
+    SDL_Rect rightRect = { (int)windowSize.x - currentWidth, 0, currentWidth, (int)windowSize.y };
+    SDL_Texture* pRightRectTexture = Util::CreateSDLTextureRect(rightRect.w, rightRect.h, COLOR_BLACK, pRenderer);
+    SDL_RenderCopy(pRenderer, pRightRectTexture, NULL, &rightRect);
+
+    SDL_DestroyTexture(pLeftRectTexture);
+    SDL_DestroyTexture(pRightRectTexture);
 
     SDL_RenderPresent(pRenderer);
 }
