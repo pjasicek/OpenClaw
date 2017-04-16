@@ -11,6 +11,8 @@
 #include "../PhysicsComponent.h"
 #include "../../ActorTemplates.h"
 #include "../ControllerComponents/HealthComponent.h"
+#include "../EnemyAI/EnemyAIComponent.h"
+#include "../ExplodeableComponent.h"
 
 #include "../../../Events/EventMgr.h"
 #include "../../../Events/Events.h"
@@ -131,6 +133,12 @@ void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)
     }
 
     if (m_Type == "Bullet")
+    {
+        OnCollidedWithSolidTile();
+    }
+    else if (m_Type == "Dynamite" &&
+             (MakeStrongPtr(pActorWhoWasShot->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name)) != nullptr ||
+              MakeStrongPtr(pActorWhoWasShot->GetComponent<ExplodeableComponent>(ExplodeableComponent::g_Name)) != nullptr))
     {
         OnCollidedWithSolidTile();
     }

@@ -1421,8 +1421,14 @@ namespace ActorTemplates
         fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
         fixtureDef.collisionMask = (CollisionFlag_Death | CollisionFlag_Controller | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_ClawAttack | CollisionFlag_Explosion);
         fixtureDef.isSensor = true;
-        fixtureDef.size = Point(40, 70);
+        fixtureDef.size = Point(40, 110); // Generic value
+        if (logicName == "Rat")
+        {
+            fixtureDef.size = Point(40, 40);
+        }
         bodyDef.fixtureList.push_back(fixtureDef);
+
+        
 
         TiXmlElement* pEnemyAIElem = new TiXmlElement("EnemyAIComponent");
         if (logicName == "Soldier")

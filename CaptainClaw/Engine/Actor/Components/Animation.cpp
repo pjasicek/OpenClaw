@@ -71,6 +71,9 @@ Animation* Animation::CreateAnimation(int numAnimFrames, int animFrameTime, cons
 
 bool Animation::Initialize(WapAni* wapAni, const char* animationName, AnimationComponent* owner)
 {
+    _name = animationName;
+    _owner = owner;
+
     // Load animation frame from WapAni
     uint32 numAnimFrames = wapAni->animationFramesCount;
     AniAnimationFrame* aniAnimFrames = wapAni->animationFrames;
@@ -93,10 +96,14 @@ bool Animation::Initialize(WapAni* wapAni, const char* animationName, AnimationC
             animFrame.eventName = "";
         }
 
+        // HACK: For specific reason, dynamite jump throw takes too long
+        if (_name == "jumpdynamite")
+        {
+            animFrame.duration = 60;
+        }
+
         _animationFrames.push_back(animFrame);
     }
-    _name = animationName;
-    _owner = owner;
 
     if (_animationFrames.empty())
     {
