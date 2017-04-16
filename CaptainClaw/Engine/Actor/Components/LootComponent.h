@@ -17,7 +17,7 @@ public:
     virtual bool VInit(TiXmlElement* pData) override;
     virtual TiXmlElement* VGenerateXml() override;
 
-    virtual void VOnHealthBelowZero() override;
+    virtual void VOnHealthBelowZero(DamageType damageType) override;
 
 private:
     std::vector<PickupType> m_Loot;

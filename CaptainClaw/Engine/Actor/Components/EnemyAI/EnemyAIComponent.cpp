@@ -139,7 +139,7 @@ void EnemyAIComponent::VUpdate(uint32 msDiff)
     }
 }
 
-void EnemyAIComponent::VOnHealthBelowZero()
+void EnemyAIComponent::VOnHealthBelowZero(DamageType damageType)
 {
     m_bDead = true;
     for (auto stateComponentIter : m_StateMap)
@@ -155,6 +155,20 @@ void EnemyAIComponent::VOnHealthBelowZero()
     assert(pPhysicsComponent);
 
     pPhysicsComponent->Destroy();
+}
+
+void EnemyAIComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint)
+{
+    // If he died we do not care
+    if (newHealth >= 0)
+    {
+        // Spawn graphics in the hit point
+        if (damageType != DamageType_Magic)
+        {
+            ActorTemplates::CreateSingleAnimation(impactPoint, AnimationType_RedHitPoint);
+            Util::PlayRandomHitSound();
+        }
+    }
 }
 
 void EnemyAIComponent::OnEnemyEnteredMeleeZone(Actor* pEnemy)

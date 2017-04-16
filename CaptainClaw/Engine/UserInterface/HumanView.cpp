@@ -1076,6 +1076,8 @@ void TeleportFadeInOutProcess::VRender(uint32 msDiff)
         referenceTime = m_FadeOutDuration - m_CurrentTime;
     }
 
+    referenceTime = max(0, referenceTime);
+
     // Left -> right rect
     int currentWidth = (int)((double)referenceTime * m_FadeInSpeed.x);
     //LOG("Current width: " + ToStr(currentWidth));

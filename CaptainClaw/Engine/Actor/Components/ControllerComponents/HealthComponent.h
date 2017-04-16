@@ -8,15 +8,15 @@ class HealthObserver;
 class HealthSubject : public Subject<HealthObserver>
 {
 public:
-    void NotifyHealthChanged(int32 oldHealth, int32 newHealth);
-    void NotifyHealthBelowZero();
+    void NotifyHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint);
+    void NotifyHealthBelowZero(DamageType damageType);
 };
 
 class HealthObserver
 {
 public:
-    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth) { }
-    virtual void VOnHealthBelowZero() { }
+    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) { }
+    virtual void VOnHealthBelowZero(DamageType damageType) { }
 };
 
 class HealthComponent : public ActorComponent, public HealthSubject
@@ -33,7 +33,7 @@ public:
 
     int32 GetHealth() { return m_CurrentHealth; }
 
-    void AddHealth(int32 health);
+    void AddHealth(int32 health, DamageType damageType, Point impactPoint);
     void SetCurrentHealth(int32 health);
     int32 GetCurrentHealth() { return m_CurrentHealth; }
     bool HasMaxHealth() { return m_CurrentHealth >= m_MaxHealth; }
@@ -43,7 +43,7 @@ public:
     void SetInvulnerable(bool invulnerable) { m_bInvulnerable = invulnerable; }
 
 private:
-    void BroadcastHealthChanged(int32 oldHealth, int32 newHealth, bool isInitial = false);
+    void BroadcastHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, bool isInitial = false);
 
     bool m_IsController;
     bool m_bInvulnerable;

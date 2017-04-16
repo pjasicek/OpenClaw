@@ -653,12 +653,14 @@ namespace ActorTemplates
         return pExplodeableComponent;
     }
 
-    TiXmlElement* CreateAreaDamageComponent(int damage, int areaDuration = 100)
+    TiXmlElement* CreateAreaDamageComponent(int damage, int areaDuration, DamageType damageType, Direction hitDirection)
     {
         TiXmlElement* pAreaDamageComponent = new TiXmlElement("AreaDamageComponent");
 
         XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pAreaDamageComponent);
         XML_ADD_TEXT_ELEMENT("Duration", ToStr(areaDuration).c_str(), pAreaDamageComponent);
+        XML_ADD_TEXT_ELEMENT("DamageType", ToStr((int)damageType).c_str(), pAreaDamageComponent);
+        XML_ADD_TEXT_ELEMENT("HitDirection", ToStr((int)hitDirection).c_str(), pAreaDamageComponent);
 
         return pAreaDamageComponent;
     }
@@ -1198,7 +1200,7 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_AreaDamageActor(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, Point positionOffset, std::string imageSet = "", int32 zCoord = 0)
+    TiXmlElement* CreateXmlData_AreaDamageActor(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, DamageType damageType, Direction hitDirection, Point positionOffset, std::string imageSet = "", int32 zCoord = 0)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", "AreaDamage");
@@ -1266,7 +1268,7 @@ namespace ActorTemplates
         pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));*/
 
         pActor->LinkEndChild(CreateTriggerComponent(-1, false, false));
-        pActor->LinkEndChild(CreateAreaDamageComponent(damage));
+        pActor->LinkEndChild(CreateAreaDamageComponent(damage, 150, damageType, hitDirection));
 
         return pActor;
     }
@@ -1391,7 +1393,7 @@ namespace ActorTemplates
         pActor->LinkEndChild(CreateActorRenderComponent(imageSet, zCoord));
         pActor->LinkEndChild(CreateAnimationComponent(animationSet, false));
         pActor->LinkEndChild(CreateTriggerComponent(1000, false, false));
-        pActor->LinkEndChild(CreateHealthComponent(10, 10));
+        pActor->LinkEndChild(CreateHealthComponent(50, 50));
         pActor->LinkEndChild(CreateLootComponent(loot));
 
         ActorBodyDef bodyDef;
@@ -1452,7 +1454,7 @@ namespace ActorTemplates
             meleeAttackAction.attackDamageType = DamageType_MeleeAttack;
             meleeAttackAction.attackFxImageSet = "NONE";
             meleeAttackAction.attackSpawnPositionOffset = Point(-30, 0);
-            meleeAttackAction.attackAreaSize = Point(90, 30);
+            meleeAttackAction.attackAreaSize = Point(110, 40);
             meleeAttackAction.damage = 10;
 
             meleeAttacks.push_back(meleeAttackAction);
@@ -1479,7 +1481,7 @@ namespace ActorTemplates
 
 
             bodyDef.fixtureList.push_back(
-                CreateActorAgroRangeFixture(Point(120, 50), Point(0, 0), FixtureType_EnemyAIMeleeSensor));
+                CreateActorAgroRangeFixture(Point(180, 50), Point(0, 0), FixtureType_EnemyAIMeleeSensor));
             bodyDef.fixtureList.push_back(
                 CreateActorAgroRangeFixture(Point(1000, 50), Point(0, -30), FixtureType_EnemyAIRangedSensor));
         }
@@ -1523,7 +1525,7 @@ namespace ActorTemplates
 
 
             bodyDef.fixtureList.push_back(
-                CreateActorAgroRangeFixture(Point(120, 50), Point(0, 0), FixtureType_EnemyAIMeleeSensor));
+                CreateActorAgroRangeFixture(Point(180, 50), Point(0, 0), FixtureType_EnemyAIMeleeSensor));
         }
         else if (logicName == "Rat")
         {
@@ -1598,6 +1600,46 @@ namespace ActorTemplates
     //=====================================================================================================================
     // Public API
     //=====================================================================================================================
+
+    StrongActorPtr CreateSingleAnimation(Point position, AnimationType animType)
+    {
+        TiXmlElement* pActorElem = new TiXmlElement("Actor");
+
+        pActorElem->LinkEndChild(CreatePositionComponent(position.x, position.y));
+
+        std::string imageSet;
+        switch (animType)
+        {
+            case AnimationType_Explosion:
+                imageSet = "GAME_EXPLOS_FIRE";
+                pActorElem->LinkEndChild(CreateCycleAnimationComponent(50));
+                break;
+
+            case AnimationType_RedHitPoint:
+                imageSet = "GAME_ENEMYHIT";
+                pActorElem->LinkEndChild(CreateCycleAnimationComponent(50));
+                break;
+
+            case AnimationType_BlueHitPoint:
+                imageSet = "GAME_CLAWHIT";
+                pActorElem->LinkEndChild(CreateCycleAnimationComponent(50));
+                break;
+
+            default:
+                LOG_ERROR("Unknown AnimationType: " + ToStr((int)animType));
+                return nullptr;
+                break;
+        }
+
+        pActorElem->SetAttribute("Type", imageSet.c_str());
+
+        pActorElem->LinkEndChild(CreateActorRenderComponent(imageSet, 1000));
+
+        TiXmlElement* pSingleAnimComponentElem = new TiXmlElement("SingleAnimationComponent");
+        pActorElem->LinkEndChild(pSingleAnimComponentElem);
+
+        return CreateAndReturnActor(pActorElem);
+    }
 
     StrongActorPtr CreateActorPickup(PickupType pickupType, Point position, bool isStatic)
     {
@@ -1687,9 +1729,9 @@ namespace ActorTemplates
             collisionMask));
     }
 
-    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag damageType, std::string shape, Point positionOffset, std::string imageSet, int32 zCoord)
+    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, DamageType damageType, Direction hitDirection, Point positionOffset, std::string imageSet, int32 zCoord)
     {
-        return CreateAndReturnActor(CreateXmlData_AreaDamageActor(position, size, damage, damageType, shape, positionOffset, imageSet, zCoord));
+        return CreateAndReturnActor(CreateXmlData_AreaDamageActor(position, size, damage, collisionFlag, shape, damageType, hitDirection, positionOffset, imageSet, zCoord));
     }
 
     StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord)

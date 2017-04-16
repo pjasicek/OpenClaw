@@ -67,11 +67,14 @@ namespace ActorTemplates
     StrongActorPtr CreatePowerupSparkleActor();
     StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position);
     StrongActorPtr CreateProjectile(std::string imageSet, uint32 damage, DamageType damageType, Direction direction, Point position, CollisionFlag collisionFlag, uint32 collisionMask);
-    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag damageType, std::string shape, Point positionOffset = Point(0, 0), std::string imageSet = "", int32 zCoord = 0);
+    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, DamageType damageType, Direction hitDirection, Point positionOffset = Point(0, 0), std::string imageSet = "", int32 zCoord = 0);
     StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord = 1010);
     //StrongActorPtr CreatePopupActor(Point position, std::string imageSet, std::vector<PredefinedMove>& moves, int32 zCoord = 0);
     StrongActorPtr CreateScorePopupActor(Point position, int score);
     StrongActorPtr CreateRenderedActor(Point position, std::string imageSet, std::string animPath, int zCoord);
+
+    // This represents (or atleast should represent) single animation, e.g. explosion
+    StrongActorPtr CreateSingleAnimation(Point position, AnimationType animType);
 
     ActorFixtureDef XmlToActorFixtureDef(TiXmlElement* pActorFixtureDefElem);
     TiXmlElement* ActorFixtureDefToXml(const ActorFixtureDef* pFixtureDef);

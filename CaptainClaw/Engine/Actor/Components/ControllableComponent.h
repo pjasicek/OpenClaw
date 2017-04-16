@@ -120,8 +120,8 @@ public:
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
 
     // HealthObserver API
-    virtual void VOnHealthBelowZero() override;
-    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth) override;
+    virtual void VOnHealthBelowZero(DamageType damageType) override;
+    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) override;
 
 private:
     void SetCurrentPhysicsState();

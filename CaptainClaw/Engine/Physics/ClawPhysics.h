@@ -65,7 +65,7 @@ public:
     virtual void VSetPosition(uint32_t actorId, const Point& position) override;
     virtual Point VGetPosition(uint32_t actorId) override;
 
-    virtual SDL_Rect VGetAABB(uint32_t actorId) override;
+    virtual SDL_Rect VGetAABB(uint32_t actorId, bool discardSensors) override;
 
     virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32 filterMask) override;
 
@@ -100,7 +100,7 @@ extern shared_ptr<PhysicsComponent> GetPhysicsComponentFromB2Body(const b2Body* 
 extern shared_ptr<KinematicComponent> GetKinematicComponentFromB2Body(const b2Body* pBody);
 extern shared_ptr<TriggerComponent> GetTriggerComponentFromB2Body(const b2Body* pBody);
 extern shared_ptr<ProjectileAIComponent> GetProjectileAIComponentFromB2Body(const b2Body* pBody);
-extern b2AABB GetBodyAABB(b2Body* pBody);
+extern b2AABB GetBodyAABB(b2Body* pBody, bool discardSensors);
 extern b2Fixture* GetLowermostFixture(b2Body* pBody, bool discardSensors = true);
 
 extern IGamePhysics* CreateClawPhysics();

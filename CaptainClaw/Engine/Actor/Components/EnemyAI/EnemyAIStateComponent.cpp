@@ -260,7 +260,7 @@ double PatrolEnemyAIStateComponent::FindClosestHole(Point center, int height, fl
         }
 
         Point fromPoint = Point(center.x + leftDelta, center.y);
-        Point toPoint = Point(fromPoint.x, fromPoint.y + height / 2 + height / 4);
+        Point toPoint = Point(fromPoint.x, fromPoint.y + height / 2 + height / 2);
 
         RaycastResult raycastResultDown = m_pPhysics->VRayCast(fromPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground));
         if (!raycastResultDown.foundIntersection)
@@ -276,7 +276,7 @@ double PatrolEnemyAIStateComponent::FindClosestHole(Point center, int height, fl
 
 void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
 {
-    SDL_Rect aabb = m_pPhysics->VGetAABB(_owner->GetGUID());
+    SDL_Rect aabb = m_pPhysics->VGetAABB(_owner->GetGUID(), true);
 
     Point center = m_pPositionComponent->GetPosition();
 
@@ -554,7 +554,9 @@ void MeleeAttackAIStateComponent::VOnAnimationFrameChanged(
             pAttack->attackAreaSize,
             pAttack->damage,
             CollisionFlag_EnemyAIAttack,
-            "Rectangle");
+            "Rectangle",
+            DamageType_MeleeAttack,
+            dir);
 
         // Play melee attack sound
         Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetMeleeAttackSounds());

@@ -38,7 +38,7 @@ void HealthComponent::VPostInit()
         m_IsController = true;
     }
 
-    BroadcastHealthChanged(0, m_CurrentHealth, true);
+    BroadcastHealthChanged(0, m_CurrentHealth, DamageType_None, Point(0, 0), true);
 }
 
 TiXmlElement* HealthComponent::VGenerateXml()
@@ -47,7 +47,7 @@ TiXmlElement* HealthComponent::VGenerateXml()
     return NULL;
 }
 
-void HealthComponent::AddHealth(int32 health)
+void HealthComponent::AddHealth(int32 health, DamageType damageType, Point impactPoint)
 {
     if (m_bInvulnerable && health < 0)
     {
@@ -71,7 +71,7 @@ void HealthComponent::AddHealth(int32 health)
 
     if (oldHealth != m_CurrentHealth)
     {
-        BroadcastHealthChanged(oldHealth, m_CurrentHealth);
+        BroadcastHealthChanged(oldHealth, m_CurrentHealth, damageType, impactPoint);
     }
 }
 
@@ -86,16 +86,16 @@ void HealthComponent::SetCurrentHealth(int32 health)
 
     if (oldHealth != m_CurrentHealth)
     {
-        BroadcastHealthChanged(oldHealth, m_CurrentHealth);
+        BroadcastHealthChanged(oldHealth, m_CurrentHealth, DamageType_None, Point(0, 0));
     }
 }
 
-void HealthComponent::BroadcastHealthChanged(int32 oldHealth, int32 newHealth, bool isInitial)
+void HealthComponent::BroadcastHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, bool isInitial)
 {
-    NotifyHealthChanged(oldHealth, newHealth);
+    NotifyHealthChanged(oldHealth, newHealth, damageType, impactPoint);
     if (newHealth <= 0)
     {
-        NotifyHealthBelowZero();
+        NotifyHealthBelowZero(damageType);
     }
 
     // Only broadcast controllers health. this is abit hacky
@@ -110,18 +110,18 @@ void HealthComponent::BroadcastHealthChanged(int32 oldHealth, int32 newHealth, b
 // HealthSubject implementation
 //=====================================================================================================================
 
-void HealthSubject::NotifyHealthChanged(int32 oldHealth, int32 newHealth)
+void HealthSubject::NotifyHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint)
 {
     for (HealthObserver* pObserver : m_Observers)
     {
-        pObserver->VOnHealthChanged(oldHealth, newHealth);
+        pObserver->VOnHealthChanged(oldHealth, newHealth, damageType, impactPoint);
     }
 }
 
-void HealthSubject::NotifyHealthBelowZero()
+void HealthSubject::NotifyHealthBelowZero(DamageType damageType)
 {
     for (HealthObserver* pObserver : m_Observers)
     {
-        pObserver->VOnHealthBelowZero();
+        pObserver->VOnHealthBelowZero(damageType);
     }
 }

@@ -80,6 +80,21 @@ void ProjectileAIComponent::OnCollidedWithSolidTile()
         IEventMgr::Get()->VQueueEvent(pEvent);
 
         m_IsActive = false;
+
+        if (m_Type == "Dynamite")
+        {
+            ActorTemplates::CreateSingleAnimation(_owner->GetPositionComponent()->GetPosition(), AnimationType_Explosion);
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                new EventData_Request_Play_Sound(SOUND_LEVEL1_KEG_EXPLODE, 100, false)));
+            ActorTemplates::CreateAreaDamage(
+                _owner->GetPositionComponent()->GetPosition(),
+                Point(150, 150),
+                50,
+                CollisionFlag_Explosion,
+                "Circle",
+                DamageType_Explosion,
+                Direction_None);
+        }
     }
 }
 
@@ -89,7 +104,30 @@ void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)
         MakeStrongPtr(pActorWhoWasShot->GetComponent<HealthComponent>(HealthComponent::g_Name));
     if (pHealthComponent)
     {
-        pHealthComponent->AddHealth((-1) * m_Damage);
+
+        DamageType damageType = DamageType_None;
+        if (m_Type == "Bullet")
+        {
+            damageType = DamageType_Bullet;
+        }
+
+        
+        SDL_Rect areaDamageAABB = g_pApp->GetGameLogic()->VGetGamePhysics()->VGetAABB(_owner->GetGUID(), false);
+        Point projectileSpeed = m_pPhysics->VGetVelocity(_owner->GetGUID());
+
+        Direction dir = Direction_Right;
+        if (projectileSpeed.x < 0)
+        {
+            dir = Direction_Left;
+        }
+
+        Point contactPoint = Point(areaDamageAABB.x + areaDamageAABB.w / 2, areaDamageAABB.y);
+        if (dir == Direction_Left)
+        {
+            contactPoint.x = areaDamageAABB.x - areaDamageAABB.w / 2;
+        }
+
+        pHealthComponent->AddHealth((-1) * m_Damage, damageType, contactPoint);
     }
 
     if (m_Type == "Bullet")

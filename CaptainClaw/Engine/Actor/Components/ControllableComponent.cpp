@@ -253,7 +253,8 @@ void ClawControllableComponent::OnAttack()
 {
     if (IsAttackingOrShooting() ||
         m_State == ClawState_Climbing ||
-        m_State == ClawState_TakingDamage)
+        m_State == ClawState_TakingDamage ||
+        m_State == ClawState_Dying)
     {
         return;
     }
@@ -521,7 +522,14 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             }
             position += positionOffset;
 
-            ActorTemplates::CreateAreaDamage(position, Point(50, 25), 10, CollisionFlag_ClawAttack, "Rectangle");
+            ActorTemplates::CreateAreaDamage(
+                position, 
+                Point(50, 25), 
+                10, 
+                CollisionFlag_ClawAttack, 
+                "Rectangle",
+                DamageType_MeleeAttack,
+                m_Direction);
         }
         if (pAnimation->IsAtLastAnimFrame())
         {
@@ -564,7 +572,7 @@ bool ClawControllableComponent::IsAttackingOrShooting()
     return false;
 }
 
-void ClawControllableComponent::VOnHealthBelowZero()
+void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
 {
     if (m_State == ClawState_Dying)
     {
@@ -583,7 +591,7 @@ void ClawControllableComponent::VOnHealthBelowZero()
     }
 }
 
-void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth)
+void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint)
 {
     // When claw takes damage but does not actually die
     if (newHealth > 0 && oldHealth > newHealth)
@@ -620,6 +628,10 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
         m_pPhysicsComponent->SetGravityScale(0.0f);
         
         m_State = ClawState_TakingDamage;
+
+        // Spawn graphics in the hit point
+        ActorTemplates::CreateSingleAnimation(impactPoint, AnimationType_BlueHitPoint);
+        Util::PlayRandomHitSound();
     }
 }
 

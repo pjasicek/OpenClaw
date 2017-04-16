@@ -99,8 +99,9 @@ inline std::shared_ptr<Type> MakeStrongPtr(std::weak_ptr<Type> pWeakPtr)
 
 enum Direction
 {
+    Direction_None,
     Direction_Left,
-    Direction_Right
+    Direction_Right,
 };
 
 //---------------------------------------------------------------------------------------------------------------------

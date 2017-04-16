@@ -191,7 +191,17 @@ enum DamageType
     DamageType_FireSword,
     DamageType_LightningSword,
     DamageType_IceSword,
+    DamageType_DeathSpike,
+    DamageType_DeathLiquid,
+    DamageType_EnemyAura,
     DamageType_Max
+};
+
+enum AnimationType
+{
+    AnimationType_Explosion,
+    AnimationType_RedHitPoint,
+    AnimationType_BlueHitPoint
 };
 
 struct RaycastResult
@@ -265,7 +275,7 @@ public:
     virtual void VSetPosition(uint32_t actorId, const Point& position) = 0;
     virtual Point VGetPosition(uint32_t actorId) = 0;
 
-    virtual SDL_Rect VGetAABB(uint32_t actorId) = 0;
+    virtual SDL_Rect VGetAABB(uint32_t actorId, bool discardSensors) = 0;
 
     virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32_t filterMask) = 0;
 

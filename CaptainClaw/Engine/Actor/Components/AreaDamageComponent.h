@@ -25,6 +25,8 @@ protected:
 private:
     int32 m_Damage;
     int32 m_Duration;
+    Direction m_HitDirection;
+    DamageType m_DamageType;
     int32 m_ActiveTime;
 };
 

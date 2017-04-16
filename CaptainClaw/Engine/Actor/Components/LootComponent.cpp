@@ -43,7 +43,7 @@ TiXmlElement* LootComponent::VGenerateXml()
     return baseElement;
 }
 
-void LootComponent::VOnHealthBelowZero()
+void LootComponent::VOnHealthBelowZero(DamageType damageType)
 {
     for (PickupType item : m_Loot)
     {

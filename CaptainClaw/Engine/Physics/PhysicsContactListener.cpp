@@ -103,7 +103,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     b2Vec2 pointVelocity = pFixtureB->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold.points[pointIdx]);
                     if (pointVelocity.y > -2)
                     {
-                        b2AABB bodyAABB = GetBodyAABB(pFixtureB->GetBody());
+                        b2AABB bodyAABB = GetBodyAABB(pFixtureB->GetBody(), true);
                         /*LOG("Actor upper AABB.y: " + ToStr(bodyAABB.upperBound.y));
                         LOG("Fixture lower AABB.y: " + ToStr(pFixtureA->GetAABB(0).lowerBound.y));
                         LOG("Lowermost fixture y: " + ToStr(GetLowermostFixture(pFixtureB->GetBody())->GetAABB(0).upperBound.y));*/
@@ -302,7 +302,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     MakeStrongPtr(pActor->GetComponent<HealthComponent>(HealthComponent::g_Name));
                 if (pHealthComponent)
                 {
-                    pHealthComponent->AddHealth(-1 * (pHealthComponent->GetHealth() + 1));
+                    pHealthComponent->AddHealth(-1 * (pHealthComponent->GetHealth() + 1), DamageType_DeathSpike, Point(0, 0));
                 }
             }
         }

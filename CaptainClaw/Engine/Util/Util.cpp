@@ -10,6 +10,8 @@
 #include "../Events/EventMgr.h"
 #include "../Events/Events.h"
 
+#include "../GameApp/BaseGameApp.h"
+
 //#include "../Level/Level.h"
 
 namespace Util
@@ -397,5 +399,13 @@ namespace Util
 
         SDL_FreeSurface(pSurface);
         return pTextureRect;
+    }
+
+    void PlayRandomHitSound()
+    {
+        static std::vector<std::string> hitSounds =
+        { SOUND_GAME_HIT1, SOUND_GAME_HIT2, SOUND_GAME_HIT3, SOUND_GAME_HIT4 };
+
+        PlayRandomSoundFromList(hitSounds);
     }
 };

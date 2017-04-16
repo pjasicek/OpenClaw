@@ -32,7 +32,8 @@ public:
 
     void RegisterState(std::string stateName, BaseEnemyAIStateComponent* pState) { m_StateMap[stateName] = pState; }
 
-    virtual void VOnHealthBelowZero() override;
+    virtual void VOnHealthBelowZero(DamageType damageType) override;
+    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) override;
 
     void OnEnemyEnteredMeleeZone(Actor* pEnemy);
     void OnEnemyLeftMeleeZone(Actor* pEnemy);

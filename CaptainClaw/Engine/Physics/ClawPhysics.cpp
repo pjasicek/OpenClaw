@@ -96,7 +96,7 @@ shared_ptr<ProjectileAIComponent> GetProjectileAIComponentFromB2Body(const b2Bod
     return pComponent;
 }
 
-b2AABB GetBodyAABB(b2Body* pBody)
+b2AABB GetBodyAABB(b2Body* pBody, bool discardSensors)
 {
     b2AABB aabb;
     aabb.lowerBound = b2Vec2(FLT_MAX, FLT_MAX);
@@ -104,7 +104,7 @@ b2AABB GetBodyAABB(b2Body* pBody)
     b2Fixture* fixture = pBody->GetFixtureList();
     while (fixture != NULL)
     {
-        if (fixture->IsSensor())
+        if (discardSensors && fixture->IsSensor())
         {
             fixture = fixture->GetNext();
             continue;
@@ -1164,20 +1164,20 @@ bool ClawPhysics::VIsAwake(uint32_t actorId)
     return false;
 }
 
-SDL_Rect ClawPhysics::VGetAABB(uint32_t actorId)
+SDL_Rect ClawPhysics::VGetAABB(uint32_t actorId, bool discardSensors)
 {
     SDL_Rect aabbRect = { 0, 0, 0, 0 };
     if (b2Body* pBody = FindBox2DBody(actorId))
     {
-        b2AABB aabb;
-        aabb.lowerBound = b2Vec2(FLT_MAX, FLT_MAX);
+        b2AABB aabb = GetBodyAABB(pBody, discardSensors);
+        /*aabb.lowerBound = b2Vec2(FLT_MAX, FLT_MAX);
         aabb.upperBound = b2Vec2(-FLT_MAX, -FLT_MAX);
         b2Fixture* pFixture = pBody->GetFixtureList();
         while (pFixture != NULL)
         {
             aabb.Combine(aabb, pFixture->GetAABB(0));
             pFixture = pFixture->GetNext();
-        }
+        }*/
 
         Point pointLowerBound = b2Vec2ToPoint(MetersToPixels(aabb.lowerBound));
         Point pointUpperBound = b2Vec2ToPoint(MetersToPixels(aabb.upperBound));

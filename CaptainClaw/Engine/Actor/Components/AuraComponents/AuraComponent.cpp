@@ -186,6 +186,7 @@ void DamageAuraComponent::VOnAuraApply(Actor* pActorInAura)
         MakeStrongPtr(pActorInAura->GetComponent<HealthComponent>(HealthComponent::g_Name));
     if (pHealthComponent)
     {
-        pHealthComponent->AddHealth((-1) * m_Damage);
+        // TODO: In original game this causes the damage impact anim effect
+        pHealthComponent->AddHealth((-1) * m_Damage, DamageType_None, Point(0, 0));
     }
 }

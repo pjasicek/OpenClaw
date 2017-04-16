@@ -31,6 +31,8 @@ namespace Util
     int GetSoundDurationMs(Mix_Chunk* pSound);
 
     SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer);
+
+    void PlayRandomHitSound();
 }
 
 #endif

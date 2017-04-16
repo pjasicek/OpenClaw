@@ -82,7 +82,7 @@ TiXmlElement* DestroyableComponent::VGenerateXml()
     return baseElement;
 }
 
-void DestroyableComponent::VOnHealthBelowZero()
+void DestroyableComponent::VOnHealthBelowZero(DamageType damageType)
 {
     if (!m_PossibleDestructionSounds.empty())
     {
