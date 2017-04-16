@@ -692,6 +692,18 @@ namespace ActorTemplates
         return fixtureDef;
     }
 
+    TiXmlElement* CreateXmlData_TakeDamageState(const std::vector<std::string>& takeDamageAnims, int invulnerabilityTime)
+    {
+        TiXmlElement* pTakeDamageStateElem = new TiXmlElement("TakeDamageAIStateComponent");
+        for (const std::string& anim : takeDamageAnims)
+        {
+            XML_ADD_TEXT_ELEMENT("TakeDamageAnimation", anim.c_str(), pTakeDamageStateElem);
+        }
+        XML_ADD_TEXT_ELEMENT("InvulnerabilityTime", ToStr(invulnerabilityTime).c_str(), pTakeDamageStateElem);
+
+        return pTakeDamageStateElem;
+    }
+
     TiXmlElement* CreateXmlData_PatrolState(uint32 animationDelay, double patrolSpeed, int leftPatrolBorder, int rightPatrolBorder, std::string walkAnimation, std::vector<std::string> idleAnimations, bool retainDirection = false)
     {
         TiXmlElement* pPatrolStateElem = new TiXmlElement("PatrolEnemyAIStateComponent");
@@ -1409,7 +1421,7 @@ namespace ActorTemplates
 
         if (logicName == "Soldier" || logicName == "Officer")
         {
-            bodyDef.size = Point(50, 110);
+            bodyDef.size = Point(50, 100);
         }
         else if (logicName == "Rat")
         {
@@ -1421,7 +1433,7 @@ namespace ActorTemplates
         fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
         fixtureDef.collisionMask = (CollisionFlag_Death | CollisionFlag_Controller | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_ClawAttack | CollisionFlag_Explosion);
         fixtureDef.isSensor = true;
-        fixtureDef.size = Point(40, 110); // Generic value
+        fixtureDef.size = Point(40, 100); // Generic value
         if (logicName == "Rat")
         {
             fixtureDef.size = Point(40, 40);
@@ -1436,6 +1448,12 @@ namespace ActorTemplates
             XML_ADD_TEXT_ELEMENT("DeathAnimation", "killfall", pEnemyAIElem);
 
             pActor->LinkEndChild(pEnemyAIElem);
+
+            //=========================================================================================================
+            // TakeDamage
+
+            std::vector<std::string> takeDamageAnims = { "hithigh" };
+            pActor->LinkEndChild(CreateXmlData_TakeDamageState(takeDamageAnims, 0));
 
             //=========================================================================================================
             // Patrol
@@ -1496,6 +1514,12 @@ namespace ActorTemplates
             XML_ADD_TEXT_ELEMENT("DeathAnimation", "fall", pEnemyAIElem);
 
             pActor->LinkEndChild(pEnemyAIElem);
+
+            //=========================================================================================================
+            // TakeDamage
+
+            std::vector<std::string> takeDamageAnims = { "hithigh" };
+            pActor->LinkEndChild(CreateXmlData_TakeDamageState(takeDamageAnims, 0));
 
             //=========================================================================================================
             // Patrol

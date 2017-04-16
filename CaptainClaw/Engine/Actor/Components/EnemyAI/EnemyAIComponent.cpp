@@ -162,6 +162,11 @@ void EnemyAIComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, Damage
     // If he died we do not care
     if (newHealth >= 0)
     {
+        if (HasState("TakeDamageState"))
+        {
+            EnterState("TakeDamageState");
+        }
+
         // Spawn graphics in the hit point
         if (damageType != DamageType_Magic)
         {
@@ -329,6 +334,22 @@ void EnemyAIComponent::AcquireStateLock()
 void EnemyAIComponent::OnStateCanFinish()
 {
     EnemyAIState currentState = GetCurrentState();
+
+    // Force acquire state lock - there is ALWAYS a better state than this
+    if (currentState == EnemyAIState_TakingDamage)
+    {
+        AcquireStateLock();
+        if (m_EnemiesInMeleeZone.size() > 0)
+        {
+            EnterState("MeleeAttackState");
+            m_bHasStateLock = false;
+        }
+        else if (m_EnemiesInRangedZone.size() > 0)
+        {
+            EnterState("RangedAttackState");
+            m_bHasStateLock = false;
+        }
+    }
 
     if (currentState == EnemyAIState_MeleeAttacking)
     {

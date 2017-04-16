@@ -16,6 +16,7 @@
 #include <time.h>
 
 const char* BaseEnemyAIStateComponent::g_Name = "BaseEnemyAIStateComponent";
+const char* TakeDamageAIStateComponent::g_Name = "TakeDamageAIStateComponent";
 const char* PatrolEnemyAIStateComponent::g_Name = "PatrolEnemyAIStateComponent";
 const char* MeleeAttackAIStateComponent::g_Name = "MeleeAttackAIStateComponent";
 const char* RangedAttackAIStateComponent::g_Name = "RangedAttackAIStateComponent";
@@ -23,6 +24,19 @@ const char* RangedAttackAIStateComponent::g_Name = "RangedAttackAIStateComponent
 //=====================================================================================================================
 // BaseEnemyAIStateComponent
 //=====================================================================================================================
+
+BaseEnemyAIStateComponent::BaseEnemyAIStateComponent(std::string stateName)
+    :
+    m_IsActive(false), 
+    m_StateName(stateName),
+    m_pPhysicsComponent(NULL),
+    m_pPositionComponent(NULL),
+    m_pAnimationComponent(NULL),
+    m_pEnemyAIComponent(NULL),
+    m_pRenderComponent(NULL)
+{
+
+}
 
 bool BaseEnemyAIStateComponent::VInit(TiXmlElement* pData)
 {
@@ -53,6 +67,66 @@ void BaseEnemyAIStateComponent::VPostInit()
     assert(m_pRenderComponent);
 
     m_pEnemyAIComponent->RegisterState(m_StateName, this);
+}
+
+//=====================================================================================================================
+// TakingDamageAIStateComponent
+//=====================================================================================================================
+
+TakeDamageAIStateComponent::TakeDamageAIStateComponent()
+    : BaseEnemyAIStateComponent("TakeDamageState")
+{
+
+}
+
+bool TakeDamageAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    for (TiXmlElement* pElem = pData->FirstChildElement("TakeDamageAnimation");
+        pElem != NULL; 
+        pElem = pElem->NextSiblingElement("TakeDamageAnimation"))
+    {
+        m_TakeDamageAnimations.push_back(pElem->GetText());
+    }
+
+    assert(m_TakeDamageAnimations.size() > 0);
+
+    return true;
+}
+
+void TakeDamageAIStateComponent::VPostInit()
+{
+    BaseEnemyAIStateComponent::VPostInit();
+
+    m_pAnimationComponent->AddObserver(this);
+}
+
+void TakeDamageAIStateComponent::VUpdate(uint32 msDiff)
+{
+
+}
+
+void TakeDamageAIStateComponent::VOnStateEnter()
+{
+    int randomAnimIdx = Util::GetRandomNumber(0, m_TakeDamageAnimations.size() - 1);
+    std::string takeDamageAnim = m_TakeDamageAnimations[randomAnimIdx];
+    m_pAnimationComponent->SetAnimation(takeDamageAnim);
+
+    m_IsActive = true;
+}
+
+void TakeDamageAIStateComponent::VOnStateLeave()
+{
+    m_IsActive = false;
+}
+
+void TakeDamageAIStateComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
+{
+    if (!m_IsActive)
+    {
+        return;
+    }
+
+    m_pEnemyAIComponent->OnStateCanFinish();
 }
 
 //=====================================================================================================================
@@ -537,6 +611,12 @@ void MeleeAttackAIStateComponent::VOnAnimationFrameChanged(
         return;
     }
 
+    // Could be leftover from past state which changed just now
+    if (m_pAnimationComponent->GetCurrentAnimation()->GetCurrentAnimationFrame() != pNewFrame)
+    {
+        return;
+    }
+
     if (m_MeleeAttackActions[0]->attackAnimFrameIdx == pNewFrame->idx)
     {
         std::shared_ptr<EnemyAttackAction> pAttack = m_MeleeAttackActions[0];
@@ -704,6 +784,12 @@ void RangedAttackAIStateComponent::VOnAnimationFrameChanged(
     AnimationFrame* pNewFrame)
 {
     if (!m_IsActive)
+    {
+        return;
+    }
+
+    // Could be leftover from past state which changed just now
+    if (m_pAnimationComponent->GetCurrentAnimation()->GetCurrentAnimationFrame() != pNewFrame)
     {
         return;
     }

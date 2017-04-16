@@ -91,6 +91,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<FollowableComponent>(FollowableComponent::GetIdFromName(FollowableComponent::g_Name));
     _componentFactory.Register<DamageAuraComponent>(DamageAuraComponent::GetIdFromName(DamageAuraComponent::g_Name));
     _componentFactory.Register<SingleAnimationComponent>(SingleAnimationComponent::GetIdFromName(SingleAnimationComponent::g_Name));
+    _componentFactory.Register<TakeDamageAIStateComponent>(TakeDamageAIStateComponent::GetIdFromName(TakeDamageAIStateComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

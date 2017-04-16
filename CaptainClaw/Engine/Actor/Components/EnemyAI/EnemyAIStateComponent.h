@@ -11,6 +11,7 @@ enum EnemyAIState
     EnemyAIState_Patrolling,
     EnemyAIState_MeleeAttacking,
     EnemyAIState_RangedAttacking,
+    EnemyAIState_TakingDamage,
     EnemyAIState_Fleeing,
     EnemyAIState_Dying,
 };
@@ -49,7 +50,7 @@ class ActorRenderComponent;
 class BaseEnemyAIStateComponent : public ActorComponent
 {
 public:
-    BaseEnemyAIStateComponent(std::string stateName) : m_IsActive(false), m_StateName(stateName) { }
+    BaseEnemyAIStateComponent(std::string stateName);
     virtual ~BaseEnemyAIStateComponent() { }
 
     static const char* g_Name;
@@ -79,6 +80,35 @@ protected:
     AnimationComponent* m_pAnimationComponent;
     EnemyAIComponent* m_pEnemyAIComponent;
     ActorRenderComponent* m_pRenderComponent;
+};
+
+//=====================================================================================================================
+// TakeDamageAIStateComponent
+//=====================================================================================================================
+typedef std::vector<std::string> TakeDamageAnimList;
+class TakeDamageAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver
+{
+public:
+    TakeDamageAIStateComponent();
+    virtual ~TakeDamageAIStateComponent() { }
+
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
+    virtual void VPostInit() override;
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    // EnemyAIStateComponent API
+    virtual void VUpdate(uint32 msDiff) override;
+    virtual void VOnStateEnter() override;
+    virtual void VOnStateLeave() override;
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_TakingDamage; }
+
+    // AnimationObserver API
+    virtual void VOnAnimationAtLastFrame(Animation* pAnimation) override;
+
+private:
+    TakeDamageAnimList m_TakeDamageAnimations;
 };
 
 //=====================================================================================================================
