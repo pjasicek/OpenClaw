@@ -7,9 +7,9 @@
             <Score>0</Score>
             <Health>100</Health>
             <Lives>3</Lives>
-            <BulletCount>15</BulletCount>
-            <MagicCount>10</MagicCount>
-            <DynamiteCount>10</DynamiteCount>
+            <BulletCount>99</BulletCount>
+            <MagicCount>99</MagicCount>
+            <DynamiteCount>99</DynamiteCount>
         </Checkpoint>
         <Checkpoint>
             <CheckpointNumber>1</CheckpointNumber>
@@ -28,6 +28,19 @@
             <BulletCount>55</BulletCount>
             <MagicCount>55</MagicCount>
             <DynamiteCount>55</DynamiteCount>
+        </Checkpoint>
+    </Level>
+    <Level>
+        <LevelNumber>2</LevelNumber>
+        <LevelName>Battlements</LevelName>
+        <Checkpoint>
+            <CheckpointNumber>0</CheckpointNumber>
+            <Score>0</Score>
+            <Health>100</Health>
+            <Lives>3</Lives>
+            <BulletCount>99</BulletCount>
+            <MagicCount>99</MagicCount>
+            <DynamiteCount>99</DynamiteCount>
         </Checkpoint>
     </Level>
 </GameSaves>

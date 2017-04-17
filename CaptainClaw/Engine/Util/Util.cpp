@@ -211,7 +211,15 @@ namespace Util
                 (tileDesc->rect.right > 0) && (tileDesc->rect.bottom == tileDesc->height - 1)) // !!! similiar to (2)
             {
                 //myfile << "Tile 6" << endl;
-                assert(false && "Paring rects case: 6");
+                //cout << "tileId: " << tileDesc->tileId << endl;
+                //cout << "left: " << tileDesc->rect.left << "right: " << tileDesc->rect.right << "bott: " << tileDesc->rect.bottom << "top: " << tileDesc->rect.top << endl;
+                SDL_Rect rect1 = { 0, 0, tileDesc->rect.left, tileDesc->height };
+                SDL_Rect rect2 = { tileDesc->rect.left, 0, tileDesc->rect.right - tileDesc->rect.left, tileDesc->height };
+                SDL_Rect rect3 = { tileDesc->rect.right, 0, tileDesc->width - tileDesc->rect.right, tileDesc->height };
+                tilePrototype->collisionRectangles.push_back({ CollisionType(tileDesc->outsideAttrib), rect1 });
+                tilePrototype->collisionRectangles.push_back({ CollisionType(tileDesc->insideAttrib), rect2 });
+                tilePrototype->collisionRectangles.push_back({ CollisionType(tileDesc->outsideAttrib), rect3 });
+                //assert(false && "Paring rects case: 6");
             }
             // My paper case (7) --- PAPERFIED
             // This yields 3 rectangles

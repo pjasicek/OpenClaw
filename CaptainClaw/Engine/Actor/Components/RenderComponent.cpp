@@ -1,5 +1,6 @@
 #include "RenderComponent.h"
 #include "../../GameApp/BaseGameApp.h"
+#include "../../GameApp/BaseGameLogic.h"
 #include "../../Graphics2D/Image.h"
 
 #include "../../Resource/Loaders/PidLoader.h"
@@ -395,6 +396,20 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
     m_PlaneProperties.tilesOnAxisX = m_PlaneProperties.planePixelWidth / m_PlaneProperties.tilePixelWidth;
     m_PlaneProperties.tilesOnAxisY = m_PlaneProperties.planePixelHeight / m_PlaneProperties.tilePixelHeight;
 
+    // Filler tile - for the background plane
+
+    WapPal* pPallette = g_pApp->GetCurrentPalette();
+    assert(m_PlaneProperties.fillColor >= 0 && m_PlaneProperties.fillColor <= 255);
+    WAP_ColorRGBA wapColor = pPallette->colors[m_PlaneProperties.fillColor];
+    SDL_Color fillColor = { wapColor.r, wapColor.g, wapColor.b, wapColor.a };
+
+    m_pFillImage.reset(Image::CreateImageFromColor(
+        fillColor,
+        m_PlaneProperties.tilePixelWidth,
+        m_PlaneProperties.tilePixelHeight,
+        g_pApp->GetRenderer()));
+    assert(m_pFillImage != nullptr);
+
     //-------------------------------------------------------------------------
     // Fill plane tiles
     //-------------------------------------------------------------------------
@@ -428,17 +443,30 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
         }
 
         // Convert to three digits, e.g. "2" -> "002" or "15" -> "015"
-        if (tileFileName.length() == 1) { tileFileName = "00" + tileFileName; }
-        else if (tileFileName.length() == 2 && tileFileName != "74") { tileFileName = "0" + tileFileName; }
+        if (tileFileName.length() == 1) 
+        { 
+            tileFileName = "00" + tileFileName; 
+        }
+        else if (tileFileName.length() == 2 &&
+            !(g_pApp->GetGameLogic()->GetCurrentLevelData()->GetLevelNumber() == 1 && tileFileName == "74")) 
+        { 
+            tileFileName = "0" + tileFileName; 
+        }
 
         auto findIt = m_ImageMap.find(tileFileName);
         if (findIt != m_ImageMap.end())
         {
             m_TileImageList.push_back(findIt->second.get());
         }
-        else if (tileFileName == "0-1")
+        else if (tileFileName == "0-1" || tileFileName == "-1")
         {
             m_TileImageList.push_back(NULL);
+        }
+        else if (m_PlaneProperties.name == "Background") // Use fill color, only aplicable to background
+        {
+            assert(m_pFillImage != nullptr);
+
+            m_TileImageList.push_back(m_pFillImage.get());
         }
         else
         {

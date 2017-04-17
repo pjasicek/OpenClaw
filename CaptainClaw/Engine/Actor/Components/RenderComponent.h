@@ -166,6 +166,9 @@ private:
     // This is 1D array representing all tiles from top left to bottom right corner
     TileImageList m_TileImageList;
 
+    // Fill color
+    shared_ptr<Image> m_pFillImage;
+
     // How far does this plane span
     SDL_Rect m_PositionRect;
 };

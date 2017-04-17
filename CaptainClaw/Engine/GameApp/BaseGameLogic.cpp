@@ -605,7 +605,7 @@ void BaseGameLogic::VChangeState(GameState newState)
         }
 
         int levelNumber = m_pCurrentLevel->GetLevelNumber();
-        assert(levelNumber == 1 && "Only level 1 is supported at this time");
+        //assert(levelNumber == 1 && "Only level 1 is supported at this time");
         assert(levelNumber >= 0 && levelNumber <= 14);
 
         // Load Monolith's WWD, they are located in /LEVEL[1-14]/WORLDS/WORLD.WWD

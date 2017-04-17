@@ -15,6 +15,7 @@ public:
     static Image* CreateImage(WapPid* pid, SDL_Renderer* renderer);
     static Image* CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer, bool useColorKey = false, SDL_Color colorKey = { 0, 0, 0, 0 });
     static Image* CreatePngImage(char* rawBuffer, uint32_t size, SDL_Renderer* renderer);
+    static Image* CreateImageFromColor(SDL_Color color, int w, int h, SDL_Renderer* pRenderer);
 
     inline SDL_Texture* GetTexture() { return m_pTexture; }
     inline int GetWidth() { return m_Width; }

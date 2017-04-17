@@ -170,12 +170,43 @@ Image* Image::CreatePngImage(char* rawBuffer, uint32_t size, SDL_Renderer* rende
     if (pTexture == NULL)
     {
         LOG_ERROR(IMG_GetError());
+        delete pImage;
         return NULL;
     }
 
     if (!pImage->Initialize(pTexture))
     {
         LOG_ERROR(IMG_GetError());
+        delete pImage;
+        SDL_DestroyTexture(pTexture);
+        return NULL;
+    }
+
+    return pImage;
+}
+
+Image* Image::CreateImageFromColor(SDL_Color color, int w, int h, SDL_Renderer* pRenderer)
+{
+    Image* pImage = new Image();
+
+    SDL_Surface* pSurface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
+    SDL_FillRect(pSurface, NULL, SDL_MapRGB(pSurface->format, color.r, color.g, color.b));
+    SDL_Texture* pTextureRect = SDL_CreateTextureFromSurface(pRenderer, pSurface);
+
+    SDL_FreeSurface(pSurface);
+
+    if (pTextureRect == NULL)
+    {
+        LOG_ERROR(IMG_GetError());
+        delete pImage;
+        return NULL;
+    }
+
+    if (!pImage->Initialize(pTextureRect))
+    {
+        LOG_ERROR(IMG_GetError());
+        delete pImage;
+        SDL_DestroyTexture(pTextureRect);
         return NULL;
     }
 
