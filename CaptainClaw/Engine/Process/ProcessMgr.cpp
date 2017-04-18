@@ -60,6 +60,10 @@ uint32_t ProcessMgr::UpdateProcesses(uint32_t msDiff)
                     ++failCount;
                     break;
                 }
+                default:
+                {
+                    break;
+                }
             }
 
             // Remove the process and destroy it

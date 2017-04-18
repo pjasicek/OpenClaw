@@ -160,7 +160,6 @@ bool HumanView::VOnEvent(SDL_Event& evt)
         {
             float threshold = 0.2;
             SDL_Event sdlevent;
-            sdlevent.key.keysym.sym;
 
             /*LOG_WARNING("fingerx: ");
             LOG_WARNING(std::to_string(evt.tfinger.x));

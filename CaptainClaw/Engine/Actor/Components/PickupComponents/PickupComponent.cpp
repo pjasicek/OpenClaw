@@ -441,7 +441,7 @@ bool AmmoPickupComponent::VDelegateInit(TiXmlElement* data)
         else if (ammoTypeStr == "Dynamite") { ammoType = AmmoType_Dynamite; }
         else
         {
-            LOG_ERROR("Unknown ammo type: " + ammoType);
+            LOG_ERROR("Unknown ammo type: " + ammoTypeStr);
             return false;
         }
 
