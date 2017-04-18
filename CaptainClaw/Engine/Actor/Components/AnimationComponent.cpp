@@ -259,7 +259,7 @@ void AnimationComponent::OnAnimationFrameStarted(AnimationFrame* frame)
     {
         renderComponent->SetImage(frame->imageName);
     }
-    else if (renderComponent = MakeStrongPtr(_owner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name)))
+    else if ((renderComponent = MakeStrongPtr(_owner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name))))
     {
         renderComponent->SetImage(frame->imageName);
     }

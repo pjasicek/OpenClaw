@@ -208,7 +208,7 @@ void Animation::SetNextFrame()
     // Certain animations play in loop while being reversed - e.g.: 0,1,2,3,4,3,2,1,0,1,....
     if (_reversed)
     {
-        if ((_currentAnimationFrame.idx == _animationFrames.size() - 1))
+        if (_currentAnimationFrame.idx == (_animationFrames.size() - 1))
         {
             _isBeingReversed = true;
             looped = true;
