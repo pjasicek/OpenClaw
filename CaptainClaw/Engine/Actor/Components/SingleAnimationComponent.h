@@ -19,7 +19,7 @@ public:
     virtual void VPostInit() override;
     virtual void VPostPostInit() override;
 
-    virtual void VOnAnimationAtLastFrame(Animation* pAnimation);
+    virtual void VOnAnimationAtLastFrame(Animation* pAnimation) override;
 
 private:
 
