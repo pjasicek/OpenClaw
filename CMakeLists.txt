@@ -50,6 +50,8 @@ list(APPEND TARGET_LIBS
     SDL2_ttf
     SDL2_image
     SDL2_gfx
+    stdc++
+    m
 )
 
 if(Android)
