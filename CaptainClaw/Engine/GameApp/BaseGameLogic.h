@@ -95,6 +95,7 @@ protected:
     void MoveActorDelegate(IEventDataPtr pEventData);
     void RequestNewActorDelegate(IEventDataPtr pEventData);
     void CollideableTileCreatedDelegate(IEventDataPtr pEventData);
+    void CreateStaticGeometryDelegate(IEventDataPtr pEventData);
     void RequestDestroyActorDelegate(IEventDataPtr pEventData);
 
     StrongActorPtr GetClawActor();

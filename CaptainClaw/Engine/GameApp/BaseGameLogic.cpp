@@ -702,11 +702,23 @@ void BaseGameLogic::CollideableTileCreatedDelegate(IEventDataPtr pEventData)
             Point size(64, 10);
             m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground);
         }
+        else if (m_pCurrentLevel->GetLevelNumber() == 2 && tileProto.id == 16)
+        {
+            Point position(pCastEventData->GetPositionX(), pCastEventData->GetPositionY() + 50);
+            Point size(64, 10);
+            m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground);
+        }
     }
     else
     {
         LOG_WARNING("Unknown tile! Id = " + ToStr(pCastEventData->GetTileId()));
     }
+}
+
+void BaseGameLogic::CreateStaticGeometryDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Add_Static_Geometry> pCastEventData =
+        static_pointer_cast<EventData_Add_Static_Geometry>(pEventData);
 }
 
 StrongActorPtr BaseGameLogic::GetClawActor()
@@ -772,12 +784,14 @@ void BaseGameLogic::RegisterAllDelegates()
 {
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::CollideableTileCreatedDelegate), EventData_Collideable_Tile_Created::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::RequestDestroyActorDelegate), EventData_Destroy_Actor::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::CreateStaticGeometryDelegate), EventData_Add_Static_Geometry::sk_EventType);
 }
 
 void BaseGameLogic::RemoveAllDelegates()
 {
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::CollideableTileCreatedDelegate), EventData_Collideable_Tile_Created::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::RequestDestroyActorDelegate), EventData_Destroy_Actor::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::CreateStaticGeometryDelegate), EventData_Add_Static_Geometry::sk_EventType);
 }
 
 void BaseGameLogic::ExecuteStartupCommands(const std::string& startupCommandsFile)

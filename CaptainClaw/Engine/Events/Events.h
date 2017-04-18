@@ -1070,6 +1070,41 @@ private:
 };
 
 //---------------------------------------------------------------------------------------------------------------------
+// EventData_Add_Static_Geometry
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Add_Static_Geometry : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Add_Static_Geometry(Point position, Point size, CollisionType collisonType)
+    {
+        m_Position = position;
+        m_Size = size;
+        m_CollisionType = collisonType;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Add_Static_Geometry(m_Position, m_Size, m_CollisionType));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_Position.x << m_Position.y << m_Size.x << m_Size.y << (int)m_CollisionType; }
+    virtual void VDeserialize(std::istringstream& in) { /* TODO: in >> m_Position.x >> m_Position.y >> m_Size.x >> m_Size.y >> (int)(m_CollisionType);*/ }
+
+    Point GetPosition() { return m_Position; }
+    Point GetSize() { return m_Size; }
+    CollisionType GetCollisionType() { return m_CollisionType; }
+
+    virtual const char* GetName(void) const { return "EventData_Add_Static_Geometry"; }
+
+private:
+    Point m_Position;
+    Point m_Size;
+    CollisionType m_CollisionType;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
 // EventData_Start_Climb - sent when climb up or down is requested (down or up arrow is pressed)
 //---------------------------------------------------------------------------------------------------------------------
 class EventData_Start_Climb : public BaseEventData

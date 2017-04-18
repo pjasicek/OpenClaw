@@ -136,6 +136,15 @@ struct TilePlaneProperties
     bool isTileAutosized;
 };
 
+// Helper struct
+struct TileInfo
+{
+    int tileId;
+    int x;
+    int y;
+};
+
+typedef std::vector<int> TileList;
 class TilePlaneRenderComponent : public BaseRenderComponent
 {
 public:
@@ -156,6 +165,10 @@ protected:
     virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) override;
 
 private:
+    void ProcessMainPlaneTiles(const TileList& tileList);
+    TileList GetAllContinuousTiles(const TileList& tileList, int fromTileIdx);
+    TileInfo GetTileInfo(const TileList& tileList, int tileIdx);
+
     // Background, action, foreground
     TilePlaneRenderPosition m_RenderLocation;
 
