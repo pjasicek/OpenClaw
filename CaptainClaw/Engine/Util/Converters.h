@@ -227,12 +227,12 @@ inline TiXmlElement* SoundTriggerToXml(WwdObject* pWwdObject)
 
 inline TiXmlElement* StackedCratesToXml(WwdObject* pWwdObject)
 {
-    
+    return NULL;
 }
 
 inline TiXmlElement* CrateToXml(WwdObject* pWwdObject)
 {
-
+    return NULL;
 }
 
 inline TiXmlElement* EyeCandyToXml(WwdObject* pWwdObject)
@@ -336,37 +336,37 @@ inline TiXmlElement* ElevatorToXml(WwdObject* pWwdObject)
 
 inline TiXmlElement* SuperCheckpointToXml(WwdObject* pWwdObject)
 {
-
+    return NULL;
 }
 
 inline TiXmlElement* CheckpointToXml(WwdObject* pWwdObject)
 {
-
+    return NULL;
 }
 
 inline TiXmlElement* PowderKegToXml(WwdObject* pWwdObject)
 {
-
+    return NULL;
 }
 
 inline TiXmlElement* OfficerToXml(WwdObject* pWwdObject)
 {
-
+    return NULL;
 }
 
 inline TiXmlElement* SoldierToXml(WwdObject* pWwdObject)
 {
-
+    return NULL;
 }
 
 inline TiXmlElement* RatToXml(WwdObject* pWwdObject)
 {
-
+    return NULL;
 }
 
 inline TiXmlElement* AmmoToXml(WwdObject* pWwdObject)
 {
-
+    return NULL;
 }
 
 inline TiXmlElement* TreasureToXml(WwdObject* pWwdObject)
@@ -385,7 +385,7 @@ inline TiXmlElement* TreasureToXml(WwdObject* pWwdObject)
 
 inline TiXmlElement* SpecialPowerupToXml(WwdObject* pWwdObject)
 {
-
+    return NULL;
 }
 
 inline TiXmlElement* TogglePegToXml(WwdObject* pWwdObject)

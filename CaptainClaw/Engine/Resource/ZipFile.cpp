@@ -260,7 +260,7 @@ int ZipFile::Find(const std::string &path) const
 
 std::vector<std::string>  ZipFile::GetAllFilesInDirectory(const std::string& dirPath)
 {
-
+    return {};
 }
 
 // --------------------------------------------------------------------------
