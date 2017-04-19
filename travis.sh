@@ -5,6 +5,8 @@ coverity() {
         exit 0
     fi
 
+    prepare_linux
+
     curl -s "https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh" | bash || true
 }
 
