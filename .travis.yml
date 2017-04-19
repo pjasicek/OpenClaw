@@ -21,6 +21,8 @@ matrix:
     - os: linux
       compiler: gcc
       env: CMAKE_ARGS="-DAndroid=1 -DCMAKE_TOOLCHAIN_FILE=../Android.cmake -Dtools=$HOME/android-toolchain/"
+    - os: osx
+      compiler: clang
 
 addons:
   coverity_scan:
@@ -33,11 +35,12 @@ addons:
     branch_pattern: coverity_scan
 
 before_install:
-    - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-    - sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev
-    - sudo apt-get install libtinyxml-dev
-    - sudo apt-get install cmake
-    - git clone 'https://github.com/loblik/captainclaw-arm-linux-androideabi-4.9.git' ~/android-toolchain
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libtinyxml-dev; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install cmake; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then git clone 'https://github.com/loblik/captainclaw-arm-linux-androideabi-4.9.git' ~/android-toolchain; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_gfx tinyxml; fi
     - git config user.email "travis@build.bot" && git config user.name "Travis CI"
     - git tag -a -m "Travis build" init
 
@@ -46,4 +49,5 @@ before_install:
 script:
     - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build; cd build; cmake $CMAKE_ARGS .. ; fi
     - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make -j8 ; fi
+
 
