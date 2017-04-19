@@ -11,6 +11,7 @@
 #include <tinyxml.h>
 #include <Box2D/Box2D.h>
 #include <algorithm>
+#include <cmath>
 
 #include "Logger/Logger.h"
 #include "Util/StringUtil.h"
