@@ -1012,61 +1012,38 @@ public:
         m_TileId = -1;
         m_PositionX = 0;
         m_PositionY = 0;
+        m_TilesCount = 0;
     }
 
-    EventData_Collideable_Tile_Created(int32 tileId, int32 positionX, int32 positionY)
+    EventData_Collideable_Tile_Created(int32 tileId, int32 positionX, int32 positionY, int tilesCount)
     {
         m_TileId = tileId;
         m_PositionX = positionX;
         m_PositionY = positionY;
+        m_TilesCount = tilesCount;
     }
 
-    virtual const EventType& VGetEventType(void) const
-    {
-        return sk_EventType;
-    }
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
 
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Collideable_Tile_Created(m_TileId, m_PositionX, m_PositionY));
+        return IEventDataPtr(new EventData_Collideable_Tile_Created(m_TileId, m_PositionX, m_PositionY, m_TilesCount));
     }
 
-    virtual void VSerialize(std::ostringstream& out) const
-    {
-        out << m_TileId << " " << m_PositionX << " " << m_PositionY;
-    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_TileId << " " << m_PositionX << " " << m_PositionY << m_TilesCount; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_TileId >> m_PositionX >> m_PositionY >> m_TilesCount; }
+    virtual const char* GetName(void) const { return "EventData_Collideable_Tile_Created"; }
 
-    virtual void VDeserialize(std::istringstream& in)
-    {
-        in >> m_TileId >> m_PositionX >> m_PositionY;
-    }
-
-    int32 GetTileId(void) const
-    {
-        return m_TileId;
-    }
-
-    int32 GetPositionX(void) const
-    {
-        return m_PositionX;
-    }
-
-    int32 GetPositionY(void) const
-    {
-        return m_PositionY;
-    }
-
-    virtual const char* GetName(void) const
-    {
-        return "EventData_Collideable_Tile_Created";
-    }
-
-    //virtual bool VBuildEventFromScript(void);
+    int32 GetTileId(void) const { return m_TileId; }
+    int32 GetPositionX(void) const { return m_PositionX; }
+    int32 GetPositionY(void) const { return m_PositionY; }
+    int32 GetTilesCount() { return m_TilesCount; }
 
 private:
     int32 m_TileId;
     int32 m_PositionX;
     int32 m_PositionY;
+    int32 m_TilesCount;
 };
 
 //---------------------------------------------------------------------------------------------------------------------

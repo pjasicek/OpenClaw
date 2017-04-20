@@ -345,35 +345,23 @@ void TilePlaneRenderComponent::ProcessMainPlaneTiles(const TileList& tileList)
         // Discard all empty tiles
         if (continuousTiles[0] != -1)
         {
-            // Do stuff with continuous tiles
-            //-----
-            //-----
-            //-----
-            //
-
-            if (continuousTiles.size() > 1)
-            {
-                LOG("Continuous tiles on Y: " + ToStr(GetTileInfo(tileList, currentTileIdx).y));
-                std::string contTilesString;
-                for (int tileId : continuousTiles)
-                {
-                    contTilesString += ToStr(tileId) + "-";
-                }
-                LOG(contTilesString);
-            }
-
             int tileWidth = m_PlaneProperties.tilePixelWidth;
             TileInfo firstTileInfo = GetTileInfo(tileList, currentTileIdx);
             int currentX = firstTileInfo.x;
             int currentY = firstTileInfo.y;
-            for (int tileId : continuousTiles)
+
+            shared_ptr<EventData_Collideable_Tile_Created> pEvent(
+                new EventData_Collideable_Tile_Created(firstTileInfo.tileId, currentX, currentY, continuousTiles.size()));
+            IEventMgr::Get()->VTriggerEvent(pEvent);
+
+            /*for (int tileId : continuousTiles)
             {
                 shared_ptr<EventData_Collideable_Tile_Created> pEvent(
-                    new EventData_Collideable_Tile_Created(tileId, currentX, currentY));
+                    new EventData_Collideable_Tile_Created(tileId, currentX, currentY, 1));
                 IEventMgr::Get()->VTriggerEvent(pEvent);
 
                 currentX += tileWidth;
-            }
+            }*/
         }
 
         currentTileIdx += continuousTiles.size();
@@ -532,143 +520,6 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
         // Temporarily keep track of the tiles stored
         int32 tileId = std::stoi(tileFileName);
         tileList.push_back(tileId);
-
-#if 0
-        //------ HACKERINO, should be in separate component, but...
-        //    Sends event that tile on the main (action) plane was created
-        //    It will be added into physics subsystem then but it is handled elsewhere. This just sends event that some
-        //    tile has been created. 
-        if (m_PlaneProperties.isMainPlane)
-        {
-            int32 tileId = std::stoi(tileFileName);
-
-            // Temporary - I guess ?
-            tileList.push_back(tileId);
-
-
-            if (tileId != -1) // Tiles with id == -1 are empty tiles (= air)
-            {
-                // THIS IS THE ORIGINAL CODE WHICH DOES NOT DEAL WITH MERGING CONTINUOUS TILES
-                /*
-                int32 posX = (tileIdx * m_PlaneProperties.tilePixelWidth) % m_PlaneProperties.planePixelWidth;
-                int32 posY = ((tileIdx / m_PlaneProperties.tilesOnAxisX) * m_PlaneProperties.tilePixelHeight) % m_PlaneProperties.planePixelHeight;
-                shared_ptr<EventData_Collideable_Tile_Created> pEvent(new EventData_Collideable_Tile_Created(tileId, posX, posY));
-                IEventMgr::Get()->VTriggerEvent(pEvent);
-                */
-
-                int32 posX = (tileIdx * m_PlaneProperties.tilePixelWidth) % m_PlaneProperties.planePixelWidth;
-                int32 posY = ((tileIdx / m_PlaneProperties.tilesOnAxisX) * m_PlaneProperties.tilePixelHeight) % m_PlaneProperties.planePixelHeight;
-
-                tilesInRow.push_back({ tileId, posX, posY });
-                lastPos = posY;
-            }
-
-            // This block of uncanny code deals with merging continuous tiles if possible
-            if (tileId == -1 || (prevTileId != tileId))
-            {
-                if (tilesInRow.size() > 1)
-                {
-                    std::string outString;
-                    for (auto tile : tilesInRow)
-                    {
-                        outString += ToStr(tile.tileId) + "-";
-                    }
-
-                    /*LOG("Row Y: " + ToStr(lastPos));
-                    LOG("Tiles: " + outString);*/
-
-                    //-----
-
-                    //if (tilesInRow.size() == 2 && tilesInRow[0].tileId != tilesInRow[1].tileId)
-
-                    // First and last are different - resolve last one separately and pop it
-                    if (tilesInRow.front().tileId != tilesInRow.back().tileId)
-                    {
-                        TileInfo tile = tilesInRow.back();
-                        shared_ptr<EventData_Collideable_Tile_Created> pEvent(
-                            new EventData_Collideable_Tile_Created(tile.tileId, tile.x, tile.y));
-                        IEventMgr::Get()->VTriggerEvent(pEvent);
-
-                        tilesInRow.pop_back();
-                    }
-                    // If there were only 2 tiles to begin with, it can happen that tehre can be only 1 now
-                    if (tilesInRow.size() == 1)
-                    {
-                        shared_ptr<EventData_Collideable_Tile_Created> pEvent(
-                            new EventData_Collideable_Tile_Created(tilesInRow[0].tileId, tilesInRow[0].x, tilesInRow[0].y));
-                        IEventMgr::Get()->VTriggerEvent(pEvent);
-                    }
-                    else
-                    {
-                        // Sanity check
-                        for (TileInfo& tile : tilesInRow)
-                        {
-                            assert(tile.tileId == tilesInRow[0].tileId);
-                        }
-
-                        // Try to merge here, multiple same tiles in the row
-                        auto findIt = pTilePrototypeMap->find(tilesInRow[0].tileId);
-                        assert(findIt != pTilePrototypeMap->end());
-                        TileCollisionPrototype tileProto = findIt->second;
-
-                        int countAttrTiles = 0;
-                        bool canBeMerged = true;
-                        TileCollisionRectangle mergedRect;
-                        for (TileCollisionRectangle& colRect : tileProto.collisionRectangles)
-                        {
-                            if (colRect.collisionType != CollisionType_None)
-                            {
-                                countAttrTiles++;
-                                mergedRect = colRect;
-
-                                if (colRect.collisionRect.w != m_PlaneProperties.tilePixelWidth)
-                                {
-                                    canBeMerged = false;
-                                }
-                            }
-                        }
-
-                        if (countAttrTiles != 1)
-                        {
-                            canBeMerged = false;
-                        }
-
-                        if (canBeMerged)
-                        {
-                            LOG("Can be merged !");
-                            for (TileInfo& tile : tilesInRow)
-                            {
-                                shared_ptr<EventData_Collideable_Tile_Created> pEvent(
-                                    new EventData_Collideable_Tile_Created(tile.tileId, tile.x, tile.y));
-                                IEventMgr::Get()->VTriggerEvent(pEvent);
-                            }
-                        }
-                        else
-                        {
-                            for (TileInfo& tile : tilesInRow)
-                            {
-                                shared_ptr<EventData_Collideable_Tile_Created> pEvent(
-                                    new EventData_Collideable_Tile_Created(tile.tileId, tile.x, tile.y));
-                                IEventMgr::Get()->VTriggerEvent(pEvent);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    for (TileInfo& tile : tilesInRow)
-                    {
-                        shared_ptr<EventData_Collideable_Tile_Created> pEvent(
-                            new EventData_Collideable_Tile_Created(tile.tileId, tile.x, tile.y));
-                        IEventMgr::Get()->VTriggerEvent(pEvent);
-                    }
-                }
-
-                tilesInRow.clear();
-            }
-            prevTileId = tileId;
-        }
-#endif
 
         // Convert to three digits, e.g. "2" -> "002" or "15" -> "015"
         if (tileFileName.length() == 1) 

@@ -112,10 +112,13 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                             pContact->SetEnabled(true);
                             pPhysicsComponent->AddOverlappingGround(pFixtureA);
                         }*/
-                        b2Vec2 relativePoint = pFixtureA->GetBody()->GetLocalPoint(worldManifold.points[pointIdx]);
+                        //pFixtureA->GetAABB()
+
+                        b2Vec2 relativePointA = pFixtureA->GetBody()->GetLocalPoint(worldManifold.points[pointIdx]);
+                        b2Vec2 relativePointB = pFixtureB->GetBody()->GetLocalPoint(worldManifold.points[pointIdx]);
                         //LOG("Relative point Y: " + ToStr(relativePoint.y));
                         float platformFaceY = 0.5f;//front of platform, from fixture definition :(
-                        if (relativePoint.y < platformFaceY - 0.05)
+                        if (relativePointA.y < platformFaceY - 0.05)
                         {
                             
                             if (pActor->GetName() == "Claw")
@@ -124,16 +127,39 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                                 LOG("x: " + ToStr(relativePoint.x));
                                 LOG("PointVelocity.y: " + ToStr(pointVelocity.y));*/
                             }
-                            //TODO: I DONT KNOW WHY BUT IT WORKS (not really tho)
-                            // It caused bugs with colliding with grounds from the side from "downtown"
-                            if (fabs(relativePoint.y) < 0.1f && fabs(relativePoint.x) > 0.3f)
+                            
+                            // Only allow to actually land from ABOVE not from the side when still below
+                            // Still hacked though... Causes some items to fall thorugh when level load maybe ? (crates level 2)
+                            if (fabs(relativePointA.y) < 0.1f && fabs(relativePointA.x) > 0.1f && fabs(relativePointB.x) > 0.01)
                             {
-                                return;
+                                /*if (pActor->GetName() == "Claw")
+                                {
+                                    LOG("-------------");
+                                    LOG("NOT DE");
+                                    LOG("relativePointA.x: " + ToStr(relativePointA.x) + ", relativePointA.y: " + ToStr(relativePointA.y));
+                                    LOG("RelativePointB.x: " + ToStr(relativePointB.x) + ", RelativePointB.y: " + ToStr(relativePointB.y));
+                                    
+                                }
+                                return;*/
                             }
+                            /*else
+                            {
+                                if (pActor->GetName() == "Claw")
+                                {
+                                    LOG("-------------");
+                                    LOG("DESTR");
+                                    LOG("relativePointA.x: " + ToStr(relativePointA.x) + ", relativePointA.y: " + ToStr(relativePointA.y));
+                                    LOG("RelativePointB.x: " + ToStr(relativePointB.x) + ", RelativePointB.y: " + ToStr(relativePointB.y));
+                                }
+                            }*/
 
                             // If bellow the platform the contact should be disabled
-                            if (relativePoint.y > 0.1f)
+                            if (relativePointA.y > 0.1f)
                             {
+                                /*if (pActor->GetName() == "Claw")
+                                {
+                                    LOG("Nope 2");
+                                }*/
                                 return;
                             }
 
@@ -142,10 +168,10 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                             
                             //pFixtureB->GetBody()->SetLinearVelocity(pFixtureA->GetBody()->GetLinearVelocity());
 
-                            if (pActor->GetName() == "Claw")
+                            /*if (pActor->GetName() == "Claw")
                             {
-                                //LOG("Enabling");
-                            }
+                                LOG("Enabling");
+                            }*/
                             
                             pContact->SetEnabled(true);
                             pPhysicsComponent->AddOverlappingGround(pFixtureA);

@@ -677,41 +677,114 @@ void BaseGameLogic::RequestNewActorDelegate(IEventDataPtr pEventData)
 
 }
 
+// Helper function
+void BaseGameLogic::CreateSinglePhysicsTile(int x, int y, const TileCollisionPrototype& proto)
+{
+    for (auto tileCollisionRect : proto.collisionRectangles)
+    {
+        Point position = Point(x + tileCollisionRect.collisionRect.x,
+            y + tileCollisionRect.collisionRect.y);
+        Point size = Point(tileCollisionRect.collisionRect.w, tileCollisionRect.collisionRect.h);
+
+        m_pPhysics->VAddStaticGeometry(position, size, tileCollisionRect.collisionType);
+    }
+
+    // LEVEL1: Top of the ladder
+    if (m_pCurrentLevel->GetLevelNumber() == 1 && proto.id == 310)
+    {
+        Point position(x, y);
+        Point size(64, 10);
+        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground);
+    }
+    else if (m_pCurrentLevel->GetLevelNumber() == 2 && proto.id == 16)
+    {
+        Point position(x, y + 50);
+        Point size(64, 10);
+        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground);
+    }
+}
+
 void BaseGameLogic::CollideableTileCreatedDelegate(IEventDataPtr pEventData)
 {
     shared_ptr<EventData_Collideable_Tile_Created> pCastEventData = static_pointer_cast<EventData_Collideable_Tile_Created>(pEventData);
 
-    auto findIt = m_pCurrentLevel->m_TileCollisionPrototypeMap.find(pCastEventData->GetTileId());
-    if (findIt != m_pCurrentLevel->m_TileCollisionPrototypeMap.end())
+    //-------------------------------------------------------------------------
+    // (1) First get all info about the tile, its position etc we want to create
+    //-------------------------------------------------------------------------
+
+    int tileId = pCastEventData->GetTileId();
+    int tileX = pCastEventData->GetPositionX();
+    int tileY = pCastEventData->GetPositionY();
+    int numTiles = pCastEventData->GetTilesCount();
+    assert(numTiles >= 1);
+
+    auto findIt = m_pCurrentLevel->m_TileCollisionPrototypeMap.find(tileId);
+    if (findIt == m_pCurrentLevel->m_TileCollisionPrototypeMap.end())
     {
-        TileCollisionPrototype& tileProto = findIt->second;
+        LOG_ERROR("Unknown tile! Id = " + ToStr(tileId));
+        assert(false && "Unknown tile");
+    }
 
-        for (auto tileCollisionRect : tileProto.collisionRectangles)
-        {
-            Point position = Point(pCastEventData->GetPositionX() + tileCollisionRect.collisionRect.x,
-                                   pCastEventData->GetPositionY() + tileCollisionRect.collisionRect.y);
-            Point size = Point(tileCollisionRect.collisionRect.w, tileCollisionRect.collisionRect.h);
+    TileCollisionPrototype& tileProto = findIt->second;
 
-            m_pPhysics->VAddStaticGeometry(position, size, tileCollisionRect.collisionType);
-        }
+    //-------------------------------------------------------------------------
+    // (2) Create the tile in the physics world appropriately
+    //    - If its single tile, create it simply from prototype
+    //    - If its multiple same tiles, check if we can merge them, if yes, 
+    //      merge and create, if not, create them separately
+    //-------------------------------------------------------------------------
 
-        // LEVEL1: Top of the ladder
-        if (m_pCurrentLevel->GetLevelNumber() == 1 && tileProto.id == 310)
-        {
-            Point position(pCastEventData->GetPositionX(), pCastEventData->GetPositionY());
-            Point size(64, 10);
-            m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground);
-        }
-        else if (m_pCurrentLevel->GetLevelNumber() == 2 && tileProto.id == 16)
-        {
-            Point position(pCastEventData->GetPositionX(), pCastEventData->GetPositionY() + 50);
-            Point size(64, 10);
-            m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground);
-        }
+    if (numTiles == 1)
+    {
+        CreateSinglePhysicsTile(tileX, tileY, tileProto);
     }
     else
     {
-        LOG_WARNING("Unknown tile! Id = " + ToStr(pCastEventData->GetTileId()));
+        // Multiple tiles in a row, check if we can marge them
+        bool bCanBeMerged = true;
+
+        int countAttrTiles = 0;
+        TileCollisionRectangle mergedRect;
+        for (TileCollisionRectangle& colRect : tileProto.collisionRectangles)
+        {
+            if (colRect.collisionType != CollisionType_None)
+            {
+                countAttrTiles++;
+                mergedRect = colRect;
+
+                if (colRect.collisionRect.w != tileProto.width)
+                {
+                    bCanBeMerged = false;
+                }
+            }
+        }
+
+        if (countAttrTiles != 1)
+        {
+            bCanBeMerged = false;
+        }
+
+        // If they can be merged, merge them
+        if (bCanBeMerged)
+        {
+            assert(mergedRect.collisionRect.x == 0);
+            assert(mergedRect.collisionRect.w == tileProto.width);
+            assert(mergedRect.collisionRect.h > 0);
+
+            Point mergedPosition(tileX + mergedRect.collisionRect.x, tileY + mergedRect.collisionRect.y);
+            Point mergedSize(tileProto.width * numTiles, mergedRect.collisionRect.h);
+
+            m_pPhysics->VAddStaticGeometry(mergedPosition, mergedSize, mergedRect.collisionType);
+        }
+        else
+        {
+            // If not, create them one by one
+            for (int tileNumIdx = 0; tileNumIdx < numTiles; tileNumIdx++)
+            {
+                CreateSinglePhysicsTile(tileX, tileY, tileProto);
+                tileX += tileProto.width;
+            }
+        }
     }
 }
 
