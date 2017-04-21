@@ -360,8 +360,6 @@ void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
     RaycastResult raycastResultLeft = m_pPhysics->VRayCast(center, toLeftRay, CollisionFlag_Solid);
     RaycastResult raycastResultRight = m_pPhysics->VRayCast(center, toRightRay, CollisionFlag_Solid);
 
-    LOG("Name: " + _owner->GetName());
-    LOG("Position: " + _owner->GetPositionComponent()->GetPosition().ToString());
     if (!raycastResultLeft.foundIntersection)
     {
         LOG_ERROR("Did not find raycastResultLeft intersection for actor: " + _owner->GetName() +

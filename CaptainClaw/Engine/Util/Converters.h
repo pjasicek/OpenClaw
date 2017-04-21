@@ -474,7 +474,7 @@ inline TiXmlElement* TogglePegToXml(WwdObject* pWwdObject)
     return pTogglePegAIElem;
 }
 
-inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath, int level)
+inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath, int levelNumber)
 {
     TiXmlElement* pActorElem = new TiXmlElement("Actor");
     pActorElem->SetAttribute("Type", wwdObject->logic);
@@ -574,6 +574,13 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             int maxTimeOff = wwdObject->moveRect.bottom;
             int minTimeOn = wwdObject->moveRect.left;
             int maxTimeOn = wwdObject->moveRect.top;
+            bool isLooping = minTimeOn == 0;
+
+            // Level global sounds are SO DAMN LOUD
+            if ((levelNumber == 2 ) && isLooping)
+            {
+                soundVolume /= 3;
+            }
 
             SAFE_DELETE(pActorElem);
             return ActorTemplates::CreateXmlData_GlobalAmbientSoundActor(
@@ -583,7 +590,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 maxTimeOff,
                 minTimeOn,
                 maxTimeOn,
-                minTimeOn == 0);
+                isLooping);
         }
 
         //pActorElem->LinkEndChild(AmbientSoundToXml(wwdObject));

@@ -1193,13 +1193,27 @@ namespace ActorTemplates
 
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
         pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), zCoord));
+
+        /*ActorBodyDef bodyDef;
+        bodyDef.bodyType = b2_dynamicBody;
+        bodyDef.makeSensor = false;
+        bodyDef.collisionShape = "Rectangle";
+        bodyDef.position = position;
+        bodyDef.positionOffset = Point(0, -50);
+        bodyDef.fixtureType = FixtureType_PowderKeg;
+        bodyDef.collisionFlag = CollisionFlag_PowderKeg;
+        bodyDef.collisionMask = (CollisionFlag_Crate | CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_Bullet | CollisionFlag_Explosion);
+        bodyDef.gravityScale = 1.0f;
+
+        pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));*/
+
         pActor->LinkEndChild(CreatePhysicsComponent(
             "Static",  // Type - "Dynamic", "Kinematic", "Static"
             false,      // Has foot sensor ?
             false,      // Has capsule shape ?
             true,       // Has bullet behaviour ?
             true,       // Has sensor behaviour ?
-            "Crate",    // Fixture type
+            "Crate",    // Fixture typeactor
             position,      // Position
             Point(0, 0),   // Offset - where to move the body upon its placement
             "Rectangle",   // Body shape - "Rectangle" or "Circle"
