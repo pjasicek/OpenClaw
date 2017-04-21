@@ -63,6 +63,8 @@ bool TogglePegAIComponent::VInit(TiXmlElement* data)
         m_Delay = std::stod(pElem->GetText());
     }
 
+    assert(ParseValueFromXmlElem(&m_ToggleFrameIdx, data->FirstChildElement("ToggleFrameIdx")));
+
     return true;
 }
 
@@ -161,15 +163,16 @@ void TogglePegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, Anima
 {
     /*LOG(ToStr(_owner->GetGUID()));
     LOG(ToStr(pLastFrame->idx) + " - " + ToStr(pNewFrame->idx));*/
-    if (pLastFrame->idx == 8 && pNewFrame->idx == 9)
+    if ((pLastFrame->idx == (m_ToggleFrameIdx - 1)) && (pNewFrame->idx == m_ToggleFrameIdx))
     {
         m_pPhysics->VDeactivate(_owner->GetGUID());
     }
-    else if (pLastFrame->idx == 9 && pNewFrame->idx == 8)
+    else if ((pLastFrame->idx == m_ToggleFrameIdx) && (pNewFrame->idx == (m_ToggleFrameIdx - 1)))
     {
         m_pPhysics->VActivate(_owner->GetGUID());
     }
-    else if (pAnimation->IsAtLastAnimFrame())
+
+    if (pAnimation->IsAtLastAnimFrame())
     {
         pAnimation->SetDelay(m_TimeOff - 500);
     }

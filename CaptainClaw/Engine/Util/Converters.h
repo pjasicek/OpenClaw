@@ -395,6 +395,7 @@ inline TiXmlElement* TogglePegToXml(WwdObject* pWwdObject)
     pTogglePegAIElem->SetAttribute("resource", "created");
 
     std::string logic = pWwdObject->logic;
+    std::string imageSet = pWwdObject->imageSet;
 
     uint32 delay = 0;
     if (logic == "TogglePeg")
@@ -453,6 +454,22 @@ inline TiXmlElement* TogglePegToXml(WwdObject* pWwdObject)
         XML_ADD_TEXT_ELEMENT("TimeOn", ToStr(timeOn).c_str(), pTogglePegAIElem);
         XML_ADD_TEXT_ELEMENT("TimeOff", ToStr(timeOff).c_str(), pTogglePegAIElem);
     }
+
+    // Different image sets have different anim frames at which they toggle
+
+    int toggleFrameIdx = -1;
+    if (imageSet == "LEVEL_PEG") // LEVEL 1
+    {
+        toggleFrameIdx = 9;
+    }
+    else if (imageSet == "LEVEL_PEGSLIDER") // LEVEL 2
+    {
+        toggleFrameIdx = 3;
+    }
+
+    assert(toggleFrameIdx != -1);
+
+    XML_ADD_TEXT_ELEMENT("ToggleFrameIdx", ToStr(toggleFrameIdx).c_str(), pTogglePegAIElem);
 
     return pTogglePegAIElem;
 }

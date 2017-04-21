@@ -31,6 +31,7 @@ private:
     double m_TimeOn;
     uint32 m_Delay;
     bool m_IsAlwaysActive;
+    int m_ToggleFrameIdx;
 
     uint32 m_PrevAnimframeIdx;
 
