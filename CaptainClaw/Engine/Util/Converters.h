@@ -457,7 +457,7 @@ inline TiXmlElement* TogglePegToXml(WwdObject* pWwdObject)
     return pTogglePegAIElem;
 }
 
-inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath)
+inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath, int level)
 {
     TiXmlElement* pActorElem = new TiXmlElement("Actor");
     pActorElem->SetAttribute("Type", wwdObject->logic);
@@ -1030,7 +1030,7 @@ inline TiXmlElement* CreateHUDElement(std::string pathToImages, int animFrameDur
     return pHUDElement;
 }
 
-TiXmlElement* WwdToXml(WapWwd* wapWwd);
+TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber);
 
 
 #endif

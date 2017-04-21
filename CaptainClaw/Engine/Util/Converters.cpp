@@ -1,6 +1,7 @@
 #include "Converters.h"
+//#include <regex>
 
-TiXmlElement* WwdToXml(WapWwd* wapWwd)
+TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
 {
     PROFILE_CPU("WWD->XML");
     TiXmlDocument xmlDoc;
@@ -211,8 +212,9 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd)
 
                 int positionOffset = -(crateIdx * 60);
 
+                std::string crateImageSet = "/LEVEL" + ToStr(levelNumber) + "/IMAGES/CRATES/*";
                 root->LinkEndChild(ActorTemplates::CreateXmlData_CrateActor(
-                    "/LEVEL1/IMAGES/CRATES/*",
+                    crateImageSet,
                     Point(wwdObject->x, wwdObject->y + positionOffset),
                     loot,
                     5, wwdObject->z + crateIdx));
@@ -220,7 +222,7 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd)
         }
         else
         {
-            root->LinkEndChild(WwdObjectToXml(&actorProperties, imagesRootPath));
+            root->LinkEndChild(WwdObjectToXml(&actorProperties, imagesRootPath, levelNumber));
         }
 
         continue;

@@ -615,7 +615,7 @@ void BaseGameLogic::VChangeState(GameState newState)
         assert(pWwd != NULL);
 
         // Convert Monolith .WWD format to my .XML format
-        TiXmlElement* pXmlLevel = WwdToXml(pWwd);
+        TiXmlElement* pXmlLevel = WwdToXml(pWwd, levelNumber);
         assert(pXmlLevel != NULL);
 
         // Save converted level to file, e.g. LEVEL1.xml
