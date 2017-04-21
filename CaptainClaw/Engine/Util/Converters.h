@@ -464,7 +464,7 @@ inline TiXmlElement* TogglePegToXml(WwdObject* pWwdObject)
     }
     else if (imageSet == "LEVEL_PEGSLIDER") // LEVEL 2
     {
-        toggleFrameIdx = 3;
+        toggleFrameIdx = 2;
     }
 
     assert(toggleFrameIdx != -1);

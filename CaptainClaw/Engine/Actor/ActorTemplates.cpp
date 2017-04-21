@@ -165,6 +165,16 @@ namespace ActorTemplates
         {
             imageSet.replace(imageSet.begin(), imageSet.begin() + strlen("STATES/"), "/STATES/IMAGES/");
         }
+        else if (imageSet.find("LEVEL/") != std::string::npos)
+        {
+            assert(g_pApp->GetGameLogic()->GetCurrentLevelData() != nullptr);
+            int levelNumber = g_pApp->GetGameLogic()->GetCurrentLevelData()->GetLevelNumber();
+
+            std::string level = "/LEVEL" + ToStr(levelNumber);
+            imageSet.replace(imageSet.begin(), imageSet.begin() + strlen("LEVEL/"), level + "/IMAGES/");
+
+            LOG("imageset: " + imageSet);
+        }
         else
         {
             /*LOG_WARNING("Conflicting image set: " + imageSet);
@@ -1653,6 +1663,11 @@ namespace ActorTemplates
             case AnimationType_BlueHitPoint:
                 imageSet = "GAME_CLAWHIT";
                 pActorElem->LinkEndChild(CreateCycleAnimationComponent(50));
+                break;
+
+            case AnimationType_TarSplash:
+                imageSet = "LEVEL_SPLASH";
+                pActorElem->LinkEndChild(CreateCycleAnimationComponent(75));
                 break;
 
             default:

@@ -12,6 +12,7 @@
 #include "FollowableComponent.h"
 
 #include "../../GameApp/BaseGameApp.h"
+#include "../../GameApp/BaseGameLogic.h"
 
 const char* ControllableComponent::g_Name = "ControllableComponent";
 const char* ClawControllableComponent::g_Name = "ClawControllableComponent";
@@ -549,6 +550,7 @@ void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
 
         SetCurrentPhysicsState();
         m_pPhysicsComponent->RestoreGravityScale();
+        m_pRenderComponent->SetVisible(true);
     }
     else if (animName == "damage1" ||
              animName == "damage2")
@@ -586,8 +588,58 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
         m_pPhysicsComponent->SetGravityScale(0.0f);
         m_State = ClawState_Dying;
 
+        std::string deathSound = SOUND_CLAW_DEATH_SPIKES;
+
+        // TODO: When claw dies, in the original game he falls off the screen and respawns
+        if (damageType == DamageType_DeathTile)
+        {
+            int currentLevel = g_pApp->GetGameLogic()->GetCurrentLevelData()->GetLevelNumber();
+
+            // Sound should be always like this
+            deathSound = "/LEVEL" + ToStr(currentLevel) + "/SOUNDS/DEATHTILE.WAV";
+
+            // Any special effect linked to the death and level
+            switch (currentLevel)
+            {
+                // Spikes
+                case 1:
+                case 3:
+                case 9:
+                case 10:
+                    break;
+                // Liquid
+                case 2:
+                {
+                    // Fallen into liquid - set invisible
+                    m_pRenderComponent->SetVisible(false);
+
+                    // Create tar splash
+                    Point splashPosition(
+                        m_pPositionComponent->GetPosition().x,
+                        m_pPositionComponent->GetPosition().y - 42);
+                    ActorTemplates::CreateSingleAnimation(splashPosition, AnimationType_TarSplash);
+                    break;
+                }
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                    assert(false && "Unsupported at the moment");
+                    break;
+
+                default:
+                    assert(false && "Unknown level");
+                    break;
+            }
+        }
+        
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-            new EventData_Request_Play_Sound(SOUND_CLAW_DEATH_SPIKES, 100, false)));
+            new EventData_Request_Play_Sound(deathSound, 100, false)));
     }
 }
 

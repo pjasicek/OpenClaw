@@ -15,6 +15,12 @@
 
 int numFootContacts = 0;
 
+#define SWAP_IF_FIXTURE_B_EQUALS(FixtureA, FixtureB, FixtureType) \
+    if (FixtureB->GetUserData() == (void*)FixtureType) \
+    { \
+        std::swap(FixtureA, FixtureB); \
+    } \
+
 //=====================================================================================================================
 //
 // PhysicsContactListener::BeginContact
@@ -46,11 +52,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
     }
     // Ladder contact
     {
-        if (pFixtureB->GetUserData() == (void*)FixtureType_Climb)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Climb);
         if (pFixtureA->GetUserData() == (void*)FixtureType_Climb)
         {
             if (pFixtureB->GetBody()->GetType() == b2_dynamicBody)
@@ -328,7 +330,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     MakeStrongPtr(pActor->GetComponent<HealthComponent>(HealthComponent::g_Name));
                 if (pHealthComponent)
                 {
-                    pHealthComponent->AddHealth(-1 * (pHealthComponent->GetHealth() + 1), DamageType_DeathSpike, Point(0, 0));
+                    pHealthComponent->AddHealth(-1 * (pHealthComponent->GetHealth() + 1), DamageType_DeathTile, Point(0, 0));
                 }
             }
         }

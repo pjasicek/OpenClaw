@@ -191,8 +191,7 @@ enum DamageType
     DamageType_FireSword,
     DamageType_LightningSword,
     DamageType_IceSword,
-    DamageType_DeathSpike,
-    DamageType_DeathLiquid,
+    DamageType_DeathTile,
     DamageType_EnemyAura,
     DamageType_Max
 };
@@ -201,7 +200,8 @@ enum AnimationType
 {
     AnimationType_Explosion,
     AnimationType_RedHitPoint,
-    AnimationType_BlueHitPoint
+    AnimationType_BlueHitPoint,
+    AnimationType_TarSplash
 };
 
 struct RaycastResult
