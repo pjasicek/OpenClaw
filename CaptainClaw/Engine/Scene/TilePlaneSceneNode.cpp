@@ -33,7 +33,7 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
     int32 tilePixelWidth = pProperties->tilePixelWidth;
     int32 tilePixelHeight = pProperties->tilePixelHeight;
 
-    int32_t renderPadding = 100;
+    int32_t numTilesPadding = 2;
 
     Point scale = g_pApp->GetScale();
 
@@ -43,14 +43,14 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
     int32_t parallaxCameraPosX = (int32_t)(camera->GetPosition().x * movementRatioX);
     int32_t parallaxCameraPosY = (int32_t)(camera->GetPosition().y * movementRatioY);
 
-    int32_t startCol = parallaxCameraPosX / tilePixelWidth;
-    int32_t startRow = parallaxCameraPosY / tilePixelHeight;
+    int32_t startCol = (parallaxCameraPosX / tilePixelWidth) - numTilesPadding;
+    int32_t startRow = parallaxCameraPosY / tilePixelHeight - numTilesPadding;
 
     int32_t colTilesToRender = (uint32_t)((camera->GetWidth() / tilePixelWidth) / scale.x) +
-        (uint32_t)((renderPadding * 2) / pProperties->tilePixelWidth);
+        2 * numTilesPadding;
 
     int32_t rowTilesToRender = (uint32_t)((camera->GetHeight() / tilePixelHeight) / scale.y) +
-        (uint32_t)((renderPadding * 2) / tilePixelHeight);
+        2 * numTilesPadding;
 
     // Some planes (Back, Front) repeat themselves, which means they can be rendered
     // even when out of bounds
@@ -82,8 +82,8 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
                 continue;
             }
 
-            int32_t x = (col - startCol) * tilePixelWidth;
-            int32_t y = (row - startRow) * tilePixelHeight;
+            int32_t x = (col - startCol - numTilesPadding) * tilePixelWidth;
+            int32_t y = (row - startRow - numTilesPadding) * tilePixelHeight;
             Image* image = (*pImageList)[(row % pProperties->tilesOnAxisY) * pProperties->tilesOnAxisX + (col % pProperties->tilesOnAxisX)];
 
             if (image && image->GetTexture() != NULL)

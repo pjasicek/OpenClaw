@@ -77,6 +77,10 @@ void HumanView::VOnRender(uint32 msDiff)
     if (m_RunFullSpeed || true)
     {
         //PROFILE_CPU(".");
+
+        // If we render out of bounds, render it as black color
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
         SDL_RenderClear(renderer);
 
         // Sort screen elements
