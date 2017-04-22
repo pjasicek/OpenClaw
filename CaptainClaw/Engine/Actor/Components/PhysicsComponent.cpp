@@ -264,9 +264,9 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
 
     /*LOG("Jumping: " + ToStr((m_IsJumping)) + ", Falling: " + ToStr(m_IsFalling) + ", JumpHeight: " + ToStr(m_HeightInAir) + ", NumFootContacts: " + ToStr(m_NumFootContacts));
     LOG("Movement: " + m_CurrentSpeed.ToString());
-    //LOG(ToStr(m_OverlappingLaddersList.size()));
-    //LOG("Vel X: " + ToStr(GetVelocity().x) + ", Vel Y: " + ToStr(GetVelocity().y));
-    //LOG(ToStr(m_OverlappingKinematicBodiesList.size()));
+    LOG(ToStr(m_OverlappingLaddersList.size()));
+    LOG("Vel X: " + ToStr(GetVelocity().x) + ", Vel Y: " + ToStr(GetVelocity().y));
+    LOG(ToStr(m_OverlappingKinematicBodiesList.size()));
     
     LOG("CLIMBING Y: " + ToStr(m_ClimbingSpeed.y));*/
     
@@ -773,6 +773,16 @@ bool PhysicsComponent::AttachToLadder()
     if (!m_CanClimb)
     {
         return false;
+    }
+
+    // Unit can attach to ladder but check if it is standing on ground and that the ground
+    // is not the top-side ladder ground patch
+    if (m_ClimbingSpeed.y > DBL_EPSILON)
+    {
+        if (m_pTopLadderContact == NULL && m_NumFootContacts > 0)
+        {
+            return false;
+        }
     }
 
     shared_ptr<PositionComponent> pPositionComponent =

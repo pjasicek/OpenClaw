@@ -66,12 +66,10 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
     }
     // Collision with "One-Way Ground" tile - mostly platforms, elevators and such
     {
-        if (pFixtureB->GetUserData() == (void*)FixtureType_Ground)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_Ground)
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Ground);
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_TopLadderGround);
+        if ((pFixtureA->GetUserData() == (void*)FixtureType_Ground) ||
+            (pFixtureA->GetUserData() == (void*)FixtureType_TopLadderGround))
         {
             if (pFixtureB->GetBody()->GetType() == b2_dynamicBody/* && pFixtureB->GetUserData() != (void*)FixtureType_Trigger*/)
             {
@@ -166,7 +164,10 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                             }
 
                             // TODO: Think about better solution and rename this to something better
-                            pPhysicsComponent->SetTopLadderContact(pContact);
+                            if (pFixtureA->GetUserData() == (void*)FixtureType_TopLadderGround)
+                            {
+                                pPhysicsComponent->SetTopLadderContact(pContact);
+                            }
                             
                             //pFixtureB->GetBody()->SetLinearVelocity(pFixtureA->GetBody()->GetLinearVelocity());
 
@@ -464,12 +465,10 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
     }
     // Collision with "One-Way Ground" tile - mostly platforms, elevators and such
     {
-        if (pFixtureB->GetUserData() == (void*)FixtureType_Ground)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_Ground)
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Ground);
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_TopLadderGround);
+        if ((pFixtureA->GetUserData() == (void*)FixtureType_Ground) ||
+            (pFixtureA->GetUserData() == (void*)FixtureType_TopLadderGround))
         {
             if (pFixtureB->GetBody()->GetType() == b2_dynamicBody && pFixtureB->GetUserData() != (void*)FixtureType_Trigger)
             {

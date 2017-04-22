@@ -430,7 +430,7 @@ void ClawPhysics::VAddLine(Point from, Point to, uint32_t thickness)
 //
 //    Adds static geometry to physics world, like ladder or solid wall.
 //
-void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType collisionType)
+void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType collisionType, FixtureType fixtureType)
 {
     if (collisionType == CollisionType_None)
     {
@@ -448,34 +448,27 @@ void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType c
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &bodyShape;
     fixtureDef.friction = 0.0f;
+    fixtureDef.userData = (void*)fixtureType;
 
     // Assign static geometry type (= tile type)
     if (collisionType == CollisionType_Solid) 
     { 
         fixtureDef.filter.categoryBits = CollisionFlag_Solid;
-        fixtureDef.userData = (void*)FixtureType_Solid; 
         fixtureDef.friction = 0.18f;
     }
     else if (collisionType == CollisionType_Ground) 
     { 
         fixtureDef.filter.categoryBits = CollisionFlag_Ground;
-        fixtureDef.userData = (void*)FixtureType_Ground; 
         fixtureDef.friction = 0.18f;
     }
     else if (collisionType == CollisionType_Climb) 
     { 
         fixtureDef.filter.categoryBits = CollisionFlag_Ladder;
-        fixtureDef.userData = (void*)FixtureType_Climb; 
         fixtureDef.isSensor = true;
     }
     else if (collisionType == CollisionType_Death) 
     { 
         fixtureDef.filter.categoryBits = CollisionFlag_Death;
-        fixtureDef.userData = (void*)FixtureType_Death; 
-    }
-    else 
-    { 
-        fixtureDef.userData = (void*)FixtureType_None; 
     }
 
     /*if ((int)fixtureDef.userData != FixtureType_Solid &&
@@ -502,7 +495,7 @@ void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType c
         fixtureDef.shape = &bodyShape;
         fixtureDef.friction = 0.18f;
         fixtureDef.filter.categoryBits = CollisionFlag_Ground;
-        fixtureDef.userData = (void*)FixtureType_Ground;
+        fixtureDef.userData = (void*)fixtureType;
         fixtureDef.isSensor = false;
         pBody->CreateFixture(&fixtureDef);
     }

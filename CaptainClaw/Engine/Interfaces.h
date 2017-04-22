@@ -67,6 +67,7 @@ enum FixtureType
     // Tiles
     FixtureType_Solid,
     FixtureType_Ground,
+    FixtureType_TopLadderGround,
     FixtureType_Climb,
     FixtureType_Death,
     // Sensors
@@ -238,7 +239,7 @@ public:
     virtual void VAddCircle(float radius, uint32_t thickness, WeakActorPtr pTargetActor) = 0;
     virtual void VAddRect(uint32_t thickness, WeakActorPtr pTargetActor) = 0;
     virtual void VAddLine(Point from, Point to, uint32_t thickness) = 0;
-    virtual void VAddStaticGeometry(Point position, Point size, CollisionType collisionType) = 0;
+    virtual void VAddStaticGeometry(Point position, Point size, CollisionType collisionType, FixtureType fixtureType) = 0;
     virtual void VAddDynamicActor(WeakActorPtr pActor) = 0;
     virtual void VAddKinematicBody(WeakActorPtr pActor) = 0;
     virtual void VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType) = 0;

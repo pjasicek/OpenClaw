@@ -677,6 +677,23 @@ void BaseGameLogic::RequestNewActorDelegate(IEventDataPtr pEventData)
 
 }
 
+std::map<CollisionType, FixtureType> g_CollisionToFixtureTypeMap =
+{
+    { CollisionType_None, FixtureType_None },
+    { CollisionType_Solid, FixtureType_Solid },
+    { CollisionType_Ground, FixtureType_Ground },
+    { CollisionType_Climb, FixtureType_Climb },
+    { CollisionType_Death, FixtureType_Death }
+};
+
+static FixtureType CollisonToFixtureType(CollisionType collisionType)
+{
+    auto findIt = g_CollisionToFixtureTypeMap.find(collisionType);
+    assert(findIt != g_CollisionToFixtureTypeMap.end());
+
+    return findIt->second;
+}
+
 // Helper function
 void BaseGameLogic::CreateSinglePhysicsTile(int x, int y, const TileCollisionPrototype& proto)
 {
@@ -686,7 +703,11 @@ void BaseGameLogic::CreateSinglePhysicsTile(int x, int y, const TileCollisionPro
             y + tileCollisionRect.collisionRect.y);
         Point size = Point(tileCollisionRect.collisionRect.w, tileCollisionRect.collisionRect.h);
 
-        m_pPhysics->VAddStaticGeometry(position, size, tileCollisionRect.collisionType);
+        m_pPhysics->VAddStaticGeometry(
+            position, 
+            size, 
+            tileCollisionRect.collisionType, 
+            CollisonToFixtureType(tileCollisionRect.collisionType));
     }
 
     // LEVEL1: Top of the ladder
@@ -694,13 +715,13 @@ void BaseGameLogic::CreateSinglePhysicsTile(int x, int y, const TileCollisionPro
     {
         Point position(x, y);
         Point size(64, 10);
-        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground);
+        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
     }
     else if (m_pCurrentLevel->GetLevelNumber() == 2 && proto.id == 16)
     {
         Point position(x, y + 50);
         Point size(64, 10);
-        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground);
+        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
     }
 }
 
@@ -774,7 +795,11 @@ void BaseGameLogic::CollideableTileCreatedDelegate(IEventDataPtr pEventData)
             Point mergedPosition(tileX + mergedRect.collisionRect.x, tileY + mergedRect.collisionRect.y);
             Point mergedSize(tileProto.width * numTiles, mergedRect.collisionRect.h);
 
-            m_pPhysics->VAddStaticGeometry(mergedPosition, mergedSize, mergedRect.collisionType);
+            m_pPhysics->VAddStaticGeometry(
+                mergedPosition, 
+                mergedSize, 
+                mergedRect.collisionType,
+                CollisonToFixtureType(mergedRect.collisionType));
         }
         else
         {

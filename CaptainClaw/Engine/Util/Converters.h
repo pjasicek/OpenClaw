@@ -989,7 +989,7 @@ inline TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
 
     TiXmlElement* pHealthComponent = new TiXmlElement("HealthComponent");
     XML_ADD_TEXT_ELEMENT("Health", "0", pHealthComponent);
-    XML_ADD_TEXT_ELEMENT("MaxHealth", "150", pHealthComponent);
+    XML_ADD_TEXT_ELEMENT("MaxHealth", "100", pHealthComponent);
     pClawActor->LinkEndChild(pHealthComponent);
 
     TiXmlElement* pAmmoComponent = new TiXmlElement("AmmoComponent");

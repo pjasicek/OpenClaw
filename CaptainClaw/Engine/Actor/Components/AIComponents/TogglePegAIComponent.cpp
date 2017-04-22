@@ -125,38 +125,7 @@ TiXmlElement* TogglePegAIComponent::VGenerateXml()
 
 void TogglePegAIComponent::VUpdate(uint32 msDiff)
 {
-    /*if (m_IsAlwaysActive)
-    {
-        m_pAnimationComponent->PauseAnimation();
-        return;
-    }
-
-    // TODO: HACK: This is polling, drains cpu for no reason, should be event based
-    if (Animation* pAnimation = m_pAnimationComponent->GetCurrentAnimation())
-    {
-        if (m_PrevAnimframeIdx != pAnimation->GetCurrentAnimationFrame()->idx)
-        {
-            if (pAnimation->IsAtLastAnimFrame())
-            {
-                pAnimation->SetDelay(m_TimeOff - 500);
-            }
-            else if (pAnimation->IsAtFirstAnimFrame())
-            {
-                pAnimation->SetDelay(m_TimeOn - 500);
-            }
-
-            m_PrevAnimframeIdx = pAnimation->GetCurrentAnimationFrame()->idx;
-        }
-
-        if (pAnimation->GetCurrentAnimationFrame()->idx > 8)
-        {
-            m_pPhysics->VDeactivate(_owner->GetGUID());
-        }
-        else
-        {
-            m_pPhysics->VActivate(_owner->GetGUID());
-        }
-    }*/
+    
 }
 
 void TogglePegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)

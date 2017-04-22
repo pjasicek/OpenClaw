@@ -28,7 +28,7 @@ public:
     virtual void VAddRect(uint32_t thickness, WeakActorPtr pTargetActor) override;
     virtual void VAddLine(Point from, Point to, uint32_t thickness) override;
 
-    virtual void VAddStaticGeometry(Point position, Point size, CollisionType collisionType) override;
+    virtual void VAddStaticGeometry(Point position, Point size, CollisionType collisionType, FixtureType fixtureType) override;
     virtual void VAddDynamicActor(WeakActorPtr pActor) override;
     virtual void VAddKinematicBody(WeakActorPtr pActor) override;
     virtual void VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType) override;
