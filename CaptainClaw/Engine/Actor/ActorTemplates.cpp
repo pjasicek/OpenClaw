@@ -151,6 +151,8 @@ namespace ActorTemplates
         shared_ptr<EventData_New_Actor> pNewActorEvent(new EventData_New_Actor(pActor->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pNewActorEvent);
 
+        SAFE_DELETE(pData);
+
         return pActor;
     }
 
