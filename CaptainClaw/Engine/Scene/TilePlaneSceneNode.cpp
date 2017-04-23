@@ -33,6 +33,8 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
     int32 tilePixelWidth = pProperties->tilePixelWidth;
     int32 tilePixelHeight = pProperties->tilePixelHeight;
 
+    // TODO: Optimize so that we dont render anything which is not seen
+    // (older commit was better ?)
     int32_t numTilesPadding = 2;
 
     Point scale = g_pApp->GetScale();
@@ -47,10 +49,10 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
     int32_t startRow = parallaxCameraPosY / tilePixelHeight - numTilesPadding;
 
     int32_t colTilesToRender = (uint32_t)((camera->GetWidth() / tilePixelWidth) / scale.x) +
-        2 * numTilesPadding;
+        3 * numTilesPadding;
 
     int32_t rowTilesToRender = (uint32_t)((camera->GetHeight() / tilePixelHeight) / scale.y) +
-        2 * numTilesPadding;
+        3 * numTilesPadding;
 
     // Some planes (Back, Front) repeat themselves, which means they can be rendered
     // even when out of bounds

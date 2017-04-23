@@ -205,6 +205,16 @@ enum AnimationType
     AnimationType_TarSplash
 };
 
+enum ActorPrototype
+{
+    ActorPrototype_Level1_Soldier,
+    ActorPrototype_Level1_Officer,
+    ActorPrototype_Level1_Rat,
+    ActorPrototype_Level2_Soldier,
+    ActorPrototype_Level2_Officer,
+    ActorPrototype_Level2_PunkRat
+};
+
 struct RaycastResult
 {
     RaycastResult()

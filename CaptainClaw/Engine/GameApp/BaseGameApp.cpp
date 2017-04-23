@@ -22,6 +22,8 @@
 
 #include "BaseGameApp.h"
 
+#include <cctype>
+
 TiXmlElement* CreateDefaultDisplayConfig();
 TiXmlElement* CreateDefaultAudioConfig();
 TiXmlElement* CreateDefaultFontConfig();
@@ -75,6 +77,12 @@ bool BaseGameApp::Initialize(int argc, char** argv)
 
     m_pResourceMgr->VPreload("*", NULL, CUSTOM_RESOURCE);
 
+    if (!VPerformStartupTests())
+    {
+        LOG_ERROR("Failed to pass certain startup tests.");
+        return false;
+    }
+
     m_IsRunning = true;
 
     return true;
@@ -95,6 +103,64 @@ void BaseGameApp::Terminate()
     //SAFE_DELETE(m_pResourceCache);
 
     SaveGameOptions();
+}
+
+#define STARTUP_TEST(condition, error) \
+{ \
+    if (!(condition)) \
+    { \
+       LOG_ERROR((error)); \
+       bTestsOk = false; \
+    } \
+} \
+
+#define STARTUP_TEST_FILE_PRESENCE_IN_RESCACHE(filePath, resCacheName, error) \
+{ \
+    std::vector<std::string> matchedFiles = m_pResourceMgr->VMatch((filePath), (resCacheName)); \
+    STARTUP_TEST(matchedFiles.size() > 0, error); \
+    std::string filePathCopy = (filePath); \
+    std::transform(filePathCopy.begin(), filePathCopy.end(), filePathCopy.begin(), (int(*)(int)) std::tolower); \
+    STARTUP_TEST(matchedFiles.size() == 1, "More than 1 file found"); \
+    STARTUP_TEST(matchedFiles[0] == (filePathCopy), (error)); \
+} \
+
+
+bool BaseGameApp::VPerformStartupTests()
+{
+    bool bTestsOk = true;
+
+    // Base SDL video, audio and events
+    STARTUP_TEST(SDL_WasInit(SDL_INIT_VIDEO), "SDL Video subsystem is unitialized");
+    STARTUP_TEST(SDL_WasInit(SDL_INIT_AUDIO), "SDL Audio subsystem is unitialized");
+    STARTUP_TEST(SDL_WasInit(SDL_INIT_EVENTS), "SDL Event subsystem is unitialized");
+    STARTUP_TEST(m_pWindow != NULL, "SDL Window is NULL");
+    STARTUP_TEST(m_pRenderer != NULL, "SDL Renderer is NULL");
+    
+    // Game logic
+    STARTUP_TEST(m_pGame != NULL, "Game Logic is NULL");
+
+    // Game view
+    STARTUP_TEST(GetHumanView() != NULL, "Human View is NULL");
+
+    // Event manager
+    STARTUP_TEST(IEventMgr::Get() != NULL, "Event manager is unitialized");
+
+    // Audio manager
+    STARTUP_TEST(m_pAudio != NULL, "Audio manager is unitialized");
+
+    // Resources
+    STARTUP_TEST(m_pResourceMgr->VHasResourceCache(ORIGINAL_RESOURCE), std::string(ORIGINAL_RESOURCE) + " is not part of ResourceMgr");
+    STARTUP_TEST(m_pResourceMgr->VHasResourceCache(CUSTOM_RESOURCE), std::string(CUSTOM_RESOURCE) + " is not part of ResourceMgr");
+
+    // Files located in my custom ASSETS.ZIP
+    std::vector<std::string> actorPrototypeXmlFiles = m_pResourceMgr->VMatch("/ActorPrototypes/LEVEL1_SOLDIER.XML", CUSTOM_RESOURCE);
+    LOG("SIZE: " + ToStr(actorPrototypeXmlFiles.size()));
+    STARTUP_TEST_FILE_PRESENCE_IN_RESCACHE(
+        "/ActorPrototypes/LEVEL1_SOLDIER.XML", 
+        CUSTOM_RESOURCE, 
+        "/ActorPrototypes/LEVEL1_SOLDIER.XML not found in: " + std::string(CUSTOM_RESOURCE));
+
+    return bTestsOk;
 }
 
 //=====================================================================================================================

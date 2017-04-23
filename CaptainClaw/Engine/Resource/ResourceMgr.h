@@ -17,6 +17,7 @@ public:
     virtual std::vector<std::string> VMatch(const std::string pattern, const std::string& resCacheName = "") = 0;
     virtual std::vector<std::string> VGetAllFilesInDirectory(const char* directoryPath, const std::string& resCacheName = "") = 0;
     virtual void VFlush(const std::string& resCacheName = "") = 0;
+    virtual bool VHasResourceCache(const std::string& resCacheName) = 0;
 };
 
 typedef std::vector<ResourceCache*> ResourceCacheList;
@@ -31,6 +32,7 @@ public:
     virtual std::vector<std::string> VMatch(const std::string pattern, const std::string& resCacheName = "");
     virtual std::vector<std::string> VGetAllFilesInDirectory(const char* directoryPath, const std::string& resCacheName = "");
     virtual void VFlush(const std::string& resCacheName = "");
+    virtual bool VHasResourceCache(const std::string& resCacheName);
 
 private:
     ResourceCache* GetResourceCacheFromName(const std::string& resCacheName);

@@ -289,6 +289,11 @@ std::string ZipFile::GetFilename(int i)  const
         memcpy(pszDest, m_papDir[i]->GetName(), m_papDir[i]->fnameLen);
         pszDest[m_papDir[i]->fnameLen] = '\0';
         fileName = pszDest;
+
+        if (fileName.size() > 0 && fileName[0] != '/')
+        {
+            fileName.insert(0, "/");
+        }
     }
     return fileName;
 }

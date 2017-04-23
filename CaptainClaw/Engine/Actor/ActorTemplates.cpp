@@ -1422,6 +1422,11 @@ namespace ActorTemplates
         return pActor;
     }
 
+    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX)
+    {
+
+    }
+
     TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
@@ -1649,6 +1654,10 @@ namespace ActorTemplates
         auraDef.damage = 10;
 
         pActor->LinkEndChild(DamageAuraComponentDefToXml(&auraDef));
+
+        /*TiXmlNode* pDup = pActor->Clone();
+        TiXmlElement* pDuplicate = pDup->ToElement();
+        pDuplicate->Print(stdout, -1);*/
 
         return pActor;
     }

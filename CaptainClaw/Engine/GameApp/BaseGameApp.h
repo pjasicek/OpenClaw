@@ -213,6 +213,7 @@ public:
 
 protected:
     virtual void VRegisterGameEvents() { }
+    virtual bool VPerformStartupTests();
 
     BaseGameLogic* m_pGame;
     ResourceCache* m_pResourceCache;

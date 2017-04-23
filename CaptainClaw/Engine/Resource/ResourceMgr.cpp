@@ -150,3 +150,17 @@ void ResourceMgrImpl::VFlush(const std::string& resCacheName)
         }
     }
 }
+
+bool ResourceMgrImpl::VHasResourceCache(const std::string& resCacheName)
+{
+    bool bHasResCache = false;
+    for (ResourceCache* pResCache : m_ResourceCacheList)
+    {
+        if (pResCache->GetName() == resCacheName)
+        {
+            return true;
+        }
+    }
+
+    return bHasResCache;
+}
