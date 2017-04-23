@@ -436,6 +436,17 @@ inline bool ParseValueFromXmlElem(std::string* pDest, TiXmlElement* pElemSource)
     return false;
 }
 
+inline bool ParseAttributeFromXmlElem(std::string* pDest, const char* attrName, TiXmlElement* pElemSource)
+{
+    if (pElemSource && pElemSource->Attribute(attrName))
+    {
+        *pDest = pElemSource->Attribute(attrName);
+        return true;
+    }
+
+    return false;
+}
+
 inline void SetPointIfDefined(Point* pDest, TiXmlElement* pElem, const char* elemAttrNameX, const char* elemAttrNameY)
 {
     if (pElem)
@@ -502,6 +513,22 @@ ValueType GetValueFromMap(KeyType _key, const std::map<KeyType, ValueType>& _map
     assert(findIt != _map.end() && "Failed to locate value from map");
 
     return findIt->second;
+}
+
+inline bool SetTiXmlElementText(const std::string& text, TiXmlElement* pElem)
+{
+    TiXmlNode* child = pElem->FirstChild();
+    if (child) 
+    {
+        TiXmlText* childText = child->ToText();
+        if (childText) 
+        {
+            childText->SetValue(text.c_str());
+            return true;
+        }
+    }
+
+    return false;
 }
 
 #endif

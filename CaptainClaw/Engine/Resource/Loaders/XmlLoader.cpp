@@ -1,6 +1,7 @@
 #include "../../GameApp/BaseGameApp.h"
 
 #include "XmlLoader.h"
+#include "../ResourceMgr.h"
 
 //=================================================================================================
 // class XmlResourceExtraData
@@ -59,8 +60,9 @@ TiXmlElement* XmlResourceLoader::LoadAndReturnRootXmlElement(const char* resourc
     {
         Resource resource(resourceString);
 
-        shared_ptr<ResourceHandle> wwdHandle = g_pApp->GetResourceCache()->GetHandle(&resource);
-        shared_ptr<XmlResourceExtraData> extraData = std::static_pointer_cast<XmlResourceExtraData>(wwdHandle->GetExtraData());
+        // XMLs are only located in my own archive
+        shared_ptr<ResourceHandle> pHandle = g_pApp->GetResourceMgr()->VGetHandle(&resource, CUSTOM_RESOURCE);
+        shared_ptr<XmlResourceExtraData> extraData = std::static_pointer_cast<XmlResourceExtraData>(pHandle->GetExtraData());
 
         if (!extraData)
         {

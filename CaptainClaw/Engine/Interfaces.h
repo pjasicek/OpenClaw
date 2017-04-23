@@ -207,12 +207,14 @@ enum AnimationType
 
 enum ActorPrototype
 {
+    ActorPrototype_Start,
     ActorPrototype_Level1_Soldier,
     ActorPrototype_Level1_Officer,
     ActorPrototype_Level1_Rat,
     ActorPrototype_Level2_Soldier,
     ActorPrototype_Level2_Officer,
-    ActorPrototype_Level2_PunkRat
+    ActorPrototype_Level2_PunkRat,
+    ActorPrototype_Max
 };
 
 struct RaycastResult

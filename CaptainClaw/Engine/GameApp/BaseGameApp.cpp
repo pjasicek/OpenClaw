@@ -61,6 +61,7 @@ bool BaseGameApp::Initialize(int argc, char** argv)
     if (!InitializeFont(m_GameOptions)) return false;
     if (!InitializeResources(m_GameOptions)) return false;
     if (!InitializeLocalization(m_GameOptions)) return false;
+    if (!ReadActorXmlPrototypes(m_GameOptions)) return false;
 
     RegisterAllDelegates();
 
@@ -118,10 +119,13 @@ void BaseGameApp::Terminate()
 { \
     std::vector<std::string> matchedFiles = m_pResourceMgr->VMatch((filePath), (resCacheName)); \
     STARTUP_TEST(matchedFiles.size() > 0, error); \
-    std::string filePathCopy = (filePath); \
-    std::transform(filePathCopy.begin(), filePathCopy.end(), filePathCopy.begin(), (int(*)(int)) std::tolower); \
-    STARTUP_TEST(matchedFiles.size() == 1, "More than 1 file found"); \
-    STARTUP_TEST(matchedFiles[0] == (filePathCopy), (error)); \
+    if (bTestsOk) \
+    { \
+        std::string filePathCopy = (filePath); \
+        std::transform(filePathCopy.begin(), filePathCopy.end(), filePathCopy.begin(), (int(*)(int)) std::tolower); \
+        STARTUP_TEST(matchedFiles.size() == 1, "More than 1 file found"); \
+        STARTUP_TEST(matchedFiles[0] == (filePathCopy), (error)); \
+    } \
 } \
 
 
@@ -153,12 +157,15 @@ bool BaseGameApp::VPerformStartupTests()
     STARTUP_TEST(m_pResourceMgr->VHasResourceCache(CUSTOM_RESOURCE), std::string(CUSTOM_RESOURCE) + " is not part of ResourceMgr");
 
     // Files located in my custom ASSETS.ZIP
-    std::vector<std::string> actorPrototypeXmlFiles = m_pResourceMgr->VMatch("/ActorPrototypes/LEVEL1_SOLDIER.XML", CUSTOM_RESOURCE);
-    LOG("SIZE: " + ToStr(actorPrototypeXmlFiles.size()));
     STARTUP_TEST_FILE_PRESENCE_IN_RESCACHE(
         "/ActorPrototypes/LEVEL1_SOLDIER.XML", 
         CUSTOM_RESOURCE, 
         "/ActorPrototypes/LEVEL1_SOLDIER.XML not found in: " + std::string(CUSTOM_RESOURCE));
+
+    STARTUP_TEST_FILE_PRESENCE_IN_RESCACHE(
+        "/ActorPrototypes/LEVEL1_OFFICER.XML",
+        CUSTOM_RESOURCE,
+        "/ActorPrototypes/LEVEL1_OFFICER.XML not found in: " + std::string(CUSTOM_RESOURCE));
 
     return bTestsOk;
 }
@@ -726,6 +733,121 @@ bool BaseGameApp::InitializeLocalization(GameOptions& gameOptions)
     return true;
 }
 
+//
+// Helper maps and functions for converting from actor prototype to string and back
+//
+
+// TODO: This should be the perfect candidate for code-generating macro
+
+std::string ActorPrototypeEnumToString(ActorPrototype actorProto)
+{
+    static std::map<ActorPrototype, std::string> actorPrototypeEnumToStringMap =
+    {
+        { ActorPrototype_Level1_Soldier, "ActorPrototype_Level1_Soldier" },
+        { ActorPrototype_Level1_Officer, "ActorPrototype_Level1_Officer" },
+        { ActorPrototype_Level1_Rat,     "ActorPrototype_Level1_Rat" },
+        { ActorPrototype_Level2_Soldier, "ActorPrototype_Level2_Soldier" },
+        { ActorPrototype_Level2_Officer, "ActorPrototype_Level2_Officer" },
+        { ActorPrototype_Level2_PunkRat, "ActorPrototype_Level2_PunkRat" },
+    };
+
+    auto findIt = actorPrototypeEnumToStringMap.find(actorProto);
+    if (findIt == actorPrototypeEnumToStringMap.end())
+    {
+        LOG_ERROR("Could not find actor enum: " + ToStr((int)actorProto));
+        assert(false && "Could not convert ActorPrototype enum to string");
+    }
+
+    return findIt->second;
+}
+
+ActorPrototype ActorPrototypeStringToEnum(std::string actorProtoStr)
+{
+    static std::map<std::string, ActorPrototype> actorPrototypeStringToEnumMap =
+    {
+        { "ActorPrototype_Level1_Soldier", ActorPrototype_Level1_Soldier },
+        { "ActorPrototype_Level1_Officer", ActorPrototype_Level1_Officer },
+        { "ActorPrototype_Level1_Rat",     ActorPrototype_Level1_Rat },
+        { "ActorPrototype_Level2_Soldier", ActorPrototype_Level2_Soldier },
+        { "ActorPrototype_Level2_Officer", ActorPrototype_Level2_Officer },
+        { "ActorPrototype_Level2_PunkRat", ActorPrototype_Level2_PunkRat },
+    };
+
+    auto findIt = actorPrototypeStringToEnumMap.find(actorProtoStr);
+    if (findIt == actorPrototypeStringToEnumMap.end())
+    {
+        LOG_ERROR("Could not find actor enum: " + actorProtoStr);
+        assert(false && "Could not convert ActorPrototype enum to string");
+    }
+
+    return findIt->second;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+// BaseGameApp::ReadActorXmlPrototypes
+// 
+//     Reads XML documents containing various actor prototypes which are then used to instantiate
+//     concrete actors
+//---------------------------------------------------------------------------------------------------------------------
+bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
+{
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, ">>>>> Loading actor prototypes...");
+
+    std::vector<std::string> xmlActorPrototypeFiles = m_pResourceMgr->VMatch("/ActorPrototypes/*.XML");
+    for (std::string protoFile : xmlActorPrototypeFiles)
+    {
+        LOG("Actor proto: " + protoFile);
+
+        TiXmlElement* pActorProtoElem = XmlResourceLoader::LoadAndReturnRootXmlElement(protoFile.c_str());
+        std::string protoName;
+        if (!ParseAttributeFromXmlElem(&protoName, "ActorPrototypeName", pActorProtoElem))
+        {
+            LOG_ERROR(protoFile + " is missing ActorPrototypeName attribute in its root node !");
+        }
+        else
+        {
+            LOG(protoFile + ": " + protoName);
+            ActorPrototype actorProto = ActorPrototypeStringToEnum(protoName);
+
+            // Create our own pointer
+            TiXmlNode* pDuplicateNode = pActorProtoElem->Clone();
+            assert(pDuplicateNode);
+            TiXmlElement* pActorProtoElemDuplicate = pDuplicateNode->ToElement();
+            assert(pActorProtoElemDuplicate);
+
+            m_ActorXmlPrototypeMap.insert(std::make_pair(actorProto, pActorProtoElemDuplicate));
+        }
+    }
+
+    bool loadedAllRequired = true;
+
+    // When I provide specific purpose API, I should be very dilligent
+    for (int actorPrototypeIdx = ActorPrototype_Start + 1;
+        actorPrototypeIdx < ActorPrototype_Max;
+        actorPrototypeIdx++)
+    {
+        auto findIt = m_ActorXmlPrototypeMap.find(ActorPrototype(actorPrototypeIdx));
+        if (findIt == m_ActorXmlPrototypeMap.end())
+        {
+            LOG_ERROR("Actor prototype: \"" + 
+                ActorPrototypeEnumToString(ActorPrototype(actorPrototypeIdx)) + 
+                std::string("\" was not found !"));
+            loadedAllRequired = false;
+        }
+    }
+
+    if (loadedAllRequired)
+    {
+        LOG("Actor prototypes loaded successfully.");
+    }
+    else
+    {
+        LOG_ERROR("Some of the actor prototypes were not loaded.");
+    }
+
+    return loadedAllRequired;
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 // BaseGameApp::InitializeEventMgr
 //---------------------------------------------------------------------------------------------------------------------
@@ -757,6 +879,18 @@ Point BaseGameApp::GetScale()
 uint32 BaseGameApp::GetWindowFlags()
 {
     return SDL_GetWindowFlags(m_pWindow);
+}
+
+// Remark: Caller is getting a NEW copy of the prototype -> caller is responsible for freeing this copy !
+TiXmlElement* BaseGameApp::GetActorPrototypeElem(ActorPrototype proto)
+{
+    auto findIt = m_ActorXmlPrototypeMap.find(proto);
+    assert(findIt != m_ActorXmlPrototypeMap.end());
+
+    TiXmlNode* pCopy = findIt->second->Clone()->ToElement();
+    assert(pCopy != NULL);
+
+    return pCopy->ToElement();
 }
 
 //=====================================================================================================================

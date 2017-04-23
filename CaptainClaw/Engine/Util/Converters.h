@@ -708,9 +708,43 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
 
         SAFE_DELETE(pActorElem);
-        return ActorTemplates::CreateXmlData_EnemyAIActor(tmpImageSet, aniPath, Point(wwdObject->x, wwdObject->y), loot, logic, wwdObject->z, wwdObject->minX, wwdObject->maxX);
 
-        //pActorElem->LinkEndChild(OfficerToXml(wwdObject));
+        ActorPrototype actorProto = ActorPrototype_Start;
+        if (levelNumber == 1)
+        {
+            if (logic == "Rat")
+            {
+                actorProto = ActorPrototype_Level1_Rat;
+            }
+            else if (logic == "Soldier")
+            {
+                actorProto = ActorPrototype_Level1_Soldier;
+            }
+            else if (logic == "Officer")
+            {
+                actorProto = ActorPrototype_Level1_Officer;
+            }
+        }
+        else if (levelNumber == 2)
+        {
+            if (logic == "Soldier")
+            {
+                actorProto = ActorPrototype_Level2_Soldier;
+            }
+            else if (logic == "Officer")
+            {
+                actorProto = ActorPrototype_Level2_Officer;
+            }
+        }
+        assert(actorProto != ActorPrototype_Start && "Unsupported level ?");
+
+
+        return ActorTemplates::CreateXmlData_EnemyAIActor(
+            actorProto,
+            Point(wwdObject->x, wwdObject->y), 
+            loot, 
+            wwdObject->minX, 
+            wwdObject->maxX);
     }
     else if (logic.find("Rat") != std::string::npos)
     {

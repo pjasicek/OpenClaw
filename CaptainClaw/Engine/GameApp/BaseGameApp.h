@@ -145,6 +145,7 @@ class Audio;
 
 typedef std::map<std::string, std::string> LocalizedStringsMap;
 typedef std::map<std::string, TTF_Font*> FontMap;
+typedef std::map<ActorPrototype, const TiXmlElement*> ActorXmlPrototypeMap;
 
 class BaseGameApp
 {
@@ -211,6 +212,8 @@ public:
     const GameOptions* GetGameConfig() const { return &m_GameOptions; }
     GlobalOptions* GetGlobalOptions() { return &m_GlobalOptions; }
 
+    TiXmlElement* GetActorPrototypeElem(ActorPrototype proto);
+
 protected:
     virtual void VRegisterGameEvents() { }
     virtual bool VPerformStartupTests();
@@ -237,6 +240,7 @@ private:
     bool InitializeLocalization(GameOptions& gameOptions);
     bool InitializeEventMgr();
     bool ReadConsoleConfig();
+    bool ReadActorXmlPrototypes(GameOptions& gameOptions);
 
     void RegisterEngineEvents();
 
@@ -260,6 +264,8 @@ private:
 
     GameCheats m_GameCheats;
     GlobalOptions m_GlobalOptions;
+
+    ActorXmlPrototypeMap m_ActorXmlPrototypeMap;
 };
 
 extern BaseGameApp* g_pApp;

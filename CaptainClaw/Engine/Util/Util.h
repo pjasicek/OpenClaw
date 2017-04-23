@@ -33,6 +33,8 @@ namespace Util
     SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer);
 
     void PlayRandomHitSound();
+
+    uint32 CalcCRC32(const char* pData, size_t dataLen);
 }
 
 #endif

@@ -1424,7 +1424,45 @@ namespace ActorTemplates
 
     TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX)
     {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(enemyType);
+        assert(pActorElem != NULL);
 
+        TiXmlHandle actorXmlHandle(pActorElem);
+
+        TiXmlElement* pActorPositionElem = actorXmlHandle.
+            FirstChild("PositionComponent").
+            FirstChild("Position").
+            ToElement();
+
+        assert(pActorPositionElem != NULL);
+        pActorPositionElem->SetAttribute("x", (int)position.x);
+        pActorPositionElem->SetAttribute("y", (int)position.y);
+
+        TiXmlElement* pLootComponentElem = actorXmlHandle.
+            FirstChild("LootComponent").
+            ToElement();
+
+        assert(pLootComponentElem != NULL);
+        for (PickupType item : loot)
+        {
+            XML_ADD_TEXT_ELEMENT("Item", ToStr((int)item).c_str(), pLootComponentElem);
+        }
+
+        TiXmlElement* pLeftPatrolBorderElem = actorXmlHandle.
+            FirstChild("PatrolEnemyAIStateComponent").
+            FirstChild("LeftPatrolBorder").
+            ToElement();
+        TiXmlElement* pRightPatrolBorderElem = actorXmlHandle.
+            FirstChild("PatrolEnemyAIStateComponent").
+            FirstChild("RightPatrolBorder").
+            ToElement();
+
+        assert(pLeftPatrolBorderElem != NULL);
+        assert(pRightPatrolBorderElem != NULL);
+        assert(SetTiXmlElementText(ToStr(minPatrolX), pLeftPatrolBorderElem));
+        assert(SetTiXmlElementText(ToStr(maxPatrolX), pRightPatrolBorderElem));
+
+        return pActorElem;
     }
 
     TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX)

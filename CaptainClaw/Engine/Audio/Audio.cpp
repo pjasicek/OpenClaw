@@ -374,7 +374,7 @@ bool Audio::InitializeMidiRPCClient()
     }
     else
     {
-        LOG_ERROR("RPC Server and Client successfully handshaked");
+        LOG("RPC Server and Client successfully handshaked");
     }
 
     return true;

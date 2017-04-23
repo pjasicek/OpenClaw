@@ -7,7 +7,6 @@
 #include "CommandHandler.h"
 
 typedef std::map<uint32, StrongActorPtr> ActorMap;
-typedef std::map<ActorPrototype, const TiXmlElement*> ActorXmlPrototypeMap;
 
 class GameSaveMgr;
 class LevelData;
@@ -126,12 +125,9 @@ protected:
 
     Point m_CurrentSpawnPosition;
 
-    ActorXmlPrototypeMap m_ActorXmlPrototypeMap;
-
 private:
     void ExecuteStartupCommands(const std::string& startupCommandsFile);
     void CreateSinglePhysicsTile(int x, int y, const TileCollisionPrototype& proto);
-
     //void LoadGameWorkerThread(const char* pXmlLevelPath, float* pProgress, bool* pRet);
 
     void RegisterAllDelegates();
