@@ -148,7 +148,8 @@ bool ZipFile::Init(const std::string &resFileName)
     fseek(m_pFile, -(int)sizeof(dh), SEEK_END);
     long dhOffset = ftell(m_pFile);
     memset(&dh, 0, sizeof(dh));
-    fread(&dh, sizeof(dh), 1, m_pFile);
+    if (fread(&dh, sizeof(dh), 1, m_pFile) != 1)
+        return false;
 
     // Check
     if (dh.sig != TZipDirHeader::SIGNATURE)
@@ -162,7 +163,8 @@ bool ZipFile::Init(const std::string &resFileName)
     if (!m_pDirData)
         return false;
     memset(m_pDirData, 0, dh.dirSize + dh.nDirEntries*sizeof(*m_papDir));
-    fread(m_pDirData, dh.dirSize, 1, m_pFile);
+    if (fread(m_pDirData, dh.dirSize, 1, m_pFile) != 1)
+        return false;
 
     // Now process each entry.
     char *pfh = m_pDirData;
@@ -330,7 +332,8 @@ bool ZipFile::ReadFile(int i, void *pBuf)
     TZipLocalHeader h;
 
     memset(&h, 0, sizeof(h));
-    fread(&h, sizeof(h), 1, m_pFile);
+    if (fread(&h, sizeof(h), 1, m_pFile) != 1)
+        return false;
     if (h.sig != TZipLocalHeader::SIGNATURE)
         return false;
 
@@ -340,7 +343,8 @@ bool ZipFile::ReadFile(int i, void *pBuf)
     if (h.compression == Z_NO_COMPRESSION)
     {
         // Simply read in raw stored data.
-        fread(pBuf, h.cSize, 1, m_pFile);
+        if (fread(pBuf, h.cSize, 1, m_pFile) != 1)
+            return false;
         return true;
     }
     else if (h.compression != Z_DEFLATED)
@@ -352,7 +356,8 @@ bool ZipFile::ReadFile(int i, void *pBuf)
         return false;
 
     memset(pcData, 0, h.cSize);
-    fread(pcData, h.cSize, 1, m_pFile);
+    if (fread(pcData, h.cSize, 1, m_pFile) != 1)
+        return false;
 
     bool ret = true;
 
@@ -404,7 +409,8 @@ bool ZipFile::ReadLargeFile(int i, void *pBuf, void(*progressCallback)(int, bool
     TZipLocalHeader h;
 
     memset(&h, 0, sizeof(h));
-    fread(&h, sizeof(h), 1, m_pFile);
+    if (fread(&h, sizeof(h), 1, m_pFile) != 1)
+        return false;
     if (h.sig != TZipLocalHeader::SIGNATURE)
         return false;
 
@@ -414,7 +420,8 @@ bool ZipFile::ReadLargeFile(int i, void *pBuf, void(*progressCallback)(int, bool
     if (h.compression == Z_NO_COMPRESSION)
     {
         // Simply read in raw stored data.
-        fread(pBuf, h.cSize, 1, m_pFile);
+        if (fread(pBuf, h.cSize, 1, m_pFile) != 1)
+            return false;
         return true;
     }
     else if (h.compression != Z_DEFLATED)
@@ -426,7 +433,8 @@ bool ZipFile::ReadLargeFile(int i, void *pBuf, void(*progressCallback)(int, bool
         return false;
 
     memset(pcData, 0, h.cSize);
-    fread(pcData, h.cSize, 1, m_pFile);
+    if (fread(pcData, h.cSize, 1, m_pFile) != 1)
+        return false;
 
     bool ret = true;
 
