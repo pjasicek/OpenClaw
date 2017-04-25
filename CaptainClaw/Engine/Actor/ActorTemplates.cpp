@@ -1467,6 +1467,8 @@ namespace ActorTemplates
 
     TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX)
     {
+        assert(false && "This method is deprecated. Use \"CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX)\" instead");
+
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", logicName.c_str());
 

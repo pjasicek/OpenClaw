@@ -266,6 +266,10 @@ struct EnemyAttackAction
 
     // Damage which the attack will deal to enemies
     uint32 damage;
+
+    // Enemy agro range bound to this attack action - attack action
+    // can only be performed when enemy is within it
+    ActorFixtureDef agroSensorFixture;
 };
 
 struct PredefinedMove

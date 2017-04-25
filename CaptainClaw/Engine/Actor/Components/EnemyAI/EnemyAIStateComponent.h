@@ -176,6 +176,7 @@ public:
     static const char* g_Name;
     virtual const char* VGetName() const override { return g_Name; }
     virtual void VPostInit() override;
+    virtual void VPostPostInit() override;
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
 
@@ -193,6 +194,7 @@ private:
     void ExecuteMeleeAttack();
 
     AttackActionList m_MeleeAttackActions;
+    ActorFixtureDef m_AgroFixtureDef;
 };
 
 //=====================================================================================================================
@@ -207,6 +209,7 @@ public:
     static const char* g_Name;
     virtual const char* VGetName() const override { return g_Name; }
     virtual void VPostInit() override;
+    virtual void VPostPostInit() override;
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
 
@@ -224,6 +227,7 @@ private:
     void ExecuteRangedAttack();
 
     AttackActionList m_RangedAttackActions;
+    ActorFixtureDef m_AgroFixtureDef;
 };
 
 #endif

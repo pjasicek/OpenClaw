@@ -538,6 +538,8 @@ bool MeleeAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
                 pAttackAction->damage = std::stoi(pDamageElem->GetText());
             }
 
+            pAttackAction->agroSensorFixture = ActorTemplates::XmlToActorFixtureDef(pElem->FirstChildElement("AgroSensorFixture"));
+
             assert(pAttackAction->animation != "" && pAttackAction->attackDamageType == DamageType_MeleeAttack);
             assert(pAttackAction->damage > 0);
 
@@ -555,6 +557,16 @@ void MeleeAttackAIStateComponent::VPostInit()
     BaseEnemyAIStateComponent::VPostInit();
 
     m_pAnimationComponent->AddObserver(this);
+}
+
+void MeleeAttackAIStateComponent::VPostPostInit()
+{
+    for (shared_ptr<EnemyAttackAction> pAttackAction : m_MeleeAttackActions)
+    {
+        g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(
+            _owner->GetGUID(),
+            &pAttackAction->agroSensorFixture);
+    }
 }
 
 void MeleeAttackAIStateComponent::VUpdate(uint32 msDiff)
@@ -713,6 +725,8 @@ bool RangedAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
                 pAttackAction->damage = std::stoi(pDamageElem->GetText());
             }
 
+            pAttackAction->agroSensorFixture = ActorTemplates::XmlToActorFixtureDef(pElem->FirstChildElement("AgroSensorFixture"));
+
             assert(pAttackAction->animation != "" && 
                 (pAttackAction->attackDamageType == DamageType_Bullet ||
                 pAttackAction->attackDamageType == DamageType_Explosion));
@@ -732,6 +746,16 @@ void RangedAttackAIStateComponent::VPostInit()
     BaseEnemyAIStateComponent::VPostInit();
 
     m_pAnimationComponent->AddObserver(this);
+}
+
+void RangedAttackAIStateComponent::VPostPostInit()
+{
+    for (shared_ptr<EnemyAttackAction> pAttackAction : m_RangedAttackActions)
+    {
+        g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(
+            _owner->GetGUID(), 
+            &pAttackAction->agroSensorFixture);
+    }
 }
 
 void RangedAttackAIStateComponent::VUpdate(uint32 msDiff)

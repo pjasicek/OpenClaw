@@ -50,6 +50,18 @@
                 <AttackSpawnPositionOffset x="-15" y="0" />
                 <AttackAreaSize width="0" height="0" />
                 <Damage>20</Damage>
+				<AgroSensorFixture>
+					<FixtureType>EnemyAIRangedSensor</FixtureType>
+					<CollisionShape>Rectangle</CollisionShape>
+					<IsSensor>true</IsSensor>
+					<Size width="1000" height="50" />
+					<Offset x="0" y="0" />
+					<CollisionFlag>4</CollisionFlag>
+					<CollisionMask>2</CollisionMask>
+					<Friction>0.000000</Friction>
+					<Density>0.000000</Density>
+					<Restitution>-1.#QNAN0</Restitution>
+				</AgroSensorFixture>
             </AttackAction>
         </Attacks>
     </RangedAttackAIStateComponent>
@@ -84,18 +96,6 @@
             <Friction>0.000000</Friction>
             <Density>0.000000</Density>
             <Restitution>0.000000</Restitution>
-        </ActorFixture>
-        <ActorFixture>
-            <FixtureType>EnemyAIRangedSensor</FixtureType>
-            <CollisionShape>Rectangle</CollisionShape>
-            <IsSensor>true</IsSensor>
-            <Size width="1000" height="50" />
-            <Offset x="0" y="0" />
-            <CollisionFlag>4</CollisionFlag>
-            <CollisionMask>2</CollisionMask>
-            <Friction>0.000000</Friction>
-            <Density>0.000000</Density>
-            <Restitution>-1.#QNAN0</Restitution>
         </ActorFixture>
     </PhysicsComponent>
     <DamageAuraComponent>
