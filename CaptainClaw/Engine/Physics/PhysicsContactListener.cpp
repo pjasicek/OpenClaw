@@ -8,7 +8,7 @@
 #include "../Actor/Components/TriggerComponents/TriggerComponent.h"
 #include "../Actor/Components/AIComponents/ProjectileAIComponent.h"
 #include "../Actor/Components/ControllerComponents/HealthComponent.h"
-#include "../Actor/Components/EnemyAI/EnemyAIComponent.h"
+#include "../Actor/Components/EnemyAI/EnemyAIStateComponent.h"
 #include "../Actor/Components/ControllableComponent.h"
 #include "../Actor/Components/PositionComponent.h"
 #include "../Actor/Components/AuraComponents/AuraComponent.h"
@@ -352,11 +352,12 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
 
                 if (pActorwhoEntered && pActorWithMeleeSensor)
                 {
-                    shared_ptr<EnemyAIComponent> pEnemyAIComponent =
-                        MakeStrongPtr(pActorWithMeleeSensor->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
-                    if (pEnemyAIComponent)
+                    shared_ptr<MeleeAttackAIStateComponent> pMeleeStateComponent =
+                        MakeStrongPtr(pActorWithMeleeSensor->GetComponent<MeleeAttackAIStateComponent>(MeleeAttackAIStateComponent::g_Name));
+                    assert(pMeleeStateComponent != nullptr);
+                    if (pMeleeStateComponent)
                     {
-                        pEnemyAIComponent->OnEnemyEnteredMeleeZone(pActorwhoEntered);
+                        pMeleeStateComponent->OnEnemyEnterAgroRange(pActorwhoEntered);
                     }
                 }
             }
@@ -378,11 +379,12 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
 
                 if (pActorwhoEntered && pActorWithRangedSensor)
                 {
-                    shared_ptr<EnemyAIComponent> pEnemyAIComponent =
-                        MakeStrongPtr(pActorWithRangedSensor->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
-                    if (pEnemyAIComponent)
+                    shared_ptr<RangedAttackAIStateComponent> pRangeAttackComponent =
+                        MakeStrongPtr(pActorWithRangedSensor->GetComponent<RangedAttackAIStateComponent>(RangedAttackAIStateComponent::g_Name));
+                    assert(pRangeAttackComponent != nullptr);
+                    if (pRangeAttackComponent)
                     {
-                        pEnemyAIComponent->OnEnemyEnteredRangedZone(pActorwhoEntered);
+                        pRangeAttackComponent->OnEnemyEnterAgroRange(pActorwhoEntered);
                     }
                 }
             }
@@ -549,11 +551,12 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
 
                 if (pActorWhoLeft && pActorWithMeleeSensor)
                 {
-                    shared_ptr<EnemyAIComponent> pEnemyAIComponent =
-                        MakeStrongPtr(pActorWithMeleeSensor->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
-                    if (pEnemyAIComponent)
+                    shared_ptr<MeleeAttackAIStateComponent> pMeleeStateComponent =
+                        MakeStrongPtr(pActorWithMeleeSensor->GetComponent<MeleeAttackAIStateComponent>(MeleeAttackAIStateComponent::g_Name));
+                    assert(pMeleeStateComponent != nullptr);
+                    if (pMeleeStateComponent)
                     {
-                        pEnemyAIComponent->OnEnemyLeftMeleeZone(pActorWhoLeft);
+                        pMeleeStateComponent->OnEnemyLeftAgroRange(pActorWhoLeft);
                     }
                 }
             }
@@ -575,11 +578,12 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
 
                 if (pActorWhoLeft && pActorWithRangedSensor)
                 {
-                    shared_ptr<EnemyAIComponent> pEnemyAIComponent =
-                        MakeStrongPtr(pActorWithRangedSensor->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
-                    if (pEnemyAIComponent)
+                    shared_ptr<RangedAttackAIStateComponent> pRangedStateComponent =
+                        MakeStrongPtr(pActorWithRangedSensor->GetComponent<RangedAttackAIStateComponent>(RangedAttackAIStateComponent::g_Name));
+                    assert(pRangedStateComponent != nullptr);
+                    if (pRangedStateComponent)
                     {
-                        pEnemyAIComponent->OnEnemyLeftRangedZone(pActorWhoLeft);
+                        pRangedStateComponent->OnEnemyLeftAgroRange(pActorWhoLeft);
                     }
                 }
             }

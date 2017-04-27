@@ -505,6 +505,7 @@ void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType c
     }
 }
 
+// TODO: This is only applicable to Claw... make him use ActorBodyDef
 void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
 {
     //LOG("Creating dynamic actor");
@@ -536,6 +537,7 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
     b2Vec2 b2BodySize = PixelsToMeters(PointToB2Vec2(bodySize));
 
     b2BodyDef bodyDef;
+    bodyDef.allowSleep = false; // TODO: Move this into ActoBodyDef aswell
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(b2Position.x, b2Position.y);
     bodyDef.fixedRotation = true;

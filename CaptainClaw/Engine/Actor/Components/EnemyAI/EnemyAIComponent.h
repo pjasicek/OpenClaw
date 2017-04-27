@@ -12,7 +12,6 @@ class PositionComponent;
 class ActorRenderComponent;
 
 typedef std::map<std::string, BaseEnemyAIStateComponent*> EnemyStateMap;
-typedef std::vector<Actor*> ActorList;
 typedef std::vector<std::string> SoundList;
 
 class EnemyAIComponent : public ActorComponent, public HealthObserver
@@ -26,6 +25,7 @@ public:
 
     virtual bool VInit(TiXmlElement* pData) override;
     virtual void VPostInit() override;
+    virtual void VPostPostInit() override;
     virtual void VUpdate(uint32 msDiff) override;
 
     virtual TiXmlElement* VGenerateXml() override { return NULL; }
@@ -35,15 +35,10 @@ public:
     virtual void VOnHealthBelowZero(DamageType damageType) override;
     virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) override;
 
-    void OnEnemyEnteredMeleeZone(Actor* pEnemy);
-    void OnEnemyLeftMeleeZone(Actor* pEnemy);
-
-    void OnEnemyEnteredRangedZone(Actor* pEnemy);
-    void OnEnemyLeftRangedZone(Actor* pEnemy);
-
     Point FindClosestHostileActorOffset();
 
-    void OnStateCanFinish();
+    //void OnStateCanFinish();
+    bool EnterBestState(bool canForceEnter);
 
     const SoundList& GetTakeDamageSounds() const { return m_TakeDamageSounds; }
     const SoundList& GetMeleeAttackSounds() const { return m_MeleeAttackSounds; }
@@ -55,8 +50,9 @@ private:
     void LeaveAllStates();
     bool HasState(std::string stateName);
     void EnterState(std::string stateName);
+    void EnterState(BaseEnemyAIStateComponent* pState);
     void AcquireStateLock();
-    EnemyAIState GetCurrentState();
+    BaseEnemyAIStateComponent* GetCurrentState();
 
     bool m_bInitialized;
     bool m_bDead;

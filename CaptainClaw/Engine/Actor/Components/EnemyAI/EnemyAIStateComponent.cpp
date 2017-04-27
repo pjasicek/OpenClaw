@@ -18,8 +18,55 @@
 const char* BaseEnemyAIStateComponent::g_Name = "BaseEnemyAIStateComponent";
 const char* TakeDamageAIStateComponent::g_Name = "TakeDamageAIStateComponent";
 const char* PatrolEnemyAIStateComponent::g_Name = "PatrolEnemyAIStateComponent";
+const char* BaseAttackAIStateComponent::g_Name = "BaseAttackAIStateComponent";
 const char* MeleeAttackAIStateComponent::g_Name = "MeleeAttackAIStateComponent";
 const char* RangedAttackAIStateComponent::g_Name = "RangedAttackAIStateComponent";
+
+#define MAX_STATE_PRIORITY INT32_MAX
+#define MIN_STATE_PRIORITY INT32_MIN
+
+// TODO: Returning pointer like this is inconsistent...
+static shared_ptr<EnemyAttackAction> XmlToEnemyAttackActionPtr(TiXmlElement* pElem)
+{
+    assert(pElem != NULL);
+
+    shared_ptr<EnemyAttackAction> pAttackAction(new EnemyAttackAction);
+
+    if (TiXmlElement* pAnimationElem = pElem->FirstChildElement("Animation"))
+    {
+        pAttackAction->animation = pAnimationElem->GetText();
+    }
+    if (TiXmlElement* pAnimAttackFrameIdxElem = pElem->FirstChildElement("AttackAnimFrameIdx"))
+    {
+        pAttackAction->attackAnimFrameIdx = std::stoi(pAnimAttackFrameIdxElem->GetText());
+    }
+    if (TiXmlElement* pAttackTypeElem = pElem->FirstChildElement("AttackType"))
+    {
+        pAttackAction->attackDamageType = DamageType(std::stoi(pAttackTypeElem->GetText()));
+    }
+    if (TiXmlElement* pAttackFxImageSetElem = pElem->FirstChildElement("AttackFxImageSet"))
+    {
+        pAttackAction->attackFxImageSet = pAttackFxImageSetElem->GetText();
+    }
+    if (TiXmlElement* pAttackOffsetElem = pElem->FirstChildElement("AttackSpawnPositionOffset"))
+    {
+        pAttackOffsetElem->Attribute("x", &pAttackAction->attackSpawnPositionOffset.x);
+        pAttackOffsetElem->Attribute("y", &pAttackAction->attackSpawnPositionOffset.y);
+    }
+    if (TiXmlElement* pAttackAreaSizeElem = pElem->FirstChildElement("AttackAreaSize"))
+    {
+        pAttackAreaSizeElem->Attribute("width", &pAttackAction->attackAreaSize.x);
+        pAttackAreaSizeElem->Attribute("height", &pAttackAction->attackAreaSize.y);
+    }
+    if (TiXmlElement* pDamageElem = pElem->FirstChildElement("Damage"))
+    {
+        pAttackAction->damage = std::stoi(pDamageElem->GetText());
+    }
+
+    pAttackAction->agroSensorFixture = ActorTemplates::XmlToActorFixtureDef(pElem->FirstChildElement("AgroSensorFixture"));
+
+    return pAttackAction;
+}
 
 //=====================================================================================================================
 // BaseEnemyAIStateComponent
@@ -27,7 +74,8 @@ const char* RangedAttackAIStateComponent::g_Name = "RangedAttackAIStateComponent
 
 BaseEnemyAIStateComponent::BaseEnemyAIStateComponent(std::string stateName)
     :
-    m_IsActive(false), 
+    m_IsActive(false),
+    m_StatePriority(-1),
     m_StateName(stateName),
     m_pPhysicsComponent(NULL),
     m_pPositionComponent(NULL),
@@ -42,7 +90,7 @@ bool BaseEnemyAIStateComponent::VInit(TiXmlElement* pData)
 {
     assert(pData);
 
-
+    assert(ParseValueFromXmlElem(&m_StatePriority, pData->FirstChildElement("StatePriority")));
 
     return VDelegateInit(pData);
 }
@@ -65,6 +113,8 @@ void BaseEnemyAIStateComponent::VPostInit()
     assert(m_pPositionComponent);
     assert(m_pEnemyAIComponent);
     assert(m_pRenderComponent);
+
+    assert(m_StatePriority >= 0);
 
     m_pEnemyAIComponent->RegisterState(m_StateName, this);
 }
@@ -111,12 +161,16 @@ void TakeDamageAIStateComponent::VOnStateEnter()
     std::string takeDamageAnim = m_TakeDamageAnimations[randomAnimIdx];
     m_pAnimationComponent->SetAnimation(takeDamageAnim);
 
+    // When taking damage, nothing can interrupt him
+    m_StatePriority = MAX_STATE_PRIORITY;
+
     m_IsActive = true;
 }
 
 void TakeDamageAIStateComponent::VOnStateLeave()
 {
     m_IsActive = false;
+    m_StatePriority = MIN_STATE_PRIORITY;
 }
 
 void TakeDamageAIStateComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
@@ -126,7 +180,10 @@ void TakeDamageAIStateComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
         return;
     }
 
-    m_pEnemyAIComponent->OnStateCanFinish();
+    // When done taking damage, everything takes precedence
+    m_StatePriority = MIN_STATE_PRIORITY;
+
+    m_pEnemyAIComponent->EnterBestState(true);
 }
 
 //=====================================================================================================================
@@ -481,87 +538,56 @@ void PatrolEnemyAIStateComponent::CommenceIdleBehaviour()
 }
 
 //=====================================================================================================================
-// MeleeAttackAIStateComponent
+// BaseAttackAIStateComponent
 //=====================================================================================================================
 
-MeleeAttackAIStateComponent::MeleeAttackAIStateComponent()
+BaseAttackAIStateComponent::BaseAttackAIStateComponent(std::string stateName)
     :
-    BaseEnemyAIStateComponent("MeleeAttackState")
+    BaseEnemyAIStateComponent(stateName)
 {
 
 }
 
-MeleeAttackAIStateComponent::~MeleeAttackAIStateComponent()
+BaseAttackAIStateComponent::~BaseAttackAIStateComponent()
 {
 
 }
 
-bool MeleeAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
+bool BaseAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
 {
     assert(pData);
 
     if (TiXmlElement* pMeleeAttacksElem = pData->FirstChildElement("Attacks"))
     {
         for (TiXmlElement* pElem = pMeleeAttacksElem->FirstChildElement("AttackAction");
-            pElem != NULL; pElem = pElem->NextSiblingElement("AttackAction"))
+            pElem != NULL;
+            pElem = pElem->NextSiblingElement("AttackAction"))
         {
-            std::shared_ptr<EnemyAttackAction> pAttackAction(new EnemyAttackAction);
+            shared_ptr<EnemyAttackAction> pAttackAction = XmlToEnemyAttackActionPtr(pElem);
 
-            if (TiXmlElement* pAnimationElem = pElem->FirstChildElement("Animation"))
-            {
-                pAttackAction->animation = pAnimationElem->GetText();
-            }
-            if (TiXmlElement* pAnimAttackFrameIdxElem = pElem->FirstChildElement("AttackAnimFrameIdx"))
-            {
-                pAttackAction->attackAnimFrameIdx = std::stoi(pAnimAttackFrameIdxElem->GetText());
-            }
-            if (TiXmlElement* pAttackTypeElem = pElem->FirstChildElement("AttackType"))
-            {
-                pAttackAction->attackDamageType = DamageType(std::stoi(pAttackTypeElem->GetText()));
-            }
-            if (TiXmlElement* pAttackFxImageSetElem = pElem->FirstChildElement("AttackFxImageSet"))
-            {
-                pAttackAction->attackFxImageSet = pAttackFxImageSetElem->GetText();
-            }
-            if (TiXmlElement* pAttackOffsetElem = pElem->FirstChildElement("AttackSpawnPositionOffset"))
-            {
-                pAttackOffsetElem->Attribute("x", &pAttackAction->attackSpawnPositionOffset.x);
-                pAttackOffsetElem->Attribute("y", &pAttackAction->attackSpawnPositionOffset.y);
-            }
-            if (TiXmlElement* pAttackAreaSizeElem = pElem->FirstChildElement("AttackAreaSize"))
-            {
-                pAttackAreaSizeElem->Attribute("width", &pAttackAction->attackAreaSize.x);
-                pAttackAreaSizeElem->Attribute("height", &pAttackAction->attackAreaSize.y);
-            }
-            if (TiXmlElement* pDamageElem = pElem->FirstChildElement("Damage"))
-            {
-                pAttackAction->damage = std::stoi(pDamageElem->GetText());
-            }
-
-            pAttackAction->agroSensorFixture = ActorTemplates::XmlToActorFixtureDef(pElem->FirstChildElement("AgroSensorFixture"));
-
-            assert(pAttackAction->animation != "" && pAttackAction->attackDamageType == DamageType_MeleeAttack);
+            assert(pAttackAction->animation != "");
             assert(pAttackAction->damage > 0);
 
-            m_MeleeAttackActions.push_back(pAttackAction);
+            m_AttackActions.push_back(pAttackAction);
         }
     }
 
-    assert(!m_MeleeAttackActions.empty());
+    assert(!m_AttackActions.empty());
+    assert(m_AttackActions.size() == 1 && "Only supporting one attack action per state component");
 
     return true;
 }
 
-void MeleeAttackAIStateComponent::VPostInit()
+void BaseAttackAIStateComponent::VPostInit()
 {
     BaseEnemyAIStateComponent::VPostInit();
 
     m_pAnimationComponent->AddObserver(this);
 }
 
-void MeleeAttackAIStateComponent::VPostPostInit()
+void BaseAttackAIStateComponent::VPostPostInit()
 {
-    for (shared_ptr<EnemyAttackAction> pAttackAction : m_MeleeAttackActions)
+    for (shared_ptr<EnemyAttackAction> pAttackAction : m_AttackActions)
     {
         g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(
             _owner->GetGUID(),
@@ -569,45 +595,25 @@ void MeleeAttackAIStateComponent::VPostPostInit()
     }
 }
 
-void MeleeAttackAIStateComponent::VUpdate(uint32 msDiff)
-{
-    if (!m_IsActive)
-    {
-        return;
-    }
-}
-
-void MeleeAttackAIStateComponent::VOnStateEnter()
+void BaseAttackAIStateComponent::VOnStateEnter()
 {
     m_IsActive = true;
-    ExecuteMeleeAttack();
+    VExecuteAttack();
 }
 
-void MeleeAttackAIStateComponent::VOnStateLeave()
+void BaseAttackAIStateComponent::VOnStateLeave()
 {
     m_IsActive = false;
 }
 
-void MeleeAttackAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
+void BaseAttackAIStateComponent::VExecuteAttack()
 {
     if (!m_IsActive)
     {
         return;
     }
 
-    // TODO: Support melee actions consiting of multiple animations ?
-    m_pEnemyAIComponent->OnStateCanFinish();
-    ExecuteMeleeAttack();
-}
-
-void MeleeAttackAIStateComponent::ExecuteMeleeAttack()
-{
-    if (!m_IsActive)
-    {
-        return;
-    }
-
-    Point closestEnemyOffset = m_pEnemyAIComponent->FindClosestHostileActorOffset();
+    Point closestEnemyOffset = FindClosestHostileActorOffset();
     //LOG("X Offset: " + ToStr(closestEnemyOffset.x));
     if (closestEnemyOffset.x < 0)
     {
@@ -622,162 +628,10 @@ void MeleeAttackAIStateComponent::ExecuteMeleeAttack()
 
     // TODO: Pick randomly melee action ?
 
-    m_pAnimationComponent->SetAnimation(m_MeleeAttackActions[0]->animation);
+    m_pAnimationComponent->SetAnimation(m_AttackActions[0]->animation);
 }
 
-void MeleeAttackAIStateComponent::VOnAnimationFrameChanged(
-    Animation* pAnimation, 
-    AnimationFrame* pLastFrame, 
-    AnimationFrame* pNewFrame)
-{
-    if (!m_IsActive)
-    {
-        return;
-    }
-
-    // Could be leftover from past state which changed just now
-    if (m_pAnimationComponent->GetCurrentAnimation()->GetCurrentAnimationFrame() != pNewFrame)
-    {
-        return;
-    }
-
-    if (m_MeleeAttackActions[0]->attackAnimFrameIdx == pNewFrame->idx)
-    {
-        std::shared_ptr<EnemyAttackAction> pAttack = m_MeleeAttackActions[0];
-
-        Direction dir = Direction_Left;
-        Point offset = pAttack->attackSpawnPositionOffset;
-        if (m_pRenderComponent->IsMirrored())
-        {
-            dir = Direction_Right;
-            offset = Point(offset.x * -1.0, offset.y);
-        }
-
-        ActorTemplates::CreateAreaDamage(
-            m_pPositionComponent->GetPosition() + offset,
-            pAttack->attackAreaSize,
-            pAttack->damage,
-            CollisionFlag_EnemyAIAttack,
-            "Rectangle",
-            DamageType_MeleeAttack,
-            dir);
-
-        // Play melee attack sound
-        Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetMeleeAttackSounds());
-    }
-}
-
-//=====================================================================================================================
-// RangedAttackAIStateComponent
-//=====================================================================================================================
-
-RangedAttackAIStateComponent::RangedAttackAIStateComponent()
-    :
-    BaseEnemyAIStateComponent("RangedAttackState")
-{
-
-}
-
-RangedAttackAIStateComponent::~RangedAttackAIStateComponent()
-{
-
-}
-
-bool RangedAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
-{
-    assert(pData);
-
-    if (TiXmlElement* pRangedAttacksElem = pData->FirstChildElement("Attacks"))
-    {
-        for (TiXmlElement* pElem = pRangedAttacksElem->FirstChildElement("AttackAction");
-            pElem != NULL; pElem = pElem->NextSiblingElement("AttackAction"))
-        {
-            std::shared_ptr<EnemyAttackAction> pAttackAction(new EnemyAttackAction);
-
-            if (TiXmlElement* pAnimationElem = pElem->FirstChildElement("Animation"))
-            {
-                pAttackAction->animation = pAnimationElem->GetText();
-            }
-            if (TiXmlElement* pAnimAttackFrameIdxElem = pElem->FirstChildElement("AttackAnimFrameIdx"))
-            {
-                pAttackAction->attackAnimFrameIdx = std::stoi(pAnimAttackFrameIdxElem->GetText());
-            }
-            if (TiXmlElement* pAttackTypeElem = pElem->FirstChildElement("AttackType"))
-            {
-                pAttackAction->attackDamageType = DamageType(std::stoi(pAttackTypeElem->GetText()));
-            }
-            if (TiXmlElement* pAttackFxImageSet = pElem->FirstChildElement("AttackFxImageSet"))
-            {
-                pAttackAction->attackFxImageSet = pAttackFxImageSet->GetText();
-            }
-            if (TiXmlElement* pAttackOffsetElem = pElem->FirstChildElement("AttackSpawnPositionOffset"))
-            {
-                pAttackOffsetElem->Attribute("x", &pAttackAction->attackSpawnPositionOffset.x);
-                pAttackOffsetElem->Attribute("y", &pAttackAction->attackSpawnPositionOffset.y);
-            }
-            if (TiXmlElement* pAttackAreaSizeElem = pElem->FirstChildElement("AttackAreaSize"))
-            {
-                pAttackAreaSizeElem->Attribute("width", &pAttackAction->attackAreaSize.x);
-                pAttackAreaSizeElem->Attribute("height", &pAttackAction->attackAreaSize.y);
-            }
-            if (TiXmlElement* pDamageElem = pElem->FirstChildElement("Damage"))
-            {
-                pAttackAction->damage = std::stoi(pDamageElem->GetText());
-            }
-
-            pAttackAction->agroSensorFixture = ActorTemplates::XmlToActorFixtureDef(pElem->FirstChildElement("AgroSensorFixture"));
-
-            assert(pAttackAction->animation != "" && 
-                (pAttackAction->attackDamageType == DamageType_Bullet ||
-                pAttackAction->attackDamageType == DamageType_Explosion));
-            assert(pAttackAction->damage > 0);
-
-            m_RangedAttackActions.push_back(pAttackAction);
-        }
-    }
-
-    assert(!m_RangedAttackActions.empty());
-
-    return true;
-}
-
-void RangedAttackAIStateComponent::VPostInit()
-{
-    BaseEnemyAIStateComponent::VPostInit();
-
-    m_pAnimationComponent->AddObserver(this);
-}
-
-void RangedAttackAIStateComponent::VPostPostInit()
-{
-    for (shared_ptr<EnemyAttackAction> pAttackAction : m_RangedAttackActions)
-    {
-        g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(
-            _owner->GetGUID(), 
-            &pAttackAction->agroSensorFixture);
-    }
-}
-
-void RangedAttackAIStateComponent::VUpdate(uint32 msDiff)
-{
-    if (!m_IsActive)
-    {
-        return;
-    }
-}
-
-void RangedAttackAIStateComponent::VOnStateEnter()
-{
-    m_IsActive = true;
-    ExecuteRangedAttack();
-}
-
-void RangedAttackAIStateComponent::VOnStateLeave()
-{
-    m_IsActive = false;
-}
-
-void RangedAttackAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
+void BaseAttackAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
 {
     if (!m_IsActive)
     {
@@ -785,36 +639,11 @@ void RangedAttackAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
     }
 
     // TODO: Support melee actions consiting of multiple animations ?
-    m_pEnemyAIComponent->OnStateCanFinish();
-    ExecuteRangedAttack();
+    m_pEnemyAIComponent->EnterBestState(true);
+    VExecuteAttack();
 }
 
-void RangedAttackAIStateComponent::ExecuteRangedAttack()
-{
-    if (!m_IsActive)
-    {
-        return;
-    }
-
-    Point closestEnemyOffset = m_pEnemyAIComponent->FindClosestHostileActorOffset();
-    //LOG("X Offset: " + ToStr(closestEnemyOffset.x));
-    if (closestEnemyOffset.x < 0)
-    {
-        m_pRenderComponent->SetMirrored(false);
-    }
-    else
-    {
-        m_pRenderComponent->SetMirrored(true);
-    }
-
-    srand((long)this + time(NULL));
-
-    // TODO: Pick randomly melee action ?
-
-    m_pAnimationComponent->SetAnimation(m_RangedAttackActions[0]->animation);
-}
-
-void RangedAttackAIStateComponent::VOnAnimationFrameChanged(
+void BaseAttackAIStateComponent::VOnAnimationFrameChanged(
     Animation* pAnimation,
     AnimationFrame* pLastFrame,
     AnimationFrame* pNewFrame)
@@ -830,9 +659,9 @@ void RangedAttackAIStateComponent::VOnAnimationFrameChanged(
         return;
     }
 
-    if (m_RangedAttackActions[0]->attackAnimFrameIdx == pNewFrame->idx)
+    if (m_AttackActions[0]->attackAnimFrameIdx == pNewFrame->idx)
     {
-        std::shared_ptr<EnemyAttackAction> pAttack = m_RangedAttackActions[0];
+        std::shared_ptr<EnemyAttackAction> pAttack = m_AttackActions[0];
 
         Direction dir = Direction_Left;
         Point offset = pAttack->attackSpawnPositionOffset;
@@ -842,16 +671,141 @@ void RangedAttackAIStateComponent::VOnAnimationFrameChanged(
             offset = Point(offset.x * -1.0, offset.y);
         }
 
-        ActorTemplates::CreateProjectile(
-            pAttack->attackFxImageSet,
-            pAttack->damage,
-            pAttack->attackDamageType,
-            dir,
-            m_pPositionComponent->GetPosition() + offset,
-            CollisionFlag_EnemyAIProjectile,
-            (CollisionFlag_Controller | CollisionFlag_Solid));
-
-        // Play ranged attack sound
-        Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetRangedAttackSounds());
+        VOnAttackFrame(pAttack, dir, offset);
     }
+}
+
+void BaseAttackAIStateComponent::OnEnemyEnterAgroRange(Actor* pEnemy)
+{
+    m_EnemyAgroList.push_back(pEnemy);
+    m_pEnemyAIComponent->EnterBestState(false);
+}
+
+void BaseAttackAIStateComponent::OnEnemyLeftAgroRange(Actor* pEnemy)
+{
+    for (auto iter = m_EnemyAgroList.begin(); iter != m_EnemyAgroList.end(); ++iter)
+    {
+        if ((*iter) == pEnemy)
+        {
+            m_EnemyAgroList.erase(iter);
+            return;
+        }
+    }
+
+    LOG_WARNING("Could not remove enemy - no such actor found");
+}
+
+Point BaseAttackAIStateComponent::FindClosestHostileActorOffset()
+{
+    Point closest(DBL_MAX, DBL_MAX);
+
+    if (m_EnemyAgroList.empty())
+    {
+        return closest;
+    }
+
+    for (Actor* pHostileActor : m_EnemyAgroList)
+    {
+        assert(pHostileActor != NULL);
+
+        shared_ptr<PositionComponent> pHostileActorPositionComponent =
+            MakeStrongPtr(pHostileActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        assert(pHostileActorPositionComponent);
+
+        Point positionDiff = pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();
+        if (positionDiff.Length() < (m_pPositionComponent->GetPosition() - closest).Length())
+        {
+            closest = positionDiff;
+        }
+    }
+
+    assert(std::fabs(closest.x) < DBL_MAX && std::fabs(closest.y) < DBL_MAX);
+
+    return closest;
+}
+
+//=====================================================================================================================
+// MeleeAttackAIStateComponent
+//=====================================================================================================================
+
+MeleeAttackAIStateComponent::MeleeAttackAIStateComponent()
+    :
+    BaseAttackAIStateComponent("MeleeAttackState")
+{
+
+}
+
+MeleeAttackAIStateComponent::~MeleeAttackAIStateComponent()
+{
+
+}
+
+bool MeleeAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    assert(pData);
+
+    if (!BaseAttackAIStateComponent::VDelegateInit(pData))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void MeleeAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset)
+{
+    ActorTemplates::CreateAreaDamage(
+        m_pPositionComponent->GetPosition() + offset,
+        pAttack->attackAreaSize,
+        pAttack->damage,
+        CollisionFlag_EnemyAIAttack,
+        "Rectangle",
+        DamageType_MeleeAttack,
+        dir);
+
+    // Play melee attack sound
+    Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetMeleeAttackSounds());
+}
+
+//=====================================================================================================================
+// RangedAttackAIStateComponent
+//=====================================================================================================================
+
+RangedAttackAIStateComponent::RangedAttackAIStateComponent()
+    :
+    BaseAttackAIStateComponent("RangedAttackState")
+{
+
+}
+
+RangedAttackAIStateComponent::~RangedAttackAIStateComponent()
+{
+
+}
+
+bool RangedAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    assert(pData);
+
+    if (!BaseAttackAIStateComponent::VDelegateInit(pData))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void RangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset)
+{
+    ActorTemplates::CreateProjectile(
+        pAttack->attackFxImageSet,
+        pAttack->damage,
+        pAttack->attackDamageType,
+        dir,
+        m_pPositionComponent->GetPosition() + offset,
+        CollisionFlag_EnemyAIProjectile,
+        (CollisionFlag_Controller | CollisionFlag_Solid));
+
+    // Play ranged attack sound
+    Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetRangedAttackSounds());
 }

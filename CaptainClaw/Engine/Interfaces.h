@@ -9,10 +9,13 @@
 #include <tinyxml.h>
 #include <stdlib.h>
 #include <float.h>
+#include <vector>
 
 class Actor;
 typedef std::shared_ptr<Actor> StrongActorPtr;
 typedef std::weak_ptr<Actor> WeakActorPtr;
+
+typedef std::vector<Actor*> ActorList;
 
 class ActorComponent;
 typedef std::shared_ptr<ActorComponent> StrongActorComponentPtr;

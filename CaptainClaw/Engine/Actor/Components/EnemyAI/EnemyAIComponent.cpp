@@ -89,16 +89,14 @@ void EnemyAIComponent::VPostInit()
     pHealthComp->AddObserver(this);
 }
 
+void EnemyAIComponent::VPostPostInit()
+{
+    assert(!m_StateMap.empty());
+    EnterState("PatrolState");
+}
+
 void EnemyAIComponent::VUpdate(uint32 msDiff)
 {
-    if (!m_bInitialized)
-    {
-        assert(!m_StateMap.empty());
-        EnterState("PatrolState");
-
-        m_bInitialized = true;
-    }
-
     if (m_bDead)
     {
         // I want it to disappear after ~900ms
@@ -176,92 +174,6 @@ void EnemyAIComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, Damage
     }
 }
 
-void EnemyAIComponent::OnEnemyEnteredMeleeZone(Actor* pEnemy)
-{
-    m_EnemiesInMeleeZone.push_back(pEnemy);
-
-    if (m_EnemiesInMeleeZone.size() == 1)
-    {
-        if (m_bHasStateLock)
-        {
-            m_bHasStateLock = false;
-            EnterState("MeleeAttackState");
-        }
-    }
-}
-
-void EnemyAIComponent::OnEnemyLeftMeleeZone(Actor* pEnemy)
-{
-    for (auto iter = m_EnemiesInMeleeZone.begin(); iter != m_EnemiesInMeleeZone.end(); ++iter)
-    {
-        if ((*iter) == pEnemy)
-        {
-            m_EnemiesInMeleeZone.erase(iter);
-            if (m_EnemiesInMeleeZone.empty())
-            {
-                if (m_bHasStateLock)
-                {
-                    if (m_EnemiesInRangedZone.size() > 0 && HasState("RangedAttackState"))
-                    {
-                        m_bHasStateLock = false;
-                        EnterState("RangedAttackState");
-                    }
-                    else
-                    {
-                        EnterState("PatrolState");
-                    }
-                }
-            }
-            return;
-        }
-    }
-
-    LOG_WARNING("Could not remove enemy - no such actor found");
-}
-
-void EnemyAIComponent::OnEnemyEnteredRangedZone(Actor* pEnemy)
-{
-    m_EnemiesInRangedZone.push_back(pEnemy);
-
-    if (m_EnemiesInRangedZone.size() == 1)
-    {
-        if (m_bHasStateLock && HasState("RangedAttackState"))
-        {
-            m_bHasStateLock = false;
-            EnterState("RangedAttackState");
-        }
-    }
-}
-
-void EnemyAIComponent::OnEnemyLeftRangedZone(Actor* pEnemy)
-{
-    for (auto iter = m_EnemiesInRangedZone.begin(); iter != m_EnemiesInRangedZone.end(); ++iter)
-    {
-        if ((*iter) == pEnemy)
-        {
-            m_EnemiesInRangedZone.erase(iter);
-            if (m_EnemiesInRangedZone.empty())
-            {
-                if (m_bHasStateLock)
-                {
-                    if (m_EnemiesInMeleeZone.size() > 0 && HasState("MeleeAttackState"))
-                    {
-                        m_bHasStateLock = false;
-                        EnterState("MeleeAttackState");
-                    }
-                    else
-                    {
-                        EnterState("PatrolState");
-                    }
-                }
-            }
-            return;
-        }
-    }
-
-    LOG_WARNING("Could not remove enemy - no such actor found");
-}
-
 Point EnemyAIComponent::FindClosestHostileActorOffset()
 {
     Point closest(0, 0);
@@ -325,85 +237,84 @@ void EnemyAIComponent::EnterState(std::string stateName)
     findIt->second->VOnStateEnter();
 }
 
+void EnemyAIComponent::EnterState(BaseEnemyAIStateComponent* pState)
+{
+    assert(pState != NULL);
+
+    LeaveAllStates();
+    pState->VOnStateEnter();
+}
+
 void EnemyAIComponent::AcquireStateLock()
 {
     LeaveAllStates();
     m_bHasStateLock = true;
 }
 
-void EnemyAIComponent::OnStateCanFinish()
+bool EnemyAIComponent::EnterBestState(bool canForceEnter)
 {
-    EnemyAIState currentState = GetCurrentState();
+    BaseEnemyAIStateComponent* pCurrentState = GetCurrentState();
 
-    // Force acquire state lock - there is ALWAYS a better state than this
-    if (currentState == EnemyAIState_TakingDamage)
+    // If some other state has state lock we will not force him to exit.
+    // Maybe this can revisited in future
+    //LOG("m_bHasStateLock: " + ToStr(m_bHasStateLock) + ", canForceEnter: " + ToStr(canForceEnter));
+    if ((!m_bHasStateLock && !canForceEnter) /*&&
+        pCurrentState->VCanEnter()*/)
+    {
+        return false;
+    }
+
+    BaseEnemyAIStateComponent* pBestState = NULL;
+    int bestStatePrio = -1;
+
+    for (auto stateIter : m_StateMap)
+    {
+        BaseEnemyAIStateComponent* pState = stateIter.second;
+        if (pState == pCurrentState)
+        {
+            continue;
+        }
+        
+        if (pState->VCanEnter() && 
+            pState->VGetPriority() > bestStatePrio)
+        {
+            pBestState = pState;
+            bestStatePrio = pState->VGetPriority();
+        }
+    }
+
+    assert(pBestState != NULL);
+    assert(bestStatePrio >= 0);
+
+    if (!pCurrentState->VCanEnter() ||
+        (pCurrentState->VGetPriority() < bestStatePrio))
     {
         AcquireStateLock();
-        if (m_EnemiesInMeleeZone.size() > 0)
+        // If best prio has some positive values, then we can only force switch it
+        if (bestStatePrio > 0)
         {
-            EnterState("MeleeAttackState");
             m_bHasStateLock = false;
         }
-        else if (m_EnemiesInRangedZone.size() > 0)
-        {
-            EnterState("RangedAttackState");
-            m_bHasStateLock = false;
-        }
+        EnterState(pBestState);
+        return true;
     }
 
-    if (currentState == EnemyAIState_MeleeAttacking)
-    {
-        if (m_EnemiesInMeleeZone.empty())
-        {
-            AcquireStateLock();
-            if (m_EnemiesInRangedZone.size() > 0)
-            {
-                EnterState("RangedAttackState");
-                m_bHasStateLock = false;
-            }
-        }
-    }
-    else if (currentState == EnemyAIState_RangedAttacking)
-    {
-        if (m_EnemiesInMeleeZone.size() > 0)
-        {
-            AcquireStateLock();
-            if (m_EnemiesInMeleeZone.size() > 0)
-            {
-                EnterState("MeleeAttackState");
-                m_bHasStateLock = false;
-            }
-        }
-        else if (m_EnemiesInRangedZone.empty())
-        {
-            AcquireStateLock();
-            if (m_EnemiesInMeleeZone.size() > 0)
-            {
-                EnterState("MeleeAttackState");
-                m_bHasStateLock = false;
-            }
-        }
-    }
-
-    if (m_bHasStateLock)
-    {
-        EnterState("PatrolState");
-    }
+    return false;
 }
 
-EnemyAIState EnemyAIComponent::GetCurrentState()
+BaseEnemyAIStateComponent* EnemyAIComponent::GetCurrentState()
 {
     for (auto stateIter : m_StateMap)
     {
         if (stateIter.second->IsActive())
         {
-            return stateIter.second->VGetStateType();
+            return stateIter.second;
         }
     }
 
     assert(false && "Could not find any state ?");
 
-    return EnemyAIState_None;
+    return NULL;
 }
 
 bool EnemyAIComponent::HasState(std::string stateName)

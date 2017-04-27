@@ -70,8 +70,15 @@ public:
     virtual void VOnStateLeave() = 0;
     virtual EnemyAIState VGetStateType() const = 0;
 
+    // Can enemy enter this state ?
+    virtual bool VCanEnter() = 0;
+
+    // Priority of this state - the higher, the more important priority
+    virtual int VGetPriority() { return m_StatePriority; }
+
 protected:
     bool m_IsActive;
+    int m_StatePriority;
 
     std::string m_StateName;
 
@@ -97,6 +104,9 @@ public:
     virtual void VPostInit() override;
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    // This state is entered manually
+    virtual bool VCanEnter() { return false; }
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override;
@@ -126,6 +136,8 @@ public:
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
     virtual void VPostInit() override;
+
+    virtual bool VCanEnter() { return true; }
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override;
@@ -164,10 +176,52 @@ private:
 };
 
 //=====================================================================================================================
+// BaseAttackAIStateComponent
+//=====================================================================================================================
+
+typedef std::vector<std::shared_ptr<EnemyAttackAction>> AttackActionList;
+class BaseAttackAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver
+{
+public:
+    BaseAttackAIStateComponent(std::string stateName);
+    virtual ~BaseAttackAIStateComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
+    virtual void VPostInit() override;
+    virtual void VPostPostInit() override;
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    // EnemyAIStateComponent API
+    virtual void VUpdate(uint32 msDiff) override { };
+    virtual void VOnStateEnter() override;
+    virtual void VOnStateLeave() override;
+    virtual EnemyAIState VGetStateType() const = 0;
+    bool VCanEnter() override { return m_EnemyAgroList.size() > 0; }
+
+    virtual void VOnAnimationLooped(Animation* pAnimation) override;
+    virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
+
+    // BaseAttackAIStateComponent API
+    virtual void VExecuteAttack();
+    virtual void VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset) = 0;
+
+    void OnEnemyEnterAgroRange(Actor* pEnemy);
+    void OnEnemyLeftAgroRange(Actor* pEnemy);
+
+    Point FindClosestHostileActorOffset();
+
+protected:
+    AttackActionList m_AttackActions;
+    ActorList m_EnemyAgroList;
+};
+
+//=====================================================================================================================
 // MeleeAttackAIStateComponent
 //=====================================================================================================================
 typedef std::vector<std::shared_ptr<EnemyAttackAction>> AttackActionList;
-class MeleeAttackAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver
+class MeleeAttackAIStateComponent : public BaseAttackAIStateComponent
 {
 public:
     MeleeAttackAIStateComponent();
@@ -175,32 +229,20 @@ public:
 
     static const char* g_Name;
     virtual const char* VGetName() const override { return g_Name; }
-    virtual void VPostInit() override;
-    virtual void VPostPostInit() override;
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
 
     // EnemyAIStateComponent API
-    virtual void VUpdate(uint32 msDiff) override;
-    virtual void VOnStateEnter() override;
-    virtual void VOnStateLeave() override;
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_MeleeAttacking; }
 
-    // AnimationObserver API
-    virtual void VOnAnimationLooped(Animation* pAnimation) override;
-    virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
-
-private:
-    void ExecuteMeleeAttack();
-
-    AttackActionList m_MeleeAttackActions;
-    ActorFixtureDef m_AgroFixtureDef;
+    // BaseAttackAIStateComponent API
+    virtual void VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset) override;
 };
 
 //=====================================================================================================================
 // RangedAttackAIStateComponent
 //=====================================================================================================================
-class RangedAttackAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver
+class RangedAttackAIStateComponent : public BaseAttackAIStateComponent
 {
 public:
     RangedAttackAIStateComponent();
@@ -208,26 +250,22 @@ public:
 
     static const char* g_Name;
     virtual const char* VGetName() const override { return g_Name; }
-    virtual void VPostInit() override;
-    virtual void VPostPostInit() override;
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
 
     // EnemyAIStateComponent API
-    virtual void VUpdate(uint32 msDiff) override;
-    virtual void VOnStateEnter() override;
-    virtual void VOnStateLeave() override;
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_RangedAttacking; }
 
-    // AnimationObserver API
-    virtual void VOnAnimationLooped(Animation* pAnimation) override;
-    virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
+    // BaseAttackAIStateComponent API
+    virtual void VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset) override;
 
 private:
     void ExecuteRangedAttack();
 
     AttackActionList m_RangedAttackActions;
     ActorFixtureDef m_AgroFixtureDef;
+
+    ActorList m_EnemyAgroList;
 };
 
 #endif
