@@ -85,7 +85,9 @@ enum FixtureType
     FixtureType_Explosion,
     FixtureType_EnemyAI,
     FixtureType_EnemyAIMeleeSensor,
+    FixtureType_EnemyAIDuckMeleeSensor,
     FixtureType_EnemyAIRangedSensor,
+    FixtureType_EnemyAIDuckRangedSensor,
     FixtureType_DamageAura
 };
 

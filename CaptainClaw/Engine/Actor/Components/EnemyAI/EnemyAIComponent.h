@@ -49,10 +49,13 @@ public:
 private:
     void LeaveAllStates();
     bool HasState(std::string stateName);
+    bool HasState(EnemyAIState state);
     void EnterState(std::string stateName);
+    void EnterState(EnemyAIState state);
     void EnterState(BaseEnemyAIStateComponent* pState);
     void AcquireStateLock();
     BaseEnemyAIStateComponent* GetCurrentState();
+    BaseEnemyAIStateComponent* GetState(EnemyAIState state);
 
     bool m_bInitialized;
     bool m_bDead;

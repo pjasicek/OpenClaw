@@ -10,7 +10,9 @@ enum EnemyAIState
     EnemyAIState_None,
     EnemyAIState_Patrolling,
     EnemyAIState_MeleeAttacking,
+    EnemyAIState_DuckMeleeAttacking,
     EnemyAIState_RangedAttacking,
+    EnemyAIState_DuckRangedAttacking,
     EnemyAIState_TakingDamage,
     EnemyAIState_Fleeing,
     EnemyAIState_Dying,
@@ -220,7 +222,6 @@ protected:
 //=====================================================================================================================
 // MeleeAttackAIStateComponent
 //=====================================================================================================================
-typedef std::vector<std::shared_ptr<EnemyAttackAction>> AttackActionList;
 class MeleeAttackAIStateComponent : public BaseAttackAIStateComponent
 {
 public:
@@ -234,6 +235,27 @@ public:
 
     // EnemyAIStateComponent API
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_MeleeAttacking; }
+
+    // BaseAttackAIStateComponent API
+    virtual void VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset) override;
+};
+
+//=====================================================================================================================
+// DuckMeleeAttackAIStateComponent
+//=====================================================================================================================
+class DuckMeleeAttackAIStateComponent : public BaseAttackAIStateComponent
+{
+public:
+    DuckMeleeAttackAIStateComponent();
+    virtual ~DuckMeleeAttackAIStateComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    // EnemyAIStateComponent API
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_DuckMeleeAttacking; }
 
     // BaseAttackAIStateComponent API
     virtual void VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset) override;
@@ -258,14 +280,27 @@ public:
 
     // BaseAttackAIStateComponent API
     virtual void VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset) override;
+};
 
-private:
-    void ExecuteRangedAttack();
+//=====================================================================================================================
+// DuckRangedAttackAIStateComponent
+//=====================================================================================================================
+class DuckRangedAttackAIStateComponent : public BaseAttackAIStateComponent
+{
+public:
+    DuckRangedAttackAIStateComponent();
+    virtual ~DuckRangedAttackAIStateComponent();
 
-    AttackActionList m_RangedAttackActions;
-    ActorFixtureDef m_AgroFixtureDef;
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
 
-    ActorList m_EnemyAgroList;
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    // EnemyAIStateComponent API
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_DuckRangedAttacking; }
+
+    // BaseAttackAIStateComponent API
+    virtual void VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset) override;
 };
 
 #endif

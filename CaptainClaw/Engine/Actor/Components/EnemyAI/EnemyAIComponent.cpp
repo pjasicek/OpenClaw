@@ -92,7 +92,7 @@ void EnemyAIComponent::VPostInit()
 void EnemyAIComponent::VPostPostInit()
 {
     assert(!m_StateMap.empty());
-    EnterState("PatrolState");
+    EnterBestState(true);
 }
 
 void EnemyAIComponent::VUpdate(uint32 msDiff)
@@ -237,6 +237,21 @@ void EnemyAIComponent::EnterState(std::string stateName)
     findIt->second->VOnStateEnter();
 }
 
+void EnemyAIComponent::EnterState(EnemyAIState state)
+{
+    LeaveAllStates();
+
+    for (auto stateIter : m_StateMap)
+    {
+        if (stateIter.second->VGetStateType() == state)
+        {
+            stateIter.second->VOnStateEnter();
+        }
+    }
+
+    assert(false && "Did not find given state");
+}
+
 void EnemyAIComponent::EnterState(BaseEnemyAIStateComponent* pState)
 {
     assert(pState != NULL);
@@ -256,9 +271,10 @@ bool EnemyAIComponent::EnterBestState(bool canForceEnter)
     BaseEnemyAIStateComponent* pCurrentState = GetCurrentState();
 
     // If some other state has state lock we will not force him to exit.
+    // If no state is set at the moment, then force it aswell
     // Maybe this can revisited in future
     //LOG("m_bHasStateLock: " + ToStr(m_bHasStateLock) + ", canForceEnter: " + ToStr(canForceEnter));
-    if ((!m_bHasStateLock && !canForceEnter) /*&&
+    if ((!m_bHasStateLock && !canForceEnter && (pCurrentState != NULL)) /*&&
         pCurrentState->VCanEnter()*/)
     {
         return false;
@@ -286,7 +302,8 @@ bool EnemyAIComponent::EnterBestState(bool canForceEnter)
     assert(pBestState != NULL);
     assert(bestStatePrio >= 0);
 
-    if (!pCurrentState->VCanEnter() ||
+    if ((pCurrentState == NULL) ||
+        !pCurrentState->VCanEnter() ||
         (pCurrentState->VGetPriority() < bestStatePrio))
     {
         AcquireStateLock();
@@ -312,7 +329,20 @@ BaseEnemyAIStateComponent* EnemyAIComponent::GetCurrentState()
         }
     }
 
-    assert(false && "Could not find any state ?");
+    //assert(false && "Could not find any state ?");
+
+    return NULL;
+}
+
+BaseEnemyAIStateComponent* EnemyAIComponent::GetState(EnemyAIState state)
+{
+    for (auto stateIter : m_StateMap)
+    {
+        if (stateIter.second->VGetStateType() == state)
+        {
+            return stateIter.second;
+        }
+    }
 
     return NULL;
 }
@@ -321,4 +351,17 @@ bool EnemyAIComponent::HasState(std::string stateName)
 {
     auto findIt = m_StateMap.find(stateName);
     return findIt != m_StateMap.end();
+}
+
+bool EnemyAIComponent::HasState(EnemyAIState state)
+{
+    for (auto stateIter : m_StateMap)
+    {
+        if (stateIter.second->VGetStateType() == state)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

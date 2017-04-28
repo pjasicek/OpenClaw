@@ -20,7 +20,9 @@ const char* TakeDamageAIStateComponent::g_Name = "TakeDamageAIStateComponent";
 const char* PatrolEnemyAIStateComponent::g_Name = "PatrolEnemyAIStateComponent";
 const char* BaseAttackAIStateComponent::g_Name = "BaseAttackAIStateComponent";
 const char* MeleeAttackAIStateComponent::g_Name = "MeleeAttackAIStateComponent";
+const char* DuckMeleeAttackAIStateComponent::g_Name = "DuckMeleeAttackAIStateComponent";
 const char* RangedAttackAIStateComponent::g_Name = "RangedAttackAIStateComponent";
+const char* DuckRangedAttackAIStateComponent::g_Name = "DuckRangedAttackAIStateComponent";
 
 #define MAX_STATE_PRIORITY INT32_MAX
 #define MIN_STATE_PRIORITY INT32_MIN
@@ -768,6 +770,49 @@ void MeleeAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackActi
 }
 
 //=====================================================================================================================
+// DuckMeleeAttackAIStateComponent
+//=====================================================================================================================
+
+DuckMeleeAttackAIStateComponent::DuckMeleeAttackAIStateComponent()
+    :
+    BaseAttackAIStateComponent("DuckMeleeAttackState")
+{
+
+}
+
+DuckMeleeAttackAIStateComponent::~DuckMeleeAttackAIStateComponent()
+{
+
+}
+
+bool DuckMeleeAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    assert(pData);
+
+    if (!BaseAttackAIStateComponent::VDelegateInit(pData))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void DuckMeleeAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset)
+{
+    ActorTemplates::CreateAreaDamage(
+        m_pPositionComponent->GetPosition() + offset,
+        pAttack->attackAreaSize,
+        pAttack->damage,
+        CollisionFlag_EnemyAIAttack,
+        "Rectangle",
+        DamageType_MeleeAttack,
+        dir);
+
+    // Play melee attack sound
+    Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetMeleeAttackSounds());
+}
+
+//=====================================================================================================================
 // RangedAttackAIStateComponent
 //=====================================================================================================================
 
@@ -796,6 +841,49 @@ bool RangedAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
 }
 
 void RangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset)
+{
+    ActorTemplates::CreateProjectile(
+        pAttack->attackFxImageSet,
+        pAttack->damage,
+        pAttack->attackDamageType,
+        dir,
+        m_pPositionComponent->GetPosition() + offset,
+        CollisionFlag_EnemyAIProjectile,
+        (CollisionFlag_Controller | CollisionFlag_Solid));
+
+    // Play ranged attack sound
+    Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetRangedAttackSounds());
+}
+
+//=====================================================================================================================
+// DuckRangedAttackAIStateComponent
+//=====================================================================================================================
+
+DuckRangedAttackAIStateComponent::DuckRangedAttackAIStateComponent()
+    :
+    BaseAttackAIStateComponent("DuckRangedAttackState")
+{
+
+}
+
+DuckRangedAttackAIStateComponent::~DuckRangedAttackAIStateComponent()
+{
+
+}
+
+bool DuckRangedAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    assert(pData);
+
+    if (!BaseAttackAIStateComponent::VDelegateInit(pData))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void DuckRangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset)
 {
     ActorTemplates::CreateProjectile(
         pAttack->attackFxImageSet,

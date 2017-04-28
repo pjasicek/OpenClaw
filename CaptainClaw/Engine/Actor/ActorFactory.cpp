@@ -84,7 +84,9 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<EnemyAIComponent>(EnemyAIComponent::GetIdFromName(EnemyAIComponent::g_Name));
     _componentFactory.Register<PatrolEnemyAIStateComponent>(PatrolEnemyAIStateComponent::GetIdFromName(PatrolEnemyAIStateComponent::g_Name));
     _componentFactory.Register<MeleeAttackAIStateComponent>(MeleeAttackAIStateComponent::GetIdFromName(MeleeAttackAIStateComponent::g_Name));
+    _componentFactory.Register<DuckMeleeAttackAIStateComponent>(DuckMeleeAttackAIStateComponent::GetIdFromName(DuckMeleeAttackAIStateComponent::g_Name));
     _componentFactory.Register<RangedAttackAIStateComponent>(RangedAttackAIStateComponent::GetIdFromName(RangedAttackAIStateComponent::g_Name));
+    _componentFactory.Register<DuckRangedAttackAIStateComponent>(DuckRangedAttackAIStateComponent::GetIdFromName(DuckRangedAttackAIStateComponent::g_Name));
     _componentFactory.Register<PredefinedMoveComponent>(PredefinedMoveComponent::GetIdFromName(PredefinedMoveComponent::g_Name));
     _componentFactory.Register<SoundTriggerComponent>(SoundTriggerComponent::GetIdFromName(SoundTriggerComponent::g_Name));
     _componentFactory.Register<GlobalAmbientSoundComponent>(GlobalAmbientSoundComponent::GetIdFromName(GlobalAmbientSoundComponent::g_Name));

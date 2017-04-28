@@ -327,7 +327,9 @@ namespace ActorTemplates
         else if (fixtureType == FixtureType_Explosion) { fixtureTypeStr = "Explosion"; }
         else if (fixtureType == FixtureType_EnemyAI) { fixtureTypeStr = "EnemyAI"; }
         else if (fixtureType == FixtureType_EnemyAIMeleeSensor) { fixtureTypeStr = "EnemyAIMeleeSensor"; }
+        else if (fixtureType == FixtureType_EnemyAIDuckMeleeSensor) { fixtureTypeStr = "EnemyAIDuckMeleeSensor"; }
         else if (fixtureType == FixtureType_EnemyAIRangedSensor) { fixtureTypeStr = "EnemyAIRangedSensor"; }
+        else if (fixtureType == FixtureType_EnemyAIDuckRangedSensor) { fixtureTypeStr = "EnemyAIDuckRangedSensor"; }
         else if (fixtureType == FixtureType_DamageAura) { fixtureTypeStr = "DamageAura"; }
         else
         {

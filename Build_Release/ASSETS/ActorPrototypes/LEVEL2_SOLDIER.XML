@@ -103,6 +103,32 @@
             </AttackAction>
         </Attacks>
     </RangedAttackAIStateComponent>
+    <DuckRangedAttackAIStateComponent>
+        <StatePriority>5</StatePriority>
+        <Attacks>
+            <AttackAction>
+                <Animation>strike2</Animation>
+                <AttackAnimFrameIdx>3</AttackAnimFrameIdx>
+                <AttackType>1</AttackType>
+                <AttackFxImageSet>/LEVEL2/IMAGES/MUSKETBALL/*</AttackFxImageSet>
+                <AttackSpawnPositionOffset x="-42" y="7" />
+                <AttackAreaSize width="0" height="0" />
+                <Damage>10</Damage>
+                <AgroSensorFixture>
+                    <FixtureType>EnemyAIDuckRangedSensor</FixtureType>
+                    <CollisionShape>Rectangle</CollisionShape>
+                    <IsSensor>true</IsSensor>
+                    <Size width="975" height="20" />
+                    <Offset x="0" y="25" />
+                    <CollisionFlag>4</CollisionFlag>
+                    <CollisionMask>2</CollisionMask>
+                    <Friction>0.000000</Friction>
+                    <Density>0.000000</Density>
+                    <Restitution>0.000000</Restitution>
+                </AgroSensorFixture>
+            </AttackAction>
+        </Attacks>
+    </DuckRangedAttackAIStateComponent>
     <PhysicsComponent>
         <BodyType>Dynamic</BodyType>
         <HasFootSensor>false</HasFootSensor>

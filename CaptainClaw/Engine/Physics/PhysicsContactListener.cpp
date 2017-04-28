@@ -19,7 +19,72 @@ int numFootContacts = 0;
     if (FixtureB->GetUserData() == (void*)FixtureType) \
     { \
         std::swap(FixtureA, FixtureB); \
-    } \
+        } \
+
+
+template<typename T>
+void TryCallActorEnteredOrLeftAgroRange(
+    b2Fixture* pFixtureA,
+    b2Fixture* pFixtureB,
+    FixtureType agroFixtureType,
+    bool didActorEnter)
+{
+    SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, agroFixtureType);
+    if (pFixtureA->GetUserData() == (void*)agroFixtureType)
+    {
+        if (pFixtureB->GetBody()->GetUserData() != NULL)
+        {
+            Actor* pActorwhoEntered = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+            Actor* pActorWithMeleeSensor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
+
+            if (pActorwhoEntered && pActorWithMeleeSensor)
+            {
+                shared_ptr<T> pStateComponent =
+                    MakeStrongPtr(pActorWithMeleeSensor->GetComponent<T>(T::g_Name));
+                assert(pStateComponent != nullptr);
+                if (pStateComponent)
+                {
+                    if (didActorEnter)
+                    {
+                        pStateComponent->OnEnemyEnterAgroRange(pActorwhoEntered);
+                    }
+                    else
+                    {
+                        pStateComponent->OnEnemyLeftAgroRange(pActorwhoEntered);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// lol
+template<typename T>
+void TryCallActorEnteredAgroRange(
+    b2Fixture* pFixtureA,
+    b2Fixture* pFixtureB,
+    FixtureType agroFixtureType)
+{
+    TryCallActorEnteredOrLeftAgroRange<T>(
+        pFixtureA,
+        pFixtureB,
+        agroFixtureType,
+        true);
+}
+
+// lol
+template<typename T>
+void TryCallActorLeftAgroRange(
+    b2Fixture* pFixtureA,
+    b2Fixture* pFixtureB,
+    FixtureType agroFixtureType)
+{
+    TryCallActorEnteredOrLeftAgroRange<T>(
+        pFixtureA,
+        pFixtureB,
+        agroFixtureType,
+        false);
+}
 
 //=====================================================================================================================
 //
@@ -336,59 +401,21 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
             }
         }
     }
-    // Enemy agro range contact
+    // Enemy agro melee contact
     {
-        if (pFixtureB->GetUserData() == (void*)FixtureType_EnemyAIMeleeSensor)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_EnemyAIMeleeSensor)
-        {
-            if (pFixtureB->GetBody()->GetUserData() != NULL)
-            {
-                Actor* pActorwhoEntered = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
-                Actor* pActorWithMeleeSensor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
-
-                if (pActorwhoEntered && pActorWithMeleeSensor)
-                {
-                    shared_ptr<MeleeAttackAIStateComponent> pMeleeStateComponent =
-                        MakeStrongPtr(pActorWithMeleeSensor->GetComponent<MeleeAttackAIStateComponent>(MeleeAttackAIStateComponent::g_Name));
-                    assert(pMeleeStateComponent != nullptr);
-                    if (pMeleeStateComponent)
-                    {
-                        pMeleeStateComponent->OnEnemyEnterAgroRange(pActorwhoEntered);
-                    }
-                }
-            }
-        }
+        TryCallActorEnteredAgroRange<MeleeAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIMeleeSensor);
+    }
+    // Enemy duck agro melee contact
+    {
+        TryCallActorEnteredAgroRange<DuckMeleeAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIDuckMeleeSensor);
     }
     // Enemy ranged agro range contact
     {
-        if (pFixtureB->GetUserData() == (void*)FixtureType_EnemyAIRangedSensor)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_EnemyAIRangedSensor)
-        {
-            if (pFixtureB->GetBody()->GetUserData() != NULL)
-            {
-                Actor* pActorwhoEntered = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
-                Actor* pActorWithRangedSensor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
-
-                if (pActorwhoEntered && pActorWithRangedSensor)
-                {
-                    shared_ptr<RangedAttackAIStateComponent> pRangeAttackComponent =
-                        MakeStrongPtr(pActorWithRangedSensor->GetComponent<RangedAttackAIStateComponent>(RangedAttackAIStateComponent::g_Name));
-                    assert(pRangeAttackComponent != nullptr);
-                    if (pRangeAttackComponent)
-                    {
-                        pRangeAttackComponent->OnEnemyEnterAgroRange(pActorwhoEntered);
-                    }
-                }
-            }
-        }
+        TryCallActorEnteredAgroRange<RangedAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIRangedSensor);
+    }
+    // Enemy duck ranged agro range contact
+    {
+        TryCallActorEnteredAgroRange<DuckRangedAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIDuckRangedSensor);
     }
     // Damage aura
     {
@@ -536,58 +563,21 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
             }
         }
     }
+    // Enemy agro melee contact
     {
-        if (pFixtureB->GetUserData() == (void*)FixtureType_EnemyAIMeleeSensor)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_EnemyAIMeleeSensor)
-        {
-            if (pFixtureB->GetBody()->GetUserData() != NULL)
-            {
-                Actor* pActorWhoLeft = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
-                Actor* pActorWithMeleeSensor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
-
-                if (pActorWhoLeft && pActorWithMeleeSensor)
-                {
-                    shared_ptr<MeleeAttackAIStateComponent> pMeleeStateComponent =
-                        MakeStrongPtr(pActorWithMeleeSensor->GetComponent<MeleeAttackAIStateComponent>(MeleeAttackAIStateComponent::g_Name));
-                    assert(pMeleeStateComponent != nullptr);
-                    if (pMeleeStateComponent)
-                    {
-                        pMeleeStateComponent->OnEnemyLeftAgroRange(pActorWhoLeft);
-                    }
-                }
-            }
-        }
+        TryCallActorLeftAgroRange<MeleeAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIMeleeSensor);
+    }
+    // Enemy duck agro melee contact
+    {
+        TryCallActorLeftAgroRange<DuckMeleeAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIDuckMeleeSensor);
     }
     // Enemy ranged agro range contact
     {
-        if (pFixtureB->GetUserData() == (void*)FixtureType_EnemyAIRangedSensor)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_EnemyAIRangedSensor)
-        {
-            if (pFixtureB->GetBody()->GetUserData() != NULL)
-            {
-                Actor* pActorWhoLeft = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
-                Actor* pActorWithRangedSensor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
-
-                if (pActorWhoLeft && pActorWithRangedSensor)
-                {
-                    shared_ptr<RangedAttackAIStateComponent> pRangedStateComponent =
-                        MakeStrongPtr(pActorWithRangedSensor->GetComponent<RangedAttackAIStateComponent>(RangedAttackAIStateComponent::g_Name));
-                    assert(pRangedStateComponent != nullptr);
-                    if (pRangedStateComponent)
-                    {
-                        pRangedStateComponent->OnEnemyLeftAgroRange(pActorWhoLeft);
-                    }
-                }
-            }
-        }
+        TryCallActorLeftAgroRange<RangedAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIRangedSensor);
+    }
+    // Enemy duck ranged agro range contact
+    {
+        TryCallActorLeftAgroRange<DuckRangedAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIDuckRangedSensor);
     }
     // Damage aura
     {
