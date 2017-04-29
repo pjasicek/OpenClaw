@@ -586,56 +586,7 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
 //
 void ClawPhysics::VAddKinematicBody(WeakActorPtr pActor)
 {
-    //LOG("Creating kinematic actor");
-
-    StrongActorPtr pStrongActor = MakeStrongPtr(pActor);
-    if (!pStrongActor)
-    {
-        return;
-    }
-
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(pStrongActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
-    if (!pPositionComponent)
-    {
-        LOG_ERROR("Attempting to create kinematic body without position component");
-        return;
-    }
-    Point position = pPositionComponent->GetPosition();
-
-    shared_ptr<KinematicComponent> pKinematicComponent =
-        MakeStrongPtr(pStrongActor->GetComponent<KinematicComponent>(KinematicComponent::g_Name));
-    if (!pKinematicComponent)
-    {
-        LOG_ERROR("Attempting to create kinematic body without kinematic component");
-        return;
-    }
-    Point bodySize = pKinematicComponent->GetSize();
-
-    // Convert pixel position and size to Box2D meters
-    b2Vec2 b2Position = PixelsToMeters(PointToB2Vec2(position));
-    b2Vec2 b2BodySize = PixelsToMeters(PointToB2Vec2(bodySize));
-
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_kinematicBody;
-    bodyDef.position.Set(b2Position.x, b2Position.y);
-    bodyDef.fixedRotation = true;
-    b2Body* pBody = m_pWorld->CreateBody(&bodyDef);
-    pBody->SetUserData(pStrongActor.get());
-
-    b2PolygonShape bodyShape;
-    bodyShape.SetAsBox(b2BodySize.x / 2, b2BodySize.y / 2);
-
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &bodyShape;
-    fixtureDef.friction = 0.0f;
-    fixtureDef.userData = (void*)FixtureType_Ground;
-    fixtureDef.isSensor = false;
-    pBody->CreateFixture(&fixtureDef);
-
-    m_ActorToBodyMap.insert(std::make_pair(pStrongActor->GetGUID(), pBody));
-    m_BodyToActorMap.insert(std::make_pair(pBody, pStrongActor->GetGUID()));
-    m_ActorIdAndBodyList.push_back(std::make_pair(pStrongActor->GetGUID(), pBody));
+    assert(false && "Deprecated and not used");
 }
 
 void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType)

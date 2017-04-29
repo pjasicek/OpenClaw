@@ -258,82 +258,6 @@ inline TiXmlElement* CrumblingPegToXml(WwdObject* pWwdObject)
     return pCrumblingPegAIComponent;
 }
 
-inline TiXmlElement* ElevatorToXml(WwdObject* pWwdObject)
-{
-    //----- [Level::Actors::ActorProperties::AI_ElevatorComponent]
-    TiXmlElement* aiElevatorComponent = new TiXmlElement("KinematicComponent");
-    aiElevatorComponent->SetAttribute("Type", pWwdObject->logic);
-    aiElevatorComponent->SetAttribute("resource", "created");
-
-    std::string logic = pWwdObject->logic;
-    if (logic == "TriggerElevator")
-    {
-        XML_ADD_TEXT_ELEMENT("TriggeredBehaviour", "true", aiElevatorComponent);
-    }
-    else if (logic == "StartElevator")
-    {
-        XML_ADD_TEXT_ELEMENT("StartBehaviour", "true", aiElevatorComponent);
-    }
-    else if (logic == "StopElevator")
-    {
-        XML_ADD_TEXT_ELEMENT("StopBehaviour", "true", aiElevatorComponent);
-    }
-    else if (logic == "Elevator")
-    {
-        XML_ADD_TEXT_ELEMENT("StandardBehaviour", "true", aiElevatorComponent);
-    }
-    else
-    {
-        LOG_WARNING("Unknown Elevator: " + logic)
-
-    }
-
-    Point speed(0, 0);
-    bool hasHorizontalMovement = false;
-    bool hasVerticalMovement = false;
-    if (pWwdObject->minX > 0 && pWwdObject->maxX > 0)
-    {
-        hasHorizontalMovement = true;
-    }
-    if (pWwdObject->minY > 0 && pWwdObject->maxY > 0)
-    {
-        hasVerticalMovement = true;
-    }
-
-    if (hasHorizontalMovement)
-    {
-        if (pWwdObject->speedX > 0)
-        {
-            speed.x = pWwdObject->speedX;
-        }
-        else
-        {
-            speed.x = 125;
-        }
-    }
-    if (hasVerticalMovement)
-    {
-        if (pWwdObject->speedY > 0)
-        {
-            speed.y = pWwdObject->speedY;
-        }
-        else if (pWwdObject->speedX > 0)
-        {
-            speed.y = pWwdObject->speedX;
-        }
-        else
-        {
-            speed.y = 125;
-        }
-    }
-
-    XML_ADD_2_PARAM_ELEMENT("Speed", "x", ToStr(speed.x).c_str(), "y", ToStr(speed.y).c_str(), aiElevatorComponent);
-    XML_ADD_2_PARAM_ELEMENT("MinPosition", "x", ToStr(pWwdObject->minX).c_str(), "y", ToStr(pWwdObject->minY).c_str(), aiElevatorComponent);
-    XML_ADD_2_PARAM_ELEMENT("MaxPosition", "x", ToStr(pWwdObject->maxX).c_str(), "y", ToStr(pWwdObject->maxY).c_str(), aiElevatorComponent);
-
-    return aiElevatorComponent;
-}
-
 inline TiXmlElement* SuperCheckpointToXml(WwdObject* pWwdObject)
 {
     return NULL;
@@ -656,7 +580,72 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic.find("Elevator") != std::string::npos)
     {
-        pActorElem->LinkEndChild(ElevatorToXml(wwdObject));
+        SAFE_DELETE(pActorElem);
+
+        std::string logic = wwdObject->logic;
+
+        Point speed(0, 0);
+        bool hasHorizontalMovement = false;
+        bool hasVerticalMovement = false;
+        if (wwdObject->minX > 0 && wwdObject->maxX > 0)
+        {
+            hasHorizontalMovement = true;
+        }
+        if (wwdObject->minY > 0 && wwdObject->maxY > 0)
+        {
+            hasVerticalMovement = true;
+        }
+
+        if (hasHorizontalMovement)
+        {
+            if (wwdObject->speedX > 0)
+            {
+                speed.x = wwdObject->speedX;
+            }
+            else
+            {
+                speed.x = 125;
+            }
+        }
+        if (hasVerticalMovement)
+        {
+            if (wwdObject->speedY > 0)
+            {
+                speed.y = wwdObject->speedY;
+            }
+            else if (wwdObject->speedX > 0)
+            {
+                speed.y = wwdObject->speedX;
+            }
+            else
+            {
+                speed.y = 125;
+            }
+        }
+
+        ElevatorDef elevatorDef;
+        elevatorDef.speed = speed;
+        elevatorDef.minPosition.Set(wwdObject->minX, wwdObject->minY);
+        elevatorDef.maxPosition.Set(wwdObject->maxX, wwdObject->maxY);
+        elevatorDef.hasTriggerBehaviour = logic.find("Trigger") != std::string::npos;
+        elevatorDef.hasStartBehaviour = logic.find("Start") != std::string::npos;
+        elevatorDef.hasStopBehaviour = logic.find("Stop") != std::string::npos;
+        elevatorDef.hasOneWayBehaviour = logic.find("OneWay") != std::string::npos;
+
+        Point position(wwdObject->x, wwdObject->y);
+
+        ActorPrototype elevatorProto = ActorPrototype_Start;
+        if (levelNumber == 1)
+        {
+            elevatorProto = ActorPrototype_Level1_Elevator;
+        }
+        else if (levelNumber == 2)
+        {
+            elevatorProto = ActorPrototype_Level2_Elevator;
+        }
+        assert(elevatorProto != ActorPrototype_Start && "Unsupported level ?");
+
+        return ActorTemplates::CreateXmlData_ElevatorActor(elevatorProto, position, elevatorDef);
     }
     else if (logic.find("TogglePeg") != std::string::npos)
     {

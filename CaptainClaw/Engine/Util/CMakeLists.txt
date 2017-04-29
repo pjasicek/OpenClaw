@@ -14,4 +14,6 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/Converters.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PrimeSearch.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PrimeSearch.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/XmlUtil.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/XmlUtil.h
 )

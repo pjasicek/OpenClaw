@@ -96,7 +96,15 @@ string ToStr(bool val)
     return (string((val == true ? "true" : "false")));
 }
 
-
+string ToStr(char* val)
+{
+    if (val == NULL)
+    {
+        return "";
+    }
+    
+    return string(val);
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 // This is basically like the Perl split() function.  It splits str into substrings by cutting it at each delimiter.  

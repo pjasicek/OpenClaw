@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "Util.h"
+#include "../SharedDefines.h"
 #include "../GameApp/BaseGameLogic.h"
 
 #include "../Events/EventMgr.h"

@@ -163,6 +163,7 @@
     <ClCompile Include="Engine\Util\Converters.cpp" />
     <ClCompile Include="Engine\Util\Memory\MemoryPool.cpp" />
     <ClCompile Include="Engine\Util\PrimeSearch.cpp" />
+    <ClCompile Include="Engine\Util\XmlUtil.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Actor\Components\Animation.cpp" />
     <ClCompile Include="Engine\Util\Profilers.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="Engine\Util\Singleton.h" />
     <ClInclude Include="Engine\Util\StringUtil.h" />
     <ClInclude Include="Engine\Util\Util.h" />
+    <ClInclude Include="Engine\Util\XmlUtil.h" />
     <ClInclude Include="Engine\XmlMacros.h" />
     <ClInclude Include="ClawGameApp.h" />
   </ItemGroup>

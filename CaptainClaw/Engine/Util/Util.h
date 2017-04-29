@@ -7,7 +7,6 @@
 #include <libwap.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
-#include "../SharedDefines.h"
 
 struct TileCollisionPrototype;
 struct TileDescription;
@@ -34,7 +33,7 @@ namespace Util
 
     void PlayRandomHitSound();
 
-    uint32 CalcCRC32(const char* pData, size_t dataLen);
+    uint32_t CalcCRC32(const char* pData, size_t dataLen);
 }
 
 #endif

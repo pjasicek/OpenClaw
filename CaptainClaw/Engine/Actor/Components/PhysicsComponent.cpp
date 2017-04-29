@@ -149,7 +149,7 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
     }
     if (TiXmlElement* pElem = data->FirstChildElement("CollisionMask"))
     {
-        m_ActorBodyDef.collisionMask = std::stoi(pElem->GetText());
+        m_ActorBodyDef.collisionMask = std::stoul(pElem->GetText());
     }
     if (TiXmlElement* pElem = data->FirstChildElement("Friction"))
     {
@@ -195,6 +195,7 @@ void PhysicsComponent::VPostInit()
             assert(pRenderComponent);
 
             shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
+            assert(pImage != nullptr);
 
             // Also offset position
             m_ActorBodyDef.position = Point(m_ActorBodyDef.position.x + pImage->GetOffsetX(), m_ActorBodyDef.position.y + pImage->GetOffsetY());

@@ -22,6 +22,7 @@
 #include "XmlMacros.h"
 #include "Interfaces.h"
 #include "SoundStrings.h"
+#include "Util/XmlUtil.h"
 
 using std::shared_ptr;
 using std::unique_ptr;
@@ -152,6 +153,9 @@ public:
 };
 
 inline Point operator-(const Point& left, const Point& right) { Point temp(left); temp -= right; return temp; }
+
+
+
 
 struct ActorFixtureDef
 {
@@ -286,185 +290,60 @@ struct PredefinedMove
     std::string soundToPlay;
 };
 
-inline void SetBoolIfDefined(bool *dest, TiXmlElement* elem)
+struct ElevatorDef
 {
-    if (elem && elem->GetText() == NULL)
-        return;
-
-    std::string opt = elem->GetText();
-    if (opt == "true")
+    ElevatorDef()
     {
-        *dest = true;
-    }
-    else if (opt == "false")
-    {
-        *dest = false;
-    }
-}
-
-inline void SetUintIfDefined(unsigned* dest, TiXmlElement* elem)
-{
-    if (elem && elem->GetText())
-    {
-        *dest = std::stoi(elem->GetText());
-    }
-}
-
-inline void SetIntIfDefined(int* dest, TiXmlElement* elem)
-{
-    if (elem && elem->GetText())
-    {
-        *dest = std::stoi(elem->GetText());
-    }
-}
-
-inline void SetStringIfDefined(std::string* dest, TiXmlElement* elem)
-{
-    if (elem && elem->GetText())
-    {
-        *dest = elem->GetText();
-    }
-}
-
-inline void SetDoubleIfDefined(double* dest, TiXmlElement* elem)
-{
-    if (elem && elem->GetText())
-    {
-        *dest = std::stod(elem->GetText());
-    }
-}
-
-inline void SetFloatIfDefined(float* dest, TiXmlElement* elem)
-{
-    if (elem && elem->GetText())
-    {
-        *dest = std::stof(elem->GetText());
-    }
-}
-
-// Rather overload it than 10 different functions ?
-
-inline bool ParseValueFromXmlElem(bool* pDest, TiXmlElement* pElemSource)
-{
-    if (pElemSource && pElemSource->GetText())
-    {
-        std::string opt = pElemSource->GetText();
-        if (opt == "true")
-        {
-            *pDest = true;
-        }
-        else if (opt == "false")
-        {
-            *pDest = false;
-        }
-        return true;
+        hasTriggerBehaviour = false;
+        hasStartBehaviour = false;
+        hasStopBehaviour = false;
+        hasOneWayBehaviour = false;
     }
 
-    return false;
-}
-
-inline bool ParseValueFromXmlElem(unsigned* pDest, TiXmlElement* pElemSource)
-{
-    if (pElemSource && pElemSource->GetText())
+    TiXmlElement* ToXml()
     {
-        *pDest = std::stoi(pElemSource->GetText());
-        return true;
+        TiXmlElement* pElevatorComponent = new TiXmlElement("KinematicComponent");
+
+        XML_ADD_2_PARAM_ELEMENT("Speed", "x", ToStr(speed.x).c_str(), "y", ToStr(speed.y).c_str(), pElevatorComponent);
+        XML_ADD_2_PARAM_ELEMENT("MinPosition", "x", ToStr(minPosition.x).c_str(), "y", ToStr(minPosition.y).c_str(), pElevatorComponent);
+        XML_ADD_2_PARAM_ELEMENT("MaxPosition", "x", ToStr(maxPosition.x).c_str(), "y", ToStr(maxPosition.y).c_str(), pElevatorComponent);
+        XML_ADD_TEXT_ELEMENT("HasTriggerBehaviour", ToStr(hasTriggerBehaviour).c_str(), pElevatorComponent);
+        XML_ADD_TEXT_ELEMENT("HasStartBehaviour", ToStr(hasStartBehaviour).c_str(), pElevatorComponent);
+        XML_ADD_TEXT_ELEMENT("HasStopBehaviour", ToStr(hasStopBehaviour).c_str(), pElevatorComponent);
+        XML_ADD_TEXT_ELEMENT("HasOneWayBehaviour", ToStr(hasOneWayBehaviour).c_str(), pElevatorComponent);
+
+        return pElevatorComponent;
     }
 
-    return false;
-}
-
-inline bool ParseValueFromXmlElem(unsigned long* pDest, TiXmlElement* pElemSource)
-{
-    if (pElemSource && pElemSource->GetText())
+    static ElevatorDef CreateFromXml(TiXmlElement* pElem)
     {
-        *pDest = std::stoul(pElemSource->GetText());
-        return true;
+        ElevatorDef def;
+        def.LoadFromXml(pElem);
+        return def;
     }
 
-    return false;
-}
-
-inline bool ParseValueFromXmlElem(long* pDest, TiXmlElement* pElemSource)
-{
-    if (pElemSource && pElemSource->GetText())
+    void LoadFromXml(TiXmlElement* pElem)
     {
-        *pDest = std::stol(pElemSource->GetText());
-        return true;
+        SetPointIfDefined(&speed, pElem->FirstChildElement("Speed"), "x", "y");
+        SetPointIfDefined(&minPosition, pElem->FirstChildElement("MinPosition"), "x", "y");
+        SetPointIfDefined(&maxPosition, pElem->FirstChildElement("MaxPosition"), "x", "y");
+        ParseValueFromXmlElem(&hasTriggerBehaviour, pElem->FirstChildElement("HasTriggerBehaviour"));
+        ParseValueFromXmlElem(&hasStartBehaviour, pElem->FirstChildElement("HasStartBehaviour"));
+        ParseValueFromXmlElem(&hasStopBehaviour, pElem->FirstChildElement("HasStopBehaviour"));
+        ParseValueFromXmlElem(&hasOneWayBehaviour, pElem->FirstChildElement("HasOneWayBehaviour"));
     }
 
-    return false;
-}
+    Point speed;
+    Point minPosition;
+    Point maxPosition;
 
-inline bool ParseValueFromXmlElem(int* pDest, TiXmlElement* pElemSource)
-{
-    if (pElemSource && pElemSource->GetText())
-    {
-        *pDest = std::stoi(pElemSource->GetText());
-        return true;
-    }
+    bool hasTriggerBehaviour;
+    bool hasStartBehaviour;
+    bool hasStopBehaviour;
+    bool hasOneWayBehaviour;
+};
 
-    return false;
-}
 
-inline bool ParseValueFromXmlElem(float* pDest, TiXmlElement* pElemSource)
-{
-    if (pElemSource && pElemSource->GetText())
-    {
-        *pDest = std::stof(pElemSource->GetText());
-        return true;
-    }
-
-    return false;
-}
-
-inline bool ParseValueFromXmlElem(double* pDest, TiXmlElement* pElemSource)
-{
-    if (pElemSource && pElemSource->GetText())
-    {
-        *pDest = std::stof(pElemSource->GetText());
-        return true;
-    }
-
-    return false;
-}
-
-inline bool ParseValueFromXmlElem(std::string* pDest, TiXmlElement* pElemSource)
-{
-    if (pElemSource && pElemSource->GetText())
-    {
-        *pDest = std::string(pElemSource->GetText());
-        return true;
-    }
-
-    return false;
-}
-
-inline bool ParseAttributeFromXmlElem(std::string* pDest, const char* attrName, TiXmlElement* pElemSource)
-{
-    if (pElemSource && pElemSource->Attribute(attrName))
-    {
-        *pDest = pElemSource->Attribute(attrName);
-        return true;
-    }
-
-    return false;
-}
-
-inline void SetPointIfDefined(Point* pDest, TiXmlElement* pElem, const char* elemAttrNameX, const char* elemAttrNameY)
-{
-    if (pElem)
-    {
-        pElem->Attribute(elemAttrNameX, &pDest->x);
-        pElem->Attribute(elemAttrNameY, &pDest->y);
-    }
-}
-
-#define SetEnumIfDefined(pDest, pElem, enumType) \
-    if (pElem && pElem->GetText()) \
-    { \
-        *pDest = enumType(std::stoi(pElem->GetText())); \
-    } \
 
 inline FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
 {
@@ -521,20 +400,6 @@ ValueType GetValueFromMap(KeyType _key, const std::map<KeyType, ValueType>& _map
     return findIt->second;
 }
 
-inline bool SetTiXmlElementText(const std::string& text, TiXmlElement* pElem)
-{
-    TiXmlNode* child = pElem->FirstChild();
-    if (child) 
-    {
-        TiXmlText* childText = child->ToText();
-        if (childText) 
-        {
-            childText->SetValue(text.c_str());
-            return true;
-        }
-    }
 
-    return false;
-}
 
 #endif

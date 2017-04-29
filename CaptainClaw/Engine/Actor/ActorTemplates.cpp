@@ -243,6 +243,8 @@ namespace ActorTemplates
         {
             assert(false && "Invalid ammo image set");
         }
+
+        return { "", 0 };
     }
 
     std::pair<std::string, uint32> GetPowerupTypeAndDurationFromImageset(const std::string& imageSet)
@@ -253,6 +255,8 @@ namespace ActorTemplates
         {
             assert(false && "Invalid ammo image set");
         }
+
+        return { "", 0 };
     }
 
     std::string GetImageSetFromClawAmmoType(AmmoType ammoType)
@@ -1429,40 +1433,46 @@ namespace ActorTemplates
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(enemyType);
         assert(pActorElem != NULL);
 
-        TiXmlHandle actorXmlHandle(pActorElem);
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
 
-        TiXmlElement* pActorPositionElem = actorXmlHandle.
-            FirstChild("PositionComponent").
-            FirstChild("Position").
-            ToElement();
-
-        assert(pActorPositionElem != NULL);
-        pActorPositionElem->SetAttribute("x", (int)position.x);
-        pActorPositionElem->SetAttribute("y", (int)position.y);
-
-        TiXmlElement* pLootComponentElem = actorXmlHandle.
-            FirstChild("LootComponent").
-            ToElement();
-
+        //----------- Loot
+        TiXmlElement* pLootComponentElem = GetTiXmlElementFromPath(pActorElem, "LootComponent");
         assert(pLootComponentElem != NULL);
         for (PickupType item : loot)
         {
             XML_ADD_TEXT_ELEMENT("Item", ToStr((int)item).c_str(), pLootComponentElem);
         }
 
-        TiXmlElement* pLeftPatrolBorderElem = actorXmlHandle.
-            FirstChild("PatrolEnemyAIStateComponent").
-            FirstChild("LeftPatrolBorder").
-            ToElement();
-        TiXmlElement* pRightPatrolBorderElem = actorXmlHandle.
-            FirstChild("PatrolEnemyAIStateComponent").
-            FirstChild("RightPatrolBorder").
-            ToElement();
+        //----------- Patrol borders
+        assert(SetTiXmlNodeValue(pActorElem, "PatrolEnemyAIStateComponent.LeftPatrolBorder", minPatrolX));
+        assert(SetTiXmlNodeValue(pActorElem, "PatrolEnemyAIStateComponent.RightPatrolBorder", maxPatrolX));
 
-        assert(pLeftPatrolBorderElem != NULL);
-        assert(pRightPatrolBorderElem != NULL);
-        assert(SetTiXmlElementText(ToStr(minPatrolX), pLeftPatrolBorderElem));
-        assert(SetTiXmlElementText(ToStr(maxPatrolX), pRightPatrolBorderElem));
+        return pActorElem;
+    }
+
+    TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, Point position, const ElevatorDef& elevatorDef)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(elevatorProto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "PositionComponent.Position", 
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- Elevator properties
+        assert(SetTiXmlNode2Attribute(pActorElem, "KinematicComponent.Speed", 
+            "x", (int)elevatorDef.speed.x, "y", (int)elevatorDef.speed.y));
+        assert(SetTiXmlNode2Attribute(pActorElem, "KinematicComponent.MinPosition",
+            "x", (int)elevatorDef.minPosition.x, "y", (int)elevatorDef.minPosition.y));
+        assert(SetTiXmlNode2Attribute(pActorElem, "KinematicComponent.MaxPosition",
+            "x", (int)elevatorDef.maxPosition.x, "y", (int)elevatorDef.maxPosition.y));
+
+        assert(SetTiXmlNodeValue(pActorElem, "KinematicComponent.HasTriggerBehaviour", elevatorDef.hasTriggerBehaviour));
+        assert(SetTiXmlNodeValue(pActorElem, "KinematicComponent.HasStartBehaviour", elevatorDef.hasStartBehaviour));
+        assert(SetTiXmlNodeValue(pActorElem, "KinematicComponent.HasStopBehaviour", elevatorDef.hasStopBehaviour));
+        assert(SetTiXmlNodeValue(pActorElem, "KinematicComponent.HasOneWayBehaviour", elevatorDef.hasOneWayBehaviour));
 
         return pActorElem;
     }

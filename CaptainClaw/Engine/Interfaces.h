@@ -43,6 +43,7 @@ enum CollisionType
 enum CollisionFlag
 {
     CollisionFlag_None              = 0x0,
+    CollisionFlag_All               = 0x1,
     CollisionFlag_Controller        = 0x2,
     CollisionFlag_DynamicActor      = 0x4,
     CollisionFlag_Bullet            = 0x8,
@@ -61,7 +62,7 @@ enum CollisionFlag
     CollisionFlag_ClawAttack        = 0x10000,
     CollisionFlag_EnemyAIAttack     = 0x20000,
     CollisionFlag_EnemyAIProjectile = 0x40000,
-    CollisionFlag_DamageAura        = 0x40000,
+    CollisionFlag_DamageAura        = 0x80000,
 };
 
 enum FixtureType
@@ -213,12 +214,19 @@ enum AnimationType
 enum ActorPrototype
 {
     ActorPrototype_Start,
+
+    // Enemy actors
     ActorPrototype_Level1_Soldier,
     ActorPrototype_Level1_Officer,
     ActorPrototype_Level1_Rat,
     ActorPrototype_Level2_Soldier,
     ActorPrototype_Level2_Officer,
     ActorPrototype_Level2_PunkRat,
+
+    // Elevators
+    ActorPrototype_Level1_Elevator,
+    ActorPrototype_Level2_Elevator,
+
     ActorPrototype_Max
 };
 

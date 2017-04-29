@@ -15,15 +15,10 @@ const char* KinematicComponent::g_Name = "KinematicComponent";
 
 KinematicComponent::KinematicComponent()
     :
-    m_Size(Point(0, 0)),
-    m_Speed(Point(0, 0)),
-    m_CurrentSpeed(Point(0, 0)),
-    m_MinPosition(Point(0, 0)),
-    m_MaxPosition(Point(0, 0)),
-    m_LastPosition(Point(0, 0)),
-    m_IsStartElevator(false),
-    m_IsTriggerElevator(false),
-    m_IsTriggered(true)
+    m_bIsTriggered(false),
+    m_bIsDone(false),
+    m_bCheckCarriedBodies(false),
+    m_TimeSinceLastCarriedBodiesCheck(0)
 {
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &KinematicComponent::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
 }
@@ -33,9 +28,9 @@ KinematicComponent::~KinematicComponent()
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &KinematicComponent::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
 }
 
-bool KinematicComponent::VInit(TiXmlElement* data)
+bool KinematicComponent::VInit(TiXmlElement* pData)
 {
-    assert(data != NULL);
+    assert(pData != NULL);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     if (!m_pPhysics)
@@ -44,79 +39,36 @@ bool KinematicComponent::VInit(TiXmlElement* data)
         return false;
     }
 
-    if (TiXmlElement* pElem = data->FirstChildElement("Size"))
-    {
-        pElem->Attribute("width", &m_Size.x);
-        pElem->Attribute("height", &m_Size.y);
-    }
-    if (TiXmlElement* pElem = data->FirstChildElement("Speed"))
-    {
-        pElem->Attribute("x", &m_Speed.x);
-        pElem->Attribute("y", &m_Speed.y);
-        double platformSpeedModifier = g_pApp->GetGlobalOptions()->platformSpeedModifier;
-        m_Speed = Point(m_Speed.x * platformSpeedModifier, m_Speed.y * platformSpeedModifier);
-    }
-    if (TiXmlElement* pElem = data->FirstChildElement("MinPosition"))
-    {
-        pElem->Attribute("x", &m_MinPosition.x);
-        pElem->Attribute("y", &m_MinPosition.y);
-    }
-    if (TiXmlElement* pElem = data->FirstChildElement("MaxPosition"))
-    {
-        pElem->Attribute("x", &m_MaxPosition.x);
-        pElem->Attribute("y", &m_MaxPosition.y);
-    }
-    if (TiXmlElement* pElem = data->FirstChildElement("StartBehaviour"))
-    {
-        m_IsStartElevator = std::string(pElem->GetText()) == "true";
-    }
-    if (TiXmlElement* pElem = data->FirstChildElement("TriggeredBehaviour"))
-    {
-        m_IsTriggerElevator = std::string(pElem->GetText()) == "true";
-        m_IsTriggered = false;
-    }
+    assert(SetPointIfDefined(&m_Properties.speed, pData->FirstChildElement("Speed"), "x", "y"));
+    assert(SetPointIfDefined(&m_Properties.minPosition, pData->FirstChildElement("MinPosition"), "x", "y"));
+    assert(SetPointIfDefined(&m_Properties.maxPosition, pData->FirstChildElement("MaxPosition"), "x", "y"));
+    ParseValueFromXmlElem(&m_Properties.hasTriggerBehaviour, pData->FirstChildElement("HasTriggerBehaviour"));
+    ParseValueFromXmlElem(&m_Properties.hasStartBehaviour, pData->FirstChildElement("HasStartBehaviour"));
+    ParseValueFromXmlElem(&m_Properties.hasStopBehaviour, pData->FirstChildElement("HasStopBehaviour"));
+    ParseValueFromXmlElem(&m_Properties.hasOneWayBehaviour, pData->FirstChildElement("HasOneWayBehaviour"));
 
+    double platformSpeedModifier = g_pApp->GetGlobalOptions()->platformSpeedModifier;
+    m_Speed = Point(m_Properties.speed.x * platformSpeedModifier, m_Properties.speed.y * platformSpeedModifier);
 
     return true;
 }
 
 void KinematicComponent::VPostInit()
 {
-    // Set size from current image if necessary
-    if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
-    {
-        shared_ptr<ActorRenderComponent> pRenderComponent =
-            MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-        assert(pRenderComponent);
-
-        shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
-
-        m_Size.x = pImage->GetWidth();
-        m_Size.y = pImage->GetHeight();
-    }
-
     shared_ptr<PositionComponent> pPositionComponent =
         MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     assert(pPositionComponent);
 
     m_pPositionComponent = pPositionComponent.get();
-    
-    /*if (m_pPositionComponent->GetX() < m_MinPosition.x)
-    {
-        LOG("SETTING");
-        m_pPositionComponent->SetX(m_MinPosition.x);
-    }*/
 
     m_InitialPosition = m_pPositionComponent->GetPosition();
     m_LastPosition = m_pPositionComponent->GetPosition();
     m_CurrentSpeed = m_Speed;
 
-    if (m_IsTriggerElevator || m_IsStartElevator)
+    if (m_Properties.hasTriggerBehaviour || m_Properties.hasStartBehaviour)
     {
         m_CurrentSpeed = Point(0, 0);
     }
-
-    m_pPhysics->VAddKinematicBody(_owner);
 }
 
 TiXmlElement* KinematicComponent::VGenerateXml()
@@ -130,26 +82,22 @@ TiXmlElement* KinematicComponent::VGenerateXml()
 
 void KinematicComponent::VUpdate(uint32 msDiff)
 {
-    /*if (m_pPositionComponent->GetX() < m_MinPosition.x ||
-        m_pPositionComponent->GetX() > m_MaxPosition.x )
+    if (m_bIsDone)
     {
-        m_CurrentSpeed = Point(m_CurrentSpeed.x * -1.0, m_CurrentSpeed.y * -1.0);
-    }*/
+        return;
+    }
+
     bool directionChanged = false;
     if (m_Speed.x > 0)
     {
-        if ((m_CurrentSpeed.x < -1.0 * DBL_EPSILON) && m_pPositionComponent->GetX() < m_MinPosition.x)
+        if ((m_CurrentSpeed.x < -1.0 * DBL_EPSILON) && m_pPositionComponent->GetX() < m_Properties.minPosition.x)
         {
-            /*m_pPositionComponent->SetX(m_MinPosition.x);
-            m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());*/
-            m_CurrentSpeed = Point(m_CurrentSpeed.x * -1.0, m_CurrentSpeed.y);
+            m_CurrentSpeed.SetX(m_CurrentSpeed.x * -1.0);
             directionChanged = true;
         }
-        else if ((m_CurrentSpeed.x > DBL_EPSILON) && m_pPositionComponent->GetX() > m_MaxPosition.x)
+        else if ((m_CurrentSpeed.x > DBL_EPSILON) && m_pPositionComponent->GetX() > m_Properties.maxPosition.x)
         {
-            /*m_pPositionComponent->SetX(m_MaxPosition.x);
-            m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());*/
-            m_CurrentSpeed = Point(m_CurrentSpeed.x * -1.0, m_CurrentSpeed.y);
+            m_CurrentSpeed.SetX(m_CurrentSpeed.x * -1.0);
             directionChanged = true;
         }
     }
@@ -160,24 +108,59 @@ void KinematicComponent::VUpdate(uint32 msDiff)
         {
             m_CurrentSpeed = Point(m_CurrentSpeed.x, m_CurrentSpeed.y * -1.0);
         }
-        else if ((m_CurrentSpeed.y < -1.0 * DBL_EPSILON) && m_pPositionComponent->GetY() < m_MinPosition.y)
+        else if ((m_CurrentSpeed.y < -1.0 * DBL_EPSILON) && m_pPositionComponent->GetY() < m_Properties.minPosition.y)
         {
-            //m_pPositionComponent->SetY(m_MinPosition.y);
-            //m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());
             m_CurrentSpeed = Point(m_CurrentSpeed.x, m_CurrentSpeed.y * -1.0);
+            directionChanged = true;
         }
-        else if ((m_CurrentSpeed.y > DBL_EPSILON) && m_pPositionComponent->GetY() > m_MaxPosition.y)
+        else if ((m_CurrentSpeed.y > DBL_EPSILON) && m_pPositionComponent->GetY() > m_Properties.maxPosition.y)
         {
-            //m_pPositionComponent->SetY(m_MaxPosition.y);
-            //m_pPhysics->VSetPosition(_owner->GetGUID(), m_pPositionComponent->GetPosition());
             m_CurrentSpeed = Point(m_CurrentSpeed.x, m_CurrentSpeed.y * -1.0);
+            directionChanged = true;
         }
     }
 
-    // Move
+    if (m_Properties.hasOneWayBehaviour && directionChanged)
+    {
+        m_bIsDone = true;
+        Point zeroSpeed(0, 0);
+        m_pPhysics->VSetLinearSpeedEx(_owner->GetGUID(), zeroSpeed);
+        return;
+    }
+
+    // This is to get aroung Box2D's imperfections
+    // When elevator is going down and Claw stands on it, he gets continuously removed and added making elevator 
+    // go slow
+    if (m_bCheckCarriedBodies)
+    {
+        m_TimeSinceLastCarriedBodiesCheck += msDiff;
+        if (m_TimeSinceLastCarriedBodiesCheck > 100)
+        {
+            m_bCheckCarriedBodies = false;
+            m_TimeSinceLastCarriedBodiesCheck = 0;
+
+            if (m_Properties.hasStartBehaviour)
+            {
+                if (m_CarriedBodiesList.empty())
+                {
+                    
+                    m_CurrentSpeed = Point(0, 0);
+                }
+                else
+                {
+                    m_CurrentSpeed = m_Speed;
+                }
+            }
+        }
+    }
 
     /*LOG(ToStr(m_pPositionComponent->GetX()) + " - " + ToStr(m_pPositionComponent->GetY()));
     LOG(ToStr(m_MinPosition.x) + " - " + ToStr(m_MinPosition.y));*/
+
+    if (m_Properties.hasStartBehaviour)
+    {
+        //LOG("Speed: " + m_CurrentSpeed.ToString());
+    }
 
     m_pPhysics->VSetLinearSpeedEx(_owner->GetGUID(), m_CurrentSpeed);
 }
@@ -188,12 +171,14 @@ void KinematicComponent::RemoveCarriedBody(b2Body* pBody)
     {
         if ((*iter) == pBody)
         {
-            if (m_IsStartElevator)
+            if (m_Properties.hasStartBehaviour)
             {
                 //LOG("REMOVING");
                 // TODO: Fix bug with start elevator when it moves in the same direction
                 //m_Speed = m_CurrentSpeed;
-                m_CurrentSpeed = Point(0, 0);
+                //m_CurrentSpeed = Point(0, 0);
+                m_bCheckCarriedBodies = true;
+                m_TimeSinceLastCarriedBodiesCheck = 0;
             }
 
             m_CarriedBodiesList.erase(iter);
@@ -204,9 +189,13 @@ void KinematicComponent::RemoveCarriedBody(b2Body* pBody)
 
 void KinematicComponent::AddCarriedBody(b2Body* pBody)
 {
-    if ((m_IsTriggerElevator && !m_IsTriggered) || m_IsStartElevator)
+    if (!m_bIsDone && 
+        ((m_Properties.hasTriggerBehaviour && !m_bIsTriggered) 
+        || m_Properties.hasStartBehaviour))
     {
-        m_IsTriggered = true;
+        m_bIsTriggered = true;
+        m_bCheckCarriedBodies = true;
+        m_TimeSinceLastCarriedBodiesCheck = 0;
         m_CurrentSpeed = m_Speed;
     }
     m_CarriedBodiesList.push_back(pBody);
@@ -287,12 +276,13 @@ void KinematicComponent::OnMoved(Point newPosition)
 // After claw dies, set elevators to default position
 void KinematicComponent::ClawDiedDelegate(IEventDataPtr pEventData)
 {
-    if (m_IsTriggerElevator)
+    if (m_Properties.hasTriggerBehaviour)
     {
-        m_IsTriggered = false;
+        m_bIsTriggered = false;
         m_CurrentSpeed = Point(0, 0);
     }
 
+    m_bIsDone = false;
     m_pPositionComponent->SetPosition(m_InitialPosition);
     m_pPhysics->VSetPosition(_owner->GetGUID(), m_InitialPosition);
 }
