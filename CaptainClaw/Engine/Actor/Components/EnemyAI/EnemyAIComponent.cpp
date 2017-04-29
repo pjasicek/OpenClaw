@@ -174,51 +174,6 @@ void EnemyAIComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, Damage
     }
 }
 
-Point EnemyAIComponent::FindClosestHostileActorOffset()
-{
-    Point closest(0, 0);
-
-    if (m_EnemiesInMeleeZone.empty() && m_EnemiesInRangedZone.empty())
-    {
-        return closest;
-    }
-
-    if (!m_EnemiesInMeleeZone.empty())
-    {
-        for (Actor* pHostileActor : m_EnemiesInMeleeZone)
-        {
-            shared_ptr<PositionComponent> pHostileActorPositionComponent =
-                MakeStrongPtr(pHostileActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
-            assert(pHostileActorPositionComponent);
-
-            Point positionDiff = pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();
-            if (positionDiff.Length() < (m_pPositionComponent->GetPosition() - closest).Length())
-            {
-                closest = positionDiff;
-            }
-        }
-    }
-    else
-    {
-        for (Actor* pHostileActor : m_EnemiesInRangedZone)
-        {
-            shared_ptr<PositionComponent> pHostileActorPositionComponent =
-                MakeStrongPtr(pHostileActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
-            assert(pHostileActorPositionComponent);
-
-            Point positionDiff = pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();
-            if (positionDiff.Length() < (m_pPositionComponent->GetPosition() - closest).Length())
-            {
-                closest = positionDiff;
-            }
-        }
-    }
-
-    assert(std::fabs(closest.x) > DBL_EPSILON || std::fabs(closest.y) > DBL_EPSILON);
-
-    return closest;
-}
-
 void EnemyAIComponent::LeaveAllStates()
 {
     for (auto stateIter : m_StateMap)
@@ -299,8 +254,8 @@ bool EnemyAIComponent::EnterBestState(bool canForceEnter)
         }
     }
 
-    assert(pBestState != NULL);
-    assert(bestStatePrio >= 0);
+    /*assert(pBestState != NULL);
+    assert(bestStatePrio >= 0);*/
 
     if ((pCurrentState == NULL) ||
         !pCurrentState->VCanEnter() ||

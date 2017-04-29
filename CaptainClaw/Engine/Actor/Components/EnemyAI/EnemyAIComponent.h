@@ -67,9 +67,6 @@ private:
     shared_ptr<PositionComponent> m_pPositionComponent;
     shared_ptr<ActorRenderComponent> m_pRenderComponent;
 
-    ActorList m_EnemiesInMeleeZone;
-    ActorList m_EnemiesInRangedZone;
-
     SoundList m_TakeDamageSounds;
     SoundList m_MeleeAttackSounds;
     SoundList m_RangedAttackSounds;

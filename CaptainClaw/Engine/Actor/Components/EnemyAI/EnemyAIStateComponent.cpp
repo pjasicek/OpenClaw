@@ -9,6 +9,7 @@
 #include "../../../GameApp/BaseGameLogic.h"
 #include "../../../GameApp/BaseGameApp.h"
 #include "../../../Physics/ClawPhysics.h"
+#include "../ControllableComponent.h"
 
 #include "../../../Events/EventMgr.h"
 #include "../../../Events/Events.h"
@@ -697,14 +698,15 @@ void BaseAttackAIStateComponent::OnEnemyLeftAgroRange(Actor* pEnemy)
     LOG_WARNING("Could not remove enemy - no such actor found");
 }
 
-Point BaseAttackAIStateComponent::FindClosestHostileActorOffset()
+Actor* BaseAttackAIStateComponent::FindClosestHostileActor()
 {
-    Point closest(DBL_MAX, DBL_MAX);
-
     if (m_EnemyAgroList.empty())
     {
-        return closest;
+        return NULL;
     }
+
+    Point closest(DBL_MAX, DBL_MAX);
+    Actor* pClosestEnemy = NULL;
 
     for (Actor* pHostileActor : m_EnemyAgroList)
     {
@@ -718,12 +720,31 @@ Point BaseAttackAIStateComponent::FindClosestHostileActorOffset()
         if (positionDiff.Length() < (m_pPositionComponent->GetPosition() - closest).Length())
         {
             closest = positionDiff;
+            pClosestEnemy = pHostileActor;
         }
     }
 
     assert(std::fabs(closest.x) < DBL_MAX && std::fabs(closest.y) < DBL_MAX);
+    assert(pClosestEnemy != NULL);
 
-    return closest;
+    return pClosestEnemy;
+}
+
+Point BaseAttackAIStateComponent::FindClosestHostileActorOffset()
+{
+    Point closest(DBL_MAX, DBL_MAX);
+
+    Actor* pClosestEnemy = FindClosestHostileActor();
+    if (pClosestEnemy == NULL)
+    {
+        return closest;
+    }
+
+    shared_ptr<PositionComponent> pHostileActorPositionComponent =
+        MakeStrongPtr(pClosestEnemy->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    assert(pHostileActorPositionComponent);
+
+    return pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();
 }
 
 //=====================================================================================================================
@@ -896,4 +917,30 @@ void DuckRangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttac
 
     // Play ranged attack sound
     Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetRangedAttackSounds());
+}
+
+bool DuckRangedAttackAIStateComponent::VCanEnter()
+{
+    if (m_EnemyAgroList.empty())
+    {
+        return false;
+    }
+
+    Actor* pClosestEnemy = FindClosestHostileActor();
+    if (pClosestEnemy == NULL)
+    {
+        return false;
+    }
+
+    // TODO: This assumes that the only hostile actor can be Claw.
+    shared_ptr<ClawControllableComponent> pClawComponent =
+        MakeStrongPtr(pClosestEnemy->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
+    assert(pClawComponent != nullptr);
+
+    if (pClawComponent->IsDucking())
+    {
+        return true;
+    }
+
+    return false;
 }
