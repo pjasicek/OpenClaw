@@ -5,7 +5,7 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/Interfaces.h
     ${CMAKE_CURRENT_SOURCE_DIR}/SharedDefines.h
     ${CMAKE_CURRENT_SOURCE_DIR}/XmlMacros.h
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/ActorDefinitions.h
 )
 
 add_subdirectory(Actor)

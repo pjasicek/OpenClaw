@@ -754,6 +754,10 @@ std::string ActorPrototypeEnumToString(ActorPrototype actorProto)
         // Elevators
         { ActorPrototype_Level1_Elevator, "ActorPrototype_Level1_Elevator" },
         { ActorPrototype_Level2_Elevator, "ActorPrototype_Level2_Elevator" },
+
+        // Toggle pegs
+        { ActorPrototype_Level1_TogglePeg, "ActorPrototype_Level1_TogglePeg" },
+        { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" }
     };
 
     auto findIt = actorPrototypeEnumToStringMap.find(actorProto);
@@ -781,6 +785,10 @@ ActorPrototype ActorPrototypeStringToEnum(std::string actorProtoStr)
         // Elevators
         { "ActorPrototype_Level1_Elevator", ActorPrototype_Level1_Elevator },
         { "ActorPrototype_Level2_Elevator", ActorPrototype_Level2_Elevator },
+
+        // Toggle pegs
+        { "ActorPrototype_Level1_TogglePeg", ActorPrototype_Level1_TogglePeg },
+        { "ActorPrototype_Level2_TogglePeg", ActorPrototype_Level2_TogglePeg },
     };
 
     auto findIt = actorPrototypeStringToEnumMap.find(actorProtoStr);

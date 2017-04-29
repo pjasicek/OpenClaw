@@ -36,6 +36,19 @@ public:
     virtual void VOnAnimationAtLastFrame(Animation* pAnimation) { }
 };
 
+struct SpecialAnimation
+{
+    SpecialAnimation()
+    {
+        frameDuration = 0;
+        setPositionDelay = false;
+    }
+
+    std::string type;
+    int frameDuration;
+    bool setPositionDelay;
+};
+
 typedef std::map<std::string, Animation*> AnimationMap;
 
 class Image;
@@ -84,7 +97,10 @@ private:
     AnimationMap _animationMap;
     Animation* _currentAnimation;
 
+    // TODO: Get rid of this..
     std::vector<std::string> m_SpecialAnimationRequestList;
+
+    std::vector<SpecialAnimation> m_SpecialAnimationList;
 };
 
 #endif

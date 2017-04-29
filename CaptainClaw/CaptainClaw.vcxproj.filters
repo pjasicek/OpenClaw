@@ -599,5 +599,8 @@
     <ClInclude Include="Engine\Util\XmlUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ActorDefinitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

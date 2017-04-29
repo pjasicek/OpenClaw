@@ -227,6 +227,10 @@ enum ActorPrototype
     ActorPrototype_Level1_Elevator,
     ActorPrototype_Level2_Elevator,
 
+    // Toggle pegs
+    ActorPrototype_Level1_TogglePeg,
+    ActorPrototype_Level2_TogglePeg,
+
     ActorPrototype_Max
 };
 

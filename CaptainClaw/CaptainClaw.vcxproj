@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActorController.h" />
+    <ClInclude Include="Engine\ActorDefinitions.h" />
     <ClInclude Include="Engine\Actor\Components\AuraComponents\AuraComponent.h" />
     <ClInclude Include="ClawEvents.h" />
     <ClInclude Include="Engine\Actor\ActorTemplates.h" />

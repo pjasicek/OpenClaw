@@ -649,11 +649,87 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic.find("TogglePeg") != std::string::npos)
     {
-        pActorElem->LinkEndChild(TogglePegToXml(wwdObject));
+        SAFE_DELETE(pActorElem);
+
+        std::string logic = wwdObject->logic;
+        std::string imageSet = wwdObject->imageSet;
+
+        TogglePegDef togglePegDef;
+
+        uint32 delay = 0;
+        if (logic == "TogglePeg")
+        {
+            togglePegDef.delay = 0;
+        }
+        else if (logic == "TogglePeg2")
+        {
+            togglePegDef.delay = 750;
+        }
+        else if (logic == "TogglePeg3")
+        {
+            togglePegDef.delay = 1500;
+        }
+        else if (logic == "TogglePeg4")
+        {
+            togglePegDef.delay = 2250;
+        }
+        else
+        {
+            LOG_WARNING("Unknown TogglePeg: " + logic)
+        }
+
+        if (wwdObject->speed > 0)
+        {
+            togglePegDef.delay = wwdObject->speed;
+        }
+
+        uint32 timeOn = 0;
+        uint32 timeOff = 0;
+        if (wwdObject->speedX > 0)
+        {
+            timeOn = wwdObject->speedX;
+        }
+        else
+        {
+            timeOn = 1500;
+        }
+        if (wwdObject->speedY > 0)
+        {
+            timeOff = wwdObject->speedY;
+        }
+        else
+        {
+            timeOff = 1500;
+        }
+
+        if (wwdObject->smarts & 0x1)
+        {
+            togglePegDef.isAlwaysOn = true;
+        }
+        else
+        {
+            togglePegDef.timeOn = timeOn;
+            togglePegDef.timeOff = timeOff;
+        }
+
+        Point position(wwdObject->x, wwdObject->y);
+
+        ActorPrototype proto = ActorPrototype_Start;
+        if (levelNumber == 1) proto = ActorPrototype_Level1_TogglePeg;
+        if (levelNumber == 2) proto = ActorPrototype_Level2_TogglePeg;
+
+        assert(proto != ActorPrototype_Start);
+
+        return ActorTemplates::CreateXmlData_TogglePegActor(
+            proto,
+            position,
+            togglePegDef);
+
+        /*pActorElem->LinkEndChild(TogglePegToXml(wwdObject));
 
         TiXmlElement* animElem = new TiXmlElement("AnimationComponent");
         XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle75", animElem);
-        pActorElem->LinkEndChild(animElem);
+        pActorElem->LinkEndChild(animElem);*/
     }
     else if (logic.find("Checkpoint") != std::string::npos)
     {

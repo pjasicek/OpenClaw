@@ -1477,6 +1477,24 @@ namespace ActorTemplates
         return pActorElem;
     }
 
+    TiXmlElement* CreateXmlData_TogglePegActor(ActorPrototype togglePegProto, Point position, const TogglePegDef& togglePegDef)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(togglePegProto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- TogglePeg properties
+        assert(SetTiXmlNodeValue(pActorElem, "TogglePegAIComponent.Delay", togglePegDef.delay));
+        assert(SetTiXmlNodeValue(pActorElem, "TogglePegAIComponent.TimeOn", togglePegDef.timeOn));
+        assert(SetTiXmlNodeValue(pActorElem, "TogglePegAIComponent.TimeOff", togglePegDef.timeOff));
+        assert(SetTiXmlNodeValue(pActorElem, "TogglePegAIComponent.AlwaysOn", togglePegDef.isAlwaysOn));
+
+        return pActorElem;
+    }
+
     TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX)
     {
         assert(false && "This method is deprecated. Use \"CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX)\" instead");

@@ -72,12 +72,25 @@ bool AnimationComponent::VInit(TiXmlElement* data)
         m_SpecialAnimationRequestList.push_back(animType);
     }
 
+    for (TiXmlElement* pSpecialAnimElem = data->FirstChildElement("SpecialAnimation");
+        pSpecialAnimElem != NULL;
+        pSpecialAnimElem = pSpecialAnimElem->NextSiblingElement("SpecialAnimation"))
+    {
+        SpecialAnimation specialAnim;
+
+        assert(ParseValueFromXmlElem(&specialAnim.type, pSpecialAnimElem->FirstChildElement("Type")));
+        assert(ParseValueFromXmlElem(&specialAnim.frameDuration, pSpecialAnimElem->FirstChildElement("FrameDuration")));
+        assert(ParseValueFromXmlElem(&specialAnim.setPositionDelay, pSpecialAnimElem->FirstChildElement("HasPositionDelay")));
+
+        m_SpecialAnimationList.push_back(specialAnim);
+    }
+
     if (TiXmlElement* pElem = data->FirstChildElement("PauseOnStart"))
     {
         m_PauseOnStart = std::string(pElem->GetText()) == "true";
     }
 
-    if (_animationMap.empty() && m_SpecialAnimationRequestList.empty())
+    if (_animationMap.empty() && m_SpecialAnimationRequestList.empty() && m_SpecialAnimationList.empty())
     {
         LOG_WARNING("Animation map for animation component is empty. Actor type: " + std::string(data->Parent()->ToElement()->Attribute("Type")));
     }
@@ -87,6 +100,7 @@ bool AnimationComponent::VInit(TiXmlElement* data)
 
 void AnimationComponent::VPostInit()
 {
+    // TODO: Get rid of this. Obfuscated, unmaintanable...
     for (std::string animType : m_SpecialAnimationRequestList)
     {
         if (animType.find("cycle") != std::string::npos)
@@ -144,6 +158,67 @@ void AnimationComponent::VPostInit()
         {
             LOG_WARNING("Unknown special animation type: " +     animType);
         }
+    }
+
+    for (const SpecialAnimation& specialAnim : m_SpecialAnimationList)
+    {
+        assert(specialAnim.type == "cycle" && "Currently supporting only cycle special animation");
+
+        if (specialAnim.type == "cycle")
+        {
+            shared_ptr<ActorRenderComponent> pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+            if (!pRenderComponent)
+            {
+                pRenderComponent = MakeStrongPtr(_owner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name));
+            }
+            if (!pRenderComponent)
+            {
+                LOG_ERROR("Actor has existing animation component but not render component. Actor: " + _owner->GetName());
+                assert(false);
+                continue;
+            }
+
+            // If there is only 1 or 0 frames, we do not need to animate it
+            if (pRenderComponent->GetImagesCount() <= 1)
+            {
+                //LOG("Skipping creating " + animType + " animation for: " + _owner->GetName());
+                continue;
+            }
+
+            Animation* pCycleAnim = Animation::CreateAnimation(
+                pRenderComponent->GetImagesCount(), 
+                specialAnim.frameDuration, 
+                specialAnim.type.c_str(), 
+                this);
+            if (!pCycleAnim)
+            {
+                LOG_ERROR("Failed to create " + specialAnim.type + " animation.");
+                continue;
+            }
+
+            if (specialAnim.setPositionDelay)
+            {
+                // Set delay according to X coord
+                shared_ptr<PositionComponent> pPositionComponent =
+                    MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+                if (!pPositionComponent)
+                {
+                    LOG_ERROR("Actor is missing position component. Actor: " + _owner->GetName());
+                    continue;
+                }
+
+                srand(pPositionComponent->GetX());
+                pCycleAnim->SetDelay(rand() % 1000);
+            }
+
+            _animationMap.insert(std::make_pair(specialAnim.type, pCycleAnim));
+        }
+    }
+
+    if (_animationMap.empty())
+    {
+        LOG_ERROR("No animations in amin component. Offending actor: " + _owner->GetName());
+        //assert(false && "No animations in AnimationComponent at all !");
     }
 
     if (!_animationMap.empty())

@@ -26,13 +26,10 @@ public:
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
 
 private:
-    Point m_Size;
-    double m_TimeOff;
-    double m_TimeOn;
-    uint32 m_Delay;
-    bool m_IsAlwaysActive;
-    int m_ToggleFrameIdx;
+    // XML data
+    TogglePegDef m_Properties;
 
+    // Internal state
     uint32 m_PrevAnimframeIdx;
 
     AnimationComponent* m_pAnimationComponent;
