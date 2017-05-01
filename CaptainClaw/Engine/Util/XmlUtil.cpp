@@ -25,10 +25,37 @@ TiXmlElement* GetTiXmlElementFromPath(TiXmlElement* pRootElem, const std::string
 
     Util::SplitStringIntoVector(tmpPath, nodes);
 
+    if (nodes.empty())
+    {
+        return NULL;
+    }
+
+    // Check for root element here
+    if (std::string(pRootElem->Value()) != nodes[0])
+    {
+        return NULL;
+    }
+    else
+    {
+        nodes.erase(nodes.begin());
+    }
+
     TiXmlHandle rootHandle(pRootElem);
     for (std::string node : nodes)
     {
         rootHandle = rootHandle.FirstChild(node.c_str());
     }
     return rootHandle.ToElement();
+}
+
+bool ParseValueFromXmlElem(Point* pDest, TiXmlElement* pElem, const char* elemAttrNameX, const char* elemAttrNameY)
+{
+    if (pElem)
+    {
+        pElem->Attribute(elemAttrNameX, &pDest->x);
+        pElem->Attribute(elemAttrNameY, &pDest->y);
+        return true;
+    }
+
+    return false;
 }

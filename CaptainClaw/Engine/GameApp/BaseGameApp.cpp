@@ -757,7 +757,16 @@ std::string ActorPrototypeEnumToString(ActorPrototype actorProto)
 
         // Toggle pegs
         { ActorPrototype_Level1_TogglePeg, "ActorPrototype_Level1_TogglePeg" },
-        { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" }
+        { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" },
+
+        //=======================================
+        // General
+        //=======================================
+
+        { ActorPrototype_BaseProjectile, "ActorPrototype_BaseProjectile" },
+        { ActorPrototype_FireSwordProjectile, "ActorPrototype_FireSwordProjectile" },
+        { ActorPrototype_FrostSwordProjectile, "ActorPrototype_FrostSwordProjectile" },
+        { ActorPrototype_LightningSwordProjectile, "ActorPrototype_LightningSwordProjectile" },
     };
 
     auto findIt = actorPrototypeEnumToStringMap.find(actorProto);
@@ -789,6 +798,15 @@ ActorPrototype ActorPrototypeStringToEnum(std::string actorProtoStr)
         // Toggle pegs
         { "ActorPrototype_Level1_TogglePeg", ActorPrototype_Level1_TogglePeg },
         { "ActorPrototype_Level2_TogglePeg", ActorPrototype_Level2_TogglePeg },
+
+        //=======================================
+        // General
+        //=======================================
+
+        { "ActorPrototype_BaseProjectile", ActorPrototype_BaseProjectile },
+        { "ActorPrototype_FireSwordProjectile", ActorPrototype_FireSwordProjectile },
+        { "ActorPrototype_FrostSwordProjectile", ActorPrototype_FrostSwordProjectile },
+        { "ActorPrototype_LightningSwordProjectile", ActorPrototype_LightningSwordProjectile },
     };
 
     auto findIt = actorPrototypeStringToEnumMap.find(actorProtoStr);
@@ -899,6 +917,106 @@ uint32 BaseGameApp::GetWindowFlags()
     return SDL_GetWindowFlags(m_pWindow);
 }
 
+class TiXmlMergeVisitor : public TiXmlVisitor
+{
+public:
+
+    TiXmlMergeVisitor(TiXmlElement* pParentRootElem)
+        :
+        m_pParentRootElem(pParentRootElem)
+    {
+
+    }
+
+    virtual bool VisitEnter(const TiXmlElement& elem, const TiXmlAttribute* pAttribute) override
+    {
+        std::string elemPath = GeTiXmlElementElementPath(&elem);
+        /*LOG("Visiting element: " + std::string(elem.Value()) + " with path: " + elemPath);
+        if (pAttribute != NULL)
+        {
+            LOG("Attribute value: " + std::string(pAttribute->Name()));
+        }*/
+
+        if (TiXmlElement* pParentElemToBeModified = GetTiXmlElementFromPath(m_pParentRootElem, elemPath))
+        {
+            // Check for attributes and text to be changed
+            UpdateTiXmlElementAttributes(pParentElemToBeModified, &elem);
+            UpdateTiXmlElementText(pParentElemToBeModified, &elem);
+        }
+        else
+        {
+            // Parent does not contain this element, so add it with all its descendants
+
+            // First get parented node to which we will add the new one
+            elemPath = elemPath.substr(0, elemPath.find_last_of("."));
+            TiXmlElement* pParentElemToWhichAdd = GetTiXmlElementFromPath(m_pParentRootElem, elemPath);
+            assert(pParentElemToWhichAdd != NULL);
+
+            // Clone and add
+            TiXmlElement* pChildElemCopy = elem.Clone()->ToElement();
+            pParentElemToWhichAdd->LinkEndChild(pChildElemCopy);
+
+            // We just added the whole subtree
+            return false;
+        }
+
+        return true;
+    }
+
+    virtual bool VisitExit(const TiXmlElement& elem) override
+    {
+        /*if (elem.Parent() == NULL)
+        {
+            m_pParentRootElem->Print(stdout, -1);
+            LOG("Visiting DONE");
+        }*/
+
+        return true;
+    }
+
+private:
+    std::string GeTiXmlElementElementPath(const TiXmlElement* pElem)
+    {
+        assert(pElem != NULL);
+        std::string path = pElem->Value();
+
+        while (pElem->Parent() && pElem->Parent()->ToElement())
+        {
+            pElem = pElem->Parent()->ToElement();
+            path.insert(0, std::string(pElem->Value()) + ".");
+        }
+
+        return path;
+    }
+
+    int UpdateTiXmlElementAttributes(TiXmlElement* updateThis, const TiXmlElement* withThis)
+    {
+        int numModifiedAttributes = 0;
+        for (const TiXmlAttribute* pNewAttr = withThis->FirstAttribute();
+            pNewAttr != NULL;
+            pNewAttr = pNewAttr->Next())
+        {
+            updateThis->SetAttribute(pNewAttr->Name(), pNewAttr->Value());
+            //LOG("Updated parent's [" + std::string(pNewAttr->Name()) + "] attribute with value [" + std::string(pNewAttr->Value()) + "]");
+            numModifiedAttributes++;
+        }
+
+        return numModifiedAttributes;
+    }
+
+    bool UpdateTiXmlElementText(TiXmlElement* updateThis, const TiXmlElement* withThis)
+    {
+        if (withThis->GetText() == NULL)
+        {
+            return false;
+        }
+
+        return SetTiXmlElementText(withThis->GetText(), updateThis);
+    }
+
+    TiXmlElement* m_pParentRootElem;
+};
+
 // Remark: Caller is getting a NEW copy of the prototype -> caller is responsible for freeing this copy !
 TiXmlElement* BaseGameApp::GetActorPrototypeElem(ActorPrototype proto)
 {
@@ -907,6 +1025,32 @@ TiXmlElement* BaseGameApp::GetActorPrototypeElem(ActorPrototype proto)
 
     TiXmlNode* pCopy = findIt->second->Clone()->ToElement();
     assert(pCopy != NULL);
+
+    TiXmlElement* pRootElem = pCopy->ToElement();
+    assert(pRootElem != NULL);
+
+    // If this is derived XML, load its parent and apply its changes
+    if (pRootElem->Attribute("Parent") != NULL)
+    {
+        ActorPrototype parentProto = ActorPrototypeStringToEnum(pRootElem->Attribute("Parent"));
+        TiXmlElement* pParentRootElem = GetActorPrototypeElem(parentProto);
+        assert(pParentRootElem != NULL);
+
+        // Merge changes from child to parent (child contains only delta changes)
+        // IE. Child applies changes to Parent
+        // * New attributes are added
+        // * Existing attributes are overwritten
+        // * New nodes are added
+        // * Existing node text is overwritten
+        TiXmlMergeVisitor mergeVisitor(pParentRootElem);
+        pRootElem->Accept(&mergeVisitor);
+
+        SAFE_DELETE(pRootElem);
+
+        //pParentRootElem->Print(stdout, -1);
+
+        return pParentRootElem;
+    }
 
     return pCopy->ToElement();
 }

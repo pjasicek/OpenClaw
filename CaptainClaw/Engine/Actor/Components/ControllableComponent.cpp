@@ -273,21 +273,49 @@ void ClawControllableComponent::OnAttack()
     }
     else
     {
-        int attackType = rand() % 5;
-        if (attackType == 0)
-        {
-            m_pClawAnimationComponent->SetAnimation("kick");
-        }
-        else if (attackType == 1)
-        {
-            m_pClawAnimationComponent->SetAnimation("uppercut");
-        }
-        else
+        // Fire/Ice/Lightning sword powerups have always swipe anim
+        if (m_pPowerupComponent->HasPowerup(PowerupType_FireSword) ||
+            m_pPowerupComponent->HasPowerup(PowerupType_FrostSword) ||
+            m_pPowerupComponent->HasPowerup(PowerupType_LightningSword))
         {
             m_pClawAnimationComponent->SetAnimation("swipe");
         }
+        else
+        {
+            int attackType = rand() % 5;
+            if (attackType == 0)
+            {
+                m_pClawAnimationComponent->SetAnimation("kick");
+            }
+            else if (attackType == 1)
+            {
+                m_pClawAnimationComponent->SetAnimation("uppercut");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("swipe");
+            }
+        }
         
         m_State = ClawState_Attacking;
+    }
+
+    // If its one of the magic swords, play its corresponding sound
+
+    if (m_pPowerupComponent->HasPowerup(PowerupType_FireSword))
+    {
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(SOUND_CLAW_FIRE_SWORD, 100, false)));
+    }
+    else if (m_pPowerupComponent->HasPowerup(PowerupType_FrostSword))
+    {
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(SOUND_CLAW_FROST_SWORD, 100, false)));
+    }
+    else if (m_pPowerupComponent->HasPowerup(PowerupType_LightningSword))
+    {
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(SOUND_CLAW_LIGHTNING_SWORD, 100, false)));
     }
 }
 
@@ -479,7 +507,11 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             if (m_Direction == Direction_Left) { offsetX *= -1; }
             int32 offsetY = -20;
             if (IsDucking()) { offsetY += 40; }
-            ActorTemplates::CreateClawProjectile(projectileType, m_Direction, Point(m_pPositionComponent->GetX() + offsetX, m_pPositionComponent->GetY() + offsetY));
+            ActorTemplates::CreateClawProjectile(
+                projectileType, 
+                m_Direction, 
+                Point(m_pPositionComponent->GetX() + offsetX, 
+                m_pPositionComponent->GetY() + offsetY));
 
             if (IsDucking())
             {
@@ -523,14 +555,38 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             }
             position += positionOffset;
 
-            ActorTemplates::CreateAreaDamage(
-                position, 
-                Point(50, 25), 
-                10, 
-                CollisionFlag_ClawAttack, 
-                "Rectangle",
-                DamageType_MeleeAttack,
-                m_Direction);
+            if (m_pPowerupComponent->HasPowerup(PowerupType_FireSword))
+            {
+                ActorTemplates::CreateActor_Projectile(
+                    ActorPrototype_FireSwordProjectile,
+                    position,
+                    m_Direction);
+            }
+            else if (m_pPowerupComponent->HasPowerup(PowerupType_FrostSword))
+            {
+                ActorTemplates::CreateActor_Projectile(
+                    ActorPrototype_FrostSwordProjectile,
+                    position,
+                    m_Direction);
+            }
+            else if (m_pPowerupComponent->HasPowerup(PowerupType_LightningSword))
+            {
+                ActorTemplates::CreateActor_Projectile(
+                    ActorPrototype_LightningSwordProjectile,
+                    position,
+                    m_Direction);
+            }
+            else
+            {
+                ActorTemplates::CreateAreaDamage(
+                    position,
+                    Point(50, 25),
+                    10,
+                    CollisionFlag_ClawAttack,
+                    "Rectangle",
+                    DamageType_MeleeAttack,
+                    m_Direction);
+            }
         }
         if (pAnimation->IsAtLastAnimFrame())
         {

@@ -900,14 +900,17 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         else if (imageSet == "GAME_POWERUPS_FIRESWORD")
         {
             CREATE_POWERUP_COMPONENT("FireSword", "30000");
+            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_CLAW_PICKUP_FIRE_SWORD, pPowerupPickupComponent);
         }
         else if (imageSet == "GAME_POWERUPS_ICESWORD")
         {
             CREATE_POWERUP_COMPONENT("IceSword", "30000");
+            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_CLAW_PICKUP_FROST_SWORD, pPowerupPickupComponent);
         }
         else if (imageSet == "GAME_POWERUPS_LIGHTNINGSWORD")
         {
             CREATE_POWERUP_COMPONENT("LightningSword", "30000");
+            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_CLAW_PICKUP_LIGHTNING_SWORD, pPowerupPickupComponent);
         }
         else
         {

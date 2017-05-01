@@ -22,7 +22,7 @@ const char* ProjectileAIComponent::g_Name = "ProjectileAIComponent";
 ProjectileAIComponent::ProjectileAIComponent()
     :
     m_Damage(0),
-    m_Type("Unknown"),
+    m_DamageType(DamageType_None),
     m_pPhysics(nullptr),
     m_IsActive(true)
 { }
@@ -32,9 +32,9 @@ ProjectileAIComponent::~ProjectileAIComponent()
 
 }
 
-bool ProjectileAIComponent::VInit(TiXmlElement* data)
+bool ProjectileAIComponent::VInit(TiXmlElement* pData)
 {
-    assert(data != NULL);
+    assert(pData != NULL);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     if (!m_pPhysics)
@@ -43,16 +43,15 @@ bool ProjectileAIComponent::VInit(TiXmlElement* data)
         return false;
     }
 
-    if (TiXmlElement* pElem = data->FirstChildElement("Damage"))
-    {
-        m_Damage = std::stoi(pElem->GetText());
-    }
-    if (TiXmlElement* pElem = data->FirstChildElement("ProjectileType"))
-    {
-        // Possible types: "Bullet", "Magic", "Dynamite"
-        m_Type = pElem->GetText();
-    }
+    std::string damageTypeStr;
 
+    ParseValueFromXmlElem(&m_Damage, pData->FirstChildElement("Damage"));
+    ParseValueFromXmlElem(&damageTypeStr, pData->FirstChildElement("ProjectileType"));
+    ParseValueFromXmlElem(&m_ProjectileSpeed, pData->FirstChildElement("ProjectileSpeed"), "x", "y");
+
+    m_DamageType = StringToDamageTypeEnum(damageTypeStr);
+
+    assert(m_DamageType != DamageType_None);
     assert(m_Damage > 0);
 
     return true;
@@ -60,7 +59,10 @@ bool ProjectileAIComponent::VInit(TiXmlElement* data)
 
 void ProjectileAIComponent::VPostInit()
 {
-
+    if (!m_ProjectileSpeed.IsZeroXY())
+    {
+        m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), m_ProjectileSpeed);
+    }
 }
 
 TiXmlElement* ProjectileAIComponent::VGenerateXml()
@@ -83,7 +85,7 @@ void ProjectileAIComponent::OnCollidedWithSolidTile()
 
         m_IsActive = false;
 
-        if (m_Type == "Dynamite")
+        if (m_DamageType == DamageType_Explosion)
         {
             ActorTemplates::CreateSingleAnimation(_owner->GetPositionComponent()->GetPosition(), AnimationType_Explosion);
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
@@ -106,14 +108,6 @@ void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)
         MakeStrongPtr(pActorWhoWasShot->GetComponent<HealthComponent>(HealthComponent::g_Name));
     if (pHealthComponent)
     {
-
-        DamageType damageType = DamageType_None;
-        if (m_Type == "Bullet")
-        {
-            damageType = DamageType_Bullet;
-        }
-
-        
         SDL_Rect areaDamageAABB = g_pApp->GetGameLogic()->VGetGamePhysics()->VGetAABB(_owner->GetGUID(), false);
         Point projectileSpeed = m_pPhysics->VGetVelocity(_owner->GetGUID());
 
@@ -129,14 +123,14 @@ void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)
             contactPoint.x = areaDamageAABB.x - areaDamageAABB.w / 2;
         }
 
-        pHealthComponent->AddHealth((-1) * m_Damage, damageType, contactPoint);
+        pHealthComponent->AddHealth((-1) * m_Damage, m_DamageType, contactPoint);
     }
 
-    if (m_Type == "Bullet")
+    if (m_DamageType == DamageType_Bullet)
     {
         OnCollidedWithSolidTile();
     }
-    else if (m_Type == "Dynamite" &&
+    else if (m_DamageType == DamageType_Explosion &&
              (MakeStrongPtr(pActorWhoWasShot->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name)) != nullptr ||
               MakeStrongPtr(pActorWhoWasShot->GetComponent<ExplodeableComponent>(ExplodeableComponent::g_Name)) != nullptr))
     {

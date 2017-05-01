@@ -164,13 +164,12 @@ void EnemyAIComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, Damage
         {
             EnterState("TakeDamageState");
         }
+    }
 
-        // Spawn graphics in the hit point
-        if (damageType != DamageType_Magic)
-        {
-            ActorTemplates::CreateSingleAnimation(impactPoint, AnimationType_RedHitPoint);
-            Util::PlayRandomHitSound();
-        }
+    if (newHealth < oldHealth)
+    {
+        ActorTemplates::CreateSingleAnimation(impactPoint, AnimationType_RedHitPoint);
+        Util::PlayRandomHitSound();
     }
 }
 

@@ -26,7 +26,8 @@ bool AnimationComponent::VInit(TiXmlElement* data)
 
     // Loop through all anim paths elements
     for (TiXmlElement* animPathElem = data->FirstChildElement("AnimationPath");
-        animPathElem != NULL; animPathElem = animPathElem->NextSiblingElement("AnimationPath"))
+        animPathElem != NULL; 
+        animPathElem = animPathElem->NextSiblingElement("AnimationPath"))
     {
         const char* animationsPath = animPathElem->GetText();
 
@@ -59,7 +60,8 @@ bool AnimationComponent::VInit(TiXmlElement* data)
     }
 
     for (TiXmlElement* animElem = data->FirstChildElement("Animation");
-        animElem != NULL; animElem = animElem->NextSiblingElement("Animation"))
+        animElem != NULL; 
+        animElem = animElem->NextSiblingElement("Animation"))
     {
         if (!animElem->Attribute("type"))
         {
@@ -217,7 +219,7 @@ void AnimationComponent::VPostInit()
 
     if (_animationMap.empty())
     {
-        LOG_ERROR("No animations in amin component. Offending actor: " + _owner->GetName());
+        //LOG_ERROR("No animations in amin component. Offending actor: " + _owner->GetName());
         //assert(false && "No animations in AnimationComponent at all !");
     }
 
@@ -230,11 +232,6 @@ void AnimationComponent::VPostInit()
     {
         _currentAnimation->Pause();
     }
-
-    /*else
-    {
-        assert(false && "Animation component is without any animation");
-    }*/
 }
 
 TiXmlElement* AnimationComponent::VGenerateXml()

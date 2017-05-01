@@ -59,6 +59,8 @@ typedef int8_t int8;
 #define max(a, b) ((a) < (b) ? (b) : (a))
 #endif
 
+
+
 // Resource caches
 // Hardcoding this saves A LOT of headaches
 #define ORIGINAL_RESOURCE "CLAW_REZ"
@@ -135,6 +137,30 @@ inline FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
     }
 
     return fixtureType;
+}
+
+inline DamageType StringToDamageTypeEnum(const std::string& str)
+{
+    static const std::map<std::string, DamageType> s_StringToDamageTypeEnumMap =
+    {
+        { "DamageType_None", DamageType_None },
+        { "DamageType_MeleeAttack", DamageType_MeleeAttack },
+        { "DamageType_Bullet", DamageType_Bullet },
+        { "DamageType_Magic", DamageType_Magic },
+        { "DamageType_Explosion", DamageType_Explosion },
+        { "DamageType_FireSword", DamageType_FireSword },
+        { "DamageType_LightningSword", DamageType_LightningSword },
+        { "DamageType_FrostSword", DamageType_FrostSword }
+    };
+
+    auto findIt = s_StringToDamageTypeEnumMap.find(str);
+    if (findIt == s_StringToDamageTypeEnumMap.end())
+    {
+        LOG_ERROR("Could not find DamageType: " + str);
+        assert(false);
+    }
+
+    return findIt->second;
 }
 
 inline b2BodyType BodyTypeStringToEnum(std::string bodyTypeStr)

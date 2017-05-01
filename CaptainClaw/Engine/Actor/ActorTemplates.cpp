@@ -70,7 +70,7 @@ namespace ActorTemplates
         { PickupType_Powerup_Life,              "" },
         { PickupType_Powerup_FireSword,         "" },
         { PickupType_Powerup_LightningSword,    "" },
-        { PickupType_Powerup_IceSword,          "" },
+        { PickupType_Powerup_FrostSword,        "" },
     };
 
     std::map<PickupType, std::string> g_PickupTypeToPickupSoundMap =
@@ -131,9 +131,9 @@ namespace ActorTemplates
         { PickupType_Powerup_Invisibility, "" },
         { PickupType_Powerup_Invincibility, "" },
         { PickupType_Powerup_Life, "" },
-        { PickupType_Powerup_FireSword, "" },
-        { PickupType_Powerup_LightningSword, "" },
-        { PickupType_Powerup_IceSword, "" },
+        { PickupType_Powerup_FireSword,         SOUND_CLAW_PICKUP_FIRE_SWORD },
+        { PickupType_Powerup_LightningSword,    SOUND_CLAW_PICKUP_LIGHTNING_SWORD },
+        { PickupType_Powerup_FrostSword,        SOUND_CLAW_PICKUP_FROST_SWORD },
     };
 
     //=====================================================================================================================
@@ -1112,9 +1112,9 @@ namespace ActorTemplates
 
         std::string projectileTypeStr;
         int32 damage = 0;
-        if (ammoType == AmmoType_Pistol) { projectileTypeStr = "Bullet"; damage = 20; }
-        else if (ammoType == AmmoType_Magic) { projectileTypeStr = "Magic"; damage = 50; }
-        else if (ammoType == AmmoType_Dynamite) { projectileTypeStr = "Dynamite"; damage = 50; }
+        if (ammoType == AmmoType_Pistol) { projectileTypeStr = "DamageType_Bullet"; damage = 20; }
+        else if (ammoType == AmmoType_Magic) { projectileTypeStr = "DamageType_Magic"; damage = 50; }
+        else if (ammoType == AmmoType_Dynamite) { projectileTypeStr = "DamageType_Explosion"; damage = 50; }
         else { assert(false && "Unknown projectile"); }
 
         TiXmlElement* pProjectileAIComponent = new TiXmlElement("ProjectileAIComponent");
@@ -1151,7 +1151,7 @@ namespace ActorTemplates
 
         TiXmlElement* pProjectileAIComponent = new TiXmlElement("ProjectileAIComponent");
         XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pProjectileAIComponent);
-        XML_ADD_TEXT_ELEMENT("ProjectileType", "Bullet", pProjectileAIComponent);
+        XML_ADD_TEXT_ELEMENT("ProjectileType", "DamageType_Bullet", pProjectileAIComponent);
         XML_ADD_2_PARAM_ELEMENT("Speed", "x", ToStr(speed).c_str(), "y", "0", pProjectileAIComponent);
         pActor->LinkEndChild(pProjectileAIComponent);
 
@@ -1434,11 +1434,11 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "PositionComponent.Position",
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- Loot
-        TiXmlElement* pLootComponentElem = GetTiXmlElementFromPath(pActorElem, "LootComponent");
+        TiXmlElement* pLootComponentElem = GetTiXmlElementFromPath(pActorElem, "Actor.LootComponent");
         assert(pLootComponentElem != NULL);
         for (PickupType item : loot)
         {
@@ -1446,8 +1446,8 @@ namespace ActorTemplates
         }
 
         //----------- Patrol borders
-        assert(SetTiXmlNodeValue(pActorElem, "PatrolEnemyAIStateComponent.LeftPatrolBorder", minPatrolX));
-        assert(SetTiXmlNodeValue(pActorElem, "PatrolEnemyAIStateComponent.RightPatrolBorder", maxPatrolX));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.LeftPatrolBorder", minPatrolX));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.RightPatrolBorder", maxPatrolX));
 
         return pActorElem;
     }
@@ -1458,21 +1458,21 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "PositionComponent.Position", 
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position", 
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- Elevator properties
-        assert(SetTiXmlNode2Attribute(pActorElem, "KinematicComponent.Speed", 
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.KinematicComponent.Speed", 
             "x", (int)elevatorDef.speed.x, "y", (int)elevatorDef.speed.y));
-        assert(SetTiXmlNode2Attribute(pActorElem, "KinematicComponent.MinPosition",
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.KinematicComponent.MinPosition",
             "x", (int)elevatorDef.minPosition.x, "y", (int)elevatorDef.minPosition.y));
-        assert(SetTiXmlNode2Attribute(pActorElem, "KinematicComponent.MaxPosition",
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.KinematicComponent.MaxPosition",
             "x", (int)elevatorDef.maxPosition.x, "y", (int)elevatorDef.maxPosition.y));
 
-        assert(SetTiXmlNodeValue(pActorElem, "KinematicComponent.HasTriggerBehaviour", elevatorDef.hasTriggerBehaviour));
-        assert(SetTiXmlNodeValue(pActorElem, "KinematicComponent.HasStartBehaviour", elevatorDef.hasStartBehaviour));
-        assert(SetTiXmlNodeValue(pActorElem, "KinematicComponent.HasStopBehaviour", elevatorDef.hasStopBehaviour));
-        assert(SetTiXmlNodeValue(pActorElem, "KinematicComponent.HasOneWayBehaviour", elevatorDef.hasOneWayBehaviour));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasTriggerBehaviour", elevatorDef.hasTriggerBehaviour));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasStartBehaviour", elevatorDef.hasStartBehaviour));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasStopBehaviour", elevatorDef.hasStopBehaviour));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasOneWayBehaviour", elevatorDef.hasOneWayBehaviour));
 
         return pActorElem;
     }
@@ -1483,16 +1483,52 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "PositionComponent.Position",
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- TogglePeg properties
-        assert(SetTiXmlNodeValue(pActorElem, "TogglePegAIComponent.Delay", togglePegDef.delay));
-        assert(SetTiXmlNodeValue(pActorElem, "TogglePegAIComponent.TimeOn", togglePegDef.timeOn));
-        assert(SetTiXmlNodeValue(pActorElem, "TogglePegAIComponent.TimeOff", togglePegDef.timeOff));
-        assert(SetTiXmlNodeValue(pActorElem, "TogglePegAIComponent.AlwaysOn", togglePegDef.isAlwaysOn));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.Delay", togglePegDef.delay));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.TimeOn", togglePegDef.timeOn));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.TimeOff", togglePegDef.timeOff));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.AlwaysOn", togglePegDef.isAlwaysOn));
 
         return pActorElem;
+    }
+
+    TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        if (dir == Direction_Left)
+        {
+            // Invert projectile speed when shooting left
+
+            TiXmlElement* pProjectileSpeedElem = GetTiXmlElementFromPath(pActorElem, "Actor.ProjectileAIComponent.ProjectileSpeed");
+            assert(pProjectileSpeedElem != NULL);
+
+            Point projectileSpeed;
+            assert(ParseValueFromXmlElem(&projectileSpeed, pProjectileSpeedElem, "x", "y"));
+            projectileSpeed.x *= -1.0;
+
+            assert(SetTiXmlNode2Attribute(pActorElem, "Actor.ProjectileAIComponent.ProjectileSpeed",
+                "x", (int)projectileSpeed.x, "y", (int)projectileSpeed.y));
+
+            // Mirror render component
+
+            assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.Mirrored", true));
+        }
+
+        return pActorElem;
+    }
+
+    StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir)
+    {
+        return CreateAndReturnActor(CreateXmlData_ProjectileActor(proto, position, dir));
     }
 
     TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX)

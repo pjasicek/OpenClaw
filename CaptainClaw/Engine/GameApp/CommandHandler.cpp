@@ -32,6 +32,27 @@ std::vector<std::string> g_AvailableCheats;
     } \
 }
 
+bool CommandHandler::AddPowerup(PowerupType type, int duration, bool& executed, std::string command, Console* pConsole)
+{
+    if (StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor())
+    {
+        shared_ptr<PowerupComponent> pPowerupComponent =
+            MakeStrongPtr(pClaw->GetComponent<PowerupComponent>(PowerupComponent::g_Name));
+        assert(pPowerupComponent);
+
+        pPowerupComponent->ApplyPowerup(type, duration);
+        executed = true;
+        pConsole->AddLine(command + " buff ON for 30 seconds.", COLOR_GREEN);
+    }
+    else
+    {
+        pConsole->AddLine("Claw is not yet created, cannot apply " + command + " buff", COLOR_RED);
+        return false;
+    }
+
+    return true;
+}
+
 void CommandHandler::HandleCommand(const char* command, void* userdata)
 {
     Console* pConsole = static_cast<Console*>(userdata);
@@ -57,21 +78,19 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
 
     if (commandStr == "catnip")
     {
-        if (StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor())
-        {
-            shared_ptr<PowerupComponent> pPowerupComponent =
-                MakeStrongPtr(pClaw->GetComponent<PowerupComponent>(PowerupComponent::g_Name));
-            assert(pPowerupComponent);
-
-            pPowerupComponent->ApplyPowerup(PowerupType_Catnip, 30000);
-            wasCommandExecuted = true;
-            pConsole->AddLine("Catnip buff ON for 30 seconds.", COLOR_GREEN);
-        }
-        else
-        {
-            pConsole->AddLine("Claw is not yet created, cannot apply Catnip buff", COLOR_RED);
-            return;
-        }
+        AddPowerup(PowerupType_Catnip, 30000, wasCommandExecuted, commandStr, pConsole);
+    }
+    else if (commandStr == "firesword")
+    {
+        AddPowerup(PowerupType_FireSword, 30000, wasCommandExecuted, commandStr, pConsole);
+    }
+    else if (commandStr == "frostsword")
+    {
+        AddPowerup(PowerupType_FrostSword, 30000, wasCommandExecuted, commandStr, pConsole);
+    }
+    else if (commandStr == "lightningsword")
+    {
+        AddPowerup(PowerupType_LightningSword, 30000, wasCommandExecuted, commandStr, pConsole);
     }
 
     if (commandStr == "reset level")

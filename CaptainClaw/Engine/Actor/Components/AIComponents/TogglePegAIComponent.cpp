@@ -36,11 +36,7 @@ bool TogglePegAIComponent::VInit(TiXmlElement* pData)
         return false;
     }
 
-    assert(ParseValueFromXmlElem(&m_Properties.timeOn, pData->FirstChildElement("TimeOn")));
-    assert(ParseValueFromXmlElem(&m_Properties.timeOff, pData->FirstChildElement("TimeOff")));
-    assert(ParseValueFromXmlElem(&m_Properties.delay, pData->FirstChildElement("Delay")));
-    assert(ParseValueFromXmlElem(&m_Properties.toggleFrameIdx, pData->FirstChildElement("ToggleFrameIdx")));
-    assert(ParseValueFromXmlElem(&m_Properties.isAlwaysOn, pData->FirstChildElement("AlwaysOn")));
+    m_Properties.LoadFromXml(pData, true);
 
     return true;
 }

@@ -22,8 +22,12 @@ public:
     void OnCollidedWithActor(Actor* pActorWhoWasShot);
 
 private:
+    // XML Data
     int32 m_Damage;
-    std::string m_Type;
+    DamageType m_DamageType;
+    Point m_ProjectileSpeed;
+
+    // Internal state
     shared_ptr<IGamePhysics> m_pPhysics;
     bool m_IsActive;
     std::vector<StrongActorPtr> m_PowerupSparkles;

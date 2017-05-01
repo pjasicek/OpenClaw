@@ -370,7 +370,7 @@ bool PowerupPickupComponent::VDelegateInit(TiXmlElement* data)
     if (powerupTypeStr == "Invulnerability") { m_PowerupType = PowerupType_Invulnerability; }
     else if (powerupTypeStr == "Invisibility") { m_PowerupType = PowerupType_Invisibility; }
     else if (powerupTypeStr == "Catnip") { m_PowerupType = PowerupType_Catnip; }
-    else if (powerupTypeStr == "IceSword") { m_PowerupType = PowerupType_IceSword; }
+    else if (powerupTypeStr == "IceSword") { m_PowerupType = PowerupType_FrostSword; }
     else if (powerupTypeStr == "FireSword") { m_PowerupType = PowerupType_FireSword; }
     else if (powerupTypeStr == "LightningSword") { m_PowerupType = PowerupType_LightningSword; }
 

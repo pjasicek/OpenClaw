@@ -7,30 +7,6 @@
 
 const char* AreaDamageComponent::g_Name = "AreaDamageComponent";
 
-std::map<std::string, DamageType> g_StringToDamageTypeEnumMap =
-{
-    { "DamageType_None", DamageType_None },
-    { "DamageType_MeleeAttack", DamageType_MeleeAttack },
-    { "DamageType_Bullet", DamageType_Bullet },
-    { "DamageType_Magic", DamageType_Magic },
-    { "DamageType_Explosion", DamageType_Explosion },
-    { "DamageType_FireSword", DamageType_FireSword },
-    { "DamageType_LightningSword", DamageType_LightningSword },
-    { "DamageType_IceSword", DamageType_IceSword }
-};
-
-DamageType StringToDamageTypeEnum(const std::string& str)
-{
-    auto findIt = g_StringToDamageTypeEnumMap.find(str);
-    if (findIt == g_StringToDamageTypeEnumMap.end())
-    {
-        LOG_ERROR("Could not find DamageType: " + str);
-        assert(false);
-    }
-
-    return findIt->second;
-}
-
 AreaDamageComponent::AreaDamageComponent()
     :
     m_Damage(50),

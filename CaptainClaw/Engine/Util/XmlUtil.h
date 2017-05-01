@@ -271,6 +271,9 @@ inline bool ParseValueFromXmlElem(std::string* pDest, TiXmlElement* pElemSource)
     return false;
 }
 
+class Point;
+bool ParseValueFromXmlElem(Point* pDest, TiXmlElement* pElem, const char* elemAttrNameX, const char* elemAttrNameY);
+
 inline bool ParseAttributeFromXmlElem(std::string* pDest, const char* attrName, TiXmlElement* pElemSource)
 {
     if (pElemSource && pElemSource->Attribute(attrName))

@@ -3,6 +3,10 @@
 
 #include "Interfaces.h"
 
+#ifndef cond_assert
+#define cond_assert(enabled, body) { if (enabled) { assert(body); } else { body; } }
+#endif
+
 //---------------------------------------------------------------------------------------------------------------------
 // This class represents a single point in 2D space
 //---------------------------------------------------------------------------------------------------------------------
@@ -230,20 +234,22 @@ struct TogglePegDef
         XML_ADD_TEXT_ELEMENT("Delay", ToStr(delay).c_str(), pTogglePegComponent);
     }
 
-    static TogglePegDef CreateFromXml(TiXmlElement* pElem)
+    static TogglePegDef CreateFromXml(TiXmlElement* pElem, bool strict)
     {
         TogglePegDef def;
-        def.LoadFromXml(pElem);
+        def.LoadFromXml(pElem, strict);
         return def;
     }
 
-    void LoadFromXml(TiXmlElement* pElem)
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        ParseValueFromXmlElem(&isAlwaysOn, pElem->FirstChildElement("AlwaysOn"));
-        ParseValueFromXmlElem(&timeOff, pElem->FirstChildElement("TimeOff"));
-        ParseValueFromXmlElem(&timeOn, pElem->FirstChildElement("TimeOn"));
-        ParseValueFromXmlElem(&toggleFrameIdx, pElem->FirstChildElement("ToggleFrameIdx"));
-        ParseValueFromXmlElem(&delay, pElem->FirstChildElement("Delay"));
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&isAlwaysOn, pElem->FirstChildElement("AlwaysOn")));
+        cond_assert(strict, ParseValueFromXmlElem(&timeOff, pElem->FirstChildElement("TimeOff")));
+        cond_assert(strict, ParseValueFromXmlElem(&timeOn, pElem->FirstChildElement("TimeOn")));
+        cond_assert(strict, ParseValueFromXmlElem(&toggleFrameIdx, pElem->FirstChildElement("ToggleFrameIdx")));
+        cond_assert(strict, ParseValueFromXmlElem(&delay, pElem->FirstChildElement("Delay")));
     }
 
     // All time values in miliseconds (ms)
@@ -253,6 +259,70 @@ struct TogglePegDef
     int timeOn;
     int toggleFrameIdx;
     int delay;
+};
+
+//-------------------------------------------------------------------------------------------------
+// ProjectileDef - ProjectileAIComponent
+//-------------------------------------------------------------------------------------------------
+
+struct ProjectileDef
+{
+    ProjectileDef()
+    {
+        damage = 0;
+        damageTypeStr = "DamageType_None";
+    }
+
+    TiXmlElement* ToXml()
+    {
+        TiXmlElement* pProjectileComponent = new TiXmlElement("ProjectileAIComponent");
+
+        XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pProjectileComponent);
+        XML_ADD_TEXT_ELEMENT("ProjectileType", damageTypeStr.c_str(), pProjectileComponent);
+        XML_ADD_2_PARAM_ELEMENT("ProjectileSpeed", "x", ToStr(projectileSpeed.x).c_str(), "y", ToStr(projectileSpeed.y).c_str(), pProjectileComponent);
+    }
+
+    static ProjectileDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        ProjectileDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&damage, pElem->FirstChildElement("Damage")));
+        cond_assert(strict, ParseValueFromXmlElem(&damageTypeStr, pElem->FirstChildElement("ProjectileType")));
+        cond_assert(strict, ParseValueFromXmlElem(&projectileSpeed, pElem->FirstChildElement("ProjectileSpeed"), "x", "y"));
+    }
+
+    int damage;
+    std::string damageTypeStr;
+    Point projectileSpeed;
+};
+
+//-------------------------------------------------------------------------------------------------
+// CollisionInfo - Contains collisonFlag an collisionMask for PhysicsComponent
+//-------------------------------------------------------------------------------------------------
+
+struct CollisionInfo
+{
+    CollisionInfo()
+    {
+        collisionFlag = CollisionFlag_None;
+        collisionMask = 0xFFFFFFFF;
+    }
+
+    CollisionInfo(CollisionFlag colFlag, uint32 colMask)
+    {
+        collisionFlag = colFlag;
+        collisionMask = colMask;
+    }
+
+    CollisionFlag collisionFlag;
+    uint32 collisionMask;
 };
 
 //-------------------------------------------------------------------------------------------------

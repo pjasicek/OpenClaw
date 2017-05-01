@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <float.h>
 #include <vector>
+#include <assert.h>
 
 class Actor;
 typedef std::shared_ptr<Actor> StrongActorPtr;
@@ -119,7 +120,7 @@ enum PowerupType
     PowerupType_Invulnerability,
     PowerupType_Invisibility,
     PowerupType_FireSword,
-    PowerupType_IceSword,
+    PowerupType_FrostSword,
     PowerupType_LightningSword,
     PowerupType_Max
 };
@@ -184,7 +185,7 @@ enum PickupType
     PickupType_Powerup_Life,
     PickupType_Powerup_FireSword,
     PickupType_Powerup_LightningSword,
-    PickupType_Powerup_IceSword,
+    PickupType_Powerup_FrostSword,
     PickupType_Max
 };
 
@@ -197,7 +198,7 @@ enum DamageType
     DamageType_Explosion,
     DamageType_FireSword,
     DamageType_LightningSword,
-    DamageType_IceSword,
+    DamageType_FrostSword,
     DamageType_DeathTile,
     DamageType_EnemyAura,
     DamageType_Max
@@ -214,6 +215,10 @@ enum AnimationType
 enum ActorPrototype
 {
     ActorPrototype_Start,
+    
+    //=======================================
+    // Level specific
+    //=======================================
 
     // Enemy actors
     ActorPrototype_Level1_Soldier,
@@ -230,6 +235,15 @@ enum ActorPrototype
     // Toggle pegs
     ActorPrototype_Level1_TogglePeg,
     ActorPrototype_Level2_TogglePeg,
+
+    //=======================================
+    // General
+    //=======================================
+
+    ActorPrototype_BaseProjectile,
+    ActorPrototype_FireSwordProjectile,
+    ActorPrototype_FrostSwordProjectile,
+    ActorPrototype_LightningSwordProjectile,
 
     ActorPrototype_Max
 };

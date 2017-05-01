@@ -1,0 +1,49 @@
+<Actor Type="Base_Projectile" ActorPrototypeName="ActorPrototype_BaseProjectile">
+	<PositionComponent>
+		<!-- DEFINED IN CODE -->
+		<Position x="-1" y="-1" /> 
+	</PositionComponent>
+	<ActorRenderComponent>
+		<imgpath>NONE</imgpath>
+		<Visible>true</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>5000</ZCoord>
+		<ImagePath>NONE</ImagePath>
+	</ActorRenderComponent>
+	<AnimationComponent>
+		<SpecialAnimation>
+			<Type>cycle</Type>
+			<FrameDuration>75</FrameDuration>
+			<HasPositionDelay>false</HasPositionDelay>
+		</SpecialAnimation>
+	</AnimationComponent>
+	<ProjectileAIComponent>
+		<Damage>0</Damage>
+		<ProjectileType>DamageType_None</ProjectileType>
+		<!-- CAN BE MODIFIED IN CODE -->
+		<ProjectileSpeed x="0.000000" y="0.000000" /> 
+	</ProjectileAIComponent>
+	<PhysicsComponent>
+        <BodyType>Dynamic</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>true</HasSensorBehaviour>
+        <FixtureType>Projectile</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+		<!-- SET ACCORDING TO IMAGE IN PHYSICS COMPONENT -->
+        <CollisionSize width="0" height="0" /> 
+        <GravityScale>0.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>0</CollisionFlag>
+        <CollisionMask>0</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+    </PhysicsComponent>
+</Actor>
