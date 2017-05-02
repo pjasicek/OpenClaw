@@ -1,4 +1,5 @@
 #include "ClawHumanView.h"
+#include "ClawGameLogic.h"
 #include "ActorController.h"
 #include "Engine/UserInterface/GameHUD.h"
 
@@ -82,9 +83,9 @@ void ClawHumanView::VSetControlledActor(uint32 actorId)
     m_pCamera->SetTarget(m_pControlledActor);
 }
 
-bool ClawHumanView::VLoadGameDelegate(TiXmlElement* pLoadData)
+bool ClawHumanView::VLoadGameDelegate(TiXmlElement* pLevelXmlElem, LevelData* pLevelData)
 {
-    if (!HumanView::VLoadGameDelegate(pLoadData))
+    if (!HumanView::VLoadGameDelegate(pLevelXmlElem, pLevelData))
     {
         return false;
     }

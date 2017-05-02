@@ -229,10 +229,14 @@ enum ActorPrototype
     ActorPrototype_Level2_PunkRat,
 
     // Elevators
+    ActorPrototype_BaseElevator,
+
     ActorPrototype_Level1_Elevator,
     ActorPrototype_Level2_Elevator,
 
     // Toggle pegs
+    ActorPrototype_BaseTogglePeg,
+
     ActorPrototype_Level1_TogglePeg,
     ActorPrototype_Level2_TogglePeg,
 

@@ -90,34 +90,63 @@ void Audio::Terminate()
 #endif //_WIN32
 }
 
+struct _MusicInfo
+{
+    _MusicInfo(const char* pData, size_t size, bool isLooping, int volume)
+    {
+        pMusicData = pData;
+        musicSize = size;
+        looping = isLooping;
+        musicVolume = volume;
+    }
+
+    const char* pMusicData;
+    size_t musicSize;
+    bool looping;
+    int musicVolume;
+};
+
+static int SetupPlayMusicThread(void* pData)
+{
+    _MusicInfo* pMusicInfo = (_MusicInfo*)pData;
+
+#ifdef _WIN32
+    RpcTryExcept
+    {
+        MidiRPC_PrepareNewSong();
+        MidiRPC_AddChunk(pMusicInfo->musicSize, (byte*)pMusicInfo->pMusicData);
+        MidiRPC_PlaySong(pMusicInfo->looping);
+        MidiRPC_ChangeVolume(pMusicInfo->musicVolume);
+    }
+        RpcExcept(1)
+    {
+        //__LOG_ERROR("Audio::SetMusicVolume: Failed due to RPC exception");
+    }
+    RpcEndExcept;
+#else
+    SDL_RWops* pRWops = SDL_RWFromMem((void*)pMusicInfo->pMusicData, pMusicInfo->musicSize);
+    Mix_Music* pMusic = Mix_LoadMUS_RW(pRWops, 0);
+    if (!pMusic) {
+        LOG_ERROR("Mix_LoadMUS_RW: " + std::string(Mix_GetError()));
+    }
+    Mix_PlayMusic(pMusic, looping ? -1 : 0);
+#endif //_WIN32
+
+    return 0;
+}
+
 void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
 {
     if (!m_bMusicOn)
     {
         return;
     }
-    
-#ifdef _WIN32
-    RpcTryExcept
-    {
-        MidiRPC_PrepareNewSong();
-        MidiRPC_AddChunk(musicSize, (byte*)musicData);
-        MidiRPC_PlaySong(looping);
-        MidiRPC_ChangeVolume(m_MusicVolume);
-    }
-    RpcExcept(1)
-    {
-        //__LOG_ERROR("Audio::SetMusicVolume: Failed due to RPC exception");
-    }
-    RpcEndExcept;
-#else
-    SDL_RWops* pRWops = SDL_RWFromMem((void*)musicData, musicSize);
-    Mix_Music* pMusic = Mix_LoadMUS_RW(pRWops, 0);
-    if(!pMusic) {
-        LOG_ERROR("Mix_LoadMUS_RW: " + std::string(Mix_GetError()));
-    }
-    Mix_PlayMusic(pMusic, looping ? -1 : 0);
-#endif //_WIN32
+
+    _MusicInfo* pMusicInfo = new _MusicInfo(musicData, musicSize, looping, m_MusicVolume);
+
+    // Playing music track takes ALOT of time for some reason so play it in another thread
+    SDL_Thread* pThread = SDL_CreateThread(SetupPlayMusicThread, "SetupPlayMusicThread", (void*)pMusicInfo);
+    SDL_DetachThread(pThread);
 }
 
 // This is probably slow as fuck, should be removed, only used for debugging afaik

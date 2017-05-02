@@ -18,7 +18,7 @@ public:
 
     virtual void VSetControlledActor(uint32 actorId) override;
 
-    virtual bool VLoadGameDelegate(TiXmlElement* pLevelData) override;
+    virtual bool VLoadGameDelegate(TiXmlElement* pLevelXmlElem, LevelData* pLevelData) override;
 
 private:
     void RegisterAllDelegates();

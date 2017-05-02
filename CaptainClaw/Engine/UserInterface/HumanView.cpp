@@ -249,11 +249,22 @@ bool HumanView::EnterMenu(TiXmlElement* pMenuData)
     return true;
 }
 
-bool HumanView::LoadGame(TiXmlElement* pLevelData)
+bool HumanView::LoadGame(TiXmlElement* pLevelXmlElem, LevelData* pLevelData)
 {
     m_pScene->SortSceneNodesByZCoord();
 
-    return VLoadGameDelegate(pLevelData);
+    // Start playing background music
+    m_CurrentLevelMusic = "/LEVEL" + ToStr(pLevelData->GetLevelNumber()) +
+        "/MUSIC/PLAY.XMI";
+
+    SoundInfo soundInfo(m_CurrentLevelMusic);
+    soundInfo.isMusic = true;
+    soundInfo.loops = -1;
+    soundInfo.soundVolume = g_pApp->GetGameConfig()->musicVolume;
+
+    IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));
+
+    return VLoadGameDelegate(pLevelXmlElem, pLevelData);
 }
 
 void HumanView::VPushElement(shared_ptr<IScreenElement> element)
@@ -469,9 +480,31 @@ void HumanView::PowerupUpdatedStatusDelegate(IEventDataPtr pEventData)
     shared_ptr<EventData_Updated_Powerup_Status> pCastEventData = static_pointer_cast<EventData_Updated_Powerup_Status>(pEventData);
     if (m_pHUD)
     {
+        bool hadPowerup = m_pHUD->IsElementVisible("stopwatch");
+
         if (!m_pHUD->SetElementVisible("stopwatch", !pCastEventData->IsPowerupFinished()))
         {
             LOG_ERROR("Could not set visibility to HUD element \"stopwatch\"");
+        }
+
+        if (!hadPowerup && m_pHUD->IsElementVisible("stopwatch"))
+        {
+            // Acquired powerup
+            SoundInfo soundInfo("/GAME/MUSIC/POWERUP.XMI");
+            soundInfo.isMusic = true;
+            soundInfo.loops = -1;
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                new EventData_Request_Play_Sound(soundInfo)));
+        }
+        else if (hadPowerup && !m_pHUD->IsElementVisible("stopwatch"))
+        {
+            // Lost powerup
+            assert(!m_CurrentLevelMusic.empty());
+            SoundInfo soundInfo(m_CurrentLevelMusic);
+            soundInfo.isMusic = true;
+            soundInfo.loops = -1;
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                new EventData_Request_Play_Sound(soundInfo)));
         }
     }
     else

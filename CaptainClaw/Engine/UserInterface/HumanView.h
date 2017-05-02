@@ -13,6 +13,7 @@
 typedef std::list<shared_ptr<IScreenElement>> ScreenElementList;
 typedef std::list<shared_ptr<IGameView>> GameViewList;
 
+class LevelData;
 class Scene;
 class CameraNode;
 class HumanView : public IGameView
@@ -43,7 +44,7 @@ public:
     shared_ptr<Scene> GetScene() const { return m_pScene; }
 
     bool EnterMenu(TiXmlElement* pMenuData);
-    bool LoadGame(TiXmlElement* pLevelData);
+    bool LoadGame(TiXmlElement* pLevelXmlElem, LevelData* pLevelData);
 
     void RegisterConsoleCommandHandler(void(*handler)(const char*, void*), void* userdata);
 
@@ -53,8 +54,10 @@ public:
     bool IsRendering() { return m_bRendering; }
     void SetPostponeRenderPresent(bool postpone) { m_bPostponeRenderPresent = postpone; }
 
+    void SetCurrentLevelMusic(const std::string& music) { m_CurrentLevelMusic = music; }
+
 protected:
-    virtual bool VLoadGameDelegate(TiXmlElement* levelData) { VPushElement(m_pScene); return true; }
+    virtual bool VLoadGameDelegate(TiXmlElement* pLevelXmlElem, LevelData* pLevelData) { VPushElement(m_pScene); return true; }
 
     // Delegates
     void NewHUDElementDelegate(IEventDataPtr pEventData);
@@ -95,6 +98,8 @@ protected:
 
     bool m_bRendering;
     bool m_bPostponeRenderPresent;
+
+    std::string m_CurrentLevelMusic;
 
 private:
     void RegisterAllDelegates();

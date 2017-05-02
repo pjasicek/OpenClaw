@@ -752,10 +752,14 @@ std::string ActorPrototypeEnumToString(ActorPrototype actorProto)
         { ActorPrototype_Level2_PunkRat, "ActorPrototype_Level2_PunkRat" },
 
         // Elevators
+        { ActorPrototype_BaseElevator, "ActorPrototype_BaseElevator" },
+
         { ActorPrototype_Level1_Elevator, "ActorPrototype_Level1_Elevator" },
         { ActorPrototype_Level2_Elevator, "ActorPrototype_Level2_Elevator" },
 
         // Toggle pegs
+        { ActorPrototype_BaseTogglePeg, "ActorPrototype_BaseTogglePeg" },
+
         { ActorPrototype_Level1_TogglePeg, "ActorPrototype_Level1_TogglePeg" },
         { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" },
 
@@ -792,10 +796,14 @@ ActorPrototype ActorPrototypeStringToEnum(std::string actorProtoStr)
         { "ActorPrototype_Level2_PunkRat", ActorPrototype_Level2_PunkRat },
 
         // Elevators
+        { "ActorPrototype_BaseElevator", ActorPrototype_BaseElevator },
+
         { "ActorPrototype_Level1_Elevator", ActorPrototype_Level1_Elevator },
         { "ActorPrototype_Level2_Elevator", ActorPrototype_Level2_Elevator },
 
         // Toggle pegs
+        { "ActorPrototype_BaseTogglePeg", ActorPrototype_BaseTogglePeg },
+
         { "ActorPrototype_Level1_TogglePeg", ActorPrototype_Level1_TogglePeg },
         { "ActorPrototype_Level2_TogglePeg", ActorPrototype_Level2_TogglePeg },
 

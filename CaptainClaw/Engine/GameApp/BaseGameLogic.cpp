@@ -341,7 +341,7 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
         if (pGameView->VGetType() == GameView_Human)
         {
             shared_ptr<HumanView> pHumanView = static_pointer_cast<HumanView>(pGameView);
-            pHumanView->LoadGame(pXmlLevelRoot);
+            pHumanView->LoadGame(pXmlLevelRoot, m_pCurrentLevel.get());
         }
     }
 
@@ -365,17 +365,6 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     // Set claw to spawn location
     m_CurrentSpawnPosition = GetSpawnPosition(m_pCurrentLevel->m_LeveNumber, m_pCurrentLevel->m_LoadedCheckpoint);
     pEventMgr->VTriggerEvent(IEventDataPtr(new EventData_Teleport_Actor(clawId, m_CurrentSpawnPosition)));
-
-    // Start playing background music
-    std::string backgroundMusicPath = "/LEVEL" + ToStr(m_pCurrentLevel->GetLevelNumber()) +
-        "/MUSIC/PLAY.XMI";
-
-    SoundInfo soundInfo(backgroundMusicPath);
-    soundInfo.isMusic = true;
-    soundInfo.loops = -1;
-    soundInfo.soundVolume = g_pApp->GetGameConfig()->musicVolume;
-
-    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));
 
     loadingProgress = 100.0f;   
     RenderLoadingScreen(pBackgroundImage, backgroundRect, scale, loadingProgress);
