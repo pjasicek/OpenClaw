@@ -22,7 +22,7 @@
 
 #include "../SharedDefines.h"
 
-typedef std::map<std::string, int> ZipContentsMap;		// maps path to a zip content id
+typedef std::map<std::string, int> ZipContentsMap;        // maps path to a zip content id
 typedef std::vector<std::string> FileList;
 typedef std::map<std::string, FileList> DirToFileListMap;
 
@@ -54,9 +54,9 @@ private:
     struct TZipDirFileHeader;
     struct TZipLocalHeader;
 
-    FILE *m_pFile;		// Zip file
-    char *m_pDirData;	// Raw data buffer.
-    int  m_nEntries;	// Number of entries.
+    FILE *m_pFile;        // Zip file
+    char *m_pDirData;    // Raw data buffer.
+    int  m_nEntries;    // Number of entries.
 
     // Pointers to the dir entries in pDirData.
     const TZipDirFileHeader **m_papDir;

@@ -55,9 +55,9 @@ void SoundTriggerComponent::VOnActorEnteredTrigger(Actor* pActorWhoPickedThis)
         MakeStrongPtr(pActorWhoPickedThis->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
     assert(pClaw != nullptr);
 
-	SoundInfo soundInfo(m_TriggerSound);
+    SoundInfo soundInfo(m_TriggerSound);
     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-		new EventData_Request_Play_Sound(soundInfo)));
+        new EventData_Request_Play_Sound(soundInfo)));
 
     if (!m_bIsInfinite)
     {

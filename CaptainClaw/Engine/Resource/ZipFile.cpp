@@ -20,7 +20,7 @@
 
 #define _CRT_SECURE_NO_DEPRECATE
 
-#include <cctype>			// for std::tolower
+#include <cctype>            // for std::tolower
 
 #include "ZipFile.h"
 
@@ -38,7 +38,7 @@
 
 #pragma pack(1)
 // --------------------------------------------------------------------------
-// struct ZipFile::TZipLocalHeader					- Chapter 8, page 215
+// struct ZipFile::TZipLocalHeader                    - Chapter 8, page 215
 // --------------------------------------------------------------------------
 struct ZipFile::TZipLocalHeader
 {
@@ -60,7 +60,7 @@ struct ZipFile::TZipLocalHeader
 };
 
 // --------------------------------------------------------------------------
-// struct ZipFile::TZipDirHeader					- Chapter 8, page 215
+// struct ZipFile::TZipDirHeader                    - Chapter 8, page 215
 // --------------------------------------------------------------------------
 struct ZipFile::TZipDirHeader
 {
@@ -79,7 +79,7 @@ struct ZipFile::TZipDirHeader
 };
 
 // --------------------------------------------------------------------------
-// struct ZipFile::TZipDirFileHeader					- Chapter 8, page 215
+// struct ZipFile::TZipDirFileHeader                    - Chapter 8, page 215
 // --------------------------------------------------------------------------
 struct ZipFile::TZipDirFileHeader
 {

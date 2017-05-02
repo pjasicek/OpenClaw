@@ -147,9 +147,9 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
                 idleQuoteSoundIdx = m_pIdleQuotesSequence->GetNext(true);
             }
 
-			SoundInfo soundInfo(m_IdleQuoteSoundList[idleQuoteSoundIdx]);
+            SoundInfo soundInfo(m_IdleQuoteSoundList[idleQuoteSoundIdx]);
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-				new EventData_Request_Play_Sound(soundInfo)));
+                new EventData_Request_Play_Sound(soundInfo)));
 
             shared_ptr<FollowableComponent> pExclamationMark =
                 MakeStrongPtr(_owner->GetComponent<FollowableComponent>(FollowableComponent::g_Name));
@@ -306,21 +306,21 @@ void ClawControllableComponent::OnAttack()
 
     if (m_pPowerupComponent->HasPowerup(PowerupType_FireSword))
     {
-		SoundInfo soundInfo(SOUND_CLAW_FIRE_SWORD);
+        SoundInfo soundInfo(SOUND_CLAW_FIRE_SWORD);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-			new EventData_Request_Play_Sound(soundInfo)));
+            new EventData_Request_Play_Sound(soundInfo)));
     }
     else if (m_pPowerupComponent->HasPowerup(PowerupType_FrostSword))
     {
-		SoundInfo soundInfo(SOUND_CLAW_FROST_SWORD);
+        SoundInfo soundInfo(SOUND_CLAW_FROST_SWORD);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-			new EventData_Request_Play_Sound(soundInfo)));
+            new EventData_Request_Play_Sound(soundInfo)));
     }
     else if (m_pPowerupComponent->HasPowerup(PowerupType_LightningSword))
     {
-		SoundInfo soundInfo(SOUND_CLAW_LIGHTNING_SWORD);
+        SoundInfo soundInfo(SOUND_CLAW_LIGHTNING_SWORD);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-			new EventData_Request_Play_Sound(soundInfo)));
+            new EventData_Request_Play_Sound(soundInfo)));
     }
 }
 
@@ -699,9 +699,9 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
             }
         }
         
-		SoundInfo soundInfo(deathSound);
+        SoundInfo soundInfo(deathSound);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-			new EventData_Request_Play_Sound(soundInfo)));
+            new EventData_Request_Play_Sound(soundInfo)));
     }
 }
 
@@ -721,9 +721,9 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
 
         // Play random "take damage" sound
         int takeDamageSoundIdx = Util::GetRandomNumber(0, m_TakeDamageSoundList.size() - 1);
-		SoundInfo soundInfo(m_TakeDamageSoundList[takeDamageSoundIdx]);
+        SoundInfo soundInfo(m_TakeDamageSoundList[takeDamageSoundIdx]);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-			new EventData_Request_Play_Sound(soundInfo)));
+            new EventData_Request_Play_Sound(soundInfo)));
 
         Point knockback(-10, 0);
         if (m_pRenderComponent->IsMirrored())

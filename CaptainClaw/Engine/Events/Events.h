@@ -123,7 +123,7 @@ private:
 
 
 //---------------------------------------------------------------------------------------------------------------------
-// EventData_Destroy_Actor - sent when actors are destroyed	
+// EventData_Destroy_Actor - sent when actors are destroyed    
 //---------------------------------------------------------------------------------------------------------------------
 class EventData_Destroy_Actor : public BaseEventData
 {
@@ -355,7 +355,7 @@ public:
     static const EventType sk_EventType;
 
     EventData_Environment_Loaded(void) { }
-    virtual const EventType& VGetEventType(void) const	{ return sk_EventType; }
+    virtual const EventType& VGetEventType(void) const    { return sk_EventType; }
     virtual IEventDataPtr VCopy(void) const
     {
         return IEventDataPtr(new EventData_Environment_Loaded());
@@ -380,7 +380,7 @@ public:
     static const EventType sk_EventType;
 
     EventData_Remote_Environment_Loaded(void) { }
-    virtual const EventType& VGetEventType(void) const	{ return sk_EventType; }
+    virtual const EventType& VGetEventType(void) const    { return sk_EventType; }
     virtual IEventDataPtr VCopy(void) const
     {
         return IEventDataPtr(new EventData_Remote_Environment_Loaded());
@@ -483,9 +483,9 @@ return m_parameter;
 
 
 //---------------------------------------------------------------------------------------------------------------------
-// EventData_Remote_Client						- Chapter 19, page 687
+// EventData_Remote_Client                        - Chapter 19, page 687
 // 
-//   Sent whenever a new client attaches to a game logic acting as a server				
+//   Sent whenever a new client attaches to a game logic acting as a server                
 //---------------------------------------------------------------------------------------------------------------------
 class EventData_Remote_Client : public BaseEventData
 {
@@ -742,7 +742,7 @@ private:
 
 
 //---------------------------------------------------------------------------------------------------------------------
-// class EventData_Request_New_Actor				
+// class EventData_Request_New_Actor                
 // This event is sent by a server asking Client proxy logics to create new actors from their local resources.
 // It can be sent from script or via code.
 // This event is also sent from the server game logic to client logics AFTER it has created a new actor. The logics will allow follow suit to stay in sync.
@@ -816,7 +816,7 @@ public:
 
     const std::string &GetActorResource(void) const { return m_ActorResource; }
     const Point *GetInitialTransform(void) const { return (m_HasInitialPosition) ? &m_InitialPosition : NULL; }
-    const uint32_t GetServerActorId(void) const 	{ return m_ServerActorId; }
+    const uint32_t GetServerActorId(void) const     { return m_ServerActorId; }
     uint32_t GetViewId(void) const { return m_ViewId; }
 
 private:
@@ -829,7 +829,7 @@ private:
 
 /*
 //---------------------------------------------------------------------------------------------------------------------
-// EventData_Request_Destroy_Actor - sent by any system requesting that the game logic destroy an actor	
+// EventData_Request_Destroy_Actor - sent by any system requesting that the game logic destroy an actor    
 //    FUTURE WORK - This event shouldn't really exist - subsystems should never ask the game logic to destroy something through an event, should they?
 //---------------------------------------------------------------------------------------------------------------------
 class EventData_Request_Destroy_Actor : public ScriptEvent
@@ -2042,22 +2042,22 @@ public:
         m_Loops = loops;
     }*/
 
-	EventData_Request_Play_Sound(const SoundInfo& soundInfo)
-	{
-		m_SoundInfo = soundInfo;
-	}
+    EventData_Request_Play_Sound(const SoundInfo& soundInfo)
+    {
+        m_SoundInfo = soundInfo;
+    }
 
     virtual const EventType& VGetEventType(void) const { return sk_EventType; }
     virtual IEventDataPtr VCopy() const
     {
-		return IEventDataPtr(new EventData_Request_Play_Sound(m_SoundInfo));
+        return IEventDataPtr(new EventData_Request_Play_Sound(m_SoundInfo));
     }
-	virtual void VSerialize(std::ostringstream& out) const { assert(false && "Not serializable"); /*out << m_MusicPath << m_Volume << m_bIsMusic << m_Loops;*/ }
-	virtual void VDeserialize(std::istringstream& in) { assert(false && "Not deserializable"); /*in >> m_MusicPath >> m_Volume >> m_bIsMusic >> m_Loops;*/ }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Not serializable"); /*out << m_MusicPath << m_Volume << m_bIsMusic << m_Loops;*/ }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Not deserializable"); /*in >> m_MusicPath >> m_Volume >> m_bIsMusic >> m_Loops;*/ }
 
-	const SoundInfo* GetSoundInfo() { return &m_SoundInfo; }
+    const SoundInfo* GetSoundInfo() { return &m_SoundInfo; }
 
-	/*std::string GetSoundPath() const { return m_MusicPath; }
+    /*std::string GetSoundPath() const { return m_MusicPath; }
     uint32 GetVolume() const { return m_Volume; }
     bool IsMusic() const { return m_bIsMusic; }
     int GetNumLoops() const { return m_Loops; }*/
@@ -2065,9 +2065,9 @@ public:
     virtual const char* GetName(void) const { return "EventData_Request_Play_Sound"; }
 
 private:
-	SoundInfo m_SoundInfo;
+    SoundInfo m_SoundInfo;
 
-	/*std::string m_MusicPath;
+    /*std::string m_MusicPath;
     uint32 m_Volume;
     int m_Loops;
     bool m_bIsMusic;*/

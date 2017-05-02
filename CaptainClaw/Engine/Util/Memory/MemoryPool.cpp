@@ -105,7 +105,7 @@ void* MemoryPool::Alloc(void)
 
 void MemoryPool::Free(void* pMem)
 {
-    if (pMem != NULL)  	// calling Free() on a NULL pointer is perfectly valid
+    if (pMem != NULL)      // calling Free() on a NULL pointer is perfectly valid
     {
         // The pointer we get back is just to the data section of the chunk.  This gets us the full chunk.
         unsigned char* pBlock = ((unsigned char*)pMem) - CHUNK_HEADER_SIZE;
@@ -158,7 +158,7 @@ bool MemoryPool::GrowMemoryArray(void)
     }
 
     // allocate a new block of memory
-    ppNewMemArray[m_memArraySize] = AllocateNewMemoryBlock();  // indexing m_memArraySize here is safe because we haven't incremented it yet to reflect the new size	
+    ppNewMemArray[m_memArraySize] = AllocateNewMemoryBlock();  // indexing m_memArraySize here is safe because we haven't incremented it yet to reflect the new size    
 
     // attach the block to the end of the current memory list
     if (m_pHead)

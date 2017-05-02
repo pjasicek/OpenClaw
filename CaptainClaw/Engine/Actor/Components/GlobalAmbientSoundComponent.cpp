@@ -50,10 +50,10 @@ bool GlobalAmbientSoundComponent::VInit(TiXmlElement* pData)
 
     if (m_IsLooping)
     {
-		SoundInfo soundInfo(m_Sound);
-		soundInfo.loops = -1;
+        SoundInfo soundInfo(m_Sound);
+        soundInfo.loops = -1;
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-			new EventData_Request_Play_Sound(soundInfo)));
+            new EventData_Request_Play_Sound(soundInfo)));
     }
 
     return true;
@@ -79,10 +79,10 @@ void GlobalAmbientSoundComponent::VUpdate(uint32 msDiff)
         int timeOn = Util::GetRandomNumber(m_MinTimeOn, m_MaxTimeOn);
         int soundLoops = timeOn / m_SoundDurationMs;
 
-		SoundInfo soundInfo(m_Sound);
-		soundInfo.loops = soundLoops;
+        SoundInfo soundInfo(m_Sound);
+        soundInfo.loops = soundLoops;
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-			new EventData_Request_Play_Sound(soundInfo)));
+            new EventData_Request_Play_Sound(soundInfo)));
 
         m_TimeOff = Util::GetRandomNumber(m_MinTimeOff, m_MaxTimeOff) + soundLoops * m_SoundDurationMs;
 

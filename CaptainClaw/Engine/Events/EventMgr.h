@@ -62,7 +62,7 @@ public:
     float GetTimeStamp(void) const { return m_TimeStamp; }
 
     // Serializing for network input / output
-    virtual void VSerialize(std::ostringstream &out) const	{ }
+    virtual void VSerialize(std::ostringstream &out) const    { }
     virtual void VDeserialize(std::istringstream& in) { }
 
 private:

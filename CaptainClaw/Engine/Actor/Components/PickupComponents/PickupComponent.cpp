@@ -84,9 +84,9 @@ void PickupComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
         // Play pickup sound if applicable
         if (m_PickupSound.length() > 0)
         {
-			SoundInfo soundInfo(m_PickupSound);
+            SoundInfo soundInfo(m_PickupSound);
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-				new EventData_Request_Play_Sound(soundInfo)));
+                new EventData_Request_Play_Sound(soundInfo)));
         }
 
         //LOG("Pickup up");
@@ -342,9 +342,9 @@ bool TeleportPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
     shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
     IEventMgr::Get()->VQueueEvent(pEvent);
 
-	SoundInfo soundInfo(SOUND_GAME_ENTER_WARP);
+    SoundInfo soundInfo(SOUND_GAME_ENTER_WARP);
     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-		new EventData_Request_Play_Sound(soundInfo)));
+        new EventData_Request_Play_Sound(soundInfo)));
 
     return true;
 }

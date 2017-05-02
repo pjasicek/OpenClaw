@@ -378,10 +378,10 @@ namespace Util
         {
             int soundIdx = Util::GetRandomNumber(0, sounds.size() - 1);
 
-			SoundInfo soundInfo(sounds[soundIdx]);
-			soundInfo.soundVolume = volume;
+            SoundInfo soundInfo(sounds[soundIdx]);
+            soundInfo.soundVolume = volume;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-				new EventData_Request_Play_Sound(soundInfo)));
+                new EventData_Request_Play_Sound(soundInfo)));
         }
     }
 

@@ -99,7 +99,7 @@ PrimeSearch::PrimeSearch(int elements)
     int c = (rand() % 5) + 1;
 
     skip = (a * maxElements * maxElements) + (b * maxElements) + c;
-    skip &= ~0xc0000000;		// this keeps skip from becoming too large....
+    skip &= ~0xc0000000;        // this keeps skip from becoming too large....
 
     Restart();
 

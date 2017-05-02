@@ -384,27 +384,27 @@ struct PredefinedMove
 
 struct SoundInfo
 {
-	SoundInfo()
-	{
-		isMusic = false;
-		soundVolume = 100;
-		loops = 0;
-		isAttentuated = false;
-		attentuationFactor = 1.0f;
-	}
+    SoundInfo()
+    {
+        isMusic = false;
+        soundVolume = 100;
+        loops = 0;
+        isAttentuated = false;
+        attentuationFactor = 1.0f;
+    }
 
-	SoundInfo(std::string sound) : SoundInfo()
-	{
-		soundToPlay = sound;
-	}
+    SoundInfo(std::string sound) : SoundInfo()
+    {
+        soundToPlay = sound;
+    }
 
-	std::string soundToPlay;
-	bool isMusic;
-	int soundVolume;
-	int loops;
-	bool isAttentuated;
-	float attentuationFactor;
-	Point soundSourcePosition;
+    std::string soundToPlay;
+    bool isMusic;
+    int soundVolume;
+    int loops;
+    bool isAttentuated;
+    float attentuationFactor;
+    Point soundSourcePosition;
 };
 
 #endif

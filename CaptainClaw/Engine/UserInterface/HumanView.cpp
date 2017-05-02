@@ -359,9 +359,9 @@ void HumanView::ScoreUpdatedDelegate(IEventDataPtr pEventData)
                 IEventMgr::Get()->VQueueEvent(pEvent);
 
                 // Play new life sound
-				SoundInfo soundInfo(SOUND_GAME_EXTRA_LIFE);
+                SoundInfo soundInfo(SOUND_GAME_EXTRA_LIFE);
                 IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-					new EventData_Request_Play_Sound(soundInfo)));
+                    new EventData_Request_Play_Sound(soundInfo)));
             }
         }
     }
@@ -488,17 +488,17 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
     shared_ptr<EventData_Request_Play_Sound> pCastEventData = static_pointer_cast<EventData_Request_Play_Sound>(pEventData);
     if (pCastEventData)
     {
-		const SoundInfo* pSoundInfo = pCastEventData->GetSoundInfo();
-		if (pSoundInfo->isMusic) // Background music - instrumental
+        const SoundInfo* pSoundInfo = pCastEventData->GetSoundInfo();
+        if (pSoundInfo->isMusic) // Background music - instrumental
         {
-			shared_ptr<MidiFile> pMidiFile = MidiResourceLoader::LoadAndReturnMidiFile(pSoundInfo->soundToPlay.c_str());
+            shared_ptr<MidiFile> pMidiFile = MidiResourceLoader::LoadAndReturnMidiFile(pSoundInfo->soundToPlay.c_str());
             assert(pMidiFile != nullptr);
 
-			g_pApp->GetAudio()->PlayMusic(pMidiFile->data, pMidiFile->size, pSoundInfo->loops != 0);
+            g_pApp->GetAudio()->PlayMusic(pMidiFile->data, pMidiFile->size, pSoundInfo->loops != 0);
         }
         else // Effect / Speech etc. - WAV
         {
-			shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(pSoundInfo->soundToPlay.c_str());
+            shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(pSoundInfo->soundToPlay.c_str());
             assert(pSound != nullptr);
 
             if (!g_pApp->GetAudio()->PlaySound(pSound.get(), pSoundInfo->soundVolume, pSoundInfo->loops))
@@ -721,9 +721,9 @@ void DeathFadeInOutProcess::VOnUpdate(uint32 msDiff)
         {
             if (m_CurrentTime >= m_StartDelay)
             {
-				SoundInfo soundInfo(SOUND_GAME_DEATH_FADE_IN_SOUND);
+                SoundInfo soundInfo(SOUND_GAME_DEATH_FADE_IN_SOUND);
                 IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-					new EventData_Request_Play_Sound(soundInfo)));
+                    new EventData_Request_Play_Sound(soundInfo)));
 
                 m_CurrentTime = 0;
                 m_DeathFadeState = DeathFadeState_FadingIn;
@@ -735,9 +735,9 @@ void DeathFadeInOutProcess::VOnUpdate(uint32 msDiff)
         {
             if (m_CurrentTime >= m_FadeInDuration)
             {
-				SoundInfo soundInfo(SOUND_GAME_DEATH_FADE_OUT_SOUND);
+                SoundInfo soundInfo(SOUND_GAME_DEATH_FADE_OUT_SOUND);
                 IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-					new EventData_Request_Play_Sound(soundInfo)));
+                    new EventData_Request_Play_Sound(soundInfo)));
 
                 g_pApp->GetHumanView()->SetRendering(true);
                 m_CurrentTime = 0;
