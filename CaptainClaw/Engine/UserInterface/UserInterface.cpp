@@ -302,7 +302,11 @@ static IEventDataPtr XmlElemToGeneratedEvent(TiXmlElement* pElem)
         ParseValueFromXmlElem(&isMusic, pElem->FirstChildElement("IsMusic"));
         ParseValueFromXmlElem(&loops, pElem->FirstChildElement("Loops"));
 
-        pEventData.reset(new EventData_Request_Play_Sound(soundName, volume, isMusic, loops));
+		SoundInfo soundInfo(soundName);
+		soundInfo.soundVolume = volume;
+		soundInfo.isMusic = isMusic;
+		soundInfo.loops = loops;
+		pEventData.reset(new EventData_Request_Play_Sound(soundInfo));
     }
     else if (eventType == "ModifyMenuItemState")
     {
@@ -442,8 +446,10 @@ bool ScreenElementMenu::Initialize(TiXmlElement* pElem)
     g_MenuScale.Set(windowSize.x / m_pBackground->GetWidth(), windowSize.y / m_pBackground->GetHeight());
 
     // Play some music
+	SoundInfo soundInfo(SOUND_MENU_MENUMUSIC);
+	soundInfo.loops = -1;
     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-        new EventData_Request_Play_Sound(SOUND_MENU_MENUMUSIC, 100, false, -1)));
+		new EventData_Request_Play_Sound(soundInfo)));
 
     return true;
 }
@@ -595,8 +601,9 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
             // HACK:
             if (keyCode == SDL_SCANCODE_ESCAPE)
             {
+				SoundInfo soundInfo(SOUND_MENU_SELECT_MENU_ITEM);
                 IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-                    new EventData_Request_Play_Sound(SOUND_MENU_SELECT_MENU_ITEM, 100)));
+					new EventData_Request_Play_Sound(soundInfo)));
             }
             IEventMgr::Get()->VQueueEvent(m_KeyToEventMap[keyCode]);
         }
@@ -763,8 +770,9 @@ bool ScreenElementMenuPage::MoveToMenuItemIdx(int oldIdx, int idxIncrement, bool
     if (playSound)
     {
         // Play sound
+		SoundInfo soundInfo(SOUND_MENU_CHANGE_MENU_ITEM);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-            new EventData_Request_Play_Sound(SOUND_MENU_CHANGE_MENU_ITEM, 100)));
+			new EventData_Request_Play_Sound(soundInfo)));
     }
 
     return true;
@@ -1124,8 +1132,9 @@ bool ScreenElementMenuItem::Press()
             IEventMgr::Get()->VQueueEvent(pEvent);
         }
         
+		SoundInfo soundInfo(SOUND_MENU_SELECT_MENU_ITEM);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-            new EventData_Request_Play_Sound(SOUND_MENU_SELECT_MENU_ITEM, 100)));
+			new EventData_Request_Play_Sound(soundInfo)));
 
         return true;
     }

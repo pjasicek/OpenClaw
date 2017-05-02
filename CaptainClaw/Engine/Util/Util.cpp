@@ -377,8 +377,11 @@ namespace Util
         if (!sounds.empty())
         {
             int soundIdx = Util::GetRandomNumber(0, sounds.size() - 1);
+
+			SoundInfo soundInfo(sounds[soundIdx]);
+			soundInfo.soundVolume = volume;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-                new EventData_Request_Play_Sound(sounds[soundIdx].c_str(), volume, false)));
+				new EventData_Request_Play_Sound(soundInfo)));
         }
     }
 

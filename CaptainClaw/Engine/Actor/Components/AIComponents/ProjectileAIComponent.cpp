@@ -88,8 +88,10 @@ void ProjectileAIComponent::OnCollidedWithSolidTile()
         if (m_DamageType == DamageType_Explosion)
         {
             ActorTemplates::CreateSingleAnimation(_owner->GetPositionComponent()->GetPosition(), AnimationType_Explosion);
+
+			SoundInfo soundInfo(SOUND_LEVEL1_KEG_EXPLODE);
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-                new EventData_Request_Play_Sound(SOUND_LEVEL1_KEG_EXPLODE, 100, false)));
+				new EventData_Request_Play_Sound(soundInfo)));
             ActorTemplates::CreateAreaDamage(
                 _owner->GetPositionComponent()->GetPosition(),
                 Point(150, 150),

@@ -91,8 +91,9 @@ void DestroyableComponent::VOnHealthBelowZero(DamageType damageType)
         int soundToPlayIdx = rand() % m_PossibleDestructionSounds.size();
 
         // And play it
+		SoundInfo soundInfo(m_PossibleDestructionSounds[soundToPlayIdx]);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-            new EventData_Request_Play_Sound(m_PossibleDestructionSounds[soundToPlayIdx].c_str(), 100, false)));
+            new EventData_Request_Play_Sound(soundInfo)));
     }
 
     if (!m_DeathAnimationName.empty())

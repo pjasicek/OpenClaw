@@ -369,8 +369,13 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     // Start playing background music
     std::string backgroundMusicPath = "/LEVEL" + ToStr(m_pCurrentLevel->GetLevelNumber()) +
         "/MUSIC/PLAY.XMI";
-    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Request_Play_Sound(
-        backgroundMusicPath, g_pApp->GetGameConfig()->musicVolume, true, -1)));
+
+	SoundInfo soundInfo(backgroundMusicPath);
+	soundInfo.isMusic = true;
+	soundInfo.loops = -1;
+	soundInfo.soundVolume = g_pApp->GetGameConfig()->musicVolume;
+
+    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));
 
     loadingProgress = 100.0f;   
     RenderLoadingScreen(pBackgroundImage, backgroundRect, scale, loadingProgress);

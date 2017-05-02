@@ -14,8 +14,9 @@ static void PlayFrameSound(const std::string& sound)
         soundName.erase(0, std::string("CLAW_").length());
         std::string soundPath = "/CLAW/SOUNDS/" + soundName + ".WAV";
 
+		SoundInfo soundInfo(soundPath);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-            new EventData_Request_Play_Sound(soundPath, 100, false)));
+			new EventData_Request_Play_Sound(soundInfo)));
     }
 }
 

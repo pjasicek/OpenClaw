@@ -2034,34 +2034,43 @@ class EventData_Request_Play_Sound : public BaseEventData
 public:
     static const EventType sk_EventType;
 
-    EventData_Request_Play_Sound(std::string soundPath, uint32 volume, bool isMusic = false, int loops = 0)
+    /*EventData_Request_Play_Sound(std::string soundPath, uint32 volume, bool isMusic = false, int loops = 0)
     {
         m_MusicPath = soundPath;
         m_Volume = volume;
         m_bIsMusic = isMusic;
         m_Loops = loops;
-    }
+    }*/
+
+	EventData_Request_Play_Sound(const SoundInfo& soundInfo)
+	{
+		m_SoundInfo = soundInfo;
+	}
 
     virtual const EventType& VGetEventType(void) const { return sk_EventType; }
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Request_Play_Sound(m_MusicPath, m_Volume, m_bIsMusic, m_Loops));
+		return IEventDataPtr(new EventData_Request_Play_Sound(m_SoundInfo));
     }
-    virtual void VSerialize(std::ostringstream& out) const { out << m_MusicPath << m_Volume << m_bIsMusic << m_Loops; }
-    virtual void VDeserialize(std::istringstream& in) { in >> m_MusicPath >> m_Volume >> m_bIsMusic >> m_Loops; }
+	virtual void VSerialize(std::ostringstream& out) const { assert(false && "Not serializable"); /*out << m_MusicPath << m_Volume << m_bIsMusic << m_Loops;*/ }
+	virtual void VDeserialize(std::istringstream& in) { assert(false && "Not deserializable"); /*in >> m_MusicPath >> m_Volume >> m_bIsMusic >> m_Loops;*/ }
 
-    std::string GetSoundPath() const { return m_MusicPath; }
+	const SoundInfo* GetSoundInfo() { return &m_SoundInfo; }
+
+	/*std::string GetSoundPath() const { return m_MusicPath; }
     uint32 GetVolume() const { return m_Volume; }
     bool IsMusic() const { return m_bIsMusic; }
-    int GetNumLoops() const { return m_Loops; }
+    int GetNumLoops() const { return m_Loops; }*/
 
     virtual const char* GetName(void) const { return "EventData_Request_Play_Sound"; }
 
 private:
-    std::string m_MusicPath;
+	SoundInfo m_SoundInfo;
+
+	/*std::string m_MusicPath;
     uint32 m_Volume;
     int m_Loops;
-    bool m_bIsMusic;
+    bool m_bIsMusic;*/
 };
 
 //---------------------------------------------------------------------------------------------------------------------

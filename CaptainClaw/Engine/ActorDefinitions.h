@@ -378,4 +378,33 @@ struct PredefinedMove
     std::string soundToPlay;
 };
 
+//-------------------------------------------------------------------------------------------------
+// SoundInfo - Used as definition of sound being played
+//-------------------------------------------------------------------------------------------------
+
+struct SoundInfo
+{
+	SoundInfo()
+	{
+		isMusic = false;
+		soundVolume = 100;
+		loops = 0;
+		isAttentuated = false;
+		attentuationFactor = 1.0f;
+	}
+
+	SoundInfo(std::string sound) : SoundInfo()
+	{
+		soundToPlay = sound;
+	}
+
+	std::string soundToPlay;
+	bool isMusic;
+	int soundVolume;
+	int loops;
+	bool isAttentuated;
+	float attentuationFactor;
+	Point soundSourcePosition;
+};
+
 #endif
