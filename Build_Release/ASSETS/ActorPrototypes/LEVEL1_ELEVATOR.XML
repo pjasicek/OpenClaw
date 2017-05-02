@@ -1,43 +1,6 @@
-<Actor Type="Elevator" ActorPrototypeName="ActorPrototype_Level1_Elevator">
-	<PositionComponent>
-		<Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
-	</PositionComponent>
+<Actor Type="Level1_Elevator" Parent="ActorPrototype_BaseElevator" ActorPrototypeName="ActorPrototype_Level1_Elevator">
 	<ActorRenderComponent>
 		<imgpath>LEVEL_ELEVATORS</imgpath>
-		<Visible>true</Visible>
-		<Mirrored>false</Mirrored>
-		<Inverted>false</Inverted>
-		<ZCoord>2000</ZCoord>
 		<ImagePath>/LEVEL1/IMAGES/ELEVATORS/*</ImagePath>
 	</ActorRenderComponent>
-	<KinematicComponent>
-		<Speed x="0.000000" y="0.000000" /> <!-- DEFINED IN CODE -->
-		<MinPosition x="0" y="0" /> <!-- DEFINED IN CODE -->
-		<MaxPosition x="0" y="0" /> <!-- DEFINED IN CODE -->
-		<HasTriggerBehaviour>false</HasTriggerBehaviour> <!-- DEFINED IN CODE -->
-		<HasStartBehaviour>false</HasStartBehaviour> <!-- DEFINED IN CODE -->
-		<HasStopBehaviour>false</HasStopBehaviour> <!-- DEFINED IN CODE -->
-		<HasOneWayBehaviour>false</HasOneWayBehaviour> <!-- DEFINED IN CODE -->
-	</KinematicComponent>
-	<PhysicsComponent>
-        <BodyType>Kinematic</BodyType>
-        <HasFootSensor>false</HasFootSensor>
-        <HasCapsuleShape>false</HasCapsuleShape>
-        <HasBulletBehaviour>false</HasBulletBehaviour>
-        <HasSensorBehaviour>false</HasSensorBehaviour>
-        <FixtureType>Ground</FixtureType>
-        <PositionOffset x="0" y="0" />
-        <CollisionShape>Rectangle</CollisionShape>
-        <CollisionSize width="0" height="0" /> <!-- SET ACCORDING TO IMAGE IN PHYSICS COMPONENT -->
-        <GravityScale>1.000000</GravityScale>
-        <HasInitialSpeed>false</HasInitialSpeed>
-        <HasInitialImpulse>false</HasInitialImpulse>
-        <InitialSpeed x="0" y="0" />
-        <CollisionFlag>1</CollisionFlag>
-        <CollisionMask>4294967295</CollisionMask>
-        <Friction>0.000000</Friction>
-        <Density>0.000000</Density>
-        <Restitution>0.000000</Restitution>
-        <PrefabType></PrefabType>
-    </PhysicsComponent>
 </Actor>
