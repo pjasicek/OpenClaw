@@ -232,6 +232,8 @@ struct TogglePegDef
         XML_ADD_TEXT_ELEMENT("TimeOn", ToStr(timeOn).c_str(), pTogglePegComponent);
         XML_ADD_TEXT_ELEMENT("ToggleFrameIdx", ToStr(toggleFrameIdx).c_str(), pTogglePegComponent);
         XML_ADD_TEXT_ELEMENT("Delay", ToStr(delay).c_str(), pTogglePegComponent);
+
+        return pTogglePegComponent;
     }
 
     static TogglePegDef CreateFromXml(TiXmlElement* pElem, bool strict)
@@ -280,6 +282,8 @@ struct ProjectileDef
         XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pProjectileComponent);
         XML_ADD_TEXT_ELEMENT("ProjectileType", damageTypeStr.c_str(), pProjectileComponent);
         XML_ADD_2_PARAM_ELEMENT("ProjectileSpeed", "x", ToStr(projectileSpeed.x).c_str(), "y", ToStr(projectileSpeed.y).c_str(), pProjectileComponent);
+
+        return pProjectileComponent;
     }
 
     static ProjectileDef CreateFromXml(TiXmlElement* pElem, bool strict)

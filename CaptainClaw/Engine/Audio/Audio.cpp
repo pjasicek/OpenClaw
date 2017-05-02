@@ -129,7 +129,7 @@ static int SetupPlayMusicThread(void* pData)
     if (!pMusic) {
         LOG_ERROR("Mix_LoadMUS_RW: " + std::string(Mix_GetError()));
     }
-    Mix_PlayMusic(pMusic, looping ? -1 : 0);
+    Mix_PlayMusic(pMusic, pMusicInfo->looping ? -1 : 0);
 #endif //_WIN32
 
     return 0;
