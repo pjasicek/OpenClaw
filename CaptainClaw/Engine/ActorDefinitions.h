@@ -7,6 +7,114 @@
 #define cond_assert(enabled, body) { if (enabled) { assert(body); } else { body; } }
 #endif
 
+//
+// Helper maps and functions for converting from actor prototype to string and back
+//
+
+// TODO: This should be the perfect candidate for code-generating macro
+
+inline std::string ActorPrototypeEnumToString(ActorPrototype actorProto)
+{
+    static std::map<ActorPrototype, std::string> actorPrototypeEnumToStringMap =
+    {
+        // Actor enemies
+        { ActorPrototype_Level1_Soldier, "ActorPrototype_Level1_Soldier" },
+        { ActorPrototype_Level1_Officer, "ActorPrototype_Level1_Officer" },
+        { ActorPrototype_Level1_Rat, "ActorPrototype_Level1_Rat" },
+        { ActorPrototype_Level2_Soldier, "ActorPrototype_Level2_Soldier" },
+        { ActorPrototype_Level2_Officer, "ActorPrototype_Level2_Officer" },
+        { ActorPrototype_Level2_PunkRat, "ActorPrototype_Level2_PunkRat" },
+
+        // Elevators
+        { ActorPrototype_BaseElevator, "ActorPrototype_BaseElevator" },
+
+        { ActorPrototype_Level1_Elevator, "ActorPrototype_Level1_Elevator" },
+        { ActorPrototype_Level2_Elevator, "ActorPrototype_Level2_Elevator" },
+
+        // Toggle pegs
+        { ActorPrototype_BaseTogglePeg, "ActorPrototype_BaseTogglePeg" },
+
+        { ActorPrototype_Level1_TogglePeg, "ActorPrototype_Level1_TogglePeg" },
+        { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" },
+
+        // Projectiles
+        { ActorPrototype_Level2_CannonBall, "ActorPrototype_Level2_CannonBall" },
+
+        // Projectile spawners
+        { ActorPrototype_BaseProjectileSpawner, "ActorPrototype_BaseProjectileSpawner" },
+        { ActorPrototype_Level2_LeftCannonTower, "ActorPrototype_Level2_LeftCannonTower" },
+
+        //=======================================
+        // General
+        //=======================================
+
+        { ActorPrototype_BaseProjectile, "ActorPrototype_BaseProjectile" },
+        { ActorPrototype_FireSwordProjectile, "ActorPrototype_FireSwordProjectile" },
+        { ActorPrototype_FrostSwordProjectile, "ActorPrototype_FrostSwordProjectile" },
+        { ActorPrototype_LightningSwordProjectile, "ActorPrototype_LightningSwordProjectile" },
+    };
+
+    auto findIt = actorPrototypeEnumToStringMap.find(actorProto);
+    if (findIt == actorPrototypeEnumToStringMap.end())
+    {
+        LOG_ERROR("Could not find actor enum: " + ToStr((int)actorProto));
+        assert(false && "Could not convert ActorPrototype enum to string");
+    }
+
+    return findIt->second;
+}
+
+inline ActorPrototype ActorPrototypeStringToEnum(std::string actorProtoStr)
+{
+    static std::map<std::string, ActorPrototype> actorPrototypeStringToEnumMap =
+    {
+        // Actor enemies
+        { "ActorPrototype_Level1_Soldier", ActorPrototype_Level1_Soldier },
+        { "ActorPrototype_Level1_Officer", ActorPrototype_Level1_Officer },
+        { "ActorPrototype_Level1_Rat", ActorPrototype_Level1_Rat },
+        { "ActorPrototype_Level2_Soldier", ActorPrototype_Level2_Soldier },
+        { "ActorPrototype_Level2_Officer", ActorPrototype_Level2_Officer },
+        { "ActorPrototype_Level2_PunkRat", ActorPrototype_Level2_PunkRat },
+
+        // Elevators
+        { "ActorPrototype_BaseElevator", ActorPrototype_BaseElevator },
+
+        { "ActorPrototype_Level1_Elevator", ActorPrototype_Level1_Elevator },
+        { "ActorPrototype_Level2_Elevator", ActorPrototype_Level2_Elevator },
+
+        // Toggle pegs
+        { "ActorPrototype_BaseTogglePeg", ActorPrototype_BaseTogglePeg },
+
+        { "ActorPrototype_Level1_TogglePeg", ActorPrototype_Level1_TogglePeg },
+        { "ActorPrototype_Level2_TogglePeg", ActorPrototype_Level2_TogglePeg },
+
+        // Projectiles
+        { "ActorPrototype_Level2_CannonBall", ActorPrototype_Level2_CannonBall },
+
+        // Projectile spawners
+        { "ActorPrototype_BaseProjectileSpawner", ActorPrototype_BaseProjectileSpawner },
+        { "ActorPrototype_Level2_LeftCannonTower", ActorPrototype_Level2_LeftCannonTower },
+
+        //=======================================
+        // General
+        //=======================================
+
+        { "ActorPrototype_BaseProjectile", ActorPrototype_BaseProjectile },
+        { "ActorPrototype_FireSwordProjectile", ActorPrototype_FireSwordProjectile },
+        { "ActorPrototype_FrostSwordProjectile", ActorPrototype_FrostSwordProjectile },
+        { "ActorPrototype_LightningSwordProjectile", ActorPrototype_LightningSwordProjectile },
+    };
+
+    auto findIt = actorPrototypeStringToEnumMap.find(actorProtoStr);
+    if (findIt == actorPrototypeStringToEnumMap.end())
+    {
+        LOG_ERROR("Could not find actor enum: " + actorProtoStr);
+        assert(false && "Could not convert ActorPrototype enum to string");
+    }
+
+    return findIt->second;
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 // This class represents a single point in 2D space
 //---------------------------------------------------------------------------------------------------------------------
@@ -339,8 +447,12 @@ struct EnemyAttackAction
     {
         attackAnimFrameIdx = 0;
         attackDamageType = DamageType_None;
+        spawnedAttackPrototype = ActorPrototype_None;
         attackFxImageSet = "NONE";
     }
+
+    // ActorTemplate will always have precedence... Later I should get rid of everything else
+    ActorPrototype spawnedAttackPrototype;
 
     std::string animation;
     uint32 attackAnimFrameIdx;

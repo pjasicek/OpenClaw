@@ -138,6 +138,7 @@ public:
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
     virtual void VPostInit() override;
+    virtual void VPostPostInit() override;
 
     virtual bool VCanEnter() { return true; }
 
@@ -156,7 +157,6 @@ private:
     void ChangeDirection(Direction newDirection);
     void CommenceIdleBehaviour();
 
-    bool m_bInitialized;
     bool m_bRetainDirection;
 
     int m_LeftPatrolBorder;
@@ -200,7 +200,7 @@ public:
     virtual void VOnStateEnter() override;
     virtual void VOnStateLeave() override;
     virtual EnemyAIState VGetStateType() const = 0;
-    virtual bool VCanEnter() override { return m_EnemyAgroList.size() > 0; }
+    virtual bool VCanEnter() override { return ((m_EnemyAgroList.size() > 0) || m_bIsAlwaysAccessible); }
 
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
@@ -216,6 +216,7 @@ public:
     Point FindClosestHostileActorOffset();
 
 protected:
+    bool m_bIsAlwaysAccessible;
     AttackActionList m_AttackActions;
     ActorList m_EnemyAgroList;
 };

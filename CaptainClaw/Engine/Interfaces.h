@@ -214,6 +214,7 @@ enum AnimationType
 
 enum ActorPrototype
 {
+    ActorPrototype_None = -1,
     ActorPrototype_Start,
     
     //=======================================
@@ -227,6 +228,14 @@ enum ActorPrototype
     ActorPrototype_Level2_Soldier,
     ActorPrototype_Level2_Officer,
     ActorPrototype_Level2_PunkRat,
+
+    // Enemy projectiles spawners
+    ActorPrototype_BaseProjectileSpawner,
+
+    ActorPrototype_Level2_LeftCannonTower,
+
+    // Projectiles
+    ActorPrototype_Level2_CannonBall,
 
     // Elevators
     ActorPrototype_BaseElevator,
