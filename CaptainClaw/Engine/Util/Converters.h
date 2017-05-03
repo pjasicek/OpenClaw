@@ -851,7 +851,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         }
 
         std::string imageSet = wwdObject->imageSet;
-        if (imageSet == "GAME_WARP")
+        if (imageSet == "GAME_WARP" || imageSet == "GAME_VERTWARP")
         {
             TiXmlElement* pTeleportPickupComponent = new TiXmlElement("TeleportPickupComponent");
             XML_ADD_2_PARAM_ELEMENT("Destination", "x", ToStr(wwdObject->speedX).c_str(), "y", ToStr(wwdObject->speedY).c_str(), pTeleportPickupComponent);
