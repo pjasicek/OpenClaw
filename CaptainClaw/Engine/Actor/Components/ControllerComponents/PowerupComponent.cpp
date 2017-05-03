@@ -14,7 +14,10 @@ PowerupComponent::PowerupComponent()
     :
     m_RemainingPowerupTime(0),
     m_ActivePowerup(PowerupType_None)
-{ }
+{ 
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &PowerupComponent::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
+}
 
 PowerupComponent::~PowerupComponent()
 {
@@ -24,6 +27,9 @@ PowerupComponent::~PowerupComponent()
     }
 
     m_PowerupSparkles.clear();
+
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &PowerupComponent::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
 }
 
 bool PowerupComponent::VInit(TiXmlElement* pData)
@@ -126,11 +132,23 @@ void PowerupComponent::SetPowerupSparklesVisibility(bool visible)
 void PowerupComponent::BroadcastPowerupTimeUpdated(uint32 actorId, PowerupType powerupType, int32 secondsRemaining)
 {
     shared_ptr<EventData_Updated_Powerup_Time> pEvent(new EventData_Updated_Powerup_Time(actorId, powerupType, secondsRemaining));
-    IEventMgr::Get()->VQueueEvent(pEvent);
+    IEventMgr::Get()->VTriggerEvent(pEvent);
 }
 
 void PowerupComponent::BroadcastPowerupStatusUpdated(uint32 actorId, PowerupType powerupType, bool isPowerupFinished)
 {
     shared_ptr<EventData_Updated_Powerup_Status> pEvent(new EventData_Updated_Powerup_Status(actorId, powerupType, isPowerupFinished));
-    IEventMgr::Get()->VQueueEvent(pEvent);
+    IEventMgr::Get()->VTriggerEvent(pEvent);
+}
+
+void PowerupComponent::ClawDiedDelegate(IEventDataPtr pEventData)
+{
+    if (HasPowerup())
+    {
+        BroadcastPowerupStatusUpdated(_owner->GetGUID(), m_ActivePowerup, true);
+
+        m_RemainingPowerupTime = 0;
+        SetPowerupSparklesVisibility(false);
+        m_ActivePowerup = PowerupType_None;
+    }
 }

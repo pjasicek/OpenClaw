@@ -24,6 +24,8 @@ public:
     bool HasPowerup() { return m_ActivePowerup != PowerupType_None; }
     bool HasPowerup(PowerupType ofType) { return ofType == m_ActivePowerup; }
 
+    void ClawDiedDelegate(IEventDataPtr pEventData);
+
 private:
     void BroadcastPowerupTimeUpdated(uint32 actorId, PowerupType powerupType, int32 secondsRemaining);
     void BroadcastPowerupStatusUpdated(uint32 actorId, PowerupType powerupType, bool isPowerupFinished);

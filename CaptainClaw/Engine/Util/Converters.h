@@ -845,7 +845,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         // All powerups should have trigger
         pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
 
-        if (imageSet != "GAME_WARP")
+        if (imageSet != "GAME_WARP" || imageSet == "GAME_VERTWARP")
         {
             pActorElem->LinkEndChild(ActorTemplates::CreateXmlData_GlitterComponent("Glitter_Yellow", true, false));
         }
