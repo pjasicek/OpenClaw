@@ -79,20 +79,8 @@ void ProjectileAIComponent::VUpdate(uint32 msDiff)
 {
     assert(g_pApp->GetHumanView() && g_pApp->GetHumanView()->GetCamera());
 
-    SDL_Rect cameraRect = g_pApp->GetHumanView()->GetCamera()->GetCameraRect();
-    Point projectilePosition = _owner->GetPositionComponent()->GetPosition();
-
-    // If the projectile is out of camera bounds, destroy it
-    SDL_Rect enlargedCameraRect;
-    enlargedCameraRect.x = cameraRect.x - cameraRect.w / 4;
-    enlargedCameraRect.y = cameraRect.y - cameraRect.h / 4;
-    enlargedCameraRect.w = cameraRect.w + cameraRect.w / 2;
-    enlargedCameraRect.h = cameraRect.h + cameraRect.h / 2;
-
-    if ((projectilePosition.x < cameraRect.x) ||
-        (projectilePosition.x > (cameraRect.x + cameraRect.w)) ||
-        (projectilePosition.y < cameraRect.y) ||
-        (projectilePosition.y > (cameraRect.y + cameraRect.h)))
+    Point projectilePos = _owner->GetPositionComponent()->GetPosition();
+    if (!g_pApp->GetHumanView()->GetCamera()->IntersectsWithPoint(projectilePos, 1.25f))
     {
         shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);

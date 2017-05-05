@@ -152,6 +152,8 @@ public:
     void SetCameraOffsetY(int32 offY) { m_OffsetY = offY; }
     void SetCameraOffset(int32 offX, int32 offY) { m_OffsetX = offX; m_OffsetY = offY; }
 
+    bool IntersectsWithPoint(const Point& point, float cameraScale = 1.0f);
+
 protected:
     uint32      m_Width;
     uint32      m_Height;

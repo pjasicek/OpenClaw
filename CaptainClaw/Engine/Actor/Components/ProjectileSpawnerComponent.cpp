@@ -2,6 +2,7 @@
 #include "../../GameApp/BaseGameApp.h"
 #include "../../GameApp/BaseGameLogic.h"
 #include "PositionComponent.h"
+#include "../../UserInterface/HumanView.h"
 
 const char* ProjectileSpawnerComponent::g_Name = "ProjectileSpawnerComponent";
 
@@ -111,16 +112,20 @@ void ProjectileSpawnerComponent::VOnAnimationFrameChanged(
     if (m_Properties.projectileSpawnAnimFrameIdx == pNewFrame->idx)
     {
         assert(m_Properties.projectileSpawnAnimFrameIdx != 0);
+        assert(g_pApp->GetHumanView() && g_pApp->GetHumanView()->GetCamera());
 
-        // TODO: Check if it is even worth to spawn the projectile - check if camera is not out of bounds
-        // if it is, claw can neither hear nor see the projectile
-
-        // Spawn the projectile
-        Point projectilePosition = _owner->GetPositionComponent()->GetPosition() + m_Properties.projectileSpawnOffset;
-        ActorTemplates::CreateActor_Projectile(
-            m_Properties.projectileProto,
-            projectilePosition,
-            m_Properties.projectileDirection);
+        // Check if the spawned projectile is within some bounds of Claw's Human View display
+        // If not, then we can't either hear it nor do we care that there is some projectile
+        Point projectilePos = _owner->GetPositionComponent()->GetPosition();
+        if (g_pApp->GetHumanView()->GetCamera()->IntersectsWithPoint(projectilePos, 1.25f))
+        {
+            // Spawn the projectile
+            Point projectilePosition = _owner->GetPositionComponent()->GetPosition() + m_Properties.projectileSpawnOffset;
+            ActorTemplates::CreateActor_Projectile(
+                m_Properties.projectileProto,
+                projectilePosition,
+                m_Properties.projectileDirection);
+        }
     }
 }
 
