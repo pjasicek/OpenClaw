@@ -16,6 +16,18 @@ void OnPidLoaded(const char* resource, WapPid* pPid)
     {
         pPid->offsetX -= 2;
     }
+    if (resourceName == "/level2/images/towercannonright/frame002.pid")
+    {
+        pPid->offsetX += 2;
+    }
+    else if (resourceName == "/level2/images/towercannonright/frame004.pid")
+    {
+        pPid->offsetX += 2;
+    }
+    else if (resourceName == "/level2/images/towercannonright/frame005.pid")
+    {
+        pPid->offsetX += 2;
+    }
 }
 
 void OnAniLoaded(const char* resource, WapAni* pAni)

@@ -32,6 +32,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Projectile spawners
         { ActorPrototype_Level2_TowerCannonLeft, "ActorPrototype_Level2_TowerCannonLeft" },
+        { ActorPrototype_Level2_TowerCannonRight, "ActorPrototype_Level2_TowerCannonRight" },
 
         // Projectiles
         { ActorPrototype_Level2_CannonBall, "ActorPrototype_Level2_CannonBall" },
@@ -84,6 +85,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Projectile spawners
         { "ActorPrototype_Level2_TowerCannonLeft", ActorPrototype_Level2_TowerCannonLeft },
+        { "ActorPrototype_Level2_TowerCannonRight", ActorPrototype_Level2_TowerCannonRight },
 
         // Projectiles
         { "ActorPrototype_Level2_CannonBall", ActorPrototype_Level2_CannonBall },

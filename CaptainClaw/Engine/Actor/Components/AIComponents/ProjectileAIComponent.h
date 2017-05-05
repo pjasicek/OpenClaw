@@ -15,6 +15,8 @@ public:
     virtual const char* VGetName() const override { return g_Name; }
     virtual void VPostInit() override;
 
+    virtual void VUpdate(uint32 msDiff) override;
+
     virtual bool VInit(TiXmlElement* data) override;
     virtual TiXmlElement* VGenerateXml() override;
 

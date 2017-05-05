@@ -1050,6 +1050,15 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         Point position(wwdObject->x, wwdObject->y);
         return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level2_TowerCannonLeft, position);
     }
+    else if (logic == "TowerCannonRight")
+    {
+        SAFE_DELETE(pActorElem);
+
+        assert(levelNumber == 2 && "Expected only level 2");
+
+        Point position(wwdObject->x, wwdObject->y);
+        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level2_TowerCannonRight, position);
+    }
     else
     {
         static std::vector<std::string> s_ReportedUnknownLogicsList;

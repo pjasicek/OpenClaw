@@ -112,6 +112,9 @@ void ProjectileSpawnerComponent::VOnAnimationFrameChanged(
     {
         assert(m_Properties.projectileSpawnAnimFrameIdx != 0);
 
+        // TODO: Check if it is even worth to spawn the projectile - check if camera is not out of bounds
+        // if it is, claw can neither hear nor see the projectile
+
         // Spawn the projectile
         Point projectilePosition = _owner->GetPositionComponent()->GetPosition() + m_Properties.projectileSpawnOffset;
         ActorTemplates::CreateActor_Projectile(

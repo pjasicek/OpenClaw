@@ -254,6 +254,7 @@ enum ActorPrototype
 
     // Projectile spawners
     ActorPrototype_Level2_TowerCannonLeft,
+    ActorPrototype_Level2_TowerCannonRight,
 
     // Projectiles
     ActorPrototype_Level2_CannonBall,
