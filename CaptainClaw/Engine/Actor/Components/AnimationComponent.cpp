@@ -48,7 +48,7 @@ bool AnimationComponent::VInit(TiXmlElement* data)
                 continue;
             }
             
-            Animation* animation = Animation::CreateAnimation(wapAni, animNameKey.c_str(), this);
+            Animation* animation = Animation::CreateAnimation(wapAni, animNameKey.c_str(), animPath.c_str(), this);
             if (!animation)
             {
                 LOG_ERROR("Could not create animation: " + animPath);

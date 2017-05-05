@@ -639,7 +639,7 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
     //assert(actorBodyDef->collisionMask != 0x0);
     if (actorBodyDef->collisionMask == 0x0)
     {
-        LOG_WARNING("Creating actor body with CollisionMask == 0x0 !");
+        //LOG_WARNING("Creating actor body with CollisionMask == 0x0 !");
     }
     assert(actorBodyDef->collisionFlag != 0x0);
     assert(actorBodyDef->fixtureType != FixtureType_None);

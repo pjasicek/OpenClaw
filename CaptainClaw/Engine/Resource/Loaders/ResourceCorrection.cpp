@@ -33,4 +33,14 @@ void OnPidLoaded(const char* resource, WapPid* pPid)
 void OnAniLoaded(const char* resource, WapAni* pAni)
 {
     const std::string resourceName(resource);
+
+    /*for (int animFrameIdx = 0; animFrameIdx < pAni->animationFramesCount; ++animFrameIdx)
+    {
+        if (pAni->animationFrames[animFrameIdx].eventFilePath != NULL)
+        {
+            std::string soundPath(pAni->animationFrames[animFrameIdx].eventFilePath);
+            LOG("Resource: " + resourceName + " - Sound: " + soundPath);
+            pAni->
+        }
+    }*/
 }

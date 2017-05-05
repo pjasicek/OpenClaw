@@ -534,9 +534,17 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
             shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(pSoundInfo->soundToPlay.c_str());
             assert(pSound != nullptr);
 
-            if (!g_pApp->GetAudio()->PlaySound(pSound.get(), pSoundInfo->soundVolume, pSoundInfo->loops))
+            Point soundSourcePos = pSoundInfo->soundSourcePosition;
+            if (!soundSourcePos.IsZeroXY())
             {
-                IEventMgr::Get()->VQueueEvent(pCastEventData);
+                if (m_pCamera->IntersectsWithPoint(soundSourcePos, 1.1f))
+                {
+                    g_pApp->GetAudio()->PlaySound(pSound.get(), pSoundInfo->soundVolume, pSoundInfo->loops);
+                }
+            }
+            else
+            {
+                g_pApp->GetAudio()->PlaySound(pSound.get(), pSoundInfo->soundVolume, pSoundInfo->loops);
             }
         }
     }

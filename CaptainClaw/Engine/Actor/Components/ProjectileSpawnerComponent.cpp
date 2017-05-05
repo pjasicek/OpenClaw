@@ -65,8 +65,6 @@ void ProjectileSpawnerComponent::VPostPostInit()
         fixtureDef.collisionFlag = CollisionFlag_Trigger;
         fixtureDef.isSensor = true;
 
-        LOG("Size: " + fixtureDef.size.ToString());
-
         g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(_owner->GetGUID(), &fixtureDef);
     }
 }
