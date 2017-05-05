@@ -1,0 +1,56 @@
+<Actor Type="Base_ProjectileSpawner" ActorPrototypeName="ActorPrototype_BaseProjectileSpawner">
+	<PositionComponent>
+		<Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
+	</PositionComponent>
+	<ActorRenderComponent>
+		<Visible>true</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>2000</ZCoord>
+		<ImagePath>NONE</ImagePath>
+        <Palette>NONE</Palette>
+	</ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>NONE</AnimationPath>
+        <PauseOnStart>false</PauseOnStart>
+    </AnimationComponent>
+    <TriggerComponent>
+        <IsTriggerUnlimited>true</IsTriggerUnlimited>
+    </TriggerComponent>
+    <ProjectileSpawnerComponent>
+        <IdleAnim>NONE</IdleAnim>
+        <FireAnim>NONE</FireAnim>
+        <IsAlwaysOn>false</IsAlwaysOn>
+        <StartSpawnDelay>0</StartSpawnDelay>
+        <MinSpawnDelay>0</MinSpawnDelay>
+        <MaxSpawnDelay>0</MaxSpawnDelay>
+        <TriggerAreaSize width="0" height="0" />
+        <TriggerAreaOffset x="0" y="0" />
+        <TriggerCollisionMask>0</TriggerCollisionMask>
+        <ProjectileSpawnAnimFrameIdx>0</ProjectileSpawnAnimFrameIdx>
+        <ProjectilePrototype>NONE</ProjectilePrototype>
+        <ProjectileDirection>NONE</ProjectileDirection>
+        <ProjectileSpawnOffset x="0" y="0" />
+    </ProjectileSpawnerComponent>
+	<PhysicsComponent>
+        <BodyType>Static</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>Solid</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="0" height="0" /> <!-- SET ACCORDING TO IMAGE IN PHYSICS COMPONENT -->
+        <GravityScale>0.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>1</CollisionFlag>
+        <CollisionMask>0</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+    </PhysicsComponent>
+</Actor>

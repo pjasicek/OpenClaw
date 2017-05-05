@@ -22,4 +22,6 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/XmlLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PcxLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PngLoader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ResourceCorrection.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ResourceCorrection.h
 )

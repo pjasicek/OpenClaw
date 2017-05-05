@@ -66,6 +66,24 @@ public:
         }
     }
 
+    template <class ComponentType>
+    weak_ptr<ComponentType> GetComponent()
+    {
+        uint32 id = ActorComponent::GetIdFromName(ComponentType::g_Name);
+        ActorComponentsMap::iterator findIter = _components.find(id);
+        if (findIter != _components.end())
+        {
+            StrongActorComponentPtr base(findIter->second);
+            shared_ptr<ComponentType> sub(static_pointer_cast<ComponentType>(base));  // cast to subclass version of the pointer
+            weak_ptr<ComponentType> weakSub(sub);  // convert strong pointer to weak pointer
+            return weakSub;  // return the weak pointer
+        }
+        else
+        {
+            return weak_ptr<ComponentType>();
+        }
+    }
+
     const ActorComponentsMap* GetComponents() { return &_components; }
 
     void AddComponent(StrongActorComponentPtr pComponent);

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "AniLoader.h"
+#include "ResourceCorrection.h"
 
 #include "../../GameApp/BaseGameApp.h"
 

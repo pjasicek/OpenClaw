@@ -2,9 +2,10 @@
 
 #include "../../Graphics2D/Image.h"
 #include "../../GameApp/BaseGameApp.h"
+#include "ResourceCorrection.h"
 
 //=================================================================================================
-// class PalResourceExtraData
+// class PidResourceExtraData
 //
 //     This class implements the IResourceExtraData
 //
@@ -17,19 +18,20 @@ PidResourceExtraData::~PidResourceExtraData()
     }
 }
 
-void PidResourceExtraData::LoadPid(char* rawBuffer, uint32 size, WapPal* palette)
+void PidResourceExtraData::LoadPid(char* rawBuffer, uint32 size, WapPal* palette, const char* resourceString)
 {
     if (_pid == NULL)
     {
         _pid = WAP_PidLoadFromData(rawBuffer, size, palette);
+        OnPidLoaded(resourceString, _pid);
     }
 }
 
-void PidResourceExtraData::LoadImage(char* rawBuffer, uint32 size, WapPal* palette)
+void PidResourceExtraData::LoadImage(char* rawBuffer, uint32 size, WapPal* palette, const char* resourceString)
 {
     if (_pid == NULL)
     {
-        LoadPid(rawBuffer, size, palette);
+        LoadPid(rawBuffer, size, palette, resourceString);
     }
     if (_image == NULL)
     {
@@ -56,7 +58,7 @@ WapPid* PidResourceLoader::LoadAndReturnPid(const char* resourceString, WapPal* 
     if (!extraData)
     {
         extraData = shared_ptr<PidResourceExtraData>(new PidResourceExtraData());
-        extraData->LoadPid(handle->GetDataBuffer(), handle->GetSize(), palette);
+        extraData->LoadPid(handle->GetDataBuffer(), handle->GetSize(), palette, resourceString);
 
         if (extraData->GetPid() == NULL)
         {
@@ -80,7 +82,7 @@ shared_ptr<Image> PidResourceLoader::LoadAndReturnImage(const char* resourceStri
     if (!extraData)
     {
         extraData = shared_ptr<PidResourceExtraData>(new PidResourceExtraData());
-        extraData->LoadImage(handle->GetDataBuffer(), handle->GetSize(), palette);
+        extraData->LoadImage(handle->GetDataBuffer(), handle->GetSize(), palette, resourceString);
 
         if (!extraData->GetImage())
         {
@@ -93,7 +95,7 @@ shared_ptr<Image> PidResourceLoader::LoadAndReturnImage(const char* resourceStri
     // Extra data could be created within LoadAndReturnPid but not the image
     else if (!extraData->GetImage())
     {
-        extraData->LoadImage(handle->GetDataBuffer(), handle->GetSize(), palette);
+        extraData->LoadImage(handle->GetDataBuffer(), handle->GetSize(), palette, resourceString);
 
         if (!extraData->GetImage())
         {

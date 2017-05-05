@@ -9,6 +9,7 @@
 		<Inverted>false</Inverted>
 		<ZCoord>0</ZCoord>
 		<ImagePath>NONE</ImagePath>
+		<Palette>NONE</Palette>
 	</ActorRenderComponent>
 	<AnimationComponent>
 		<SpecialAnimation>

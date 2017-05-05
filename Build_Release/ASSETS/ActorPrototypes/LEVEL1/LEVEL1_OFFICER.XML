@@ -8,6 +8,7 @@
         <Inverted>false</Inverted>
         <ZCoord>4000</ZCoord>
         <ImagePath>/LEVEL1/IMAGES/OFFICER/*</ImagePath>
+        <Palette>/LEVEL1/PALETTES/MAIN.PAL</Palette>
     </ActorRenderComponent>
     <AnimationComponent>
         <AnimationPath>/LEVEL1/ANIS/OFFICER/*</AnimationPath>

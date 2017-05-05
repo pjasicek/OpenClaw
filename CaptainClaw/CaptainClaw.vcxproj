@@ -95,6 +95,7 @@
     <ClCompile Include="Engine\Actor\Components\ExplodeableComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\FollowableComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\GlobalAmbientSoundComponent.cpp" />
+    <ClCompile Include="Engine\Interfaces.cpp" />
     <ClCompile Include="Engine\Actor\Components\LootComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PickupComponents\PickupComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\KinematicComponent.cpp" />
@@ -102,6 +103,7 @@
     <ClCompile Include="Engine\Actor\Components\PowerupSparkleAIComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\AreaDamageComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\GlitterComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\ProjectileSpawnerComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\SingleAnimationComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\SoundTriggerComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.cpp" />
@@ -120,6 +122,7 @@
     <ClCompile Include="Engine\Resource\Loaders\MidiLoader.cpp" />
     <ClCompile Include="Engine\Resource\Loaders\PcxLoader.cpp" />
     <ClCompile Include="Engine\Resource\Loaders\PngLoader.cpp" />
+    <ClCompile Include="Engine\Resource\Loaders\ResourceCorrection.cpp" />
     <ClCompile Include="Engine\Resource\Miniz.cpp" />
     <ClCompile Include="Engine\Resource\ResourceMgr.cpp" />
     <ClCompile Include="Engine\Resource\ZipFile.cpp" />
@@ -198,6 +201,7 @@
     <ClInclude Include="Engine\Actor\Components\PredefinedMoveComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PowerupSparkleAIComponent.h" />
     <ClInclude Include="Engine\Actor\Components\GlitterComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\ProjectileSpawnerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\SingleAnimationComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\SoundTriggerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.h" />
@@ -205,6 +209,7 @@
     <ClInclude Include="ClawGameLogic.h" />
     <ClInclude Include="ClawHumanView.h" />
     <ClInclude Include="Engine\Resource\Loaders\PngLoader.h" />
+    <ClInclude Include="Engine\Resource\Loaders\ResourceCorrection.h" />
     <ClInclude Include="Engine\Resource\Miniz.h" />
     <ClInclude Include="Engine\Resource\ResourceMgr.h" />
     <ClInclude Include="Engine\Resource\ZipFile.h" />

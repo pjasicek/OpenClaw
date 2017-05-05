@@ -2,6 +2,7 @@
 #define __INTERFACES_H__
 
 #include <SDL2/SDL.h>
+#include <Box2D/Box2D.h>
 #include <stdint.h>
 #include <memory>
 #include <list>
@@ -21,6 +22,15 @@ typedef std::vector<Actor*> ActorList;
 class ActorComponent;
 typedef std::shared_ptr<ActorComponent> StrongActorComponentPtr;
 typedef std::weak_ptr<ActorComponent> WeakActorComponentPtr;
+
+enum Direction
+{
+    Direction_None,
+    Direction_Up,
+    Direction_Down,
+    Direction_Left,
+    Direction_Right,
+};
 
 enum MovementInfoEvent
 {
@@ -214,6 +224,8 @@ enum AnimationType
 
 enum ActorPrototype
 {
+    ActorPrototype_None = -1,
+
     ActorPrototype_Start,
     
     //=======================================
@@ -240,6 +252,12 @@ enum ActorPrototype
     ActorPrototype_Level1_TogglePeg,
     ActorPrototype_Level2_TogglePeg,
 
+    // Projectile spawners
+    ActorPrototype_Level2_TowerCannonLeft,
+
+    // Projectiles
+    ActorPrototype_Level2_CannonBall,
+
     //=======================================
     // General
     //=======================================
@@ -248,6 +266,8 @@ enum ActorPrototype
     ActorPrototype_FireSwordProjectile,
     ActorPrototype_FrostSwordProjectile,
     ActorPrototype_LightningSwordProjectile,
+
+    ActorPrototype_BaseProjectileSpawner,
 
     ActorPrototype_Max
 };
@@ -473,5 +493,22 @@ protected:
     Singleton() { }
     ~Singleton() { }
 };
+
+//-------------------------------------------------------------------------------------------------
+// String-To-Enum
+// Enum-To-String
+//-------------------------------------------------------------------------------------------------
+
+FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr);
+
+DamageType StringToDamageTypeEnum(const std::string& str);
+
+b2BodyType BodyTypeStringToEnum(std::string bodyTypeStr);
+
+Direction StringToEnum_Direction(std::string dirStr);
+std::string EnumToString_Direction(Direction dir);
+
+std::string EnumToString_ActorPrototype(ActorPrototype actorProto);
+ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr);
 
 #endif

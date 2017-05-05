@@ -45,15 +45,15 @@ bool TriggerComponent::VInit(TiXmlElement* data)
     {
         m_IsStatic = std::string(pElem->GetText()) == "true";
     }
-    /*if (TiXmlElement* pElem = data->FirstChildElement("TriggerUnlimited"))
+    /*if (TiXmlElement* pElem = data->FirstChildElement("IsTriggerUnlimited"))
     {
         m_IsTriggerUnlimited = std::string(pElem->GetText()) == "true";
     }
-    if (TiXmlElement* pElem = data->FirstChildElement("TriggerOnce"))
+    if (TiXmlElement* pElem = data->FirstChildElement("IsTriggerOnce"))
     {
         m_IsTriggerOnce = std::string(pElem->GetText()) == "true";
     }
-    if (TiXmlElement* pElem = data->FirstChildElement("TriggerFinitedTimes"))
+    if (TiXmlElement* pElem = data->FirstChildElement("IsTriggerFinitedTimes"))
     {
         m_TriggerRemaining = std::stoi(std::string(pElem->GetText()));
     }*/

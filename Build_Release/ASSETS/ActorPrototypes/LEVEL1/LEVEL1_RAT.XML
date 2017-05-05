@@ -1,4 +1,4 @@
-<Actor Type="Rat" ActorPrototypeName="ActorPrototype_Level2_PunkRat">
+<Actor Type="Rat" ActorPrototypeName="ActorPrototype_Level1_Rat">
     <PositionComponent>
         <!-- DEFINED IN CODE -->
         <Position x="-1" y="-1" />
@@ -9,6 +9,7 @@
         <Inverted>false</Inverted>
         <ZCoord>0</ZCoord>
         <ImagePath>/LEVEL1/IMAGES/RAT/*</ImagePath>
+        <Palette>/LEVEL1/PALETTES/MAIN.PAL</Palette>
     </ActorRenderComponent>
     <AnimationComponent>
         <AnimationPath>/LEVEL1/ANIS/RAT/*</AnimationPath>
@@ -18,8 +19,8 @@
         <TriggerFinitedTimes>1000</TriggerFinitedTimes>
     </TriggerComponent>
     <HealthComponent>
-        <Health>50</Health>
-        <MaxHealth>50</MaxHealth>
+        <Health>5</Health>
+        <MaxHealth>5</MaxHealth>
     </HealthComponent>
     <LootComponent>
         <!-- DEFINED IN CODE -->

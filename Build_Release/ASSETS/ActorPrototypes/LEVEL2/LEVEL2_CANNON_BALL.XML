@@ -1,0 +1,18 @@
+<Actor Type="Level2_CannonBallProjectile" Parent="ActorPrototype_BaseProjectile" ActorPrototypeName="ActorPrototype_Level2_CannonBall">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL2/IMAGES/CANNONBALL/*</ImagePath>
+		<Palette>/LEVEL2/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<ProjectileAIComponent>
+		<Damage>20</Damage>
+		<ProjectileType>DamageType_Bullet</ProjectileType>
+		<!-- CAN BE MODIFIED IN CODE -->
+		<ProjectileSpeed x="9.00000" y="0.000000" /> 
+	</ProjectileAIComponent>
+	<PhysicsComponent>
+        <CollisionFlag>262144</CollisionFlag>
+        <CollisionMask>258</CollisionMask>
+		<CollisionSize width="25" height="25" />
+		<PositionOffset x="-10" y="0" />
+    </PhysicsComponent>
+</Actor>

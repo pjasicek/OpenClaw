@@ -1,4 +1,4 @@
-<Actor Type="Soldier" ActorPrototypeName="ActorPrototype_Level2_Soldier">
+<Actor Type="Officer" ActorPrototypeName="ActorPrototype_Level2_Officer">
     <PositionComponent>
         <Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
     </PositionComponent>
@@ -7,10 +7,11 @@
         <Mirrored>false</Mirrored>
         <Inverted>false</Inverted>
         <ZCoord>4000</ZCoord>
-        <ImagePath>/LEVEL2/IMAGES/SOLDIER/*</ImagePath>
+        <ImagePath>/LEVEL2/IMAGES/OFFICER/*</ImagePath>
+        <Palette>/LEVEL2/PALETTES/MAIN.PAL</Palette>
     </ActorRenderComponent>
     <AnimationComponent>
-        <AnimationPath>/LEVEL2/ANIS/SOLDIER/*</AnimationPath>
+        <AnimationPath>/LEVEL2/ANIS/OFFICER/*</AnimationPath>
         <PauseOnStart>false</PauseOnStart>
     </AnimationComponent>
     <TriggerComponent>
@@ -25,10 +26,10 @@
     </LootComponent>
     <EnemyAIComponent>
         <DeathAnimation>fall</DeathAnimation>
-        <Sound SoundType="TakeDamage" SoundName="/LEVEL1/SOUNDS/SOLDIER/00320005.WAV" />
-        <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/SOLDIER/00320006.WAV" />
-        <Sound SoundType="MeleeAttack" SoundName="/LEVEL1/SOUNDS/SOLDIER/RFHEADBT8-22.WAV" />
-        <Sound SoundType="RangedAttack" SoundName="/LEVEL1/SOUNDS/SOLDIER/SOLGUNFR8-22.WAV" />
+        <Sound SoundType="TakeDamage" SoundName="/LEVEL1/SOUNDS/HIT1.WAV" />
+        <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340014.WAV" />
+        <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340015.WAV" />
+        <Sound SoundType="MeleeAttack" SoundName="/LEVEL1/SOUNDS/OFFICER/OFCSWSTB8-22.WAV" />
     </EnemyAIComponent>
     <TakeDamageAIStateComponent>
         <StatePriority>0</StatePriority>
@@ -37,63 +38,65 @@
     </TakeDamageAIStateComponent>
     <PatrolEnemyAIStateComponent>
         <StatePriority>0</StatePriority>
-        <PatrolSpeed>1.200000</PatrolSpeed>
-        <LeftPatrolBorder>0</LeftPatrolBorder>   <!-- DEFINED IN CODE -->
+        <PatrolSpeed>1.300000</PatrolSpeed>
+        <LeftPatrolBorder>0</LeftPatrolBorder> <!-- DEFINED IN CODE -->
         <RightPatrolBorder>0</RightPatrolBorder> <!-- DEFINED IN CODE -->
-        <RetainDirection>false</RetainDirection> 
+        <RetainDirection>false</RetainDirection>
         <WalkAction>
             <Animation>fastadvance</Animation>
         </WalkAction>
         <IdleAction>
-            <AnimationDelay>750</AnimationDelay>
+            <AnimationDelay>900</AnimationDelay>
             <Animation>stand1</Animation>
-            <Animation>stand</Animation>
             <Animation>stand2</Animation>
+            <Animation>stand3</Animation>
+            <Animation>stand4</Animation>
+            <Animation>stand5</Animation>
         </IdleAction>
     </PatrolEnemyAIStateComponent>
     <MeleeAttackAIStateComponent>
         <StatePriority>20</StatePriority>
         <Attacks>
             <AttackAction>
-                <Animation>strike1</Animation>
-                <AttackAnimFrameIdx>4</AttackAnimFrameIdx>
+                <Animation>strike</Animation>
+                <AttackAnimFrameIdx>3</AttackAnimFrameIdx>
                 <AttackType>0</AttackType>
                 <AttackFxImageSet>NONE</AttackFxImageSet>
                 <AttackSpawnPositionOffset x="-30" y="0" />
-                <AttackAreaSize width="110" height="40" />
+                <AttackAreaSize width="130" height="50" />
                 <Damage>10</Damage>
                 <AgroSensorFixture>
                     <FixtureType>EnemyAIMeleeSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>
                     <IsSensor>true</IsSensor>
-                    <Size width="160" height="50" />
+                    <Size width="180" height="50" />
                     <Offset x="0" y="0" />
                     <CollisionFlag>4</CollisionFlag>
                     <CollisionMask>2</CollisionMask>
                     <Friction>0.000000</Friction>
                     <Density>0.000000</Density>
-                    <Restitution>0.000000</Restitution>
+                    <Restitution>-1.#QNAN0</Restitution>
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>
     </MeleeAttackAIStateComponent>
-    <RangedAttackAIStateComponent>
-        <StatePriority>10</StatePriority>
+    <DuckMeleeAttackAIStateComponent>
+        <StatePriority>15</StatePriority>
         <Attacks>
             <AttackAction>
-                <Animation>strike</Animation>
+                <Animation>strike1</Animation>
                 <AttackAnimFrameIdx>2</AttackAnimFrameIdx>
-                <AttackType>1</AttackType>
-                <AttackFxImageSet>/LEVEL2/IMAGES/MUSKETBALL/*</AttackFxImageSet>
-                <AttackSpawnPositionOffset x="-42" y="-38" />
-                <AttackAreaSize width="0" height="0" />
+                <AttackType>0</AttackType>
+                <AttackFxImageSet>NONE</AttackFxImageSet>
+                <AttackSpawnPositionOffset x="-30" y="25" />
+                <AttackAreaSize width="130" height="50" />
                 <Damage>10</Damage>
                 <AgroSensorFixture>
-                    <FixtureType>EnemyAIRangedSensor</FixtureType>
+                    <FixtureType>EnemyAIDuckMeleeSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>
                     <IsSensor>true</IsSensor>
-                    <Size width="1000" height="50" />
-                    <Offset x="0" y="-30" />
+                    <Size width="165" height="25" />
+                    <Offset x="0" y="20" />
                     <CollisionFlag>4</CollisionFlag>
                     <CollisionMask>2</CollisionMask>
                     <Friction>0.000000</Friction>
@@ -102,33 +105,7 @@
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>
-    </RangedAttackAIStateComponent>
-    <DuckRangedAttackAIStateComponent>
-        <StatePriority>5</StatePriority>
-        <Attacks>
-            <AttackAction>
-                <Animation>strike2</Animation>
-                <AttackAnimFrameIdx>3</AttackAnimFrameIdx>
-                <AttackType>1</AttackType>
-                <AttackFxImageSet>/LEVEL2/IMAGES/MUSKETBALL/*</AttackFxImageSet>
-                <AttackSpawnPositionOffset x="-42" y="7" />
-                <AttackAreaSize width="0" height="0" />
-                <Damage>10</Damage>
-                <AgroSensorFixture>
-                    <FixtureType>EnemyAIDuckRangedSensor</FixtureType>
-                    <CollisionShape>Rectangle</CollisionShape>
-                    <IsSensor>true</IsSensor>
-                    <Size width="975" height="20" />
-                    <Offset x="0" y="25" />
-                    <CollisionFlag>4</CollisionFlag>
-                    <CollisionMask>2</CollisionMask>
-                    <Friction>0.000000</Friction>
-                    <Density>0.000000</Density>
-                    <Restitution>0.000000</Restitution>
-                </AgroSensorFixture>
-            </AttackAction>
-        </Attacks>
-    </DuckRangedAttackAIStateComponent>
+    </DuckMeleeAttackAIStateComponent>
     <PhysicsComponent>
         <BodyType>Dynamic</BodyType>
         <HasFootSensor>false</HasFootSensor>

@@ -488,9 +488,9 @@ void ClawControllableComponent::SetCurrentPhysicsState()
     }
     else
     {
-        m_pClawAnimationComponent->SetAnimation("stand");
+        m_pClawAnimationComponent->SetAnimation("fall");
         m_State = ClawState_Standing;
-        LOG_ERROR("Unknown physics state. Assume standing");
+        LOG_ERROR("Unknown physics state. Assume falling");
     }
 
     m_pPhysicsComponent->RestoreGravityScale();

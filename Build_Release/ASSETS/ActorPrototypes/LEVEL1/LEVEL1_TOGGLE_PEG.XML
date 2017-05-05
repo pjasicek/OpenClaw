@@ -2,6 +2,7 @@
 	<ActorRenderComponent>
 		<imgpath>LEVEL_PEG</imgpath>
 		<ImagePath>/LEVEL1/IMAGES/PEG/*</ImagePath>
+		<Palette>/LEVEL1/PALETTES/MAIN.PAL</Palette>
 	</ActorRenderComponent>
 	<TogglePegAIComponent>
 		<ToggleFrameIdx>9</ToggleFrameIdx>

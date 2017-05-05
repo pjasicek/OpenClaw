@@ -102,82 +102,6 @@ inline std::shared_ptr<Type> MakeStrongPtr(std::weak_ptr<Type> pWeakPtr)
         return std::shared_ptr<Type>();
 }
 
-enum Direction
-{
-    Direction_None,
-    Direction_Left,
-    Direction_Right,
-};
-
-inline FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
-{
-    FixtureType fixtureType = FixtureType_None;
-
-    if (fixtureTypeStr == "Solid") { fixtureType = FixtureType_Solid; }
-    else if (fixtureTypeStr == "Ground") { fixtureType = FixtureType_Ground; }
-    else if (fixtureTypeStr == "Climb") { fixtureType = FixtureType_Climb; }
-    else if (fixtureTypeStr == "Death") { fixtureType = FixtureType_Death; }
-    else if (fixtureTypeStr == "Trigger") { fixtureType = FixtureType_Trigger; }
-    else if (fixtureTypeStr == "Projectile") { fixtureType = FixtureType_Projectile; }
-    else if (fixtureTypeStr == "Crate") { fixtureType = FixtureType_Crate; }
-    else if (fixtureTypeStr == "Pickup") { fixtureType = FixtureType_Pickup; }
-    else if (fixtureTypeStr == "Trigger") { fixtureType = FixtureType_Trigger; }
-    else if (fixtureTypeStr == "Controller") { fixtureType = FixtureType_Controller; }
-    else if (fixtureTypeStr == "PowderKeg") { fixtureType = FixtureType_PowderKeg; }
-    else if (fixtureTypeStr == "Explosion") { fixtureType = FixtureType_Explosion; }
-    else if (fixtureTypeStr == "EnemyAI") { fixtureType = FixtureType_EnemyAI; }
-    else if (fixtureTypeStr == "EnemyAIMeleeSensor") { fixtureType = FixtureType_EnemyAIMeleeSensor; }
-    else if (fixtureTypeStr == "EnemyAIDuckMeleeSensor") { fixtureType = FixtureType_EnemyAIDuckMeleeSensor; }
-    else if (fixtureTypeStr == "EnemyAIRangedSensor") { fixtureType = FixtureType_EnemyAIRangedSensor; }
-    else if (fixtureTypeStr == "EnemyAIDuckRangedSensor") { fixtureType = FixtureType_EnemyAIDuckRangedSensor; }
-    else if (fixtureTypeStr == "DamageAura") { fixtureType = FixtureType_DamageAura; }
-    else
-    {
-        assert(false && "Unknown body type");
-    }
-
-    return fixtureType;
-}
-
-inline DamageType StringToDamageTypeEnum(const std::string& str)
-{
-    static const std::map<std::string, DamageType> s_StringToDamageTypeEnumMap =
-    {
-        { "DamageType_None", DamageType_None },
-        { "DamageType_MeleeAttack", DamageType_MeleeAttack },
-        { "DamageType_Bullet", DamageType_Bullet },
-        { "DamageType_Magic", DamageType_Magic },
-        { "DamageType_Explosion", DamageType_Explosion },
-        { "DamageType_FireSword", DamageType_FireSword },
-        { "DamageType_LightningSword", DamageType_LightningSword },
-        { "DamageType_FrostSword", DamageType_FrostSword }
-    };
-
-    auto findIt = s_StringToDamageTypeEnumMap.find(str);
-    if (findIt == s_StringToDamageTypeEnumMap.end())
-    {
-        LOG_ERROR("Could not find DamageType: " + str);
-        assert(false);
-    }
-
-    return findIt->second;
-}
-
-inline b2BodyType BodyTypeStringToEnum(std::string bodyTypeStr)
-{
-    b2BodyType bodyType;
-
-    if (bodyTypeStr == "Static") { bodyType = b2_staticBody; }
-    else if (bodyTypeStr == "Kinematic") { bodyType = b2_kinematicBody; }
-    else if (bodyTypeStr == "Dynamic") { bodyType = b2_dynamicBody; }
-    else
-    {
-        assert(false && "Unknown body type");
-    }
-
-    return bodyType;
-}
-
 template
 <typename KeyType, typename ValueType>
 ValueType GetValueFromMap(KeyType _key, const std::map<KeyType, ValueType>& _map)
@@ -187,7 +111,5 @@ ValueType GetValueFromMap(KeyType _key, const std::map<KeyType, ValueType>& _map
 
     return findIt->second;
 }
-
-
 
 #endif

@@ -308,6 +308,75 @@ struct ProjectileDef
 };
 
 //-------------------------------------------------------------------------------------------------
+// ProjectileSpawnerDef - ProjectileSpawnerComponent
+//-------------------------------------------------------------------------------------------------
+
+struct ProjectileSpawnerDef
+{
+    ProjectileSpawnerDef()
+    {
+        isAlwaysOn = false;
+        projectileProto = ActorPrototype_None;
+        projectileDirection = Direction_None;
+    }
+
+    static ProjectileSpawnerDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        ProjectileSpawnerDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        // TODO:
+        return NULL;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&idleAnim, pElem->FirstChildElement("IdleAnim")));
+        cond_assert(strict, ParseValueFromXmlElem(&fireAnim, pElem->FirstChildElement("FireAnim")));
+        cond_assert(strict, ParseValueFromXmlElem(&isAlwaysOn, pElem->FirstChildElement("IsAlwaysOn")));
+        cond_assert(strict, ParseValueFromXmlElem(&startSpawnDelay, pElem->FirstChildElement("StartSpawnDelay")));
+        cond_assert(strict, ParseValueFromXmlElem(&minSpawnDelay, pElem->FirstChildElement("MinSpawnDelay")));
+        cond_assert(strict, ParseValueFromXmlElem(&maxSpawnDelay, pElem->FirstChildElement("MaxSpawnDelay")));
+
+        cond_assert(strict, ParseValueFromXmlElem(&triggerAreaSize, pElem->FirstChildElement("TriggerAreaSize"), "width", "height"));
+        cond_assert(strict, ParseValueFromXmlElem(&triggerAreaOffset, pElem->FirstChildElement("TriggerAreaOffset"), "x", "y"));
+        cond_assert(strict, ParseValueFromXmlElem(&triggerCollisionMask, pElem->FirstChildElement("TriggerCollisionMask")));
+
+        cond_assert(strict, ParseValueFromXmlElem(&projectileSpawnAnimFrameIdx, pElem->FirstChildElement("ProjectileSpawnAnimFrameIdx")));
+
+        std::string projectileProtoStr;
+        cond_assert(strict, ParseValueFromXmlElem(&projectileProtoStr, pElem->FirstChildElement("ProjectilePrototype")));
+        projectileProto = StringToEnum_ActorPrototype(projectileProtoStr);
+
+        std::string directionStr;
+        cond_assert(strict, ParseValueFromXmlElem(&directionStr, pElem->FirstChildElement("ProjectileDirection")));
+        projectileDirection = StringToEnum_Direction(directionStr);
+
+        cond_assert(strict, ParseValueFromXmlElem(&projectileSpawnOffset, pElem->FirstChildElement("ProjectileSpawnOffset"), "x", "y"));
+    }
+
+    std::string idleAnim;
+    std::string fireAnim;
+    bool isAlwaysOn;
+    int startSpawnDelay;
+    int minSpawnDelay;
+    int maxSpawnDelay;
+    Point triggerAreaSize;
+    Point triggerAreaOffset;
+    uint32 triggerCollisionMask;
+    int projectileSpawnAnimFrameIdx;
+    ActorPrototype projectileProto;
+    Direction projectileDirection;
+    Point projectileSpawnOffset;
+};
+
+//-------------------------------------------------------------------------------------------------
 // CollisionInfo - Contains collisonFlag an collisionMask for PhysicsComponent
 //-------------------------------------------------------------------------------------------------
 

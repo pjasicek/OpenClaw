@@ -2,6 +2,7 @@
 	<ActorRenderComponent>
 		<imgpath>LEVEL_PEGSLIDER</imgpath>
 		<ImagePath>/LEVEL2/IMAGES/PEGSLIDER/*</ImagePath>
+		<Palette>/LEVEL2/PALETTES/MAIN.PAL</Palette>
 	</ActorRenderComponent>
 	<TogglePegAIComponent>
 		<ToggleFrameIdx>2</ToggleFrameIdx>
