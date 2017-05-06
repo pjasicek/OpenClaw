@@ -809,7 +809,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             Point(wwdObject->x, wwdObject->y), 
             loot, 
             wwdObject->minX, 
-            wwdObject->maxX);
+            wwdObject->maxX,
+            wwdObject->userValue1);
     }
     else if (logic.find("Rat") != std::string::npos)
     {

@@ -43,4 +43,10 @@ void OnAniLoaded(const char* resource, WapAni* pAni)
             pAni->
         }
     }*/
+
+    if (resourceName == "/level1/anis/rat/dead.ani")
+    {
+        // Disable all sounds for this animation
+        pAni->unk0 = 1;
+    }
 }

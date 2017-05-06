@@ -37,6 +37,7 @@
         <InvulnerabilityTime>0</InvulnerabilityTime>
     </TakeDamageAIStateComponent>
     <PatrolEnemyAIStateComponent>
+        <IsAlwaysIdle>false</IsAlwaysIdle>
         <StatePriority>0</StatePriority>
         <PatrolSpeed>1.300000</PatrolSpeed>
         <LeftPatrolBorder>0</LeftPatrolBorder> <!-- DEFINED IN CODE -->

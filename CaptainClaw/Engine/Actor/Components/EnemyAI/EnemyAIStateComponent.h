@@ -138,6 +138,7 @@ public:
 
     virtual bool VDelegateInit(TiXmlElement* pData) override;
     virtual void VPostInit() override;
+    virtual void VPostPostInit() override;
 
     virtual bool VCanEnter() { return true; }
 

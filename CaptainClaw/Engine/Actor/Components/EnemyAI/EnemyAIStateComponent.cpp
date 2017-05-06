@@ -273,6 +273,8 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
         }
     }
 
+    ParseValueFromXmlElem(&m_IsAlwaysIdle, pData->FirstChildElement("IsAlwaysIdle"));
+
     /*m_LeftPatrolBorder = 6330;
     m_RightPatrolBorder = 6550;*/
     
@@ -302,21 +304,20 @@ void PatrolEnemyAIStateComponent::VPostInit()
     m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), noSpeed);
 }
 
+void PatrolEnemyAIStateComponent::VPostPostInit()
+{
+    if (!m_IsAlwaysIdle)
+    {
+        CalculatePatrolBorders();
+    }
+
+    m_bInitialized = true;
+}
+
 void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
 {
     if (!m_IsActive)
     {
-        return;
-    }
-
-    // Has to be here because in VPostInit there is no guarantee that
-    // PhysicsComponent is already initialized
-    if (!m_bInitialized)
-    {
-        CalculatePatrolBorders();
-
-        m_bInitialized = true;
-
         return;
     }
 

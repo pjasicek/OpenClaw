@@ -1440,7 +1440,7 @@ namespace ActorTemplates
         return pActorElem;
     }
 
-    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX)
+    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(enemyType);
         assert(pActorElem != NULL);
@@ -1458,6 +1458,7 @@ namespace ActorTemplates
         }
 
         //----------- Patrol borders
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.IsAlwaysIdle", isAlwaysIdle));
         assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.LeftPatrolBorder", minPatrolX));
         assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.RightPatrolBorder", maxPatrolX));
 

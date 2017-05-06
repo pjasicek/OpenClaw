@@ -28,9 +28,9 @@
     <EnemyAIComponent>
         <DeathAnimation>dead</DeathAnimation>
         <Sound SoundType="Death" SoundName="/GAME/SOUNDS/MOUSEKILL.WAV" />
-        <Sound SoundType="RangedAttack" SoundName="/GAME/SOUNDS/THRWBOMB.WAV" />
     </EnemyAIComponent>
     <PatrolEnemyAIStateComponent>
+        <IsAlwaysIdle>false</IsAlwaysIdle>
         <StatePriority>0</StatePriority>
         <PatrolSpeed>1.300000</PatrolSpeed>
         <!-- DEFINED IN CODE -->
@@ -38,6 +38,10 @@
         <!-- DEFINED IN CODE -->
         <RightPatrolBorder>0</RightPatrolBorder>
         <RetainDirection>true</RetainDirection>
+        <IdleAction>
+            <AnimationDelay>0</AnimationDelay>
+            <Animation>idle</Animation>
+        </IdleAction>
         <WalkAction>
             <Animation>walk</Animation>
         </WalkAction>

@@ -73,20 +73,39 @@ bool Animation::Initialize(WapAni* wapAni, const char* animationName, const char
         animFrame.imageId = aniAnimFrames[frameIdx].imageFileId;
         animFrame.imageName = "frame" + Util::ConvertToThreeDigitsString(animFrame.imageId);
         animFrame.duration = aniAnimFrames[frameIdx].duration;
-        if (aniAnimFrames[frameIdx].eventFilePath != NULL)
+         
+        // if pWapAni->unk0 == 1, then skip all sounds in this animation
+        if (aniAnimFrames[frameIdx].eventFilePath != NULL &&
+            wapAni->unk0 != 1)
         {
             std::string resourcePathStr(resourcePath);
             std::string soundPath(aniAnimFrames[frameIdx].eventFilePath);
 
             std::replace(soundPath.begin(), soundPath.end(), '_', '/');
-            soundPath = soundPath.substr(soundPath.find("/"));
 
-            // Remove "/" at the beginning
-            resourcePathStr.erase(0, 1);
-            std::string rootDir = resourcePathStr.substr(0, resourcePathStr.find("/"));
+            // If the sound path from ANI has "LEVEL" in it, then take the level number
+            // from the animation resource path
+            if (soundPath.find("LEVEL/") != std::string::npos)
+            {
+                soundPath = soundPath.substr(soundPath.find("/"));
 
-            soundPath = "/" + rootDir + "/SOUNDS" + soundPath + ".WAV";
+                // Remove "/" at the beginning
+                resourcePathStr.erase(0, 1);
+                std::string rootDir = resourcePathStr.substr(0, resourcePathStr.find("/"));
+
+                soundPath = "/" + rootDir + "/SOUNDS" + soundPath + ".WAV";
+            }
+            else
+            {
+                // Else just replace it with /[game|state|claw]/sounds/
+                soundPath.insert(soundPath.find("/"), "/sounds");
+                soundPath.insert(0, "/");
+                soundPath += ".wav";
+            }
+
             std::transform(soundPath.begin(), soundPath.end(), soundPath.begin(), ::tolower);
+
+            //LOG("Sound: " + soundPath);
 
             animFrame.hasEvent = true;
             animFrame.eventName = soundPath;
@@ -256,6 +275,8 @@ void Animation::SetNextFrame()
 void Animation::PlayFrameSound(const std::string& sound)
 {
     assert(_owner && _owner->_owner && _owner->_owner->GetPositionComponent());
+
+    //LOG("Sound: " + sound + ", Owner: " + _owner->_owner->GetName());
 
     SoundInfo soundInfo(sound);
     soundInfo.soundSourcePosition = _owner->_owner->GetPositionComponent()->GetPosition();
