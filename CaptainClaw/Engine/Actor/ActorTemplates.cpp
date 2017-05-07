@@ -615,7 +615,7 @@ namespace ActorTemplates
         return pFollowableComponentElem;
     }
 
-    TiXmlElement* CreateLootComponent(const std::vector<PickupType>& loot)
+    TiXmlElement* CreateLootComponent(const std::vector<PickupType>& loot, int lootSoundChance = 0)
     {
         TiXmlElement* pLootComponent = new TiXmlElement("LootComponent");
         
@@ -628,6 +628,8 @@ namespace ActorTemplates
         {
             XML_ADD_TEXT_ELEMENT("Item", ToStr(PickupType_Treasure_Coins).c_str(), pLootComponent);
         }
+
+        XML_ADD_TEXT_ELEMENT("LootSoundChance", ToStr(lootSoundChance).c_str(), pLootComponent);
 
         return pLootComponent;
     }
@@ -1187,7 +1189,7 @@ namespace ActorTemplates
             0.0f)); // Restitution - makes object bounce
 
         pActor->LinkEndChild(CreateCycleAnimationComponent(75, true));
-        pActor->LinkEndChild(CreateLootComponent(loot));
+        pActor->LinkEndChild(CreateLootComponent(loot, 33));
         pActor->LinkEndChild(CreateDestroyableComponent(true, "DEFAULT", { SOUND_GAME_CRATE_BREAK1, SOUND_GAME_CRATE_BREAK2 }));
         pActor->LinkEndChild(CreateHealthComponent(health, health));
 

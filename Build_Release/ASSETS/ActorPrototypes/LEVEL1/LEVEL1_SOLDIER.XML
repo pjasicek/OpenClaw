@@ -22,6 +22,7 @@
         <MaxHealth>10</MaxHealth>
     </HealthComponent>
     <LootComponent>
+        <LootSoundChance>100</LootSoundChance>
         <!-- DEFINED IN CODE -->
     </LootComponent>
     <EnemyAIComponent>
