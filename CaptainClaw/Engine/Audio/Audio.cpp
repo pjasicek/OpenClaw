@@ -132,11 +132,17 @@ static int SetupPlayMusicThread(void* pData)
     Mix_PlayMusic(pMusic, pMusicInfo->looping ? -1 : 0);
 #endif //_WIN32
 
+    SAFE_DELETE(pMusicInfo);
+
     return 0;
 }
-
+#include <ostream>
 void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
 {
+    std::ofstream outFile("out.midi", ios::out | ios::binary);
+    outFile.write(musicData, musicSize);
+    outFile.close();
+
     if (!m_bMusicOn)
     {
         return;
@@ -254,27 +260,34 @@ int Audio::GetMusicVolume()
     return ceil(((float)m_MusicVolume / (float)MIX_MAX_VOLUME) * 100.0f);
 }
 
-bool Audio::PlaySound(const char* soundData, size_t soundSize, int volumePercentage, int loops)
+bool Audio::PlaySound(const char* soundData, size_t soundSize, const SoundProperties& soundProperties)
 {
     SDL_RWops* soundRwOps = SDL_RWFromMem((void*)soundData, soundSize);
     Mix_Chunk* soundChunk = Mix_LoadWAV_RW(soundRwOps, 1);
 
-    return PlaySound(soundChunk, volumePercentage, loops);
+    return PlaySound(soundChunk, soundProperties);
 }
 
-bool Audio::PlaySound(Mix_Chunk* sound, int volumePercentage, int loops)
+bool Audio::PlaySound(Mix_Chunk* sound, const SoundProperties& soundProperties)
 {
     if (!m_bSoundOn)
     {
         return true;
     }
 
-    int chunkVolume = (int)((((float)volumePercentage) / 100.0f) * (float)m_SoundVolume);
+    int chunkVolume = (int)((((float)soundProperties.volume) / 100.0f) * (float)m_SoundVolume);
 
     Mix_VolumeChunk(sound, chunkVolume);
-    if (Mix_PlayChannel(-1, sound, loops) == -1)
+    int channel = Mix_PlayChannel(-1, sound, soundProperties.loops);
+    if (channel == -1)
     {
         LOG_ERROR("Failed to play chunk: " + std::string(Mix_GetError()));
+        return false;
+    }
+
+    if (!Mix_SetPosition(channel, soundProperties.angle, soundProperties.distance))
+    {
+        LOG_ERROR("Mix_SetPosition: " + std::string(Mix_GetError()));
         return false;
     }
 

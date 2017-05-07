@@ -31,6 +31,8 @@ private:
 
     // Internal state
     uint32 m_PrevAnimframeIdx;
+    int m_OnDuration;
+    int m_OffDuration;
 
     AnimationComponent* m_pAnimationComponent;
     shared_ptr<IGamePhysics> m_pPhysics;

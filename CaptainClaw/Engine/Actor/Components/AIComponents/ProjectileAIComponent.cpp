@@ -104,6 +104,7 @@ void ProjectileAIComponent::OnCollidedWithSolidTile()
             ActorTemplates::CreateSingleAnimation(_owner->GetPositionComponent()->GetPosition(), AnimationType_Explosion);
 
             SoundInfo soundInfo(SOUND_LEVEL1_KEG_EXPLODE);
+            //soundInfo.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
             ActorTemplates::CreateAreaDamage(

@@ -5,6 +5,7 @@
 		<Palette>/LEVEL1/PALETTES/MAIN.PAL</Palette>
 	</ActorRenderComponent>
 	<TogglePegAIComponent>
-		<ToggleFrameIdx>9</ToggleFrameIdx>
+		<ToggleFrameIdx>2</ToggleFrameIdx>
+		<ToggleSound>/LEVEL1/SOUNDS/PEGSLIDE.WAV</ToggleSound>
 	</TogglePegAIComponent>
 </Actor>

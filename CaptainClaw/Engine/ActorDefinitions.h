@@ -251,6 +251,7 @@ struct TogglePegDef
         cond_assert(strict, ParseValueFromXmlElem(&timeOff, pElem->FirstChildElement("TimeOff")));
         cond_assert(strict, ParseValueFromXmlElem(&timeOn, pElem->FirstChildElement("TimeOn")));
         cond_assert(strict, ParseValueFromXmlElem(&toggleFrameIdx, pElem->FirstChildElement("ToggleFrameIdx")));
+        cond_assert(strict, ParseValueFromXmlElem(&toggleSound, pElem->FirstChildElement("ToggleSound")));
         cond_assert(strict, ParseValueFromXmlElem(&delay, pElem->FirstChildElement("Delay")));
     }
 
@@ -260,6 +261,7 @@ struct TogglePegDef
     int timeOff;
     int timeOn;
     int toggleFrameIdx;
+    std::string toggleSound;
     int delay;
 };
 
@@ -376,6 +378,35 @@ struct ProjectileSpawnerDef
     Point projectileSpawnOffset;
 };
 
+struct LocalAmbientSoundDef
+{
+    LocalAmbientSoundDef()
+    {
+    }
+
+    static LocalAmbientSoundDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        LocalAmbientSoundDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        // TODO:
+        return NULL;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+    }
+
+    std::string sound;
+    Point soundArea;
+    Point soundAreaOffset;
+};
+
 //-------------------------------------------------------------------------------------------------
 // CollisionInfo - Contains collisonFlag an collisionMask for PhysicsComponent
 //-------------------------------------------------------------------------------------------------
@@ -462,7 +493,9 @@ struct SoundInfo
         isMusic = false;
         soundVolume = 100;
         loops = 0;
-        isAttentuated = false;
+        setPositionEffect = false;
+        setDistanceEffect = false;
+        maxHearDistance = 0;
         attentuationFactor = 1.0f;
     }
 
@@ -475,9 +508,27 @@ struct SoundInfo
     bool isMusic;
     int soundVolume;
     int loops;
-    bool isAttentuated;
+    bool setPositionEffect;
+    bool setDistanceEffect;
+    float maxHearDistance;
     float attentuationFactor;
     Point soundSourcePosition;
+};
+
+struct SoundProperties
+{
+    SoundProperties()
+    {
+        volume = 100;
+        loops = 0;
+        angle = 0;
+        distance = 0;
+    }
+
+    int volume;
+    int loops;
+    int angle;
+    int distance;
 };
 
 #endif

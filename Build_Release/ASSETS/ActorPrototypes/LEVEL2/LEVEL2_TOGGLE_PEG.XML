@@ -6,5 +6,6 @@
 	</ActorRenderComponent>
 	<TogglePegAIComponent>
 		<ToggleFrameIdx>2</ToggleFrameIdx>
+		<ToggleSound>/LEVEL2/SOUNDS/PEGSLIDE.WAV</ToggleSound>
 	</TogglePegAIComponent>
 </Actor>

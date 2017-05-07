@@ -23,6 +23,7 @@
 		<TimeOn>0</TimeOn> <!-- DEFINED IN CODE -->
 		<TimeOff>0</TimeOff> <!-- DEFINED IN CODE -->
 		<ToggleFrameIdx>0</ToggleFrameIdx>
+		<ToggleSound>NONE</ToggleSound>
 		<AlwaysOn>false</AlwaysOn> <!-- DEFINED IN CODE -->
 	</TogglePegAIComponent>
 	<PhysicsComponent>

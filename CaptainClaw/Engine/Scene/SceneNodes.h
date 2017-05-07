@@ -154,6 +154,13 @@ public:
 
     bool IntersectsWithPoint(const Point& point, float cameraScale = 1.0f);
 
+    inline Point GetCenterPosition() 
+    {
+        return Point(
+            m_Properties.GetPosition().x + m_Width / 2, 
+            m_Properties.GetPosition().y + m_Height / 2);
+    }
+
 protected:
     uint32      m_Width;
     uint32      m_Height;
