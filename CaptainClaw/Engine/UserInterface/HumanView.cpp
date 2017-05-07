@@ -495,6 +495,11 @@ void HumanView::PowerupUpdatedStatusDelegate(IEventDataPtr pEventData)
             soundInfo.loops = -1;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
+
+            if (pCastEventData->GetPowerupType() == PowerupType_Invisibility)
+            {
+
+            }
         }
         else if (hadPowerup && !m_pHUD->IsElementVisible("stopwatch"))
         {

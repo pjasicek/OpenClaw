@@ -1115,6 +1115,25 @@ bool ClawPhysics::VIsAwake(uint32_t actorId)
     return false;
 }
 
+void ClawPhysics::VChangeCollisionFlag(uint32_t actorId, uint32 fromFlag, uint32 toFlag)
+{
+    if (b2Body* pBody = FindBox2DBody(actorId))
+    {
+        b2Fixture* pFixture = pBody->GetFixtureList();
+        while (pFixture != NULL)
+        {
+            b2Filter filter = pFixture->GetFilterData();
+            if (filter.categoryBits & fromFlag)
+            {
+                filter.categoryBits &= ~fromFlag;
+                filter.categoryBits |= toFlag;
+                pFixture->SetFilterData(filter);
+            }
+            pFixture = pFixture->GetNext();
+        }
+    }
+}
+
 SDL_Rect ClawPhysics::VGetAABB(uint32_t actorId, bool discardSensors)
 {
     SDL_Rect aabbRect = { 0, 0, 0, 0 };

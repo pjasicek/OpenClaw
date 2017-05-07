@@ -128,8 +128,8 @@ namespace ActorTemplates
         { PickupType_Treasure_Skull_Green,      SOUND_GAME_TREASURE_SKULL },
         { PickupType_Treasure_Skull_Blue,       SOUND_GAME_TREASURE_SKULL },
         { PickupType_Treasure_Skull_Purple,     SOUND_GAME_TREASURE_SKULL },
-        { PickupType_Powerup_Invisibility, "" },
-        { PickupType_Powerup_Invincibility, "" },
+        { PickupType_Powerup_Invisibility,      SOUND_GAME_PICKUP_MAGIC },
+        { PickupType_Powerup_Invincibility,     SOUND_GAME_PICKUP_MAGIC },
         { PickupType_Powerup_Life, "" },
         { PickupType_Powerup_FireSword,         SOUND_CLAW_PICKUP_FIRE_SWORD },
         { PickupType_Powerup_LightningSword,    SOUND_CLAW_PICKUP_LIGHTNING_SWORD },
@@ -864,7 +864,7 @@ namespace ActorTemplates
         ActorFixtureDef fixtureDef;
         fixtureDef.fixtureType = FixtureType_Trigger;
         fixtureDef.collisionFlag = CollisionFlag_Pickup;
-        fixtureDef.collisionMask = CollisionFlag_Controller;
+        fixtureDef.collisionMask = CollisionFlag_Controller | CollisionFlag_InvisibleController;
         fixtureDef.isSensor = true;
         bodyDef.fixtureList.push_back(fixtureDef);
 
@@ -891,7 +891,7 @@ namespace ActorTemplates
         bodyDef.fixtureType = FixtureType_Pickup;
         bodyDef.position = position;
         bodyDef.collisionFlag = CollisionFlag_Pickup;
-        bodyDef.collisionMask = CollisionFlag_Controller;
+        bodyDef.collisionMask = CollisionFlag_Controller | CollisionFlag_InvisibleController;
         bodyDef.fixtureType = FixtureType_Trigger;
         bodyDef.size = size;
 
@@ -1265,11 +1265,15 @@ namespace ActorTemplates
         }
         else if (collisionFlag == CollisionFlag_EnemyAIAttack)
         {
-            collisionMask = (CollisionFlag_Controller);
+            collisionMask = (CollisionFlag_Controller | CollisionFlag_InvisibleController);
         }
         else if (collisionFlag == CollisionFlag_Explosion)
         {
-            collisionMask = (CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Controller);
+            collisionMask = (CollisionFlag_Crate | 
+                CollisionFlag_PowderKeg | 
+                CollisionFlag_DynamicActor | 
+                CollisionFlag_Controller | 
+                CollisionFlag_InvisibleController);
         }
         else
         {
@@ -1344,7 +1348,7 @@ namespace ActorTemplates
             Point(0, 0), // If it does, specify it here
             CollisionFlag_Ground,  // Collision flag - e.g. What is this actor ?
             // TODO:
-            CollisionFlag_Controller,  // Collision mask - e.g. With what does this actor collide with ?
+            CollisionFlag_Controller | CollisionFlag_InvisibleController,  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Friction - with floor and so
             0.0f,  // Density - determines if this character bounces
             0.0f)); // Restitution - makes object bounce
@@ -1416,7 +1420,7 @@ namespace ActorTemplates
             Point(0, 0), // If it does, specify it here
             CollisionFlag_Checkpoint,  // Collision flag - e.g. What is this actor ?
             // TODO:
-            CollisionFlag_Controller,  // Collision mask - e.g. With what does this actor collide with ?
+            CollisionFlag_Controller | CollisionFlag_InvisibleController,  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Friction - with floor and so
             0.0f,  // Density - determines if this character bounces
             0.0f)); // Restitution - makes object bounce
@@ -1583,7 +1587,13 @@ namespace ActorTemplates
         ActorFixtureDef fixtureDef;
         fixtureDef.fixtureType = FixtureType_EnemyAI;
         fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
-        fixtureDef.collisionMask = (CollisionFlag_Death | CollisionFlag_Controller | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_ClawAttack | CollisionFlag_Explosion);
+        fixtureDef.collisionMask = (CollisionFlag_Death | 
+            CollisionFlag_Controller | 
+            CollisionFlag_Bullet | 
+            CollisionFlag_Magic | 
+            CollisionFlag_ClawAttack | 
+            CollisionFlag_Explosion |
+            CollisionFlag_InvisibleController);
         fixtureDef.isSensor = true;
         fixtureDef.size = Point(40, 100); // Generic value
         if (logicName == "Rat")
@@ -1765,7 +1775,7 @@ namespace ActorTemplates
         auraDef.baseAuraComponentDef.pulseIntrval = 2000;
 
         auraDef.baseAuraComponentDef.auraFixtureDef.collisionFlag = CollisionFlag_DamageAura;
-        auraDef.baseAuraComponentDef.auraFixtureDef.collisionMask = CollisionFlag_Controller;
+        auraDef.baseAuraComponentDef.auraFixtureDef.collisionMask = CollisionFlag_Controller | CollisionFlag_InvisibleController;
         auraDef.baseAuraComponentDef.auraFixtureDef.collisionShape = "Rectangle";
         auraDef.baseAuraComponentDef.auraFixtureDef.fixtureType = FixtureType_DamageAura;
         auraDef.baseAuraComponentDef.auraFixtureDef.isSensor = true;

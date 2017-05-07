@@ -871,10 +871,12 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         else if (imageSet == "GAME_POWERUPS_INVULNERABLE")
         {
             CREATE_POWERUP_COMPONENT("Invulnerability", "30000");
+            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_GAME_PICKUP_MAGIC, pPowerupPickupComponent);
         }
         else if (imageSet == "GAME_POWERUPS_GHOST")
         {
             CREATE_POWERUP_COMPONENT("Invisibility", "30000");
+            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_GAME_PICKUP_MAGIC, pPowerupPickupComponent);
         }
         else if (imageSet == "GAME_CATNIPS_NIP1")
         {

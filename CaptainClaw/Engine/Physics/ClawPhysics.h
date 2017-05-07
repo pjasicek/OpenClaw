@@ -59,6 +59,8 @@ public:
     virtual void VSetLinearSpeedEx(uint32_t actorId, const Point& speed) override;
     virtual bool VIsAwake(uint32_t actorId) override;
 
+    virtual void VChangeCollisionFlag(uint32_t actorId, uint32 fromFlag, uint32 toFlag) override;
+
     virtual void VActivate(uint32_t actorId) override;
     virtual void VDeactivate(uint32_t actorId) override;
 

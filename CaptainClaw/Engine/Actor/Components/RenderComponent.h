@@ -77,6 +77,8 @@ public:
     inline bool IsVisible() { return m_IsVisible; }
     inline bool IsMirrored() { return m_IsMirrored; }
     inline bool IsInverted() { return m_IsInverted; }
+    inline int GetAlpha() { return m_Alpha; }
+    inline void SetAlpha(int alpha) { m_Alpha = alpha; }
 
 protected:
     virtual shared_ptr<SceneNode> VCreateSceneNode() override;
@@ -90,6 +92,7 @@ private:
     bool m_IsVisible;
     bool m_IsMirrored;
     bool m_IsInverted;
+    int m_Alpha;
     int32 m_ZCoord;
 };
 

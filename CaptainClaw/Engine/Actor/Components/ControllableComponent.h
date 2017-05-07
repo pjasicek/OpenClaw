@@ -79,7 +79,10 @@ class AnimationComponent;
 class AmmoComponent;
 class PowerupComponent;
 class HealthComponent;
-class ClawControllableComponent : public ControllableComponent, public AnimationObserver, public HealthObserver
+class ClawControllableComponent : 
+    public ControllableComponent, 
+    public AnimationObserver, 
+    public HealthObserver
 {
 public:
     ClawControllableComponent();

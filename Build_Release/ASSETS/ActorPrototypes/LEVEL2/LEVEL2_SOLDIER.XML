@@ -178,7 +178,7 @@
             <Size width="40" height="85" />
             <Offset x="0" y="0" />
             <CollisionFlag>262144</CollisionFlag>
-            <CollisionMask>2</CollisionMask>
+            <CollisionMask>1048578</CollisionMask>
             <Friction>0.000000</Friction>
             <Density>0.000000</Density>
             <Restitution>0.000000</Restitution>

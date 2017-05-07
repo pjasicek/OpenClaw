@@ -11,7 +11,7 @@
 	</ProjectileAIComponent>
 	<PhysicsComponent>
         <CollisionFlag>262144</CollisionFlag>
-        <CollisionMask>258</CollisionMask>
+        <CollisionMask>1048834</CollisionMask>
 		<CollisionSize width="25" height="25" />
 		<PositionOffset x="-10" y="0" />
     </PhysicsComponent>

@@ -103,6 +103,12 @@ void PowerupComponent::ApplyPowerup(PowerupType powerupType, int32 msDuration)
 {
     if (msDuration > 0 && powerupType != PowerupType_None)
     {
+        if (m_ActivePowerup != PowerupType_None)
+        {
+            BroadcastPowerupStatusUpdated(_owner->GetGUID(), m_ActivePowerup, true);
+            SetPowerupSparklesVisibility(false);
+        }
+
         m_ActivePowerup = powerupType;
         m_RemainingPowerupTime = msDuration;
         int32 secondsRemaining = m_RemainingPowerupTime / 1000;
@@ -139,6 +145,8 @@ void PowerupComponent::BroadcastPowerupStatusUpdated(uint32 actorId, PowerupType
 {
     shared_ptr<EventData_Updated_Powerup_Status> pEvent(new EventData_Updated_Powerup_Status(actorId, powerupType, isPowerupFinished));
     IEventMgr::Get()->VTriggerEvent(pEvent);
+
+    NotifyPowerupStatusUpdated(powerupType, isPowerupFinished);
 }
 
 void PowerupComponent::ClawDiedDelegate(IEventDataPtr pEventData)
@@ -150,5 +158,17 @@ void PowerupComponent::ClawDiedDelegate(IEventDataPtr pEventData)
         m_RemainingPowerupTime = 0;
         SetPowerupSparklesVisibility(false);
         m_ActivePowerup = PowerupType_None;
+    }
+}
+
+//=====================================================================================================================
+// PowerupSubject implementation
+//=====================================================================================================================
+
+void PowerupSubject::NotifyPowerupStatusUpdated(PowerupType powerupType, bool isPowerupFinished)
+{
+    for (PowerupObserver* pObserver : m_Observers)
+    {
+        pObserver->VOnPowerupStatusChanged(powerupType, isPowerupFinished);
     }
 }

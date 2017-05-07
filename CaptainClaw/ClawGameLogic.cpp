@@ -6,6 +6,7 @@
 #include "ClawEvents.h"
 
 #include "Engine/Actor/Components/PhysicsComponent.h"
+#include "Engine/Actor/Components/RenderComponent.h"
 #include "Engine/Actor/Components/ControllableComponent.h"
 #include "Engine/Actor/Components/ControllerComponents/LifeComponent.h"
 #include "Engine/Actor/Components/ControllerComponents/HealthComponent.h"
@@ -416,6 +417,29 @@ void ClawGameLogic::UpdatedPowerupStatusDelegate(IEventDataPtr pEventData)
         else
         {
             pPhysicsComponent->SetMaxJumpHeight(g_pApp->GetGlobalOptions()->powerupMaxJumpHeight);
+        }
+    }
+    else if (pCastEventData->GetPowerupType() == PowerupType_Invisibility)
+    {
+        shared_ptr<ActorRenderComponent> pARC =
+            MakeStrongPtr(pActor->GetComponent<ActorRenderComponent>());
+        assert(pARC);
+
+        if (pCastEventData->IsPowerupFinished())
+        {
+            pARC->SetAlpha(255);
+            m_pPhysics->VChangeCollisionFlag(
+                pCastEventData->GetActorId(), 
+                CollisionFlag_InvisibleController, 
+                CollisionFlag_Controller);
+        }
+        else
+        {
+            pARC->SetAlpha(127);
+            m_pPhysics->VChangeCollisionFlag(
+                pCastEventData->GetActorId(),
+                CollisionFlag_Controller,
+                CollisionFlag_InvisibleController);
         }
     }
 }

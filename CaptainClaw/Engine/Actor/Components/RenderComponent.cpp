@@ -207,6 +207,8 @@ bool BaseRenderComponent::HasImage(int32 imageId)
 //=================================================================================================
 
 ActorRenderComponent::ActorRenderComponent()
+    :
+    m_Alpha(255)
 {
     // Everything is visible by default, should be explicitly stated that its not visible
     m_IsVisible = true;

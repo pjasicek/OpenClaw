@@ -871,7 +871,7 @@ void RangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAct
         dir,
         m_pPositionComponent->GetPosition() + offset,
         CollisionFlag_EnemyAIProjectile,
-        (CollisionFlag_Controller | CollisionFlag_Solid));
+        (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController));
 
     // Play ranged attack sound
     Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetRangedAttackSounds());
@@ -914,7 +914,7 @@ void DuckRangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttac
         dir,
         m_pPositionComponent->GetPosition() + offset,
         CollisionFlag_EnemyAIProjectile,
-        (CollisionFlag_Controller | CollisionFlag_Solid));
+        (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController));
 
     // Play ranged attack sound
     Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetRangedAttackSounds());

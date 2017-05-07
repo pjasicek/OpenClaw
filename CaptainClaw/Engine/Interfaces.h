@@ -53,27 +53,28 @@ enum CollisionType
 
 enum CollisionFlag
 {
-    CollisionFlag_None              = 0x0,
-    CollisionFlag_All               = 0x1,
-    CollisionFlag_Controller        = 0x2,
-    CollisionFlag_DynamicActor      = 0x4,
-    CollisionFlag_Bullet            = 0x8,
-    CollisionFlag_Explosion         = 0x10,
-    CollisionFlag_Magic             = 0x20,
-    CollisionFlag_Crate             = 0x40,
-    CollisionFlag_Rope              = 0x80,
-    CollisionFlag_Solid             = 0x100,
-    CollisionFlag_Ground            = 0x200,
-    CollisionFlag_Death             = 0x400,
-    CollisionFlag_Ladder            = 0x800,
-    CollisionFlag_PowderKeg         = 0x1000,
-    CollisionFlag_Trigger           = 0x2000,
-    CollisionFlag_Pickup            = 0x4000,
-    CollisionFlag_Checkpoint        = 0x8000,
-    CollisionFlag_ClawAttack        = 0x10000,
-    CollisionFlag_EnemyAIAttack     = 0x20000,
-    CollisionFlag_EnemyAIProjectile = 0x40000,
-    CollisionFlag_DamageAura        = 0x80000,
+    CollisionFlag_None                  = 0x0,
+    CollisionFlag_All                   = 0x1,
+    CollisionFlag_Controller            = 0x2,
+    CollisionFlag_DynamicActor          = 0x4,
+    CollisionFlag_Bullet                = 0x8,
+    CollisionFlag_Explosion             = 0x10,
+    CollisionFlag_Magic                 = 0x20,
+    CollisionFlag_Crate                 = 0x40,
+    CollisionFlag_Rope                  = 0x80,
+    CollisionFlag_Solid                 = 0x100,
+    CollisionFlag_Ground                = 0x200,
+    CollisionFlag_Death                 = 0x400,
+    CollisionFlag_Ladder                = 0x800,
+    CollisionFlag_PowderKeg             = 0x1000,
+    CollisionFlag_Trigger               = 0x2000,
+    CollisionFlag_Pickup                = 0x4000,
+    CollisionFlag_Checkpoint            = 0x8000,
+    CollisionFlag_ClawAttack            = 0x10000,
+    CollisionFlag_EnemyAIAttack         = 0x20000,
+    CollisionFlag_EnemyAIProjectile     = 0x40000,
+    CollisionFlag_DamageAura            = 0x80000,
+    CollisionFlag_InvisibleController   = 0x100000,
 };
 
 enum FixtureType
@@ -337,6 +338,8 @@ public:
     virtual void VSetGravityScale(uint32_t actorId, const float gravityScale) = 0;
     virtual void VSetLinearSpeedEx(uint32_t actorId, const Point& speed) = 0;
     virtual bool VIsAwake(uint32_t actorId) = 0;
+
+    virtual void VChangeCollisionFlag(uint32_t actorId, uint32_t fromFlag, uint32_t toFlag) = 0;
 
     virtual void VActivate(uint32_t actorId) = 0;
     virtual void VDeactivate(uint32_t actorId) = 0;
