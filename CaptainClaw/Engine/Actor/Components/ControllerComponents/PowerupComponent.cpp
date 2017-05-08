@@ -105,7 +105,7 @@ void PowerupComponent::ApplyPowerup(PowerupType powerupType, int32 msDuration)
     {
         if (m_ActivePowerup != PowerupType_None)
         {
-            BroadcastPowerupStatusUpdated(_owner->GetGUID(), m_ActivePowerup, true);
+            // Clear internal state
             SetPowerupSparklesVisibility(false);
         }
 
