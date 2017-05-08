@@ -45,6 +45,10 @@ For all platforms you will need original CLAW.REZ game archive from original gam
   - make -j4
   - cd ../Build_Release
   - ./captainclaw (Considering you have CLAW.REZ from original game in the same folder)
+
+ **Remarks:**
+
+  - For hearing background music play, you need to install **timidity (or timidity++)** and **freepats**. Some linux distributions come with it by default, some do not (fedora, archlinux)
   
 ### Android
   
