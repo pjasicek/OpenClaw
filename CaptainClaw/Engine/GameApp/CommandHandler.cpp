@@ -96,6 +96,10 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
     {
         AddPowerup(PowerupType_Invisibility, 30000, wasCommandExecuted, commandStr, pConsole);
     }
+    else if (commandStr == "invulnerable" || commandStr == "invlr")
+    {
+        AddPowerup(PowerupType_Invulnerability, 30000, wasCommandExecuted, commandStr, pConsole);
+    }
 
     if (commandStr == "reset level")
     {

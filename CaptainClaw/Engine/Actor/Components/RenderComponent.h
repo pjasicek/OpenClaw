@@ -79,6 +79,8 @@ public:
     inline bool IsInverted() { return m_IsInverted; }
     inline int GetAlpha() { return m_Alpha; }
     inline void SetAlpha(int alpha) { m_Alpha = alpha; }
+    SDL_Color GetColorMod() { return m_ColorMod; }
+    void SetColorMod(const SDL_Color& color) { m_ColorMod = color; }
 
 protected:
     virtual shared_ptr<SceneNode> VCreateSceneNode() override;
@@ -93,6 +95,7 @@ private:
     bool m_IsMirrored;
     bool m_IsInverted;
     int m_Alpha;
+    SDL_Color m_ColorMod;
     int32 m_ZCoord;
 };
 

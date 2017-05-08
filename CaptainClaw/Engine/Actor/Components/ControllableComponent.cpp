@@ -174,7 +174,10 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_TakeDamageTimeLeftMs -= msDiff;
         if (m_TakeDamageTimeLeftMs <= 0)
         {
-            m_pHealthComponent->SetInvulnerable(false);
+            if (!m_pPowerupComponent->HasPowerup(PowerupType_Invulnerability))
+            {
+                m_pHealthComponent->SetInvulnerable(false);
+            }
             m_TakeDamageTimeLeftMs = 0;
         }
     }

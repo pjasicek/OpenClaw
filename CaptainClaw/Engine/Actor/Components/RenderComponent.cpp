@@ -215,6 +215,7 @@ ActorRenderComponent::ActorRenderComponent()
     m_IsMirrored = false;
     m_IsInverted = false;
     m_ZCoord = 0;
+    m_ColorMod.r = m_ColorMod.g = m_ColorMod.b = m_ColorMod.a = 255;
 }
 
 bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)

@@ -442,4 +442,31 @@ void ClawGameLogic::UpdatedPowerupStatusDelegate(IEventDataPtr pEventData)
                 CollisionFlag_InvisibleController);
         }
     }
+    else if (pCastEventData->GetPowerupType() == PowerupType_Invulnerability)
+    {
+        shared_ptr<ActorRenderComponent> pARC =
+            MakeStrongPtr(pActor->GetComponent<ActorRenderComponent>());
+        assert(pARC);
+
+        shared_ptr<HealthComponent> pHealthComponent =
+            MakeStrongPtr(pActor->GetComponent<HealthComponent>());
+        assert(pHealthComponent);
+
+        if (pCastEventData->IsPowerupFinished())
+        {
+            pHealthComponent->SetInvulnerable(false);
+            pARC->SetColorMod(COLOR_WHITE);
+        }
+        else
+        {
+            pHealthComponent->SetInvulnerable(true);
+
+            SDL_Color invulnerabilityColor;
+            invulnerabilityColor.r = 255;
+            invulnerabilityColor.g = 0;
+            invulnerabilityColor.b = 0;
+            invulnerabilityColor.a = 255;
+            pARC->SetColorMod(invulnerabilityColor);
+        }
+    }
 }
