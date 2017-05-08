@@ -271,6 +271,9 @@ enum ActorPrototype
 
     ActorPrototype_BaseProjectileSpawner,
 
+    // Sound
+    ActorPrototype_LocalAmbientSound,
+
     ActorPrototype_Max
 };
 

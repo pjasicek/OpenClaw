@@ -95,6 +95,7 @@
     <ClCompile Include="Engine\Actor\Components\ExplodeableComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\FollowableComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\GlobalAmbientSoundComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\LocalAmbientSoundComponent.cpp" />
     <ClCompile Include="Engine\Interfaces.cpp" />
     <ClCompile Include="Engine\Actor\Components\LootComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PickupComponents\PickupComponent.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Engine\Actor\Components\AreaDamageComponent.h" />
     <ClInclude Include="Engine\Actor\Components\FollowableComponent.h" />
     <ClInclude Include="Engine\Actor\Components\GlobalAmbientSoundComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\LocalAmbientSoundComponent.h" />
     <ClInclude Include="Engine\Actor\Components\LootComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PickupComponents\PickupComponent.h" />
     <ClInclude Include="Engine\Actor\Components\KinematicComponent.h" />

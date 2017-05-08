@@ -246,6 +246,18 @@ bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
         m_ZCoord = std::stoi(pElem->GetText());
     }
 
+    if (!m_IsVisible)
+    {
+        if (!m_ImageMap.empty())
+        {
+            m_CurrentImage = m_ImageMap.begin()->second;
+        }
+        else
+        {
+            LOG_WARNING("Invisible actor has no dummy image !");
+        }
+    }
+
     if (m_IsVisible)
     {
         if (m_ImageMap.empty())

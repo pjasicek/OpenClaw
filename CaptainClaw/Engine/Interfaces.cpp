@@ -47,6 +47,9 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_LightningSwordProjectile, "ActorPrototype_LightningSwordProjectile" },
 
         { ActorPrototype_BaseProjectileSpawner, "ActorPrototype_BaseProjectileSpawner" },
+
+        // Sound
+        { ActorPrototype_LocalAmbientSound, "ActorPrototype_LocalAmbientSound" },
     };
 
     auto findIt = actorPrototypeEnumToStringMap.find(actorProto);
@@ -100,6 +103,9 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_LightningSwordProjectile", ActorPrototype_LightningSwordProjectile },
 
         { "ActorPrototype_BaseProjectileSpawner", ActorPrototype_BaseProjectileSpawner },
+
+        // Sound
+        { "ActorPrototype_LocalAmbientSound", ActorPrototype_LocalAmbientSound },
     };
 
     auto findIt = actorPrototypeStringToEnumMap.find(actorProtoStr);

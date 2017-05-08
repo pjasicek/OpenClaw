@@ -486,21 +486,22 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
     if (logic.find("AmbientSound") != std::string::npos)
     {
+        std::string sound = wwdObject->sound;
+        int soundVolume = wwdObject->damage;
+        if (soundVolume == 0)
+        {
+            soundVolume = 100;
+        }
+
         if (logic == "GlobalAmbientSound")
         {
-            std::string sound = wwdObject->sound;
-            int soundVolume = wwdObject->damage;
-            if (soundVolume == 0)
-            {
-                soundVolume = 100;
-            }
             int minTimeOff = wwdObject->moveRect.right;
             int maxTimeOff = wwdObject->moveRect.bottom;
             int minTimeOn = wwdObject->moveRect.left;
             int maxTimeOn = wwdObject->moveRect.top;
             bool isLooping = minTimeOn == 0;
 
-            // Level global sounds are SO DAMN LOUD
+            // Level 2 global sounds are SO DAMN LOUD
             if ((levelNumber == 2 ) && isLooping)
             {
                 soundVolume /= 3;
@@ -515,6 +516,56 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 minTimeOn,
                 maxTimeOn,
                 isLooping);
+        }
+        else if (logic == "SpotAmbientSound" || 
+                 logic == "AmbientSound")
+        {
+            /*if (pWwdObject->maxX != 0 && pWwdObject->maxY != 0)
+            {
+                pAmbientSoundElem->LinkEndChild(CreatePlayAreaElement(pWwdObject->minX, pWwdObject->minY,
+                    pWwdObject->maxX - pWwdObject->minX, pWwdObject->maxY - pWwdObject->minY));
+            }*/
+
+            assert(wwdObject->maxX != 0);
+            assert(wwdObject->maxY != 0);
+
+            // Claw guys seem to have some typos in image set names...
+            if (sound == "LEVEL_AMBIENT_ANGVIL")
+            {
+                sound = "LEVEL_AMBIENT_ANVIL";
+                // This had to be some kind of a mistake on their part
+                soundVolume = 0;
+            }
+
+            /*Point center(
+                (wwdObject->minX + wwdObject->maxX) / 2,
+                (wwdObject->minY + wwdObject->maxY) / 2);*/
+            Point center(wwdObject->x, wwdObject->y);
+            Point size(
+                wwdObject->maxX - wwdObject->minX,
+                wwdObject->maxY - wwdObject->minY);
+            if (size.y > size.x)
+            {
+                size.y = size.x;
+            }
+
+            LocalAmbientSoundDef soundDef;
+            soundDef.sound = ActorTemplates::GetSoundPathFromClawPath(sound);
+            soundDef.volume = soundVolume;
+            soundDef.soundAreaSize = size;
+
+            LOG("Size: " + soundDef.soundAreaSize.ToString());
+            SAFE_DELETE(pActorElem);
+            return ActorTemplates::CreateXmlData_LocalAmbientSound(
+                ActorPrototype_LocalAmbientSound,
+                center,
+                soundDef);
+        }
+        else
+        {
+            LOG("Not created ambient sound logic: " + logic);
+            Point pos(wwdObject->x, wwdObject->y);
+            LOG("Position: " + pos.ToString());
         }
 
         //pActorElem->LinkEndChild(AmbientSoundToXml(wwdObject));

@@ -1550,6 +1550,25 @@ namespace ActorTemplates
         return CreateAndReturnActor(CreateXmlData_ProjectileActor(proto, position, dir));
     }
 
+    TiXmlElement* CreateXmlData_LocalAmbientSound(ActorPrototype proto, Point position, const LocalAmbientSoundDef& soundDef)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.LocalAmbientSoundComponent.Sound", soundDef.sound));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.LocalAmbientSoundComponent.Volume", soundDef.volume));
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.LocalAmbientSoundComponent.SoundAreaSize",
+            "width", (int)soundDef.soundAreaSize.x, "height", (int)soundDef.soundAreaSize.y));
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.LocalAmbientSoundComponent.SoundAreaOffset",
+            "x", (int)soundDef.soundAreaOffset.x, "y", (int)soundDef.soundAreaOffset.y));
+
+        return pActorElem;
+    }
+
     TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX)
     {
         assert(false && "This method is deprecated. Use \"CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX)\" instead");

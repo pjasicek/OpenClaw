@@ -303,6 +303,9 @@
     <ClCompile Include="Engine\Resource\Loaders\ResourceCorrection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Actor\Components\LocalAmbientSoundComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Process\Process.h">
@@ -615,6 +618,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Resource\Loaders\ResourceCorrection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actor\Components\LocalAmbientSoundComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

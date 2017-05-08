@@ -71,6 +71,11 @@ string ToStr(int num, int base)
     return std::to_string(num);
 }
 
+string ToStr(std::string str)
+{
+    return str;
+}
+
 string ToStr(unsigned int num, int base)
 {
     return std::to_string(num);

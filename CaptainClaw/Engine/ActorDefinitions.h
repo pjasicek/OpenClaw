@@ -400,10 +400,16 @@ struct LocalAmbientSoundDef
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
         assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&sound, pElem->FirstChildElement("Sound")));
+        cond_assert(strict, ParseValueFromXmlElem(&volume, pElem->FirstChildElement("Volume")));
+        cond_assert(strict, ParseValueFromXmlElem(&soundAreaSize, pElem->FirstChildElement("SoundAreaSize"), "width", "height"));
+        cond_assert(strict, ParseValueFromXmlElem(&soundAreaOffset, pElem->FirstChildElement("SoundAreaOffset"), "x", "y"));
     }
 
     std::string sound;
-    Point soundArea;
+    int volume;
+    Point soundAreaSize;
     Point soundAreaOffset;
 };
 

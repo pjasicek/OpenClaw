@@ -1,0 +1,47 @@
+<Actor Type="LocalAmbientSound" ActorPrototypeName="ActorPrototype_LocalAmbientSound">
+	<PositionComponent>
+		<Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
+	</PositionComponent>
+	<ActorRenderComponent>
+		<Visible>false</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>0</ZCoord>
+		<ImagePath>/GAME/IMAGES/SOUNDICON/*</ImagePath>
+		<Palette>/LEVEL1/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+    <TriggerComponent>
+        <IsTriggerUnlimited>true</IsTriggerUnlimited>
+    </TriggerComponent>
+    <LocalAmbientSoundComponent>
+        <!-- DEFINED IN CODE -->
+        <Sound>NONE</Sound>
+        <!-- DEFINED IN CODE -->
+        <Volume>100</Volume>
+        <!-- DEFINED IN CODE -->
+        <SoundAreaSize width="0" height="0" />
+        <!-- DEFINED IN CODE -->
+        <SoundAreaOffset x="0" y="0" />
+    </LocalAmbientSoundComponent>
+	<PhysicsComponent>
+        <BodyType>Static</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>Solid</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="0" height="0" /> <!-- SET ACCORDING TO IMAGE IN PHYSICS COMPONENT -->
+        <GravityScale>0.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>1</CollisionFlag>
+        <CollisionMask>0</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+    </PhysicsComponent>
+</Actor>
