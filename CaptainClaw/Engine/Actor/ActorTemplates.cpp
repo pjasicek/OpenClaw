@@ -1428,18 +1428,6 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_Actor(ActorPrototype enemyType, Point position)
-    {
-        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(enemyType);
-        assert(pActorElem != NULL);
-
-        //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
-            "x", (int)position.x, "y", (int)position.y));
-
-        return pActorElem;
-    }
-
     TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(enemyType);

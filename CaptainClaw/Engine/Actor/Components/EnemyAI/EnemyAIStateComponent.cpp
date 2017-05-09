@@ -66,13 +66,6 @@ static shared_ptr<EnemyAttackAction> XmlToEnemyAttackActionPtr(TiXmlElement* pEl
         pAttackAction->damage = std::stoi(pDamageElem->GetText());
     }
 
-    std::string spawnedAttackPrototypeStr;
-    if (ParseValueFromXmlElem(&spawnedAttackPrototypeStr, pElem->FirstChildElement("SpawnedAttackPrototype")))
-    {
-        pAttackAction->spawnedAttackPrototype = ActorPrototypeStringToEnum(spawnedAttackPrototypeStr);
-    }
-    
-
     pAttackAction->agroSensorFixture = ActorTemplates::XmlToActorFixtureDef(pElem->FirstChildElement("AgroSensorFixture"));
 
     return pAttackAction;
@@ -218,6 +211,7 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     //m_pCurrentAction(NULL),
     BaseEnemyAIStateComponent("PatrolState"),
     m_PatrolSpeed(0.0),
+    m_bInitialized(false),
     m_bRetainDirection(false),
     m_IsAlwaysIdle(false)
 {
@@ -279,18 +273,13 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
         }
     }
 
-    ParseValueFromXmlElem(&m_IsAlwaysIdle, pData->FirstChildElement("IsAlwaysIdle"));
-
     /*m_LeftPatrolBorder = 6330;
     m_RightPatrolBorder = 6550;*/
-
-    if (!m_IsAlwaysIdle)
-    {
-        assert(fabs(m_PatrolSpeed) > DBL_EPSILON);
-        assert(m_pWalkAction != nullptr);
-        assert(!m_pWalkAction->animations.empty());
-    }
     
+    assert(fabs(m_PatrolSpeed) > DBL_EPSILON);
+
+    assert(m_pWalkAction != nullptr);
+    assert(!m_pWalkAction->animations.empty());
     if (m_pIdleAction == nullptr)
     {
         LOG_WARNING("No idle action");
@@ -313,18 +302,21 @@ void PatrolEnemyAIStateComponent::VPostInit()
     m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), noSpeed);
 }
 
-void PatrolEnemyAIStateComponent::VPostPostInit()
-{
-    if (!m_IsAlwaysIdle)
-    {
-        CalculatePatrolBorders();
-    }
-}
-
 void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
 {
     if (!m_IsActive)
     {
+        return;
+    }
+
+    // Has to be here because in VPostInit there is no guarantee that
+    // PhysicsComponent is already initialized
+    if (!m_bInitialized)
+    {
+        CalculatePatrolBorders();
+
+        m_bInitialized = true;
+
         return;
     }
 
@@ -340,7 +332,7 @@ void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
     }
 
     // Only makes sense to check for stuff when walking
-    if (m_pWalkAction && m_pWalkAction->isActive)
+    if (m_pWalkAction->isActive)
     {
         if (fabs(m_pPhysics->VGetVelocity(_owner->GetGUID()).x) < 0.1)
         {
@@ -357,14 +349,8 @@ void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
 void PatrolEnemyAIStateComponent::VOnStateEnter()
 {
     m_IsActive = true;
-    if (m_IsAlwaysIdle)
-    {
-        CommenceIdleBehaviour();
-    }
-    else
-    {
-        ChangeDirection(m_Direction);
-    }
+    //CommenceIdleBehaviour();
+    ChangeDirection(m_Direction);
 }
 
 void PatrolEnemyAIStateComponent::VOnStateLeave()
@@ -541,10 +527,7 @@ void PatrolEnemyAIStateComponent::CommenceIdleBehaviour()
 {
     if (m_pIdleAction)
     {
-        if (m_pWalkAction)
-        {
-            m_pWalkAction->isActive = false;
-        }
+        m_pWalkAction->isActive = false;
         m_pIdleAction->isActive = true;
         m_pIdleAction->activeAnimIdx = 0;
         m_pAnimationComponent->SetAnimation(m_pIdleAction->animations[0]);
@@ -563,8 +546,7 @@ void PatrolEnemyAIStateComponent::CommenceIdleBehaviour()
 
 BaseAttackAIStateComponent::BaseAttackAIStateComponent(std::string stateName)
     :
-    BaseEnemyAIStateComponent(stateName),
-    m_bIsAlwaysAccessible(false)
+    BaseEnemyAIStateComponent(stateName)
 {
 
 }
@@ -586,11 +568,8 @@ bool BaseAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
         {
             shared_ptr<EnemyAttackAction> pAttackAction = XmlToEnemyAttackActionPtr(pElem);
 
-            if (pAttackAction->spawnedAttackPrototype == ActorPrototype_None)
-            {
-                assert(pAttackAction->animation != "");
-                assert(pAttackAction->damage > 0);
-            }
+            assert(pAttackAction->animation != "");
+            assert(pAttackAction->damage > 0);
 
             m_AttackActions.push_back(pAttackAction);
         }
@@ -884,25 +863,15 @@ bool RangedAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
 
 void RangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset)
 {
-    if (pAttack->spawnedAttackPrototype == ActorPrototype_None)
-    {
-        ActorTemplates::CreateProjectile(
-            pAttack->attackFxImageSet,
-            pAttack->damage,
-            pAttack->attackDamageType,
-            dir,
-            m_pPositionComponent->GetPosition() + offset,
-            CollisionFlag_EnemyAIProjectile,
-            (CollisionFlag_Controller | CollisionFlag_Solid));
-    }
-    else
-    {
-        ActorTemplates::CreateActor_Projectile(
-            pAttack->spawnedAttackPrototype,
-            m_pPositionComponent->GetPosition() + offset,
-            dir);
-    }
-    
+    ActorTemplates::CreateProjectile(
+        pAttack->attackFxImageSet,
+        pAttack->damage,
+        pAttack->attackDamageType,
+        dir,
+        m_pPositionComponent->GetPosition() + offset,
+        CollisionFlag_EnemyAIProjectile,
+        (CollisionFlag_Controller | CollisionFlag_Solid));
+
     // Play ranged attack sound
     Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetRangedAttackSounds());
 }

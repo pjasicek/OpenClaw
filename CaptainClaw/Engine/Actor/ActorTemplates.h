@@ -37,7 +37,6 @@ struct DamageAuraComponentDef
 namespace ActorTemplates
 {
     // Actor prototypes
-    TiXmlElement* CreateXmlData_Actor(ActorPrototype enemyType, Point position);
     TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX);
     TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, Point position, const ElevatorDef& elevatorDef);
     TiXmlElement* CreateXmlData_TogglePegActor(ActorPrototype togglePegProto, Point position, const TogglePegDef& togglePegDef);

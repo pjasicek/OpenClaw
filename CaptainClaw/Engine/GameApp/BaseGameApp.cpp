@@ -733,6 +733,100 @@ bool BaseGameApp::InitializeLocalization(GameOptions& gameOptions)
     return true;
 }
 
+//
+// Helper maps and functions for converting from actor prototype to string and back
+//
+
+// TODO: This should be the perfect candidate for code-generating macro
+
+std::string ActorPrototypeEnumToString(ActorPrototype actorProto)
+{
+    static std::map<ActorPrototype, std::string> actorPrototypeEnumToStringMap =
+    {
+        // Actor enemies
+        { ActorPrototype_Level1_Soldier, "ActorPrototype_Level1_Soldier" },
+        { ActorPrototype_Level1_Officer, "ActorPrototype_Level1_Officer" },
+        { ActorPrototype_Level1_Rat,     "ActorPrototype_Level1_Rat" },
+        { ActorPrototype_Level2_Soldier, "ActorPrototype_Level2_Soldier" },
+        { ActorPrototype_Level2_Officer, "ActorPrototype_Level2_Officer" },
+        { ActorPrototype_Level2_PunkRat, "ActorPrototype_Level2_PunkRat" },
+
+        // Elevators
+        { ActorPrototype_BaseElevator, "ActorPrototype_BaseElevator" },
+
+        { ActorPrototype_Level1_Elevator, "ActorPrototype_Level1_Elevator" },
+        { ActorPrototype_Level2_Elevator, "ActorPrototype_Level2_Elevator" },
+
+        // Toggle pegs
+        { ActorPrototype_BaseTogglePeg, "ActorPrototype_BaseTogglePeg" },
+
+        { ActorPrototype_Level1_TogglePeg, "ActorPrototype_Level1_TogglePeg" },
+        { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" },
+
+        //=======================================
+        // General
+        //=======================================
+
+        { ActorPrototype_BaseProjectile, "ActorPrototype_BaseProjectile" },
+        { ActorPrototype_FireSwordProjectile, "ActorPrototype_FireSwordProjectile" },
+        { ActorPrototype_FrostSwordProjectile, "ActorPrototype_FrostSwordProjectile" },
+        { ActorPrototype_LightningSwordProjectile, "ActorPrototype_LightningSwordProjectile" },
+    };
+
+    auto findIt = actorPrototypeEnumToStringMap.find(actorProto);
+    if (findIt == actorPrototypeEnumToStringMap.end())
+    {
+        LOG_ERROR("Could not find actor enum: " + ToStr((int)actorProto));
+        assert(false && "Could not convert ActorPrototype enum to string");
+    }
+
+    return findIt->second;
+}
+
+ActorPrototype ActorPrototypeStringToEnum(std::string actorProtoStr)
+{
+    static std::map<std::string, ActorPrototype> actorPrototypeStringToEnumMap =
+    {
+        // Actor enemies
+        { "ActorPrototype_Level1_Soldier", ActorPrototype_Level1_Soldier },
+        { "ActorPrototype_Level1_Officer", ActorPrototype_Level1_Officer },
+        { "ActorPrototype_Level1_Rat",     ActorPrototype_Level1_Rat },
+        { "ActorPrototype_Level2_Soldier", ActorPrototype_Level2_Soldier },
+        { "ActorPrototype_Level2_Officer", ActorPrototype_Level2_Officer },
+        { "ActorPrototype_Level2_PunkRat", ActorPrototype_Level2_PunkRat },
+
+        // Elevators
+        { "ActorPrototype_BaseElevator", ActorPrototype_BaseElevator },
+
+        { "ActorPrototype_Level1_Elevator", ActorPrototype_Level1_Elevator },
+        { "ActorPrototype_Level2_Elevator", ActorPrototype_Level2_Elevator },
+
+        // Toggle pegs
+        { "ActorPrototype_BaseTogglePeg", ActorPrototype_BaseTogglePeg },
+
+        { "ActorPrototype_Level1_TogglePeg", ActorPrototype_Level1_TogglePeg },
+        { "ActorPrototype_Level2_TogglePeg", ActorPrototype_Level2_TogglePeg },
+
+        //=======================================
+        // General
+        //=======================================
+
+        { "ActorPrototype_BaseProjectile", ActorPrototype_BaseProjectile },
+        { "ActorPrototype_FireSwordProjectile", ActorPrototype_FireSwordProjectile },
+        { "ActorPrototype_FrostSwordProjectile", ActorPrototype_FrostSwordProjectile },
+        { "ActorPrototype_LightningSwordProjectile", ActorPrototype_LightningSwordProjectile },
+    };
+
+    auto findIt = actorPrototypeStringToEnumMap.find(actorProtoStr);
+    if (findIt == actorPrototypeStringToEnumMap.end())
+    {
+        LOG_ERROR("Could not find actor enum: " + actorProtoStr);
+        assert(false && "Could not convert ActorPrototype enum to string");
+    }
+
+    return findIt->second;
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 // BaseGameApp::ReadActorXmlPrototypes
 // 

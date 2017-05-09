@@ -113,8 +113,8 @@ StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement*
         StrongActorComponentPtr component = VCreateComponent(node);
         if (component)
         {
-            component->SetOwner(actor);
             actor->AddComponent(component);
+            component->SetOwner(actor);
         }
         else
         {

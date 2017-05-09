@@ -84,11 +84,9 @@ void EnemyAIComponent::VPostInit()
 
     shared_ptr<HealthComponent> pHealthComp = 
         MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name));
-    //assert(pHealthComp);
-    if (pHealthComp)
-    {
-        pHealthComp->AddObserver(this);
-    }
+    assert(pHealthComp);
+
+    pHealthComp->AddObserver(this);
 }
 
 void EnemyAIComponent::VPostPostInit()

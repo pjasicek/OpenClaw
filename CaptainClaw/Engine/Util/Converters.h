@@ -547,14 +547,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         //pActorElem->LinkEndChild(StackedCratesToXml(wwdObject));
         
     }
-    else if (logic == "TowerCannonLeft")
-    {
-        SAFE_DELETE(pActorElem);
-        Point pos(wwdObject->x, wwdObject->y);
-        return ActorTemplates::CreateXmlData_Actor(
-            ActorPrototype_Level2_LeftCannonTower,
-            pos);
-    }
     else if (logic.find("Crate") != std::string::npos)
     {
         std::vector<PickupType> loot;
