@@ -54,6 +54,7 @@ public:
 };
 
 inline Point operator-(const Point& left, const Point& right) { Point temp(left); temp -= right; return temp; }
+inline Point operator+(const Point& left, const Point& right) { Point temp(left); temp += right; return temp; }
 
 //-------------------------------------------------------------------------------------------------
 // ActorFixtureDef - Physics

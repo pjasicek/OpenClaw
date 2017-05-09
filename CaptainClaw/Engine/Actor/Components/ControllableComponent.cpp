@@ -13,12 +13,17 @@
 
 #include "../../GameApp/BaseGameApp.h"
 #include "../../GameApp/BaseGameLogic.h"
+#include "../../UserInterface/HumanView.h"
+#include "../../Scene/SceneNodes.h"
 
 const char* ControllableComponent::g_Name = "ControllableComponent";
 const char* ClawControllableComponent::g_Name = "ClawControllableComponent";
 
 ControllableComponent::ControllableComponent()
-    : m_Active(false)
+    :
+    m_Active(false),
+    m_DuckingTime(0),
+    m_LookingUpTime(0)
 { }
 
 bool ControllableComponent::VInit(TiXmlElement* data)
@@ -169,6 +174,7 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_IdleTime = 0;
     }
 
+    // Check if invulnerability caused by previously taking damage is gone
     if (m_TakeDamageTimeLeftMs > 0)
     {
         m_TakeDamageTimeLeftMs -= msDiff;
@@ -180,6 +186,42 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
             }
             m_TakeDamageTimeLeftMs = 0;
         }
+    }
+
+    assert(g_pApp->GetHumanView() && g_pApp->GetHumanView()->GetCamera());
+    shared_ptr<CameraNode> pCamera = g_pApp->GetHumanView()->GetCamera();
+
+    if (m_DuckingTime > 1500)
+    {
+        if (pCamera->GetCameraOffsetY() < 400)
+        {
+            // Pixels per milisecond (300px per 1000ms)
+            double cameraOffsetSpeed = 300.0 / 1000.0;
+            pCamera->AddCameraOffsetY(cameraOffsetSpeed * msDiff);
+        }
+    }
+    else if (m_LookingUpTime > 1500)
+    {
+        if (pCamera->GetCameraOffsetY() > -400.0)
+        {
+            // Pixels per milisecond (300px per 1000ms)
+            double cameraOffsetSpeed = -1.0 * (300.0 / 1000.0);
+            pCamera->AddCameraOffsetY(cameraOffsetSpeed * msDiff);
+        }
+        m_pClawAnimationComponent->SetAnimation("lookup");
+    }
+    else
+    {
+        if (m_State != ClawState_Ducking)
+        {
+            m_DuckingTime = 0;
+        }
+        if (m_State != ClawState_Standing)
+        {
+            m_LookingUpTime = 0;
+        }
+
+        pCamera->SetCameraOffsetY(0);
     }
 
     m_LastState = m_State;

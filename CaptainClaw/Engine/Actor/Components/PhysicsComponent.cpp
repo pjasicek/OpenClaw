@@ -284,6 +284,10 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         m_IsClimbing = false;
         // When Claw takes damage while ducking he stands up.. TODO: Think of better solution
         m_pPhysics->VScaleActor(_owner->GetGUID(), 2.0);
+
+        m_pControllableComponent->SetDuckingTime(0);
+        m_pControllableComponent->SetLookingUpTime(0);
+
         return;
     }
 
@@ -318,8 +322,15 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         {
             m_pMovingPlatformContact->SetFriction(100.0f);
         }
+
+        if (m_ClimbingSpeed.y > DBL_EPSILON)
+        {
+            m_pControllableComponent->AddDuckingTime(msDiff);
+        }
+
         m_CurrentSpeed = Point(0, 0);
         m_ClimbingSpeed = Point(0, 0);
+
         return;
     }
 
@@ -404,6 +415,10 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
                 m_pControllableComponent->VOnClimb();
             }
             m_ClimbingSpeed = Point(0, 0);
+
+            m_pControllableComponent->SetDuckingTime(0);
+            m_pControllableComponent->SetLookingUpTime(0);
+
             return;
         }
     }
@@ -662,6 +677,16 @@ set_velocity:
     {
         m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), m_ConstantSpeed);
     }*/
+
+    if (m_ClimbingSpeed.y < (-1.0 * DBL_EPSILON))
+    {
+        m_pControllableComponent->AddLookingUpTime(msDiff);
+    }
+    else
+    {
+        m_pControllableComponent->SetLookingUpTime(0);
+        m_pControllableComponent->SetDuckingTime(0);
+    }
 
     m_CurrentSpeed.Set(0, 0);
     m_ClimbingSpeed = Point(0, 0);

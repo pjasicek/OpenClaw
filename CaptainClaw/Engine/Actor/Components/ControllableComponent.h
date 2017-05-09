@@ -48,8 +48,17 @@ public:
 
     virtual bool IsClimbing() = 0;
 
-private:
+    void SetLookingUpTime(int32 msTime) { m_LookingUpTime = msTime; }
+    void AddLookingUpTime(int32 msTime) { m_LookingUpTime += msTime; }
+
+    void SetDuckingTime(int32 msTime) { m_DuckingTime = msTime; }
+    void AddDuckingTime(int32 msTime) { m_DuckingTime += msTime; }
+
+protected:
     bool m_Active;
+
+    int m_DuckingTime;
+    int m_LookingUpTime;
 };
 
 enum ClawState

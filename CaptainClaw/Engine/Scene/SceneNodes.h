@@ -128,6 +128,8 @@ public:
     virtual void VRender(Scene* pScene);
     virtual bool IsVisible(Scene* pScene) const { return m_Active; }
 
+    Point GetPosition() { return m_Properties.GetPosition() + m_CameraOffset; }
+
     void SetViewPosition(Scene* pScene);
     void SetTarget(shared_ptr<SceneNode> pTarget) { m_pTarget = pTarget; }
     shared_ptr<SceneNode> GetTarget() { return m_pTarget; }
@@ -138,34 +140,40 @@ public:
     uint32 GetWidth() { return m_Width; }
     uint32 GetHeight() { return m_Height; }
 
+    // TODO: Calc this only when changes are performed, do not recalc it every single time
+    // since this function is called A LOT
     inline SDL_Rect GetCameraRect() const
     {
-        return{ (int)m_Properties.GetPosition().x,
-            (int)m_Properties.GetPosition().y,
+        return{ (int)(m_Properties.GetPosition().x + m_CameraOffset.x),
+            (int)(m_Properties.GetPosition().y + m_CameraOffset.y),
             (int)(m_Width / m_ScaleX),
             (int)(m_Height / m_ScaleY) };
     }
 
-    int32 GetCameraOffsetX() { return m_OffsetX; }
-    int32 GetCameraOffsetY() { return m_OffsetY; }
-    void SetCameraOffsetX(int32 offX) { m_OffsetX = offX; }
-    void SetCameraOffsetY(int32 offY) { m_OffsetY = offY; }
-    void SetCameraOffset(int32 offX, int32 offY) { m_OffsetX = offX; m_OffsetY = offY; }
+    inline double GetCameraOffsetX() { return m_CameraOffset.x; }
+    inline double GetCameraOffsetY() { return m_CameraOffset.y; }
+
+    inline void SetCameraOffsetX(double offX) { m_CameraOffset.x = offX; }
+    inline void SetCameraOffsetY(double offY) { m_CameraOffset.y = offY; }
+
+    inline void AddCameraOffsetX(double offset) { m_CameraOffset.x += offset; }
+    inline void AddCameraOffsetY(double offset) { m_CameraOffset.y += offset; }
+
+    inline void SetCameraOffset(double offX, double offY) { m_CameraOffset.Set(offX, offY); }
 
     bool IntersectsWithPoint(const Point& point, float cameraScale = 1.0f);
 
     inline Point GetCenterPosition() 
     {
         return Point(
-            m_Properties.GetPosition().x + m_Width / 2, 
-            m_Properties.GetPosition().y + m_Height / 2);
+            m_Properties.GetPosition().x + m_CameraOffset.x + m_Width / 2, 
+            m_Properties.GetPosition().y + m_CameraOffset.y + m_Height / 2);
     }
 
 protected:
     uint32      m_Width;
     uint32      m_Height;
-    uint32      m_OffsetX;
-    uint32      m_OffsetY;
+    Point       m_CameraOffset;
     bool        m_Active;
     bool        m_DebugCamera;
 

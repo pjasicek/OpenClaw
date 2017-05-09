@@ -237,8 +237,6 @@ void RootNode::VRenderChildren(Scene* pScene)
 
 CameraNode::CameraNode(Point position, uint32 width, uint32 height)
     : SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_0, position),
-    m_OffsetX(0),
-    m_OffsetY(0),
     m_Active(true),
     m_DebugCamera(false)
 {
