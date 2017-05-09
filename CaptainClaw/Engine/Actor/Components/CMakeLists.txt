@@ -45,6 +45,10 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/FollowableComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/SingleAnimationComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SingleAnimationComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ProjectileSpawnerComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ProjectileSpawnerComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/LocalAmbientSoundComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/LocalAmbientSoundComponent.h
 )
 
 add_subdirectory(AIComponents)

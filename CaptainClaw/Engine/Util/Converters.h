@@ -486,21 +486,22 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
     if (logic.find("AmbientSound") != std::string::npos)
     {
+        std::string sound = wwdObject->sound;
+        int soundVolume = wwdObject->damage;
+        if (soundVolume == 0)
+        {
+            soundVolume = 100;
+        }
+
         if (logic == "GlobalAmbientSound")
         {
-            std::string sound = wwdObject->sound;
-            int soundVolume = wwdObject->damage;
-            if (soundVolume == 0)
-            {
-                soundVolume = 100;
-            }
             int minTimeOff = wwdObject->moveRect.right;
             int maxTimeOff = wwdObject->moveRect.bottom;
             int minTimeOn = wwdObject->moveRect.left;
             int maxTimeOn = wwdObject->moveRect.top;
             bool isLooping = minTimeOn == 0;
 
-            // Level global sounds are SO DAMN LOUD
+            // Level 2 global sounds are SO DAMN LOUD
             if ((levelNumber == 2 ) && isLooping)
             {
                 soundVolume /= 3;
@@ -515,6 +516,56 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 minTimeOn,
                 maxTimeOn,
                 isLooping);
+        }
+        else if (logic == "SpotAmbientSound" || 
+                 logic == "AmbientSound")
+        {
+            /*if (pWwdObject->maxX != 0 && pWwdObject->maxY != 0)
+            {
+                pAmbientSoundElem->LinkEndChild(CreatePlayAreaElement(pWwdObject->minX, pWwdObject->minY,
+                    pWwdObject->maxX - pWwdObject->minX, pWwdObject->maxY - pWwdObject->minY));
+            }*/
+
+            assert(wwdObject->maxX != 0);
+            assert(wwdObject->maxY != 0);
+
+            // Claw guys seem to have some typos in image set names...
+            if (sound == "LEVEL_AMBIENT_ANGVIL")
+            {
+                sound = "LEVEL_AMBIENT_ANVIL";
+                // This had to be some kind of a mistake on their part
+                soundVolume = 0;
+            }
+
+            /*Point center(
+                (wwdObject->minX + wwdObject->maxX) / 2,
+                (wwdObject->minY + wwdObject->maxY) / 2);*/
+            Point center(wwdObject->x, wwdObject->y);
+            Point size(
+                wwdObject->maxX - wwdObject->minX,
+                wwdObject->maxY - wwdObject->minY);
+            if (size.y > size.x)
+            {
+                size.y = size.x;
+            }
+
+            LocalAmbientSoundDef soundDef;
+            soundDef.sound = ActorTemplates::GetSoundPathFromClawPath(sound);
+            soundDef.volume = soundVolume;
+            soundDef.soundAreaSize = size;
+
+            LOG("Size: " + soundDef.soundAreaSize.ToString());
+            SAFE_DELETE(pActorElem);
+            return ActorTemplates::CreateXmlData_LocalAmbientSound(
+                ActorPrototype_LocalAmbientSound,
+                center,
+                soundDef);
+        }
+        else
+        {
+            LOG("Not created ambient sound logic: " + logic);
+            Point pos(wwdObject->x, wwdObject->y);
+            LOG("Position: " + pos.ToString());
         }
 
         //pActorElem->LinkEndChild(AmbientSoundToXml(wwdObject));
@@ -809,7 +860,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             Point(wwdObject->x, wwdObject->y), 
             loot, 
             wwdObject->minX, 
-            wwdObject->maxX);
+            wwdObject->maxX,
+            wwdObject->userValue1);
     }
     else if (logic.find("Rat") != std::string::npos)
     {
@@ -870,10 +922,12 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         else if (imageSet == "GAME_POWERUPS_INVULNERABLE")
         {
             CREATE_POWERUP_COMPONENT("Invulnerability", "30000");
+            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_GAME_PICKUP_MAGIC, pPowerupPickupComponent);
         }
         else if (imageSet == "GAME_POWERUPS_GHOST")
         {
             CREATE_POWERUP_COMPONENT("Invisibility", "30000");
+            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_GAME_PICKUP_MAGIC, pPowerupPickupComponent);
         }
         else if (imageSet == "GAME_CATNIPS_NIP1")
         {
@@ -1041,9 +1095,43 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), healthPickupComponent);
     }
+    else if (logic == "TowerCannonLeft")
+    {
+        SAFE_DELETE(pActorElem);
+
+        assert(levelNumber == 2 && "Expected only level 2");
+
+        Point position(wwdObject->x, wwdObject->y);
+        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level2_TowerCannonLeft, position);
+    }
+    else if (logic == "TowerCannonRight")
+    {
+        SAFE_DELETE(pActorElem);
+
+        assert(levelNumber == 2 && "Expected only level 2");
+
+        Point position(wwdObject->x, wwdObject->y);
+        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level2_TowerCannonRight, position);
+    }
     else
     {
-        //LOG_WARNING("Unknown logic: " + logic);
+        static std::vector<std::string> s_ReportedUnknownLogicsList;
+
+        bool isAlreadyReported = false;
+        for (std::string unkLogic : s_ReportedUnknownLogicsList)
+        {
+            if (unkLogic == logic)
+            {
+                isAlreadyReported = true;
+                break;
+            }
+        }
+
+        if (!isAlreadyReported)
+        {
+            s_ReportedUnknownLogicsList.push_back(logic);
+            LOG_WARNING("Unknown logic: " + logic);
+        }
     }
 
     return pActorElem;

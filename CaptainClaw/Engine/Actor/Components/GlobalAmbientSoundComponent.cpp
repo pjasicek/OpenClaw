@@ -29,13 +29,13 @@ bool GlobalAmbientSoundComponent::VInit(TiXmlElement* pData)
 {
     assert(pData);
 
-    SetStringIfDefined(&m_Sound, pData->FirstChildElement("Sound"));
-    SetIntIfDefined(&m_SoundVolume, pData->FirstChildElement("SoundVolume"));
-    SetIntIfDefined(&m_MinTimeOff, pData->FirstChildElement("MinTimeOff"));
-    SetIntIfDefined(&m_MaxTimeOff, pData->FirstChildElement("MaxTimeOff"));
-    SetIntIfDefined(&m_MinTimeOn, pData->FirstChildElement("MinTimeOn"));
-    SetIntIfDefined(&m_MaxTimeOn, pData->FirstChildElement("MaxTimeOn"));
-    SetBoolIfDefined(&m_IsLooping, pData->FirstChildElement("IsLooping"));
+    ParseValueFromXmlElem(&m_Sound, pData->FirstChildElement("Sound"));
+    ParseValueFromXmlElem(&m_SoundVolume, pData->FirstChildElement("SoundVolume"));
+    ParseValueFromXmlElem(&m_MinTimeOff, pData->FirstChildElement("MinTimeOff"));
+    ParseValueFromXmlElem(&m_MaxTimeOff, pData->FirstChildElement("MaxTimeOff"));
+    ParseValueFromXmlElem(&m_MinTimeOn, pData->FirstChildElement("MinTimeOn"));
+    ParseValueFromXmlElem(&m_MaxTimeOn, pData->FirstChildElement("MaxTimeOn"));
+    ParseValueFromXmlElem(&m_IsLooping, pData->FirstChildElement("IsLooping"));
 
     if (!m_IsLooping)
     {

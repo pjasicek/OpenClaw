@@ -495,6 +495,11 @@ void HumanView::PowerupUpdatedStatusDelegate(IEventDataPtr pEventData)
             soundInfo.loops = -1;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
+
+            if (pCastEventData->GetPowerupType() == PowerupType_Invisibility)
+            {
+
+            }
         }
         else if (hadPowerup && !m_pHUD->IsElementVisible("stopwatch"))
         {
@@ -513,6 +518,7 @@ void HumanView::PowerupUpdatedStatusDelegate(IEventDataPtr pEventData)
     }
 }
 
+#include <cmath>
 // TODO: Handle somehow volume of specific track
 // Mix_VolumeChunk for sound
 // Music has only 1 channel as far as I know so setting volume for music globally should be fine
@@ -534,9 +540,70 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
             shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(pSoundInfo->soundToPlay.c_str());
             assert(pSound != nullptr);
 
-            if (!g_pApp->GetAudio()->PlaySound(pSound.get(), pSoundInfo->soundVolume, pSoundInfo->loops))
+            SoundProperties soundProperties;
+            soundProperties.volume = pSoundInfo->soundVolume;
+            soundProperties.loops = pSoundInfo->loops;
+
+            Point soundSourcePos = pSoundInfo->soundSourcePosition;
+            if (pSoundInfo->setPositionEffect)
             {
-                IEventMgr::Get()->VQueueEvent(pCastEventData);
+                assert(!soundSourcePos.IsZeroXY());
+            }
+
+            if (pSoundInfo->setDistanceEffect)
+            {
+                /*assert(!soundSourcePos.IsZeroXY());
+                Point soundDistanceDelta = m_pCamera->GetCenterPosition() - soundSourcePos;
+                float length = soundDistanceDelta.Length();
+                float distanceRatio = length / (m_pCamera->GetWidth() / 2);
+                int sdlDistance = std::min(distanceRatio * 255, (float)255);
+                LOG("SDL DISTANCE: " + ToStr(sdlDistance));*/
+            }
+            
+            if (!soundSourcePos.IsZeroXY())
+            {
+                const float paddingPx = 150.0f;
+                const float paddingRatio = paddingPx / (float)m_pCamera->GetWidth();
+                if (m_pCamera->IntersectsWithPoint(soundSourcePos, 1.0f + paddingRatio))
+                {
+                    bool ok = true;
+                    if (pSoundInfo->setDistanceEffect)
+                    {
+                        Point soundDistanceDelta = m_pCamera->GetCenterPosition() - soundSourcePos;
+                        double length = soundDistanceDelta.Length();
+
+                        float distanceRatio = length / ((m_pCamera->GetWidth() / 2) * (1.0f + paddingRatio));
+                        //float distanceRatio = length / pSoundInfo->maxHearDistance;
+                        int sdlDistance = std::min(distanceRatio * 150, (float)150);
+                        /*LOG("SDL DISTANCE: " + ToStr(sdlDistance));
+                        LOG("Length: " + ToStr(length));*/
+                        soundProperties.distance = sdlDistance;
+
+                        if (pSoundInfo->setPositionEffect)
+                        {
+                            double dot = soundDistanceDelta.y;
+                            double det = soundDistanceDelta.x;
+                            double angle = std::atan2(det, dot);
+                            angle *= 180 / M_PI;
+                            angle -= 180;
+
+                            if (angle < 0) angle = fabs(angle) + 180;
+
+                            soundProperties.angle = angle;
+                        }
+                    }
+
+                    /*LOG("CenterPosition: " + m_pCamera->GetCenterPosition().ToString());
+                    LOG("SoundSourcePos: " + soundSourcePos.ToString());*/
+                    if (ok)
+                    {
+                        g_pApp->GetAudio()->PlaySound(pSound.get(), soundProperties);
+                    }
+                }
+            }
+            else
+            {
+                g_pApp->GetAudio()->PlaySound(pSound.get(), soundProperties);
             }
         }
     }

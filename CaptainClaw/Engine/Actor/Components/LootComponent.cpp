@@ -3,7 +3,17 @@
 #include "PositionComponent.h"
 #include "PhysicsComponent.h"
 
+#include "../../Events/EventMgr.h"
+#include "../../Events/Events.h"
+
 const char* LootComponent::g_Name = "LootComponent";
+
+LootComponent::LootComponent()
+    : 
+    m_LootSoundChance(0)
+{
+
+}
 
 bool LootComponent::VInit(TiXmlElement* pData)
 {
@@ -17,6 +27,8 @@ bool LootComponent::VInit(TiXmlElement* pData)
 
         m_Loot.push_back(loot);
     }
+
+    ParseValueFromXmlElem(&m_LootSoundChance, pData->FirstChildElement("LootSoundChance"));
 
     return true;
 }
@@ -45,6 +57,7 @@ TiXmlElement* LootComponent::VGenerateXml()
 
 void LootComponent::VOnHealthBelowZero(DamageType damageType)
 {
+    bool hadRareTreasure = false;
     for (PickupType item : m_Loot)
     {
         shared_ptr<PositionComponent> pPositionComponent =
@@ -52,6 +65,14 @@ void LootComponent::VOnHealthBelowZero(DamageType damageType)
         assert(pPositionComponent);
 
         StrongActorPtr pLoot = ActorTemplates::CreateActorPickup(item, pPositionComponent->GetPosition(), false);
+    }
+
+    int randChance = Util::GetRandomNumber(1, 100);
+    if (randChance <= m_LootSoundChance)
+    {
+        SoundInfo sound(SOUND_GAME_TREASURE_RARE_SPAWNED);
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(sound)));
     }
 
     m_Loot.clear();

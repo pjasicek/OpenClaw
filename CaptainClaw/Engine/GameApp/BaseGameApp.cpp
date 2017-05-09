@@ -158,14 +158,14 @@ bool BaseGameApp::VPerformStartupTests()
 
     // Files located in my custom ASSETS.ZIP
     STARTUP_TEST_FILE_PRESENCE_IN_RESCACHE(
-        "/ActorPrototypes/LEVEL1_SOLDIER.XML", 
+        "/ActorPrototypes/LEVEL1/LEVEL1_SOLDIER.XML", 
         CUSTOM_RESOURCE, 
-        "/ActorPrototypes/LEVEL1_SOLDIER.XML not found in: " + std::string(CUSTOM_RESOURCE));
+        "/ActorPrototypes/LEVEL1/LEVEL1_SOLDIER.XML not found in: " + std::string(CUSTOM_RESOURCE));
 
     STARTUP_TEST_FILE_PRESENCE_IN_RESCACHE(
-        "/ActorPrototypes/LEVEL1_OFFICER.XML",
+        "/ActorPrototypes/LEVEL1/LEVEL1_OFFICER.XML",
         CUSTOM_RESOURCE,
-        "/ActorPrototypes/LEVEL1_OFFICER.XML not found in: " + std::string(CUSTOM_RESOURCE));
+        "/ActorPrototypes/LEVEL1/LEVEL1_OFFICER.XML not found in: " + std::string(CUSTOM_RESOURCE));
 
     return bTestsOk;
 }
@@ -733,100 +733,6 @@ bool BaseGameApp::InitializeLocalization(GameOptions& gameOptions)
     return true;
 }
 
-//
-// Helper maps and functions for converting from actor prototype to string and back
-//
-
-// TODO: This should be the perfect candidate for code-generating macro
-
-std::string ActorPrototypeEnumToString(ActorPrototype actorProto)
-{
-    static std::map<ActorPrototype, std::string> actorPrototypeEnumToStringMap =
-    {
-        // Actor enemies
-        { ActorPrototype_Level1_Soldier, "ActorPrototype_Level1_Soldier" },
-        { ActorPrototype_Level1_Officer, "ActorPrototype_Level1_Officer" },
-        { ActorPrototype_Level1_Rat,     "ActorPrototype_Level1_Rat" },
-        { ActorPrototype_Level2_Soldier, "ActorPrototype_Level2_Soldier" },
-        { ActorPrototype_Level2_Officer, "ActorPrototype_Level2_Officer" },
-        { ActorPrototype_Level2_PunkRat, "ActorPrototype_Level2_PunkRat" },
-
-        // Elevators
-        { ActorPrototype_BaseElevator, "ActorPrototype_BaseElevator" },
-
-        { ActorPrototype_Level1_Elevator, "ActorPrototype_Level1_Elevator" },
-        { ActorPrototype_Level2_Elevator, "ActorPrototype_Level2_Elevator" },
-
-        // Toggle pegs
-        { ActorPrototype_BaseTogglePeg, "ActorPrototype_BaseTogglePeg" },
-
-        { ActorPrototype_Level1_TogglePeg, "ActorPrototype_Level1_TogglePeg" },
-        { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" },
-
-        //=======================================
-        // General
-        //=======================================
-
-        { ActorPrototype_BaseProjectile, "ActorPrototype_BaseProjectile" },
-        { ActorPrototype_FireSwordProjectile, "ActorPrototype_FireSwordProjectile" },
-        { ActorPrototype_FrostSwordProjectile, "ActorPrototype_FrostSwordProjectile" },
-        { ActorPrototype_LightningSwordProjectile, "ActorPrototype_LightningSwordProjectile" },
-    };
-
-    auto findIt = actorPrototypeEnumToStringMap.find(actorProto);
-    if (findIt == actorPrototypeEnumToStringMap.end())
-    {
-        LOG_ERROR("Could not find actor enum: " + ToStr((int)actorProto));
-        assert(false && "Could not convert ActorPrototype enum to string");
-    }
-
-    return findIt->second;
-}
-
-ActorPrototype ActorPrototypeStringToEnum(std::string actorProtoStr)
-{
-    static std::map<std::string, ActorPrototype> actorPrototypeStringToEnumMap =
-    {
-        // Actor enemies
-        { "ActorPrototype_Level1_Soldier", ActorPrototype_Level1_Soldier },
-        { "ActorPrototype_Level1_Officer", ActorPrototype_Level1_Officer },
-        { "ActorPrototype_Level1_Rat",     ActorPrototype_Level1_Rat },
-        { "ActorPrototype_Level2_Soldier", ActorPrototype_Level2_Soldier },
-        { "ActorPrototype_Level2_Officer", ActorPrototype_Level2_Officer },
-        { "ActorPrototype_Level2_PunkRat", ActorPrototype_Level2_PunkRat },
-
-        // Elevators
-        { "ActorPrototype_BaseElevator", ActorPrototype_BaseElevator },
-
-        { "ActorPrototype_Level1_Elevator", ActorPrototype_Level1_Elevator },
-        { "ActorPrototype_Level2_Elevator", ActorPrototype_Level2_Elevator },
-
-        // Toggle pegs
-        { "ActorPrototype_BaseTogglePeg", ActorPrototype_BaseTogglePeg },
-
-        { "ActorPrototype_Level1_TogglePeg", ActorPrototype_Level1_TogglePeg },
-        { "ActorPrototype_Level2_TogglePeg", ActorPrototype_Level2_TogglePeg },
-
-        //=======================================
-        // General
-        //=======================================
-
-        { "ActorPrototype_BaseProjectile", ActorPrototype_BaseProjectile },
-        { "ActorPrototype_FireSwordProjectile", ActorPrototype_FireSwordProjectile },
-        { "ActorPrototype_FrostSwordProjectile", ActorPrototype_FrostSwordProjectile },
-        { "ActorPrototype_LightningSwordProjectile", ActorPrototype_LightningSwordProjectile },
-    };
-
-    auto findIt = actorPrototypeStringToEnumMap.find(actorProtoStr);
-    if (findIt == actorPrototypeStringToEnumMap.end())
-    {
-        LOG_ERROR("Could not find actor enum: " + actorProtoStr);
-        assert(false && "Could not convert ActorPrototype enum to string");
-    }
-
-    return findIt->second;
-}
-
 //---------------------------------------------------------------------------------------------------------------------
 // BaseGameApp::ReadActorXmlPrototypes
 // 
@@ -851,7 +757,7 @@ bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
         else
         {
             LOG(protoFile + ": " + protoName);
-            ActorPrototype actorProto = ActorPrototypeStringToEnum(protoName);
+            ActorPrototype actorProto = StringToEnum_ActorPrototype(protoName);
 
             // Create our own pointer
             TiXmlNode* pDuplicateNode = pActorProtoElem->Clone();
@@ -874,7 +780,7 @@ bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
         if (findIt == m_ActorXmlPrototypeMap.end())
         {
             LOG_ERROR("Actor prototype: \"" + 
-                ActorPrototypeEnumToString(ActorPrototype(actorPrototypeIdx)) + 
+                EnumToString_ActorPrototype(ActorPrototype(actorPrototypeIdx)) +
                 std::string("\" was not found !"));
             loadedAllRequired = false;
         }
@@ -1040,7 +946,7 @@ TiXmlElement* BaseGameApp::GetActorPrototypeElem(ActorPrototype proto)
     // If this is derived XML, load its parent and apply its changes
     if (pRootElem->Attribute("Parent") != NULL)
     {
-        ActorPrototype parentProto = ActorPrototypeStringToEnum(pRootElem->Attribute("Parent"));
+        ActorPrototype parentProto = StringToEnum_ActorPrototype(pRootElem->Attribute("Parent"));
         TiXmlElement* pParentRootElem = GetActorPrototypeElem(parentProto);
         assert(pParentRootElem != NULL);
 

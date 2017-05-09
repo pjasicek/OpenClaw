@@ -251,6 +251,7 @@ struct TogglePegDef
         cond_assert(strict, ParseValueFromXmlElem(&timeOff, pElem->FirstChildElement("TimeOff")));
         cond_assert(strict, ParseValueFromXmlElem(&timeOn, pElem->FirstChildElement("TimeOn")));
         cond_assert(strict, ParseValueFromXmlElem(&toggleFrameIdx, pElem->FirstChildElement("ToggleFrameIdx")));
+        cond_assert(strict, ParseValueFromXmlElem(&toggleSound, pElem->FirstChildElement("ToggleSound")));
         cond_assert(strict, ParseValueFromXmlElem(&delay, pElem->FirstChildElement("Delay")));
     }
 
@@ -260,6 +261,7 @@ struct TogglePegDef
     int timeOff;
     int timeOn;
     int toggleFrameIdx;
+    std::string toggleSound;
     int delay;
 };
 
@@ -305,6 +307,110 @@ struct ProjectileDef
     int damage;
     std::string damageTypeStr;
     Point projectileSpeed;
+};
+
+//-------------------------------------------------------------------------------------------------
+// ProjectileSpawnerDef - ProjectileSpawnerComponent
+//-------------------------------------------------------------------------------------------------
+
+struct ProjectileSpawnerDef
+{
+    ProjectileSpawnerDef()
+    {
+        isAlwaysOn = false;
+        projectileProto = ActorPrototype_None;
+        projectileDirection = Direction_None;
+    }
+
+    static ProjectileSpawnerDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        ProjectileSpawnerDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        // TODO:
+        return NULL;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&idleAnim, pElem->FirstChildElement("IdleAnim")));
+        cond_assert(strict, ParseValueFromXmlElem(&fireAnim, pElem->FirstChildElement("FireAnim")));
+        cond_assert(strict, ParseValueFromXmlElem(&isAlwaysOn, pElem->FirstChildElement("IsAlwaysOn")));
+        cond_assert(strict, ParseValueFromXmlElem(&startSpawnDelay, pElem->FirstChildElement("StartSpawnDelay")));
+        cond_assert(strict, ParseValueFromXmlElem(&minSpawnDelay, pElem->FirstChildElement("MinSpawnDelay")));
+        cond_assert(strict, ParseValueFromXmlElem(&maxSpawnDelay, pElem->FirstChildElement("MaxSpawnDelay")));
+
+        cond_assert(strict, ParseValueFromXmlElem(&triggerAreaSize, pElem->FirstChildElement("TriggerAreaSize"), "width", "height"));
+        cond_assert(strict, ParseValueFromXmlElem(&triggerAreaOffset, pElem->FirstChildElement("TriggerAreaOffset"), "x", "y"));
+        cond_assert(strict, ParseValueFromXmlElem(&triggerCollisionMask, pElem->FirstChildElement("TriggerCollisionMask")));
+
+        cond_assert(strict, ParseValueFromXmlElem(&projectileSpawnAnimFrameIdx, pElem->FirstChildElement("ProjectileSpawnAnimFrameIdx")));
+
+        std::string projectileProtoStr;
+        cond_assert(strict, ParseValueFromXmlElem(&projectileProtoStr, pElem->FirstChildElement("ProjectilePrototype")));
+        projectileProto = StringToEnum_ActorPrototype(projectileProtoStr);
+
+        std::string directionStr;
+        cond_assert(strict, ParseValueFromXmlElem(&directionStr, pElem->FirstChildElement("ProjectileDirection")));
+        projectileDirection = StringToEnum_Direction(directionStr);
+
+        cond_assert(strict, ParseValueFromXmlElem(&projectileSpawnOffset, pElem->FirstChildElement("ProjectileSpawnOffset"), "x", "y"));
+    }
+
+    std::string idleAnim;
+    std::string fireAnim;
+    bool isAlwaysOn;
+    int startSpawnDelay;
+    int minSpawnDelay;
+    int maxSpawnDelay;
+    Point triggerAreaSize;
+    Point triggerAreaOffset;
+    uint32 triggerCollisionMask;
+    int projectileSpawnAnimFrameIdx;
+    ActorPrototype projectileProto;
+    Direction projectileDirection;
+    Point projectileSpawnOffset;
+};
+
+struct LocalAmbientSoundDef
+{
+    LocalAmbientSoundDef()
+    {
+    }
+
+    static LocalAmbientSoundDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        LocalAmbientSoundDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        // TODO:
+        return NULL;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&sound, pElem->FirstChildElement("Sound")));
+        cond_assert(strict, ParseValueFromXmlElem(&volume, pElem->FirstChildElement("Volume")));
+        cond_assert(strict, ParseValueFromXmlElem(&soundAreaSize, pElem->FirstChildElement("SoundAreaSize"), "width", "height"));
+        cond_assert(strict, ParseValueFromXmlElem(&soundAreaOffset, pElem->FirstChildElement("SoundAreaOffset"), "x", "y"));
+    }
+
+    std::string sound;
+    int volume;
+    Point soundAreaSize;
+    Point soundAreaOffset;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -393,7 +499,9 @@ struct SoundInfo
         isMusic = false;
         soundVolume = 100;
         loops = 0;
-        isAttentuated = false;
+        setPositionEffect = false;
+        setDistanceEffect = false;
+        maxHearDistance = 0;
         attentuationFactor = 1.0f;
     }
 
@@ -406,9 +514,27 @@ struct SoundInfo
     bool isMusic;
     int soundVolume;
     int loops;
-    bool isAttentuated;
+    bool setPositionEffect;
+    bool setDistanceEffect;
+    float maxHearDistance;
     float attentuationFactor;
     Point soundSourcePosition;
+};
+
+struct SoundProperties
+{
+    SoundProperties()
+    {
+        volume = 100;
+        loops = 0;
+        angle = 0;
+        distance = 0;
+    }
+
+    int volume;
+    int loops;
+    int angle;
+    int distance;
 };
 
 #endif

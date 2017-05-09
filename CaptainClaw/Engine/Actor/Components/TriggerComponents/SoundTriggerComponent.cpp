@@ -23,9 +23,9 @@ bool SoundTriggerComponent::VInit(TiXmlElement* pData)
 {
     assert(pData);
 
-    SetBoolIfDefined(&m_bActivateDialog, pData->FirstChildElement("ActivateDialog"));
-    SetIntIfDefined(&m_EnterCount, pData->FirstChildElement("EnterCount"));
-    SetStringIfDefined(&m_TriggerSound, pData->FirstChildElement("Sound"));
+    ParseValueFromXmlElem(&m_bActivateDialog, pData->FirstChildElement("ActivateDialog"));
+    ParseValueFromXmlElem(&m_EnterCount, pData->FirstChildElement("EnterCount"));
+    ParseValueFromXmlElem(&m_TriggerSound, pData->FirstChildElement("Sound"));
 
     assert(!m_TriggerSound.empty());
 

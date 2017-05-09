@@ -636,7 +636,11 @@ void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionT
 
 void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
 {
-    assert(actorBodyDef->collisionMask != 0x0);
+    //assert(actorBodyDef->collisionMask != 0x0);
+    if (actorBodyDef->collisionMask == 0x0)
+    {
+        //LOG_WARNING("Creating actor body with CollisionMask == 0x0 !");
+    }
     assert(actorBodyDef->collisionFlag != 0x0);
     assert(actorBodyDef->fixtureType != FixtureType_None);
 
@@ -706,7 +710,8 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
 
         if (actorBodyDef->collisionShape == "Rectangle")
         {
-            rectangleShape.SetAsBox(b2BodySize.x / 2, b2BodySize.y / 2);
+            b2Vec2 b2Offset = PixelsToMeters(PointToB2Vec2(actorBodyDef->positionOffset));
+            rectangleShape.SetAsBox(b2BodySize.x / 2, b2BodySize.y / 2, b2Offset, 0);
             fixtureDef.shape = &rectangleShape;
         }
         else if (actorBodyDef->collisionShape == "Circle")
@@ -1108,6 +1113,25 @@ bool ClawPhysics::VIsAwake(uint32_t actorId)
     }
 
     return false;
+}
+
+void ClawPhysics::VChangeCollisionFlag(uint32_t actorId, uint32 fromFlag, uint32 toFlag)
+{
+    if (b2Body* pBody = FindBox2DBody(actorId))
+    {
+        b2Fixture* pFixture = pBody->GetFixtureList();
+        while (pFixture != NULL)
+        {
+            b2Filter filter = pFixture->GetFilterData();
+            if (filter.categoryBits & fromFlag)
+            {
+                filter.categoryBits &= ~fromFlag;
+                filter.categoryBits |= toFlag;
+                pFixture->SetFilterData(filter);
+            }
+            pFixture = pFixture->GetNext();
+        }
+    }
 }
 
 SDL_Rect ClawPhysics::VGetAABB(uint32_t actorId, bool discardSensors)

@@ -8,6 +8,7 @@
         <Inverted>false</Inverted>
         <ZCoord>4000</ZCoord>
         <ImagePath>/LEVEL2/IMAGES/OFFICER/*</ImagePath>
+        <Palette>/LEVEL2/PALETTES/MAIN.PAL</Palette>
     </ActorRenderComponent>
     <AnimationComponent>
         <AnimationPath>/LEVEL2/ANIS/OFFICER/*</AnimationPath>
@@ -21,6 +22,7 @@
         <MaxHealth>20</MaxHealth>
     </HealthComponent>
     <LootComponent>
+        <LootSoundChance>100</LootSoundChance>
         <!-- DEFINED IN CODE -->
     </LootComponent>
     <EnemyAIComponent>
@@ -36,6 +38,7 @@
         <InvulnerabilityTime>0</InvulnerabilityTime>
     </TakeDamageAIStateComponent>
     <PatrolEnemyAIStateComponent>
+        <IsAlwaysIdle>false</IsAlwaysIdle>
         <StatePriority>0</StatePriority>
         <PatrolSpeed>1.300000</PatrolSpeed>
         <LeftPatrolBorder>0</LeftPatrolBorder> <!-- DEFINED IN CODE -->
@@ -151,7 +154,7 @@
             <Size width="40" height="85" />
             <Offset x="0" y="0" />
             <CollisionFlag>262144</CollisionFlag>
-            <CollisionMask>2</CollisionMask>
+            <CollisionMask>1048578</CollisionMask>
             <Friction>0.000000</Friction>
             <Density>0.000000</Density>
             <Restitution>0.000000</Restitution>

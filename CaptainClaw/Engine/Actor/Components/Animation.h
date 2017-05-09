@@ -25,7 +25,7 @@ public:
     Animation();
     ~Animation();
 
-    static Animation* CreateAnimation(WapAni* wapAni, const char* animationName, AnimationComponent* owner);
+    static Animation* CreateAnimation(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner);
     static Animation* CreateAnimation(std::vector<AnimationFrame> animFrames, const char* animName, AnimationComponent* owner);
     static Animation* CreateAnimation(int numAnimFrames, int animFrameTime, const char* animName, AnimationComponent* owner);
 
@@ -53,9 +53,11 @@ private:
     void SetName(const char* name) { _name = name; }
     void SetOwner(AnimationComponent* owner) { assert(!_owner && owner); _owner = owner; }
 
-    bool Initialize(WapAni* wapAni, const char* animationName, AnimationComponent* owner);
+    bool Initialize(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner);
     bool Initialize(std::vector<AnimationFrame> animFrames, const char* animationName, AnimationComponent* owner);
     bool Initialize(int numAnimFrames, int animFrameTime, const char* animName, AnimationComponent* owner);
+
+    void PlayFrameSound(const std::string& sound);
 
     std::string _name;
     AnimationFrame _currentAnimationFrame;

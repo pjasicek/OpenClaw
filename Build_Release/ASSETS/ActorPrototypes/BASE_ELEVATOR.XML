@@ -9,6 +9,7 @@
 		<Inverted>false</Inverted>
 		<ZCoord>2000</ZCoord>
 		<ImagePath>NONE</ImagePath>
+		<Palette>NONE</Palette>
 	</ActorRenderComponent>
 	<KinematicComponent>
 		<Speed x="0.000000" y="0.000000" /> <!-- DEFINED IN CODE -->

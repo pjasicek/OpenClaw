@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "AniLoader.h"
+#include "ResourceCorrection.h"
 
 #include "../../GameApp/BaseGameApp.h"
 
@@ -17,9 +18,10 @@ AniResourceExtraData::~AniResourceExtraData()
     }
 }
 
-void AniResourceExtraData::LoadAni(char* rawBuffer, uint32 size)
+void AniResourceExtraData::LoadAni(char* rawBuffer, uint32 size, const char* resourceString)
 {
     _ani = WAP_AniLoadFromData(rawBuffer, size);
+    OnAniLoaded(resourceString, _ani);
 }
 
 //=================================================================================================
@@ -37,7 +39,7 @@ bool AniResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::shar
     }
 
     shared_ptr<AniResourceExtraData> extraData = shared_ptr<AniResourceExtraData>(new AniResourceExtraData());
-    extraData->LoadAni(rawBuffer, rawSize);
+    extraData->LoadAni(rawBuffer, rawSize, handle->GetName().c_str());
 
     handle->SetExtraData(extraData);
 

@@ -43,6 +43,8 @@
 #include "Components/FollowableComponent.h"
 #include "Components/AuraComponents/AuraComponent.h"
 #include "Components/SingleAnimationComponent.h"
+#include "Components/ProjectileSpawnerComponent.h"
+#include "Components/LocalAmbientSoundComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -94,6 +96,8 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<DamageAuraComponent>(DamageAuraComponent::GetIdFromName(DamageAuraComponent::g_Name));
     _componentFactory.Register<SingleAnimationComponent>(SingleAnimationComponent::GetIdFromName(SingleAnimationComponent::g_Name));
     _componentFactory.Register<TakeDamageAIStateComponent>(TakeDamageAIStateComponent::GetIdFromName(TakeDamageAIStateComponent::g_Name));
+    _componentFactory.Register<ProjectileSpawnerComponent>(ProjectileSpawnerComponent::GetIdFromName(ProjectileSpawnerComponent::g_Name));
+    _componentFactory.Register<LocalAmbientSoundComponent>(LocalAmbientSoundComponent::GetIdFromName(LocalAmbientSoundComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

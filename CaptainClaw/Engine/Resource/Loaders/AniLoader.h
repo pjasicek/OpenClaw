@@ -11,7 +11,7 @@ public:
     virtual ~AniResourceExtraData();
 
     virtual std::string VToString() { return "AniResourceExtraData"; }
-    void LoadAni(char* rawBuffer, uint32 size);
+    void LoadAni(char* rawBuffer, uint32 size, const char* resourceString);
     WapAni* GetAni() { return _ani; }
 
 private:

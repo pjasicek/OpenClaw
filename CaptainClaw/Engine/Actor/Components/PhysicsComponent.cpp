@@ -281,6 +281,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         SetVelocity(Point(0, 0));
         m_CurrentSpeed = Point(0, 0);
         m_ClimbingSpeed = Point(0, 0);
+        m_IsClimbing = false;
         // When Claw takes damage while ducking he stands up.. TODO: Think of better solution
         m_pPhysics->VScaleActor(_owner->GetGUID(), 2.0);
         return;
@@ -774,6 +775,11 @@ void PhysicsComponent::SetJumping(bool jumping)
 bool PhysicsComponent::AttachToLadder()
 {
     if (!m_CanClimb)
+    {
+        return false;
+    }
+
+    if (!m_pControllableComponent->InPhysicsCapableState())
     {
         return false;
     }

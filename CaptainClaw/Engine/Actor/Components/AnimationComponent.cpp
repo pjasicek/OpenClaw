@@ -48,7 +48,7 @@ bool AnimationComponent::VInit(TiXmlElement* data)
                 continue;
             }
             
-            Animation* animation = Animation::CreateAnimation(wapAni, animNameKey.c_str(), this);
+            Animation* animation = Animation::CreateAnimation(wapAni, animNameKey.c_str(), animPath.c_str(), this);
             if (!animation)
             {
                 LOG_ERROR("Could not create animation: " + animPath);
@@ -274,6 +274,14 @@ bool AnimationComponent::SetAnimation(std::string animationName)
     animation->Reset();
     _currentAnimation = animation;
     OnAnimationFrameStarted(_currentAnimation->GetCurrentAnimationFrame());
+
+    // If animation has only 1 anim lasting 0 ms, then it is just a placeholder for the image
+    // TODO: Some anims are reliant on this and they set anim delay.... e.g. PatrolStateComponent
+    if (_currentAnimation->GetAnimFramesSize() == 1 &&
+        _currentAnimation->GetCurrentAnimationFrame()->duration == 0)
+    {
+        //_currentAnimation->Pause();
+    }
 
     return true;
 }

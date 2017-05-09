@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.2)
 target_sources(captainclaw
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Interfaces.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Interfaces.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SharedDefines.h
     ${CMAKE_CURRENT_SOURCE_DIR}/XmlMacros.h
     ${CMAKE_CURRENT_SOURCE_DIR}/ActorDefinitions.h

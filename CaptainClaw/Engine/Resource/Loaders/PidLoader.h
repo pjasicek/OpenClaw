@@ -13,8 +13,8 @@ public:
     virtual ~PidResourceExtraData();
 
     virtual std::string VToString() { return "PidResourceExtraData"; }
-    void LoadPid(char* rawBuffer, uint32 size, WapPal* palette);
-    void LoadImage(char* rawBuffer, uint32 size, WapPal* palette);
+    void LoadPid(char* rawBuffer, uint32 size, WapPal* palette, const char* resourceString);
+    void LoadImage(char* rawBuffer, uint32 size, WapPal* palette, const char* resourceString);
     WapPid* GetPid() { return _pid; }
     shared_ptr<Image> GetImage() { return _image; }
 

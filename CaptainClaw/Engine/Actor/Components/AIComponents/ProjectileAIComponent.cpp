@@ -16,6 +16,7 @@
 
 #include "../../../Events/EventMgr.h"
 #include "../../../Events/Events.h"
+#include "../../../UserInterface/HumanView.h"
 
 const char* ProjectileAIComponent::g_Name = "ProjectileAIComponent";
 
@@ -74,6 +75,19 @@ TiXmlElement* ProjectileAIComponent::VGenerateXml()
     return baseElement;
 }
 
+void ProjectileAIComponent::VUpdate(uint32 msDiff)
+{
+    assert(g_pApp->GetHumanView() && g_pApp->GetHumanView()->GetCamera());
+
+    Point projectilePos = _owner->GetPositionComponent()->GetPosition();
+    if (!g_pApp->GetHumanView()->GetCamera()->IntersectsWithPoint(projectilePos, 1.25f))
+    {
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        IEventMgr::Get()->VQueueEvent(pEvent);
+    }
+}
+
+
 void ProjectileAIComponent::OnCollidedWithSolidTile()
 {
     if (m_IsActive)
@@ -90,6 +104,7 @@ void ProjectileAIComponent::OnCollidedWithSolidTile()
             ActorTemplates::CreateSingleAnimation(_owner->GetPositionComponent()->GetPosition(), AnimationType_Explosion);
 
             SoundInfo soundInfo(SOUND_LEVEL1_KEG_EXPLODE);
+            //soundInfo.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
             ActorTemplates::CreateAreaDamage(

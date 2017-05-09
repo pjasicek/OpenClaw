@@ -270,3 +270,25 @@ void CameraNode::SetViewPosition(Scene* pScene)
         VSetPosition(cameraPos);
     }
 }
+
+bool CameraNode::IntersectsWithPoint(const Point& point, float cameraScale)
+{
+    SDL_Rect cameraRect = GetCameraRect();
+
+    // If the projectile is out of camera bounds, destroy it
+    SDL_Rect scaledCameraRect;
+    scaledCameraRect.x = cameraRect.x - cameraRect.w * (cameraScale - 1.0f);
+    scaledCameraRect.y = cameraRect.y - cameraRect.h * (cameraScale - 1.0f);
+    scaledCameraRect.w = cameraRect.w + cameraRect.w * ((cameraScale - 1.0f) * 2);
+    scaledCameraRect.h = cameraRect.h + cameraRect.h * ((cameraScale - 1.0f) * 2);
+
+    if ((point.x < scaledCameraRect.x) ||
+        (point.x >(scaledCameraRect.x + scaledCameraRect.w)) ||
+        (point.y < scaledCameraRect.y) ||
+        (point.y >(scaledCameraRect.y + scaledCameraRect.h)))
+    {
+        return false;
+    }
+
+    return true;
+}

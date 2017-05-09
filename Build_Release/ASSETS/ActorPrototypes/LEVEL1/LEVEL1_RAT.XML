@@ -1,4 +1,4 @@
-<Actor Type="Rat" ActorPrototypeName="ActorPrototype_Level2_PunkRat">
+<Actor Type="Rat" ActorPrototypeName="ActorPrototype_Level1_Rat">
     <PositionComponent>
         <!-- DEFINED IN CODE -->
         <Position x="-1" y="-1" />
@@ -9,6 +9,7 @@
         <Inverted>false</Inverted>
         <ZCoord>0</ZCoord>
         <ImagePath>/LEVEL1/IMAGES/RAT/*</ImagePath>
+        <Palette>/LEVEL1/PALETTES/MAIN.PAL</Palette>
     </ActorRenderComponent>
     <AnimationComponent>
         <AnimationPath>/LEVEL1/ANIS/RAT/*</AnimationPath>
@@ -18,8 +19,8 @@
         <TriggerFinitedTimes>1000</TriggerFinitedTimes>
     </TriggerComponent>
     <HealthComponent>
-        <Health>50</Health>
-        <MaxHealth>50</MaxHealth>
+        <Health>5</Health>
+        <MaxHealth>5</MaxHealth>
     </HealthComponent>
     <LootComponent>
         <!-- DEFINED IN CODE -->
@@ -27,9 +28,9 @@
     <EnemyAIComponent>
         <DeathAnimation>dead</DeathAnimation>
         <Sound SoundType="Death" SoundName="/GAME/SOUNDS/MOUSEKILL.WAV" />
-        <Sound SoundType="RangedAttack" SoundName="/GAME/SOUNDS/THRWBOMB.WAV" />
     </EnemyAIComponent>
     <PatrolEnemyAIStateComponent>
+        <IsAlwaysIdle>false</IsAlwaysIdle>
         <StatePriority>0</StatePriority>
         <PatrolSpeed>1.300000</PatrolSpeed>
         <!-- DEFINED IN CODE -->
@@ -37,6 +38,10 @@
         <!-- DEFINED IN CODE -->
         <RightPatrolBorder>0</RightPatrolBorder>
         <RetainDirection>true</RetainDirection>
+        <IdleAction>
+            <AnimationDelay>0</AnimationDelay>
+            <Animation>idle</Animation>
+        </IdleAction>
         <WalkAction>
             <Animation>walk</Animation>
         </WalkAction>
@@ -113,7 +118,7 @@
             <Size width="30" height="26" />
             <Offset x="0" y="0" />
             <CollisionFlag>262144</CollisionFlag>
-            <CollisionMask>2</CollisionMask>
+            <CollisionMask>1048578</CollisionMask>
             <Friction>0.000000</Friction>
             <Density>0.000000</Density>
             <Restitution>0.000000</Restitution>

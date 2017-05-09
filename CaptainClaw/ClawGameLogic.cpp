@@ -6,6 +6,7 @@
 #include "ClawEvents.h"
 
 #include "Engine/Actor/Components/PhysicsComponent.h"
+#include "Engine/Actor/Components/RenderComponent.h"
 #include "Engine/Actor/Components/ControllableComponent.h"
 #include "Engine/Actor/Components/ControllerComponents/LifeComponent.h"
 #include "Engine/Actor/Components/ControllerComponents/HealthComponent.h"
@@ -403,19 +404,73 @@ void ClawGameLogic::UpdatedPowerupStatusDelegate(IEventDataPtr pEventData)
         return;
     }
 
+    // Clear all existing effects
+    shared_ptr<PhysicsComponent> pPhysicsComponent =
+        MakeStrongPtr(pActor->GetComponent<PhysicsComponent>());
+    shared_ptr<ActorRenderComponent> pARC =
+        MakeStrongPtr(pActor->GetComponent<ActorRenderComponent>());
+    shared_ptr<HealthComponent> pHealthComponent =
+        MakeStrongPtr(pActor->GetComponent<HealthComponent>());
+    
+    if (pPhysicsComponent)
+    {
+        // Clear Catnip
+        pPhysicsComponent->SetMaxJumpHeight(g_pApp->GetGlobalOptions()->maxJumpHeight);
+    }
+    if (pARC)
+    {
+        // Clear invisibility
+        pARC->SetAlpha(255);
+        m_pPhysics->VChangeCollisionFlag(
+            pCastEventData->GetActorId(),
+            CollisionFlag_InvisibleController,
+            CollisionFlag_Controller);
+    }
+    if (pHealthComponent)
+    {
+        // Clear invulnerability
+        pHealthComponent->SetInvulnerable(false);
+        pARC->SetColorMod(COLOR_WHITE);
+    }
+
+    // Apply new effect if applicable
     if (pCastEventData->GetPowerupType() == PowerupType_Catnip)
     {
-        shared_ptr<PhysicsComponent> pPhysicsComponent =
-            MakeStrongPtr(pActor->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
         assert(pPhysicsComponent);
 
-        if (pCastEventData->IsPowerupFinished())
-        {
-            pPhysicsComponent->SetMaxJumpHeight(g_pApp->GetGlobalOptions()->maxJumpHeight);
-        }
-        else
+        if (!pCastEventData->IsPowerupFinished())
         {
             pPhysicsComponent->SetMaxJumpHeight(g_pApp->GetGlobalOptions()->powerupMaxJumpHeight);
+        }
+    }
+    else if (pCastEventData->GetPowerupType() == PowerupType_Invisibility)
+    {
+        assert(pARC);
+
+        if (!pCastEventData->IsPowerupFinished())
+        {
+            pARC->SetAlpha(127);
+            m_pPhysics->VChangeCollisionFlag(
+                pCastEventData->GetActorId(),
+                CollisionFlag_Controller,
+                CollisionFlag_InvisibleController);
+        }
+    }
+    else if (pCastEventData->GetPowerupType() == PowerupType_Invulnerability)
+    {
+        assert(pARC);
+        assert(pHealthComponent);
+
+        if (!pCastEventData->IsPowerupFinished())
+        {
+            pHealthComponent->SetInvulnerable(true);
+
+            SDL_Color invulnerabilityColor;
+            invulnerabilityColor.r = 255;
+            invulnerabilityColor.g = 0;
+            invulnerabilityColor.b = 0;
+            invulnerabilityColor.a = 255;
+            pARC->SetColorMod(invulnerabilityColor);
         }
     }
 }

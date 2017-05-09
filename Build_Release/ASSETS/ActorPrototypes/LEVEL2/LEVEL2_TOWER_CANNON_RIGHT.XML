@@ -1,0 +1,24 @@
+<Actor Type="Level2_TowerCannonRight" Parent="ActorPrototype_BaseProjectileSpawner" ActorPrototypeName="ActorPrototype_Level2_TowerCannonRight">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL2/IMAGES/TOWERCANNONRIGHT/*</ImagePath>
+		<Palette>/LEVEL2/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<AnimationComponent>
+        <AnimationPath>/LEVEL2/ANIS/TOWERCANNONRIGHT/*</AnimationPath>
+    </AnimationComponent>
+	<ProjectileSpawnerComponent>
+        <IdleAnim>home</IdleAnim>
+        <FireAnim>firing</FireAnim>
+        <IsAlwaysOn>true</IsAlwaysOn>
+        <StartSpawnDelay>0</StartSpawnDelay>
+        <MinSpawnDelay>500</MinSpawnDelay>
+        <MaxSpawnDelay>1500</MaxSpawnDelay>
+        <TriggerAreaSize width="250" height="30" />
+        <TriggerAreaOffset x="-150" y="10" />
+        <TriggerCollisionMask>2</TriggerCollisionMask>
+        <ProjectileSpawnAnimFrameIdx>1</ProjectileSpawnAnimFrameIdx>
+        <ProjectilePrototype>ActorPrototype_Level2_CannonBall</ProjectilePrototype>
+        <ProjectileDirection>Direction_Right</ProjectileDirection>
+        <ProjectileSpawnOffset x="30" y="10" />
+    </ProjectileSpawnerComponent>
+</Actor>

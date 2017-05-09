@@ -8,7 +8,7 @@
 class LootComponent : public ActorComponent, public HealthObserver
 {
 public:
-    LootComponent() { }
+    LootComponent();
 
     static const char* g_Name;
     virtual const char* VGetName() const override { return g_Name; }
@@ -21,6 +21,7 @@ public:
 
 private:
     std::vector<PickupType> m_Loot;
+    int m_LootSoundChance;
 };
 
 #endif

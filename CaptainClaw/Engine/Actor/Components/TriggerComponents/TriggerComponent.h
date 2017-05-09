@@ -36,6 +36,12 @@ public:
 
     virtual SDL_Rect GetTriggerArea();
 
+    // TOTO: Implement this in future
+    // Different components can have different trigger areas, this should implement this request
+    // OnActorEntered should also have SDL_Rect area of the trigger so that it could then iterate
+    // over observers and call the appropriate ones
+    //void AddTriggerArea(SDL_Rect triggerArea, TriggerObserver* pObserver)
+
     void Deactivate() { m_pPhysics->VDeactivate(_owner->GetGUID()); }
     void Activate() { m_pPhysics->VActivate(_owner->GetGUID()); }
     void Destroy() { m_pPhysics->VRemoveActor(_owner->GetGUID()); }

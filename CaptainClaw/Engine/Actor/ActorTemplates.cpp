@@ -128,8 +128,8 @@ namespace ActorTemplates
         { PickupType_Treasure_Skull_Green,      SOUND_GAME_TREASURE_SKULL },
         { PickupType_Treasure_Skull_Blue,       SOUND_GAME_TREASURE_SKULL },
         { PickupType_Treasure_Skull_Purple,     SOUND_GAME_TREASURE_SKULL },
-        { PickupType_Powerup_Invisibility, "" },
-        { PickupType_Powerup_Invincibility, "" },
+        { PickupType_Powerup_Invisibility,      SOUND_GAME_PICKUP_MAGIC },
+        { PickupType_Powerup_Invincibility,     SOUND_GAME_PICKUP_MAGIC },
         { PickupType_Powerup_Life, "" },
         { PickupType_Powerup_FireSword,         SOUND_CLAW_PICKUP_FIRE_SWORD },
         { PickupType_Powerup_LightningSword,    SOUND_CLAW_PICKUP_LIGHTNING_SWORD },
@@ -615,7 +615,7 @@ namespace ActorTemplates
         return pFollowableComponentElem;
     }
 
-    TiXmlElement* CreateLootComponent(const std::vector<PickupType>& loot)
+    TiXmlElement* CreateLootComponent(const std::vector<PickupType>& loot, int lootSoundChance = 0)
     {
         TiXmlElement* pLootComponent = new TiXmlElement("LootComponent");
         
@@ -628,6 +628,8 @@ namespace ActorTemplates
         {
             XML_ADD_TEXT_ELEMENT("Item", ToStr(PickupType_Treasure_Coins).c_str(), pLootComponent);
         }
+
+        XML_ADD_TEXT_ELEMENT("LootSoundChance", ToStr(lootSoundChance).c_str(), pLootComponent);
 
         return pLootComponent;
     }
@@ -862,7 +864,7 @@ namespace ActorTemplates
         ActorFixtureDef fixtureDef;
         fixtureDef.fixtureType = FixtureType_Trigger;
         fixtureDef.collisionFlag = CollisionFlag_Pickup;
-        fixtureDef.collisionMask = CollisionFlag_Controller;
+        fixtureDef.collisionMask = CollisionFlag_Controller | CollisionFlag_InvisibleController;
         fixtureDef.isSensor = true;
         bodyDef.fixtureList.push_back(fixtureDef);
 
@@ -889,7 +891,7 @@ namespace ActorTemplates
         bodyDef.fixtureType = FixtureType_Pickup;
         bodyDef.position = position;
         bodyDef.collisionFlag = CollisionFlag_Pickup;
-        bodyDef.collisionMask = CollisionFlag_Controller;
+        bodyDef.collisionMask = CollisionFlag_Controller | CollisionFlag_InvisibleController;
         bodyDef.fixtureType = FixtureType_Trigger;
         bodyDef.size = size;
 
@@ -1187,7 +1189,7 @@ namespace ActorTemplates
             0.0f)); // Restitution - makes object bounce
 
         pActor->LinkEndChild(CreateCycleAnimationComponent(75, true));
-        pActor->LinkEndChild(CreateLootComponent(loot));
+        pActor->LinkEndChild(CreateLootComponent(loot, 33));
         pActor->LinkEndChild(CreateDestroyableComponent(true, "DEFAULT", { SOUND_GAME_CRATE_BREAK1, SOUND_GAME_CRATE_BREAK2 }));
         pActor->LinkEndChild(CreateHealthComponent(health, health));
 
@@ -1263,11 +1265,15 @@ namespace ActorTemplates
         }
         else if (collisionFlag == CollisionFlag_EnemyAIAttack)
         {
-            collisionMask = (CollisionFlag_Controller);
+            collisionMask = (CollisionFlag_Controller | CollisionFlag_InvisibleController);
         }
         else if (collisionFlag == CollisionFlag_Explosion)
         {
-            collisionMask = (CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Controller);
+            collisionMask = (CollisionFlag_Crate | 
+                CollisionFlag_PowderKeg | 
+                CollisionFlag_DynamicActor | 
+                CollisionFlag_Controller | 
+                CollisionFlag_InvisibleController);
         }
         else
         {
@@ -1342,7 +1348,7 @@ namespace ActorTemplates
             Point(0, 0), // If it does, specify it here
             CollisionFlag_Ground,  // Collision flag - e.g. What is this actor ?
             // TODO:
-            CollisionFlag_Controller,  // Collision mask - e.g. With what does this actor collide with ?
+            CollisionFlag_Controller | CollisionFlag_InvisibleController,  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Friction - with floor and so
             0.0f,  // Density - determines if this character bounces
             0.0f)); // Restitution - makes object bounce
@@ -1414,7 +1420,7 @@ namespace ActorTemplates
             Point(0, 0), // If it does, specify it here
             CollisionFlag_Checkpoint,  // Collision flag - e.g. What is this actor ?
             // TODO:
-            CollisionFlag_Controller,  // Collision mask - e.g. With what does this actor collide with ?
+            CollisionFlag_Controller | CollisionFlag_InvisibleController,  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Friction - with floor and so
             0.0f,  // Density - determines if this character bounces
             0.0f)); // Restitution - makes object bounce
@@ -1428,7 +1434,19 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX)
+    TiXmlElement* CreateXmlData_Actor(ActorPrototype enemyType, Point position)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(enemyType);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        return pActorElem;
+    }
+
+    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(enemyType);
         assert(pActorElem != NULL);
@@ -1446,6 +1464,7 @@ namespace ActorTemplates
         }
 
         //----------- Patrol borders
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.IsAlwaysIdle", isAlwaysIdle));
         assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.LeftPatrolBorder", minPatrolX));
         assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.RightPatrolBorder", maxPatrolX));
 
@@ -1531,6 +1550,25 @@ namespace ActorTemplates
         return CreateAndReturnActor(CreateXmlData_ProjectileActor(proto, position, dir));
     }
 
+    TiXmlElement* CreateXmlData_LocalAmbientSound(ActorPrototype proto, Point position, const LocalAmbientSoundDef& soundDef)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.LocalAmbientSoundComponent.Sound", soundDef.sound));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.LocalAmbientSoundComponent.Volume", soundDef.volume));
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.LocalAmbientSoundComponent.SoundAreaSize",
+            "width", (int)soundDef.soundAreaSize.x, "height", (int)soundDef.soundAreaSize.y));
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.LocalAmbientSoundComponent.SoundAreaOffset",
+            "x", (int)soundDef.soundAreaOffset.x, "y", (int)soundDef.soundAreaOffset.y));
+
+        return pActorElem;
+    }
+
     TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX)
     {
         assert(false && "This method is deprecated. Use \"CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX)\" instead");
@@ -1568,7 +1606,13 @@ namespace ActorTemplates
         ActorFixtureDef fixtureDef;
         fixtureDef.fixtureType = FixtureType_EnemyAI;
         fixtureDef.collisionFlag = CollisionFlag_DynamicActor;
-        fixtureDef.collisionMask = (CollisionFlag_Death | CollisionFlag_Controller | CollisionFlag_Bullet | CollisionFlag_Magic | CollisionFlag_ClawAttack | CollisionFlag_Explosion);
+        fixtureDef.collisionMask = (CollisionFlag_Death | 
+            CollisionFlag_Controller | 
+            CollisionFlag_Bullet | 
+            CollisionFlag_Magic | 
+            CollisionFlag_ClawAttack | 
+            CollisionFlag_Explosion |
+            CollisionFlag_InvisibleController);
         fixtureDef.isSensor = true;
         fixtureDef.size = Point(40, 100); // Generic value
         if (logicName == "Rat")
@@ -1750,7 +1794,7 @@ namespace ActorTemplates
         auraDef.baseAuraComponentDef.pulseIntrval = 2000;
 
         auraDef.baseAuraComponentDef.auraFixtureDef.collisionFlag = CollisionFlag_DamageAura;
-        auraDef.baseAuraComponentDef.auraFixtureDef.collisionMask = CollisionFlag_Controller;
+        auraDef.baseAuraComponentDef.auraFixtureDef.collisionMask = CollisionFlag_Controller | CollisionFlag_InvisibleController;
         auraDef.baseAuraComponentDef.auraFixtureDef.collisionShape = "Rectangle";
         auraDef.baseAuraComponentDef.auraFixtureDef.fixtureType = FixtureType_DamageAura;
         auraDef.baseAuraComponentDef.auraFixtureDef.isSensor = true;

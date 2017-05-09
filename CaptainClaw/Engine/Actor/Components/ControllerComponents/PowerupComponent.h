@@ -2,10 +2,24 @@
 #define __POWERUPCOMPONENT_H__
 
 #include "../../ActorComponent.h"
+#include "../../../Util/Subject.h"
 
 typedef std::map<AmmoType, uint32> AmmoMap;
 
-class PowerupComponent : public ActorComponent
+class PowerupObserver;
+class PowerupSubject : public Subject<PowerupObserver>
+{
+public:
+    void NotifyPowerupStatusUpdated(PowerupType powerupType, bool isPowerupFinished);
+};
+
+class PowerupObserver
+{
+public:
+    virtual void VOnPowerupStatusChanged(PowerupType powerupType, bool isPowerupFinished) { }
+};
+
+class PowerupComponent : public ActorComponent, public PowerupSubject
 {
 public:
     PowerupComponent();

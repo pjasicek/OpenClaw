@@ -37,10 +37,12 @@ struct DamageAuraComponentDef
 namespace ActorTemplates
 {
     // Actor prototypes
-    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX);
+    TiXmlElement* CreateXmlData_Actor(ActorPrototype actorProto, Point position);
+    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle);
     TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, Point position, const ElevatorDef& elevatorDef);
     TiXmlElement* CreateXmlData_TogglePegActor(ActorPrototype togglePegProto, Point position, const TogglePegDef& togglePegDef);
     TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir);
+    TiXmlElement* CreateXmlData_LocalAmbientSound(ActorPrototype proto, Point position, const LocalAmbientSoundDef& soundDef);
 
     StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir);
 
@@ -89,6 +91,8 @@ namespace ActorTemplates
     TiXmlElement* ActorFixtureDefToXml(const ActorFixtureDef* pFixtureDef);
 
     TiXmlElement* DamageAuraComponentDefToXml(const DamageAuraComponentDef* pAuraDef);
+
+    std::string GetSoundPathFromClawPath(const std::string& sound);
 };
 
 #endif

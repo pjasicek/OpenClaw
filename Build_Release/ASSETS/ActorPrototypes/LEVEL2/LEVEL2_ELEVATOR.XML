@@ -2,5 +2,6 @@
 	<ActorRenderComponent>
 		<imgpath>LEVEL_ELEVATOR</imgpath>
 		<ImagePath>/LEVEL2/IMAGES/ELEVATOR/*</ImagePath>
+		<Palette>/LEVEL2/PALETTES/MAIN.PAL</Palette>
 	</ActorRenderComponent>
 </Actor>

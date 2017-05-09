@@ -207,12 +207,15 @@ bool BaseRenderComponent::HasImage(int32 imageId)
 //=================================================================================================
 
 ActorRenderComponent::ActorRenderComponent()
+    :
+    m_Alpha(255)
 {
     // Everything is visible by default, should be explicitly stated that its not visible
     m_IsVisible = true;
     m_IsMirrored = false;
     m_IsInverted = false;
     m_ZCoord = 0;
+    m_ColorMod.r = m_ColorMod.g = m_ColorMod.b = m_ColorMod.a = 255;
 }
 
 bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
@@ -241,6 +244,18 @@ bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
     if (TiXmlElement* pElem = pXmlData->FirstChildElement("ZCoord"))
     {
         m_ZCoord = std::stoi(pElem->GetText());
+    }
+
+    if (!m_IsVisible)
+    {
+        if (!m_ImageMap.empty())
+        {
+            m_CurrentImage = m_ImageMap.begin()->second;
+        }
+        else
+        {
+            LOG_WARNING("Invisible actor has no dummy image !");
+        }
     }
 
     if (m_IsVisible)

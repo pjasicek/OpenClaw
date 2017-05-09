@@ -2,23 +2,11 @@
 #include "AnimationComponent.h"
 #include "../../Util/Util.h"
 
+#include "PositionComponent.h"
+#include "../Actor.h"
+
 #include "../../Events/EventMgr.h"
 #include "../../Events/Events.h"
-
-static void PlayFrameSound(const std::string& sound)
-{
-    // Only Claw sounds are supported at the moment (there are some misc others)
-    std::string soundName = sound;
-    if (soundName.find("CLAW_") != std::string::npos)
-    {
-        soundName.erase(0, std::string("CLAW_").length());
-        std::string soundPath = "/CLAW/SOUNDS/" + soundName + ".WAV";
-
-        SoundInfo soundInfo(soundPath);
-        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-            new EventData_Request_Play_Sound(soundInfo)));
-    }
-}
 
 Animation::Animation() :
     _name("Unknown"),
@@ -34,10 +22,10 @@ Animation::~Animation()
     _animationFrames.clear();
 }
 
-Animation* Animation::CreateAnimation(WapAni* wapAni, const char* animationName, AnimationComponent* owner)
+Animation* Animation::CreateAnimation(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner)
 {
     Animation* animation = new Animation();
-    if (!animation->Initialize(wapAni, animationName, owner))
+    if (!animation->Initialize(wapAni, animationName, resourcePath, owner))
     {
         delete animation;
         return NULL;
@@ -70,7 +58,7 @@ Animation* Animation::CreateAnimation(int numAnimFrames, int animFrameTime, cons
     return animation;
 }
 
-bool Animation::Initialize(WapAni* wapAni, const char* animationName, AnimationComponent* owner)
+bool Animation::Initialize(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner)
 {
     _name = animationName;
     _owner = owner;
@@ -85,11 +73,42 @@ bool Animation::Initialize(WapAni* wapAni, const char* animationName, AnimationC
         animFrame.imageId = aniAnimFrames[frameIdx].imageFileId;
         animFrame.imageName = "frame" + Util::ConvertToThreeDigitsString(animFrame.imageId);
         animFrame.duration = aniAnimFrames[frameIdx].duration;
-        if (aniAnimFrames[frameIdx].eventFilePath != NULL)
+         
+        // if pWapAni->unk0 == 1, then skip all sounds in this animation
+        if (aniAnimFrames[frameIdx].eventFilePath != NULL &&
+            wapAni->unk0 != 1)
         {
+            std::string resourcePathStr(resourcePath);
+            std::string soundPath(aniAnimFrames[frameIdx].eventFilePath);
+
+            std::replace(soundPath.begin(), soundPath.end(), '_', '/');
+
+            // If the sound path from ANI has "LEVEL" in it, then take the level number
+            // from the animation resource path
+            if (soundPath.find("LEVEL/") != std::string::npos)
+            {
+                soundPath = soundPath.substr(soundPath.find("/"));
+
+                // Remove "/" at the beginning
+                resourcePathStr.erase(0, 1);
+                std::string rootDir = resourcePathStr.substr(0, resourcePathStr.find("/"));
+
+                soundPath = "/" + rootDir + "/SOUNDS" + soundPath + ".WAV";
+            }
+            else
+            {
+                // Else just replace it with /[game|state|claw]/sounds/
+                soundPath.insert(soundPath.find("/"), "/sounds");
+                soundPath.insert(0, "/");
+                soundPath += ".wav";
+            }
+
+            std::transform(soundPath.begin(), soundPath.end(), soundPath.begin(), ::tolower);
+
+            //LOG("Sound: " + soundPath);
+
             animFrame.hasEvent = true;
-            animFrame.eventName = std::string(aniAnimFrames[frameIdx].eventFilePath);
-            //LOG("Event: " + animFrame.eventName);
+            animFrame.eventName = soundPath;
         }
         else
         {
@@ -251,4 +270,16 @@ void Animation::SetNextFrame()
     {
         PlayFrameSound(_currentAnimationFrame.eventName);
     }
+}
+
+void Animation::PlayFrameSound(const std::string& sound)
+{
+    assert(_owner && _owner->_owner && _owner->_owner->GetPositionComponent());
+
+    //LOG("Sound: " + sound + ", Owner: " + _owner->_owner->GetName());
+
+    SoundInfo soundInfo(sound);
+    soundInfo.soundSourcePosition = _owner->_owner->GetPositionComponent()->GetPosition();
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+        new EventData_Request_Play_Sound(soundInfo)));
 }
