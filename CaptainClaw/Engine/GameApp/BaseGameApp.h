@@ -124,6 +124,9 @@ struct GlobalOptions
         maxJumpHeight = 150;
         powerupMaxJumpHeight = 200;
         skipMenu = false;
+        startLookUpOrDownTime = 1500;
+        maxLookUpOrDownDistance = 250;
+        lookUpOrDownSpeed = 250;
     }
 
     int cpuDelayMs;
@@ -134,6 +137,9 @@ struct GlobalOptions
     float maxJumpHeight;
     float powerupMaxJumpHeight;
     bool skipMenu;
+    int startLookUpOrDownTime;
+    int maxLookUpOrDownDistance;
+    int lookUpOrDownSpeed;
 };
 
 class EventMgr;

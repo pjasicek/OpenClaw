@@ -83,8 +83,6 @@ void KinematicComponent::VPostInit()
         {
             m_LastSpeed.SetY(m_Speed.y * -1.0);
         }
-
-        LOG("LastSpeed: " + m_LastSpeed.ToString());
     }
 }
 

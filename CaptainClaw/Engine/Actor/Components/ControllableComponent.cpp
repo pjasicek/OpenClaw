@@ -191,21 +191,21 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
     assert(g_pApp->GetHumanView() && g_pApp->GetHumanView()->GetCamera());
     shared_ptr<CameraNode> pCamera = g_pApp->GetHumanView()->GetCamera();
 
-    if (m_DuckingTime > 1500)
+    if (m_DuckingTime > g_pApp->GetGlobalOptions()->startLookUpOrDownTime)
     {
-        if (pCamera->GetCameraOffsetY() < 400)
+        if (pCamera->GetCameraOffsetY() < g_pApp->GetGlobalOptions()->maxLookUpOrDownDistance)
         {
-            // Pixels per milisecond (300px per 1000ms)
-            double cameraOffsetSpeed = 300.0 / 1000.0;
+            // Pixels per milisecond
+            double cameraOffsetSpeed = g_pApp->GetGlobalOptions()->lookUpOrDownSpeed / 1000.0;
             pCamera->AddCameraOffsetY(cameraOffsetSpeed * msDiff);
         }
     }
-    else if (m_LookingUpTime > 1500)
+    else if (m_LookingUpTime > g_pApp->GetGlobalOptions()->startLookUpOrDownTime)
     {
-        if (pCamera->GetCameraOffsetY() > -400.0)
+        if (pCamera->GetCameraOffsetY() > -1.0 * g_pApp->GetGlobalOptions()->maxLookUpOrDownDistance)
         {
-            // Pixels per milisecond (300px per 1000ms)
-            double cameraOffsetSpeed = -1.0 * (300.0 / 1000.0);
+            // Pixels per milisecond
+            double cameraOffsetSpeed = -1.0 * (g_pApp->GetGlobalOptions()->lookUpOrDownSpeed / 1000.0);
             pCamera->AddCameraOffsetY(cameraOffsetSpeed * msDiff);
         }
         m_pClawAnimationComponent->SetAnimation("lookup");
@@ -221,7 +221,30 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
             m_LookingUpTime = 0;
         }
 
-        pCamera->SetCameraOffsetY(0);
+        if (fabs(pCamera->GetCameraOffsetY()) > DBL_EPSILON)
+        {
+            double cameraOffsetSpeed = ((double)g_pApp->GetGlobalOptions()->lookUpOrDownSpeed * 2.0) / 1000.0;
+            if (pCamera->GetCameraOffsetY() > DBL_EPSILON)
+            {
+                // Camera should move back up
+                double cameraMovePx = -1.0 * cameraOffsetSpeed * msDiff;
+                pCamera->AddCameraOffsetY(cameraMovePx);
+                if (pCamera->GetCameraOffsetY() < DBL_EPSILON)
+                {
+                    pCamera->SetCameraOffsetY(0.0);
+                }
+            }
+            else if (pCamera->GetCameraOffsetY() < (-1.0 * DBL_EPSILON))
+            {
+                // Camera should move back down
+                double cameraMovePx = cameraOffsetSpeed * msDiff;
+                pCamera->AddCameraOffsetY(cameraMovePx);
+                if (pCamera->GetCameraOffsetY() > DBL_EPSILON)
+                {
+                    pCamera->SetCameraOffsetY(0.0);
+                }
+            }
+        }
     }
 
     m_LastState = m_State;

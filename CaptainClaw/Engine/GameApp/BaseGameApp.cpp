@@ -524,6 +524,12 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("PowerupMaxJumpHeight"));
         ParseValueFromXmlElem(&m_GlobalOptions.skipMenu,
             pGlobalOptionsRootElem->FirstChildElement("SkipMenu"));
+        ParseValueFromXmlElem(&m_GlobalOptions.startLookUpOrDownTime,
+            pGlobalOptionsRootElem->FirstChildElement("StartLookUpOrDownTime"));
+        ParseValueFromXmlElem(&m_GlobalOptions.maxLookUpOrDownDistance,
+            pGlobalOptionsRootElem->FirstChildElement("MaxLookUpOrDownDistance"));
+        ParseValueFromXmlElem(&m_GlobalOptions.lookUpOrDownSpeed,
+            pGlobalOptionsRootElem->FirstChildElement("LookUpOrDownSpeed"));
     }
 
     return true;
@@ -746,7 +752,7 @@ bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
     std::vector<std::string> xmlActorPrototypeFiles = m_pResourceMgr->VMatch("/ActorPrototypes/*.XML");
     for (std::string protoFile : xmlActorPrototypeFiles)
     {
-        LOG("Actor proto: " + protoFile);
+        //LOG("Actor proto: " + protoFile);
 
         TiXmlElement* pActorProtoElem = XmlResourceLoader::LoadAndReturnRootXmlElement(protoFile.c_str());
         std::string protoName;
@@ -756,7 +762,7 @@ bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
         }
         else
         {
-            LOG(protoFile + ": " + protoName);
+            //LOG(protoFile + ": " + protoName);
             ActorPrototype actorProto = StringToEnum_ActorPrototype(protoName);
 
             // Create our own pointer

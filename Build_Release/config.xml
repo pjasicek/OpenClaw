@@ -1,6 +1,6 @@
 <Configuration>
     <Display>
-        <Size width="800" height="600" />
+        <Size width="1200" height="900" />
         <Scale>1</Scale>
         <UseVerticalSync>false</UseVerticalSync>
         <IsFullscreen>false</IsFullscreen>
@@ -51,5 +51,8 @@
         <MaxJumpHeight>142</MaxJumpHeight>
         <PowerupMaxJumpHeight>200</PowerupMaxJumpHeight>
         <SkipMenu>false</SkipMenu>
+	<StartLookUpOrDownTime>1500</StartLookUpOrDownTime>
+	<MaxLookUpOrDownDistance>250</MaxLookUpOrDownDistance>
+	<LookUpOrDownSpeed>250</LookUpOrDownSpeed>
     </GlobalOptions>
 </Configuration>

@@ -554,7 +554,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             soundDef.volume = soundVolume;
             soundDef.soundAreaSize = size;
 
-            LOG("Size: " + soundDef.soundAreaSize.ToString());
             SAFE_DELETE(pActorElem);
             return ActorTemplates::CreateXmlData_LocalAmbientSound(
                 ActorPrototype_LocalAmbientSound,
