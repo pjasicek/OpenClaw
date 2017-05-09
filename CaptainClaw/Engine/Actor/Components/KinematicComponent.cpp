@@ -68,6 +68,23 @@ void KinematicComponent::VPostInit()
     if (m_Properties.hasTriggerBehaviour || m_Properties.hasStartBehaviour)
     {
         m_CurrentSpeed = Point(0, 0);
+
+        // Precalculate initial speed
+        Point positionDelta = m_Properties.maxPosition - m_Properties.minPosition;
+        Point middlePositionDelta(positionDelta.x / 2.0, positionDelta.y / 2.0);
+        Point middleTrajectoryPosition = m_Properties.minPosition + middlePositionDelta;
+
+        m_LastSpeed = m_Speed;
+        if (m_pPositionComponent->GetPosition().GetX() > middleTrajectoryPosition.x)
+        {
+            m_LastSpeed.SetX(m_Speed.x * -1.0);
+        }
+        if (m_pPositionComponent->GetPosition().GetY() > middleTrajectoryPosition.y)
+        {
+            m_LastSpeed.SetY(m_Speed.y * -1.0);
+        }
+
+        LOG("LastSpeed: " + m_LastSpeed.ToString());
     }
 }
 
@@ -88,7 +105,7 @@ void KinematicComponent::VUpdate(uint32 msDiff)
     }
 
     bool directionChanged = false;
-    if (m_Speed.x > 0)
+    if (fabs(m_Speed.x) > DBL_EPSILON)
     {
         if ((m_CurrentSpeed.x < -1.0 * DBL_EPSILON) && m_pPositionComponent->GetX() < m_Properties.minPosition.x)
         {
@@ -102,7 +119,7 @@ void KinematicComponent::VUpdate(uint32 msDiff)
         }
     }
 
-    if (m_Speed.y > 0)
+    if (fabs(m_Speed.y) > DBL_EPSILON)
     {
         if (directionChanged)
         {
@@ -118,6 +135,11 @@ void KinematicComponent::VUpdate(uint32 msDiff)
             m_CurrentSpeed = Point(m_CurrentSpeed.x, m_CurrentSpeed.y * -1.0);
             directionChanged = true;
         }
+    }
+
+    if (!m_CurrentSpeed.IsZeroXY())
+    {
+        m_LastSpeed = m_CurrentSpeed;
     }
 
     if (m_Properties.hasOneWayBehaviour && directionChanged)
@@ -148,14 +170,11 @@ void KinematicComponent::VUpdate(uint32 msDiff)
                 }
                 else
                 {
-                    m_CurrentSpeed = m_Speed;
+                    m_CurrentSpeed = m_LastSpeed;
                 }
             }
         }
     }
-
-    /*LOG(ToStr(m_pPositionComponent->GetX()) + " - " + ToStr(m_pPositionComponent->GetY()));
-    LOG(ToStr(m_MinPosition.x) + " - " + ToStr(m_MinPosition.y));*/
 
     if (m_Properties.hasStartBehaviour)
     {
@@ -196,7 +215,7 @@ void KinematicComponent::AddCarriedBody(b2Body* pBody)
         m_bIsTriggered = true;
         m_bCheckCarriedBodies = true;
         m_TimeSinceLastCarriedBodiesCheck = 0;
-        m_CurrentSpeed = m_Speed;
+        m_CurrentSpeed = m_LastSpeed;
     }
     m_CarriedBodiesList.push_back(pBody);
 }
