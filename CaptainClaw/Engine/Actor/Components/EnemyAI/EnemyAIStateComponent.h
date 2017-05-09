@@ -201,7 +201,7 @@ public:
     virtual void VOnStateEnter() override;
     virtual void VOnStateLeave() override;
     virtual EnemyAIState VGetStateType() const = 0;
-    virtual bool VCanEnter() override { return m_EnemyAgroList.size() > 0; }
+    virtual bool VCanEnter() override;
 
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;

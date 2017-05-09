@@ -748,6 +748,33 @@ Point BaseAttackAIStateComponent::FindClosestHostileActorOffset()
     return pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();
 }
 
+bool BaseAttackAIStateComponent::VCanEnter()
+{
+    if (m_EnemyAgroList.empty())
+    {
+        return false;
+    }
+
+    // TODO: Only Claw is the enemy at the moment, if the need to have more enemies arises, this needs to be changed
+    // Since the first found actor is picked
+
+    // Check if enemy is within line of sight
+    Point fromPoint = _owner->GetPositionComponent()->GetPosition();
+    Point toPoint = m_EnemyAgroList[0]->GetPositionComponent()->GetPosition();
+
+    RaycastResult raycastResultDown = g_pApp->GetGameLogic()->VGetGamePhysics()->VRayCast(
+        fromPoint, 
+        toPoint, 
+        CollisionFlag_Solid);
+    if (raycastResultDown.foundIntersection)
+    {
+        // Vision is obstructed
+        return false;
+    }
+
+    return true;
+}
+
 //=====================================================================================================================
 // MeleeAttackAIStateComponent
 //=====================================================================================================================
