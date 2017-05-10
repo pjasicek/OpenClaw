@@ -95,10 +95,10 @@ void GlitterComponent::VUpdate(uint32 msDiff)
 
 void GlitterComponent::Deactivate()
 {
+    m_Active = false;
+
     if (m_pGlitter)
     {
-        m_Active = false;
-
         shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pGlitter->GetGUID()));
         IEventMgr::Get()->VTriggerEvent(pEvent);
 

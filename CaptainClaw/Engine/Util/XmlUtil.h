@@ -44,6 +44,12 @@
 
 #endif
 
+template<typename T>
+void AddXmlTextElement(const char* elemName, T val, TiXmlElement* pParent)
+{
+    XML_ADD_TEXT_ELEMENT(elemName, ToStr(val).c_str(), pParent);
+}
+
 inline bool SetTiXmlElementText(const std::string& text, TiXmlElement* pElem)
 {
     TiXmlNode* child = pElem->FirstChild();

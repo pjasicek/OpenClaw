@@ -72,7 +72,7 @@ struct ActorFixtureDef
 
         friction = 0.0f;
         density = 0.0f;
-        float restitution = 0.0f;
+        restitution = 0.0f;
 
         collisionFlag = CollisionFlag_None;
         collisionMask = 0x0;
@@ -412,6 +412,31 @@ struct LocalAmbientSoundDef
     int volume;
     Point soundAreaSize;
     Point soundAreaOffset;
+};
+
+//-------------------------------------------------------------------------------------------------
+// DestroyableComponentDef - DestroyableComponent
+//-------------------------------------------------------------------------------------------------
+
+struct DestroyableComponentDef
+{
+    DestroyableComponentDef()
+    {
+        deleteImmediately = false;
+        deleteDelay = 0;
+        blinkOnDestruction = false;
+        deleteOnDestruction = true;
+        removeFromPhysics = true;
+        deathAnimationName = "";
+    }
+
+    bool deleteImmediately;
+    int deleteDelay;
+    bool blinkOnDestruction;
+    bool deleteOnDestruction;
+    bool removeFromPhysics;
+    std::string deathAnimationName;
+    std::vector<std::string> deathSoundList;
 };
 
 //-------------------------------------------------------------------------------------------------

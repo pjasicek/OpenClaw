@@ -5,13 +5,19 @@
 #include "../../Events/EventMgr.h"
 #include "../../Events/Events.h"
 
+#include "RenderComponent.h"
+
 const char* DestroyableComponent::g_Name = "DestroyableComponent";
 
 DestroyableComponent::DestroyableComponent()
     :
+    m_DeleteDelay(0),
+    m_bDeleteImmediately(false),
+    m_bBlinkOnDestruction(false),
     m_bDeleteOnDestruction(true),
     m_bRemoveFromPhysics(true),
-    m_bIsDead(false)
+    m_bIsDead(false),
+    m_DeleteDelayTimeLeft(0)
 { }
 
 DestroyableComponent::~DestroyableComponent()
@@ -30,23 +36,21 @@ bool DestroyableComponent::VInit(TiXmlElement* pData)
         return false;
     }
 
-    if (TiXmlElement* pElem = pData->FirstChildElement("DeleteOnDestruction"))
-    {
-        m_bDeleteOnDestruction = std::string(pElem->GetText()) == "true";
-    }
-    if (TiXmlElement* pElem = pData->FirstChildElement("RemoveFromPhysics"))
-    {
-        m_bRemoveFromPhysics = std::string(pElem->GetText()) == "true";
-    }
-    if (TiXmlElement* pElem = pData->FirstChildElement("DeathAnimationName"))
-    {
-        m_DeathAnimationName = pElem->GetText();
-    }
+    ParseValueFromXmlElem(&m_DeleteDelay, pData->FirstChildElement("DeleteDelay"));
+    ParseValueFromXmlElem(&m_bDeleteImmediately, pData->FirstChildElement("DeleteImmediately"));
+    ParseValueFromXmlElem(&m_bBlinkOnDestruction, pData->FirstChildElement("BlinkOnDestruction"));
+    ParseValueFromXmlElem(&m_bDeleteOnDestruction, pData->FirstChildElement("DeleteOnDestruction"));
+    ParseValueFromXmlElem(&m_bRemoveFromPhysics, pData->FirstChildElement("RemoveFromPhysics"));
+    ParseValueFromXmlElem(&m_DeathAnimationName, pData->FirstChildElement("DeathAnimationName"));
+
     for (TiXmlElement* pElem = pData->FirstChildElement("DeathSound");
-        pElem; pElem = pElem->NextSiblingElement("DeathSound"))
+        pElem; 
+        pElem = pElem->NextSiblingElement("DeathSound"))
     {
         m_PossibleDestructionSounds.push_back(pElem->GetText());
     }
+
+    m_DeleteDelayTimeLeft = m_DeleteDelay;
 
     return true;
 }
@@ -71,6 +75,9 @@ void DestroyableComponent::VPostInit()
     {
         pAnimationComponent->AddObserver(this);
     }
+
+    m_pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>()).get();
+    assert(m_pRenderComponent != NULL);
 }
 
 TiXmlElement* DestroyableComponent::VGenerateXml()
@@ -82,8 +89,58 @@ TiXmlElement* DestroyableComponent::VGenerateXml()
     return baseElement;
 }
 
+void DestroyableComponent::VUpdate(uint32 msDiff)
+{
+    if (m_bIsDead && m_bBlinkOnDestruction)
+    {
+        assert(m_DeleteDelay > 0 && "This should blink but no delete delay ?");
+
+        m_DeleteDelayTimeLeft -= msDiff;
+
+        shared_ptr<AnimationComponent> pAnimationComponent =
+            MakeStrongPtr(_owner->GetComponent<AnimationComponent>());
+
+        int cycleState = m_DeleteDelayTimeLeft / 350;
+        if (cycleState % 2 == 0)
+        {
+            m_pRenderComponent->SetVisible(true);
+            if (pAnimationComponent)
+            {
+                pAnimationComponent->ResumeAnimation();
+            }
+        }
+        else
+        {
+            m_pRenderComponent->SetVisible(false);
+            if (pAnimationComponent)
+            {
+                pAnimationComponent->PauseAnimation();
+            }
+        }
+
+        if (m_DeleteDelayTimeLeft <= 0)
+        {
+            m_pPhysics->VRemoveActor(_owner->GetGUID());
+            DeleteActor();
+        }
+    }
+}
+
 void DestroyableComponent::VOnHealthBelowZero(DamageType damageType)
 {
+    m_bIsDead = true;
+
+    if (m_bRemoveFromPhysics && m_DeleteDelay == 0)
+    {
+        m_pPhysics->VRemoveActor(_owner->GetGUID());
+    }
+
+    if (m_DeleteDelay > 0)
+    {
+        Point nullSpeed(0, 0);
+        m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), nullSpeed);
+    }
+
     if (!m_PossibleDestructionSounds.empty())
     {
         // Pick random death sound
@@ -114,12 +171,10 @@ void DestroyableComponent::VOnHealthBelowZero(DamageType damageType)
         }
     }
 
-    if (m_bRemoveFromPhysics)
+    if (m_bDeleteImmediately)
     {
-        m_pPhysics->VRemoveActor(_owner->GetGUID());
+        DeleteActor();
     }
-
-    m_bIsDead = true;
 }
 
 void DestroyableComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
@@ -129,13 +184,23 @@ void DestroyableComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
         return;
     }
 
+    if (m_DeleteDelay != 0)
+    {
+        return;
+    }
+
     if (m_bDeleteOnDestruction)
     {
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
-        IEventMgr::Get()->VQueueEvent(pEvent);
+        DeleteActor();
     }
     else
     {
         pAnimation->Pause();
     }
+}
+
+void DestroyableComponent::DeleteActor()
+{
+    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+    IEventMgr::Get()->VQueueEvent(pEvent);
 }

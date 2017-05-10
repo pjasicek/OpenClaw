@@ -652,6 +652,24 @@ namespace ActorTemplates
         return pDestroyableComponent;
     }
 
+    TiXmlElement* CreateDestroyableComponent(const DestroyableComponentDef& def)
+    {
+        TiXmlElement* pDestroyableComponent = new TiXmlElement("DestroyableComponent");
+
+        AddXmlTextElement("DeleteImmediately", def.deleteImmediately, pDestroyableComponent);
+        AddXmlTextElement("DeleteDelay", def.deleteDelay, pDestroyableComponent);
+        AddXmlTextElement("BlinkOnDestruction", def.blinkOnDestruction, pDestroyableComponent);
+        AddXmlTextElement("DeleteOnDestruction", def.deleteOnDestruction, pDestroyableComponent);
+        AddXmlTextElement("RemoveFromPhysics", def.removeFromPhysics, pDestroyableComponent);
+        AddXmlTextElement("DeathAnimationName", def.deathAnimationName, pDestroyableComponent);
+        for (const std::string& deathSound : def.deathSoundList)
+        {
+            AddXmlTextElement("DeathSound", deathSound, pDestroyableComponent);
+        }
+
+        return pDestroyableComponent;
+    }
+
     TiXmlElement* CreateHealthComponent(int currentHealth, int maxHealth)
     {
         TiXmlElement* pHealthComponent = new TiXmlElement("HealthComponent");
@@ -871,6 +889,18 @@ namespace ActorTemplates
         pActorElem->LinkEndChild(CreatePhysicsComponent(&bodyDef));
 
         pActorElem->LinkEndChild(CreateXmlData_GlitterComponent("Glitter_Yellow", isStatic, false));
+
+        if (!isStatic)
+        {
+            DestroyableComponentDef destroyableDef;
+            destroyableDef.blinkOnDestruction = true;
+            destroyableDef.deleteDelay = 3149;
+            destroyableDef.deleteOnDestruction = true;
+            destroyableDef.removeFromPhysics = true;
+            pActorElem->LinkEndChild(CreateDestroyableComponent(destroyableDef));
+
+            pActorElem->LinkEndChild(CreateHealthComponent(1, 1));
+        }
 
         return pActorElem;
     }

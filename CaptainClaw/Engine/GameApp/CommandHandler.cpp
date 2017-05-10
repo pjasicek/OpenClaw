@@ -7,6 +7,9 @@
 #include "../Events/EventMgr.h"
 #include "../Events/Events.h"
 
+#include "../Actor/ActorTemplates.h"
+#include "../Actor/Components/PositionComponent.h"
+
 std::vector<std::string> g_AvailableCheats;
 
 #define COMMAND_SET_BOOL_VALUE(targetCommandName, targetValue) \
@@ -105,6 +108,35 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
     {
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Reset_Level));
         pConsole->AddLine("Requested level reset.", COLOR_GREEN);
+        wasCommandExecuted = true;
+    }
+
+    if (commandStr.find("spawn coin") == 0)
+    {
+        if (StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor())
+        {
+            ActorTemplates::CreateActorPickup(
+                PickupType_Treasure_Coins, 
+                pClaw->GetPositionComponent()->GetPosition() + Point(100, 0));
+        }
+        else
+        {
+            pConsole->AddLine("Claw is not yet created, cannot " + commandStr, COLOR_RED);
+        }
+        wasCommandExecuted = true;
+    }
+    if (commandStr.find("spawn skull") == 0)
+    {
+        if (StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor())
+        {
+            ActorTemplates::CreateActorPickup(
+                PickupType_Treasure_Skull_Green,
+                pClaw->GetPositionComponent()->GetPosition() + Point(100, 0));
+        }
+        else
+        {
+            pConsole->AddLine("Claw is not yet created, cannot " + commandStr, COLOR_RED);
+        }
         wasCommandExecuted = true;
     }
 

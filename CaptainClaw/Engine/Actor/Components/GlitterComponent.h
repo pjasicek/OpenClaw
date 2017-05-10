@@ -3,9 +3,10 @@
 
 #include "../../SharedDefines.h"
 #include "../ActorComponent.h"
+#include "ControllerComponents/HealthComponent.h"
 
 class PositionComponent;
-class GlitterComponent : public ActorComponent
+class GlitterComponent : public ActorComponent, public HealthObserver
 {
 public:
     GlitterComponent();
