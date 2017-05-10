@@ -42,7 +42,7 @@ For all platforms you will need original CLAW.REZ game archive from original gam
   - mkdir build
   - cd build
   - cmake ..
-  - make -j4
+  - make -j4 (for best performance, replace "4" with whatever number of simultaneous threads your machine can run)
   - cd ../Build_Release
   - ./captainclaw (Considering you have CLAW.REZ from original game in the same folder)
 
