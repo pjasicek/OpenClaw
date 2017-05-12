@@ -8,70 +8,238 @@
 
 namespace ActorTemplates
 {
+    typedef TiXmlElement* (*PickupCreationFunction)(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap);
 
-    // The empty image set strings signal that these pickups cant be used like this. Maybe change ?
-    std::map<PickupType, std::string> g_PickupTypeToImageSetMap =
+    struct PickupCreationTable
     {
-        { PickupType_Default,                   "GAME_TREASURE_COINS" },
-        { PickupType_Treasure_Goldbars,         "GAME_TREASURE_GOLDBARS" },
-        { PickupType_Treasure_Rings_Red,        "GAME_TREASURE_RINGS_RED" },
-        { PickupType_Treasure_Rings_Green,      "GAME_TREASURE_RINGS_GREEN" },
-        { PickupType_Treasure_Rings_Blue,       "GAME_TREASURE_RINGS_BLUE" },
-        { PickupType_Treasure_Rings_Purple,     "GAME_TREASURE_RINGS_PURPLE" },
-        { PickupType_Treasure_Necklace,         "GAME_TREASURE_NECKLACE" },
-        { PickupType_Treasure_Crosses_Red,      "GAME_TREASURE_CROSSES_RED" },
-        { PickupType_Treasure_Crosses_Green,    "GAME_TREASURE_CROSSES_GREEN" },
-        { PickupType_Treasure_Crosses_Blue,     "GAME_TREASURE_CROSSES_BLUE" },
-        { PickupType_Treasure_Crosses_Purple,   "GAME_TREASURE_CROSSES_PURPLE" },
-        { PickupType_Treasure_Scepters_Red,     "GAME_TREASURE_SCEPTERS_RED" },
-        { PickupType_Treasure_Scepters_Green,   "GAME_TREASURE_SCEPTERS_GREEN" },
-        { PickupType_Treasure_Scepters_Blue,    "GAME_TREASURE_SCEPTERS_BLUE" },
-        { PickupType_Treasure_Scepters_Purple,  "GAME_TREASURE_SCEPTERS_PURPLE" },
-        { PickupType_Treasure_Geckos_Red,       "GAME_TREASURE_GECKOS_RED" },
-        { PickupType_Treasure_Geckos_Green,     "GAME_TREASURE_GECKOS_GREEN" },
-        { PickupType_Treasure_Geckos_Blue,      "GAME_TREASURE_GECKOS_BLUE" },
-        { PickupType_Treasure_Geckos_Purple,    "GAME_TREASURE_GECKOS_PURPLE" },
-        { PickupType_Ammo_Deathbag,             "GAME_AMMO_DEATHBAG" },
-        { PickupType_Ammo_Shot,                 "GAME_AMMO_SHOT" },
-        { PickupType_Ammo_Shotbag,              "GAME_AMMO_SHOTBAG" },
-        { PickupType_Powerup_Catnip_1,          "GAME_CATNIPS_NIP1" },
-        { PickupType_Powerup_Catnip_2,          "GAME_CATNIPS_NIP2" },
-        { PickupType_Health_Breadwater,         "GAME_HEALTH_BREADWATER" },
-        { PickupType_Health_25,                 "GAME_HEALTH_POTION3" },
-        { PickupType_Health_10,                 "GAME_HEALTH_POTION1" },
-        { PickupType_Health_15,                 "GAME_HEALTH_POTION2" },
-        { PickupType_Ammo_Magic_5,              "GAME_MAGIC_GLOW" },
-        { PickupType_Ammo_Magic_10,             "GAME_MAGIC_STARGLOW" },
-        { PickupType_Ammo_Magic_25,             "GAME_MAGIC_MAGICCLAW" },
-        { PickupType_Mappiece,                  "GAME_MAPPIECE" },
-        { PickupType_Warp,                      "GAME_WARP" },
-        { PickupType_Treasure_Coins,            "GAME_TREASURE_COINS" },
-        { PickupType_Ammo_Dynamite,             "GAME_DYNAMITE" },
-        { PickupType_Curse_Ammo,                "" },
-        { PickupType_Curse_Magic,               "" },
-        { PickupType_Curse_Health,              "" },
-        { PickupType_Curse_Death,               "" },
-        { PickupType_Curse_Treasure,            "" },
-        { PickupType_Curse_Freeze,              "" },
-        { PickupType_Treasure_Chalices_Red,     "GAME_TREASURE_CHALICES_RED" },
-        { PickupType_Treasure_Chalices_Green,   "GAME_TREASURE_CHALICES_GREEN" },
-        { PickupType_Treasure_Chalices_Blue,    "GAME_TREASURE_CHALICES_BLUE" },
-        { PickupType_Treasure_Chalices_Purple,  "GAME_TREASURE_CHALICES_PURPLE" },
-        { PickupType_Treasure_Crowns_Red,       "GAME_TREASURE_CROWNS_RED" },
-        { PickupType_Treasure_Crowns_Green,     "GAME_TREASURE_CROWNS_GREEN" },
-        { PickupType_Treasure_Crowns_Blue,      "GAME_TREASURE_CROWNS_BLUE" },
-        { PickupType_Treasure_Crowns_Purple,    "GAME_TREASURE_CROWNS_PURPLE" },
-        { PickupType_Treasure_Skull_Red,        "GAME_TREASURE_JEWELEDSKULL_RED" },
-        { PickupType_Treasure_Skull_Green,      "GAME_TREASURE_JEWELEDSKULL_GREEN" },
-        { PickupType_Treasure_Skull_Blue,       "GAME_TREASURE_JEWELEDSKULL_BLUE" },
-        { PickupType_Treasure_Skull_Purple,     "GAME_TREASURE_JEWELEDSKULL_PURPLE" },
-        { PickupType_Powerup_Invisibility,      "" },
-        { PickupType_Powerup_Invincibility,     "" },
-        { PickupType_Powerup_Life,              "" },
-        { PickupType_Powerup_FireSword,         "" },
-        { PickupType_Powerup_LightningSword,    "" },
-        { PickupType_Powerup_FrostSword,        "" },
+        PickupType pickupType;
+        PickupCreationFunction creationFunction;
     };
+
+    // Need to forward declare this
+    TiXmlElement* CreateXmlData_TreasurePickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap);
+    TiXmlElement* CreateXmlData_AmmoPickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap);
+    TiXmlElement* CreateXmlData_PowerupPickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap);
+    TiXmlElement* CreateXmlData_HealthPickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap);
+    TiXmlElement* CreateXmlData_LifePickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap);
+    TiXmlElement* CreateXmlData_WarpPickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap);
+    TiXmlElement* CreateXmlData_MappiecePickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap);
+
+    PickupCreationTable g_PickupCreationTable[] =
+    {
+        { PickupType_Default,                   &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Goldbars,         &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Rings_Red,        &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Rings_Green,      &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Rings_Blue,       &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Rings_Purple,     &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Necklace,         &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Crosses_Red,      &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Crosses_Green,    &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Crosses_Blue,     &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Crosses_Purple,   &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Scepters_Red,     &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Scepters_Green,   &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Scepters_Blue,    &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Scepters_Purple,  &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Geckos_Red,       &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Geckos_Green,     &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Geckos_Blue,      &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Geckos_Purple,    &CreateXmlData_TreasurePickupActor },
+        { PickupType_Ammo_Deathbag,             &CreateXmlData_AmmoPickupActor },
+        { PickupType_Ammo_Shot,                 &CreateXmlData_AmmoPickupActor },
+        { PickupType_Ammo_Shotbag,              &CreateXmlData_AmmoPickupActor },
+        { PickupType_Powerup_Catnip_1,          &CreateXmlData_PowerupPickupActor },
+        { PickupType_Powerup_Catnip_2,          &CreateXmlData_PowerupPickupActor },
+        { PickupType_Health_Breadwater,         &CreateXmlData_HealthPickupActor },
+        { PickupType_Health_25,                 &CreateXmlData_HealthPickupActor },
+        { PickupType_Health_10,                 &CreateXmlData_HealthPickupActor },
+        { PickupType_Health_15,                 &CreateXmlData_HealthPickupActor },
+        { PickupType_Ammo_Magic_5,              &CreateXmlData_PowerupPickupActor },
+        { PickupType_Ammo_Magic_10,             &CreateXmlData_PowerupPickupActor },
+        { PickupType_Ammo_Magic_25,             &CreateXmlData_PowerupPickupActor },
+        { PickupType_Mappiece,                  &CreateXmlData_MappiecePickupActor },
+        { PickupType_Warp,                      &CreateXmlData_WarpPickupActor },
+        { PickupType_Treasure_Coins,            &CreateXmlData_TreasurePickupActor },
+        { PickupType_Ammo_Dynamite,             &CreateXmlData_AmmoPickupActor },
+        { PickupType_Curse_Ammo,                NULL },
+        { PickupType_Curse_Magic,               NULL },
+        { PickupType_Curse_Health,              NULL },
+        { PickupType_Curse_Death,               NULL },
+        { PickupType_Curse_Treasure,            NULL },
+        { PickupType_Curse_Freeze,              NULL },
+        { PickupType_Treasure_Chalices_Red,     &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Chalices_Green,   &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Chalices_Blue,    &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Chalices_Purple,  &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Crowns_Red,       &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Crowns_Green,     &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Crowns_Blue,      &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Crowns_Purple,    &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Skull_Red,        &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Skull_Green,      &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Skull_Blue,       &CreateXmlData_TreasurePickupActor },
+        { PickupType_Treasure_Skull_Purple,     &CreateXmlData_TreasurePickupActor },
+        { PickupType_Powerup_Invisibility,      &CreateXmlData_PowerupPickupActor },
+        { PickupType_Powerup_Invincibility,     &CreateXmlData_PowerupPickupActor },
+        { PickupType_Powerup_Life,              &CreateXmlData_LifePickupActor },
+        { PickupType_Powerup_FireSword,         &CreateXmlData_PowerupPickupActor },
+        { PickupType_Powerup_LightningSword,    &CreateXmlData_PowerupPickupActor },
+        { PickupType_Powerup_FrostSword,        &CreateXmlData_PowerupPickupActor },
+        { PickupType_Max,                       NULL },
+    };
+
+    PickupType StringToEnum_ImageSetToPickupType(const std::string& pickupImageSet)
+    {
+        static const std::map<std::string, PickupType> s_ImageSetToPickupTypeMap =
+        {
+            { "GAME_TREASURE_COINS", PickupType_Default },
+            { "GAME_TREASURE_GOLDBARS", PickupType_Treasure_Goldbars },
+            { "GAME_TREASURE_RINGS_RED", PickupType_Treasure_Rings_Red },
+            { "GAME_TREASURE_RINGS_GREEN", PickupType_Treasure_Rings_Green },
+            { "GAME_TREASURE_RINGS_BLUE", PickupType_Treasure_Rings_Blue },
+            { "GAME_TREASURE_RINGS_PURPLE", PickupType_Treasure_Rings_Purple },
+            { "GAME_TREASURE_NECKLACE", PickupType_Treasure_Necklace },
+            { "GAME_TREASURE_CROSSES_RED", PickupType_Treasure_Crosses_Red },
+            { "GAME_TREASURE_CROSSES_GREEN", PickupType_Treasure_Crosses_Green },
+            { "GAME_TREASURE_CROSSES_BLUE", PickupType_Treasure_Crosses_Blue },
+            { "GAME_TREASURE_CROSSES_PURPLE", PickupType_Treasure_Crosses_Purple },
+            { "GAME_TREASURE_SCEPTERS_RED", PickupType_Treasure_Scepters_Red },
+            { "GAME_TREASURE_SCEPTERS_GREEN", PickupType_Treasure_Scepters_Green },
+            { "GAME_TREASURE_SCEPTERS_BLUE", PickupType_Treasure_Scepters_Blue },
+            { "GAME_TREASURE_SCEPTERS_PURPLE", PickupType_Treasure_Scepters_Purple },
+            { "GAME_TREASURE_GECKOS_RED", PickupType_Treasure_Geckos_Red },
+            { "GAME_TREASURE_GECKOS_GREEN", PickupType_Treasure_Geckos_Green },
+            { "GAME_TREASURE_GECKOS_BLUE", PickupType_Treasure_Geckos_Blue },
+            { "GAME_TREASURE_GECKOS_PURPLE", PickupType_Treasure_Geckos_Purple },
+            { "GAME_AMMO_DEATHBAG", PickupType_Ammo_Deathbag },
+            { "GAME_AMMO_SHOT", PickupType_Ammo_Shot },
+            { "GAME_AMMO_SHOTBAG", PickupType_Ammo_Shotbag },
+            { "GAME_CATNIPS_NIP1", PickupType_Powerup_Catnip_1 },
+            { "GAME_CATNIPS_NIP2", PickupType_Powerup_Catnip_2 },
+            { "LEVEL_HEALTH", PickupType_Health_Breadwater },
+            { "GAME_HEALTH_BREADWATER", PickupType_Health_Breadwater },
+            { "GAME_HEALTH_POTION3", PickupType_Health_25 },
+            { "GAME_HEALTH_POTION1", PickupType_Health_10 },
+            { "GAME_HEALTH_POTION2", PickupType_Health_15 },
+            { "GAME_MAGIC_GLOW", PickupType_Ammo_Magic_5 },
+            { "GAME_MAGIC_STARGLOW", PickupType_Ammo_Magic_10 },
+            { "GAME_MAGIC_MAGICCLAW", PickupType_Ammo_Magic_25 },
+            { "GAME_MAPPIECE", PickupType_Mappiece },
+            { "GAME_WARP", PickupType_Warp },
+            { "GAME_VERTWARP", PickupType_Warp },
+            { "GAME_TREASURE_COINS", PickupType_Treasure_Coins },
+            { "GAME_DYNAMITE", PickupType_Ammo_Dynamite },
+            { "GAME_CURSES_AMMO", PickupType_Curse_Ammo },
+            { "GAME_CURSES_MAGIC", PickupType_Curse_Magic },
+            { "GAME_CURSES_HEALTH", PickupType_Curse_Health },
+            { "GAME_CURSES_DEATJ", PickupType_Curse_Death },
+            { "GAME_CURSES_TREASURE", PickupType_Curse_Treasure },
+            { "GAME_CURSES_FREEZE", PickupType_Curse_Freeze },
+            { "GAME_TREASURE_CHALICES_RED", PickupType_Treasure_Chalices_Red },
+            { "GAME_TREASURE_CHALICES_GREEN", PickupType_Treasure_Chalices_Green },
+            { "GAME_TREASURE_CHALICES_BLUE", PickupType_Treasure_Chalices_Blue },
+            { "GAME_TREASURE_CHALICES_PURPLE", PickupType_Treasure_Chalices_Purple },
+            { "GAME_TREASURE_CROWNS_RED", PickupType_Treasure_Crowns_Red },
+            { "GAME_TREASURE_CROWNS_GREEN", PickupType_Treasure_Crowns_Green },
+            { "GAME_TREASURE_CROWNS_BLUE", PickupType_Treasure_Crowns_Blue },
+            { "GAME_TREASURE_CROWNS_PURPLE", PickupType_Treasure_Crowns_Purple },
+            { "GAME_TREASURE_JEWELEDSKULL_RED", PickupType_Treasure_Skull_Red },
+            { "GAME_TREASURE_JEWELEDSKULL_GREEN", PickupType_Treasure_Skull_Green },
+            { "GAME_TREASURE_JEWELEDSKULL_BLUE", PickupType_Treasure_Skull_Blue },
+            { "GAME_TREASURE_JEWELEDSKULL_PURPLE", PickupType_Treasure_Skull_Purple },
+            { "GAME_POWERUPS_GHOST", PickupType_Powerup_Invisibility },
+            { "GAME_POWERUPS_INVULNERABLE", PickupType_Powerup_Invincibility },
+            { "GAME_POWERUPS_EXTRALIFE", PickupType_Powerup_Life },
+            { "GAME_POWERUPS_LIGHTNINGSWORD", PickupType_Powerup_FireSword },
+            { "GAME_POWERUPS_FIRESWORD", PickupType_Powerup_LightningSword },
+            { "GAME_POWERUPS_ICESWORD", PickupType_Powerup_FrostSword },
+        };
+
+        auto findIt = s_ImageSetToPickupTypeMap.find(pickupImageSet);
+        if (findIt == s_ImageSetToPickupTypeMap.end())
+        {
+            LOG_ERROR("Could not find requested enum. Offending key: " + pickupImageSet);
+            assert(false);
+        }
+
+        return findIt->second;
+    }
+
+    std::string EnumToString_PickupTypeToImageSet(PickupType pickupType)
+    {
+        std::map<PickupType, std::string> s_PickupTypeToImageSetMap =
+        {
+            { PickupType_Default,                   "GAME_TREASURE_COINS" },
+            { PickupType_Treasure_Goldbars,         "GAME_TREASURE_GOLDBARS" },
+            { PickupType_Treasure_Rings_Red,        "GAME_TREASURE_RINGS_RED" },
+            { PickupType_Treasure_Rings_Green,      "GAME_TREASURE_RINGS_GREEN" },
+            { PickupType_Treasure_Rings_Blue,       "GAME_TREASURE_RINGS_BLUE" },
+            { PickupType_Treasure_Rings_Purple,     "GAME_TREASURE_RINGS_PURPLE" },
+            { PickupType_Treasure_Necklace,         "GAME_TREASURE_NECKLACE" },
+            { PickupType_Treasure_Crosses_Red,      "GAME_TREASURE_CROSSES_RED" },
+            { PickupType_Treasure_Crosses_Green,    "GAME_TREASURE_CROSSES_GREEN" },
+            { PickupType_Treasure_Crosses_Blue,     "GAME_TREASURE_CROSSES_BLUE" },
+            { PickupType_Treasure_Crosses_Purple,   "GAME_TREASURE_CROSSES_PURPLE" },
+            { PickupType_Treasure_Scepters_Red,     "GAME_TREASURE_SCEPTERS_RED" },
+            { PickupType_Treasure_Scepters_Green,   "GAME_TREASURE_SCEPTERS_GREEN" },
+            { PickupType_Treasure_Scepters_Blue,    "GAME_TREASURE_SCEPTERS_BLUE" },
+            { PickupType_Treasure_Scepters_Purple,  "GAME_TREASURE_SCEPTERS_PURPLE" },
+            { PickupType_Treasure_Geckos_Red,       "GAME_TREASURE_GECKOS_RED" },
+            { PickupType_Treasure_Geckos_Green,     "GAME_TREASURE_GECKOS_GREEN" },
+            { PickupType_Treasure_Geckos_Blue,      "GAME_TREASURE_GECKOS_BLUE" },
+            { PickupType_Treasure_Geckos_Purple,    "GAME_TREASURE_GECKOS_PURPLE" },
+            { PickupType_Ammo_Deathbag,             "GAME_AMMO_DEATHBAG" },
+            { PickupType_Ammo_Shot,                 "GAME_AMMO_SHOT" },
+            { PickupType_Ammo_Shotbag,              "GAME_AMMO_SHOTBAG" },
+            { PickupType_Powerup_Catnip_1,          "GAME_CATNIPS_NIP1" },
+            { PickupType_Powerup_Catnip_2,          "GAME_CATNIPS_NIP2" },
+            { PickupType_Health_Breadwater,         "GAME_HEALTH_BREADWATER" },
+            { PickupType_Health_25,                 "GAME_HEALTH_POTION3" },
+            { PickupType_Health_10,                 "GAME_HEALTH_POTION1" },
+            { PickupType_Health_15,                 "GAME_HEALTH_POTION2" },
+            { PickupType_Ammo_Magic_5,              "GAME_MAGIC_GLOW" },
+            { PickupType_Ammo_Magic_10,             "GAME_MAGIC_STARGLOW" },
+            { PickupType_Ammo_Magic_25,             "GAME_MAGIC_MAGICCLAW" },
+            { PickupType_Mappiece,                  "GAME_MAPPIECE" },
+            { PickupType_Warp,                      "GAME_WARP" },
+            { PickupType_Treasure_Coins,            "GAME_TREASURE_COINS" },
+            { PickupType_Ammo_Dynamite,             "GAME_DYNAMITE" },
+            { PickupType_Curse_Ammo,                "GAME_CURSES_AMMO" },
+            { PickupType_Curse_Magic,               "GAME_CURSES_MAGIC" },
+            { PickupType_Curse_Health,              "GAME_CURSES_HEALTH" },
+            { PickupType_Curse_Death,               "GAME_CURSES_DEATJ" },
+            { PickupType_Curse_Treasure,            "GAME_CURSES_TREASURE" },
+            { PickupType_Curse_Freeze,              "GAME_CURSES_FREEZE" },
+            { PickupType_Treasure_Chalices_Red,     "GAME_TREASURE_CHALICES_RED" },
+            { PickupType_Treasure_Chalices_Green,   "GAME_TREASURE_CHALICES_GREEN" },
+            { PickupType_Treasure_Chalices_Blue,    "GAME_TREASURE_CHALICES_BLUE" },
+            { PickupType_Treasure_Chalices_Purple,  "GAME_TREASURE_CHALICES_PURPLE" },
+            { PickupType_Treasure_Crowns_Red,       "GAME_TREASURE_CROWNS_RED" },
+            { PickupType_Treasure_Crowns_Green,     "GAME_TREASURE_CROWNS_GREEN" },
+            { PickupType_Treasure_Crowns_Blue,      "GAME_TREASURE_CROWNS_BLUE" },
+            { PickupType_Treasure_Crowns_Purple,    "GAME_TREASURE_CROWNS_PURPLE" },
+            { PickupType_Treasure_Skull_Red,        "GAME_TREASURE_JEWELEDSKULL_RED" },
+            { PickupType_Treasure_Skull_Green,      "GAME_TREASURE_JEWELEDSKULL_GREEN" },
+            { PickupType_Treasure_Skull_Blue,       "GAME_TREASURE_JEWELEDSKULL_BLUE" },
+            { PickupType_Treasure_Skull_Purple,     "GAME_TREASURE_JEWELEDSKULL_PURPLE" },
+            { PickupType_Powerup_Invisibility,      "GAME_POWERUPS_GHOST" },
+            { PickupType_Powerup_Invincibility,     "GAME_POWERUPS_INVULNERABLE" },
+            { PickupType_Powerup_Life,              "GAME_POWERUPS_EXTRALIFE" },
+            { PickupType_Powerup_FireSword,         "GAME_POWERUPS_LIGHTNINGSWORD" },
+            { PickupType_Powerup_LightningSword,    "GAME_POWERUPS_FIRESWORD" },
+            { PickupType_Powerup_FrostSword,        "GAME_POWERUPS_ICESWORD" },
+        };
+
+        auto findIt = s_PickupTypeToImageSetMap.find(pickupType);
+        if (findIt == s_PickupTypeToImageSetMap.end())
+        {
+            LOG_ERROR("Could not find requested enum. Offending key: " + ToStr((int)pickupType));
+            assert(false);
+        }
+
+        return findIt->second;
+    }
 
     std::map<PickupType, std::string> g_PickupTypeToPickupSoundMap =
     {
@@ -106,8 +274,8 @@ namespace ActorTemplates
         { PickupType_Ammo_Magic_5,              SOUND_GAME_PICKUP_MAGIC },
         { PickupType_Ammo_Magic_10,             SOUND_GAME_PICKUP_MAGIC },
         { PickupType_Ammo_Magic_25,             SOUND_GAME_PICKUP_MAGIC },
-        { PickupType_Mappiece, "" },
-        { PickupType_Warp, "" },
+        { PickupType_Mappiece,                  SOUND_GAME_MAPPIECE },
+        { PickupType_Warp,                      SOUND_GAME_ENTER_WARP },
         { PickupType_Treasure_Coins,            SOUND_GAME_TREASURE_COIN },
         { PickupType_Ammo_Dynamite, "" },
         { PickupType_Curse_Ammo, "" },
@@ -130,7 +298,7 @@ namespace ActorTemplates
         { PickupType_Treasure_Skull_Purple,     SOUND_GAME_TREASURE_SKULL },
         { PickupType_Powerup_Invisibility,      SOUND_GAME_PICKUP_MAGIC },
         { PickupType_Powerup_Invincibility,     SOUND_GAME_PICKUP_MAGIC },
-        { PickupType_Powerup_Life, "" },
+        { PickupType_Powerup_Life,              SOUND_GAME_EXTRA_LIFE },
         { PickupType_Powerup_FireSword,         SOUND_CLAW_PICKUP_FIRE_SWORD },
         { PickupType_Powerup_LightningSword,    SOUND_CLAW_PICKUP_LIGHTNING_SWORD },
         { PickupType_Powerup_FrostSword,        SOUND_CLAW_PICKUP_FROST_SWORD },
@@ -251,6 +419,11 @@ namespace ActorTemplates
     {
         if (imageSet == "GAME_CATNIPS_NIP1") return std::make_pair("Catnip", 15000);
         else if (imageSet == "GAME_CATNIPS_NIP2") return std::make_pair("Catnip", 30000);
+        else if (imageSet == "GAME_POWERUPS_GHOST") return std::make_pair("Invisibility", 30000);
+        else if (imageSet == "GAME_POWERUPS_INVULNERABLE") return std::make_pair("Invulnerability", 30000);
+        else if (imageSet == "GAME_POWERUPS_LIGHTNINGSWORD") return std::make_pair("LightningSword", 30000);
+        else if (imageSet == "GAME_POWERUPS_FIRESWORD") return std::make_pair("FireSword", 30000);
+        else if (imageSet == "GAME_POWERUPS_ICESWORD") return std::make_pair("IceSword", 30000);
         else
         {
             assert(false && "Invalid ammo image set");
@@ -837,74 +1010,6 @@ namespace ActorTemplates
     // Specific functions for creating specific actors
     //=====================================================================================================================
 
-    // TODO: What is this function specifically for ? Only dynamically spawned pickups ?
-    TiXmlElement* CreateXmlData_GeneralPickupActor(std::string imageSet, Point position, int32 zCoord, bool isStatic)
-    {
-        TiXmlElement* pActorElem = new TiXmlElement("Actor");
-        pActorElem->SetAttribute("Type", imageSet.c_str());
-        
-        pActorElem->LinkEndChild(CreatePositionComponent(position.x, position.y));
-
-        ImageSetToWildcardImagePath(imageSet);
-        std::vector<std::string> imagePaths;
-        imagePaths.push_back(imageSet);
-        pActorElem->LinkEndChild(CreateActorRenderComponent(imagePaths, zCoord));
-
-        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, isStatic));
-
-        srand((long)pActorElem + time(NULL));
-        double speedX = 0.5 + (rand() % 100) / 50.0;
-        double speedY = -(1 + (rand() % 100) / 50.0);
-
-        if (rand() % 2 == 1) { speedX *= -1; }
-
-        ActorBodyDef bodyDef;
-        if (isStatic)
-        {
-            bodyDef.bodyType = b2_staticBody;
-        }
-        else
-        {
-            bodyDef.bodyType = b2_dynamicBody;
-        }
-        bodyDef.makeSensor = false;
-        bodyDef.fixtureType = FixtureType_Pickup;
-        bodyDef.position = position;
-        bodyDef.gravityScale = 0.8f;
-        bodyDef.setInitialSpeed = true;
-        bodyDef.initialSpeed = Point(speedX, speedY);
-        bodyDef.collisionFlag = CollisionFlag_Pickup;
-        bodyDef.collisionMask = (CollisionFlag_Death | CollisionFlag_Ground | CollisionFlag_Solid);
-        bodyDef.density = 10.0f;
-        bodyDef.friction = 0.18f;
-        bodyDef.restitution = 0.5f;
-
-        ActorFixtureDef fixtureDef;
-        fixtureDef.fixtureType = FixtureType_Trigger;
-        fixtureDef.collisionFlag = CollisionFlag_Pickup;
-        fixtureDef.collisionMask = CollisionFlag_Controller | CollisionFlag_InvisibleController;
-        fixtureDef.isSensor = true;
-        bodyDef.fixtureList.push_back(fixtureDef);
-
-        pActorElem->LinkEndChild(CreatePhysicsComponent(&bodyDef));
-
-        pActorElem->LinkEndChild(CreateXmlData_GlitterComponent("Glitter_Yellow", isStatic, false));
-
-        if (!isStatic)
-        {
-            DestroyableComponentDef destroyableDef;
-            destroyableDef.blinkOnDestruction = true;
-            destroyableDef.deleteDelay = 3149;
-            destroyableDef.deleteOnDestruction = true;
-            destroyableDef.removeFromPhysics = true;
-            pActorElem->LinkEndChild(CreateDestroyableComponent(destroyableDef));
-
-            pActorElem->LinkEndChild(CreateHealthComponent(1, 1));
-        }
-
-        return pActorElem;
-    }
-
     TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, Point position, Point size, int enterCount, bool activateDialog)
     {
         // General stuff
@@ -1016,9 +1121,121 @@ namespace ActorTemplates
         return pActorElem;
     }
 
-    TiXmlElement* CreateXmlData_TreasurePickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
+    template <typename K, typename V>
+    bool IsKeyInMap(const K& key, const std::map<K, V>& m)
     {
-        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic);
+        auto findIt = m.find(key);
+        if (findIt == m.end())
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    template <typename K, typename V>
+    V StrictFindValueInMap(const K& key, const std::map<K, V>& m)
+    {
+        auto findIt = m.find(key);
+        if (findIt == m.end())
+        {
+            LOG_ERROR("Could not find key in specified map. Key: [" + ToStr(key) + "]");
+            assert(false);
+        }
+
+        return findIt->second;
+    }
+
+    template <typename K, typename V>
+    V TryGetValueFromMap(const K& key, const std::map<K, V>& m, const V& defaultVal)
+    {
+        if (IsKeyInMap(key, m))
+        {
+            return StrictFindValueInMap(key, m);
+        }
+
+        return defaultVal;
+    }
+
+    // TODO: What is this function specifically for ? Only dynamically spawned pickups ?
+    TiXmlElement* CreateXmlData_GeneralPickupActor(std::string imageSet, Point position, int32 zCoord, bool isStatic, const ParamMap& paramMap)
+    {
+        TiXmlElement* pActorElem = new TiXmlElement("Actor");
+        pActorElem->SetAttribute("Type", imageSet.c_str());
+
+        bool isMirrored = TryGetValueFromMap(std::string("IsMirrored"), paramMap, std::string("")) == "true";
+        bool isInverted = TryGetValueFromMap(std::string("IsInverted"), paramMap, std::string("")) == "true";
+
+        pActorElem->LinkEndChild(CreatePositionComponent(position.x, position.y));
+
+        std::string originalImageSet = imageSet;
+
+        ImageSetToWildcardImagePath(imageSet);
+        std::vector<std::string> imagePaths;
+        imagePaths.push_back(imageSet);
+        pActorElem->LinkEndChild(CreateActorRenderComponent(imagePaths, zCoord, true, isMirrored, isInverted));
+
+        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, isStatic));
+
+        srand((long)pActorElem + time(NULL));
+        double speedX = 0.5 + (rand() % 100) / 50.0;
+        double speedY = -(1 + (rand() % 100) / 50.0);
+
+        if (rand() % 2 == 1) { speedX *= -1; }
+
+        ActorBodyDef bodyDef;
+        if (isStatic)
+        {
+            bodyDef.bodyType = b2_staticBody;
+        }
+        else
+        {
+            bodyDef.bodyType = b2_dynamicBody;
+        }
+        bodyDef.makeSensor = false;
+        bodyDef.fixtureType = FixtureType_Pickup;
+        bodyDef.position = position;
+        bodyDef.gravityScale = 0.8f;
+        bodyDef.setInitialSpeed = true;
+        bodyDef.initialSpeed = Point(speedX, speedY);
+        bodyDef.collisionFlag = CollisionFlag_Pickup;
+        bodyDef.collisionMask = (CollisionFlag_Death | CollisionFlag_Ground | CollisionFlag_Solid);
+        bodyDef.density = 10.0f;
+        bodyDef.friction = 0.18f;
+        bodyDef.restitution = 0.5f;
+
+        ActorFixtureDef fixtureDef;
+        fixtureDef.fixtureType = FixtureType_Trigger;
+        fixtureDef.collisionFlag = CollisionFlag_Pickup;
+        fixtureDef.collisionMask = CollisionFlag_Controller | CollisionFlag_InvisibleController;
+        fixtureDef.isSensor = true;
+        bodyDef.fixtureList.push_back(fixtureDef);
+
+        pActorElem->LinkEndChild(CreatePhysicsComponent(&bodyDef));
+
+        if (!(TryGetValueFromMap(std::string("IsGlitter"), paramMap, std::string("")) == "false"))
+        {
+            pActorElem->LinkEndChild(CreateXmlData_GlitterComponent("Glitter_Yellow", isStatic, false));
+        }
+
+        if (!isStatic)
+        {
+            DestroyableComponentDef destroyableDef;
+            destroyableDef.blinkOnDestruction = true;
+            destroyableDef.deleteDelay = 3149;
+            destroyableDef.deleteOnDestruction = true;
+            destroyableDef.removeFromPhysics = true;
+            pActorElem->LinkEndChild(CreateDestroyableComponent(destroyableDef));
+
+            pActorElem->LinkEndChild(CreateHealthComponent(1, 1));
+        }
+
+        return pActorElem;
+    }
+
+    TiXmlElement* CreateXmlData_TreasurePickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap)
+    {
+        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic, paramMap);
 
         TiXmlElement* pTreasurePickupComponent = new TiXmlElement("TreasurePickupComponent");
         XML_ADD_TEXT_ELEMENT("ScorePoints", ToStr(GetScorePointsFromImageSet(imageSet)).c_str(), pTreasurePickupComponent);
@@ -1034,9 +1251,9 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_AmmoPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
+    TiXmlElement* CreateXmlData_AmmoPickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap)
     {
-        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic);
+        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic, paramMap);
 
         TiXmlElement* pAmmoPickupComponent = new TiXmlElement("AmmoPickupComponent");
         std::pair<std::string, uint32> ammoPair = GetAmmoCountAndTypeFromImageset(imageSet);
@@ -1047,9 +1264,9 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_LifePickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
+    TiXmlElement* CreateXmlData_LifePickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap)
     {
-        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic);
+        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic, paramMap);
 
         TiXmlElement* pLifePickupComponent = new TiXmlElement("LifePickupComponent");
         XML_ADD_TEXT_ELEMENT("Lives", ToStr(1).c_str(), pLifePickupComponent);
@@ -1059,9 +1276,9 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_HealthPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
+    TiXmlElement* CreateXmlData_HealthPickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap)
     {
-        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic);
+        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic, paramMap);
 
         TiXmlElement* pHealthPickupComponent = new TiXmlElement("HealthPickupComponent");
         XML_ADD_TEXT_ELEMENT("Health", ToStr(GetHealthCountFromImageSet(imageSet)).c_str(), pHealthPickupComponent);
@@ -1071,16 +1288,48 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_PowerupPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic)
+    TiXmlElement* CreateXmlData_PowerupPickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap)
     {
-        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 5000, isStatic);
+        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 5000, isStatic, paramMap);
 
         TiXmlElement* pPowerupPickupComponent = new TiXmlElement("PowerupPickupComponent");
         std::pair<std::string, uint32> powerupPair = GetPowerupTypeAndDurationFromImageset(imageSet);
+        if (IsKeyInMap(std::string("PowerupDuration"), paramMap))
+        {
+            powerupPair.second = std::stoul(StrictFindValueInMap(std::string("PowerupDuration"), paramMap));
+        }
         XML_ADD_TEXT_ELEMENT("Type", powerupPair.first.c_str(), pPowerupPickupComponent);
         XML_ADD_TEXT_ELEMENT("Duration", ToStr(powerupPair.second).c_str(), pPowerupPickupComponent);
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pPowerupPickupComponent);
         pActor->LinkEndChild(pPowerupPickupComponent);
+
+        return pActor;
+    }
+
+    TiXmlElement* CreateXmlData_WarpPickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap)
+    {
+        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 0, isStatic, paramMap);
+
+        std::string destinationX = StrictFindValueInMap(std::string("DestinationX"), paramMap);
+        std::string destinationY = StrictFindValueInMap(std::string("DestinationY"), paramMap);
+
+        TiXmlElement* pWarpPickupComponent = new TiXmlElement("TeleportPickupComponent");
+        XML_ADD_2_PARAM_ELEMENT("Destination", "x", destinationX.c_str(), "y", destinationY.c_str(), pWarpPickupComponent);
+        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pWarpPickupComponent);
+        pActor->LinkEndChild(pWarpPickupComponent);
+
+        pActor->LinkEndChild(CreateCycleAnimationComponent(125));
+
+        return pActor;
+    }
+
+    TiXmlElement* CreateXmlData_MappiecePickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap)
+    {
+        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 2000, isStatic, paramMap);
+
+        TiXmlElement* pMappiecePickupComponent = new TiXmlElement("EndLevelPickupComponent");
+        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pMappiecePickupComponent);
+        pActor->LinkEndChild(pMappiecePickupComponent);
 
         return pActor;
     }
@@ -1891,48 +2140,41 @@ namespace ActorTemplates
         return CreateAndReturnActor(pActorElem);
     }
 
-    StrongActorPtr CreateActorPickup(PickupType pickupType, Point position, bool isStatic)
+    TiXmlElement* CreateXmlData_PickupActor(PickupType pickupType, Point position, bool isStatic, const ParamMap& paramMap)
     {
-        std::string imageSet = g_PickupTypeToImageSetMap[pickupType];
+        assert(pickupType >= PickupType_Default && pickupType < PickupType_Max);
+
+        std::string imageSet = EnumToString_PickupTypeToImageSet(pickupType);
         if (imageSet.empty())
         {
             LOG_ERROR("Could not get valid image set for pickup type: " + ToStr(pickupType));
-            return StrongActorPtr();
+            return NULL;
         }
 
         std::string pickupSound = g_PickupTypeToPickupSoundMap[pickupType];
         if (pickupSound.empty())
         {
             LOG_ERROR("Could not get valid pickup sound for pickup type: " + ToStr(pickupType));
-            return StrongActorPtr();
+            return NULL;
         }
 
         TiXmlElement* pActorXmlData = NULL;
-        if (imageSet.find("_TREASURE") != std::string::npos)
+        if (g_PickupCreationTable[pickupType].creationFunction != NULL)
         {
-            pActorXmlData = CreateXmlData_TreasurePickupActor(imageSet, pickupSound, position, isStatic);
-        }
-        else if (imageSet.find("_CATNIPS") != std::string::npos)
-        {
-            pActorXmlData = CreateXmlData_PowerupPickupActor(imageSet, pickupSound, position, isStatic);
-        }
-        else if (imageSet.find("_AMMO") != std::string::npos ||
-                 imageSet.find("_MAGIC") != std::string::npos ||
-                 imageSet.find("_DYNAMITE") != std::string::npos)
-        {
-            pActorXmlData = CreateXmlData_AmmoPickupActor(imageSet, pickupSound, position, isStatic);
-        }
-        else if (imageSet.find("_HEALTH") != std::string::npos)
-        {
-            pActorXmlData = CreateXmlData_HealthPickupActor(imageSet, pickupSound, position, isStatic);
+            pActorXmlData = g_PickupCreationTable[pickupType].creationFunction(pickupType, imageSet, pickupSound, position, isStatic, paramMap);
         }
         else
         {
-            LOG_ERROR("Offending image set: " + imageSet);
+            LOG_ERROR("No creation function for pickup with image set: " + imageSet);
             assert(false);
         }
 
-        return CreateAndReturnActor(pActorXmlData);
+        return pActorXmlData;
+    }
+
+    StrongActorPtr CreateActorPickup(PickupType pickupType, Point position, bool isStatic)
+    {
+        return CreateAndReturnActor(CreateXmlData_PickupActor(pickupType, position, isStatic));
     }
 
     StrongActorPtr CreateRenderedActor(Point position, std::string imageSet, std::string animPath, int zCoord)

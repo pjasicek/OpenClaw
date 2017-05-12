@@ -27,6 +27,7 @@ protected:
     virtual bool VDelegateInit(TiXmlElement* data) { return true; }
     virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) = 0;
 
+    PickupType m_PickupType;
     std::string m_PickupSound;
 };
 
@@ -169,6 +170,25 @@ protected:
 
 private:
     AmmoList m_AmmoPickupList;
+};
+
+//=====================================================================================================================
+// EndLevelPickupComponent
+//=====================================================================================================================
+
+class EndLevelPickupComponent : public PickupComponent
+{
+public:
+    EndLevelPickupComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const { return g_Name; }
+
+    virtual bool VOnApply(Actor* pActorWhoPickedThis);
+
+protected:
+    virtual bool VDelegateInit(TiXmlElement* data);
+    virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
 };
 
 #endif

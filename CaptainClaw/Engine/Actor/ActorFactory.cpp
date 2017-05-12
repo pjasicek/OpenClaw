@@ -75,6 +75,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<PowerupComponent>(PowerupComponent::GetIdFromName(PowerupComponent::g_Name));
     _componentFactory.Register<PowerupPickupComponent>(PowerupPickupComponent::GetIdFromName(PowerupPickupComponent::g_Name));
     _componentFactory.Register<AmmoPickupComponent>(AmmoPickupComponent::GetIdFromName(AmmoPickupComponent::g_Name));
+    _componentFactory.Register<EndLevelPickupComponent>(EndLevelPickupComponent::GetIdFromName(EndLevelPickupComponent::g_Name));
     _componentFactory.Register<PowerupSparkleAIComponent>(PowerupSparkleAIComponent::GetIdFromName(PowerupSparkleAIComponent::g_Name));
     _componentFactory.Register<ProjectileAIComponent>(ProjectileAIComponent::GetIdFromName(ProjectileAIComponent::g_Name));
     _componentFactory.Register<LootComponent>(LootComponent::GetIdFromName(LootComponent::g_Name));

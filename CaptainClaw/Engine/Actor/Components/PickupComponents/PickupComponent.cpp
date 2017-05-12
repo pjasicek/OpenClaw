@@ -5,6 +5,7 @@
 #include "../ControllerComponents/HealthComponent.h"
 #include "../ControllerComponents/PowerupComponent.h"
 #include "../ControllerComponents/AmmoComponent.h"
+#include "../ControllableComponent.h"
 #include "../RenderComponent.h"
 #include "../PositionComponent.h"
 #include "../GlitterComponent.h"
@@ -23,6 +24,7 @@ const char* HealthPickupComponent::g_Name = "HealthPickupComponent";
 const char* TeleportPickupComponent::g_Name = "TeleportPickupComponent";
 const char* PowerupPickupComponent::g_Name = "PowerupPickupComponent";
 const char* AmmoPickupComponent::g_Name = "AmmoPickupComponent";
+const char* EndLevelPickupComponent::g_Name = "EndLevelPickupComponent";
 
 //=====================================================================================================================
 //
@@ -342,9 +344,9 @@ bool TeleportPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
     shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
     IEventMgr::Get()->VQueueEvent(pEvent);
 
-    SoundInfo soundInfo(SOUND_GAME_ENTER_WARP);
+    /*SoundInfo soundInfo(SOUND_GAME_ENTER_WARP);
     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-        new EventData_Request_Play_Sound(soundInfo)));
+        new EventData_Request_Play_Sound(soundInfo)));*/
 
     return true;
 }
@@ -481,6 +483,38 @@ bool AmmoPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
 
         return true;
     }
+
+    return false;
+}
+
+//=====================================================================================================================
+//
+// EndLevelPickupComponent Implementation
+//
+//=====================================================================================================================
+
+EndLevelPickupComponent::EndLevelPickupComponent()
+{ }
+
+bool EndLevelPickupComponent::VDelegateInit(TiXmlElement* data)
+{
+    assert(data);
+
+    return true;
+}
+
+void EndLevelPickupComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement)
+{
+
+}
+
+bool EndLevelPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
+{
+    // Only Claw should be able to pick this
+    shared_ptr<ClawControllableComponent> pClawComponent = MakeStrongPtr(pActorWhoPickedThis->GetComponent<ClawControllableComponent>());
+    assert(pClawComponent != nullptr && "Only claw should be able to pick end level item !");
+
+
 
     return false;
 }

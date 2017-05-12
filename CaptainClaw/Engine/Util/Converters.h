@@ -866,7 +866,47 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     {
         //pActorElem->LinkEndChild(RatToXml(wwdObject));
     }
-    else if (logic.find("AmmoPowerup") != std::string::npos)
+    //=============================================================================================
+    // PICKUPS
+    //=============================================================================================
+    else if (logic == "AmmoPowerup" ||
+             logic == "SpecialPowerup" ||
+             logic == "TreasurePowerup" ||
+             logic == "GlitterlessPowerup" ||
+             logic == "HealthPowerup")
+    {
+        SAFE_DELETE(pActorElem);
+
+        ParamMap paramMap;
+        paramMap["IsMirrored"] = ToStr((wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR) != 0);
+        paramMap["IsInverted"] = ToStr((wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_INVERT) != 0);
+
+        if (imageSet == "GAME_WARP" || imageSet == "GAME_VERTWARP")
+        {
+            paramMap["IsGlitter"] = "false";
+            paramMap["DestinationX"] = ToStr(wwdObject->speedX);
+            paramMap["DestinationY"] = ToStr(wwdObject->speedY);
+        }
+
+        if (imageSet == "GAME_TREASURE_COINS")
+        {
+            paramMap["IsGlitter"] = "false";
+        }
+
+        if ((imageSet.find("_CATNIP") != std::string::npos) ||
+            imageSet.find("_POWERUPS") != std::string::npos)
+        {
+            if (wwdObject->smarts > 0)
+            {
+                paramMap["PowerupDuration"] = ToStr(wwdObject->smarts);
+            }
+        }
+
+        PickupType pickupType = ActorTemplates::StringToEnum_ImageSetToPickupType(wwdObject->imageSet);
+
+        return ActorTemplates::CreateXmlData_PickupActor(pickupType, Point(wwdObject->x, wwdObject->y), true, paramMap);
+    }
+    /*else if (logic.find("AmmoPowerup") != std::string::npos)
     {
         std::string pickupSound;
         if (std::string(wwdObject->imageSet).find("MAGIC") != std::string::npos)
@@ -1059,11 +1099,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             pickupSound = SOUND_GAME_PICKUP_POTION;
         }
 
-
-        // TODO: Use this instead of the stuff below
-        /*delete pActorElem;
-        return ActorTemplates::CreateXmlData_HealthPickupActor(tmpImageSet, pickupSound, Point(wwdObject->x, wwdObject->y), true);*/
-
         pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
 
         TiXmlElement* healthPickupComponent = new TiXmlElement("HealthPickupComponent");
@@ -1093,7 +1128,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         }
 
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), healthPickupComponent);
-    }
+    }*/
     else if (logic == "TowerCannonLeft")
     {
         SAFE_DELETE(pActorElem);

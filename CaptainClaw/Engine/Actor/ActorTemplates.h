@@ -34,6 +34,8 @@ struct DamageAuraComponentDef
     int damage;
 };
 
+typedef std::map<std::string, std::string> ParamMap;
+
 namespace ActorTemplates
 {
     // Actor prototypes
@@ -62,11 +64,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_CheckpointActor(std::string imageSet, Point position, int32 zCoord, Point spawnPosition, bool isSaveCheckpoint, uint32 saveCheckpointNumber);
     TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX);
     
-    TiXmlElement* CreateXmlData_AmmoPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
-    TiXmlElement* CreateXmlData_LifePickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
-    TiXmlElement* CreateXmlData_TreasurePickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
-    TiXmlElement* CreateXmlData_PowerupPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
-    TiXmlElement* CreateXmlData_HealthPickupActor(std::string imageSet, std::string pickupSound, Point position, bool isStatic);
+    TiXmlElement* CreateXmlData_PickupActor(PickupType pickupType, Point position, bool isStatic, const ParamMap& paramMap = ParamMap());
 
     TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, Point position, Point size, int enterCount, bool activateDialog = false);
     TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, const std::string& logicName, Point position, SDL_Rect presetPosition, int enterCount);
@@ -93,6 +91,9 @@ namespace ActorTemplates
     TiXmlElement* DamageAuraComponentDefToXml(const DamageAuraComponentDef* pAuraDef);
 
     std::string GetSoundPathFromClawPath(const std::string& sound);
+
+    PickupType StringToEnum_ImageSetToPickupType(const std::string& pickupImageSet);
+    std::string EnumToString_PickupTypeToImageSet(PickupType pickupType);
 };
 
 #endif

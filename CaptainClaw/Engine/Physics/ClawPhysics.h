@@ -139,4 +139,75 @@ inline b2Vec2 PointToB2Vec2(const Point& point)
     return b2Vec2((float)point.x, (float)point.y);
 }
 
+//-------------------------------------------------------------------------------------------------
+// NullPhysics - everything is stubbed out
+//-------------------------------------------------------------------------------------------------
+
+class NullPhysics : public IGamePhysics
+{
+public:
+    NullPhysics() { }
+    virtual ~NullPhysics() { }
+
+    // Initialization and maintanance of the Physics World
+    virtual bool VInitialize() override { return true; }
+    virtual void VSyncVisibleScene() override { }
+    virtual void VOnUpdate(const uint32_t msDiff) override { }
+
+    // Initialization of Physics Objects
+    virtual void VAddCircle(float radius, uint32_t thickness, WeakActorPtr pTargetActor) override { }
+    virtual void VAddRect(uint32_t thickness, WeakActorPtr pTargetActor) override { }
+    virtual void VAddLine(Point from, Point to, uint32_t thickness) override { }
+
+    virtual void VAddStaticGeometry(Point position, Point size, CollisionType collisionType, FixtureType fixtureType) override { }
+    virtual void VAddDynamicActor(WeakActorPtr pActor) override { }
+    virtual void VAddKinematicBody(WeakActorPtr pActor) override { }
+    virtual void VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType) override { }
+    virtual void VRemoveActor(uint32_t actorId) override { }
+
+    virtual void VAddActorBody(const ActorBodyDef* actorBodyDef) override { }
+    virtual void VAddActorFixtureToBody(uint32_t actorId, const ActorFixtureDef* pFixtureDef) override { }
+
+    // Debugging
+    virtual void VRenderDiagnostics(SDL_Renderer* pRenderer, shared_ptr<CameraNode> pCamera) override { }
+
+    // Physics world modifiers
+    virtual void VCreateTrigger(WeakActorPtr pActor, const Point& pos, Point& size, bool isStatic) override { }
+    virtual void VApplyForce(uint32_t actorId, const Point& force) override { }
+    virtual void VApplyLinearImpulse(uint32_t actorId, const Point& impulse) override { }
+    virtual bool VKinematicMove(const Point& pos, uint32_t actorId) override { return false; }
+
+    virtual Point GetGravity() const override { return Point(); }
+
+    // Physics actor states
+    virtual void VStopActor(uint32_t actorId) override { }
+    virtual Point VGetVelocity(uint32_t actorId) override { return Point(); }
+    virtual void SetVelocity(uint32_t actorId, const Point& velocity) override { }
+    virtual void VTranslate(uint32_t actorId, const Point& dir) override { }
+    virtual void VAddLinearSpeed(uint32_t actorId, const Point& speedIncrement) override { }
+    virtual void VSetLinearSpeed(uint32_t actorId, const Point& speed) override { }
+    virtual void VSetGravityScale(uint32_t actorId, const float gravityScale) override { }
+    virtual void VSetLinearSpeedEx(uint32_t actorId, const Point& speed) override { }
+    virtual bool VIsAwake(uint32_t actorId) override { return false; }
+
+    virtual void VChangeCollisionFlag(uint32_t actorId, uint32 fromFlag, uint32 toFlag) override { }
+
+    virtual void VActivate(uint32_t actorId) override { }
+    virtual void VDeactivate(uint32_t actorId) override { }
+
+    virtual void VSetPosition(uint32_t actorId, const Point& position) override { }
+    virtual Point VGetPosition(uint32_t actorId) override { return Point(); }
+
+    virtual SDL_Rect VGetAABB(uint32_t actorId, bool discardSensors) override  { return{ 0, 0, 0, 0 }; }
+
+    virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32 filterMask) override { return RaycastResult(); }
+
+    virtual void VScaleActor(uint32_t actorId, double scale) override { }
+};
+
+inline IGamePhysics* CreateNullPhysics()
+{
+    return new NullPhysics;
+}
+
 #endif
