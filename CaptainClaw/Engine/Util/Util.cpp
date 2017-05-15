@@ -13,6 +13,8 @@
 
 #include "../GameApp/BaseGameApp.h"
 
+#include "../Resource/Loaders/WavLoader.h"
+
 //#include "../Level/Level.h"
 
 namespace Util
@@ -383,6 +385,13 @@ namespace Util
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
         }
+    }
+
+    int GetSoundDurationMs(const std::string& soundPath)
+    {
+        shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(soundPath.c_str());
+        assert(pSound != nullptr);
+        return GetSoundDurationMs(pSound.get());
     }
 
     int GetSoundDurationMs(Mix_Chunk* pSound)

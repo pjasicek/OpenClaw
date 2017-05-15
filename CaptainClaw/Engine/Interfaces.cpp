@@ -50,6 +50,13 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Sound
         { ActorPrototype_LocalAmbientSound, "ActorPrototype_LocalAmbientSound" },
+
+        //=======================================
+        // Menu
+        //=======================================
+
+        { ActorPrototype_StaticImage, "ActorPrototype_StaticImage" },
+        { ActorPrototype_StaticAnimatedImage, "ActorPrototype_StaticAnimatedImage" },
     };
 
     auto findIt = actorPrototypeEnumToStringMap.find(actorProto);
@@ -106,6 +113,13 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Sound
         { "ActorPrototype_LocalAmbientSound", ActorPrototype_LocalAmbientSound },
+
+        //=======================================
+        // Menu
+        //=======================================
+
+        { "ActorPrototype_StaticImage", ActorPrototype_StaticImage },
+        { "ActorPrototype_StaticAnimatedImage", ActorPrototype_StaticAnimatedImage },
     };
 
     auto findIt = actorPrototypeStringToEnumMap.find(actorProtoStr);

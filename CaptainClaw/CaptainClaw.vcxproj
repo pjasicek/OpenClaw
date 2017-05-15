@@ -157,9 +157,12 @@
     <ClCompile Include="Engine\Resource\ResourceCache.cpp" />
     <ClCompile Include="Engine\Scene\Scene.cpp" />
     <ClCompile Include="Engine\Scene\SceneNodes.cpp" />
+    <ClCompile Include="Engine\UserInterface\ScoreScreen\EndLevelScoreScreen.cpp" />
     <ClCompile Include="Engine\UserInterface\GameHUD.cpp" />
     <ClCompile Include="Engine\UserInterface\HumanView.cpp" />
     <ClCompile Include="Engine\UserInterface\MovementController.cpp" />
+    <ClCompile Include="Engine\UserInterface\ScoreScreen\ScoreScreenCommon.cpp" />
+    <ClCompile Include="Engine\UserInterface\ScoreScreen\ScoreScreenProcesses.cpp" />
     <ClCompile Include="Engine\UserInterface\UserInterface.cpp" />
     <ClCompile Include="Engine\Events\EventMgr.cpp" />
     <ClCompile Include="Engine\Events\EventMgrImpl.cpp" />
@@ -215,6 +218,9 @@
     <ClInclude Include="Engine\Resource\Miniz.h" />
     <ClInclude Include="Engine\Resource\ResourceMgr.h" />
     <ClInclude Include="Engine\Resource\ZipFile.h" />
+    <ClInclude Include="Engine\UserInterface\ScoreScreen\EndLevelScoreScreen.h" />
+    <ClInclude Include="Engine\UserInterface\ScoreScreen\ScoreScreenCommon.h" />
+    <ClInclude Include="Engine\UserInterface\ScoreScreen\ScoreScreenProcesses.h" />
     <ClInclude Include="Engine\Util\Converters.h" />
     <ClInclude Include="Engine\GameApp\CommandHandler.h" />
     <ClInclude Include="Engine\GameApp\GameSaves.h" />

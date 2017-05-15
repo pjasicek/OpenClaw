@@ -181,6 +181,18 @@ inline void SetFloatIfDefined(float* dest, TiXmlElement* elem)
 
 // Rather overload it than 10 different functions ?
 
+template <typename T>
+inline bool ParseValueFromXmlElem(T* val, TiXmlElement* pRootElem, const std::string& pathToNode)
+{
+    if (TiXmlElement* pDestElem = GetTiXmlElementFromPath(pRootElem, pathToNode))
+    {
+        ParseValueFromXmlElem(val, pDestElem);
+        return true;
+    }
+
+    return false;
+}
+
 inline bool ParseValueFromXmlElem(bool* pDest, TiXmlElement* pElemSource)
 {
     if (pElemSource && pElemSource->GetText())

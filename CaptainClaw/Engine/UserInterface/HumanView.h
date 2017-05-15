@@ -44,6 +44,7 @@ public:
     shared_ptr<Scene> GetScene() const { return m_pScene; }
 
     bool EnterMenu(TiXmlElement* pMenuData);
+    void LoadScoreScreen(TiXmlElement* pScoreScreenRootElem);
     bool LoadGame(TiXmlElement* pLevelXmlElem, LevelData* pLevelData);
 
     void RegisterConsoleCommandHandler(void(*handler)(const char*, void*), void* userdata);
@@ -75,6 +76,8 @@ protected:
     void SoundEnabledChangedDelegate(IEventDataPtr pEventData);
     void ClawDiedDelegate(IEventDataPtr pEventData);
     void TeleportActorDelegate(IEventDataPtr pEventData);
+    void EnterMenuDelegate(IEventDataPtr pEventData);
+    void FinishedLevelDelegate(IEventDataPtr pEventData);
 
     uint32 m_ViewId;
     uint32 m_ActorId;

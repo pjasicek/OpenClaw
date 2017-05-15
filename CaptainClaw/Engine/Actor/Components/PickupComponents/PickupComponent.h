@@ -23,6 +23,8 @@ public:
     virtual bool VOnApply(Actor* pActorWhoPickedThis) = 0;
     virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered) override;
 
+    PickupType GetPickupType() { return m_PickupType; }
+
 protected:
     virtual bool VDelegateInit(TiXmlElement* data) { return true; }
     virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) = 0;

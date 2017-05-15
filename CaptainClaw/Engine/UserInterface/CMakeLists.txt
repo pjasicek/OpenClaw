@@ -13,3 +13,5 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/MovementController.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/UserInterface.cpp
 )
+
+add_subdirectory(ScoreScreen)

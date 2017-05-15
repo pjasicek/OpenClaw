@@ -34,10 +34,19 @@ const char* EndLevelPickupComponent::g_Name = "EndLevelPickupComponent";
 
 bool PickupComponent::VInit(TiXmlElement* data)
 {
-    if (TiXmlElement* pElem = data->FirstChildElement("PickupSound"))
+    assert(data != NULL);
+
+    ParseValueFromXmlElem(&m_PickupSound, data->FirstChildElement("PickupSound"));
+
+    m_PickupType = PickupType_None;
+
+    int pickupType = -1;
+    ParseValueFromXmlElem(&pickupType, data->FirstChildElement("PickupType"));
+    if (pickupType != -1)
     {
-        m_PickupSound = pElem->GetText();
+        m_PickupType = PickupType(pickupType);
     }
+    
 
     if (m_PickupSound.empty())
     {
@@ -74,6 +83,11 @@ void PickupComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
     // Note: Actor is not destroyed here. subclasses need to handle it.
     if (VOnApply(pActorWhoEntered))
     {
+        if (m_PickupType != PickupType_None)
+        {
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Item_Picked_Up(m_PickupType)));
+        }
+
         // TODO: Is this necessary ?
         shared_ptr<TriggerComponent> pTriggerComponent =
             MakeStrongPtr(_owner->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
@@ -514,7 +528,30 @@ bool EndLevelPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
     shared_ptr<ClawControllableComponent> pClawComponent = MakeStrongPtr(pActorWhoPickedThis->GetComponent<ClawControllableComponent>());
     assert(pClawComponent != nullptr && "Only claw should be able to pick end level item !");
 
+    shared_ptr<EventData_Finished_Level> pEvent(new EventData_Finished_Level());
+    IEventMgr::Get()->VQueueEvent(pEvent);
 
+    // Play sound here
+    assert(!m_PickupSound.empty());
+    SoundInfo soundInfo(m_PickupSound);
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+        new EventData_Request_Play_Sound(soundInfo)));
 
-    return false;
+    // TODO: This is hack. But it suffices.
+
+    // Lets wait a bit
+    int waitDuration = 1500;
+    SDL_Event evt;
+    while (waitDuration > 0)
+    {
+        // Eat events
+        while (SDL_PollEvent(&evt));
+        SDL_Delay(10);
+        waitDuration -= 10;
+    }
+
+    // We already played it
+    m_PickupSound = "";
+
+    return true;
 }

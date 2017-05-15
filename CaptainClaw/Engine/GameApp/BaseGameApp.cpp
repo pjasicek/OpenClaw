@@ -530,6 +530,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("MaxLookUpOrDownDistance"));
         ParseValueFromXmlElem(&m_GlobalOptions.lookUpOrDownSpeed,
             pGlobalOptionsRootElem->FirstChildElement("LookUpOrDownSpeed"));
+        ParseValueFromXmlElem(&m_GlobalOptions.scoreScreenPalPath,
+            pGlobalOptionsRootElem->FirstChildElement("ScoreScreenPalPath"));
     }
 
     return true;
@@ -830,6 +832,11 @@ Point BaseGameApp::GetScale()
     scale.Set((double)scaleX, (double)scaleY);
 
     return scale;
+}
+
+void BaseGameApp::SetScale(Point scale)
+{
+    SDL_RenderSetScale(m_pRenderer, (float)scale.x, (float)scale.y);
 }
 
 uint32 BaseGameApp::GetWindowFlags()

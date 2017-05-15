@@ -19,6 +19,8 @@ public:
 
     virtual void VOnHealthBelowZero(DamageType damageType) override;
 
+    const std::vector<PickupType>* const GetLoot() { return &m_Loot; }
+
 private:
     std::vector<PickupType> m_Loot;
     int m_LootSoundChance;

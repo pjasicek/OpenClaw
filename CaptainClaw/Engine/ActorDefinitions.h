@@ -440,6 +440,25 @@ struct DestroyableComponentDef
 };
 
 //-------------------------------------------------------------------------------------------------
+// AnimationDef - AnimationComponent
+//-------------------------------------------------------------------------------------------------
+
+struct AnimationDef
+{
+    AnimationDef()
+    {
+        hasAnimation = false;
+        isCycleAnimation = false;
+        cycleAnimationDuration = 0;
+    }
+
+    bool hasAnimation;
+    bool isCycleAnimation;
+    int cycleAnimationDuration;
+    std::string animationPath;
+};
+
+//-------------------------------------------------------------------------------------------------
 // CollisionInfo - Contains collisonFlag an collisionMask for PhysicsComponent
 //-------------------------------------------------------------------------------------------------
 

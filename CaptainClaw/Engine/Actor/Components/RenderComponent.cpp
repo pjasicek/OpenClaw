@@ -337,6 +337,12 @@ void ActorRenderComponent::SetImage(std::string imageName)
         }
         LOG_ERROR("Trying to set nonexistant image: " + imageName + " to render component of actor: " +
             _owner->GetName());
+
+        /*LOG("Actor has following images: ");
+        for (auto iter : m_ImageMap)
+        {
+            LOG("Image: " + iter.first);
+        }*/
     }
 }
 

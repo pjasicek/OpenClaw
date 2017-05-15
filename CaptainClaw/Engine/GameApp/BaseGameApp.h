@@ -139,7 +139,8 @@ struct GlobalOptions
     bool skipMenu;
     int startLookUpOrDownTime;
     int maxLookUpOrDownDistance;
-    int lookUpOrDownSpeed;
+    int lookUpOrDownSpeed; 
+    std::string scoreScreenPalPath;
 };
 
 class EventMgr;
@@ -185,9 +186,11 @@ public:
     bool LoadStrings(std::string language);
     std::string GetString(std::string stringId);
     Point GetScale();
+    void SetScale(Point scale);
     uint32 GetWindowFlags();
 
     inline SDL_Renderer* GetRenderer() const { return m_pRenderer; }
+    // TODO: Memory leak most likely
     inline WapPal* GetCurrentPalette() const { return m_pPalette; }
     void SetCurrentPalette(WapPal* palette) { m_pPalette = palette; }
     inline ResourceCache* GetResourceCache() const { return m_pResourceCache; }

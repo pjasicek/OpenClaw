@@ -1,0 +1,21 @@
+<Actor Type="StaticAnimatedImage" ActorPrototypeName="ActorPrototype_StaticAnimatedImage">
+	<PositionComponent>
+		<Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
+	</PositionComponent>
+	<ActorRenderComponent>
+		<imgpath>NONE</imgpath>
+		<Visible>true</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>2000</ZCoord>
+		<ImagePath>NONE</ImagePath>
+		<Palette>NONE</Palette>
+	</ActorRenderComponent>
+	<AnimationComponent>
+		<SpecialAnimation>
+			<Type>cycle</Type>
+			<FrameDuration>75</FrameDuration>
+			<HasPositionDelay>false</HasPositionDelay>
+		</SpecialAnimation>
+	</AnimationComponent>
+</Actor>

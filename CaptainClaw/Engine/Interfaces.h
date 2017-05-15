@@ -138,6 +138,7 @@ enum PowerupType
 
 enum PickupType
 {
+    PickupType_None = -1,
     PickupType_Default = 0,
     PickupType_Treasure_Goldbars,
     PickupType_Treasure_Rings_Red,
@@ -273,6 +274,10 @@ enum ActorPrototype
 
     // Sound
     ActorPrototype_LocalAmbientSound,
+
+    // Menu
+    ActorPrototype_StaticImage,
+    ActorPrototype_StaticAnimatedImage,
 
     ActorPrototype_Max
 };

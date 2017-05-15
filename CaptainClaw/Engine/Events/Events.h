@@ -2339,4 +2339,73 @@ private:
     bool m_bIsMusic;
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Enter_Menu
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Enter_Menu : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Enter_Menu() { }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Enter_Menu());
+    }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Cannot be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Cannot be serialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_Enter_Menu"; }
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Finished_Level
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Finished_Level : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Finished_Level() { }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Finished_Level());
+    }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Cannot be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Cannot be serialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_Finished_Level"; }
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Item_Picked_Up
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Item_Picked_Up : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Item_Picked_Up(PickupType item) { m_PickupType = item; }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Item_Picked_Up(m_PickupType));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Cannot be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Cannot be serialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_Item_Picked_Up"; }
+
+    PickupType GetPickupType() { return m_PickupType; }
+
+private:
+    PickupType m_PickupType;
+};
+
+
 #endif

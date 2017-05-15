@@ -1238,6 +1238,7 @@ namespace ActorTemplates
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic, paramMap);
 
         TiXmlElement* pTreasurePickupComponent = new TiXmlElement("TreasurePickupComponent");
+        AddXmlTextElement("PickupType", (int)pickupType, pTreasurePickupComponent);
         XML_ADD_TEXT_ELEMENT("ScorePoints", ToStr(GetScorePointsFromImageSet(imageSet)).c_str(), pTreasurePickupComponent);
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pTreasurePickupComponent);
         pActor->LinkEndChild(pTreasurePickupComponent);
@@ -1256,6 +1257,7 @@ namespace ActorTemplates
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic, paramMap);
 
         TiXmlElement* pAmmoPickupComponent = new TiXmlElement("AmmoPickupComponent");
+        AddXmlTextElement("PickupType", (int)pickupType, pAmmoPickupComponent);
         std::pair<std::string, uint32> ammoPair = GetAmmoCountAndTypeFromImageset(imageSet);
         XML_ADD_2_PARAM_ELEMENT("Ammo", "ammoType", ammoPair.first.c_str(), "ammoCount", ammoPair.second, pAmmoPickupComponent);
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pAmmoPickupComponent);
@@ -1269,6 +1271,7 @@ namespace ActorTemplates
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic, paramMap);
 
         TiXmlElement* pLifePickupComponent = new TiXmlElement("LifePickupComponent");
+        AddXmlTextElement("PickupType", (int)pickupType, pLifePickupComponent);
         XML_ADD_TEXT_ELEMENT("Lives", ToStr(1).c_str(), pLifePickupComponent);
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pLifePickupComponent);
         pActor->LinkEndChild(pLifePickupComponent);
@@ -1281,6 +1284,7 @@ namespace ActorTemplates
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic, paramMap);
 
         TiXmlElement* pHealthPickupComponent = new TiXmlElement("HealthPickupComponent");
+        AddXmlTextElement("PickupType", (int)pickupType, pHealthPickupComponent);
         XML_ADD_TEXT_ELEMENT("Health", ToStr(GetHealthCountFromImageSet(imageSet)).c_str(), pHealthPickupComponent);
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pHealthPickupComponent);
         pActor->LinkEndChild(pHealthPickupComponent);
@@ -1293,6 +1297,7 @@ namespace ActorTemplates
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 5000, isStatic, paramMap);
 
         TiXmlElement* pPowerupPickupComponent = new TiXmlElement("PowerupPickupComponent");
+        AddXmlTextElement("PickupType", (int)pickupType, pPowerupPickupComponent);
         std::pair<std::string, uint32> powerupPair = GetPowerupTypeAndDurationFromImageset(imageSet);
         if (IsKeyInMap(std::string("PowerupDuration"), paramMap))
         {
@@ -1314,6 +1319,7 @@ namespace ActorTemplates
         std::string destinationY = StrictFindValueInMap(std::string("DestinationY"), paramMap);
 
         TiXmlElement* pWarpPickupComponent = new TiXmlElement("TeleportPickupComponent");
+        AddXmlTextElement("PickupType", (int)pickupType, pWarpPickupComponent);
         XML_ADD_2_PARAM_ELEMENT("Destination", "x", destinationX.c_str(), "y", destinationY.c_str(), pWarpPickupComponent);
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pWarpPickupComponent);
         pActor->LinkEndChild(pWarpPickupComponent);
@@ -1328,6 +1334,7 @@ namespace ActorTemplates
         TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 2000, isStatic, paramMap);
 
         TiXmlElement* pMappiecePickupComponent = new TiXmlElement("EndLevelPickupComponent");
+        AddXmlTextElement("PickupType", (int)pickupType, pMappiecePickupComponent);
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pMappiecePickupComponent);
         pActor->LinkEndChild(pMappiecePickupComponent);
 
@@ -1824,9 +1831,33 @@ namespace ActorTemplates
         return pActorElem;
     }
 
+    TiXmlElement* CreateXmlData_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
+
+        return pActorElem;
+    }
+
+    StrongActorPtr CreateActor(ActorPrototype proto, Point position)
+    {
+        return CreateAndReturnActor(CreateXmlData_Actor(proto, position));
+    }
+
     StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir)
     {
         return CreateAndReturnActor(CreateXmlData_ProjectileActor(proto, position, dir));
+    }
+
+    StrongActorPtr CreateActor_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef)
+    {
+        return CreateAndReturnActor(CreateXmlData_StaticImage(proto, position, imagePath, aniDef));
     }
 
     TiXmlElement* CreateXmlData_LocalAmbientSound(ActorPrototype proto, Point position, const LocalAmbientSoundDef& soundDef)

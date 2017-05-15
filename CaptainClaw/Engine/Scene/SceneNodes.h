@@ -36,7 +36,7 @@ public:
     
     virtual bool VIsVisible(Scene* pScene) const = 0;
 
-    virtual void VSetPosition(Point& position) = 0;
+    virtual void VSetPosition(const Point& position) = 0;
     
     virtual bool VAddChild(shared_ptr<ISceneNode> kid) = 0;
     virtual bool VRemoveChild(uint32 actorId) = 0;
@@ -92,7 +92,7 @@ public:
     virtual bool VRemoveChild(uint32 actorId);
     virtual bool VOnLostDevice(Scene* pScene);
 
-    virtual void VSetPosition(Point& position) { m_Properties.m_Position = position; }
+    virtual void VSetPosition(const Point& position) { m_Properties.m_Position = position; }
     Point GetPosition() { return m_Properties.m_Position; }
 
     int32 GetOrientation() const { return m_Properties.m_Orientation; }

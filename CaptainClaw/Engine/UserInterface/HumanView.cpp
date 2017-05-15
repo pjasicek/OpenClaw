@@ -7,6 +7,7 @@
 #include "../Resource/Loaders/MidiLoader.h"
 #include "../Resource/Loaders/WavLoader.h"
 #include "../Util/PrimeSearch.h"
+#include "ScoreScreen/EndLevelScoreScreen.h"
 
 const uint32 g_InvalidGameViewId = 0xFFFFFFFF;
 
@@ -88,7 +89,6 @@ void HumanView::VOnRender(uint32 msDiff)
 
         for (shared_ptr<IScreenElement> screenElement : m_ScreenElements)
         {
-            
             if (screenElement->VIsVisible())
             {
                 screenElement->VOnRender(msDiff);
@@ -249,6 +249,32 @@ bool HumanView::EnterMenu(TiXmlElement* pMenuData)
     return true;
 }
 
+void HumanView::LoadScoreScreen(TiXmlElement* pScoreScreenRootElem)
+{
+    m_ScreenElements.clear();
+    m_pScene.reset();
+    m_pHUD.reset();
+
+    Point defaultCameraPos(0, 0);
+    m_pCamera->VSetPosition(defaultCameraPos);
+    m_pCamera->SetTarget(nullptr);
+
+    g_pApp->GetAudio()->StopAllSounds();
+
+    shared_ptr<ScreenElementScoreScreen> pScoreScreen(new ScreenElementScoreScreen(g_pApp->GetRenderer()));
+    if (pScoreScreen->Initialize(pScoreScreenRootElem))
+    {
+        LOG("Score screen initialized OK");
+        pScoreScreen->SetCamera(m_pCamera);
+        VPushElement(pScoreScreen);
+        assert(m_ScreenElements.size() == 1);
+    }
+    else
+    {
+        LOG_ERROR("Failed to inizialize Score Screen !");
+    }
+}
+
 bool HumanView::LoadGame(TiXmlElement* pLevelXmlElem, LevelData* pLevelData)
 {
     m_pScene->SortSceneNodesByZCoord();
@@ -312,6 +338,10 @@ void HumanView::RegisterAllDelegates()
         this, &HumanView::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &HumanView::TeleportActorDelegate), EventData_Teleport_Actor::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::EnterMenuDelegate), EventData_Enter_Menu::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::FinishedLevelDelegate), EventData_Finished_Level::sk_EventType);
 }
 
 void HumanView::RemoveAllDelegates()
@@ -337,6 +367,10 @@ void HumanView::RemoveAllDelegates()
         this, &HumanView::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
         this, &HumanView::TeleportActorDelegate), EventData_Teleport_Actor::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &HumanView::EnterMenuDelegate), EventData_Enter_Menu::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &HumanView::FinishedLevelDelegate), EventData_Finished_Level::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -632,7 +666,7 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
 {
     shared_ptr<EventData_Menu_LoadGame> pCastEventData =
         static_pointer_cast<EventData_Menu_LoadGame>(pEventData);
-
+    
     if (pCastEventData)
     {
         bool isNewGame = pCastEventData->GetIsNewGame();
@@ -646,15 +680,29 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         // Reset Graphical representation of level
         m_ScreenElements.clear();
         m_pMenu.reset();
-
         m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
-        //m_pCamera.reset(new CameraNode(Point(0, 0), 0, 0));
         m_pHUD.reset(new ScreenElementHUD());
-        m_pScene->AddChild(INVALID_ACTOR_ID, m_pCamera);
         m_pScene->SetCamera(m_pCamera);
 
         g_pApp->GetGameLogic()->VChangeState(GameState_LoadingLevel);
     }
+}
+
+void HumanView::EnterMenuDelegate(IEventDataPtr pEventData)
+{
+    m_ScreenElements.clear();
+    m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
+    m_pHUD.reset();
+
+    g_pApp->GetAudio()->StopAllSounds();
+    g_pApp->GetGameLogic()->UnloadLevel();
+
+    g_pApp->GetGameLogic()->VChangeState(GameState_Menu);
+}
+
+void HumanView::FinishedLevelDelegate(IEventDataPtr pEventData)
+{
+    
 }
 
 void HumanView::SetVolumeDelegate(IEventDataPtr pEventData)

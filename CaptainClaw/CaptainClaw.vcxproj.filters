@@ -306,6 +306,15 @@
     <ClCompile Include="Engine\Actor\Components\LocalAmbientSoundComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\UserInterface\ScoreScreen\EndLevelScoreScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UserInterface\ScoreScreen\ScoreScreenProcesses.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UserInterface\ScoreScreen\ScoreScreenCommon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Process\Process.h">
@@ -621,6 +630,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Actor\Components\LocalAmbientSoundComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UserInterface\ScoreScreen\EndLevelScoreScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UserInterface\ScoreScreen\ScoreScreenProcesses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UserInterface\ScoreScreen\ScoreScreenCommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

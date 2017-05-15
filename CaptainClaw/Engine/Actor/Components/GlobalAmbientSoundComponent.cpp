@@ -53,7 +53,7 @@ bool GlobalAmbientSoundComponent::VInit(TiXmlElement* pData)
         SoundInfo soundInfo(m_Sound);
         soundInfo.loops = -1;
         soundInfo.soundVolume = m_SoundVolume;
-        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+        IEventMgr::Get()->VQueueEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
     }
 

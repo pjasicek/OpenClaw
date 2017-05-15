@@ -268,6 +268,7 @@ static IEventDataPtr XmlElemToGeneratedEvent(TiXmlElement* pElem)
         ParseValueFromXmlElem(&checkpointNumber, pElem->FirstChildElement("CheckpointNumber"));
 
         pEventData.reset(new EventData_Menu_LoadGame(levelNumber, isNewGame, checkpointNumber));
+        //pEventData.reset(new EventData_Finished_Level());
     }
     else if (eventType == "QuitGame")
     {

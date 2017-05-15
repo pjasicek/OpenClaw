@@ -48,7 +48,9 @@ const EventType EventData_Set_Volume::sk_EventType(0xc486b92);
 const EventType EventData_Sound_Enabled_Changed::sk_EventType(0x1236b92);
 const EventType EventData_Menu_Modify_Item_State::sk_EventType(0x4566b92);
 const EventType EventData_Add_Static_Geometry::sk_EventType(0x456abc2);
-
+const EventType EventData_Enter_Menu::sk_EventType(0xdc4606a5);
+const EventType EventData_Item_Picked_Up::sk_EventType(0xdc5706a5);
+const EventType EventData_Finished_Level::sk_EventType(0xdc5706f5);
 
 /*bool EventData_PlaySound::VBuildEventFromScript(void)
 {

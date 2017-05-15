@@ -45,8 +45,13 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_TogglePegActor(ActorPrototype togglePegProto, Point position, const TogglePegDef& togglePegDef);
     TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir);
     TiXmlElement* CreateXmlData_LocalAmbientSound(ActorPrototype proto, Point position, const LocalAmbientSoundDef& soundDef);
+    TiXmlElement* CreateXmlData_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef);
 
+    StrongActorPtr CreateActor(ActorPrototype proto, Point position);
     StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir);
+
+    StrongActorPtr CreateActor_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef);
+    //StrongActorPtr CreateActor_StaticAnimatedImage(ActorPrototype proto, Point position, const std::string& imagePath);
 
     // Exposed Component Xml data generating functions
     TiXmlElement* CreateXmlData_GlitterComponent(std::string glitterType, bool spawnImmediate, bool followOwner);

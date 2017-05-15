@@ -27,6 +27,7 @@ namespace Util
 
     void PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume = 100);
 
+    int GetSoundDurationMs(const std::string& soundPath);
     int GetSoundDurationMs(Mix_Chunk* pSound);
 
     SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer);
@@ -34,6 +35,13 @@ namespace Util
     void PlayRandomHitSound();
 
     uint32_t CalcCRC32(const char* pData, size_t dataLen);
+
+    template<typename T>
+    T GetRandomValueFromVector(const std::vector<T>& container)
+    {
+        int randIdx = GetRandomNumber(0, container.size() - 1);
+        return container[randIdx];
+    }
 }
 
 #endif

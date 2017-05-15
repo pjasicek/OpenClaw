@@ -97,6 +97,8 @@ protected:
     void CollideableTileCreatedDelegate(IEventDataPtr pEventData);
     void CreateStaticGeometryDelegate(IEventDataPtr pEventData);
     void RequestDestroyActorDelegate(IEventDataPtr pEventData);
+    void ItemPickedUpDelegate(IEventDataPtr pEventData);
+    void FinishedLevelDelegate(IEventDataPtr pEventData);
 
     StrongActorPtr GetClawActor();
 
@@ -173,6 +175,7 @@ struct TileDescription
 
 typedef std::map<int32, TileDescription> TileDescriptionMap;
 typedef std::map<int32, TileCollisionPrototype> TileCollisionPrototypeMap;
+typedef std::map<PickupType, int> PickupMap;
 
 // Class containing level (meta)data
 class LevelData
@@ -204,6 +207,8 @@ public:
     uint32 GetLevelNumber() const { return m_LeveNumber; }
     uint32 GetLoadedCheckpointNumber() const { return m_LoadedCheckpoint; }
 
+    const PickupMap* GetLootedItems() { return &m_LootedPickupsMap; }
+
 private:
     std::string m_LevelName;
     std::string m_LevelAuthor;
@@ -215,6 +220,10 @@ private:
 
     TileDescriptionMap m_TileDescriptionMap;
     TileCollisionPrototypeMap m_TileCollisionPrototypeMap;
+
+    // How many times were certain pickups picked up
+    PickupMap m_LootedPickupsMap;
+    PickupMap m_TotalPickupsMap;
 };
 
 #endif

@@ -9,10 +9,19 @@
 #include "../Graphics2D/Image.h"
 #include "../Audio/Audio.h"
 
+#include "../Actor/Components/PositionComponent.h"
+#include "../Actor/Components/PickupComponents/PickupComponent.h"
+#include "../Actor/Components/LootComponent.h"
+#include "../Actor/Components/ControllerComponents/HealthComponent.h"
+#include "../Actor/Components/ControllerComponents/ScoreComponent.h"
+#include "../Actor/Components/ControllerComponents/LifeComponent.h"
+#include "../Actor/Components/ControllerComponents/AmmoComponent.h"
+
 #include "../Util/Converters.h"
 
 #include "GameSaves.h"
 #include "BaseGameLogic.h"
+#include "GameSaves.h"
 
 #include "../Physics/ClawPhysics.h"
 
@@ -304,7 +313,8 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     g_pApp->SetCurrentPalette(PalResourceLoader::LoadAndReturnPal(palettePath.c_str()));
 
     uint32 clawId = -1;
-    for (TiXmlElement* pActorElem = pXmlLevelRoot->FirstChildElement("Actor"); pActorElem;
+    for (TiXmlElement* pActorElem = pXmlLevelRoot->FirstChildElement("Actor"); 
+        pActorElem != NULL;
         pActorElem = pActorElem->NextSiblingElement("Actor"))
     {
         //LOG("Creating actor: " + std::string(pActorElem->Attribute("Type")));
@@ -335,16 +345,6 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
         }
     }
 
-    // Notify all human views
-    for (auto pGameView : m_GameViews)
-    {
-        if (pGameView->VGetType() == GameView_Human)
-        {
-            shared_ptr<HumanView> pHumanView = static_pointer_cast<HumanView>(pGameView);
-            pHumanView->LoadGame(pXmlLevelRoot, m_pCurrentLevel.get());
-        }
-    }
-
     // Load game save data
     const CheckpointSave* pCheckpointSave = m_pGameSaveMgr->GetCheckpointSave(
         m_pCurrentLevel->m_LeveNumber, m_pCurrentLevel->m_LoadedCheckpoint);
@@ -366,6 +366,43 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     m_CurrentSpawnPosition = GetSpawnPosition(m_pCurrentLevel->m_LeveNumber, m_pCurrentLevel->m_LoadedCheckpoint);
     pEventMgr->VTriggerEvent(IEventDataPtr(new EventData_Teleport_Actor(clawId, m_CurrentSpawnPosition)));
 
+    // Save possible pickup items
+    for (auto actorIter : m_ActorMap)
+    {
+        shared_ptr<TreasurePickupComponent> pTreasurePickupComponent =
+            MakeStrongPtr(actorIter.second->GetComponent<TreasurePickupComponent>());
+        if (pTreasurePickupComponent != nullptr)
+        {
+            PickupType treasurePickupType = pTreasurePickupComponent->GetPickupType();
+            assert(treasurePickupType != PickupType_None);
+
+            m_pCurrentLevel->m_TotalPickupsMap[treasurePickupType]++;
+        }
+
+        shared_ptr<LootComponent> pLootComponent =
+            MakeStrongPtr(actorIter.second->GetComponent<LootComponent>());
+        if (pLootComponent)
+        {
+            const std::vector<PickupType>* pLootList = pLootComponent->GetLoot();
+            for (PickupType pickup : (*pLootList))
+            {
+                assert(pickup != PickupType_None);
+
+                m_pCurrentLevel->m_TotalPickupsMap[pickup]++;
+            }
+        }
+    }
+
+    // Notify all human views
+    for (auto pGameView : m_GameViews)
+    {
+        if (pGameView->VGetType() == GameView_Human)
+        {
+            shared_ptr<HumanView> pHumanView = static_pointer_cast<HumanView>(pGameView);
+            pHumanView->LoadGame(pXmlLevelRoot, m_pCurrentLevel.get());
+        }
+    }
+
     loadingProgress = 100.0f;   
     RenderLoadingScreen(pBackgroundImage, backgroundRect, scale, loadingProgress);
 
@@ -379,6 +416,34 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     // TODO: This is a bit hacky but it helps with development (prevents entering cheats over and over again). It can be data driven.
     LOG("Loading startup ingame commands...");
     ExecuteStartupCommands(g_pApp->GetGameConfig()->startupCommandsFile);
+
+    /*int skullsCount = m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Blue] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Red] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Purple] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Green];
+    LOG("Skull count: " + ToStr(skullsCount));
+
+    int crownsCount = m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Blue] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Red] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Purple] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Green];
+    LOG("crownsCount count: " + ToStr(crownsCount));
+
+    int geckoCount = m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Blue] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Red] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Purple] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Green];
+    LOG("geckoCount count: " + ToStr(geckoCount));
+
+    int coinsCount = m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Coins] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Default];
+    LOG("coinsCount count: " + ToStr(coinsCount));
+
+    int Rings = m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Blue] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Red] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Purple] +
+        m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Green];
+    LOG("Rings count: " + ToStr(Rings));*/
 
     return true;
 }
@@ -508,6 +573,11 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
             break;
         }
 
+        case GameState_ScoreScreen:
+        {
+            break;
+        }
+
         case GameState_IngameRunning:
         {
             if (m_pProcessMgr)
@@ -582,6 +652,7 @@ void BaseGameLogic::VChangeState(GameState newState)
         UnloadLevel();
         if (!VEnterMenu("MENU.xml"))
         {
+            LOG_ERROR("Failed to enter menu");
             g_pApp->Terminate();
             exit(1);
         }
@@ -663,7 +734,16 @@ void BaseGameLogic::RequestDestroyActorDelegate(IEventDataPtr pEventData)
 
 void BaseGameLogic::MoveActorDelegate(IEventDataPtr pEventData)
 {
+    shared_ptr<EventData_Move_Actor> pCastEventData = static_pointer_cast<EventData_Move_Actor>(pEventData);
 
+    StrongActorPtr pActor = MakeStrongPtr(VGetActor(pCastEventData->GetActorId()));
+    if (pActor != nullptr)
+    {
+        shared_ptr<PositionComponent> pPositionComponent = MakeStrongPtr(pActor->GetComponent<PositionComponent>());
+        assert(pPositionComponent != nullptr);
+
+        pPositionComponent->SetPosition(pCastEventData->GetMove());
+    }
 }
 
 void BaseGameLogic::RequestNewActorDelegate(IEventDataPtr pEventData)
@@ -813,6 +893,199 @@ void BaseGameLogic::CreateStaticGeometryDelegate(IEventDataPtr pEventData)
         static_pointer_cast<EventData_Add_Static_Geometry>(pEventData);
 }
 
+void BaseGameLogic::ItemPickedUpDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Item_Picked_Up> pCastEventData =
+        static_pointer_cast<EventData_Item_Picked_Up>(pEventData);
+
+    //LOG("Picked up: " + ActorTemplates::EnumToString_PickupTypeToImageSet(pCastEventData->GetPickupType()));
+    m_pCurrentLevel->m_LootedPickupsMap[pCastEventData->GetPickupType()]++;
+}
+
+void BaseGameLogic::FinishedLevelDelegate(IEventDataPtr pEventData)
+{
+    // Dummy for testing
+    if (m_pCurrentLevel == nullptr)
+    {
+        m_pCurrentLevel.reset(new LevelData(1, false, 2));
+    }
+
+    // Save game progress
+
+    // For convinience
+    StrongActorPtr pClaw = GetClawActor();
+    assert(pClaw != nullptr);
+
+    auto pScoreComponent = MakeStrongPtr(pClaw->GetComponent<ScoreComponent>(ScoreComponent::g_Name));
+    auto pHealthComponent = MakeStrongPtr(pClaw->GetComponent<HealthComponent>(HealthComponent::g_Name));
+    auto pLifeComponent = MakeStrongPtr(pClaw->GetComponent<LifeComponent>(LifeComponent::g_Name));
+    auto pAmmoComponent = MakeStrongPtr(pClaw->GetComponent<AmmoComponent>(AmmoComponent::g_Name));
+    assert(pScoreComponent);
+    assert(pHealthComponent);
+    assert(pLifeComponent);
+    assert(pAmmoComponent);
+
+    CheckpointSave nextLevelCheckpoint;
+
+    nextLevelCheckpoint.checkpointIdx = 0;
+    nextLevelCheckpoint.score = pScoreComponent->GetScore();
+    nextLevelCheckpoint.health = pHealthComponent->GetHealth();
+    nextLevelCheckpoint.lives = pLifeComponent->GetLives();
+    nextLevelCheckpoint.bulletCount = pAmmoComponent->GetRemainingAmmo(AmmoType_Pistol);
+    nextLevelCheckpoint.magicCount = pAmmoComponent->GetRemainingAmmo(AmmoType_Magic);
+    nextLevelCheckpoint.dynamiteCount = pAmmoComponent->GetRemainingAmmo(AmmoType_Dynamite);
+
+    int finishedLevelNumber = m_pCurrentLevel->GetLevelNumber();
+    int nextLevelNumber = m_pCurrentLevel->GetLevelNumber() + 1;
+
+    m_pGameSaveMgr->AddCheckpointSave(nextLevelNumber, nextLevelCheckpoint);
+
+    // Unload the finished level
+    UnloadLevel();
+
+    std::string finishedLevelXmlDescPath = "/FINISHED_LEVEL_SCENES/LEVEL" + ToStr(m_pCurrentLevel->m_LeveNumber) + ".XML";
+    TiXmlElement* pScoreScreenRootElem = XmlResourceLoader::LoadAndReturnRootXmlElement(finishedLevelXmlDescPath.c_str());
+    assert(pScoreScreenRootElem != NULL);
+
+    for (TiXmlElement* pScoreRowElem = pScoreScreenRootElem->FirstChildElement("ScoreRow");
+        pScoreRowElem != NULL;
+        pScoreRowElem = pScoreRowElem->NextSiblingElement("ScoreRow"))
+    {
+        std::string treasureTypeStr;
+        assert(ParseAttributeFromXmlElem(&treasureTypeStr, "Treasure", pScoreRowElem));
+
+        int pickedUpCount = 0;
+        int totalCount = 0;
+        // Better solution ?
+        if (treasureTypeStr == "Skull")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Purple];
+
+
+        }
+        else if (treasureTypeStr == "Crown")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Purple];
+        }
+        else if (treasureTypeStr == "Gecko")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Purple];
+        }
+        else if (treasureTypeStr == "Scepter")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Purple];
+        }
+        else if (treasureTypeStr == "Cross")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Purple];
+        }
+        else if (treasureTypeStr == "Chalice")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Purple];
+        }
+        else if (treasureTypeStr == "Ring")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Purple];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Purple];
+        }
+        else if (treasureTypeStr == "Goldbar")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Goldbars];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Goldbars];
+        }
+        else if (treasureTypeStr == "Coin")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Default];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Coins];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Default];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Coins];
+        }
+        else
+        {
+            LOG_ERROR("Offending treasure type: " + treasureTypeStr);
+            assert(false && "Unknown treasuretype");
+        }
+
+        /*LOG("[TOTAL] " + treasureTypeStr + ": " + ToStr(totalCount));
+        LOG("[PICKED UP] " + treasureTypeStr + ": " + ToStr(pickedUpCount));*/
+
+        assert(SetTiXmlNodeValue(pScoreRowElem, "ScoreRow.CountOfPickedUpScoreItems", pickedUpCount));
+        assert(SetTiXmlNodeValue(pScoreRowElem, "ScoreRow.CountOfTotalScoreItemsInLevel", totalCount));
+    }
+
+    const CheckpointSave* pStartLevelSave = m_pGameSaveMgr->GetCheckpointSave(finishedLevelNumber, 0);
+    assert(pStartLevelSave != NULL);
+
+    int startLevelScore = pStartLevelSave->score;
+    int levelScoreCollected = nextLevelCheckpoint.score - startLevelScore;
+
+    //<ScorePointsCollectedInLevel>0<ScorePointsCollectedInLevel>
+    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.NextLevelNumber", nextLevelNumber));
+    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.ScorePointsOnLevelStart", startLevelScore));
+    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.ScorePointsCollectedInLevel", levelScoreCollected));
+
+    g_pApp->GetHumanView()->LoadScoreScreen(pScoreScreenRootElem);
+
+    VChangeState(GameState_ScoreScreen);
+}
+
 StrongActorPtr BaseGameLogic::GetClawActor()
 {
     for (auto actorIter : m_ActorMap)
@@ -841,6 +1114,8 @@ void BaseGameLogic::UnloadLevel()
 
     // Process any pending events which could have arose from deleting all actors
     IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
+
+    //m_pCurrentLevel.reset();
 
     m_pPhysics.reset();
 }
@@ -877,6 +1152,9 @@ void BaseGameLogic::RegisterAllDelegates()
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::CollideableTileCreatedDelegate), EventData_Collideable_Tile_Created::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::RequestDestroyActorDelegate), EventData_Destroy_Actor::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::CreateStaticGeometryDelegate), EventData_Add_Static_Geometry::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::ItemPickedUpDelegate), EventData_Item_Picked_Up::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::FinishedLevelDelegate), EventData_Finished_Level::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::MoveActorDelegate), EventData_Move_Actor::sk_EventType);
 }
 
 void BaseGameLogic::RemoveAllDelegates()
@@ -884,6 +1162,9 @@ void BaseGameLogic::RemoveAllDelegates()
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::CollideableTileCreatedDelegate), EventData_Collideable_Tile_Created::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::RequestDestroyActorDelegate), EventData_Destroy_Actor::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::CreateStaticGeometryDelegate), EventData_Add_Static_Geometry::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::ItemPickedUpDelegate), EventData_Item_Picked_Up::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::FinishedLevelDelegate), EventData_Finished_Level::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::MoveActorDelegate), EventData_Move_Actor::sk_EventType);
 }
 
 void BaseGameLogic::ExecuteStartupCommands(const std::string& startupCommandsFile)
