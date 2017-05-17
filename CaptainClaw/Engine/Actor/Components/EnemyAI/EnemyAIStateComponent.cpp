@@ -66,6 +66,13 @@ static shared_ptr<EnemyAttackAction> XmlToEnemyAttackActionPtr(TiXmlElement* pEl
         pAttackAction->damage = std::stoi(pDamageElem->GetText());
     }
 
+    // This should be used, the stuff behind (AttackFxImageSet, AttackAreaSize, ...) is deprecated
+    std::string projectileProtoStr;
+    if (ParseValueFromXmlElem(&projectileProtoStr, pElem->FirstChildElement("ProjectilePrototype")))
+    {
+        pAttackAction->projectileProto = StringToEnum_ActorPrototype(projectileProtoStr);
+    }
+
     pAttackAction->agroSensorFixture = ActorTemplates::XmlToActorFixtureDef(pElem->FirstChildElement("AgroSensorFixture"));
 
     return pAttackAction;
@@ -569,8 +576,11 @@ bool BaseAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
         {
             shared_ptr<EnemyAttackAction> pAttackAction = XmlToEnemyAttackActionPtr(pElem);
 
-            assert(pAttackAction->animation != "");
-            assert(pAttackAction->damage > 0);
+            if (pAttackAction->projectileProto == ActorPrototype_None)
+            {
+                assert(pAttackAction->animation != "");
+                assert(pAttackAction->damage > 0);
+            }
 
             m_AttackActions.push_back(pAttackAction);
         }
@@ -891,14 +901,24 @@ bool RangedAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
 
 void RangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset)
 {
-    ActorTemplates::CreateProjectile(
-        pAttack->attackFxImageSet,
-        pAttack->damage,
-        pAttack->attackDamageType,
-        dir,
-        m_pPositionComponent->GetPosition() + offset,
-        CollisionFlag_EnemyAIProjectile,
-        (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController));
+    if (pAttack->projectileProto == ActorPrototype_None)
+    {
+        ActorTemplates::CreateProjectile(
+            pAttack->attackFxImageSet,
+            pAttack->damage,
+            pAttack->attackDamageType,
+            dir,
+            m_pPositionComponent->GetPosition() + offset,
+            CollisionFlag_EnemyAIProjectile,
+            (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController));
+    }
+    else
+    {
+        ActorTemplates::CreateActor_Projectile(
+            pAttack->projectileProto,
+            m_pPositionComponent->GetPosition() + offset,
+            dir);
+    }
 
     // Play ranged attack sound
     Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetRangedAttackSounds());

@@ -490,8 +490,11 @@ struct EnemyAttackAction
     {
         attackAnimFrameIdx = 0;
         attackDamageType = DamageType_None;
+        projectileProto = ActorPrototype_None;
         attackFxImageSet = "NONE";
     }
+
+    ActorPrototype projectileProto;
 
     std::string animation;
     uint32 attackAnimFrameIdx;

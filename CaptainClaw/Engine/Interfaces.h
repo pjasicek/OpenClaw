@@ -235,6 +235,8 @@ enum ActorPrototype
     //=======================================
 
     // Enemy actors
+    ActorPrototype_BaseEnemy,
+
     ActorPrototype_Level1_Soldier,
     ActorPrototype_Level1_Officer,
     ActorPrototype_Level1_Rat,
@@ -260,6 +262,7 @@ enum ActorPrototype
 
     // Projectiles
     ActorPrototype_Level2_CannonBall,
+    ActorPrototype_Level2_RatProjectile,
 
     //=======================================
     // General

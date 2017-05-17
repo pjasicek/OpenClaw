@@ -11,6 +11,8 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
     static std::map<ActorPrototype, std::string> actorPrototypeEnumToStringMap =
     {
         // Actor enemies
+        { ActorPrototype_BaseEnemy, "ActorPrototype_BaseEnemy" },
+
         { ActorPrototype_Level1_Soldier, "ActorPrototype_Level1_Soldier" },
         { ActorPrototype_Level1_Officer, "ActorPrototype_Level1_Officer" },
         { ActorPrototype_Level1_Rat, "ActorPrototype_Level1_Rat" },
@@ -36,6 +38,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Projectiles
         { ActorPrototype_Level2_CannonBall, "ActorPrototype_Level2_CannonBall" },
+        { ActorPrototype_Level2_RatProjectile, "ActorPrototype_Level2_RatProjectile" },
 
         //=======================================
         // General
@@ -74,6 +77,8 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
     static std::map<std::string, ActorPrototype> actorPrototypeStringToEnumMap =
     {
         // Actor enemies
+        { "ActorPrototype_BaseEnemy", ActorPrototype_BaseEnemy },
+
         { "ActorPrototype_Level1_Soldier", ActorPrototype_Level1_Soldier },
         { "ActorPrototype_Level1_Officer", ActorPrototype_Level1_Officer },
         { "ActorPrototype_Level1_Rat", ActorPrototype_Level1_Rat },
@@ -99,6 +104,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Projectiles
         { "ActorPrototype_Level2_CannonBall", ActorPrototype_Level2_CannonBall },
+        { "ActorPrototype_Level2_RatProjectile", ActorPrototype_Level2_RatProjectile },
 
         //=======================================
         // General

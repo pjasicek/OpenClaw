@@ -1,0 +1,96 @@
+<Actor Type="BaseEnemy" ActorPrototypeName="ActorPrototype_BaseEnemy">
+    <PositionComponent>
+        <Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
+    </PositionComponent>
+    <ActorRenderComponent>
+        <Visible>true</Visible>
+        <Mirrored>false</Mirrored>
+        <Inverted>false</Inverted>
+        <ZCoord>4000</ZCoord>
+        <!-- OVERRIDEN IN PROTOTYPE -->
+        <ImagePath>NONE</ImagePath>
+        <!-- OVERRIDEN IN PROTOTYPE -->
+        <Palette>NONE</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <!-- OVERRIDEN IN PROTOTYPE -->
+        <AnimationPath>NONE</AnimationPath>
+        <PauseOnStart>false</PauseOnStart>
+    </AnimationComponent>
+    <TriggerComponent>
+        <TriggerFinitedTimes>1000</TriggerFinitedTimes>
+    </TriggerComponent>
+    <HealthComponent>
+        <!-- OVERRIDEN IN PROTOTYPE -->
+        <Health>0</Health>
+        <MaxHealth>0</MaxHealth>
+    </HealthComponent>
+    <LootComponent>
+        <LootSoundChance>100</LootSoundChance>
+        <!-- DEFINED IN CODE -->
+    </LootComponent>
+    <EnemyAIComponent>
+        <!-- OVERRIDEN IN PROTOTYPE -->
+        <DeathAnimation>fall</DeathAnimation>
+    </EnemyAIComponent>
+    <TakeDamageAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <!-- OVERRIDEN IN PROTOTYPE -->
+        <TakeDamageAnimation>NONE</TakeDamageAnimation>
+        <InvulnerabilityTime>0</InvulnerabilityTime>
+    </TakeDamageAIStateComponent>
+    <PhysicsComponent>
+        <BodyType>Dynamic</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>true</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>EnemyAI</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="50" height="100" />
+        <GravityScale>1.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>4</CollisionFlag>
+        <CollisionMask>1792</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+        <ActorFixture>
+            <FixtureType>EnemyAI</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>true</IsSensor>
+            <!-- OVERRIDEN IN PROTOTYPE -->
+            <Size width="0" height="0" />
+            <Offset x="0" y="0" />
+            <CollisionFlag>4</CollisionFlag>
+            <CollisionMask>66618</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>0.000000</Restitution>
+        </ActorFixture>
+    </PhysicsComponent>
+    <DamageAuraComponent>
+        <IsPulsating>true</IsPulsating>
+        <IsGroupPulse>false</IsGroupPulse>
+        <ApplyAuraOnEnter>true</ApplyAuraOnEnter>
+        <RemoveActorAfterPulse>false</RemoveActorAfterPulse>
+        <PulseInterval>2000</PulseInterval>
+        <ActorFixture>
+            <FixtureType>DamageAura</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>true</IsSensor>
+            <Size width="40" height="85" />
+            <Offset x="0" y="0" />
+            <CollisionFlag>262144</CollisionFlag>
+            <CollisionMask>1048578</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>0.000000</Restitution>
+        </ActorFixture>
+        <Damage>10</Damage>
+    </DamageAuraComponent>
+</Actor>
