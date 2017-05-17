@@ -11,7 +11,7 @@
         <MaxHealth>5</MaxHealth>
     </HealthComponent>
     <EnemyAIComponent>
-        <DeathAnimation>dead</DeathAnimation>
+        <DeathAnimation>idle</DeathAnimation>
         <Sound SoundType="Death" SoundName="/GAME/SOUNDS/MOUSEKILL.WAV" />
         <Sound SoundType="RangedAttack" SoundName="/CLAW/SOUNDS/FIRESWORD.WAV" />
     </EnemyAIComponent>
@@ -38,6 +38,7 @@
             <AttackAction>
                 <Animation>strike</Animation>
                 <AttackAnimFrameIdx>2</AttackAnimFrameIdx>
+                <AttackSpawnPositionOffset x="-10" y="-5" />
                 <ProjectilePrototype>ActorPrototype_Level2_RatProjectile</ProjectilePrototype>
                 <AgroSensorFixture>
                     <FixtureType>EnemyAIRangedSensor</FixtureType>
@@ -56,5 +57,13 @@
     </RangedAttackAIStateComponent>
     <PhysicsComponent>
         <CollisionSize width="40" height="41" />
+        <ActorFixture>
+            <Size width="40" height="40" />
+        </ActorFixture>
     </PhysicsComponent>
+    <DamageAuraComponent>
+        <ActorFixture>
+            <Size width="30" height="26" />
+        </ActorFixture>
+    </DamageAuraComponent>
 </Actor>

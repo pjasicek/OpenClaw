@@ -38,7 +38,8 @@ PhysicsComponent::PhysicsComponent() :
     m_pControllableComponent(nullptr),
     m_pPhysics(nullptr),
     m_pTopLadderContact(NULL),
-    m_pMovingPlatformContact(NULL)
+    m_pMovingPlatformContact(NULL),
+    m_bClampToGround(false)
 { }
 
 PhysicsComponent::~PhysicsComponent()
@@ -176,16 +177,19 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
         m_ActorBodyDef.fixtureList.push_back(fixtureDef);
     }
 
+    ParseValueFromXmlElem(&m_bClampToGround, data->FirstChildElement("ClampToGround"));
+
     return true;
 }
 
 void PhysicsComponent::VPostInit()
 {
+    shared_ptr<PositionComponent> pPositionComponent =
+        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    assert(pPositionComponent);
+
     if (m_ActorBodyDef.collisionFlag != CollisionFlag_None)
     {
-        shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
-        assert(pPositionComponent);
         m_ActorBodyDef.position = pPositionComponent->GetPosition();
 
         if (fabs(m_ActorBodyDef.size.x) < DBL_EPSILON || fabs(m_ActorBodyDef.size.y) < DBL_EPSILON)
@@ -228,6 +232,20 @@ void PhysicsComponent::VPostInit()
     else
     {
         m_pPhysics->VAddDynamicActor(_owner);
+    }
+
+    if (m_bClampToGround)
+    {
+        // Position enemy to the floor
+        Point fromPoint = pPositionComponent->GetPosition();
+        Point toPoint = pPositionComponent->GetPosition() + Point(0, 1000);
+        RaycastResult raycastDown = m_pPhysics->VRayCast(fromPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground));
+        assert(raycastDown.foundIntersection && "Did not find intersection. Enemy is too far in the air with no ground below him");
+
+        double deltaY = raycastDown.deltaY - m_pPhysics->VGetAABB(_owner->GetGUID(), true).h / 2;
+
+        pPositionComponent->SetY(pPositionComponent->GetY() + deltaY - 1);
+        m_pPhysics->VSetPosition(_owner->GetGUID(), pPositionComponent->GetPosition());
     }
 }
 

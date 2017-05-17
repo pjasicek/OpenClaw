@@ -11,6 +11,6 @@
 	<PhysicsComponent>
         <CollisionFlag>262144</CollisionFlag>
         <CollisionMask>1048834</CollisionMask>
-		<CollisionSize width="100" height="40" /> 
+		<CollisionSize width="100" height="25" /> 
     </PhysicsComponent>
 </Actor>

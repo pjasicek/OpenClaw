@@ -59,6 +59,7 @@
         <Density>0.000000</Density>
         <Restitution>0.000000</Restitution>
         <PrefabType></PrefabType>
+        <ClampToGround>true</ClampToGround>
         <ActorFixture>
             <FixtureType>EnemyAI</FixtureType>
             <CollisionShape>Rectangle</CollisionShape>

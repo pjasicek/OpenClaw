@@ -68,7 +68,7 @@ void LootComponent::VOnHealthBelowZero(DamageType damageType)
     }
 
     int randChance = Util::GetRandomNumber(1, 100);
-    if (randChance <= m_LootSoundChance)
+    if (!m_Loot.empty() && randChance <= m_LootSoundChance)
     {
         SoundInfo sound(SOUND_GAME_TREASURE_RARE_SPAWNED);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(

@@ -1175,7 +1175,7 @@ namespace ActorTemplates
         imagePaths.push_back(imageSet);
         pActorElem->LinkEndChild(CreateActorRenderComponent(imagePaths, zCoord, true, isMirrored, isInverted));
 
-        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, isStatic));
+        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, false));
 
         srand((long)pActorElem + time(NULL));
         double speedX = 0.5 + (rand() % 100) / 50.0;
@@ -1508,7 +1508,7 @@ namespace ActorTemplates
             false,      // Has foot sensor ?
             false,      // Has capsule shape ?
             true,       // Has bullet behaviour ?
-            true,       // Has sensor behaviour ?
+            false,       // Has sensor behaviour ?
             "Crate",    // Fixture typeactor
             position,      // Position
             Point(0, 0),   // Offset - where to move the body upon its placement
@@ -1524,10 +1524,12 @@ namespace ActorTemplates
             0.0f,  // Density - determines if this character bounces
             0.3f)); // Restitution - makes object bounce
 
+        AddXmlTextElement("ClampToGround", true, pActor->FirstChildElement("PhysicsComponent"));
+
         pActor->LinkEndChild(CreateAnimationComponent("/LEVEL1/ANIS/POWDERKEG/EXPLODE.ANI", true));
         pActor->LinkEndChild(CreateDestroyableComponent(true, "explode", { SOUND_LEVEL1_KEG_EXPLODE }));
         pActor->LinkEndChild(CreateHealthComponent(1, 1));
-        pActor->LinkEndChild(CreateExplodeableComponent(Point(120, 120), damage));
+        pActor->LinkEndChild(CreateExplodeableComponent(Point(140, 140), damage));
 
         return pActor;
     }

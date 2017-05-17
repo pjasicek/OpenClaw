@@ -9,7 +9,7 @@
     <Audio>
         <Frequency>44100</Frequency>
         <SoundChannels>1</SoundChannels>
-        <MixingChannels>24</MixingChannels>
+        <MixingChannels>64</MixingChannels>
         <ChunkSize>2048</ChunkSize>
         <SoundVolume>80</SoundVolume>
         <MusicVolume>8</MusicVolume>

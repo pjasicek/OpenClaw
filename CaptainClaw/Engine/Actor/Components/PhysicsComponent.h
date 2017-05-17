@@ -140,6 +140,7 @@ private:
 
     // Actor body definition for physics body creation
     ActorBodyDef m_ActorBodyDef;
+    bool m_bClampToGround;
 
     b2Contact* m_pTopLadderContact;
     b2Contact* m_pMovingPlatformContact;

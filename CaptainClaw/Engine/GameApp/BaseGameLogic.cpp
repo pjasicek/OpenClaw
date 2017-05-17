@@ -730,6 +730,7 @@ void BaseGameLogic::RequestDestroyActorDelegate(IEventDataPtr pEventData)
 {
     shared_ptr<EventData_Destroy_Actor> pCastEventData = static_pointer_cast<EventData_Destroy_Actor>(pEventData);
     VDestroyActor(pCastEventData->GetActorId());
+    m_pPhysics->VRemoveActor(pCastEventData->GetActorId());
 }
 
 void BaseGameLogic::MoveActorDelegate(IEventDataPtr pEventData)

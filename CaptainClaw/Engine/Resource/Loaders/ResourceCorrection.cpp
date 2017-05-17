@@ -28,6 +28,10 @@ void OnPidLoaded(const char* resource, WapPid* pPid)
     {
         pPid->offsetX += 2;
     }
+    else if (resourceName.find("/images/powderkeg/frame") != std::string::npos)
+    {
+        pPid->offsetY -= 46;
+    }
 }
 
 void OnAniLoaded(const char* resource, WapAni* pAni)

@@ -370,6 +370,8 @@ void ClawPhysics::VOnUpdate(const uint32 msDiff)
     {
         if (b2Body* pBody = FindBox2DBody(actorId))
         {
+            assert(m_pWorld->IsLocked() == false);
+
             pBody->SetActive(false);
             pBody->SetUserData(NULL);
             m_pWorld->DestroyBody(pBody);
