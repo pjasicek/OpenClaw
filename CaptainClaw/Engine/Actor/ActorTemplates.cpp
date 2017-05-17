@@ -86,6 +86,7 @@ namespace ActorTemplates
         { PickupType_Powerup_FireSword,         &CreateXmlData_PowerupPickupActor },
         { PickupType_Powerup_LightningSword,    &CreateXmlData_PowerupPickupActor },
         { PickupType_Powerup_FrostSword,        &CreateXmlData_PowerupPickupActor },
+        { PickupType_BossWarp,                  &CreateXmlData_WarpPickupActor },
         { PickupType_Max,                       NULL },
     };
 
@@ -154,6 +155,7 @@ namespace ActorTemplates
             { "GAME_POWERUPS_LIGHTNINGSWORD", PickupType_Powerup_FireSword },
             { "GAME_POWERUPS_FIRESWORD", PickupType_Powerup_LightningSword },
             { "GAME_POWERUPS_ICESWORD", PickupType_Powerup_FrostSword },
+            { "GAME_BOSSWARP", PickupType_BossWarp },
         };
 
         auto findIt = s_ImageSetToPickupTypeMap.find(pickupImageSet);
@@ -229,6 +231,7 @@ namespace ActorTemplates
             { PickupType_Powerup_FireSword,         "GAME_POWERUPS_LIGHTNINGSWORD" },
             { PickupType_Powerup_LightningSword,    "GAME_POWERUPS_FIRESWORD" },
             { PickupType_Powerup_FrostSword,        "GAME_POWERUPS_ICESWORD" },
+            { PickupType_BossWarp,                  "GAME_BOSSWARP" },
         };
 
         auto findIt = s_PickupTypeToImageSetMap.find(pickupType);
@@ -302,6 +305,7 @@ namespace ActorTemplates
         { PickupType_Powerup_FireSword,         SOUND_CLAW_PICKUP_FIRE_SWORD },
         { PickupType_Powerup_LightningSword,    SOUND_CLAW_PICKUP_LIGHTNING_SWORD },
         { PickupType_Powerup_FrostSword,        SOUND_CLAW_PICKUP_FROST_SWORD },
+        { PickupType_BossWarp,                  SOUND_GAME_ENTER_WARP },
     };
 
     //=====================================================================================================================
@@ -1187,12 +1191,14 @@ namespace ActorTemplates
         if (isStatic)
         {
             bodyDef.bodyType = b2_staticBody;
+            bodyDef.makeSensor = true;
         }
         else
         {
             bodyDef.bodyType = b2_dynamicBody;
+            bodyDef.makeSensor = true;
         }
-        bodyDef.makeSensor = false;
+        
         bodyDef.fixtureType = FixtureType_Pickup;
         bodyDef.position = position;
         bodyDef.gravityScale = 0.8f;
@@ -1313,7 +1319,7 @@ namespace ActorTemplates
 
     TiXmlElement* CreateXmlData_WarpPickupActor(PickupType pickupType, std::string imageSet, std::string pickupSound, Point position, bool isStatic, const ParamMap& paramMap)
     {
-        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 0, isStatic, paramMap);
+        TiXmlElement* pActor = CreateXmlData_GeneralPickupActor(imageSet, position, 1000, isStatic, paramMap);
 
         std::string destinationX = StrictFindValueInMap(std::string("DestinationX"), paramMap);
         std::string destinationY = StrictFindValueInMap(std::string("DestinationY"), paramMap);

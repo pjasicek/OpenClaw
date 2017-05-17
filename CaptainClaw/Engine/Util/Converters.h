@@ -878,7 +878,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "SpecialPowerup" ||
              logic == "TreasurePowerup" ||
              logic == "GlitterlessPowerup" ||
-             logic == "HealthPowerup")
+             logic == "HealthPowerup" ||
+             logic == "BossWarp")
     {
         SAFE_DELETE(pActorElem);
 
@@ -886,7 +887,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         paramMap["IsMirrored"] = ToStr((wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR) != 0);
         paramMap["IsInverted"] = ToStr((wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_INVERT) != 0);
 
-        if (imageSet == "GAME_WARP" || imageSet == "GAME_VERTWARP")
+        if (imageSet == "GAME_WARP" || imageSet == "GAME_VERTWARP" || imageSet == "GAME_BOSSWARP")
         {
             paramMap["IsGlitter"] = "false";
             paramMap["DestinationX"] = ToStr(wwdObject->speedX);

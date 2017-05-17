@@ -755,6 +755,12 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
     // TODO: Remove reduntant code up there... 
     for (ActorFixtureDef actorFixtureDef : actorBodyDef->fixtureList)
     {
+        // If it has 0 size, set it to body size
+        if (actorFixtureDef.size.IsZeroXY())
+        {
+            actorFixtureDef.size = actorBodyDef->size;
+        }
+
         AddActorFixtureToBody(pBody, &actorFixtureDef);
     }
 

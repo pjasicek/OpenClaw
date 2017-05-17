@@ -198,6 +198,7 @@ enum PickupType
     PickupType_Powerup_FireSword,
     PickupType_Powerup_LightningSword,
     PickupType_Powerup_FrostSword,
+    PickupType_BossWarp,
     PickupType_Max
 };
 
