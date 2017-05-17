@@ -53,4 +53,9 @@ void OnAniLoaded(const char* resource, WapAni* pAni)
         // Disable all sounds for this animation
         pAni->unk0 = 1;
     }
+    else if (resourceName == "/level2/anis/punkrat/strike.ani")
+    {
+        pAni->animationFrames[1].duration = 100;
+        pAni->animationFrames[2].duration = 200;
+    }
 }
