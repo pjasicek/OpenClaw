@@ -261,6 +261,7 @@ void HumanView::LoadScoreScreen(TiXmlElement* pScoreScreenRootElem)
 
     g_pApp->GetAudio()->StopAllSounds();
 
+    LOG("Initializing score screen ...");
     shared_ptr<ScreenElementScoreScreen> pScoreScreen(new ScreenElementScoreScreen(g_pApp->GetRenderer()));
     if (pScoreScreen->Initialize(pScoreScreenRootElem))
     {
