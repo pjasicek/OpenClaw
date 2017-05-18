@@ -1196,7 +1196,7 @@ namespace ActorTemplates
         else
         {
             bodyDef.bodyType = b2_dynamicBody;
-            bodyDef.makeSensor = true;
+            bodyDef.makeSensor = false;
         }
         
         bodyDef.fixtureType = FixtureType_Pickup;
