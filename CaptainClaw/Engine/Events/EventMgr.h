@@ -119,6 +119,9 @@ public:
     // returns true if the event was found and removed, false otherwise
     virtual bool VAbortEvent(const EventType& type, bool allOfType = false) = 0;
 
+    // Abort all events in queue
+    virtual void VAbortAllEvents() = 0;
+
     // Allow for processing of any queued messages, optionally specify a processing time limit so that the event 
     // processing does not take too long. Note the danger of using this artificial limiter is that all messages 
     // may not in fact get processed.

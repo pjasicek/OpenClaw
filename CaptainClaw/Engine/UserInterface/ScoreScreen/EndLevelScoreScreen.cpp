@@ -480,6 +480,10 @@ void ScreenElementScoreScreen::LoadNextLevel()
     // Specify this
     int nextLevelNum = m_NextLevelNumber;
 
+    m_pProcessMgr->AbortAllProcesses(true);
+    SAFE_DELETE(m_pProcessMgr);
+    IEventMgr::Get()->VAbortAllEvents();
+
     IEventDataPtr pEvent(new EventData_Menu_LoadGame(nextLevelNum, false, 0));
     IEventMgr::Get()->VQueueEvent(pEvent);
 }
@@ -612,6 +616,7 @@ void ScreenElementScoreScreen::ScoreScreenLevelScoreAddedDelegate(IEventDataPtr 
 bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
 {
     m_pProcessMgr = new ProcessMgr();
+    IEventMgr::Get()->VAbortAllEvents();
 
     m_State = ScoreScreenState_Intro;
 

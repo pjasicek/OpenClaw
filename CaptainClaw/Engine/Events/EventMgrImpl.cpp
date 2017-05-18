@@ -172,6 +172,19 @@ bool EventMgr::VAbortEvent(const EventType& inType, bool allOfType)
     return success;
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+// EventMgr::VAbortAllEvents
+//---------------------------------------------------------------------------------------------------------------------
+void EventMgr::VAbortAllEvents()
+{
+    assert(m_ActiveQueue >= 0);
+    assert(m_ActiveQueue < EVENTMANAGER_NUM_QUEUES);
+
+    for (EventQueue& queue : m_Queues)
+    {
+        queue.clear();
+    }
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 // EventMgr::VTick

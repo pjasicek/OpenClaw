@@ -113,6 +113,14 @@ SpawnScoreRowProcess::~SpawnScoreRowProcess()
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Destroy_Actor(pActor->GetGUID())));
     }
+
+    for (Actor* pActor : m_ActorCategoryToActorListMap[ScoreRowActorType_MovingScoreItems])
+    {
+        assert(pActor != NULL);
+
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Destroy_Actor(pActor->GetGUID())));
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -409,6 +417,17 @@ void SpawnScoreRowProcess::ForceSpawnImmediately()
     {
         SetScore(m_ScoreRowDef.countOfPickedUpScoreItems * m_ScoreRowDef.scoreItemPointsWorth);
         SetCollectedSpawnedScoreItems(m_ScoreRowDef.countOfPickedUpScoreItems);
+
+        // If we already spawned some moving items, destroy them
+        for (auto iter = m_ActorCategoryToActorListMap[ScoreRowActorType_MovingScoreItems].begin();
+            iter != m_ActorCategoryToActorListMap[ScoreRowActorType_MovingScoreItems].end();
+            /*iter++*/)
+        {
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                new EventData_Destroy_Actor((*iter)->GetGUID())));
+
+            iter = m_ActorCategoryToActorListMap[ScoreRowActorType_MovingScoreItems].erase(iter);
+        }
 
         m_State = ScoreRowState_FinalizeScoreRowLoading;
     }

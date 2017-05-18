@@ -14,15 +14,16 @@ public:
     EventMgr(const char* pName, bool setAsGlobal);
     virtual ~EventMgr();
 
-    virtual bool VAddListener(const EventListenerDelegate& eventDelegate, const EventType& type);
-    virtual bool VRemoveListener(const EventListenerDelegate& eventDelegate, const EventType& type);
+    virtual bool VAddListener(const EventListenerDelegate& eventDelegate, const EventType& type) override;
+    virtual bool VRemoveListener(const EventListenerDelegate& eventDelegate, const EventType& type) override;
 
-    virtual bool VTriggerEvent(const IEventDataPtr& pEvent) const;
-    virtual bool VQueueEvent(const IEventDataPtr& pEvent);
-    virtual bool VThreadSafeQueueEvent(const IEventDataPtr& pEvent);
-    virtual bool VAbortEvent(const EventType& type, bool allOfType = false);
+    virtual bool VTriggerEvent(const IEventDataPtr& pEvent) const override;
+    virtual bool VQueueEvent(const IEventDataPtr& pEvent) override;
+    virtual bool VThreadSafeQueueEvent(const IEventDataPtr& pEvent) override;
+    virtual bool VAbortEvent(const EventType& type, bool allOfType = false) override;
+    virtual void VAbortAllEvents() override;
 
-    virtual bool VUpdate(unsigned long maxMilis = kINFINITE);
+    virtual bool VUpdate(unsigned long maxMilis = kINFINITE) override;
 
 private:
     typedef std::list<EventListenerDelegate> EventListenerList;
