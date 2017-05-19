@@ -448,6 +448,190 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     return true;
 }
 
+bool BaseGameLogic::VLoadScoreScreen(const char* xmlScoreScreenResource)
+{
+    TiXmlElement* pScoreScreenRootElem = XmlResourceLoader::LoadAndReturnRootXmlElement(xmlScoreScreenResource);
+    if (pScoreScreenRootElem == NULL)
+    {
+        LOG_ERROR("Failed to load score screen XML resource: " + std::string(xmlScoreScreenResource));
+        return false;
+    }
+
+    // Save game progress
+    // When Claw finishes level, the saved checkpoint is (CurrentLevel + 1) level start
+
+    // For convinience
+    StrongActorPtr pClaw = GetClawActor();
+    assert(pClaw != nullptr);
+
+    auto pScoreComponent = MakeStrongPtr(pClaw->GetComponent<ScoreComponent>(ScoreComponent::g_Name));
+    auto pHealthComponent = MakeStrongPtr(pClaw->GetComponent<HealthComponent>(HealthComponent::g_Name));
+    auto pLifeComponent = MakeStrongPtr(pClaw->GetComponent<LifeComponent>(LifeComponent::g_Name));
+    auto pAmmoComponent = MakeStrongPtr(pClaw->GetComponent<AmmoComponent>(AmmoComponent::g_Name));
+    assert(pScoreComponent);
+    assert(pHealthComponent);
+    assert(pLifeComponent);
+    assert(pAmmoComponent);
+
+    CheckpointSave nextLevelCheckpoint;
+
+    nextLevelCheckpoint.checkpointIdx = 0;
+    nextLevelCheckpoint.score = pScoreComponent->GetScore();
+    nextLevelCheckpoint.health = pHealthComponent->GetHealth();
+    nextLevelCheckpoint.lives = pLifeComponent->GetLives();
+    nextLevelCheckpoint.bulletCount = pAmmoComponent->GetRemainingAmmo(AmmoType_Pistol);
+    nextLevelCheckpoint.magicCount = pAmmoComponent->GetRemainingAmmo(AmmoType_Magic);
+    nextLevelCheckpoint.dynamiteCount = pAmmoComponent->GetRemainingAmmo(AmmoType_Dynamite);
+
+    int finishedLevelNumber = m_pCurrentLevel->GetLevelNumber();
+    int nextLevelNumber = m_pCurrentLevel->GetLevelNumber() + 1;
+
+    m_pGameSaveMgr->AddCheckpointSave(nextLevelNumber, nextLevelCheckpoint);
+
+    // Unload the finished level
+    UnloadLevel();
+
+    // Gather information about collected treasure items
+    for (TiXmlElement* pScoreRowElem = pScoreScreenRootElem->FirstChildElement("ScoreRow");
+        pScoreRowElem != NULL;
+        pScoreRowElem = pScoreRowElem->NextSiblingElement("ScoreRow"))
+    {
+        std::string treasureTypeStr;
+        assert(ParseAttributeFromXmlElem(&treasureTypeStr, "Treasure", pScoreRowElem));
+
+        int pickedUpCount = 0;
+        int totalCount = 0;
+        // Better solution ?
+        if (treasureTypeStr == "Skull")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Purple];
+
+
+        }
+        else if (treasureTypeStr == "Crown")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Purple];
+        }
+        else if (treasureTypeStr == "Gecko")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Purple];
+        }
+        else if (treasureTypeStr == "Scepter")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Purple];
+        }
+        else if (treasureTypeStr == "Cross")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Purple];
+        }
+        else if (treasureTypeStr == "Chalice")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Blue];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Purple];
+        }
+        else if (treasureTypeStr == "Ring")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Red];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Green];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Blue];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Purple];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Red];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Green];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Purple];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Purple];
+        }
+        else if (treasureTypeStr == "Goldbar")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Goldbars];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Goldbars];
+        }
+        else if (treasureTypeStr == "Coin")
+        {
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Default];
+            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Coins];
+
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Default];
+            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Coins];
+        }
+        else
+        {
+            LOG_ERROR("Offending treasure type: " + treasureTypeStr);
+            assert(false && "Unknown treasuretype");
+        }
+
+        /*LOG("[TOTAL] " + treasureTypeStr + ": " + ToStr(totalCount));
+        LOG("[PICKED UP] " + treasureTypeStr + ": " + ToStr(pickedUpCount));*/
+
+        assert(SetTiXmlNodeValue(pScoreRowElem, "ScoreRow.CountOfPickedUpScoreItems", pickedUpCount));
+        assert(SetTiXmlNodeValue(pScoreRowElem, "ScoreRow.CountOfTotalScoreItemsInLevel", totalCount));
+    }
+
+    const CheckpointSave* pStartLevelSave = m_pGameSaveMgr->GetCheckpointSave(finishedLevelNumber, 0);
+    assert(pStartLevelSave != NULL);
+
+    int startLevelScore = pStartLevelSave->score;
+    int levelScoreCollected = nextLevelCheckpoint.score - startLevelScore;
+
+    //<ScorePointsCollectedInLevel>0<ScorePointsCollectedInLevel>
+    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.NextLevelNumber", nextLevelNumber));
+    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.ScorePointsOnLevelStart", startLevelScore));
+    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.ScorePointsCollectedInLevel", levelScoreCollected));
+
+    // Load the ScoreScreen
+    g_pApp->GetHumanView()->LoadScoreScreen(pScoreScreenRootElem);
+
+    return true;
+}
+
 void BaseGameLogic::VSetProxy()
 {
     m_Proxy = true;
@@ -573,6 +757,12 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
             break;
         }
 
+        case GameState_LoadingScoreScreen:
+        {
+            VChangeState(GameState_ScoreScreen);
+            break;
+        }
+
         case GameState_ScoreScreen:
         {
             break;
@@ -693,6 +883,22 @@ void BaseGameLogic::VChangeState(GameState newState)
         if (!VLoadGame(outFileLevelName.c_str()))
         {
             LOG_ERROR("Could not load level");
+            exit(1);
+        }
+    }
+    else if (newState == GameState_ScoreScreen)
+    {
+        // Dummy for testing
+        if (m_pCurrentLevel == nullptr)
+        {
+            m_pCurrentLevel.reset(new LevelData(1, false, 2));
+        }
+
+        std::string finishedLevelXmlDescPath = "/FINISHED_LEVEL_SCENES/LEVEL" + ToStr(m_pCurrentLevel->m_LeveNumber) + ".XML";
+
+        if (!VLoadScoreScreen(finishedLevelXmlDescPath.c_str()))
+        {
+            LOG_ERROR("Could not load score screen");
             exit(1);
         }
     }
@@ -908,186 +1114,7 @@ void BaseGameLogic::ItemPickedUpDelegate(IEventDataPtr pEventData)
 
 void BaseGameLogic::FinishedLevelDelegate(IEventDataPtr pEventData)
 {
-    // Dummy for testing
-    if (m_pCurrentLevel == nullptr)
-    {
-        m_pCurrentLevel.reset(new LevelData(1, false, 2));
-    }
-
-    // Save game progress
-
-    // For convinience
-    StrongActorPtr pClaw = GetClawActor();
-    assert(pClaw != nullptr);
-
-    auto pScoreComponent = MakeStrongPtr(pClaw->GetComponent<ScoreComponent>(ScoreComponent::g_Name));
-    auto pHealthComponent = MakeStrongPtr(pClaw->GetComponent<HealthComponent>(HealthComponent::g_Name));
-    auto pLifeComponent = MakeStrongPtr(pClaw->GetComponent<LifeComponent>(LifeComponent::g_Name));
-    auto pAmmoComponent = MakeStrongPtr(pClaw->GetComponent<AmmoComponent>(AmmoComponent::g_Name));
-    assert(pScoreComponent);
-    assert(pHealthComponent);
-    assert(pLifeComponent);
-    assert(pAmmoComponent);
-
-    CheckpointSave nextLevelCheckpoint;
-
-    nextLevelCheckpoint.checkpointIdx = 0;
-    nextLevelCheckpoint.score = pScoreComponent->GetScore();
-    nextLevelCheckpoint.health = pHealthComponent->GetHealth();
-    nextLevelCheckpoint.lives = pLifeComponent->GetLives();
-    nextLevelCheckpoint.bulletCount = pAmmoComponent->GetRemainingAmmo(AmmoType_Pistol);
-    nextLevelCheckpoint.magicCount = pAmmoComponent->GetRemainingAmmo(AmmoType_Magic);
-    nextLevelCheckpoint.dynamiteCount = pAmmoComponent->GetRemainingAmmo(AmmoType_Dynamite);
-
-    int finishedLevelNumber = m_pCurrentLevel->GetLevelNumber();
-    int nextLevelNumber = m_pCurrentLevel->GetLevelNumber() + 1;
-
-    m_pGameSaveMgr->AddCheckpointSave(nextLevelNumber, nextLevelCheckpoint);
-
-    // Unload the finished level
-    UnloadLevel();
-
-    std::string finishedLevelXmlDescPath = "/FINISHED_LEVEL_SCENES/LEVEL" + ToStr(m_pCurrentLevel->m_LeveNumber) + ".XML";
-    TiXmlElement* pScoreScreenRootElem = XmlResourceLoader::LoadAndReturnRootXmlElement(finishedLevelXmlDescPath.c_str());
-    assert(pScoreScreenRootElem != NULL);
-
-    for (TiXmlElement* pScoreRowElem = pScoreScreenRootElem->FirstChildElement("ScoreRow");
-        pScoreRowElem != NULL;
-        pScoreRowElem = pScoreRowElem->NextSiblingElement("ScoreRow"))
-    {
-        std::string treasureTypeStr;
-        assert(ParseAttributeFromXmlElem(&treasureTypeStr, "Treasure", pScoreRowElem));
-
-        int pickedUpCount = 0;
-        int totalCount = 0;
-        // Better solution ?
-        if (treasureTypeStr == "Skull")
-        {
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Red];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Green];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Blue];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Skull_Purple];
-
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Red];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Green];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Blue];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Skull_Purple];
-
-
-        }
-        else if (treasureTypeStr == "Crown")
-        {
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Red];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Green];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Blue];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crowns_Purple];
-
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Red];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Green];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Blue];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crowns_Purple];
-        }
-        else if (treasureTypeStr == "Gecko")
-        {
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Red];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Green];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Blue];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Geckos_Purple];
-
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Red];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Green];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Blue];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Geckos_Purple];
-        }
-        else if (treasureTypeStr == "Scepter")
-        {
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Red];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Green];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Blue];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Scepters_Purple];
-
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Red];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Green];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Blue];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Scepters_Purple];
-        }
-        else if (treasureTypeStr == "Cross")
-        {
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Red];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Green];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Blue];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Crosses_Purple];
-
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Red];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Green];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Blue];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Crosses_Purple];
-        }
-        else if (treasureTypeStr == "Chalice")
-        {
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Red];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Green];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Blue];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Chalices_Purple];
-
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Red];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Green];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Blue];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Chalices_Purple];
-        }
-        else if (treasureTypeStr == "Ring")
-        {
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Red];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Green];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Blue];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Rings_Purple];
-
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Red];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Green];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Purple];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Purple];
-        }
-        else if (treasureTypeStr == "Goldbar")
-        {
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Goldbars];
-
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Goldbars];
-        }
-        else if (treasureTypeStr == "Coin")
-        {
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Default];
-            pickedUpCount += m_pCurrentLevel->m_LootedPickupsMap[PickupType_Treasure_Coins];
-
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Default];
-            totalCount += m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Coins];
-        }
-        else
-        {
-            LOG_ERROR("Offending treasure type: " + treasureTypeStr);
-            assert(false && "Unknown treasuretype");
-        }
-
-        /*LOG("[TOTAL] " + treasureTypeStr + ": " + ToStr(totalCount));
-        LOG("[PICKED UP] " + treasureTypeStr + ": " + ToStr(pickedUpCount));*/
-
-        assert(SetTiXmlNodeValue(pScoreRowElem, "ScoreRow.CountOfPickedUpScoreItems", pickedUpCount));
-        assert(SetTiXmlNodeValue(pScoreRowElem, "ScoreRow.CountOfTotalScoreItemsInLevel", totalCount));
-    }
-
-    const CheckpointSave* pStartLevelSave = m_pGameSaveMgr->GetCheckpointSave(finishedLevelNumber, 0);
-    assert(pStartLevelSave != NULL);
-
-    int startLevelScore = pStartLevelSave->score;
-    int levelScoreCollected = nextLevelCheckpoint.score - startLevelScore;
-
-    //<ScorePointsCollectedInLevel>0<ScorePointsCollectedInLevel>
-    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.NextLevelNumber", nextLevelNumber));
-    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.ScorePointsOnLevelStart", startLevelScore));
-    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.ScorePointsCollectedInLevel", levelScoreCollected));
-
-    g_pApp->GetHumanView()->LoadScoreScreen(pScoreScreenRootElem);
-
-    VChangeState(GameState_ScoreScreen);
+    VChangeState(GameState_LoadingScoreScreen);
 }
 
 StrongActorPtr BaseGameLogic::GetClawActor()
@@ -1105,15 +1132,23 @@ StrongActorPtr BaseGameLogic::GetClawActor()
 
 void BaseGameLogic::UnloadLevel()
 {
+    // We cannot do this inside event update loop
+    assert(IEventMgr::Get()->VIsUpdating() == false);
+
     // Handle all pending events before reset
     IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
 
-    for (auto actorIter : m_ActorMap)
+    // We need to create a copy here because the m_ActorMap will be modified by future events will
+    // will arise
+    ActorMap actorMapCopy = m_ActorMap;
+
+    for (auto actorIter = actorMapCopy.begin(); actorIter != actorMapCopy.end(); ++actorIter)
     {
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(actorIter.second->GetGUID()));
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor((*actorIter).second->GetGUID()));
         IEventMgr::Get()->VTriggerEvent(pEvent);
     }
 
+    // These events have to ensure that the map will be in fact empty
     assert(m_ActorMap.empty());
 
     // Process any pending events which could have arose from deleting all actors

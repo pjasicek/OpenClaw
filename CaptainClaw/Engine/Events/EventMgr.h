@@ -122,6 +122,9 @@ public:
     // Abort all events in queue
     virtual void VAbortAllEvents() = 0;
 
+    // Returns true is the EventMgr is currently processing events
+    virtual bool VIsUpdating() = 0;
+
     // Allow for processing of any queued messages, optionally specify a processing time limit so that the event 
     // processing does not take too long. Note the danger of using this artificial limiter is that all messages 
     // may not in fact get processed.

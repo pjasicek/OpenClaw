@@ -22,6 +22,7 @@ public:
     virtual bool VThreadSafeQueueEvent(const IEventDataPtr& pEvent) override;
     virtual bool VAbortEvent(const EventType& type, bool allOfType = false) override;
     virtual void VAbortAllEvents() override;
+    virtual bool VIsUpdating() override { return m_bIsUpdating; }
 
     virtual bool VUpdate(unsigned long maxMilis = kINFINITE) override;
 
@@ -33,6 +34,7 @@ private:
     EventListenerMap m_EventListeners;
     EventQueue m_Queues[EVENTMANAGER_NUM_QUEUES];
     int m_ActiveQueue;  // index of actively processing queue; events enque to the opposing queue
+    bool m_bIsUpdating;
 
     //ThreadSafeEventQueue m_realtimeEventQueue;
 };

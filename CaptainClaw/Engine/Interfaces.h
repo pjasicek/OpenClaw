@@ -383,7 +383,7 @@ enum GameState
     GameState_LoadingLevel,
     GameState_IngameRunning,
     GameState_IngamePaused,
-    GameState_FinishedLevel,
+    GameState_LoadingScoreScreen,
     GameState_ScoreScreen,
     GameState_Cutscene
 };

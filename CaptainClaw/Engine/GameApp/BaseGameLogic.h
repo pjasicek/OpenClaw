@@ -58,6 +58,7 @@ public:
 
     // Subclasses can't override this function, they have to use VLoadGameDelegate() instead
     virtual bool VLoadGame(const char* xmlLevelResource);
+    virtual bool VLoadScoreScreen(const char* xmlScoreScreenResource);
     virtual bool VEnterMenu(const char* xmlMenuResource);
     virtual void VSetProxy();
 

@@ -10,6 +10,7 @@ EventMgr::EventMgr(const char* pName, bool setAsGlobal)
     : IEventMgr(pName, setAsGlobal)
 {
     m_ActiveQueue = 0;
+    m_bIsUpdating = false;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -191,6 +192,9 @@ void EventMgr::VAbortAllEvents()
 //---------------------------------------------------------------------------------------------------------------------
 bool EventMgr::VUpdate(unsigned long maxMillis)
 {
+    assert(!m_bIsUpdating && "Attempted to nest updating events - EventMgr::VUpdate inside EventMgr::VUpdate");
+
+    m_bIsUpdating = true;
     unsigned long currMs = SDL_GetTicks();
     unsigned long maxMs = ((maxMillis == IEventMgr::kINFINITE) ? (IEventMgr::kINFINITE) : (currMs + maxMillis));
 
@@ -264,6 +268,8 @@ bool EventMgr::VUpdate(unsigned long maxMillis)
             m_Queues[m_ActiveQueue].push_front(pEvent);
         }
     }
+
+    m_bIsUpdating = false;
 
     return queueFlushed;
 }
