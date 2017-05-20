@@ -504,7 +504,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             // Level 2 global sounds are SO DAMN LOUD
             if ((levelNumber == 2 ) && isLooping)
             {
-                soundVolume /= 3;
+                soundVolume /= 5;
             }
 
             SAFE_DELETE(pActorElem);

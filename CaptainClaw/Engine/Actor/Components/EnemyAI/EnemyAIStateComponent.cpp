@@ -1075,8 +1075,6 @@ void BaseBossAIStateComponennt::BossFightStartedDelegate(IEventDataPtr pEvent)
 
 void BaseBossAIStateComponennt::BossFightEndedDelegate(IEventDataPtr pEvent)
 {
-    VOnBossFightEnded();
-
     m_bBossFightStarted = false;
 
     // Reset health if boss did not die (Claw died) and reset his position
@@ -1087,6 +1085,12 @@ void BaseBossAIStateComponennt::BossFightEndedDelegate(IEventDataPtr pEvent)
         IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(_owner->GetGUID(), m_DefaultPosition)));
 
         m_pAnimationComponent->SetAnimation(m_BossDialogAnimation);
+
+        VOnBossFightEnded(false);
+    }
+    else
+    {
+        VOnBossFightEnded(true);
     }
 }
 
@@ -1136,4 +1140,18 @@ void LaRauxBossAIStateComponent::VOnStateLeave()
 void LaRauxBossAIStateComponent::VOnBossFightStarted()
 {
     m_pEnemyAIComponent->EnterBestState(true);
+}
+
+void LaRauxBossAIStateComponent::VOnBossFightEnded(bool isBossDead)
+{
+    if (isBossDead)
+    {
+        SoundInfo soundInfo(SOUND_GAME_AMULET_RISE);
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(soundInfo)));
+
+        soundInfo.soundToPlay = SOUND_LEVEL2_BOSS_DEAD;
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(soundInfo)));
+    }
 }

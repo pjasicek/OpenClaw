@@ -345,7 +345,7 @@ private:
 protected:
     virtual void VOnActorEnteredBossArea() { }
     virtual void VOnBossFightStarted() { }
-    virtual void VOnBossFightEnded() { }
+    virtual void VOnBossFightEnded(bool isBossDead) { }
 
     bool m_bBossFightStarted;
     std::string m_BossDialogAnimation;
@@ -377,6 +377,7 @@ public:
 
 protected:
     virtual void VOnBossFightStarted() override;
+    virtual void VOnBossFightEnded(bool isBossDead) override;
 };
 
 #endif

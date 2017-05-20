@@ -734,14 +734,28 @@ void HumanView::ActorEnteredBossAreaDelegate(IEventDataPtr pEventData)
 
 void HumanView::BossFightEndedDelegate(IEventDataPtr pEventData)
 {
+    shared_ptr<EventData_Boss_Fight_Ended> pCastEventData =
+        static_pointer_cast<EventData_Boss_Fight_Ended>(pEventData);
+
+    if (!pCastEventData->GetIsBossDead())
+    {
+        SoundInfo soundInfo(m_CurrentLevelMusic);
+        soundInfo.isMusic = true;
+        soundInfo.loops = -1;
+        //soundInfo.soundVolume = g_pApp->GetGameConfig()->musicVolume;
+        g_pApp->GetAudio()->SetMusicVolume(g_pApp->GetGameConfig()->musicVolume);
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));
+    }
+
     m_pHUD->SetElementVisible("bossbar", false);
 
-    SoundInfo soundInfo(m_CurrentLevelMusic);
+    // Does music go back to original level one once the boss is defeated ?
+    /*SoundInfo soundInfo(m_CurrentLevelMusic);
     soundInfo.isMusic = true;
     soundInfo.loops = -1;
     //soundInfo.soundVolume = g_pApp->GetGameConfig()->musicVolume;
     g_pApp->GetAudio()->SetMusicVolume(g_pApp->GetGameConfig()->musicVolume / 3);
-    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));*/
 }
 
 void HumanView::SetVolumeDelegate(IEventDataPtr pEventData)

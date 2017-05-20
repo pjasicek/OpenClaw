@@ -20,6 +20,7 @@ public:
 
 private:
     void ActorEnteredBossAreaDelegate(IEventDataPtr pEventData);
+    void BossFightEndedDelegate(IEventDataPtr pEvent);
 
     // Data properties
     std::string m_Sound;
@@ -34,6 +35,7 @@ private:
     int m_SoundDurationMs;
     int m_CurrentTimeOff;
     int m_TimeOff;
+    bool m_bIsStopped;
 };
 
 #endif //__GLOBAL_AMBIENT_SOUND_COMPONENT_H__

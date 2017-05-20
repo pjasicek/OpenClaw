@@ -22,16 +22,21 @@ GlobalAmbientSoundComponent::GlobalAmbientSoundComponent() :
     m_IsLooping(false),
     m_SoundDurationMs(0),
     m_CurrentTimeOff(0),
-    m_TimeOff(0)
+    m_TimeOff(0),
+    m_bIsStopped(false)
 { 
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &GlobalAmbientSoundComponent::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &GlobalAmbientSoundComponent::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
 }
 
 GlobalAmbientSoundComponent::~GlobalAmbientSoundComponent()
 {
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
         this, &GlobalAmbientSoundComponent::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &GlobalAmbientSoundComponent::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
 }
 
 bool GlobalAmbientSoundComponent::VInit(TiXmlElement* pData)
@@ -78,7 +83,7 @@ TiXmlElement* GlobalAmbientSoundComponent::VGenerateXml()
 
 void GlobalAmbientSoundComponent::VUpdate(uint32 msDiff)
 {
-    if (m_IsLooping)
+    if (m_IsLooping || m_bIsStopped)
     {
         return;
     }
@@ -103,5 +108,25 @@ void GlobalAmbientSoundComponent::VUpdate(uint32 msDiff)
 void GlobalAmbientSoundComponent::ActorEnteredBossAreaDelegate(IEventDataPtr pEventData)
 {
     // Hack..
-    m_IsLooping = true;
+    m_bIsStopped = true;
+}
+
+void GlobalAmbientSoundComponent::BossFightEndedDelegate(IEventDataPtr pEvent)
+{
+    shared_ptr<EventData_Boss_Fight_Ended> pCastEventData =
+        static_pointer_cast<EventData_Boss_Fight_Ended>(pEvent);
+
+    if (!pCastEventData->GetIsBossDead())
+    {
+        m_bIsStopped = false;
+
+        if (m_IsLooping)
+        {
+            SoundInfo soundInfo(m_Sound);
+            soundInfo.loops = -1;
+            soundInfo.soundVolume = m_SoundVolume;
+            IEventMgr::Get()->VQueueEvent(IEventDataPtr(
+                new EventData_Request_Play_Sound(soundInfo)));
+        }
+    }
 }
