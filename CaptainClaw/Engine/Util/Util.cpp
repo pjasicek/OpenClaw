@@ -198,16 +198,23 @@ namespace Util
                 PrintRect(rect1, "4.1");
                 PrintRect(rect2, "4.2");*/
             }
-            // !!! UNUSED !!!
             // My paper case (5)
             // This yields 3 rectangles
             else if ((tileDesc->rect.left == 0) && (tileDesc->rect.top > 0) && // Starting on the left side somewhere between top and bottom
                 (tileDesc->rect.right == tileDesc->width - 1) && (tileDesc->rect.bottom > 0)) // !!! Not 100% but it works because we have case (3) ending on right side somewhere between top and bottom
             {
+                SDL_Rect rect1 = { 0, 0, tileDesc->width, tileDesc->rect.top };
+                SDL_Rect rect2 = { 0, 0, tileDesc->width, tileDesc->rect.bottom - tileDesc->rect.top };
+                SDL_Rect rect3 = { 0, tileDesc->rect.bottom, tileDesc->width, tileDesc->height - tileDesc->rect.bottom };
+                tilePrototype->collisionRectangles.push_back({ CollisionType(tileDesc->outsideAttrib), rect1 });
+                tilePrototype->collisionRectangles.push_back({ CollisionType(tileDesc->insideAttrib), rect2 });
+                tilePrototype->collisionRectangles.push_back({ CollisionType(tileDesc->outsideAttrib), rect3 });
+
+                //LOG("TileId: " + ToStr(tileDesc->tileId));
+
                 //myfile << "Tile 5" << endl;
-                assert(false && "Paring rects case: 5");
+                //assert(false && "Paring rects case: 5");
             }
-            // !!! UNUSED !!!
             // My paper case (6)
             // This yields 3 rectangles
             else if ((tileDesc->rect.left > 0) && (tileDesc->rect.top == 0) && // Starting on top side somewhere between left and right
@@ -309,7 +316,7 @@ namespace Util
                 (tileDesc->rect.right == tileDesc->width - 1) && IsInBetween(tileDesc->rect.bottom, 0, tileDesc->height - 1))
             {
                 //myfile << "Tile 12" << endl;
-                assert(false && "Paring rects case: 12");
+                //assert(false && "Paring rects case: 12");
             }
             // My paper case (13) --- PAPERFIED
             // This yields 4 rectangles
@@ -355,8 +362,13 @@ namespace Util
         if (tilePrototype->collisionRectangles.empty())
         {
             LOG_ERROR("Collision rectangles are empty for tile: " + ToStr(tileDesc->tileId));
-            //PrintRect(tileDesc->)
-            assert(!tilePrototype->collisionRectangles.empty());
+            SDL_Rect rect;
+            rect.x = tileDesc->rect.left;
+            rect.y = tileDesc->rect.top;
+            rect.w = tileDesc->rect.right - tileDesc->rect.left;
+            rect.h = tileDesc->rect.bottom - tileDesc->rect.top;
+            PrintRect(rect, "Unknown Rect");
+            //assert(!tilePrototype->collisionRectangles.empty());
         }
 
         /*for (auto a : tilePrototype->collisionRectangles)

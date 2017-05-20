@@ -432,6 +432,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     {
         // Remove "LEVEL_" from tmpImageSet, e.g. "LEVEL_SOLDIER" -> "SOLDIER"
         tmpImageSet.erase(0, strlen("LEVEL_"));
+        tmpImagesRootPath = "/LEVEL" + ToStr(levelNumber) + "/IMAGES/";
         imageSetValid = true;
     }
     else if (tmpImageSet.find("GAME_") == 0)
@@ -447,6 +448,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     {
         LOG_WARNING("Unknown actor image path: " + std::string(wwdObject->imageSet));
     }
+    
 
     if (imageSetValid)
     {
@@ -484,6 +486,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     // Specific logics to XML
     //=========================================================================
 
+    //LOG("Logic: " + logic);
     if (logic.find("AmbientSound") != std::string::npos)
     {
         std::string sound = wwdObject->sound;
@@ -502,7 +505,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             bool isLooping = minTimeOn == 0;
 
             // Level 2 global sounds are SO DAMN LOUD
-            if ((levelNumber == 2 ) && isLooping)
+            if ((levelNumber == 2 || levelNumber == 3) && isLooping)
             {
                 soundVolume /= 5;
             }
@@ -526,8 +529,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                     pWwdObject->maxX - pWwdObject->minX, pWwdObject->maxY - pWwdObject->minY));
             }*/
 
-            assert(wwdObject->maxX != 0);
-            assert(wwdObject->maxY != 0);
+            /*assert(wwdObject->maxX != 0);
+            assert(wwdObject->maxY != 0);*/
 
             // Claw guys seem to have some typos in image set names...
             if (sound == "LEVEL_AMBIENT_ANGVIL")
@@ -540,10 +543,34 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             /*Point center(
                 (wwdObject->minX + wwdObject->maxX) / 2,
                 (wwdObject->minY + wwdObject->maxY) / 2);*/
+
             Point center(wwdObject->x, wwdObject->y);
-            Point size(
-                wwdObject->maxX - wwdObject->minX,
-                wwdObject->maxY - wwdObject->minY);
+            Point size;
+
+            if (wwdObject->maxX == 0 && wwdObject->maxY == 0)
+            {
+                assert(wwdObject->hitRect.left != 0);
+                assert(wwdObject->hitRect.right != 0);
+                assert(wwdObject->hitRect.top != 0);
+                assert(wwdObject->hitRect.bottom != 0);
+
+                center.Set(
+                    (wwdObject->hitRect.right + wwdObject->hitRect.left) / 2,
+                    (wwdObject->hitRect.bottom + wwdObject->hitRect.top) / 2);
+                size.Set(
+                    (wwdObject->hitRect.right - wwdObject->hitRect.left),
+                    (wwdObject->hitRect.bottom - wwdObject->hitRect.top));
+            }
+            else
+            {
+                size.Set(
+                    wwdObject->maxX - wwdObject->minX,
+                    wwdObject->maxY - wwdObject->minY);
+            }
+
+            assert(!center.IsZeroXY());
+            assert(!size.IsZeroXY());
+            
             if (size.y > size.x)
             {
                 size.y = size.x;
@@ -692,6 +719,17 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         else if (levelNumber == 2)
         {
             elevatorProto = ActorPrototype_Level2_Elevator;
+        }
+        else if (levelNumber == 3)
+        {
+            if (imageSet == "LEVEL_ELEVATOR1")
+            {
+                elevatorProto = ActorPrototype_Level3_Elevator_1;
+            }
+            else
+            {
+                elevatorProto = ActorPrototype_Level3_Elevator_2;
+            }
         }
         assert(elevatorProto != ActorPrototype_Start && "Unsupported level ?");
 
@@ -854,6 +892,13 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             else if (logic == "PunkRat")
             {
                 actorProto = ActorPrototype_Level2_PunkRat;
+            }
+        }
+        else if (levelNumber == 3)
+        {
+            if (logic == "Rat")
+            {
+                actorProto = ActorPrototype_Level3_Rat;
             }
         }
         assert(actorProto != ActorPrototype_Start && "Unsupported level ?");

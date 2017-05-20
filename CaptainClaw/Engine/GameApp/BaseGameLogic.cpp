@@ -856,7 +856,7 @@ void BaseGameLogic::VChangeState(GameState newState)
             m_pCurrentLevel.reset(new LevelData);
 
             m_pCurrentLevel->m_bIsNewGame = false;
-            m_pCurrentLevel->m_LeveNumber = 1;
+            m_pCurrentLevel->m_LeveNumber = 3;
             m_pCurrentLevel->m_LoadedCheckpoint = 0;
         }
 
