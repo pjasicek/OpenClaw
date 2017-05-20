@@ -111,6 +111,16 @@ string ToStr(char* val)
     return string(val);
 }
 
+string ToStr(const char* val)
+{
+    if (val == NULL)
+    {
+        return "";
+    }
+
+    return string(val);
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 // This is basically like the Perl split() function.  It splits str into substrings by cutting it at each delimiter.  
 // The result is stored in vec.

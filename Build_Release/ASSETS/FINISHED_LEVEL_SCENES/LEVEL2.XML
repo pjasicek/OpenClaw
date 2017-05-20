@@ -1,23 +1,16 @@
 <FinishedLevelScreen Level="1">
 	<BackgroundSound>
-		<SoundPath>/STATES/BOOTY/SOUNDS/MAPLOOP.WAV</SoundPath>
+		<SoundPath>/STATES/BOOTY/SOUNDS/AMULET.WAV</SoundPath>
 		<Volume>50</Volume>
 		<IsMusic>false</IsMusic>
+		<IsLooping>false</IsLooping>
 	</BackgroundSound>
-	<InitialBackgroundScreen>/STATES/BOOTY/SCREENS/001MAP.PCX</InitialBackgroundScreen>
-	<ScoreBackgroundScreen>/STATES/BOOTY/SCREENS/002MAP.PCX</ScoreBackgroundScreen>
-	<AcquiredPiece>
-		<ImagePath>/STATES/BOOTY/IMAGES/MAPPIECE/LEVEL001/*</ImagePath>
-		<SoundPath>/STATES/BOOTY/SOUNDS/IMPACT3.WAV</SoundPath>
-		<Position x="560" y="384" />
-		<IsAnimated>false</IsAnimated>
-		<Delay>2500</Delay>
-	</AcquiredPiece>
+	<InitialBackgroundScreen>/STATES/BOOTY/SCREENS/007AMULET.PCX</InitialBackgroundScreen>
+	<ScoreBackgroundScreen>/STATES/BOOTY/SCREENS/004AMULET.PCX</ScoreBackgroundScreen>
 	<ClawCommentSound>
-		<SoundPath>/STATES/BOOTY/SOUNDS/CLAW/1110004.WAV</SoundPath>
-		<Delay>7500</Delay>
+		<SoundPath>/STATES/BOOTY/SOUNDS/CLAW/1110023.WAV</SoundPath>
+		<Delay>3000</Delay>
 	</ClawCommentSound>
-	<ScoreOverviewDelay>15000</ScoreOverviewDelay>
 
 	<NextLevelNumber>0</NextLevelNumber>
 	<ScorePointsOnLevelStart>0</ScorePointsOnLevelStart>

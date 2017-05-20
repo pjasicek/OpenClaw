@@ -33,14 +33,14 @@ private:
 class ImageSpawnProcess : public Process
 {
 public:
-    ImageSpawnProcess(const std::string& imagePath, const Point& position, bool isAnimated);
+    ImageSpawnProcess(const std::string& imagePath, const Point& position, const AnimationDef& aniDef);
 
     virtual void VOnUpdate(uint32 msDiff) override;
 
 private:
     const std::string m_ImagePath;
     const Point m_Position;
-    bool m_bIsAnimated;
+    const AnimationDef m_AniDef;
 };
 
 //=================================================================================================

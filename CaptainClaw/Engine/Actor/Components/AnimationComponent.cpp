@@ -12,7 +12,8 @@ const char* AnimationComponent::g_Name = "AnimationComponent";
 AnimationComponent::AnimationComponent()
     :
     _currentAnimation(NULL),
-    m_PauseOnStart(false)
+    m_PauseOnStart(false),
+    m_PauseOnEnd(false)
 { }
 
 AnimationComponent::~AnimationComponent()
@@ -87,10 +88,8 @@ bool AnimationComponent::VInit(TiXmlElement* data)
         m_SpecialAnimationList.push_back(specialAnim);
     }
 
-    if (TiXmlElement* pElem = data->FirstChildElement("PauseOnStart"))
-    {
-        m_PauseOnStart = std::string(pElem->GetText()) == "true";
-    }
+    ParseValueFromXmlElem(&m_PauseOnStart, data->FirstChildElement("PauseOnStart"));
+    ParseValueFromXmlElem(&m_PauseOnEnd, data->FirstChildElement("PauseOnEnd"));
 
     if (_animationMap.empty() && m_SpecialAnimationRequestList.empty() && m_SpecialAnimationList.empty())
     {
@@ -367,6 +366,11 @@ void AnimationComponent::OnAnimationLooped()
 void AnimationComponent::OnAnimationAtLastFrame()
 {
     NotifyAnimationAtLastFrame(_currentAnimation);
+
+    if (m_PauseOnEnd)
+    {
+        _currentAnimation->Pause();
+    }
 }
 
 void AnimationComponent::SetDelay(uint32 msDelay)

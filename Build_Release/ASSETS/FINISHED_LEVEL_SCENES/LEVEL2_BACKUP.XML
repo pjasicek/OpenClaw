@@ -1,20 +1,25 @@
 <FinishedLevelScreen Level="1">
 	<BackgroundSound>
-		<SoundPath>/STATES/BOOTY/SOUNDS/MAPLOOP.WAV</SoundPath>
+		<SoundPath>/STATES/BOOTY/SOUNDS/AMULET.WAV</SoundPath>
 		<Volume>50</Volume>
 		<IsMusic>false</IsMusic>
+		<IsLooping>false</IsLooping>
 	</BackgroundSound>
-	<InitialBackgroundScreen>/STATES/BOOTY/SCREENS/001MAP.PCX</InitialBackgroundScreen>
-	<ScoreBackgroundScreen>/STATES/BOOTY/SCREENS/002MAP.PCX</ScoreBackgroundScreen>
+	<InitialBackgroundScreen>/STATES/BOOTY/SCREENS/003AMULET.PCX</InitialBackgroundScreen>
+	<ScoreBackgroundScreen>/STATES/BOOTY/SCREENS/004AMULET.PCX</ScoreBackgroundScreen>
 	<AcquiredPiece>
-		<ImagePath>/STATES/BOOTY/IMAGES/MAPPIECE/LEVEL001/*</ImagePath>
-		<SoundPath>/STATES/BOOTY/SOUNDS/IMPACT3.WAV</SoundPath>
-		<Position x="560" y="384" />
-		<IsAnimated>false</IsAnimated>
+		<ImagePath>/STATES/BOOTY/IMAGES/MAPPIECE/LEVEL002/*</ImagePath>
+		<SoundPath>/STATES/BOOTY/SOUNDS/GEM.WAV</SoundPath>
+		<Position x="300" y="300" />
+		<AnimationDef>
+			<HasAnimation>true</HasAnimation>
+			<IsCycleAnimation>true</IsCycleAnimation>
+			<CycleDuration>50</CycleDuration>
+		</AnimationDef>
 		<Delay>2500</Delay>
 	</AcquiredPiece>
 	<ClawCommentSound>
-		<SoundPath>/STATES/BOOTY/SOUNDS/CLAW/1110004.WAV</SoundPath>
+		<SoundPath>/STATES/BOOTY/SOUNDS/CLAW/1110023.WAV</SoundPath>
 		<Delay>7500</Delay>
 	</ClawCommentSound>
 	<ScoreOverviewDelay>15000</ScoreOverviewDelay>

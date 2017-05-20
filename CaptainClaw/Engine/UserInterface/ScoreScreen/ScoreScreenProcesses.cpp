@@ -30,11 +30,11 @@ void DelayedProcess::VOnUpdate(uint32 msDiff)
 // ImageSpawnProcess implementation
 //=================================================================================================
 
-ImageSpawnProcess::ImageSpawnProcess(const std::string& imagePath, const Point& position, bool isAnimated)
+ImageSpawnProcess::ImageSpawnProcess(const std::string& imagePath, const Point& position, const AnimationDef& aniDef)
     :
     m_ImagePath(imagePath),
     m_Position(position),
-    m_bIsAnimated(isAnimated),
+    m_AniDef(aniDef),
     Process()
 {
 
@@ -42,8 +42,7 @@ ImageSpawnProcess::ImageSpawnProcess(const std::string& imagePath, const Point& 
 
 void ImageSpawnProcess::VOnUpdate(uint32 msDiff)
 {
-    ActorPrototype proto = m_bIsAnimated ? ActorPrototype_StaticAnimatedImage : ActorPrototype_StaticImage;
-    SpawnImageActor(m_ImagePath, m_Position);
+    SpawnImageActor(m_ImagePath, m_Position, m_AniDef);
     Succeed();
 }
 

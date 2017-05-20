@@ -636,7 +636,9 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
     assert(ParseValueFromXmlElem(&backgroundSound.soundToPlay, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.SoundPath"));
     assert(ParseValueFromXmlElem(&backgroundSound.soundVolume, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.Volume"));
     assert(ParseValueFromXmlElem(&backgroundSound.isMusic, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.IsMusic"));
-    backgroundSound.loops = -1;
+    bool isLooping = true;
+    ParseValueFromXmlElem(&isLooping, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.IsLooping");
+    backgroundSound.loops = isLooping ? -1 : 0;
     assert(!backgroundSound.soundToPlay.empty());
     IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Request_Play_Sound(backgroundSound)));
 
@@ -654,20 +656,25 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
     {
         std::string acquiredPieceImagePath;
         Point acquiredPiecePosition;
-        bool isAnimated;
+        AnimationDef aniDef;
         int delay;
         std::string sound;
 
         assert(ParseValueFromXmlElem(&acquiredPieceImagePath, pAcquiredPieceElem->FirstChildElement("ImagePath")));
         assert(ParseValueFromXmlElem(&acquiredPiecePosition, pAcquiredPieceElem->FirstChildElement("Position"), "x", "y"));
-        assert(ParseValueFromXmlElem(&isAnimated, pAcquiredPieceElem->FirstChildElement("IsAnimated")));
         assert(ParseValueFromXmlElem(&delay, pAcquiredPieceElem->FirstChildElement("Delay")));
         assert(ParseValueFromXmlElem(&sound, pAcquiredPieceElem->FirstChildElement("SoundPath")));
+        if (TiXmlElement* pAnimElem = pAcquiredPieceElem->FirstChildElement("AnimationDef"))
+        {
+            assert(ParseValueFromXmlElem(&aniDef.hasAnimation, pAnimElem->FirstChildElement("HasAnimation")));
+            assert(ParseValueFromXmlElem(&aniDef.isCycleAnimation, pAnimElem->FirstChildElement("IsCycleAnimation")));
+            assert(ParseValueFromXmlElem(&aniDef.cycleAnimationDuration, pAnimElem->FirstChildElement("CycleDuration")));
+        }
 
         StrongProcessPtr pShowAcquiredPieceImageProc(new ImageSpawnProcess(
             acquiredPieceImagePath,
             acquiredPiecePosition,
-            isAnimated));
+            aniDef));
         QueueDelayedProcess(pShowAcquiredPieceImageProc, delay);
 
         SoundInfo soundInfo(sound);
@@ -676,7 +683,8 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
     }
     else
     {
-        assert(false && "Acquired piece XML element is missing");
+        //assert(false && "Acquired piece XML element is missing");
+        LOG_WARNING("Acquired piece element is not present !");
     }
 
     int clawFinishDialogTime = 0;

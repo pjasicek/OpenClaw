@@ -84,6 +84,7 @@ public:
 private:
 
     bool m_PauseOnStart;
+    bool m_PauseOnEnd;
 
     // Animation events
     void OnAnimationFrameFinished(AnimationFrame* frame);

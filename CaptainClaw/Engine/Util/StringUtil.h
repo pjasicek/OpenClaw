@@ -22,6 +22,7 @@ extern std::string ToStr(float num);
 extern std::string ToStr(double num);
 extern std::string ToStr(bool val);
 extern std::string ToStr(char* val);
+extern std::string ToStr(const char* val);
 extern std::string ToStr(std::string str);
 
 // Splits a string by the delimeter into a vector of strings.  For example, say you have the following string:

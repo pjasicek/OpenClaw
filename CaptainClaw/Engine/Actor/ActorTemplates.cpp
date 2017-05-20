@@ -1852,6 +1852,15 @@ namespace ActorTemplates
 
         assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
 
+        if (proto == ActorPrototype_StaticAnimatedImage && aniDef.hasAnimation)
+        {
+            assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.Type", "cycle"));
+            assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.FrameDuration", aniDef.cycleAnimationDuration));
+            assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.HasPositionDelay", false));
+
+            //pActorElem->Print(stdout, -1);
+        }
+
         return pActorElem;
     }
 

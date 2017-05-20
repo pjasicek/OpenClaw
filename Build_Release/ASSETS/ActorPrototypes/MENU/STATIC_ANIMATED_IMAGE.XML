@@ -3,7 +3,6 @@
 		<Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
 	</PositionComponent>
 	<ActorRenderComponent>
-		<imgpath>NONE</imgpath>
 		<Visible>true</Visible>
 		<Mirrored>false</Mirrored>
 		<Inverted>false</Inverted>
