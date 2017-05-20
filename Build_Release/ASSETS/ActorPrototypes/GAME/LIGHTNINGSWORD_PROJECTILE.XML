@@ -1,8 +1,15 @@
-<Actor Type="FireSword_Projectile" Parent="ActorPrototype_BaseProjectile" ActorPrototypeName="ActorPrototype_LightningSwordProjectile">
+<Actor Type="LightningSowrd_Projectile" Parent="ActorPrototype_BaseProjectile" ActorPrototypeName="ActorPrototype_LightningSwordProjectile">
 	<ActorRenderComponent>
 		<imgpath>GAME_PROJECTILES_LIGHTNINGSWORD</imgpath>
 		<ImagePath>/GAME/IMAGES/PROJECTILES/LIGHTNINGSWORD/*</ImagePath>
 	</ActorRenderComponent>
+	<AnimationComponent>
+		<SpecialAnimation>
+			<Type>cycle</Type>
+			<FrameDuration>75</FrameDuration>
+			<HasPositionDelay>false</HasPositionDelay>
+		</SpecialAnimation>
+	</AnimationComponent>
 	<ProjectileAIComponent>
 		<Damage>100</Damage>
 		<ProjectileType>DamageType_LightningSword</ProjectileType>

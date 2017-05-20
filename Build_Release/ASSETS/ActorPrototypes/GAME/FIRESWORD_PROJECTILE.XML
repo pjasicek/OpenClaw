@@ -3,6 +3,13 @@
 		<imgpath>GAME_PROJECTILES_FIRESWORD</imgpath>
 		<ImagePath>/GAME/IMAGES/PROJECTILES/FIRESWORD/*</ImagePath>
 	</ActorRenderComponent>
+	<AnimationComponent>
+		<SpecialAnimation>
+			<Type>cycle</Type>
+			<FrameDuration>75</FrameDuration>
+			<HasPositionDelay>false</HasPositionDelay>
+		</SpecialAnimation>
+	</AnimationComponent>
 	<ProjectileAIComponent>
 		<Damage>100</Damage>
 		<ProjectileType>DamageType_FireSword</ProjectileType>

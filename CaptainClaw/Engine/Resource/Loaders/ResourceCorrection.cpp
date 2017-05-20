@@ -32,6 +32,10 @@ void OnPidLoaded(const char* resource, WapPid* pPid)
     {
         pPid->offsetY -= 46;
     }
+    else if (resourceName.find("/level3/images/ratbomb/") != std::string::npos)
+    {
+        pPid->offsetY -= 40;
+    }
 }
 
 void OnAniLoaded(const char* resource, WapAni* pAni)

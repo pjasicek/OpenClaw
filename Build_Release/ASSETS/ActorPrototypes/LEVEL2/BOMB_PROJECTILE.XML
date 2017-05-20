@@ -2,6 +2,13 @@
 	<ActorRenderComponent>
 		<ImagePath>/LEVEL2/IMAGES/CANNONBALL/*</ImagePath>
 	</ActorRenderComponent>
+	<AnimationComponent>
+		<SpecialAnimation>
+			<Type>cycle</Type>
+			<FrameDuration>75</FrameDuration>
+			<HasPositionDelay>false</HasPositionDelay>
+		</SpecialAnimation>
+	</AnimationComponent>
 	<ProjectileAIComponent>
 		<Damage>25</Damage>
 		<ProjectileType>DamageType_Bullet</ProjectileType>

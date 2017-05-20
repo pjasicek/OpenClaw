@@ -4,20 +4,12 @@
 		<Position x="-1" y="-1" /> 
 	</PositionComponent>
 	<ActorRenderComponent>
-		<imgpath>NONE</imgpath>
 		<Visible>true</Visible>
 		<Mirrored>false</Mirrored>
 		<Inverted>false</Inverted>
 		<ZCoord>5000</ZCoord>
 		<ImagePath>NONE</ImagePath>
 	</ActorRenderComponent>
-	<AnimationComponent>
-		<SpecialAnimation>
-			<Type>cycle</Type>
-			<FrameDuration>75</FrameDuration>
-			<HasPositionDelay>false</HasPositionDelay>
-		</SpecialAnimation>
-	</AnimationComponent>
 	<ProjectileAIComponent>
 		<Damage>0</Damage>
 		<ProjectileType>DamageType_None</ProjectileType>

@@ -1834,8 +1834,14 @@ namespace ActorTemplates
                 "x", (int)projectileSpeed.x, "y", (int)projectileSpeed.y));
 
             // Mirror render component
+            bool isMirroredByDefault = false;
+            TiXmlElement* pIsMirroredElem = GetTiXmlElementFromPath(pActorElem, "Actor.ActorRenderComponent.Mirrored");
+            if (pIsMirroredElem != NULL)
+            {
+                ParseValueFromXmlElem(&isMirroredByDefault, pIsMirroredElem);
+            }
 
-            assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.Mirrored", true));
+            assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.Mirrored", isMirroredByDefault == false));
         }
 
         return pActorElem;

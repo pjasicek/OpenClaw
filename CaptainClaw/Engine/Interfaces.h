@@ -270,6 +270,7 @@ enum ActorPrototype
     // Projectiles
     ActorPrototype_Level2_CannonBall,
     ActorPrototype_Level2_RatProjectile,
+    ActorPrototype_Level3_RatBomb,
 
     // Boss stagers
     ActorPrototype_Level2_BossStager,
