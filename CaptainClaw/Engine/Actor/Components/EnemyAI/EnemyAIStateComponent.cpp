@@ -75,6 +75,8 @@ static shared_ptr<EnemyAttackAction> XmlToEnemyAttackActionPtr(TiXmlElement* pEl
         pAttackAction->projectileProto = StringToEnum_ActorPrototype(projectileProtoStr);
     }
 
+    ParseValueFromXmlElem(&pAttackAction->isMirrored, pElem->FirstChildElement("IsMirrored"));
+
     pAttackAction->agroSensorFixture = ActorTemplates::XmlToActorFixtureDef(pElem->FirstChildElement("AgroSensorFixture"));
 
     return pAttackAction;
@@ -956,14 +958,24 @@ bool DuckRangedAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
 
 void DuckRangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset)
 {
-    ActorTemplates::CreateProjectile(
-        pAttack->attackFxImageSet,
-        pAttack->damage,
-        pAttack->attackDamageType,
-        dir,
-        m_pPositionComponent->GetPosition() + offset,
-        CollisionFlag_EnemyAIProjectile,
-        (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController));
+    if (pAttack->projectileProto == ActorPrototype_None)
+    {
+        ActorTemplates::CreateProjectile(
+            pAttack->attackFxImageSet,
+            pAttack->damage,
+            pAttack->attackDamageType,
+            dir,
+            m_pPositionComponent->GetPosition() + offset,
+            CollisionFlag_EnemyAIProjectile,
+            (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController));
+    }
+    else
+    {
+        ActorTemplates::CreateActor_Projectile(
+            pAttack->projectileProto,
+            m_pPositionComponent->GetPosition() + offset,
+            dir);
+    }
 
     // Play ranged attack sound
     Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetRangedAttackSounds());

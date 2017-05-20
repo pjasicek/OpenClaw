@@ -492,6 +492,7 @@ struct EnemyAttackAction
         attackDamageType = DamageType_None;
         projectileProto = ActorPrototype_None;
         attackFxImageSet = "NONE";
+        isMirrored = false;
     }
 
     ActorPrototype projectileProto;
@@ -499,6 +500,7 @@ struct EnemyAttackAction
     std::string animation;
     uint32 attackAnimFrameIdx;
     std::string attackFxImageSet;
+    bool isMirrored;
 
     DamageType attackDamageType;
 

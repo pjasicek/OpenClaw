@@ -1,0 +1,17 @@
+<Actor Type="Level3_ArrowProjectile" Parent="ActorPrototype_BaseProjectile" ActorPrototypeName="ActorPrototype_Level3_ArrowProjectile">
+	<ActorRenderComponent>
+		<Mirrored>false</Mirrored>
+		<ImagePath>/LEVEL3/IMAGES/ARROW/*</ImagePath>
+		<Palette>/LEVEL3/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<ProjectileAIComponent>
+		<Damage>10</Damage>
+		<ProjectileType>DamageType_Bullet</ProjectileType>
+		<!-- CAN BE MODIFIED IN CODE -->
+		<ProjectileSpeed x="10.00000" y="0.000000" /> 
+	</ProjectileAIComponent>
+	<PhysicsComponent>
+        <CollisionFlag>262144</CollisionFlag>
+        <CollisionMask>1048834</CollisionMask>
+    </PhysicsComponent>
+</Actor>
