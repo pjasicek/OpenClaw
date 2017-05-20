@@ -145,13 +145,9 @@ static int SetupPlayMusicThread(void* pData)
 
     return 0;
 }
-#include <ostream>
+
 void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
 {
-    std::ofstream outFile("out.midi", ios::out | ios::binary);
-    outFile.write(musicData, musicSize);
-    outFile.close();
-
     if (!m_bMusicOn)
     {
         return;

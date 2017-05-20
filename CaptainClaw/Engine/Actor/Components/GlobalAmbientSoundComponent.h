@@ -8,6 +8,7 @@ class GlobalAmbientSoundComponent : public ActorComponent
 {
 public:
     GlobalAmbientSoundComponent();
+    virtual ~GlobalAmbientSoundComponent();
 
     static const char* g_Name;
     virtual const char* VGetName() const override { return g_Name; }
@@ -18,6 +19,8 @@ public:
     virtual void VUpdate(uint32 msDiff) override;
 
 private:
+    void ActorEnteredBossAreaDelegate(IEventDataPtr pEventData);
+
     // Data properties
     std::string m_Sound;
     int m_SoundVolume;

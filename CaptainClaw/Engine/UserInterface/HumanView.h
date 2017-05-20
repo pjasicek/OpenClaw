@@ -78,6 +78,8 @@ protected:
     void TeleportActorDelegate(IEventDataPtr pEventData);
     void EnterMenuDelegate(IEventDataPtr pEventData);
     void FinishedLevelDelegate(IEventDataPtr pEventData);
+    void ActorEnteredBossAreaDelegate(IEventDataPtr pEventData);
+    void BossFightEndedDelegate(IEventDataPtr pEventData);
 
     uint32 m_ViewId;
     uint32 m_ActorId;

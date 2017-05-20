@@ -343,6 +343,11 @@ void HumanView::RegisterAllDelegates()
         this, &HumanView::EnterMenuDelegate), EventData_Enter_Menu::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &HumanView::FinishedLevelDelegate), EventData_Finished_Level::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
+    
 }
 
 void HumanView::RemoveAllDelegates()
@@ -372,6 +377,10 @@ void HumanView::RemoveAllDelegates()
         this, &HumanView::EnterMenuDelegate), EventData_Enter_Menu::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
         this, &HumanView::FinishedLevelDelegate), EventData_Finished_Level::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &HumanView::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &HumanView::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
 }
 
 //=====================================================================================================================
@@ -706,6 +715,35 @@ void HumanView::FinishedLevelDelegate(IEventDataPtr pEventData)
     
 }
 
+void HumanView::ActorEnteredBossAreaDelegate(IEventDataPtr pEventData)
+{
+    m_pHUD->SetElementVisible("bossbar", true);
+
+    assert(g_pApp->GetGameLogic()->GetCurrentLevelData() != nullptr);
+    int currentLevel = g_pApp->GetGameLogic()->GetCurrentLevelData()->GetLevelNumber();
+
+    std::string bossMusicPath = "LEVEL" + ToStr(currentLevel) + "/MUSIC/BOSS.XMI";
+
+    SoundInfo soundInfo(bossMusicPath);
+    soundInfo.isMusic = true;
+    soundInfo.loops = -1;
+    //soundInfo.soundVolume = g_pApp->GetGameConfig()->musicVolume * 3;
+    g_pApp->GetAudio()->SetMusicVolume(g_pApp->GetGameConfig()->musicVolume * 3);
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));
+}
+
+void HumanView::BossFightEndedDelegate(IEventDataPtr pEventData)
+{
+    m_pHUD->SetElementVisible("bossbar", false);
+
+    SoundInfo soundInfo(m_CurrentLevelMusic);
+    soundInfo.isMusic = true;
+    soundInfo.loops = -1;
+    //soundInfo.soundVolume = g_pApp->GetGameConfig()->musicVolume;
+    g_pApp->GetAudio()->SetMusicVolume(g_pApp->GetGameConfig()->musicVolume / 3);
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));
+}
+
 void HumanView::SetVolumeDelegate(IEventDataPtr pEventData)
 {
     shared_ptr<EventData_Set_Volume> pCastEventData =
@@ -839,11 +877,15 @@ void DeathFadeInOutProcess::VOnInit()
     assert(g_pApp->GetHumanView()->GetCamera());
 
     // Recalc epicenter to screen-local coordinates
-    Point windowSize = g_pApp->GetWindowSize();
+    Point windowSize = g_pApp->GetWindowSizeScaled();
     shared_ptr<CameraNode> pCamera = g_pApp->GetHumanView()->GetCamera();
     Point cameraPos = pCamera->GetPosition();
 
     m_Epicenter.Set(m_Epicenter.x - cameraPos.x, m_Epicenter.y - cameraPos.y);
+
+    // Apply scale
+    Point scale = g_pApp->GetScale();
+    m_Epicenter.Set(m_Epicenter.x / scale.x, m_Epicenter.y / scale.y);
 
     // Stop game logic update during fade in/out
     g_pApp->GetGameLogic()->SetRunning(false);
@@ -927,7 +969,7 @@ void DeathFadeInOutProcess::VRender(uint32 msDiff)
 {
     SDL_Renderer* pRenderer = g_pApp->GetRenderer();
 
-    Point windowSize = g_pApp->GetWindowSize();
+    Point windowSize = g_pApp->GetWindowSizeScaled();
     
     /*g_pApp->GetHumanView()->SetRendering(true);
     g_pApp->GetHumanView()->VOnRender(msDiff);
@@ -1142,7 +1184,7 @@ void TeleportFadeInOutProcess::VOnInit()
     g_pApp->GetHumanView()->SetPostponeRenderPresent(true);
     g_pApp->GetHumanView()->SetRendering(false);
 
-    Point windowSize = g_pApp->GetWindowSize();
+    Point windowSize = g_pApp->GetWindowSizeScaled();
 
     // Calculate graphics fade speed
     m_FadeInSpeed.x = (windowSize.x / (double)m_FadeInDuration) / 2.0;
@@ -1219,7 +1261,7 @@ void TeleportFadeInOutProcess::VRender(uint32 msDiff)
 {
     SDL_Renderer* pRenderer = g_pApp->GetRenderer();
 
-    Point windowSize = g_pApp->GetWindowSize();
+    Point windowSize = g_pApp->GetWindowSizeScaled();
 
     // Render fade in/outs according to current state
     int referenceTime = 0;

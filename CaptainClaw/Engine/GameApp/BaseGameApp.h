@@ -201,6 +201,7 @@ public:
 
     SDL_Window* GetWindow() const { return m_pWindow; }
     Point GetWindowSize() { return m_WindowSize; }
+    Point GetWindowSizeScaled() { return Point(m_WindowSize.x / GetScale().x, m_WindowSize.y / GetScale().y); }
     void RequestWindowSizeChange(Point newSize, bool fullscreen);
 
     inline EventMgr* GetEventMgr() const { return m_pEventMgr; }

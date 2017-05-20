@@ -51,6 +51,10 @@ const EventType EventData_Add_Static_Geometry::sk_EventType(0x456abc2);
 const EventType EventData_Enter_Menu::sk_EventType(0xdc4606a5);
 const EventType EventData_Item_Picked_Up::sk_EventType(0xdc5706a5);
 const EventType EventData_Finished_Level::sk_EventType(0xdc5706f5);
+const EventType EventData_Entered_Boss_Area::sk_EventType(0x6a51ffff);
+const EventType EventData_Boss_Fight_Started::sk_EventType(0x62ccc8af);
+const EventType EventData_Boss_Fight_Ended::sk_EventType(0x62cdd8af);
+const EventType EventData_Boss_Health_Changed::sk_EventType(0x2222d8af);
 
 /*bool EventData_PlaySound::VBuildEventFromScript(void)
 {

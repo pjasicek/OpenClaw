@@ -318,7 +318,8 @@ bool HealthPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
 
 TeleportPickupComponent::TeleportPickupComponent()
     :
-    m_Destination(Point(0, 0))
+    m_Destination(Point(0, 0)),
+    m_bIsBossWarp(false)
 { }
 
 bool TeleportPickupComponent::VDelegateInit(TiXmlElement* data)
@@ -335,6 +336,8 @@ bool TeleportPickupComponent::VDelegateInit(TiXmlElement* data)
         LOG_ERROR("TeleportPickupComponent does not have destination set.");
         return false;
     }
+
+    ParseValueFromXmlElem(&m_bIsBossWarp, data->FirstChildElement("IsBossWarp"));
 
     if (m_Destination.x <= 0 || m_Destination.y <= 0)
     {
@@ -354,6 +357,15 @@ bool TeleportPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
 {
     shared_ptr<EventData_Teleport_Actor> pTeleportEvent(new EventData_Teleport_Actor(pActorWhoPickedThis->GetGUID(), m_Destination, true));
     IEventMgr::Get()->VQueueEvent(pTeleportEvent);
+
+    // HACK: ...
+    if (m_bIsBossWarp)
+    {
+        SoundInfo soundInfo(m_PickupSound);
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(soundInfo)));
+        return false;
+    }
 
     shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
     IEventMgr::Get()->VQueueEvent(pEvent);

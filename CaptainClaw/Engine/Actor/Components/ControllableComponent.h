@@ -48,6 +48,8 @@ public:
 
     virtual bool IsClimbing() = 0;
 
+    virtual void SetFrozen(bool frozen) { m_bFrozen = frozen; }
+
     void SetLookingUpTime(int32 msTime) { m_LookingUpTime = msTime; }
     void AddLookingUpTime(int32 msTime) { m_LookingUpTime += msTime; }
 
@@ -56,6 +58,7 @@ public:
 
 protected:
     bool m_Active;
+    bool m_bFrozen;
 
     int m_DuckingTime;
     int m_LookingUpTime;
@@ -136,8 +139,13 @@ public:
     virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) override;
 
 private:
+    void BossFightStartedDelegate(IEventDataPtr pEvent);
+    void BossFightEndedDelegate(IEventDataPtr pEvent);
+
     void SetCurrentPhysicsState();
     bool IsAttackingOrShooting();
+
+    bool m_bIsInBossFight;
 
     int m_TakeDamageDuration;
     int m_TakeDamageTimeLeftMs;

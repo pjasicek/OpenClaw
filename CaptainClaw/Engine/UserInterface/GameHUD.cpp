@@ -29,14 +29,23 @@ ScreenElementHUD::ScreenElementHUD()
     :
     m_IsVisible(true),
     m_pFPSTexture(NULL),
-    m_pPositionTexture(NULL)
+    m_pPositionTexture(NULL),
+    m_pBossBarTexture(NULL)
 {
-   
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &ScreenElementHUD::BossHealthChangedDelegate), EventData_Boss_Health_Changed::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &ScreenElementHUD::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
 }
 
 ScreenElementHUD::~ScreenElementHUD()
 {
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &ScreenElementHUD::BossHealthChangedDelegate), EventData_Boss_Health_Changed::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &ScreenElementHUD::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
+
     m_HUDElementsMap.clear();
+
+    SDL_DestroyTexture(m_pFPSTexture);
+    SDL_DestroyTexture(m_pPositionTexture);
+    SDL_DestroyTexture(m_pBossBarTexture);
 }
 
 bool ScreenElementHUD::Initialize(SDL_Renderer* pRenderer, shared_ptr<CameraNode> pCamera)
@@ -162,6 +171,23 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
         renderRect.x = (int)(m_pCamera->GetWidth() / scale.x - renderRect.w - 1);
         renderRect.y = (int)(m_pCamera->GetHeight() / scale.y - renderRect.h - 1);
         SDL_RenderCopy(m_pRenderer, m_pPositionTexture, NULL, &renderRect);
+    }
+
+    if (m_pBossBarTexture)
+    {
+        Point pos;
+        Point windowSize = g_pApp->GetWindowSize();
+        Point windowScale = g_pApp->GetScale();
+
+        pos.Set(
+            (((windowSize.x * 0.5) / windowScale.x) - 114),
+            ((windowSize.y * 0.8) / windowScale.y) - 3);
+
+        SDL_Rect renderRect;
+        SDL_QueryTexture(m_pBossBarTexture, NULL, NULL, &renderRect.w, &renderRect.h);
+        renderRect.x = pos.x;
+        renderRect.y = pos.y;
+        SDL_RenderCopy(m_pRenderer, m_pBossBarTexture, NULL, &renderRect);
     }
 }
 
@@ -306,4 +332,37 @@ bool ScreenElementHUD::IsElementVisible(std::string element)
     }
 
     return false;
+}
+
+void ScreenElementHUD::BossHealthChangedDelegate(IEventDataPtr pEvent)
+{
+    shared_ptr<EventData_Boss_Health_Changed> pCastEventData =
+        static_pointer_cast<EventData_Boss_Health_Changed>(pEvent);
+
+    if (pCastEventData->GetNewHealthLeft() <= 0)
+    {
+        SDL_DestroyTexture(m_pBossBarTexture);
+        return;
+    }
+
+    const int FULL_LENGTH = 228;
+
+    int length = (int)(((float)pCastEventData->GetNewHealthPercentage() / 100.0f) * FULL_LENGTH);
+
+    if (m_pBossBarTexture)
+    {
+        SDL_DestroyTexture(m_pBossBarTexture);
+    }
+
+    m_pBossBarTexture = Util::CreateSDLTextureRect(length, 7, COLOR_RED, m_pRenderer);
+}
+
+void ScreenElementHUD::BossFightEndedDelegate(IEventDataPtr pEvent)
+{
+    LOG("GOTIT!")
+    if (m_pBossBarTexture)
+    {
+        SDL_DestroyTexture(m_pBossBarTexture);
+        m_pBossBarTexture = NULL;
+    }
 }

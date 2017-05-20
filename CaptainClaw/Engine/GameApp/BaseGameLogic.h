@@ -100,6 +100,8 @@ protected:
     void RequestDestroyActorDelegate(IEventDataPtr pEventData);
     void ItemPickedUpDelegate(IEventDataPtr pEventData);
     void FinishedLevelDelegate(IEventDataPtr pEventData);
+    void ActorEnteredBossAreaDelegate(IEventDataPtr pEventData);
+    void BossFightStartedDelegate(IEventDataPtr pEventData);
 
     StrongActorPtr GetClawActor();
 

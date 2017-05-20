@@ -23,7 +23,16 @@ GlobalAmbientSoundComponent::GlobalAmbientSoundComponent() :
     m_SoundDurationMs(0),
     m_CurrentTimeOff(0),
     m_TimeOff(0)
-{ }
+{ 
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &GlobalAmbientSoundComponent::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+}
+
+GlobalAmbientSoundComponent::~GlobalAmbientSoundComponent()
+{
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &GlobalAmbientSoundComponent::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+}
 
 bool GlobalAmbientSoundComponent::VInit(TiXmlElement* pData)
 {
@@ -89,4 +98,10 @@ void GlobalAmbientSoundComponent::VUpdate(uint32 msDiff)
 
         m_CurrentTimeOff = 0;
     }
+}
+
+void GlobalAmbientSoundComponent::ActorEnteredBossAreaDelegate(IEventDataPtr pEventData)
+{
+    // Hack..
+    m_IsLooping = true;
 }

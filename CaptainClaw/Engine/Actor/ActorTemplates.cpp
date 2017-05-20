@@ -87,6 +87,7 @@ namespace ActorTemplates
         { PickupType_Powerup_LightningSword,    &CreateXmlData_PowerupPickupActor },
         { PickupType_Powerup_FrostSword,        &CreateXmlData_PowerupPickupActor },
         { PickupType_BossWarp,                  &CreateXmlData_WarpPickupActor },
+        { PickupType_Level2_Gem,                &CreateXmlData_MappiecePickupActor },
         { PickupType_Max,                       NULL },
     };
 
@@ -232,6 +233,7 @@ namespace ActorTemplates
             { PickupType_Powerup_LightningSword,    "GAME_POWERUPS_FIRESWORD" },
             { PickupType_Powerup_FrostSword,        "GAME_POWERUPS_ICESWORD" },
             { PickupType_BossWarp,                  "GAME_BOSSWARP" },
+            { PickupType_Level2_Gem,                "LEVEL_GEM" },
         };
 
         auto findIt = s_PickupTypeToImageSetMap.find(pickupType);
@@ -306,6 +308,7 @@ namespace ActorTemplates
         { PickupType_Powerup_LightningSword,    SOUND_CLAW_PICKUP_LIGHTNING_SWORD },
         { PickupType_Powerup_FrostSword,        SOUND_CLAW_PICKUP_FROST_SWORD },
         { PickupType_BossWarp,                  SOUND_GAME_ENTER_WARP },
+        { PickupType_Level2_Gem,                SOUND_GAME_MAPPIECE },
     };
 
     //=====================================================================================================================
@@ -346,8 +349,6 @@ namespace ActorTemplates
 
             std::string level = "/LEVEL" + ToStr(levelNumber);
             imageSet.replace(imageSet.begin(), imageSet.begin() + strlen("LEVEL/"), level + "/IMAGES/");
-
-            LOG("imageset: " + imageSet);
         }
         else
         {
@@ -1326,6 +1327,7 @@ namespace ActorTemplates
 
         TiXmlElement* pWarpPickupComponent = new TiXmlElement("TeleportPickupComponent");
         AddXmlTextElement("PickupType", (int)pickupType, pWarpPickupComponent);
+        AddXmlTextElement("IsBossWarp", pickupType == PickupType_BossWarp, pWarpPickupComponent);
         XML_ADD_2_PARAM_ELEMENT("Destination", "x", destinationX.c_str(), "y", destinationY.c_str(), pWarpPickupComponent);
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pWarpPickupComponent);
         pActor->LinkEndChild(pWarpPickupComponent);

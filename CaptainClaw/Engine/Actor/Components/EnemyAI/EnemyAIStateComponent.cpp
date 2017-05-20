@@ -24,6 +24,8 @@ const char* MeleeAttackAIStateComponent::g_Name = "MeleeAttackAIStateComponent";
 const char* DuckMeleeAttackAIStateComponent::g_Name = "DuckMeleeAttackAIStateComponent";
 const char* RangedAttackAIStateComponent::g_Name = "RangedAttackAIStateComponent";
 const char* DuckRangedAttackAIStateComponent::g_Name = "DuckRangedAttackAIStateComponent";
+const char* BaseBossAIStateComponennt::g_Name = "BaseBossAIStateComponennt";
+const char* LaRauxBossAIStateComponent::g_Name = "LaRauxBossAIStateComponent";
 
 #define MAX_STATE_PRIORITY INT32_MAX
 #define MIN_STATE_PRIORITY INT32_MIN
@@ -214,7 +216,7 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     :
     m_LeftPatrolBorder(0),
     m_RightPatrolBorder(0),
-    m_Direction(Direction_Right),
+    m_Direction(Direction_Left),
     //m_pCurrentAction(NULL),
     BaseEnemyAIStateComponent("PatrolState"),
     m_PatrolSpeed(0.0),
@@ -494,9 +496,9 @@ void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
 
     // Move them into the middle of their patrol path at the beginning
     // Doing not so caused some bugs with level resets
-    Point spawnPosition((m_LeftPatrolBorder + m_RightPatrolBorder) / 2, m_pPositionComponent->GetY());
+    /*Point spawnPosition((m_LeftPatrolBorder + m_RightPatrolBorder) / 2, m_pPositionComponent->GetY());
     m_pPhysics->VSetPosition(_owner->GetGUID(), spawnPosition);
-    m_pPositionComponent->SetPosition(spawnPosition);
+    m_pPositionComponent->SetPosition(spawnPosition);*/
 
     /*shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(_owner->GetGUID(), spawnPosition));
     IEventMgr::Get()->VQueueEvent(pEvent);*/
@@ -991,4 +993,147 @@ bool DuckRangedAttackAIStateComponent::VCanEnter()
     }
 
     return false;
+}
+
+//=====================================================================================================================
+// BaseBossAIStateComponennt
+//=====================================================================================================================
+
+BaseBossAIStateComponennt::BaseBossAIStateComponennt(std::string stateName)
+    :
+    BaseEnemyAIStateComponent("BaseBossAIStateComponent"),
+    m_bBossFightStarted(false)
+{
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseBossAIStateComponennt::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseBossAIStateComponennt::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseBossAIStateComponennt::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
+}
+
+BaseBossAIStateComponennt::~BaseBossAIStateComponennt()
+{
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseBossAIStateComponennt::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseBossAIStateComponennt::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseBossAIStateComponennt::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
+}
+
+bool BaseBossAIStateComponennt::VDelegateInit(TiXmlElement* pData)
+{
+    assert(pData);
+
+    assert(ParseValueFromXmlElem(&m_BossDialogAnimation, pData->FirstChildElement("BossDialogAnimation")));
+
+    return true;
+}
+
+void BaseBossAIStateComponennt::VPostInit()
+{
+    BaseEnemyAIStateComponent::VPostInit();
+
+    auto pHC = MakeStrongPtr(_owner->GetComponent<HealthComponent>());
+    assert(pHC != nullptr);
+
+    m_pHealthComponent = pHC.get();
+    m_pHealthComponent->AddObserver(this);
+
+    m_DefaultPosition = m_pPositionComponent->GetPosition();
+
+    m_pAnimationComponent->SetAnimation(m_BossDialogAnimation);
+}
+
+void BaseBossAIStateComponennt::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint)
+{
+    int maxHealth = m_pHealthComponent->GetMaxHealth();
+    float newHealthPercentage = ((float)newHealth / (float)maxHealth) * 100;
+
+    if (m_bBossFightStarted)
+    {
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Boss_Health_Changed((int)newHealthPercentage, newHealth)));
+    }
+}
+
+void BaseBossAIStateComponennt::VOnHealthBelowZero(DamageType damageType)
+{
+    IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Boss_Fight_Ended(true)));
+}
+
+void BaseBossAIStateComponennt::ActorEnteredBossAreaDelegate(IEventDataPtr pEvent)
+{
+    assert(this && m_pAnimationComponent != NULL);
+    m_pAnimationComponent->SetAnimation(m_BossDialogAnimation);
+
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Boss_Health_Changed(100, m_pHealthComponent->GetHealth())));
+
+    VOnActorEnteredBossArea();
+}
+
+void BaseBossAIStateComponennt::BossFightStartedDelegate(IEventDataPtr pEvent)
+{
+    m_bBossFightStarted = true;
+
+    VOnBossFightStarted();
+}
+
+void BaseBossAIStateComponennt::BossFightEndedDelegate(IEventDataPtr pEvent)
+{
+    VOnBossFightEnded();
+
+    m_bBossFightStarted = false;
+
+    // Reset health if boss did not die (Claw died) and reset his position
+    if (m_pHealthComponent->GetCurrentHealth() > 0)
+    {
+        m_pEnemyAIComponent->EnterBestState(true);
+        m_pHealthComponent->SetMaxHealth();
+        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(_owner->GetGUID(), m_DefaultPosition)));
+
+        m_pAnimationComponent->SetAnimation(m_BossDialogAnimation);
+    }
+}
+
+//=====================================================================================================================
+// LaRauxBossAIStateComponent
+//=====================================================================================================================
+
+LaRauxBossAIStateComponent::LaRauxBossAIStateComponent()
+    :
+    BaseBossAIStateComponennt("LaRauxBossAIStateComponent")
+{
+
+}
+
+LaRauxBossAIStateComponent::~LaRauxBossAIStateComponent()
+{
+
+}
+
+bool LaRauxBossAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    assert(pData);
+
+    if (!BaseBossAIStateComponennt::VDelegateInit(pData))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void LaRauxBossAIStateComponent::VUpdate(uint32 msDiff)
+{
+
+}
+
+void LaRauxBossAIStateComponent::VOnStateEnter()
+{
+
+}
+
+void LaRauxBossAIStateComponent::VOnStateLeave()
+{
+
+}
+
+void LaRauxBossAIStateComponent::VOnBossFightStarted()
+{
+    m_pEnemyAIComponent->EnterBestState(true);
 }

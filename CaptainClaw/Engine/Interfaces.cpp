@@ -40,6 +40,12 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level2_CannonBall, "ActorPrototype_Level2_CannonBall" },
         { ActorPrototype_Level2_RatProjectile, "ActorPrototype_Level2_RatProjectile" },
 
+        // Boss Stagers
+        { ActorPrototype_Level2_BossStager, "ActorPrototype_Level2_BossStager" },
+
+        // Bosses
+        { ActorPrototype_Level2_LaRaux, "ActorPrototype_Level2_LaRaux" },
+        
         //=======================================
         // General
         //=======================================
@@ -53,6 +59,8 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Sound
         { ActorPrototype_LocalAmbientSound, "ActorPrototype_LocalAmbientSound" },
+
+        { ActorPrototype_BaseBossStager, "ActorPrototype_BaseBossStager" },
 
         //=======================================
         // Menu
@@ -106,6 +114,12 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level2_CannonBall", ActorPrototype_Level2_CannonBall },
         { "ActorPrototype_Level2_RatProjectile", ActorPrototype_Level2_RatProjectile },
 
+        // Boss Stagers
+        { "ActorPrototype_Level2_BossStager", ActorPrototype_Level2_BossStager },
+
+        // Bosses
+        { "ActorPrototype_Level2_LaRaux", ActorPrototype_Level2_LaRaux },
+
         //=======================================
         // General
         //=======================================
@@ -119,6 +133,8 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Sound
         { "ActorPrototype_LocalAmbientSound", ActorPrototype_LocalAmbientSound },
+
+        { "ActorPrototype_BaseBossStager", ActorPrototype_BaseBossStager },
 
         //=======================================
         // Menu

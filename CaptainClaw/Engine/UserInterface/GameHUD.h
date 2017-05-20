@@ -49,6 +49,9 @@ public:
     void UpdateFPS(uint32 newFPS);
 
 private:
+    void BossHealthChangedDelegate(IEventDataPtr pEvent);
+    void BossFightEndedDelegate(IEventDataPtr pEvent);
+
     void UpdateCameraPosition();
 
     bool m_IsVisible;
@@ -65,6 +68,7 @@ private:
 
     SDL_Texture* m_pFPSTexture;
     SDL_Texture* m_pPositionTexture;
+    SDL_Texture* m_pBossBarTexture;
 };
 
 #endif

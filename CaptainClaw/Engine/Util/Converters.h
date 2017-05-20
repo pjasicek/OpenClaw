@@ -912,229 +912,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         return ActorTemplates::CreateXmlData_PickupActor(pickupType, Point(wwdObject->x, wwdObject->y), true, paramMap);
     }
-    /*else if (logic.find("AmmoPowerup") != std::string::npos)
-    {
-        std::string pickupSound;
-        if (std::string(wwdObject->imageSet).find("MAGIC") != std::string::npos)
-        {
-            pickupSound = SOUND_GAME_PICKUP_MAGIC;
-        }
-        else
-        {
-            pickupSound = SOUND_GAME_PICKUP_AMMUNITION;
-        }
-
-        SAFE_DELETE(pActorElem);
-        return ActorTemplates::CreateXmlData_AmmoPickupActor(wwdObject->imageSet, pickupSound, Point(wwdObject->x, wwdObject->y), true);
-        //pActorElem->LinkEndChild(AmmoToXml(wwdObject));
-    }
-    else if (logic.find("SpecialPowerup") != std::string::npos ||
-        imageSet.find("CATNIPS") != std::string::npos)
-    {
-        //pActorElem->LinkEndChild(SpecialPowerupToXml(wwdObject));
-
-#define CREATE_POWERUP_COMPONENT(name, duration) \
-    TiXmlElement* pPowerupPickupComponent = new TiXmlElement("PowerupPickupComponent"); \
-    XML_ADD_TEXT_ELEMENT("Type", name, pPowerupPickupComponent); \
-    XML_ADD_TEXT_ELEMENT("Duration", duration, pPowerupPickupComponent); \
-    pActorElem->LinkEndChild(pPowerupPickupComponent); \
-
-        // All powerups should have trigger
-        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
-
-        if (imageSet != "GAME_WARP" || imageSet == "GAME_VERTWARP")
-        {
-            pActorElem->LinkEndChild(ActorTemplates::CreateXmlData_GlitterComponent("Glitter_Yellow", true, false));
-        }
-
-        std::string imageSet = wwdObject->imageSet;
-        if (imageSet == "GAME_WARP" || imageSet == "GAME_VERTWARP")
-        {
-            TiXmlElement* pTeleportPickupComponent = new TiXmlElement("TeleportPickupComponent");
-            XML_ADD_2_PARAM_ELEMENT("Destination", "x", ToStr(wwdObject->speedX).c_str(), "y", ToStr(wwdObject->speedY).c_str(), pTeleportPickupComponent);
-            pActorElem->LinkEndChild(pTeleportPickupComponent);
-
-            TiXmlElement* pAnimCompElem = new TiXmlElement("AnimationComponent");
-            pAnimCompElem->LinkEndChild(CreateCycleAnimation(125));
-            pActorElem->LinkEndChild(pAnimCompElem);
-        }
-        else if (imageSet == "GAME_POWERUPS_EXTRALIFE")
-        {
-            SAFE_DELETE(pActorElem);
-            return ActorTemplates::CreateXmlData_LifePickupActor(
-                imageSet, SOUND_GAME_EXTRA_LIFE, Point(wwdObject->x, wwdObject->y), true);
-        }
-        else if (imageSet == "GAME_POWERUPS_INVULNERABLE")
-        {
-            CREATE_POWERUP_COMPONENT("Invulnerability", "30000");
-            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_GAME_PICKUP_MAGIC, pPowerupPickupComponent);
-        }
-        else if (imageSet == "GAME_POWERUPS_GHOST")
-        {
-            CREATE_POWERUP_COMPONENT("Invisibility", "30000");
-            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_GAME_PICKUP_MAGIC, pPowerupPickupComponent);
-        }
-        else if (imageSet == "GAME_CATNIPS_NIP1")
-        {
-            int duration = 15000;
-            if (wwdObject->smarts > 0)
-            {
-                duration = wwdObject->smarts;
-            }
-
-            CREATE_POWERUP_COMPONENT("Catnip", ToStr(duration).c_str());
-            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_GAME_PICKUP_CATNIP, pPowerupPickupComponent);
-        }
-        else if (imageSet == "GAME_CATNIPS_NIP2")
-        {
-            int duration = 30000;
-            if (wwdObject->smarts > 0)
-            {
-                duration = wwdObject->smarts;
-            }
-
-            CREATE_POWERUP_COMPONENT("Catnip", ToStr(duration).c_str());
-            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_GAME_PICKUP_CATNIP, pPowerupPickupComponent);
-        }
-        else if (imageSet == "GAME_POWERUPS_FIRESWORD")
-        {
-            CREATE_POWERUP_COMPONENT("FireSword", "30000");
-            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_CLAW_PICKUP_FIRE_SWORD, pPowerupPickupComponent);
-        }
-        else if (imageSet == "GAME_POWERUPS_ICESWORD")
-        {
-            CREATE_POWERUP_COMPONENT("IceSword", "30000");
-            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_CLAW_PICKUP_FROST_SWORD, pPowerupPickupComponent);
-        }
-        else if (imageSet == "GAME_POWERUPS_LIGHTNINGSWORD")
-        {
-            CREATE_POWERUP_COMPONENT("LightningSword", "30000");
-            XML_ADD_TEXT_ELEMENT("PickupSound", SOUND_CLAW_PICKUP_LIGHTNING_SWORD, pPowerupPickupComponent);
-        }
-        else
-        {
-            LOG_ERROR("Unknown special powerup: " + imageSet);
-        }
-    }
-    else if (logic == "TreasurePowerup" ||
-             logic == "GlitterlessPowerup")
-    {
-        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
-
-        std::string imageSet = wwdObject->imageSet;
-        int points = 0;
-        std::string pickupSound;
-
-        if (imageSet == "GAME_TREASURE_COINS")
-        {
-            points = 100;
-            pickupSound = SOUND_GAME_TREASURE_COIN;
-        }
-        else if (imageSet == "GAME_TREASURE_GOLDBARS")
-        {
-            points = 500;
-            pickupSound = SOUND_GAME_TREASURE_GOLDBAR;
-        }
-        else if (imageSet == "GAME_TREASURE_NECKLACE")
-        {
-            points = 10000;
-            pickupSound = SOUND_GAME_TREASURE_GECKO;
-        }
-        else if (imageSet.find("GAME_TREASURE_RINGS") != std::string::npos)
-        {
-            points = 1500;
-            pickupSound = SOUND_GAME_TREASURE_RING;
-        }
-        else if (imageSet.find("GAME_TREASURE_CHALICES") != std::string::npos)
-        {
-            points = 2500;
-            pickupSound = SOUND_GAME_TREASURE_CHALICE;
-        }
-        else if (imageSet.find("GAME_TREASURE_CROSSES") != std::string::npos)
-        {
-            points = 5000;
-            pickupSound = SOUND_GAME_TREASURE_CROSS;
-        }
-        else if (imageSet.find("GAME_TREASURE_SCEPTERS") != std::string::npos)
-        {
-            points = 7500;
-            pickupSound = SOUND_GAME_TREASURE_SCEPTER;
-        }
-        else if (imageSet.find("GAME_TREASURE_GECKOS") != std::string::npos)
-        {
-            points = 10000;
-            pickupSound = SOUND_GAME_TREASURE_GECKO;
-        }
-        else if (imageSet.find("GAME_TREASURE_CROWNS") != std::string::npos)
-        {
-            points = 15000;
-            pickupSound = SOUND_GAME_TREASURE_CROWN;
-        }
-        else if (imageSet.find("GAME_TREASURE_JEWELEDSKULL") != std::string::npos)
-        {
-            points = 25000;
-            pickupSound = SOUND_GAME_TREASURE_SKULL;
-        }
-        else
-        {
-            assert(false && "Unknown treasure");
-        }
-
-        TiXmlElement* pScoreElement = new TiXmlElement("TreasurePickupComponent");
-        XML_ADD_TEXT_ELEMENT("ScorePoints", ToStr(points).c_str(), pScoreElement);
-        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pScoreElement);
-        pActorElem->LinkEndChild(pScoreElement);
-
-        if (imageSet != "GAME_TREASURE_COINS")
-        {
-            pActorElem->LinkEndChild(ActorTemplates::CreateXmlData_GlitterComponent("Glitter_Yellow", true, false));
-        }
-
-        TiXmlElement* elem = TreasureToXml(wwdObject);
-        if (elem)
-        {
-            pActorElem->LinkEndChild(elem);
-        }
-    }
-    else if (logic == "HealthPowerup" && imageSet.find("CATNIPS") == std::string::npos)
-    {
-        std::string pickupSound = SOUND_GAME_PICKUP_FOODITEM;
-        if (std::string(wwdObject->imageSet).find("POTION") != std::string::npos ||
-            std::string(wwdObject->imageSet).find("MILK") != std::string::npos)
-        {
-            pickupSound = SOUND_GAME_PICKUP_POTION;
-        }
-
-        pActorElem->LinkEndChild(CreateTriggerComponent(1, false, true));
-
-        TiXmlElement* healthPickupComponent = new TiXmlElement("HealthPickupComponent");
-        pActorElem->LinkEndChild(healthPickupComponent);
-
-        std::string imageSet = wwdObject->imageSet;
-        if (imageSet == "LEVEL_HEALTH")
-        {
-            XML_ADD_TEXT_ELEMENT("Health", "5", healthPickupComponent);
-        }
-        else if (imageSet == "GAME_HEALTH_POTION1")
-        {
-            XML_ADD_TEXT_ELEMENT("Health", "10", healthPickupComponent);
-        }
-        else if (imageSet == "GAME_HEALTH_POTION2")
-        {
-            XML_ADD_TEXT_ELEMENT("Health", "20", healthPickupComponent);
-        }
-        else if (imageSet == "GAME_HEALTH_POTION3")
-        {
-            XML_ADD_TEXT_ELEMENT("Health", "35", healthPickupComponent);
-        }
-        else
-        {
-            LOG_WARNING("Trying to parse unknown HealthPickupComponent" + imageSet);
-            assert(false);
-        }
-
-        XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), healthPickupComponent);
-    }*/
     else if (logic == "TowerCannonLeft")
     {
         SAFE_DELETE(pActorElem);
@@ -1152,6 +929,27 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         Point position(wwdObject->x, wwdObject->y);
         return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level2_TowerCannonRight, position);
+    }
+    else if (logic == "BossStager")
+    {
+        SAFE_DELETE(pActorElem);
+
+        assert(levelNumber == 2 && "Expected only level 2");
+
+        Point position(wwdObject->x, wwdObject->y);
+        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level2_BossStager, position);
+    }
+    else if (logic == "Raux")
+    {
+        SAFE_DELETE(pActorElem);
+
+        return ActorTemplates::CreateXmlData_EnemyAIActor(
+            ActorPrototype_Level2_LaRaux,
+            Point(wwdObject->x, wwdObject->y),
+            {},
+            wwdObject->minX,
+            wwdObject->maxX,
+            false);
     }
     else
     {
@@ -1250,7 +1048,7 @@ inline TiXmlElement* CreateHUDElement(std::string pathToImages, int animFrameDur
     {
         pHUDElement->LinkEndChild(CreateAnimationComponent(animPath));
     }
-    else
+    else if (animFrameDuration > 0)
     {
         TiXmlElement* pAnimCompElem = new TiXmlElement("AnimationComponent");
         pAnimCompElem->LinkEndChild(CreateCycleAnimation(animFrameDuration));
@@ -1282,6 +1080,51 @@ inline TiXmlElement* CreateHUDElement(std::string pathToImages, int animFrameDur
     pHUDElement->LinkEndChild(pHUDRenderComponentElem);
 
     return pHUDElement;
+}
+
+struct HUDElementDef
+{
+    HUDElementDef()
+    {
+        isPositionProtortional = false;
+        isAnchoredRight = false;
+        isAnchoredBottom = false;
+        isVisible = true;
+    }
+
+    std::string imageSet;
+    AnimationDef animDef;
+    bool isPositionProtortional;
+    Point positionProportion;
+    Point position;
+    bool isAnchoredRight;
+    bool isAnchoredBottom;
+    bool isVisible;
+    std::string HUDElemKey;
+};
+
+inline TiXmlElement* CreateHUDElement(const HUDElementDef& def)
+{
+    Point pos = def.position;
+    if (def.isPositionProtortional)
+    {
+        Point windowSize = g_pApp->GetWindowSize();
+        Point windowScale = g_pApp->GetScale();
+
+        pos.Set(
+            (windowSize.x * def.positionProportion.x) / windowScale.x, 
+            (windowSize.y * def.positionProportion.y) / windowScale.y);
+    }
+
+    return CreateHUDElement(
+        def.imageSet,
+        def.animDef.cycleAnimationDuration,
+        def.animDef.animationPath,
+        pos,
+        def.isAnchoredRight,
+        def.isAnchoredBottom,
+        def.HUDElemKey,
+        def.isVisible);
 }
 
 TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber);

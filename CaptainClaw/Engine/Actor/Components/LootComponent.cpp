@@ -23,7 +23,12 @@ bool LootComponent::VInit(TiXmlElement* pData)
         pElem; pElem = pElem->NextSiblingElement("Item"))
     {
         PickupType loot = PickupType(std::stoi(pElem->GetText()));
-        assert(loot >= PickupType_Default && loot < PickupType_Max);
+        
+        if (!(loot >= PickupType_Default && loot < PickupType_Max))
+        {
+            LOG_ERROR("Conflicting pickup: " + ToStr((int)loot));
+            return false;
+        }
 
         m_Loot.push_back(loot);
     }

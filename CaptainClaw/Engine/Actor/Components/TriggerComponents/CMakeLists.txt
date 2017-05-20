@@ -6,4 +6,6 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/TriggerComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SoundTriggerComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/SoundTriggerComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BossStagerTriggerComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/BossStagerTriggerComponent.cpp
 )

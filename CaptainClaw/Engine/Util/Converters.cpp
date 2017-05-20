@@ -616,6 +616,18 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
     root->LinkEndChild(CreateHUDElement("/GAME/IMAGES/INTERFACE/WEAPONS/DYNAMITE/*", 0, "/GAME/ANIS/INTERFACE/DYNAMITE.ANI", Point(-26, 45), true, false, "dynamite", false));
     root->LinkEndChild(CreateHUDElement("/GAME/IMAGES/INTERFACE/LIVESHEAD/*", 0, "/GAME/ANIS/INTERFACE/LIVES.ANI", Point(-18, 75), true, false, "lives"));
 
+    // Boss Bar
+    HUDElementDef def;
+    def.imageSet = "/GAME/IMAGES/BOSSBAR/*";
+    def.isPositionProtortional = true;
+    def.positionProportion = Point(0.5, 0.8);
+    def.isAnchoredRight = false;
+    def.isAnchoredBottom = false;
+    def.HUDElemKey = "bossbar";
+    def.isVisible = false;
+
+    root->LinkEndChild(CreateHUDElement(def));
+
     //xmlDoc.Print();
 
 

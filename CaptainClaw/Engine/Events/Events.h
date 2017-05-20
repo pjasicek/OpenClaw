@@ -2407,5 +2407,132 @@ private:
     PickupType m_PickupType;
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Entered_Boss_Area
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Entered_Boss_Area : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Entered_Boss_Area(uint32 actorId, uint32 bossId) 
+    { 
+        m_ControllerId = actorId; 
+        m_BossId = bossId;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Entered_Boss_Area(m_ControllerId, m_BossId));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Cannot be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Cannot be serialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_Entered_Boss_Area"; }
+
+    uint32 GetControllerId() { return m_ControllerId; }
+
+    // Unimplemented
+    uint32 GetBossId() { assert(false && "Unimplemented"); return m_BossId; }
+
+private:
+    uint32 m_ControllerId;
+    uint32 m_BossId;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Boss_Fight_Started
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Boss_Fight_Started : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Boss_Fight_Started(uint32 controllerId, uint32 bossId) 
+    { 
+        m_ControllerId = controllerId;
+        m_BossId = bossId; }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Boss_Fight_Started(m_ControllerId, m_BossId));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Cannot be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Cannot be serialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_Boss_Fight_Started"; }
+
+    uint32 GetControllerId() { return m_ControllerId; }
+
+    // Unimplemented
+    uint32 GetBossId() { assert(false && "Unimplemented"); return m_BossId; }
+
+private:
+    uint32 m_ControllerId;
+    uint32 m_BossId;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Boss_Fight_Ended
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Boss_Fight_Ended : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Boss_Fight_Ended(bool isBossDead)
+    {
+        m_bIsBossDead = isBossDead;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Boss_Fight_Ended(m_bIsBossDead));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Cannot be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Cannot be serialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_Boss_Fight_Ended"; }
+
+    bool GetIsBossDead() { return m_bIsBossDead; }
+
+private:
+    bool m_bIsBossDead;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_Boss_Health_Changed
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Boss_Health_Changed : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Boss_Health_Changed(int newHealthPercentage, int newHealthLeft)
+    {
+        m_HealthPercentage = newHealthPercentage;
+        m_HealthLeft = newHealthLeft;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Boss_Health_Changed(m_HealthPercentage, m_HealthLeft));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Cannot be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Cannot be serialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_Boss_Health_Changed"; }
+
+    int GetNewHealthPercentage() { return m_HealthPercentage; }
+    int GetNewHealthLeft() { return m_HealthLeft; }
+
+private:
+    int m_HealthPercentage;
+    int m_HealthLeft;
+};
 
 #endif

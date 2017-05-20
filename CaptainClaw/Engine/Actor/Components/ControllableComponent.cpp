@@ -23,7 +23,8 @@ ControllableComponent::ControllableComponent()
     :
     m_Active(false),
     m_DuckingTime(0),
-    m_LookingUpTime(0)
+    m_LookingUpTime(0),
+    m_bFrozen(false)
 { }
 
 bool ControllableComponent::VInit(TiXmlElement* data)
@@ -79,11 +80,16 @@ ClawControllableComponent::ClawControllableComponent()
     m_IdleTime = 0;
     m_TakeDamageDuration = 500; // TODO: Data drive
     m_TakeDamageTimeLeftMs = 0;
+    m_bIsInBossFight = false;
+
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &ClawControllableComponent::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &ClawControllableComponent::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
 }
 
 ClawControllableComponent::~ClawControllableComponent()
 {
-
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &ClawControllableComponent::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &ClawControllableComponent::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
 }
 
 bool ClawControllableComponent::VInitDelegate(TiXmlElement* data)
@@ -247,6 +253,14 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         }
     }
 
+    if (m_bFrozen)
+    {
+        m_pClawAnimationComponent->SetAnimation("stand");
+        m_IdleTime = 0;
+        m_LookingUpTime = 0;
+        m_DuckingTime = 0;
+    }
+
     m_LastState = m_State;
 }
 
@@ -271,7 +285,8 @@ void ClawControllableComponent::VOnLandOnGround()
 void ClawControllableComponent::VOnStartJumping()
 {
     if (m_State == ClawState_JumpShooting ||
-        m_State == ClawState_JumpAttacking)
+        m_State == ClawState_JumpAttacking ||
+        m_bFrozen)
     {
         return;
     }
@@ -281,6 +296,11 @@ void ClawControllableComponent::VOnStartJumping()
 
 void ClawControllableComponent::VOnDirectionChange(Direction direction)
 {
+    if (m_bFrozen)
+    {
+        return;
+    }
+
     m_pRenderComponent->SetMirrored(direction == Direction_Left);
     m_Direction = direction;
 }
@@ -325,7 +345,8 @@ void ClawControllableComponent::OnAttack()
     if (IsAttackingOrShooting() ||
         m_State == ClawState_Climbing ||
         m_State == ClawState_TakingDamage ||
-        m_State == ClawState_Dying)
+        m_State == ClawState_Dying ||
+        m_bFrozen)
     {
         return;
     }
@@ -397,7 +418,8 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
     if (IsAttackingOrShooting() ||
         m_State == ClawState_Climbing ||
         m_State == ClawState_Dying || 
-        m_State == ClawState_TakingDamage)
+        m_State == ClawState_TakingDamage ||
+        m_bFrozen)
     {
         return;
     }
@@ -524,7 +546,8 @@ bool ClawControllableComponent::CanMove()
         m_State == ClawState_Dying ||
         m_State == ClawState_DuckAttacking ||
         m_State == ClawState_DuckShooting ||
-        m_State == ClawState_TakingDamage)
+        m_State == ClawState_TakingDamage ||
+        m_bFrozen)
     {
         return false;
     }
@@ -771,6 +794,11 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
     }
+
+    if (m_bIsInBossFight)
+    {
+        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Boss_Fight_Ended(false)));
+    }
 }
 
 void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint)
@@ -844,4 +872,18 @@ bool ClawControllableComponent::IsClimbing()
 {
     return m_pClawAnimationComponent->GetCurrentAnimationName().find("climb") != std::string::npos &&
         !m_pClawAnimationComponent->GetCurrentAnimation()->IsPaused();
+}
+
+void ClawControllableComponent::BossFightStartedDelegate(IEventDataPtr pEvent)
+{
+    m_TakeDamageDuration = 500;
+
+    m_bIsInBossFight = true;
+}
+
+void ClawControllableComponent::BossFightEndedDelegate(IEventDataPtr pEvent)
+{
+    m_TakeDamageDuration = 500;
+
+    m_bIsInBossFight = false;
 }

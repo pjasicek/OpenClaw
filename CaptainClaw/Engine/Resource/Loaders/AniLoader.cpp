@@ -55,7 +55,7 @@ WapAni* AniResourceLoader::LoadAndReturnAni(const char* resourceString)
 
     if (!extraData)
     {
-        LOG_ERROR("Could not cast type to AniResourceExtraData. Check if AniResourceLoader is registered.");
+        LOG_ERROR("Could not cast type to AniResourceExtraData. Check if AniResourceLoader is registered. Resource: " + ToStr(resourceString));
         return NULL;
     }
 

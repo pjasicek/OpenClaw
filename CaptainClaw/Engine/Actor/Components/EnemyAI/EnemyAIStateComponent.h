@@ -4,6 +4,7 @@
 #include "../../../SharedDefines.h"
 #include "../../ActorComponent.h"
 #include "../AnimationComponent.h"
+#include "../ControllerComponents/HealthComponent.h"
 
 enum EnemyAIState
 {
@@ -16,6 +17,7 @@ enum EnemyAIState
     EnemyAIState_TakingDamage,
     EnemyAIState_Fleeing,
     EnemyAIState_Dying,
+    EnemyAIState_BrainLaRaux,
 };
 
 struct EnemyAIAction
@@ -304,6 +306,77 @@ public:
     // BaseAttackAIStateComponent API
     virtual void VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset) override;
     virtual bool VCanEnter() override;
+};
+
+//=====================================================================================================================
+// BaseBossAIStateComponennt
+//=====================================================================================================================
+class BaseBossAIStateComponennt : public BaseEnemyAIStateComponent, public HealthObserver
+{
+public:
+    BaseBossAIStateComponennt(std::string stateName);
+    virtual ~BaseBossAIStateComponennt();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+    virtual void VPostInit() override;
+
+    // EnemyAIStateComponent API
+    virtual void VUpdate(uint32 msDiff) override = 0;
+    virtual void VOnStateEnter() = 0;
+    virtual void VOnStateLeave() = 0;
+    virtual EnemyAIState VGetStateType() const = 0;
+
+    // Can enemy enter this state ?
+    virtual bool VCanEnter() = 0;
+
+    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) override;
+    virtual void VOnHealthBelowZero(DamageType damageType) override;
+
+private:
+    void ActorEnteredBossAreaDelegate(IEventDataPtr pEvent);
+    void BossFightStartedDelegate(IEventDataPtr pEvent);
+    void BossFightEndedDelegate(IEventDataPtr pEvent);
+
+    HealthComponent* m_pHealthComponent;
+
+protected:
+    virtual void VOnActorEnteredBossArea() { }
+    virtual void VOnBossFightStarted() { }
+    virtual void VOnBossFightEnded() { }
+
+    bool m_bBossFightStarted;
+    std::string m_BossDialogAnimation;
+    Point m_DefaultPosition;
+};
+
+//=====================================================================================================================
+// LaRauxBossAIStateComponent
+//=====================================================================================================================
+class LaRauxBossAIStateComponent : public BaseBossAIStateComponennt
+{
+public:
+    LaRauxBossAIStateComponent();
+    virtual ~LaRauxBossAIStateComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    // EnemyAIStateComponent API
+    virtual void VUpdate(uint32 msDiff) override;
+    virtual void VOnStateEnter() override;
+    virtual void VOnStateLeave() override;
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_BrainLaRaux; }
+
+    // Can enemy enter this state ?
+    virtual bool VCanEnter() override { return m_bBossFightStarted == false; }
+
+protected:
+    virtual void VOnBossFightStarted() override;
 };
 
 #endif

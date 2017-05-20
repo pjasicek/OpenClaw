@@ -199,6 +199,7 @@ enum PickupType
     PickupType_Powerup_LightningSword,
     PickupType_Powerup_FrostSword,
     PickupType_BossWarp,
+    PickupType_Level2_Gem,
     PickupType_Max
 };
 
@@ -265,6 +266,12 @@ enum ActorPrototype
     ActorPrototype_Level2_CannonBall,
     ActorPrototype_Level2_RatProjectile,
 
+    // Boss stagers
+    ActorPrototype_Level2_BossStager,
+
+    // Bosses
+    ActorPrototype_Level2_LaRaux,
+
     //=======================================
     // General
     //=======================================
@@ -282,6 +289,8 @@ enum ActorPrototype
     // Menu
     ActorPrototype_StaticImage,
     ActorPrototype_StaticAnimatedImage,
+
+    ActorPrototype_BaseBossStager,
 
     ActorPrototype_Max
 };

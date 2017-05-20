@@ -16,6 +16,7 @@
 #include "../Actor/Components/ControllerComponents/ScoreComponent.h"
 #include "../Actor/Components/ControllerComponents/LifeComponent.h"
 #include "../Actor/Components/ControllerComponents/AmmoComponent.h"
+#include "../Actor/Components/ControllableComponent.h"
 
 #include "../Util/Converters.h"
 
@@ -1117,6 +1118,40 @@ void BaseGameLogic::FinishedLevelDelegate(IEventDataPtr pEventData)
     VChangeState(GameState_LoadingScoreScreen);
 }
 
+void BaseGameLogic::ActorEnteredBossAreaDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Entered_Boss_Area> pCastEventData =
+        static_pointer_cast<EventData_Entered_Boss_Area>(pEventData);
+
+    auto findIt = m_ActorMap.find(pCastEventData->GetControllerId());
+    assert(findIt != m_ActorMap.end());
+
+    StrongActorPtr pClaw = findIt->second;
+
+    shared_ptr<ClawControllableComponent> pClawComponent = 
+        MakeStrongPtr(pClaw->GetComponent<ClawControllableComponent>());
+    assert(pClawComponent != nullptr);
+
+    pClawComponent->SetFrozen(true);
+}
+
+void BaseGameLogic::BossFightStartedDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Boss_Fight_Started> pCastEventData =
+        static_pointer_cast<EventData_Boss_Fight_Started>(pEventData);
+
+    auto findIt = m_ActorMap.find(pCastEventData->GetControllerId());
+    assert(findIt != m_ActorMap.end());
+
+    StrongActorPtr pClaw = findIt->second;
+
+    shared_ptr<ClawControllableComponent> pClawComponent =
+        MakeStrongPtr(pClaw->GetComponent<ClawControllableComponent>());
+    assert(pClawComponent != nullptr);
+
+    pClawComponent->SetFrozen(false);
+}
+
 StrongActorPtr BaseGameLogic::GetClawActor()
 {
     for (auto actorIter : m_ActorMap)
@@ -1194,6 +1229,8 @@ void BaseGameLogic::RegisterAllDelegates()
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::ItemPickedUpDelegate), EventData_Item_Picked_Up::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::FinishedLevelDelegate), EventData_Finished_Level::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::MoveActorDelegate), EventData_Move_Actor::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
 }
 
 void BaseGameLogic::RemoveAllDelegates()
@@ -1204,6 +1241,8 @@ void BaseGameLogic::RemoveAllDelegates()
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::ItemPickedUpDelegate), EventData_Item_Picked_Up::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::FinishedLevelDelegate), EventData_Finished_Level::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::MoveActorDelegate), EventData_Move_Actor::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
 }
 
 void BaseGameLogic::ExecuteStartupCommands(const std::string& startupCommandsFile)

@@ -124,6 +124,8 @@ protected:
     virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
 
 private:
+
+    bool m_bIsBossWarp;
     Point m_Destination;
 };
 

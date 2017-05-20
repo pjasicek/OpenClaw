@@ -45,6 +45,9 @@
 #include "Components/SingleAnimationComponent.h"
 #include "Components/ProjectileSpawnerComponent.h"
 #include "Components/LocalAmbientSoundComponent.h"
+#include "Components/TriggerComponents/BossStagerTriggerComponent.h"
+
+
 
 ActorFactory::ActorFactory()
 {
@@ -99,6 +102,8 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<TakeDamageAIStateComponent>(TakeDamageAIStateComponent::GetIdFromName(TakeDamageAIStateComponent::g_Name));
     _componentFactory.Register<ProjectileSpawnerComponent>(ProjectileSpawnerComponent::GetIdFromName(ProjectileSpawnerComponent::g_Name));
     _componentFactory.Register<LocalAmbientSoundComponent>(LocalAmbientSoundComponent::GetIdFromName(LocalAmbientSoundComponent::g_Name));
+    _componentFactory.Register<BossStagerTriggerComponent>(BossStagerTriggerComponent::GetIdFromName(BossStagerTriggerComponent::g_Name));
+    _componentFactory.Register<LaRauxBossAIStateComponent>(LaRauxBossAIStateComponent::GetIdFromName(LaRauxBossAIStateComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

@@ -96,6 +96,7 @@
     <ClCompile Include="Engine\Actor\Components\FollowableComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\GlobalAmbientSoundComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\LocalAmbientSoundComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\TriggerComponents\BossStagerTriggerComponent.cpp" />
     <ClCompile Include="Engine\Interfaces.cpp" />
     <ClCompile Include="Engine\Actor\Components\LootComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PickupComponents\PickupComponent.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="Engine\Actor\Components\GlitterComponent.h" />
     <ClInclude Include="Engine\Actor\Components\ProjectileSpawnerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\SingleAnimationComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\TriggerComponents\BossStagerTriggerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\SoundTriggerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.h" />
     <ClInclude Include="Engine\Audio\Audio.h" />

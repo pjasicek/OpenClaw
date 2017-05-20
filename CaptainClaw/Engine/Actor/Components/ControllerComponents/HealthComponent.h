@@ -32,6 +32,7 @@ public:
     virtual TiXmlElement* VGenerateXml() override;
 
     int32 GetHealth() { return m_CurrentHealth; }
+    int GetMaxHealth() { return m_MaxHealth; }
 
     void AddHealth(int32 health, DamageType damageType, Point impactPoint);
     void SetCurrentHealth(int32 health);
