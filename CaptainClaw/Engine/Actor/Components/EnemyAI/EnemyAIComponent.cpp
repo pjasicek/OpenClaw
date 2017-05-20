@@ -38,37 +38,41 @@ bool EnemyAIComponent::VInit(TiXmlElement* pData)
         m_DeathAnimation = pElem->GetText();
     }
 
-    for (TiXmlElement* pElem = pData->FirstChildElement("Sound");
-        pElem != NULL;
-        pElem = pElem->NextSiblingElement())
+    
+    if (TiXmlElement* pSoundsElem = pData->FirstChildElement("Sounds"))
     {
-        std::string soundType = pElem->Attribute("SoundType");
-        std::string soundName = pElem->Attribute("SoundName");
+        for (TiXmlElement* pElem = pSoundsElem->FirstChildElement("Sound");
+            pElem != NULL;
+            pElem = pElem->NextSiblingElement())
+        {
+            std::string soundType = pElem->Attribute("SoundType");
+            std::string soundName = pElem->Attribute("SoundName");
 
-        if (soundType == "TakeDamage")
-        {
-            m_TakeDamageSounds.push_back(soundName);
-        }
-        else if (soundType == "MeleeAttack")
-        {
-            m_MeleeAttackSounds.push_back(soundName);
-        }
-        else if (soundType == "RangedAttack")
-        {
-            m_RangedAttackSounds.push_back(soundName);
-        }
-        else if (soundType == "Death")
-        {
-            m_DeathSounds.push_back(soundName);
-        }
-        else if (soundType == "Quote")
-        {
-            m_QuoteToHostileUnitSounds.push_back(soundName);
-        }
-        else
-        {
-            LOG_ERROR("Conflicting sound type: " + soundType + ", SoundName: " + soundName);
-            assert(false && "Unknown sound type");
+            if (soundType == "TakeDamage")
+            {
+                m_TakeDamageSounds.push_back(soundName);
+            }
+            else if (soundType == "MeleeAttack")
+            {
+                m_MeleeAttackSounds.push_back(soundName);
+            }
+            else if (soundType == "RangedAttack")
+            {
+                m_RangedAttackSounds.push_back(soundName);
+            }
+            else if (soundType == "Death")
+            {
+                m_DeathSounds.push_back(soundName);
+            }
+            else if (soundType == "Quote")
+            {
+                m_QuoteToHostileUnitSounds.push_back(soundName);
+            }
+            else
+            {
+                LOG_ERROR("Conflicting sound type: " + soundType + ", SoundName: " + soundName);
+                assert(false && "Unknown sound type");
+            }
         }
     }
 

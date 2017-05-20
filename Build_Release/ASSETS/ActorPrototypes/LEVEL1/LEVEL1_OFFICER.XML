@@ -27,10 +27,12 @@
     </LootComponent>
     <EnemyAIComponent>
         <DeathAnimation>fall</DeathAnimation>
-        <Sound SoundType="TakeDamage" SoundName="/LEVEL1/SOUNDS/HIT1.WAV" />
-        <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340014.WAV" />
-        <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340015.WAV" />
-        <Sound SoundType="MeleeAttack" SoundName="/LEVEL1/SOUNDS/OFFICER/OFCSWSTB8-22.WAV" />
+        <Sounds>
+            <Sound SoundType="TakeDamage" SoundName="/LEVEL1/SOUNDS/HIT1.WAV" />
+            <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340014.WAV" />
+            <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340015.WAV" />
+            <Sound SoundType="MeleeAttack" SoundName="/LEVEL1/SOUNDS/OFFICER/OFCSWSTB8-22.WAV" />
+        </Sounds>
     </EnemyAIComponent>
     <TakeDamageAIStateComponent>
         <StatePriority>0</StatePriority>

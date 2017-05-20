@@ -916,7 +916,6 @@ void RangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAct
     }
     else
     {
-        LOG("Dir: " + ToStr((int)dir));
         ActorTemplates::CreateActor_Projectile(
             pAttack->projectileProto,
             m_pPositionComponent->GetPosition() + offset,

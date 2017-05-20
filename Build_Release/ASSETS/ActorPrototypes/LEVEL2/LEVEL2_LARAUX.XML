@@ -15,8 +15,10 @@
     </LootComponent>
     <EnemyAIComponent>
         <DeathAnimation>idle</DeathAnimation>
-        <Sound SoundType="Death" SoundName="/LEVEL2/SOUNDS/RAUX/00840005.WAV" />
-        <Sound SoundType="TakeDamage" SoundName="/LEVEL1/SOUNDS/HIT1.WAV" />
+        <Sounds>
+            <Sound SoundType="Death" SoundName="/LEVEL2/SOUNDS/RAUX/00840005.WAV" />
+            <Sound SoundType="TakeDamage" SoundName="/LEVEL1/SOUNDS/HIT1.WAV" />
+        </Sounds>
     </EnemyAIComponent>
     <TakeDamageAIStateComponent>
         <StatePriority>0</StatePriority>

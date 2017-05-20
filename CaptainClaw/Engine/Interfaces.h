@@ -248,6 +248,7 @@ enum ActorPrototype
     ActorPrototype_Level2_PunkRat,
 
     ActorPrototype_Level3_Rat,
+    ActorPrototype_Level3_CutThroat,
 
     // Elevators
     ActorPrototype_BaseElevator,

@@ -27,7 +27,9 @@
     </LootComponent>
     <EnemyAIComponent>
         <DeathAnimation>dead</DeathAnimation>
-        <Sound SoundType="Death" SoundName="/GAME/SOUNDS/MOUSEKILL.WAV" />
+        <Sounds>
+            <Sound SoundType="Death" SoundName="/GAME/SOUNDS/MOUSEKILL.WAV" />
+        </Sounds>
     </EnemyAIComponent>
     <PatrolEnemyAIStateComponent>
         <IsAlwaysIdle>false</IsAlwaysIdle>

@@ -1,0 +1,123 @@
+<Actor Type="Level3_CutThroat" Parent="ActorPrototype_BaseEnemy" ActorPrototypeName="ActorPrototype_Level3_CutThroat">
+    <ActorRenderComponent>
+        <ImagePath>/LEVEL3/IMAGES/CUTTHROAT/*</ImagePath>
+        <Palette>/LEVEL3/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL3/ANIS/CUTTHROAT/*.ANI</AnimationPath>
+    </AnimationComponent>
+    <HealthComponent>
+        <Health>25</Health>
+        <MaxHealth>25</MaxHealth>
+    </HealthComponent>
+    <EnemyAIComponent>
+        <DeathAnimation>killfall</DeathAnimation>
+        <Sounds>
+            <Sound SoundType="TakeDamage" SoundName="/LEVEL3/SOUNDS/CUTTHROAT/00350010.WAV" />
+            <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340014.WAV" />
+            <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340015.WAV" />
+            <Sound SoundType="MeleeAttack" SoundName="/LEVEL4/SOUNDS/STAB2.WAV" />
+            <Sound SoundType="RangedAttack" SoundName="/LEVEL3/SOUNDS/CUTTHROAT/THROWHIGH.WAV" />
+        </Sounds>
+    </EnemyAIComponent>
+    <TakeDamageAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <TakeDamageAnimation>hithigh</TakeDamageAnimation>
+        <InvulnerabilityTime>0</InvulnerabilityTime>
+    </TakeDamageAIStateComponent>
+    <PatrolEnemyAIStateComponent>
+        <IsAlwaysIdle>false</IsAlwaysIdle>
+        <StatePriority>0</StatePriority>
+        <PatrolSpeed>1.300000</PatrolSpeed>
+        <!-- DEFINED IN CODE -->
+        <LeftPatrolBorder>0</LeftPatrolBorder>
+        <!-- DEFINED IN CODE -->
+        <RightPatrolBorder>0</RightPatrolBorder>
+        <RetainDirection>false</RetainDirection>
+        <IdleAction>
+            <AnimationDelay>0</AnimationDelay>
+            <Animation>idle</Animation>
+        </IdleAction>
+        <WalkAction>
+            <Animation>fastadvance</Animation>
+        </WalkAction>
+    </PatrolEnemyAIStateComponent>
+    <MeleeAttackAIStateComponent>
+        <StatePriority>20</StatePriority>
+        <Attacks>
+            <AttackAction>
+                <Animation>strike1</Animation>
+                <AttackAnimFrameIdx>2</AttackAnimFrameIdx>
+                <AttackType>0</AttackType>
+                <AttackFxImageSet>NONE</AttackFxImageSet>
+                <AttackSpawnPositionOffset x="-30" y="0" />
+                <AttackAreaSize width="110" height="40" />
+                <Damage>10</Damage>
+                <AgroSensorFixture>
+                    <FixtureType>EnemyAIMeleeSensor</FixtureType>
+                    <CollisionShape>Rectangle</CollisionShape>
+                    <IsSensor>true</IsSensor>
+                    <Size width="160" height="50" />
+                    <Offset x="0" y="0" />
+                    <CollisionFlag>4</CollisionFlag>
+                    <CollisionMask>2</CollisionMask>
+                    <Friction>0.000000</Friction>
+                    <Density>0.000000</Density>
+                    <Restitution>0.000000</Restitution>
+                </AgroSensorFixture>
+            </AttackAction>
+        </Attacks>
+    </MeleeAttackAIStateComponent>
+    <RangedAttackAIStateComponent>
+        <StatePriority>10</StatePriority>
+        <Attacks>
+            <AttackAction>
+                <Animation>strike2</Animation>
+                <AttackAnimFrameIdx>6</AttackAnimFrameIdx>
+                <AttackType>1</AttackType>
+                <AttackFxImageSet>/LEVEL3/IMAGES/KNIFE/*</AttackFxImageSet>
+                <AttackSpawnPositionOffset x="-42" y="-30" />
+                <AttackAreaSize width="0" height="0" />
+                <Damage>10</Damage>
+                <AgroSensorFixture>
+                    <FixtureType>EnemyAIRangedSensor</FixtureType>
+                    <CollisionShape>Rectangle</CollisionShape>
+                    <IsSensor>true</IsSensor>
+                    <Size width="1000" height="50" />
+                    <Offset x="0" y="-30" />
+                    <CollisionFlag>4</CollisionFlag>
+                    <CollisionMask>2</CollisionMask>
+                    <Friction>0.000000</Friction>
+                    <Density>0.000000</Density>
+                    <Restitution>0.000000</Restitution>
+                </AgroSensorFixture>
+            </AttackAction>
+        </Attacks>
+    </RangedAttackAIStateComponent>
+    <DuckRangedAttackAIStateComponent>
+        <StatePriority>5</StatePriority>
+        <Attacks>
+            <AttackAction>
+                <Animation>strike3</Animation>
+                <AttackAnimFrameIdx>6</AttackAnimFrameIdx>
+                <AttackType>1</AttackType>
+                <AttackFxImageSet>/LEVEL3/IMAGES/KNIFE/*</AttackFxImageSet>
+                <AttackSpawnPositionOffset x="-42" y="7" />
+                <AttackAreaSize width="0" height="0" />
+                <Damage>10</Damage>
+                <AgroSensorFixture>
+                    <FixtureType>EnemyAIDuckRangedSensor</FixtureType>
+                    <CollisionShape>Rectangle</CollisionShape>
+                    <IsSensor>true</IsSensor>
+                    <Size width="975" height="20" />
+                    <Offset x="0" y="25" />
+                    <CollisionFlag>4</CollisionFlag>
+                    <CollisionMask>2</CollisionMask>
+                    <Friction>0.000000</Friction>
+                    <Density>0.000000</Density>
+                    <Restitution>0.000000</Restitution>
+                </AgroSensorFixture>
+            </AttackAction>
+        </Attacks>
+    </DuckRangedAttackAIStateComponent>
+</Actor>
