@@ -32,12 +32,12 @@ bool Actor::Init(TiXmlElement* data)
 
 void Actor::PostInit()
 {
+    m_pPositionComponent = MakeStrongPtr(GetComponent<PositionComponent>(PositionComponent::g_Name));
+
     for (auto component : _components)
     {
         component.second->VPostInit();
     }
-
-    m_pPositionComponent = MakeStrongPtr(GetComponent<PositionComponent>(PositionComponent::g_Name));
 }
 
 void Actor::PostPostInit()

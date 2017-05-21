@@ -712,7 +712,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     else if (logic.find("Elevator") != std::string::npos &&
              logic != "PathElevator")
     {
-        LOG("logic: " + logic);
         SAFE_DELETE(pActorElem);
 
         std::string logic = wwdObject->logic;
@@ -991,7 +990,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "GlitterlessPowerup" ||
              logic == "HealthPowerup" ||
              logic == "BossWarp" ||
-             logic == "EndOfLevelPowerup")
+             logic == "EndOfLevelPowerup" ||
+             logic == "MagicPowerup")
     {
         SAFE_DELETE(pActorElem);
 
@@ -1160,6 +1160,23 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_FloorSpike(
+            proto,
+            position,
+            tmpImageSet,
+            def);
+    }
+    else if (logic == "AniRope")
+    {
+        ActorPrototype proto = ActorPrototype_BaseFloorSpike;
+        Point position(wwdObject->x, wwdObject->y);
+
+        RopeDef def;
+        def.timeToFlayBackAndForth = wwdObject->speedX;
+        assert(def.timeToFlayBackAndForth != 0);
+
+        SAFE_DELETE(pActorElem);
+
+        return ActorTemplates::CreateXmlData_Rope(
             proto,
             position,
             tmpImageSet,

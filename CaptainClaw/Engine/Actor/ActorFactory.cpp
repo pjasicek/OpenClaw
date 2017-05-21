@@ -48,6 +48,7 @@
 #include "Components/TriggerComponents/BossStagerTriggerComponent.h"
 #include "Components/PathElevatorComponent.h"
 #include "Components/FloorSpikeComponent.h"
+#include "Components/RopeComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -106,6 +107,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<LaRauxBossAIStateComponent>(LaRauxBossAIStateComponent::GetIdFromName(LaRauxBossAIStateComponent::g_Name));
     _componentFactory.Register<PathElevatorComponent>(PathElevatorComponent::GetIdFromName(PathElevatorComponent::g_Name));
     _componentFactory.Register<FloorSpikeComponent>(FloorSpikeComponent::GetIdFromName(FloorSpikeComponent::g_Name));
+    _componentFactory.Register<RopeComponent>(RopeComponent::GetIdFromName(RopeComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

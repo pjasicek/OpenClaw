@@ -48,6 +48,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef);
     TiXmlElement* CreateXmlData_PathElevator(ActorPrototype proto, const Point& position, const std::string& imagePath, const PathElevatorDef& def);
     TiXmlElement* CreateXmlData_FloorSpike(ActorPrototype proto, const Point& position, const std::string& imagePath, const FloorSpikeDef& def);
+    TiXmlElement* CreateXmlData_Rope(ActorPrototype proto, const Point& position, const std::string& imagePath, const RopeDef& def);
 
     StrongActorPtr CreateActor(ActorPrototype proto, Point position);
     StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir);

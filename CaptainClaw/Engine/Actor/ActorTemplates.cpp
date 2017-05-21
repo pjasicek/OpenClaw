@@ -55,9 +55,9 @@ namespace ActorTemplates
         { PickupType_Health_25,                 &CreateXmlData_HealthPickupActor },
         { PickupType_Health_10,                 &CreateXmlData_HealthPickupActor },
         { PickupType_Health_15,                 &CreateXmlData_HealthPickupActor },
-        { PickupType_Ammo_Magic_5,              &CreateXmlData_PowerupPickupActor },
-        { PickupType_Ammo_Magic_10,             &CreateXmlData_PowerupPickupActor },
-        { PickupType_Ammo_Magic_25,             &CreateXmlData_PowerupPickupActor },
+        { PickupType_Ammo_Magic_5,              &CreateXmlData_AmmoPickupActor },
+        { PickupType_Ammo_Magic_10,             &CreateXmlData_AmmoPickupActor },
+        { PickupType_Ammo_Magic_25,             &CreateXmlData_AmmoPickupActor },
         { PickupType_Mappiece,                  &CreateXmlData_MappiecePickupActor },
         { PickupType_Warp,                      &CreateXmlData_WarpPickupActor },
         { PickupType_Treasure_Coins,            &CreateXmlData_TreasurePickupActor },
@@ -1925,6 +1925,27 @@ namespace ActorTemplates
         assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.ActiveFrameIdx", def.activeFrameIdx));
         assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.StartDelay", def.startDelay));
         assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.TimeOn", def.timeOn));
+
+        return pActorElem;
+    }
+
+    TiXmlElement* CreateXmlData_Rope(ActorPrototype proto, const Point& position, const std::string& imagePath, const RopeDef& def)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- ActorRenderComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
+
+        //----------- AnimationComponent
+
+        // All ropes have 120 animation frames
+        int cycleDuration = def.timeToFlayBackAndForth / 120;
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.FrameDuration", cycleDuration));
 
         return pActorElem;
     }

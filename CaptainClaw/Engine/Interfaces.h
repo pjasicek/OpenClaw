@@ -79,6 +79,7 @@ enum CollisionFlag
     CollisionFlag_EnemyAIProjectile     = 0x40000,
     CollisionFlag_DamageAura            = 0x80000,
     CollisionFlag_InvisibleController   = 0x100000,
+    CollisionFlag_RopeSensor            = 0x400000,
 };
 
 enum FixtureType
@@ -309,6 +310,8 @@ enum ActorPrototype
     ActorPrototype_BaseBossStager,
 
     ActorPrototype_BaseFloorSpike,
+
+    ActorPrototype_BaseRope,
 
     ActorPrototype_Max
 };

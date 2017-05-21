@@ -53,6 +53,8 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/PathElevatorComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FloorSpikeComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FloorSpikeComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/RopeComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RopeComponent.h
 )
 
 add_subdirectory(AIComponents)

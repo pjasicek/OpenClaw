@@ -600,6 +600,40 @@ struct FloorSpikeDef
 };
 
 //-------------------------------------------------------------------------------------------------
+// RopeDef - RopeComponent
+//-------------------------------------------------------------------------------------------------
+
+struct RopeDef
+{
+    RopeDef()
+    {
+        timeToFlayBackAndForth = 0;
+    }
+
+    static RopeDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        RopeDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        assert(false);
+        return NULL;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&timeToFlayBackAndForth, pElem->FirstChildElement("TimeToFlayBackAndForth")));
+    }
+
+    int timeToFlayBackAndForth;
+};
+
+//-------------------------------------------------------------------------------------------------
 // AnimationDef - AnimationComponent
 //-------------------------------------------------------------------------------------------------
 

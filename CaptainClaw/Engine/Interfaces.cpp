@@ -75,6 +75,9 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         // Floor Spike
         { ActorPrototype_BaseFloorSpike, "ActorPrototype_BaseFloorSpike" },
 
+        // Rope
+        { ActorPrototype_BaseRope, "ActorPrototype_BaseRope" },
+
         //=======================================
         // Menu
         //=======================================
@@ -161,6 +164,9 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Floor Spike
         { "ActorPrototype_BaseFloorSpike", ActorPrototype_BaseFloorSpike },
+
+        // Rope
+        { "ActorPrototype_BaseRope", ActorPrototype_BaseRope },
 
         //=======================================
         // Menu
