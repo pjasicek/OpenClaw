@@ -18,3 +18,18 @@ bool ConcreteComponent::VInit(TiXmlElement* data)
 
     return true;
 }
+
+void ConcreteComponent::VPostInit()
+{
+
+}
+
+void ConcreteComponent::VPostPostInit()
+{
+
+}
+
+void ConcreteComponent::VUpdate(uint32 msDiff)
+{
+
+}

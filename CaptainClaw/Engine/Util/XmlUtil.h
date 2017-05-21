@@ -3,6 +3,7 @@
 
 #include <tinyxml.h>
 #include "Util.h"
+#include "StringUtil.h"
 
 #ifndef XML_ADD_TEXT_ELEMENT
 #define XML_ADD_TEXT_ELEMENT(elementName, elementValue, parentElement) \
