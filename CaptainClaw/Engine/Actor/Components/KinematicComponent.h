@@ -50,6 +50,7 @@ private:
 
     Point m_CurrentSpeed;
     Point m_LastSpeed;
+    Point m_InitialSpeed;
 
     // This is to get aroung Box2D's imperfections
     bool m_bCheckCarriedBodies;

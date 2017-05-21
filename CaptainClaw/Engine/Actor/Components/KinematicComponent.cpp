@@ -83,6 +83,8 @@ void KinematicComponent::VPostInit()
         {
             m_LastSpeed.SetY(m_Speed.y * -1.0);
         }
+
+        m_InitialSpeed = m_LastSpeed;
     }
 }
 
@@ -297,9 +299,20 @@ void KinematicComponent::ClawDiedDelegate(IEventDataPtr pEventData)
     {
         m_bIsTriggered = false;
         m_CurrentSpeed = Point(0, 0);
+        
+    }
+    if (m_Properties.hasStartBehaviour || 
+        m_Properties.hasTriggerBehaviour || 
+        m_Properties.hasStopBehaviour)
+    {
+        m_LastSpeed = m_InitialSpeed;
     }
 
+    m_CarriedBodiesList.clear();
+    m_bCheckCarriedBodies = false;
+
     m_bIsDone = false;
-    m_pPositionComponent->SetPosition(m_InitialPosition);
-    m_pPhysics->VSetPosition(_owner->GetGUID(), m_InitialPosition);
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Teleport_Actor(_owner->GetGUID(), m_InitialPosition)));
+    /*m_pPositionComponent->SetPosition(m_InitialPosition);
+    m_pPhysics->VSetPosition(_owner->GetGUID(), m_InitialPosition);*/
 }
