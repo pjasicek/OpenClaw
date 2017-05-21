@@ -153,8 +153,8 @@ namespace ActorTemplates
             { "GAME_POWERUPS_GHOST", PickupType_Powerup_Invisibility },
             { "GAME_POWERUPS_INVULNERABLE", PickupType_Powerup_Invincibility },
             { "GAME_POWERUPS_EXTRALIFE", PickupType_Powerup_Life },
-            { "GAME_POWERUPS_LIGHTNINGSWORD", PickupType_Powerup_FireSword },
-            { "GAME_POWERUPS_FIRESWORD", PickupType_Powerup_LightningSword },
+            { "GAME_POWERUPS_LIGHTNINGSWORD", PickupType_Powerup_LightningSword },
+            { "GAME_POWERUPS_FIRESWORD", PickupType_Powerup_FireSword }, 
             { "GAME_POWERUPS_ICESWORD", PickupType_Powerup_FrostSword },
             { "GAME_BOSSWARP", PickupType_BossWarp },
         };
@@ -229,8 +229,8 @@ namespace ActorTemplates
             { PickupType_Powerup_Invisibility,      "GAME_POWERUPS_GHOST" },
             { PickupType_Powerup_Invincibility,     "GAME_POWERUPS_INVULNERABLE" },
             { PickupType_Powerup_Life,              "GAME_POWERUPS_EXTRALIFE" },
-            { PickupType_Powerup_FireSword,         "GAME_POWERUPS_LIGHTNINGSWORD" },
-            { PickupType_Powerup_LightningSword,    "GAME_POWERUPS_FIRESWORD" },
+            { PickupType_Powerup_FireSword,         "GAME_POWERUPS_FIRESWORD" },
+            { PickupType_Powerup_LightningSword,    "GAME_POWERUPS_LIGHTNINGSWORD" },
             { PickupType_Powerup_FrostSword,        "GAME_POWERUPS_ICESWORD" },
             { PickupType_BossWarp,                  "GAME_BOSSWARP" },
             { PickupType_Level2_Gem,                "LEVEL_GEM" },
@@ -1315,6 +1315,12 @@ namespace ActorTemplates
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pPowerupPickupComponent);
         pActor->LinkEndChild(pPowerupPickupComponent);
 
+        if (pickupType != PickupType_Powerup_Catnip_1 ||
+            pickupType != PickupType_Powerup_Catnip_2)
+        {
+            pActor->LinkEndChild(CreateCycleAnimationComponent(75, false));
+        }
+
         return pActor;
     }
 
@@ -1865,6 +1871,32 @@ namespace ActorTemplates
             assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.HasPositionDelay", false));
 
             //pActorElem->Print(stdout, -1);
+        }
+
+        return pActorElem;
+    }
+
+    TiXmlElement* CreateXmlData_PathElevator(ActorPrototype proto, const Point& position, const std::string& imagePath, const PathElevatorDef& def)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- ActorRenderComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
+
+        // ---------- PathElevatorComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.PathElevatorComponent.Speed", def.speed));
+
+        TiXmlElement* pPathElevatorStepsElem = GetTiXmlElementFromPath(pActorElem, "Actor.PathElevatorComponent.ElevatorSteps");
+        assert(pPathElevatorStepsElem != NULL);
+
+        for (ElevatorStepDef stepDef : def.elevatorPath)
+        {
+            pPathElevatorStepsElem->LinkEndChild(stepDef.ToXml());
         }
 
         return pActorElem;

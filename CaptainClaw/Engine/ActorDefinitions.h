@@ -440,6 +440,112 @@ struct DestroyableComponentDef
 };
 
 //-------------------------------------------------------------------------------------------------
+// PathElevatorDef - PathElevatorComponent
+//-------------------------------------------------------------------------------------------------
+
+struct ElevatorStepDef
+{
+    ElevatorStepDef()
+    {
+        direction = Direction_None;
+        isWaiting = false;
+        waitMsTime = 0;
+    }
+
+    static ElevatorStepDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        ElevatorStepDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        TiXmlElement* pElevatorStepElem = new TiXmlElement("ElevatorStep");
+
+        AddXmlTextElement("Direction", EnumToString_Direction(direction), pElevatorStepElem);
+        AddXmlTextElement("StepDeltaDistance", stepDeltaDistance, pElevatorStepElem);
+        AddXmlTextElement("IsWaiting", isWaiting, pElevatorStepElem);
+        AddXmlTextElement("WaitTime", waitMsTime, pElevatorStepElem);
+
+        return pElevatorStepElem;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        std::string directionStr;
+        cond_assert(strict, ParseValueFromXmlElem(&directionStr, pElem->FirstChildElement("Direction")));
+        direction = StringToEnum_Direction(directionStr);
+
+        cond_assert(strict, ParseValueFromXmlElem(&stepDeltaDistance, pElem->FirstChildElement("StepDeltaDistance")));
+        cond_assert(strict, ParseValueFromXmlElem(&isWaiting, pElem->FirstChildElement("IsWaiting")));
+        cond_assert(strict, ParseValueFromXmlElem(&waitMsTime, pElem->FirstChildElement("WaitTime")));
+    }
+
+    Direction direction;
+    int stepDeltaDistance;
+
+    bool isWaiting;
+    int waitMsTime;
+};
+
+struct PathElevatorDef
+{
+    PathElevatorDef()
+    {
+        speed = 0.0;
+    }
+
+    static PathElevatorDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        PathElevatorDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        TiXmlElement* pPathElevatorComponent = new TiXmlElement("PathElevatorComponent");
+
+        AddXmlTextElement("Speed", speed, pPathElevatorComponent);
+
+        TiXmlElement* pPathElem = new TiXmlElement("ElevatorSteps");
+        pPathElevatorComponent->LinkEndChild(pPathElem);
+
+        for (ElevatorStepDef& step : elevatorPath)
+        {
+            pPathElem->LinkEndChild(step.ToXml());
+        }
+
+        return pPathElevatorComponent;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&speed, pElem->FirstChildElement("Speed")));
+
+        TiXmlElement* pElevatorStepsElem = pElem->FirstChildElement("ElevatorSteps");
+        assert(pElevatorStepsElem != NULL);
+        for (TiXmlElement* pStepElem = pElevatorStepsElem->FirstChildElement("ElevatorStep");
+            pStepElem != NULL;
+            pStepElem = pStepElem->NextSiblingElement("ElevatorStep"))
+        {
+            ElevatorStepDef def;
+            def.LoadFromXml(pStepElem, strict);
+
+            elevatorPath.push_back(def);
+        }
+    }
+
+    double speed;
+    std::vector<ElevatorStepDef> elevatorPath;
+};
+
+//-------------------------------------------------------------------------------------------------
 // AnimationDef - AnimationComponent
 //-------------------------------------------------------------------------------------------------
 

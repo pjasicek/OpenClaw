@@ -11,6 +11,7 @@
 #include "../Actor/Components/EnemyAI/EnemyAIStateComponent.h"
 #include "../Actor/Components/ControllableComponent.h"
 #include "../Actor/Components/PositionComponent.h"
+#include "../Actor/Components/PathElevatorComponent.h"
 #include "../Actor/Components/AuraComponents/AuraComponent.h"
 
 int numFootContacts = 0;
@@ -270,8 +271,16 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                 if (pContact->IsEnabled() /*!pFixtureA->IsSensor()*/ && pFixtureA->GetBody()->GetType() == b2_kinematicBody && !pFixtureB->IsSensor())
                 {
                     //LOG("ADDED");
-                    shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
-                    pKinematicComponent->AddCarriedBody(pFixtureB->GetBody());
+                    if (shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody()))
+                    {
+                        pKinematicComponent->AddCarriedBody(pFixtureB->GetBody());
+                    }
+                    else if (shared_ptr<PathElevatorComponent> pPathElevatorComponent = GetPathElevatorComponentFromB2Body(pFixtureA->GetBody()))
+                    {
+                        pPathElevatorComponent->AddCarriedBody(pFixtureB->GetBody());
+                    }
+                    /*shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
+                    pKinematicComponent->AddCarriedBody(pFixtureB->GetBody());*/
                     pPhysicsComponent->AddOverlappingKinematicBody(pFixtureA->GetBody());
                     pContact->SetFriction(100.0f);
                     pPhysicsComponent->SetMovingPlatformContact(pContact);
@@ -508,8 +517,16 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                     if (pContact->IsEnabled()/*!pFixtureA->IsSensor()*/ && pFixtureA->GetBody()->GetType() == b2_kinematicBody && !pFixtureB->IsSensor())
                     {
                         //LOG("REMOVED");
-                        shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
-                        pKinematicComponent->RemoveCarriedBody(pFixtureB->GetBody());
+                        if (shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody()))
+                        {
+                            pKinematicComponent->RemoveCarriedBody(pFixtureB->GetBody());
+                        }
+                        else if (shared_ptr<PathElevatorComponent> pPathElevatorComponent = GetPathElevatorComponentFromB2Body(pFixtureA->GetBody()))
+                        {
+                            pPathElevatorComponent->RemoveCarriedBody(pFixtureB->GetBody());
+                        }
+                        /*shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
+                        pKinematicComponent->RemoveCarriedBody(pFixtureB->GetBody());*/
                         pPhysicsComponent->RemoveOverlappingKinematicBody(pFixtureA->GetBody());
                         pPhysicsComponent->SetMovingPlatformContact(NULL);
                     }

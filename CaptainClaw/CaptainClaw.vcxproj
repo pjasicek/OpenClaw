@@ -96,6 +96,7 @@
     <ClCompile Include="Engine\Actor\Components\FollowableComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\GlobalAmbientSoundComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\LocalAmbientSoundComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PathElevatorComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\BossStagerTriggerComponent.cpp" />
     <ClCompile Include="Engine\Interfaces.cpp" />
     <ClCompile Include="Engine\Actor\Components\LootComponent.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Engine\Actor\Components\GlobalAmbientSoundComponent.h" />
     <ClInclude Include="Engine\Actor\Components\LocalAmbientSoundComponent.h" />
     <ClInclude Include="Engine\Actor\Components\LootComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PathElevatorComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PickupComponents\PickupComponent.h" />
     <ClInclude Include="Engine\Actor\Components\KinematicComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PredefinedMoveComponent.h" />

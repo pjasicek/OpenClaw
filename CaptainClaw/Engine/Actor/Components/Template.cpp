@@ -18,12 +18,3 @@ bool ConcreteComponent::VInit(TiXmlElement* data)
 
     return true;
 }
-
-TiXmlElement* ConcreteComponent::VGenerateXml()
-{
-    TiXmlElement* baseElement = new TiXmlElement(VGetName());
-
-    //
-
-    return baseElement;
-}

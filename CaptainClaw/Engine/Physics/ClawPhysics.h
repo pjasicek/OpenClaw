@@ -97,9 +97,11 @@ class KinematicComponent;
 class PhysicsComponent;
 class TriggerComponent;
 class ProjectileAIComponent;
+class PathElevatorComponent;
 
 extern shared_ptr<PhysicsComponent> GetPhysicsComponentFromB2Body(const b2Body* pBody);
 extern shared_ptr<KinematicComponent> GetKinematicComponentFromB2Body(const b2Body* pBody);
+extern shared_ptr<PathElevatorComponent> GetPathElevatorComponentFromB2Body(const b2Body* pBody);
 extern shared_ptr<TriggerComponent> GetTriggerComponentFromB2Body(const b2Body* pBody);
 extern shared_ptr<ProjectileAIComponent> GetProjectileAIComponentFromB2Body(const b2Body* pBody);
 extern b2AABB GetBodyAABB(b2Body* pBody, bool discardSensors);

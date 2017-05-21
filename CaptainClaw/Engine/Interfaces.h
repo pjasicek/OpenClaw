@@ -30,6 +30,10 @@ enum Direction
     Direction_Down,
     Direction_Left,
     Direction_Right,
+    Direction_Up_Left,
+    Direction_Up_Right,
+    Direction_Down_Right,
+    Direction_Down_Left
 };
 
 enum MovementInfoEvent
@@ -258,6 +262,8 @@ enum ActorPrototype
     ActorPrototype_Level2_Elevator,
     ActorPrototype_Level3_Elevator_1,
     ActorPrototype_Level3_Elevator_2,
+
+    ActorPrototype_BasePathElevator,
 
     // Toggle pegs
     ActorPrototype_BaseTogglePeg,

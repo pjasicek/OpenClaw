@@ -31,6 +31,8 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level3_Elevator_1, "ActorPrototype_Level3_Elevator_1" },
         { ActorPrototype_Level3_Elevator_2, "ActorPrototype_Level3_Elevator_2" },
 
+        { ActorPrototype_BasePathElevator, "ActorPrototype_BasePathElevator" },
+
         // Toggle pegs
         { ActorPrototype_BaseTogglePeg, "ActorPrototype_BaseTogglePeg" },
 
@@ -112,6 +114,8 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level2_Elevator", ActorPrototype_Level2_Elevator },
         { "ActorPrototype_Level3_Elevator_1", ActorPrototype_Level3_Elevator_1 },
         { "ActorPrototype_Level3_Elevator_2", ActorPrototype_Level3_Elevator_2 },
+
+        { "ActorPrototype_BasePathElevator", ActorPrototype_BasePathElevator },
 
         // Toggle pegs
         { "ActorPrototype_BaseTogglePeg", ActorPrototype_BaseTogglePeg },
@@ -259,10 +263,15 @@ Direction StringToEnum_Direction(std::string dirStr)
 {
     static const std::map<std::string, Direction> directionEnumToStringMap =
     {
+        { "Direction_None", Direction_None },
         { "Direction_Up", Direction_Up },
         { "Direction_Down", Direction_Down },
         { "Direction_Left", Direction_Left },
         { "Direction_Right", Direction_Right },
+        { "Direction_Up_Left", Direction_Up_Left },
+        { "Direction_Down_Left", Direction_Down_Left },
+        { "Direction_Up_Right", Direction_Up_Right },
+        { "Direction_Down_Right", Direction_Down_Right },
     };
 
     auto findIt = directionEnumToStringMap.find(dirStr);
@@ -280,10 +289,15 @@ std::string EnumToString_Direction(Direction dir)
     static std::map<Direction, std::string> stringToDirectionEnumMap =
     {
         // Actor enemies
+        { Direction_None, "Direction_None" },
         { Direction_Up, "Direction_Up" },
         { Direction_Down, "Direction_Down" },
         { Direction_Left, "Direction_Left" },
         { Direction_Right, "Direction_Right" },
+        { Direction_Up_Left, "Direction_Up_Left" },
+        { Direction_Down_Left, "Direction_Down_Left" },
+        { Direction_Up_Right, "Direction_Up_Right" },
+        { Direction_Down_Right, "Direction_Down_Right" },
     };
 
     auto findIt = stringToDirectionEnumMap.find(dir);

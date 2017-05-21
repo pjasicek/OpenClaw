@@ -11,6 +11,7 @@
 #include "../Actor/Components/CollisionComponent.h"
 #include "../Actor/Components/PhysicsComponent.h"
 #include "../Actor/Components/KinematicComponent.h"
+#include "../Actor/Components/PathElevatorComponent.h"
 #include "../Actor/Components/RenderComponent.h"
 #include "../Actor/Components/TriggerComponents/TriggerComponent.h"
 #include "../Actor/Components/AIComponents/ProjectileAIComponent.h"
@@ -53,9 +54,24 @@ shared_ptr<KinematicComponent> GetKinematicComponentFromB2Body(const b2Body* pBo
 
     shared_ptr<KinematicComponent> pKinematicComponent =
         MakeStrongPtr(pActor->GetComponent<KinematicComponent>(KinematicComponent::g_Name));
-    assert(pKinematicComponent);
 
     return pKinematicComponent;
+}
+
+shared_ptr<PathElevatorComponent> GetPathElevatorComponentFromB2Body(const b2Body* pBody)
+{
+    assert(pBody);
+
+    Actor* pActor = static_cast<Actor*>(pBody->GetUserData());
+    if (!pActor)
+    {
+        return nullptr;
+    }
+
+    shared_ptr<PathElevatorComponent> pPathElevatorComponent =
+        MakeStrongPtr(pActor->GetComponent<PathElevatorComponent>());
+
+    return pPathElevatorComponent;
 }
 
 shared_ptr<TriggerComponent> GetTriggerComponentFromB2Body(const b2Body* pBody)
@@ -345,9 +361,15 @@ void ClawPhysics::VSyncVisibleScene()
                 // If it is kinematic body (moving platform, elevator), notify it
                 if (pActorBody->GetType() == b2_kinematicBody)
                 {
-                    shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pActorBody);
-                    //pKinematicComponent->RemoveCarriedBody(pActorBody);
-                    pKinematicComponent->OnMoved(bodyPixelPosition);
+                    // TODO: Refactor
+                    if (shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pActorBody))
+                    {
+                        pKinematicComponent->OnMoved(bodyPixelPosition);
+                    }
+                    else if (shared_ptr<PathElevatorComponent> pPathElevatorComponent = GetPathElevatorComponentFromB2Body(pActorBody))
+                    {
+                        pPathElevatorComponent->OnMoved(bodyPixelPosition);
+                    }
                 }
             }
         }

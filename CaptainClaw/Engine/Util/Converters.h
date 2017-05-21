@@ -398,6 +398,46 @@ inline TiXmlElement* TogglePegToXml(WwdObject* pWwdObject)
     return pTogglePegAIElem;
 }
 
+// @moveType: Left/Right/LeftTop/... or stop for a certain time only 1-9 are valid
+// @value: pixel distance or milisecond stop
+inline ElevatorStepDef GetElevatorStepDef(int moveType, int value)
+{
+    assert(moveType >= 1 && moveType <= 9);
+    assert(value > 0);
+
+    Direction dir = Direction_None;
+
+    switch (moveType)
+    {
+        case 1: dir = Direction_Down_Left; break;
+        case 2: dir = Direction_Down; break;
+        case 3: dir = Direction_Down_Right; break;
+        case 4: dir = Direction_Left; break;
+        case 5: dir = Direction_None; break;
+        case 6: dir = Direction_Right; break;
+        case 7: dir = Direction_Up_Left; break;
+        case 8: dir = Direction_Up; break;
+        case 9: dir = Direction_Up_Right; break;
+        default: assert(false);
+    }
+
+    ElevatorStepDef def;
+
+    // Stop for given amount of milis
+    if (dir == Direction_None)
+    {
+        def.isWaiting = true;
+        def.waitMsTime = value;
+    }
+    else
+    {
+        def.direction = dir;
+        def.stepDeltaDistance = value;
+    }
+    
+    return def; 
+}
+
 inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath, int levelNumber)
 {
     TiXmlElement* pActorElem = new TiXmlElement("Actor");
@@ -655,8 +695,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle50", animElem);
         pActorElem->LinkEndChild(animElem);
     }
-    else if (logic.find("Elevator") != std::string::npos)
+    else if (logic.find("Elevator") != std::string::npos &&
+             logic != "PathElevator")
     {
+        LOG("logic: " + logic);
         SAFE_DELETE(pActorElem);
 
         std::string logic = wwdObject->logic;
@@ -1005,6 +1047,64 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             wwdObject->minX,
             wwdObject->maxX,
             false);
+    }
+    else if (logic == "PathElevator")
+    {
+        /*static bool wasHere = false;
+        if (wasHere) return pActorElem;
+        wasHere = true;*/
+
+        PathElevatorDef pathElevatorDef;
+
+        pathElevatorDef.speed = wwdObject->speed;
+        if (wwdObject->moveRect.left != 0)
+        {
+            pathElevatorDef.elevatorPath.push_back(GetElevatorStepDef(wwdObject->moveRect.left, wwdObject->moveRect.top));
+        }
+        if (wwdObject->moveRect.right != 0)
+        {
+            pathElevatorDef.elevatorPath.push_back(GetElevatorStepDef(wwdObject->moveRect.right, wwdObject->moveRect.bottom));
+        }
+
+        if (wwdObject->hitRect.left != 0)
+        {
+            pathElevatorDef.elevatorPath.push_back(GetElevatorStepDef(wwdObject->hitRect.left, wwdObject->hitRect.top));
+        }
+        if (wwdObject->hitRect.right != 0)
+        {
+            pathElevatorDef.elevatorPath.push_back(GetElevatorStepDef(wwdObject->hitRect.right, wwdObject->hitRect.bottom));
+        }
+
+        if (wwdObject->attackRect.left != 0)
+        {
+            pathElevatorDef.elevatorPath.push_back(GetElevatorStepDef(wwdObject->attackRect.left, wwdObject->attackRect.top));
+        }
+        if (wwdObject->attackRect.right != 0)
+        {
+            pathElevatorDef.elevatorPath.push_back(GetElevatorStepDef(wwdObject->attackRect.right, wwdObject->attackRect.bottom));
+        }
+
+        if (wwdObject->clipRect.left != 0)
+        {
+            pathElevatorDef.elevatorPath.push_back(GetElevatorStepDef(wwdObject->clipRect.left, wwdObject->clipRect.top));
+        }
+        if (wwdObject->clipRect.right != 0)
+        {
+            pathElevatorDef.elevatorPath.push_back(GetElevatorStepDef(wwdObject->clipRect.right, wwdObject->clipRect.bottom));
+        }
+
+        assert(pathElevatorDef.speed > 0);
+        assert(pathElevatorDef.elevatorPath.size() > 2);
+
+        Point position(wwdObject->x, wwdObject->y);
+
+        SAFE_DELETE(pActorElem);
+
+        return ActorTemplates::CreateXmlData_PathElevator(
+            ActorPrototype_BasePathElevator,
+            position,
+            tmpImageSet,
+            pathElevatorDef);
     }
     else
     {
