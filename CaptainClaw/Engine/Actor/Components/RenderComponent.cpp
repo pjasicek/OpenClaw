@@ -601,7 +601,7 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
     }
 
     int planeWidth = m_PlaneProperties.planePixelWidth;
-    int planeHeight = m_PlaneProperties.planePixelHeight;
+    int planeHeight = m_PlaneProperties.planePixelHeight * 2;
     if (m_PlaneProperties.isWrappedX)
     {
         planeWidth = INT32_MAX;
@@ -610,7 +610,7 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
     {
         planeHeight = INT32_MAX;
     }
-
+    
     m_PositionRect = { 0, 0, planeWidth, planeHeight };
 
     return true;
