@@ -51,6 +51,8 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/LocalAmbientSoundComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/PathElevatorComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PathElevatorComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FloorSpikeComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FloorSpikeComponent.h
 )
 
 add_subdirectory(AIComponents)

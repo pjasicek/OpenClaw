@@ -321,6 +321,9 @@
     <ClCompile Include="Engine\Actor\Components\PathElevatorComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Actor\Components\FloorSpikeComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Process\Process.h">
@@ -651,6 +654,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Actor\Components\PathElevatorComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actor\Components\FloorSpikeComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

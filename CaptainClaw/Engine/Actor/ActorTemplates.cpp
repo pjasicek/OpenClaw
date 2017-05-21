@@ -1902,6 +1902,33 @@ namespace ActorTemplates
         return pActorElem;
     }
 
+    TiXmlElement* CreateXmlData_FloorSpike(ActorPrototype proto, const Point& position, const std::string& imagePath, const FloorSpikeDef& def)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- ActorRenderComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
+
+        //----------- AnimationComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.FrameDuration", def.cycleDuration));
+
+        // ---------- DamageAuraComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.DamageAuraComponent.Damage", def.damage));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.DamageAuraComponent.PulseInterval", def.damagePulseInterval));
+
+        // ---------- FloorSpikeComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.ActiveFrameIdx", def.activeFrameIdx));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.StartDelay", def.startDelay));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.TimeOn", def.timeOn));
+
+        return pActorElem;
+    }
+
     StrongActorPtr CreateActor(ActorPrototype proto, Point position)
     {
         return CreateAndReturnActor(CreateXmlData_Actor(proto, position));

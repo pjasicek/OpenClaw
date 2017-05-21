@@ -440,7 +440,7 @@ struct DestroyableComponentDef
 };
 
 //-------------------------------------------------------------------------------------------------
-// PathElevatorDef - PathElevatorComponent
+// ElevatorStepDef - PathElevatorComponent
 //-------------------------------------------------------------------------------------------------
 
 struct ElevatorStepDef
@@ -492,6 +492,10 @@ struct ElevatorStepDef
 
     Point destinationPosition;
 };
+
+//-------------------------------------------------------------------------------------------------
+// PathElevatorDef - PathElevatorComponent
+//-------------------------------------------------------------------------------------------------
 
 struct PathElevatorDef
 {
@@ -545,6 +549,54 @@ struct PathElevatorDef
 
     double speed;
     std::vector<ElevatorStepDef> elevatorPath;
+};
+
+//-------------------------------------------------------------------------------------------------
+// FloorSpikeDef - FloorSpikeComponent
+//-------------------------------------------------------------------------------------------------
+
+struct FloorSpikeDef
+{
+    FloorSpikeDef()
+    {
+        activeFrameIdx = 0;
+        damage = 0;
+        damagePulseInterval = 0;
+        cycleDuration = 0;
+        startDelay = 0;
+        timeOn = 0;
+    }
+
+    static FloorSpikeDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        FloorSpikeDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        assert(false);
+        return NULL;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&activeFrameIdx, pElem->FirstChildElement("ActiveFrameIdx")));
+        cond_assert(strict, ParseValueFromXmlElem(&damage, pElem->FirstChildElement("Damage")));
+        cond_assert(strict, ParseValueFromXmlElem(&damagePulseInterval, pElem->FirstChildElement("DamagePulseInterval")));
+        cond_assert(strict, ParseValueFromXmlElem(&cycleDuration, pElem->FirstChildElement("CycleDuration")));
+        cond_assert(strict, ParseValueFromXmlElem(&startDelay, pElem->FirstChildElement("StartDelay")));
+    }
+
+    int activeFrameIdx;
+    int timeOn;
+    int damage;
+    int damagePulseInterval;
+    int cycleDuration;
+    int startDelay;
 };
 
 //-------------------------------------------------------------------------------------------------

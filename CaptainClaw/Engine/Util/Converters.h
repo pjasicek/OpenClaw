@@ -549,6 +549,11 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             {
                 soundVolume /= 5;
             }
+            // Also non-looping sounds require tweaks
+            if (levelNumber == 2 || levelNumber == 3 && !isLooping)
+            {
+                soundVolume = (int)((float)soundVolume / 1.5f);
+            }
 
             SAFE_DELETE(pActorElem);
             return ActorTemplates::CreateXmlData_GlobalAmbientSoundActor(
@@ -1115,6 +1120,50 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             position,
             tmpImageSet,
             pathElevatorDef);
+    }
+    else if (logic.find("FloorSpike") != std::string::npos)
+    {
+        int delay = 0;
+        if (logic == "FloorSpike")
+        {
+            delay = 0;
+        }
+        else if (logic == "FloorSpike2")
+        {
+            delay = 750;
+        }
+        else if (logic == "FloorSpike3")
+        {
+            delay = 1500;
+        }
+        else if (logic == "FloorSpike4")
+        {
+            delay = 2250;
+        }
+        else
+        {
+            LOG("Offending floor spike: " + logic);
+            assert(false && "Unknown floor spike");
+        }
+
+        ActorPrototype proto = ActorPrototype_BaseFloorSpike;
+        Point position(wwdObject->x, wwdObject->y);
+
+        // TODO: Make specific actor prototypes in next level(s)
+        FloorSpikeDef def;
+        def.activeFrameIdx = 5;
+        def.startDelay = delay;
+        def.damage = 5;
+        def.cycleDuration = 75;
+        def.damagePulseInterval = 1000;
+        def.timeOn = 1000;
+
+        SAFE_DELETE(pActorElem);
+        return ActorTemplates::CreateXmlData_FloorSpike(
+            proto,
+            position,
+            tmpImageSet,
+            def);
     }
     else
     {

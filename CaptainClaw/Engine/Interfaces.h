@@ -308,6 +308,8 @@ enum ActorPrototype
 
     ActorPrototype_BaseBossStager,
 
+    ActorPrototype_BaseFloorSpike,
+
     ActorPrototype_Max
 };
 

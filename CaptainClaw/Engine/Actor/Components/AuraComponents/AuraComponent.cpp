@@ -129,7 +129,7 @@ void BaseAuraComponent::OnActorEntered(Actor* pActor)
     newActorPulse.pActor = pActor;
     m_ActivePulseList.push_back(newActorPulse);
 
-    if (m_bApplyAuraOnEnter)
+    if (m_bApplyAuraOnEnter && m_bIsEnabled)
     {
         VOnAuraApply(pActor);
     }
@@ -147,6 +147,23 @@ void BaseAuraComponent::OnActorLeft(Actor* pActor)
             return;
         }
     }
+}
+
+void BaseAuraComponent::SetEnabled(bool enabled)
+{
+    if (!m_bIsEnabled && enabled)
+    {
+        for (PulseInfo& pulse : m_ActivePulseList)
+        {
+            if (pulse.pActor == NULL)
+            {
+                continue;
+            }
+            VOnAuraApply(pulse.pActor);
+        }
+    }
+
+    m_bIsEnabled = enabled;
 }
 
 //=====================================================================================================================

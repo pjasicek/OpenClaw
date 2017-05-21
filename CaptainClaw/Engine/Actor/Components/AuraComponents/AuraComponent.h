@@ -48,7 +48,7 @@ public:
     virtual void VOnAuraApply(Actor* pActorInAura) { }
     virtual void VOnAuraRemove (Actor* pActorInAura) { }
 
-    void SetEnabled(bool enabled) { m_bIsEnabled = enabled; }
+    void SetEnabled(bool enabled);
 
 protected:
     virtual bool VDelegateInit(TiXmlElement* data) { return true; }

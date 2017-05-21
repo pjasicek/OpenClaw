@@ -72,6 +72,9 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         { ActorPrototype_BaseBossStager, "ActorPrototype_BaseBossStager" },
 
+        // Floor Spike
+        { ActorPrototype_BaseFloorSpike, "ActorPrototype_BaseFloorSpike" },
+
         //=======================================
         // Menu
         //=======================================
@@ -155,6 +158,9 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_LocalAmbientSound", ActorPrototype_LocalAmbientSound },
 
         { "ActorPrototype_BaseBossStager", ActorPrototype_BaseBossStager },
+
+        // Floor Spike
+        { "ActorPrototype_BaseFloorSpike", ActorPrototype_BaseFloorSpike },
 
         //=======================================
         // Menu

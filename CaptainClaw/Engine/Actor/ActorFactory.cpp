@@ -47,7 +47,7 @@
 #include "Components/LocalAmbientSoundComponent.h"
 #include "Components/TriggerComponents/BossStagerTriggerComponent.h"
 #include "Components/PathElevatorComponent.h"
-
+#include "Components/FloorSpikeComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -105,6 +105,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<BossStagerTriggerComponent>(BossStagerTriggerComponent::GetIdFromName(BossStagerTriggerComponent::g_Name));
     _componentFactory.Register<LaRauxBossAIStateComponent>(LaRauxBossAIStateComponent::GetIdFromName(LaRauxBossAIStateComponent::g_Name));
     _componentFactory.Register<PathElevatorComponent>(PathElevatorComponent::GetIdFromName(PathElevatorComponent::g_Name));
+    _componentFactory.Register<FloorSpikeComponent>(FloorSpikeComponent::GetIdFromName(FloorSpikeComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

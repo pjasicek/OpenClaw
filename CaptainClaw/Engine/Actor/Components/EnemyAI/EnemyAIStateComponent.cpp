@@ -997,6 +997,10 @@ bool DuckRangedAttackAIStateComponent::VCanEnter()
     // TODO: This assumes that the only hostile actor can be Claw.
     shared_ptr<ClawControllableComponent> pClawComponent =
         MakeStrongPtr(pClosestEnemy->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
+    if (pClawComponent == nullptr)
+    {
+        LOG("Closest enemy name: " + pClosestEnemy->GetName());
+    }
     assert(pClawComponent != nullptr);
 
     if (pClawComponent->IsDucking())
