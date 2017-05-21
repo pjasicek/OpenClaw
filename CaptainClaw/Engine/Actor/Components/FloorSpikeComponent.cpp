@@ -1,8 +1,12 @@
 #include "FloorSpikeComponent.h"
 #include "AuraComponents/AuraComponent.h"
+#include "PositionComponent.h"
 
 #include "../../GameApp/BaseGameApp.h"
 #include "../../GameApp/BaseGameLogic.h"
+
+#include "../../Events/EventMgr.h"
+#include "../../Events/Events.h"
 
 const char* FloorSpikeComponent::g_Name = "FloorSpikeComponent";
 
@@ -59,6 +63,24 @@ void FloorSpikeComponent::VOnAnimationFrameChanged(Animation* pAnimation, Animat
     if ((pLastFrame->idx == 1 && pNewFrame->idx == 0) ||
         (pNewFrame->idx == pAnimation->GetAnimFramesSize() - 1 && pLastFrame->idx == pAnimation->GetAnimFramesSize() - 2))
     {
+
         pAnimation->SetDelay(m_TimeOn);
+    }
+
+    SoundInfo sound;
+    sound.soundVolume = 40;
+    sound.setPositionEffect = true;
+    sound.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
+    if (pLastFrame->idx == 0 && pNewFrame->idx == 1)
+    {
+        sound.soundToPlay = "/LEVEL3/SOUNDS/FLOORSPIKEUP.WAV";
+
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(sound)));
+    }
+    else if (pLastFrame->idx == pAnimation->GetAnimFramesSize() - 1 && pNewFrame->idx == pAnimation->GetAnimFramesSize() - 2)
+    {
+        sound.soundToPlay = "/LEVEL3/SOUNDS/FLOORSPIKEDOWN.WAV";
+
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(sound)));
     }
 }
