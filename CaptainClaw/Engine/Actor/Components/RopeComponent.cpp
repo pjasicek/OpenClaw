@@ -205,13 +205,13 @@ void RopeComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFra
     Point newPosition = GetRopeEndFramePosition(_owner->GetPositionComponent()->GetPosition(), pNewFrame->idx);
     if (pNewFrame->idx > 60)
     {
-        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Teleport_Actor(
+        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(
             m_pRopeEndTriggerActor->GetGUID(),
             newPosition)));
     }
     else
     {
-        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Teleport_Actor(
+        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(
             m_pRopeEndTriggerActor->GetGUID(),
             newPosition)));
     }
@@ -281,7 +281,7 @@ void RopeComponent::UpdateAttachedActorPosition(const Point& newPosition)
 {
     assert(m_pAttachedActor != NULL);
 
-    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Teleport_Actor(
+    IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(
         m_pAttachedActor->GetGUID(),
         newPosition)));
 }
