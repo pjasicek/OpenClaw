@@ -654,6 +654,15 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 enterCount = 1;
             }
 
+            if ((levelNumber == 3) && (sound == "LEVEL_TRIGGER_BIRDCALL2"))
+            {
+                sound = "LEVEL_AMBIENT_BIRDCALL2";
+            }
+            if ((levelNumber == 3) && (sound == "LEVEL_TRIGGER_1013"))
+            {
+                sound = "/LEVEL10/SOUNDS/TRIGGER/1013.WAV";
+            }
+
             SAFE_DELETE(pActorElem);
             return ActorTemplates::CreateXmlData_SoundTriggerActor(sound, logic, Point(wwdObject->x, wwdObject->y), predefinedPosition, enterCount);
         }
@@ -976,7 +985,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "TreasurePowerup" ||
              logic == "GlitterlessPowerup" ||
              logic == "HealthPowerup" ||
-             logic == "BossWarp")
+             logic == "BossWarp" ||
+             logic == "EndOfLevelPowerup")
     {
         SAFE_DELETE(pActorElem);
 
