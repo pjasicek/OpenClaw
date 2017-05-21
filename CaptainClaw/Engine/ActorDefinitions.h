@@ -489,6 +489,8 @@ struct ElevatorStepDef
 
     bool isWaiting;
     int waitMsTime;
+
+    Point destinationPosition;
 };
 
 struct PathElevatorDef

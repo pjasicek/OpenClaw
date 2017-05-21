@@ -15,9 +15,7 @@ public:
     virtual bool VInit(TiXmlElement* pData) override;
     virtual void VPostInit() override;
 
-    virtual void VUpdate(uint32 msDiff) override;
-
-    virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return false; }
+    virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return NULL; }
 
     void AddCarriedBody(b2Body* pBody);
     void RemoveCarriedBody(b2Body* pBody);
@@ -25,9 +23,9 @@ public:
     void OnMoved(Point newPosition);
 
 private:
-    double CalculateElapsedDistance(const Point& lastPosition, const Point& currentPosition, Direction dir);
     Point CalculateSpeed(double speed, Direction dir);
     void ChangeToNextStep();
+    bool ShouldChangeDirection(const Point& newPosition);
 
     // XML data
     PathElevatorDef m_Properties;

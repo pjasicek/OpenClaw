@@ -5,6 +5,9 @@
 #include "../../GameApp/BaseGameApp.h"
 #include "../../GameApp/BaseGameLogic.h"
 
+#include "../../Events/EventMgr.h"
+#include "../../Events/Events.h"
+
 const char* PathElevatorComponent::g_Name = "PathElevatorComponent";
 
 PathElevatorComponent::PathElevatorComponent()
@@ -30,9 +33,6 @@ bool PathElevatorComponent::VInit(TiXmlElement* pData)
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     assert(m_pPhysics != nullptr);
 
-    m_Properties.speed *= g_pApp->GetGlobalOptions()->platformSpeedModifier;
-    m_CurrentStepDef = m_Properties.elevatorPath[m_CurrentStepDefIdx];
-
     /*LOG("Speed: " + ToStr(m_Properties.speed));
     int i = 0;
     for (auto def : m_Properties.elevatorPath)
@@ -52,21 +52,32 @@ bool PathElevatorComponent::VInit(TiXmlElement* pData)
 
 void PathElevatorComponent::VPostInit()
 {
+    auto pPC = MakeStrongPtr(_owner->GetComponent<PositionComponent>());
+    assert(pPC != nullptr);
+
+    m_LastPosition = pPC->GetPosition();
+
+    int i = 0;
+    Point previousStepPosition = pPC->GetPosition();
+    for (ElevatorStepDef& elevatorStep : m_Properties.elevatorPath)
+    {
+        assert(elevatorStep.direction != Direction_None && "PathElevator waiting not supported at the moment");
+
+        Point dirSpeed = CalculateSpeed(1.0, elevatorStep.direction);
+        Point deltaStep(dirSpeed.x * elevatorStep.stepDeltaDistance, dirSpeed.y * elevatorStep.stepDeltaDistance);
+
+        elevatorStep.destinationPosition = previousStepPosition + deltaStep;
+
+        previousStepPosition = elevatorStep.destinationPosition;
+    }
+
+    m_CurrentStepDef = m_Properties.elevatorPath[m_CurrentStepDefIdx];
+
+    // From px/s to m/s
+    m_Properties.speed *= g_pApp->GetGlobalOptions()->platformSpeedModifier;
+
     m_CurrentSpeed = CalculateSpeed(m_Properties.speed, m_CurrentStepDef.direction);
     m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), m_CurrentSpeed);
-
-    auto pPC = MakeStrongPtr(_owner->GetComponent<PositionComponent>());
-    m_LastPosition = pPC->GetPosition();
-}
-
-void PathElevatorComponent::VUpdate(uint32 msDiff)
-{
-
-}
-
-double PathElevatorComponent::CalculateElapsedDistance(const Point& lastPosition, const Point& currentPosition, Direction dir)
-{
-
 }
 
 Point PathElevatorComponent::CalculateSpeed(double speed, Direction dir)
@@ -108,6 +119,35 @@ void PathElevatorComponent::ChangeToNextStep()
     m_StepElapsedDistance = 0;
 }
 
+bool PathElevatorComponent::ShouldChangeDirection(const Point& newPosition)
+{
+    // It should change position if it is past its X destination or Y destination
+    Point speedDirection = CalculateSpeed(1.0f, m_CurrentStepDef.direction);
+
+    // Elevator is moving Up
+    if ((speedDirection.y < (-1.0 * DBL_EPSILON) && (newPosition.y < m_CurrentStepDef.destinationPosition.y)))
+    {
+        return true;
+    }
+    // Elevator is moving Down
+    else if ((speedDirection.y > DBL_EPSILON) && (newPosition.y > m_CurrentStepDef.destinationPosition.y))
+    {
+        return true;
+    }
+    // Elevator is moving Left
+    if ((speedDirection.x < (-1.0 * DBL_EPSILON) && (newPosition.x < m_CurrentStepDef.destinationPosition.x)))
+    {
+        return true;
+    }
+    // Elevator is moving Right
+    else if ((speedDirection.x > DBL_EPSILON) && (newPosition.x > m_CurrentStepDef.destinationPosition.x))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void PathElevatorComponent::AddCarriedBody(b2Body* pBody)
 {
     for (auto iter = m_CarriedBodiesList.begin(); iter != m_CarriedBodiesList.end(); ++iter)
@@ -130,7 +170,7 @@ void PathElevatorComponent::OnMoved(Point newPosition)
     Point positionDelta = Point(newPosition.x - m_LastPosition.x, newPosition.y - m_LastPosition.y);
 
     m_StepElapsedDistance += max(fabs(positionDelta.x), fabs(positionDelta.y));
-    if (m_StepElapsedDistance >= m_CurrentStepDef.stepDeltaDistance)
+    if (ShouldChangeDirection(newPosition))
     {
         ChangeToNextStep();
     }
@@ -146,8 +186,6 @@ void PathElevatorComponent::OnMoved(Point newPosition)
         return;
     }
 
-    
-    //LOG(ToStr(positionDelta.x) + " " + ToStr(positionDelta.y));
 
     std::vector<b2Body*> uniqueCarriedBodies = m_CarriedBodiesList;
     std::sort(uniqueCarriedBodies.begin(), uniqueCarriedBodies.end());
