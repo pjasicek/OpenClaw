@@ -143,6 +143,20 @@ void ClawControllableComponent::VPostInit()
     m_pIdleQuotesSequence.reset(new PrimeSearch(m_IdleQuoteSoundList.size()));
 }
 
+void ClawControllableComponent::VPostPostInit()
+{
+    // So that Claw can attach to rope
+    ActorFixtureDef fixtureDef;
+    fixtureDef.collisionShape = "Rectangle";
+    fixtureDef.fixtureType = FixtureType_RopeSensor;
+    fixtureDef.size = Point(25, 25);
+    fixtureDef.collisionMask = CollisionFlag_Rope;
+    fixtureDef.collisionFlag = CollisionFlag_RopeSensor;
+    fixtureDef.isSensor = true;
+
+    g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(_owner->GetGUID(), &fixtureDef);
+}
+
 void ClawControllableComponent::VUpdate(uint32 msDiff)
 {
     if (m_State == ClawState_Standing ||
@@ -261,6 +275,15 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_DuckingTime = 0;
     }
 
+    if (m_State == ClawState_HoldingRope)
+    {
+        m_IdleTime = 0;
+        m_LookingUpTime = 0;
+        m_DuckingTime = 0;
+    }
+
+    //LOG("State: " + ToStr((int)m_State));
+
     m_LastState = m_State;
 }
 
@@ -272,6 +295,7 @@ void ClawControllableComponent::VOnStartFalling()
     {
         return;
     }
+
     m_pClawAnimationComponent->SetAnimation("fall");
     m_State = ClawState_Falling;
 }
@@ -290,6 +314,7 @@ void ClawControllableComponent::VOnStartJumping()
     {
         return;
     }
+
     m_pClawAnimationComponent->SetAnimation("jump");
     m_State = ClawState_Jumping;
 }
@@ -346,6 +371,7 @@ void ClawControllableComponent::OnAttack()
         m_State == ClawState_Climbing ||
         m_State == ClawState_TakingDamage ||
         m_State == ClawState_Dying ||
+        m_State == ClawState_HoldingRope ||
         m_bFrozen)
     {
         return;
@@ -419,6 +445,7 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
         m_State == ClawState_Climbing ||
         m_State == ClawState_Dying || 
         m_State == ClawState_TakingDamage ||
+        m_State == ClawState_HoldingRope ||
         m_bFrozen)
     {
         return;
@@ -577,11 +604,17 @@ void ClawControllableComponent::SetCurrentPhysicsState()
         m_pClawAnimationComponent->SetAnimation("stand");
         m_State = ClawState_Standing;
     }
+    else if (m_State == ClawState_HoldingRope)
+    {
+        m_pClawAnimationComponent->SetAnimation("swing");
+        m_pPhysicsComponent->SetGravityScale(0.0f);
+        return;
+    }
     else
     {
         m_pClawAnimationComponent->SetAnimation("fall");
         m_State = ClawState_Standing;
-        LOG_ERROR("Unknown physics state. Assume falling");
+        //LOG_ERROR("Unknown physics state. Assume falling");
     }
 
     m_pPhysicsComponent->RestoreGravityScale();
@@ -806,13 +839,18 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
     // When claw takes damage but does not actually die
     if (newHealth > 0 && oldHealth > newHealth)
     {
-        if (Util::GetRandomNumber(0, 1) == 0)
+
+        // When Claw is holding rope his animation does not change
+        if (m_State != ClawState_HoldingRope)
         {
-            m_pClawAnimationComponent->SetAnimation("damage1");
-        }
-        else
-        {
-            m_pClawAnimationComponent->SetAnimation("damage2");
+            if (Util::GetRandomNumber(0, 1) == 0)
+            {
+                m_pClawAnimationComponent->SetAnimation("damage1");
+            }
+            else
+            {
+                m_pClawAnimationComponent->SetAnimation("damage2");
+            }
         }
 
         // Play random "take damage" sound
@@ -838,7 +876,10 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
         m_TakeDamageTimeLeftMs = m_TakeDamageDuration;
         m_pPhysicsComponent->SetGravityScale(0.0f);
         
-        m_State = ClawState_TakingDamage;
+        if (m_State != ClawState_HoldingRope)
+        {
+            m_State = ClawState_TakingDamage;
+        }
 
         // Spawn graphics in the hit point
         ActorTemplates::CreateSingleAnimation(impactPoint, AnimationType_BlueHitPoint);
@@ -872,6 +913,26 @@ bool ClawControllableComponent::IsClimbing()
 {
     return m_pClawAnimationComponent->GetCurrentAnimationName().find("climb") != std::string::npos &&
         !m_pClawAnimationComponent->GetCurrentAnimation()->IsPaused();
+}
+
+void ClawControllableComponent::VOnAttachedToRope()
+{
+    m_pClawAnimationComponent->SetAnimation("swing");
+    m_pPhysicsComponent->SetGravityScale(0.0f);
+
+    m_State = ClawState_HoldingRope;
+
+    m_pPhysicsComponent->OnAttachedToRope();
+}
+
+void ClawControllableComponent::VDetachFromRope()
+{
+    m_State = ClawState_Jumping;
+    m_pPhysicsComponent->RestoreGravityScale();
+
+    SetCurrentPhysicsState();
+
+    m_pPhysicsComponent->OnDetachedFromRope();
 }
 
 void ClawControllableComponent::BossFightStartedDelegate(IEventDataPtr pEvent)

@@ -1167,7 +1167,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic == "AniRope")
     {
-        ActorPrototype proto = ActorPrototype_BaseFloorSpike;
+        ActorPrototype proto = ActorPrototype_BaseRope;
         Point position(wwdObject->x, wwdObject->y);
 
         RopeDef def;

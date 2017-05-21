@@ -2231,6 +2231,17 @@ namespace ActorTemplates
     // Public API
     //=====================================================================================================================
 
+    StrongActorPtr CreateActor_Trigger(const ActorBodyDef& triggerBodyDef, const Point& position)
+    {
+        TiXmlElement* pActorElem = new TiXmlElement("Actor");
+
+        pActorElem->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActorElem->LinkEndChild(CreatePhysicsComponent(&triggerBodyDef));
+        pActorElem->LinkEndChild(CreateTriggerComponent(1000, false, false));
+
+        return CreateAndReturnActor(pActorElem);
+    }
+
     StrongActorPtr CreateSingleAnimation(Point position, AnimationType animType)
     {
         TiXmlElement* pActorElem = new TiXmlElement("Actor");

@@ -21,7 +21,14 @@ Actor::~Actor()
 
 bool Actor::Init(TiXmlElement* data)
 {
-    _name = data->Attribute("Type");
+    if (data->Attribute("Type") != NULL)
+    {
+        _name = data->Attribute("Type");
+    }
+    else
+    {
+        _name = "UNSET";
+    }
     //_resource = data->Attribute("resource");
 
     //LOG_TAG("Actor", "Constructor: Initializing actor: " + _name + ", GUID: " + std::to_string(_GUID) + 

@@ -57,6 +57,9 @@ public:
     void OnStartFalling();
     void OnStartJumping();
 
+    void OnAttachedToRope();
+    void OnDetachedFromRope();
+
     int32 GetNumFootContacts() { return m_NumFootContacts; }
     bool IsOnGround() { return m_NumFootContacts > 0; }
     bool IsInAir() { return m_IsFalling || m_IsJumping; }
@@ -137,6 +140,8 @@ private:
     ControllableComponent* m_pControllableComponent;
 
     shared_ptr<IGamePhysics> m_pPhysics;
+
+    int m_DoNothingTimeout;
 
     // Actor body definition for physics body creation
     ActorBodyDef m_ActorBodyDef;

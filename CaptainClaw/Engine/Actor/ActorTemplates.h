@@ -56,6 +56,8 @@ namespace ActorTemplates
     StrongActorPtr CreateActor_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef);
     //StrongActorPtr CreateActor_StaticAnimatedImage(ActorPrototype proto, Point position, const std::string& imagePath);
 
+    StrongActorPtr CreateActor_Trigger(const ActorBodyDef& triggerBodyDef, const Point& position);
+
     // Exposed Component Xml data generating functions
     TiXmlElement* CreateXmlData_GlitterComponent(std::string glitterType, bool spawnImmediate, bool followOwner);
     TiXmlElement* CreatePhysicsComponent(const ActorBodyDef* pBodyDef);

@@ -106,7 +106,8 @@ enum FixtureType
     FixtureType_EnemyAIDuckMeleeSensor,
     FixtureType_EnemyAIRangedSensor,
     FixtureType_EnemyAIDuckRangedSensor,
-    FixtureType_DamageAura
+    FixtureType_DamageAura,
+    FixtureType_RopeSensor
 };
 
 enum PlayerStat

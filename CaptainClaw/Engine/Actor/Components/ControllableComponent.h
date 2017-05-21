@@ -39,6 +39,9 @@ public:
     virtual void OnFire(bool outOfAmmo = false) = 0;
     virtual void OnDuck() = 0;
     virtual void OnStand() = 0;
+    virtual void VOnAttachedToRope() = 0;
+    virtual void VDetachFromRope() = 0;
+    virtual bool VIsAttachedToRope() = 0;
 
     virtual bool CanMove() = 0;
     virtual bool IsDucking() = 0;
@@ -81,6 +84,7 @@ enum ClawState
     ClawState_JumpAttacking,
     ClawState_TakingDamage,
     ClawState_Dying,
+    ClawState_HoldingRope,
     ClawState_Idle
 };
 
@@ -105,6 +109,7 @@ public:
 
     virtual bool VInitDelegate(TiXmlElement* data) override;
     virtual void VPostInit() override; 
+    virtual void VPostPostInit() override;
     virtual void VUpdate(uint32 msDiff) override;
 
     // Interface for subclasses
@@ -119,6 +124,10 @@ public:
     virtual void OnAttack() override;
     virtual void OnFire(bool outOfAmmo = false) override;
     virtual void OnDuck() override;
+
+    virtual void VOnAttachedToRope() override;
+    virtual void VDetachFromRope() override;
+    virtual bool VIsAttachedToRope() override { return m_State == ClawState_HoldingRope; }
 
     virtual bool CanMove() override;
     virtual bool IsDucking() override;

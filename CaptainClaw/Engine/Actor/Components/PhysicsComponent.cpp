@@ -39,7 +39,8 @@ PhysicsComponent::PhysicsComponent() :
     m_pPhysics(nullptr),
     m_pTopLadderContact(NULL),
     m_pMovingPlatformContact(NULL),
-    m_bClampToGround(false)
+    m_bClampToGround(false),
+    m_DoNothingTimeout(0)
 { }
 
 PhysicsComponent::~PhysicsComponent()
@@ -289,6 +290,26 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     
     LOG("CLIMBING Y: " + ToStr(m_ClimbingSpeed.y));*/
     
+    //LOG("ROPE_1: " + ToStr(m_pControllableComponent->VIsAttachedToRope()));
+
+    m_DoNothingTimeout -= msDiff;
+    if (m_DoNothingTimeout > 0)
+    {
+        SetVelocity(Point(0, 0));
+        m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0.0f);
+        m_CurrentSpeed.Set(0, 0);
+        return;
+    }
+
+    if (m_pControllableComponent->VIsAttachedToRope())
+    {
+        m_CurrentSpeed.SetX(0);
+        if (m_ClimbingSpeed.y > 0)
+        {
+            m_ClimbingSpeed.y = 0;
+        }
+    }
+
     if (m_OverlappingKinematicBodiesList.empty())
     {
         m_ExternalSourceSpeed.Set(0, 0);
@@ -391,6 +412,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             fabs(m_ClimbingSpeed.y) < DBL_EPSILON)
         {
             //LOG("GOTO");
+            //LOG("1");
             m_pControllableComponent->VOnStartJumping();
             m_IgnoreJump = false;
             m_IsClimbing = false;
@@ -403,6 +425,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         else if (!m_IgnoreJump && (fabs(m_CurrentSpeed.y) > DBL_EPSILON))
         {
             //LOG(".");
+            //LOG("2");
             m_IsClimbing = false;
             m_IsJumping = true;
             m_IsFalling = false;
@@ -456,6 +479,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
                 m_pControllableComponent->VOnDirectionChange(m_Direction);
             }
 
+            LOG("SHOULD NOT BE HERE");
             SetVelocity(Point(0, 0));
             m_CurrentSpeed = Point(0, 0);
             m_ClimbingSpeed = Point(0, 0);
@@ -483,15 +507,16 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     // This should be available only to controlled actors
     if (m_CanJump)
     {
+        //LOG("Pre CurrentSpeed: " + m_CurrentSpeed.ToString());
+
         //LOG(ToStr(GetVelocity().y));
         // This is to ensure one jump per one space press
         if (m_IsClimbing)
         {
-
         
         }
         // "20" lets us skip uneven ground and therefore skip spamming transition between falling/jumping
-        else if (m_HeightInAir > 20 && fabs(GetVelocity().y) < FLT_EPSILON)
+        else if (m_HeightInAir > 20 && fabs(GetVelocity().y) < FLT_EPSILON && !m_pControllableComponent->VIsAttachedToRope())
         {
             m_IgnoreJump = true;
             m_CurrentSpeed.y = 0;
@@ -501,7 +526,9 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             m_IgnoreJump = true;
             m_CurrentSpeed.y = 0;
         }
-        else if (m_IgnoreJump && (fabs(m_CurrentSpeed.y) < DBL_EPSILON) && m_NumFootContacts > 0)
+        else if (m_IgnoreJump && 
+                (fabs(m_CurrentSpeed.y) < DBL_EPSILON) && 
+                (m_NumFootContacts > 0 || m_pControllableComponent->VIsAttachedToRope()))
         {
             m_IgnoreJump = false;
         }
@@ -509,7 +536,6 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         {
             m_CurrentSpeed.y = 0;
         }
-
         else if (m_IsFalling && m_NumFootContacts == 0)
         {
             m_IgnoreJump = true;
@@ -521,7 +547,11 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             m_CurrentSpeed.y = 0;
         }
 
+        //LOG("Post CurrentSpeed: " + m_CurrentSpeed.ToString());
+
 set_velocity:
+
+        //=====================================================================
         // Set velocity here
         //=====================================================================
         Point velocity = GetVelocity();
@@ -592,6 +622,11 @@ set_velocity:
                 timeSinceLastUpdate = 0;
             }
         }*/
+
+        if (m_pControllableComponent->VIsAttachedToRope())
+        {
+            applyForce = false;
+        }
 
         bool disableGravity = false;
         Point gravity = m_pPhysics->GetGravity();
@@ -706,6 +741,24 @@ set_velocity:
         m_pControllableComponent->SetDuckingTime(0);
     }
 
+    if (m_pControllableComponent->VIsAttachedToRope())
+    {
+        if (!m_IgnoreJump && m_CurrentSpeed.y <= (-1.0 * DBL_EPSILON))
+        {
+            m_pControllableComponent->VDetachFromRope();
+        }
+
+        if (m_CurrentSpeed.y >= (-1.0 * DBL_EPSILON))
+        {
+            SetVelocity(Point(0, 0));
+            m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0.0f);
+        }
+
+        //LOG("CurrentSpeed: " + m_CurrentSpeed.ToString());
+    }
+
+    //LOG("ROPE_2: " + ToStr(m_pControllableComponent->VIsAttachedToRope()));
+
     m_CurrentSpeed.Set(0, 0);
     m_ClimbingSpeed = Point(0, 0);
 }
@@ -733,6 +786,11 @@ void PhysicsComponent::OnEndFootContact()
 
 void PhysicsComponent::OnStartFalling()
 { 
+    if (m_DoNothingTimeout > 0 || (m_pControllableComponent && m_pControllableComponent->VIsAttachedToRope()))
+    {
+        return;
+    }
+
     if (m_IsClimbing)
     {
         return;
@@ -753,6 +811,11 @@ void PhysicsComponent::OnStartFalling()
 
 void PhysicsComponent::OnStartJumping()
 {  
+    if (m_DoNothingTimeout > 0)
+    {
+        return;
+    }
+
     if (m_IsClimbing)
     {
         return;
@@ -776,6 +839,11 @@ void PhysicsComponent::OnStartJumping()
 // Also ignoring invisible bumps on tiles (2 pixel tolerancy, probably too much)
 void PhysicsComponent::SetFalling(bool falling)
 {
+    if (m_DoNothingTimeout > 0 || (m_pControllableComponent && m_pControllableComponent->VIsAttachedToRope()))
+    {
+        return;
+    }
+
     if (falling)
     {
         if (m_HeightInAir < 5 && (GetVelocity().y < 5))
@@ -796,6 +864,11 @@ void PhysicsComponent::SetFalling(bool falling)
 
 void PhysicsComponent::SetJumping(bool jumping)
 {
+    if (m_DoNothingTimeout > 0 || (m_pControllableComponent && m_pControllableComponent->VIsAttachedToRope() && !m_IgnoreJump))
+    {
+        return;
+    }
+
     if (jumping)
     {
         if (m_HeightInAir < 2)
@@ -953,4 +1026,18 @@ void PhysicsComponent::SetForceFall()
     {
         m_pControllableComponent->VOnStartFalling();
     }
+}
+
+void PhysicsComponent::OnAttachedToRope()
+{
+    m_IgnoreJump = true;
+    m_HeightInAir = 0;
+    m_IsJumping = false;
+    m_IsFalling = false;
+    m_DoNothingTimeout = 250;
+}
+
+void PhysicsComponent::OnDetachedFromRope()
+{
+    m_HeightInAir = 0;
 }
