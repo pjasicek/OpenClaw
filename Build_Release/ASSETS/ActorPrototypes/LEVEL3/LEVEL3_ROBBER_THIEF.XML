@@ -43,6 +43,7 @@
     </PatrolEnemyAIStateComponent>
     <RangedAttackAIStateComponent>
         <StatePriority>10</StatePriority>
+        <AttackDelay>100</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
@@ -68,6 +69,7 @@
     </RangedAttackAIStateComponent>
     <DuckRangedAttackAIStateComponent>
         <StatePriority>5</StatePriority>
+        <AttackDelay>100</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike2</Animation>

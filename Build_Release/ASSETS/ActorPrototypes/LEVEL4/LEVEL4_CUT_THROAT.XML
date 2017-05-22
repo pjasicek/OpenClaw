@@ -44,6 +44,7 @@
     </PatrolEnemyAIStateComponent>
     <MeleeAttackAIStateComponent>
         <StatePriority>20</StatePriority>
+        <AttackDelay>150</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
@@ -70,6 +71,7 @@
     </MeleeAttackAIStateComponent>
     <RangedAttackAIStateComponent>
         <StatePriority>10</StatePriority>
+        <AttackDelay>250</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike2</Animation>
@@ -93,6 +95,7 @@
         </Attacks>
     </RangedAttackAIStateComponent>
     <DuckRangedAttackAIStateComponent>
+        <AttackDelay>250</AttackDelay>
         <StatePriority>5</StatePriority>
         <Attacks>
             <AttackAction>

@@ -802,7 +802,10 @@ void PhysicsComponent::OnBeginFootContact()
 
     m_NumFootContacts++; 
     //LOG(ToStr(m_HeightInAir));
-    m_HeightInAir = 0;
+    if (!m_bIsForcedUp)
+    {
+        m_HeightInAir = 0;
+    }
 }
 
 void PhysicsComponent::OnEndFootContact()

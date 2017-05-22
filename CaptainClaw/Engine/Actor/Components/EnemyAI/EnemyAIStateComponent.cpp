@@ -558,6 +558,7 @@ void PatrolEnemyAIStateComponent::CommenceIdleBehaviour()
 
 BaseAttackAIStateComponent::BaseAttackAIStateComponent(std::string stateName)
     :
+    m_AttackDelay(0),
     BaseEnemyAIStateComponent(stateName)
 {
 
@@ -589,6 +590,8 @@ bool BaseAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
             m_AttackActions.push_back(pAttackAction);
         }
     }
+
+    ParseValueFromXmlElem(&m_AttackDelay, pData->FirstChildElement("AttackDelay"));
 
     assert(!m_AttackActions.empty());
     assert(m_AttackActions.size() == 1 && "Only supporting one attack action per state component");
@@ -647,6 +650,7 @@ void BaseAttackAIStateComponent::VExecuteAttack()
     // TODO: Pick randomly melee action ?
 
     m_pAnimationComponent->SetAnimation(m_AttackActions[0]->animation);
+    m_pAnimationComponent->SetDelay(m_AttackDelay);
 }
 
 void BaseAttackAIStateComponent::VOnAnimationLooped(Animation* pAnimation)

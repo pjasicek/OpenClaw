@@ -218,6 +218,9 @@ public:
     Actor* FindClosestHostileActor();
     Point FindClosestHostileActorOffset();
 
+private:
+    int m_AttackDelay;
+
 protected:
     AttackActionList m_AttackActions;
     ActorList m_EnemyAgroList;
