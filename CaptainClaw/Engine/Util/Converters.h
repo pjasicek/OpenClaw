@@ -1208,6 +1208,31 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             tmpImageSet,
             def);
     }
+    else if (logic.find("SteppingStone") != std::string::npos)
+    {
+        ActorPrototype proto = ActorPrototype_None;
+
+        if (levelNumber == 4)
+        {
+            proto = ActorPrototype_Level4_SteppingGround;
+        }
+
+        assert(proto != ActorPrototype_None && "Unsupported level ?");
+
+        Point position(wwdObject->x, wwdObject->y);
+
+        // I dont know where this is defined
+        SteppingGroundDef def;
+        def.timeOn = 150;
+        def.timeOff = 500;
+
+        SAFE_DELETE(pActorElem);
+
+        return ActorTemplates::CreateXmlData_SteppingGround(
+            proto,
+            position,
+            def);
+    }
     else
     {
         static std::vector<std::string> s_ReportedUnknownLogicsList;

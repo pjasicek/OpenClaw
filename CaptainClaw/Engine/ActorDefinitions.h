@@ -634,6 +634,48 @@ struct RopeDef
 };
 
 //-------------------------------------------------------------------------------------------------
+// SteppingGroundDef - SteppingGroundComponent
+//-------------------------------------------------------------------------------------------------
+
+struct SteppingGroundDef
+{
+    SteppingGroundDef()
+    {
+        toggleFrameIdx = 0;
+        timeOn = 0;
+        timeOff = 0;
+    }
+
+    static SteppingGroundDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        SteppingGroundDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        assert(false);
+        return NULL;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&toggleFrameIdx, pElem->FirstChildElement("ToggleFrameIdx")));
+        cond_assert(strict, ParseValueFromXmlElem(&timeOn, pElem->FirstChildElement("TimeOn")));
+        cond_assert(strict, ParseValueFromXmlElem(&timeOff, pElem->FirstChildElement("TimeOff")));
+        cond_assert(strict, ParseValueFromXmlElem(&toggleSound, pElem->FirstChildElement("ToggleSound")));
+    }
+
+    int toggleFrameIdx;
+    int timeOn;
+    int timeOff;
+    std::string toggleSound;
+};
+
+//-------------------------------------------------------------------------------------------------
 // AnimationDef - AnimationComponent
 //-------------------------------------------------------------------------------------------------
 

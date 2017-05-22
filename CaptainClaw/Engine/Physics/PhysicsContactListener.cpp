@@ -12,6 +12,7 @@
 #include "../Actor/Components/ControllableComponent.h"
 #include "../Actor/Components/PositionComponent.h"
 #include "../Actor/Components/PathElevatorComponent.h"
+#include "../Actor/Components/SteppingGroundComponent.h"
 #include "../Actor/Components/AuraComponents/AuraComponent.h"
 
 int numFootContacts = 0;
@@ -298,6 +299,14 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     if (pCrumblingPegComponent)
                     {
                         pCrumblingPegComponent->OnContact(pFixtureB->GetBody());
+                    }
+
+                    shared_ptr<SteppingGroundComponent> pSteppingGroundComponent =
+                        MakeStrongPtr(pActor->GetComponent<SteppingGroundComponent>());
+                    if (pSteppingGroundComponent)
+                    {
+                        Actor* pOtherActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                        pSteppingGroundComponent->OnActorContact(pOtherActor);
                     }
                 }
 

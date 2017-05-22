@@ -99,6 +99,7 @@
     <ClCompile Include="Engine\Actor\Components\LocalAmbientSoundComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PathElevatorComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\RopeComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\SteppingGroundComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\BossStagerTriggerComponent.cpp" />
     <ClCompile Include="Engine\Interfaces.cpp" />
     <ClCompile Include="Engine\Actor\Components\LootComponent.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="Engine\Actor\Components\ProjectileSpawnerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\RopeComponent.h" />
     <ClInclude Include="Engine\Actor\Components\SingleAnimationComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\SteppingGroundComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\BossStagerTriggerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\SoundTriggerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\TriggerComponents\TriggerComponent.h" />

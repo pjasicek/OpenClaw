@@ -1,0 +1,15 @@
+<Actor Type="Level4_SteppingGround" Parent="ActorPrototype_BaseSteppingGround" ActorPrototypeName="ActorPrototype_Level4_SteppingGround">
+	<PositionComponent>
+		<!-- DEFINED IN CODE -->
+		<Position x="-1" y="-1" /> 
+	</PositionComponent>
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL4/IMAGES/STEPPINGSTONE/*</ImagePath>
+	</ActorRenderComponent>
+	<SteppingGroundComponent>
+		<ToggleFrameIdx>1</ToggleFrameIdx>
+        <TimeOn>150</TimeOn>
+        <TimeOff>500</TimeOff>
+        <ToggleSound>/LEVEL4/SOUNDS/STONERISE3.WAV</ToggleSound>
+    </SteppingGroundComponent>
+</Actor>

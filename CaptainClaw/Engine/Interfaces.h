@@ -298,6 +298,9 @@ enum ActorPrototype
     // Bosses
     ActorPrototype_Level2_LaRaux,
 
+    // Stepping stones
+    ActorPrototype_Level4_SteppingGround,
+
     //=======================================
     // General
     //=======================================
@@ -311,6 +314,9 @@ enum ActorPrototype
 
     // Sound
     ActorPrototype_LocalAmbientSound,
+
+    // Stepping Stone
+    ActorPrototype_BaseSteppingGround,
 
     // Menu
     ActorPrototype_StaticImage,

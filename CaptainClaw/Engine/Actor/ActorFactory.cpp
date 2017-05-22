@@ -49,6 +49,7 @@
 #include "Components/PathElevatorComponent.h"
 #include "Components/FloorSpikeComponent.h"
 #include "Components/RopeComponent.h"
+#include "Components/SteppingGroundComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -108,6 +109,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<PathElevatorComponent>(PathElevatorComponent::GetIdFromName(PathElevatorComponent::g_Name));
     _componentFactory.Register<FloorSpikeComponent>(FloorSpikeComponent::GetIdFromName(FloorSpikeComponent::g_Name));
     _componentFactory.Register<RopeComponent>(RopeComponent::GetIdFromName(RopeComponent::g_Name));
+    _componentFactory.Register<SteppingGroundComponent>(SteppingGroundComponent::GetIdFromName(SteppingGroundComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

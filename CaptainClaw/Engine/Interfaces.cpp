@@ -68,6 +68,9 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Bosses
         { ActorPrototype_Level2_LaRaux, "ActorPrototype_Level2_LaRaux" },
+
+        // Stepping stones
+        { ActorPrototype_Level4_SteppingGround, "ActorPrototype_Level4_SteppingGround" },
         
         //=======================================
         // General
@@ -82,6 +85,9 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Sound
         { ActorPrototype_LocalAmbientSound, "ActorPrototype_LocalAmbientSound" },
+
+        // Stepping stones
+        { ActorPrototype_BaseSteppingGround, "ActorPrototype_BaseSteppingGround" },
 
         { ActorPrototype_BaseBossStager, "ActorPrototype_BaseBossStager" },
 
@@ -172,6 +178,9 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         // Bosses
         { "ActorPrototype_Level2_LaRaux", ActorPrototype_Level2_LaRaux },
 
+        // Stepping stones
+        { "ActorPrototype_Level4_SteppingGround", ActorPrototype_Level4_SteppingGround },
+
         //=======================================
         // General
         //=======================================
@@ -185,6 +194,9 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Sound
         { "ActorPrototype_LocalAmbientSound", ActorPrototype_LocalAmbientSound },
+
+        // Stepping Stone
+        { "ActorPrototype_BaseSteppingGround", ActorPrototype_BaseSteppingGround },
 
         { "ActorPrototype_BaseBossStager", ActorPrototype_BaseBossStager },
 

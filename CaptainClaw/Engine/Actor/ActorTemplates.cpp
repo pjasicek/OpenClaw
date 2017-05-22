@@ -1950,6 +1950,22 @@ namespace ActorTemplates
         return pActorElem;
     }
 
+    TiXmlElement* CreateXmlData_SteppingGround(ActorPrototype proto, const Point& position, const SteppingGroundDef& def)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- ActorRenderComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.SteppingGroundComponent.TimeOn", def.timeOn));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.SteppingGroundComponent.TimeOff", def.timeOff));
+
+        return pActorElem;
+    }
+
     StrongActorPtr CreateActor(ActorPrototype proto, Point position)
     {
         return CreateAndReturnActor(CreateXmlData_Actor(proto, position));
