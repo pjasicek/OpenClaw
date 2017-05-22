@@ -19,17 +19,25 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level2_Soldier, "ActorPrototype_Level2_Soldier" },
         { ActorPrototype_Level2_Officer, "ActorPrototype_Level2_Officer" },
         { ActorPrototype_Level2_PunkRat, "ActorPrototype_Level2_PunkRat" },
+
         { ActorPrototype_Level3_Rat, "ActorPrototype_Level3_Rat" },
         { ActorPrototype_Level3_CutThroat, "ActorPrototype_Level3_CutThroat" },
         { ActorPrototype_Level3_RobberThief, "ActorPrototype_Level3_RobberThief" },
+
+        { ActorPrototype_Level4_Rat, "ActorPrototype_Level4_Rat" },
+        { ActorPrototype_Level4_CutThroat, "ActorPrototype_Level4_CutThroat" },
+        { ActorPrototype_Level4_RobberThief, "ActorPrototype_Level4_RobberThief" },
         
         // Elevators
         { ActorPrototype_BaseElevator, "ActorPrototype_BaseElevator" },
 
         { ActorPrototype_Level1_Elevator, "ActorPrototype_Level1_Elevator" },
         { ActorPrototype_Level2_Elevator, "ActorPrototype_Level2_Elevator" },
+
         { ActorPrototype_Level3_Elevator_1, "ActorPrototype_Level3_Elevator_1" },
         { ActorPrototype_Level3_Elevator_2, "ActorPrototype_Level3_Elevator_2" },
+
+        { ActorPrototype_Level4_Elevator, "ActorPrototype_Level4_Elevator" },
 
         { ActorPrototype_BasePathElevator, "ActorPrototype_BasePathElevator" },
 
@@ -46,9 +54,14 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         // Projectiles
         { ActorPrototype_Level2_CannonBall, "ActorPrototype_Level2_CannonBall" },
         { ActorPrototype_Level2_RatProjectile, "ActorPrototype_Level2_RatProjectile" },
+
         { ActorPrototype_Level3_RatBomb, "ActorPrototype_Level3_RatBomb" },
         { ActorPrototype_Level3_ArrowProjectile, "ActorPrototype_Level3_ArrowProjectile" },
         { ActorPrototype_Level3_KnifeProjectile, "ActorPrototype_Level3_KnifeProjectile" },
+
+        { ActorPrototype_Level3_RatBomb, "ActorPrototype_Level4_RatBomb" },
+        { ActorPrototype_Level3_ArrowProjectile, "ActorPrototype_Level4_ArrowProjectile" },
+        { ActorPrototype_Level3_KnifeProjectile, "ActorPrototype_Level4_KnifeProjectile" },
 
         // Boss Stagers
         { ActorPrototype_Level2_BossStager, "ActorPrototype_Level2_BossStager" },
@@ -109,17 +122,25 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level2_Soldier", ActorPrototype_Level2_Soldier },
         { "ActorPrototype_Level2_Officer", ActorPrototype_Level2_Officer },
         { "ActorPrototype_Level2_PunkRat", ActorPrototype_Level2_PunkRat },
+
         { "ActorPrototype_Level3_Rat", ActorPrototype_Level3_Rat },
         { "ActorPrototype_Level3_CutThroat", ActorPrototype_Level3_CutThroat },
         { "ActorPrototype_Level3_RobberThief", ActorPrototype_Level3_RobberThief },
+
+        { "ActorPrototype_Level4_Rat", ActorPrototype_Level4_Rat },
+        { "ActorPrototype_Level4_CutThroat", ActorPrototype_Level4_CutThroat },
+        { "ActorPrototype_Level4_RobberThief", ActorPrototype_Level4_RobberThief },
 
         // Elevators
         { "ActorPrototype_BaseElevator", ActorPrototype_BaseElevator },
 
         { "ActorPrototype_Level1_Elevator", ActorPrototype_Level1_Elevator },
         { "ActorPrototype_Level2_Elevator", ActorPrototype_Level2_Elevator },
+
         { "ActorPrototype_Level3_Elevator_1", ActorPrototype_Level3_Elevator_1 },
         { "ActorPrototype_Level3_Elevator_2", ActorPrototype_Level3_Elevator_2 },
+
+        { "ActorPrototype_Level4_Elevator", ActorPrototype_Level4_Elevator },
 
         { "ActorPrototype_BasePathElevator", ActorPrototype_BasePathElevator },
 
@@ -136,9 +157,14 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         // Projectiles
         { "ActorPrototype_Level2_CannonBall", ActorPrototype_Level2_CannonBall },
         { "ActorPrototype_Level2_RatProjectile", ActorPrototype_Level2_RatProjectile },
+
         { "ActorPrototype_Level3_RatBomb", ActorPrototype_Level3_RatBomb },
         { "ActorPrototype_Level3_ArrowProjectile", ActorPrototype_Level3_ArrowProjectile },
         { "ActorPrototype_Level3_KnifeProjectile", ActorPrototype_Level3_KnifeProjectile },
+
+        { "ActorPrototype_Level4_RatBomb", ActorPrototype_Level4_RatBomb },
+        { "ActorPrototype_Level4_ArrowProjectile", ActorPrototype_Level4_ArrowProjectile },
+        { "ActorPrototype_Level4_KnifeProjectile", ActorPrototype_Level4_KnifeProjectile },
 
         // Boss Stagers
         { "ActorPrototype_Level2_BossStager", ActorPrototype_Level2_BossStager },

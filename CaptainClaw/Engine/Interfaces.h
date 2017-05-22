@@ -257,6 +257,10 @@ enum ActorPrototype
     ActorPrototype_Level3_CutThroat,
     ActorPrototype_Level3_RobberThief,
 
+    ActorPrototype_Level4_Rat,
+    ActorPrototype_Level4_CutThroat,
+    ActorPrototype_Level4_RobberThief,
+
     // Elevators
     ActorPrototype_BaseElevator,
 
@@ -264,6 +268,7 @@ enum ActorPrototype
     ActorPrototype_Level2_Elevator,
     ActorPrototype_Level3_Elevator_1,
     ActorPrototype_Level3_Elevator_2,
+    ActorPrototype_Level4_Elevator,
 
     ActorPrototype_BasePathElevator,
 
@@ -283,6 +288,9 @@ enum ActorPrototype
     ActorPrototype_Level3_RatBomb,
     ActorPrototype_Level3_ArrowProjectile,
     ActorPrototype_Level3_KnifeProjectile,
+    ActorPrototype_Level4_RatBomb,
+    ActorPrototype_Level4_ArrowProjectile,
+    ActorPrototype_Level4_KnifeProjectile,
 
     // Boss stagers
     ActorPrototype_Level2_BossStager,

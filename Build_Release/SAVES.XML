@@ -92,4 +92,35 @@
 			<DynamiteCount>99</DynamiteCount>
 		</Checkpoint>
 	</Level>
+	<Level>
+		<LevelNumber>4</LevelNumber>
+		<LevelName>Dark Woods</LevelName>
+		<Checkpoint>
+			<CheckpointNumber>0</CheckpointNumber>
+			<Score>0</Score>
+			<Health>100</Health>
+			<Lives>3</Lives>
+			<BulletCount>99</BulletCount>
+			<MagicCount>99</MagicCount>
+			<DynamiteCount>99</DynamiteCount>
+		</Checkpoint>
+		<Checkpoint>
+			<CheckpointNumber>1</CheckpointNumber>
+			<Score>0</Score>
+			<Health>100</Health>
+			<Lives>3</Lives>
+			<BulletCount>99</BulletCount>
+			<MagicCount>99</MagicCount>
+			<DynamiteCount>99</DynamiteCount>
+		</Checkpoint>
+		<Checkpoint>
+			<CheckpointNumber>2</CheckpointNumber>
+			<Score>0</Score>
+			<Health>100</Health>
+			<Lives>3</Lives>
+			<BulletCount>99</BulletCount>
+			<MagicCount>99</MagicCount>
+			<DynamiteCount>99</DynamiteCount>
+		</Checkpoint>
+	</Level>
 </GameSaves>

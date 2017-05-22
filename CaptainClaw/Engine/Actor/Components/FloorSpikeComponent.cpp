@@ -63,7 +63,6 @@ void FloorSpikeComponent::VOnAnimationFrameChanged(Animation* pAnimation, Animat
     if ((pLastFrame->idx == 1 && pNewFrame->idx == 0) ||
         (pNewFrame->idx == pAnimation->GetAnimFramesSize() - 1 && pLastFrame->idx == pAnimation->GetAnimFramesSize() - 2))
     {
-
         pAnimation->SetDelay(m_TimeOn);
     }
 

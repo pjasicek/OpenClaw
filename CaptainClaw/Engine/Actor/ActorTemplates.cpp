@@ -282,7 +282,7 @@ namespace ActorTemplates
         { PickupType_Mappiece,                  SOUND_GAME_MAPPIECE },
         { PickupType_Warp,                      SOUND_GAME_ENTER_WARP },
         { PickupType_Treasure_Coins,            SOUND_GAME_TREASURE_COIN },
-        { PickupType_Ammo_Dynamite, "" },
+        { PickupType_Ammo_Dynamite,             SOUND_GAME_PICKUP_AMMUNITION },
         { PickupType_Curse_Ammo, "" },
         { PickupType_Curse_Magic, "" },
         { PickupType_Curse_Health, "" },

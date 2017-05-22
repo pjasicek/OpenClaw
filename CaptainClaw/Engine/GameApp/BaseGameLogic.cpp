@@ -856,7 +856,7 @@ void BaseGameLogic::VChangeState(GameState newState)
             m_pCurrentLevel.reset(new LevelData);
 
             m_pCurrentLevel->m_bIsNewGame = false;
-            m_pCurrentLevel->m_LeveNumber = 3;
+            m_pCurrentLevel->m_LeveNumber = 4;
             m_pCurrentLevel->m_LoadedCheckpoint = 0;
         }
 
@@ -1017,6 +1017,12 @@ void BaseGameLogic::CreateSinglePhysicsTile(int x, int y, const TileCollisionPro
     else if (m_pCurrentLevel->GetLevelNumber() == 3 && proto.id == 667)
     {
         Point position(x, y);
+        Point size(64, 10);
+        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
+    }
+    else if (m_pCurrentLevel->GetLevelNumber() == 4 && proto.id == 181)
+    {
+        Point position(x, y + 7);
         Point size(64, 10);
         m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
     }

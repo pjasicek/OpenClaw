@@ -441,7 +441,7 @@ inline ElevatorStepDef GetElevatorStepDef(int moveType, int value)
 inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRootPath, int levelNumber)
 {
     TiXmlElement* pActorElem = new TiXmlElement("Actor");
-    pActorElem->SetAttribute("Type", wwdObject->logic);
+    pActorElem->SetAttribute("Type", wwdObject->imageSet);
 
     std::string logic = wwdObject->logic;
     std::string imageSet = wwdObject->imageSet;
@@ -786,6 +786,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 elevatorProto = ActorPrototype_Level3_Elevator_2;
             }
         }
+        else if (levelNumber == 4)
+        {
+            elevatorProto = ActorPrototype_Level4_Elevator;
+        }
         assert(elevatorProto != ActorPrototype_Start && "Unsupported level ?");
 
         return ActorTemplates::CreateXmlData_ElevatorActor(elevatorProto, position, elevatorDef);
@@ -966,6 +970,21 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 actorProto = ActorPrototype_Level3_RobberThief;
             }
         }
+        else if (levelNumber == 4)
+        {
+            if (logic == "Rat")
+            {
+                actorProto = ActorPrototype_Level4_Rat;
+            }
+            else if (logic == "CutThroat")
+            {
+                actorProto = ActorPrototype_Level4_CutThroat;
+            }
+            else if (logic == "RobberThief")
+            {
+                actorProto = ActorPrototype_Level4_RobberThief;
+            }
+        }
         assert(actorProto != ActorPrototype_Start && "Unsupported level ?");
 
 
@@ -1046,7 +1065,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     {
         SAFE_DELETE(pActorElem);
 
-        assert(levelNumber == 2 && "Expected only level 2");
+        //assert(levelNumber == 2 && "Expected only level 2");
 
         Point position(wwdObject->x, wwdObject->y);
         return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level2_BossStager, position);
@@ -1151,7 +1170,14 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         // TODO: Make specific actor prototypes in next level(s)
         FloorSpikeDef def;
-        def.activeFrameIdx = 5;
+        if (levelNumber == 3)
+        {
+            def.activeFrameIdx = 5;
+        }
+        else if (levelNumber == 4)
+        {
+            def.activeFrameIdx = 4;
+        }
         def.startDelay = delay;
         def.damage = 5;
         def.cycleDuration = 75;

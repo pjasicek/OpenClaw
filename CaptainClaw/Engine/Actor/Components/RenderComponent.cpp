@@ -324,6 +324,14 @@ void ActorRenderComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElemen
 
 void ActorRenderComponent::SetImage(std::string imageName)
 {
+    // Hack.. only 2, 3, 4
+    if (_owner->GetName() == "LEVEL_TORCH2")
+    {
+        imageName = imageName.substr(7);
+        int num = std::stoi(imageName) + 1;
+        imageName = ToStr(num);
+    }
+
     if (m_ImageMap.count(imageName) > 0)
     {
         m_CurrentImage = m_ImageMap[imageName];
