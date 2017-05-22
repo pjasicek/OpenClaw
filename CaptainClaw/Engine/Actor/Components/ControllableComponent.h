@@ -53,6 +53,9 @@ public:
 
     virtual void SetFrozen(bool frozen) { m_bFrozen = frozen; }
 
+    void SetMaxJumpHeight(int maxJumpHeight) { m_MaxJumpHeight = maxJumpHeight; }
+    int GetMaxJumpHeight() { return m_MaxJumpHeight; }
+
     void SetLookingUpTime(int32 msTime) { m_LookingUpTime = msTime; }
     void AddLookingUpTime(int32 msTime) { m_LookingUpTime += msTime; }
 
@@ -65,6 +68,8 @@ protected:
 
     int m_DuckingTime;
     int m_LookingUpTime;
+
+    int m_MaxJumpHeight;
 };
 
 enum ClawState

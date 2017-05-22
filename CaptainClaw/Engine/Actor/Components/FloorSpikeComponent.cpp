@@ -69,6 +69,7 @@ void FloorSpikeComponent::VOnAnimationFrameChanged(Animation* pAnimation, Animat
     SoundInfo sound;
     sound.soundVolume = 40;
     sound.setPositionEffect = true;
+    sound.setDistanceEffect = true;
     sound.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
     if (pLastFrame->idx == 0 && pNewFrame->idx == 1)
     {

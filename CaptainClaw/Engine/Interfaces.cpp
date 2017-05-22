@@ -71,7 +71,10 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Stepping stones
         { ActorPrototype_Level4_SteppingGround, "ActorPrototype_Level4_SteppingGround" },
-        
+
+        // Spring board
+        { ActorPrototype_Level4_SpringBoard, "ActorPrototype_Level4_SpringBoard" },
+
         //=======================================
         // General
         //=======================================
@@ -88,6 +91,9 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Stepping stones
         { ActorPrototype_BaseSteppingGround, "ActorPrototype_BaseSteppingGround" },
+
+        // Spring board
+        { ActorPrototype_BaseSpringBoard, "ActorPrototype_BaseSpringBoard" },
 
         { ActorPrototype_BaseBossStager, "ActorPrototype_BaseBossStager" },
 
@@ -181,6 +187,9 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         // Stepping stones
         { "ActorPrototype_Level4_SteppingGround", ActorPrototype_Level4_SteppingGround },
 
+        // Spring board
+        { "ActorPrototype_Level4_SpringBoard", ActorPrototype_Level4_SpringBoard },
+
         //=======================================
         // General
         //=======================================
@@ -197,6 +206,9 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Stepping Stone
         { "ActorPrototype_BaseSteppingGround", ActorPrototype_BaseSteppingGround },
+
+        // Spring board
+        { "ActorPrototype_BaseSpringBoard", ActorPrototype_BaseSpringBoard },
 
         { "ActorPrototype_BaseBossStager", ActorPrototype_BaseBossStager },
 

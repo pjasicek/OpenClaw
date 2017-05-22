@@ -301,6 +301,9 @@ enum ActorPrototype
     // Stepping stones
     ActorPrototype_Level4_SteppingGround,
 
+    // Spring board
+    ActorPrototype_Level4_SpringBoard,
+
     //=======================================
     // General
     //=======================================
@@ -317,6 +320,9 @@ enum ActorPrototype
 
     // Stepping Stone
     ActorPrototype_BaseSteppingGround,
+
+    // Spring board
+    ActorPrototype_BaseSpringBoard,
 
     // Menu
     ActorPrototype_StaticImage,

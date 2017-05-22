@@ -1,0 +1,43 @@
+<Actor Type="Base_SpringBoard" ActorPrototypeName="ActorPrototype_BaseSpringBoard">
+	<PositionComponent>
+		<!-- DEFINED IN CODE -->
+		<Position x="-1" y="-1" /> 
+	</PositionComponent>
+	<ActorRenderComponent>
+		<Visible>true</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>2000</ZCoord>
+		<ImagePath>NONE</ImagePath>
+	</ActorRenderComponent>
+    <AnimationComponent>
+	</AnimationComponent>
+	<SpringBoardComponent>
+		<AppliedForce>0</AppliedForce>
+        <SpringFrameIdx>0</SpringFrameIdx>
+        <SpringDelay>0</SpringDelay>
+        <IdleAnimName>NONE</IdleAnimName>
+        <SpringAnimName>NONE</SpringAnimName>
+	</SpringBoardComponent>
+	<PhysicsComponent>
+        <BodyType>Static</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>Ground</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="0" height="0" /> <!-- SET ACCORDING TO IMAGE IN PHYSICS COMPONENT -->
+        <GravityScale>0.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>1</CollisionFlag>
+        <CollisionMask>4294967295</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+    </PhysicsComponent>
+</Actor>

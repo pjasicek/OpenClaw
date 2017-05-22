@@ -28,8 +28,8 @@ public:
 
     std::string ToXML();
 
-    uint32_t GetGUID() const { return _GUID; }
-    std::string GetName() const { return _name; }
+    inline uint32_t GetGUID() const { return _GUID; }
+    inline std::string GetName() const { return _name; }
 
     // Retrieves component from given ID or NULL if component not found
     template <class ComponentType>

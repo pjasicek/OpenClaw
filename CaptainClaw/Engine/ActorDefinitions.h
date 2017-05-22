@@ -676,6 +676,50 @@ struct SteppingGroundDef
 };
 
 //-------------------------------------------------------------------------------------------------
+// SpringBoardDef - SpringBoardComponent
+//-------------------------------------------------------------------------------------------------
+
+struct SpringBoardDef
+{
+    SpringBoardDef()
+    {
+        appliedForce = 0.0;
+        springFrameIdx = 0;
+        springDelay = 0;
+    }
+
+    static SpringBoardDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        SpringBoardDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        assert(false);
+        return NULL;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&appliedForce, pElem->FirstChildElement("AppliedForce")));
+        cond_assert(strict, ParseValueFromXmlElem(&springFrameIdx, pElem->FirstChildElement("SpringFrameIdx")));
+        cond_assert(strict, ParseValueFromXmlElem(&idleAnimName, pElem->FirstChildElement("IdleAnimName")));
+        cond_assert(strict, ParseValueFromXmlElem(&springAnimName, pElem->FirstChildElement("SpringAnimName")));
+        cond_assert(strict, ParseValueFromXmlElem(&springDelay, pElem->FirstChildElement("SpringDelay")));
+    }
+
+    double appliedForce;
+    int springFrameIdx;
+    int springDelay;
+    std::string idleAnimName;
+    std::string springAnimName;
+};
+
+//-------------------------------------------------------------------------------------------------
 // AnimationDef - AnimationComponent
 //-------------------------------------------------------------------------------------------------
 

@@ -1,4 +1,5 @@
 #include "SteppingGroundComponent.h"
+#include "PositionComponent.h"
 
 #include "../../GameApp/BaseGameApp.h"
 #include "../../GameApp/BaseGameLogic.h"
@@ -59,6 +60,7 @@ void SteppingGroundComponent::VOnAnimationFrameChanged(Animation* pAnimation, An
         if (pNewFrame->idx == pAnimation->GetAnimFramesSize() - 2)
         {
             SoundInfo sound(m_Properties.toggleSound);
+            sound.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
             sound.setDistanceEffect = true;
             sound.soundVolume = 50;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(sound)));

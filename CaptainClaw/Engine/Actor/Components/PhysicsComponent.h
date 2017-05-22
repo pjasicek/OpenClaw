@@ -24,7 +24,7 @@ public:
 
     void Destroy() { m_pPhysics->VRemoveActor(_owner->GetGUID()); }
 
-    void SetControllableComponent(ControllableComponent* pComp) { m_pControllableComponent = pComp; }
+    void SetControllableComponent(ControllableComponent* pComp);
 
     bool CanBounce() const { return m_CanBounce; }
     void SetCanBounce(bool canBounce) { m_CanBounce = canBounce; }
@@ -33,7 +33,7 @@ public:
     void SetCanJump(bool canJump) { m_CanJump = canJump; }
 
     int32 GetMaxJumpHeight() const { return m_MaxJumpHeight; }
-    void SetMaxJumpHeight(int32 maxJumpHeight) { m_MaxJumpHeight = maxJumpHeight; }
+    void SetMaxJumpHeight(int32 maxJumpHeight);
 
     void SetGravityScale(float gravityScale) { m_pPhysics->VSetGravityScale(_owner->GetGUID(), gravityScale); }
     float GetGravityScale() { return m_GravityScale; }
@@ -92,6 +92,9 @@ public:
 
     bool IsAwake() { return m_pPhysics->VIsAwake(_owner->GetGUID()); }
 
+    void SetIsForcedUp(bool isForcedUp);
+    bool GetIsForcedUp() { return m_bIsForcedUp; }
+
     void AddOverlappingLadder(const b2Fixture* ladder) { m_OverlappingLaddersList.push_back(ladder); }
     void RemoveOverlappingLadder(const b2Fixture* ladder);
 
@@ -146,6 +149,9 @@ private:
     // Actor body definition for physics body creation
     ActorBodyDef m_ActorBodyDef;
     bool m_bClampToGround;
+
+    // Spring caused us to go up
+    bool m_bIsForcedUp;
 
     b2Contact* m_pTopLadderContact;
     b2Contact* m_pMovingPlatformContact;

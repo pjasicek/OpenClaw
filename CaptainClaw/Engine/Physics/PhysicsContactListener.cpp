@@ -13,6 +13,7 @@
 #include "../Actor/Components/PositionComponent.h"
 #include "../Actor/Components/PathElevatorComponent.h"
 #include "../Actor/Components/SteppingGroundComponent.h"
+#include "../Actor/Components/SpringBoardComponent.h"
 #include "../Actor/Components/AuraComponents/AuraComponent.h"
 
 int numFootContacts = 0;
@@ -308,6 +309,14 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                         Actor* pOtherActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                         pSteppingGroundComponent->OnActorContact(pOtherActor);
                     }
+
+                    shared_ptr<SpringBoardComponent> pSpringBoardComponent =
+                        MakeStrongPtr(pActor->GetComponent<SpringBoardComponent>());
+                    if (pSpringBoardComponent)
+                    {
+                        Actor* pOtherActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                        pSpringBoardComponent->OnActorBeginContact(pOtherActor);
+                    }
                 }
 
                 if (pActor->GetName() == "Claw")
@@ -550,6 +559,19 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                     {
                         pPhysicsComponent->RemoveOverlappingGround(pFixtureA);
                     }
+
+                    Actor* pGroundActor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
+                    if (pGroundActor)
+                    {
+                        shared_ptr<SpringBoardComponent> pSpringBoardComponent =
+                            MakeStrongPtr(pGroundActor->GetComponent<SpringBoardComponent>());
+                        if (pSpringBoardComponent)
+                        {
+                            Actor* pOtherActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                            pSpringBoardComponent->OnActorEndContact(pOtherActor);
+                        }
+                    }
+
                     pContact->SetEnabled(false);
 
                     /*if (pFixtureB->GetBody()->GetLinearVelocity().y >= 0)

@@ -331,6 +331,10 @@ void ActorRenderComponent::SetImage(std::string imageName)
         int num = std::stoi(imageName) + 1;
         imageName = ToStr(num);
     }
+    else if (_owner->GetName() == "Level4_SpringBoard")
+    {
+        imageName = imageName.substr(5);
+    }
 
     if (m_ImageMap.count(imageName) > 0)
     {

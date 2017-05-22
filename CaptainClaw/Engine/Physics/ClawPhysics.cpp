@@ -300,8 +300,14 @@ void ClawPhysics::VSyncVisibleScene()
                             pPhysicsComponent->AddJumpHeight(fabs(bodyPixelPosition.y - actorPixelPosition.y));
 
                             float jumpPixelsLeft = pPhysicsComponent->GetMaxJumpHeight() - pPhysicsComponent->GetHeightInAir();
+
+                            if (pGameActor->GetName() == "Claw")
+                            {
+                                //LOG("LEFT: " + ToStr(jumpPixelsLeft));
+                            }
+
                             // Jumped past limit
-                            if (!g_pApp->GetGameCheats()->clawInfiniteJump && jumpPixelsLeft < 0.0f)
+                            if ((!g_pApp->GetGameCheats()->clawInfiniteJump || pPhysicsComponent->GetIsForcedUp()) && jumpPixelsLeft < 0.0f)
                             {
                                 // Set b2Body to its max height
                                 bodyPixelPosition = Point(bodyPixelPosition.x, bodyPixelPosition.y + fabs(jumpPixelsLeft));

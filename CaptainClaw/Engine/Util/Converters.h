@@ -1233,6 +1233,26 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             position,
             def);
     }
+    else if (logic == "SpringBoard")
+    {
+        ActorPrototype proto = ActorPrototype_None;
+
+        if (levelNumber == 4)
+        {
+            proto = ActorPrototype_Level4_SpringBoard;
+        }
+
+        assert(proto != ActorPrototype_None && "Unsupported level ?");
+
+        Point position(wwdObject->x, wwdObject->y);
+
+        SAFE_DELETE(pActorElem);
+
+        // Everything should be in XML here
+        return ActorTemplates::CreateXmlData_Actor(
+            proto,
+            position);
+    }
     else
     {
         static std::vector<std::string> s_ReportedUnknownLogicsList;

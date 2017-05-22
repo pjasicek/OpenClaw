@@ -57,6 +57,8 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/RopeComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/SteppingGroundComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SteppingGroundComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/SpringBoardComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/SpringBoardComponent.h
 )
 
 add_subdirectory(AIComponents)

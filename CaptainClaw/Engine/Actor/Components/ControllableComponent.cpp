@@ -24,7 +24,8 @@ ControllableComponent::ControllableComponent()
     m_Active(false),
     m_DuckingTime(0),
     m_LookingUpTime(0),
-    m_bFrozen(false)
+    m_bFrozen(false),
+    m_MaxJumpHeight(0)
 { }
 
 bool ControllableComponent::VInit(TiXmlElement* data)
@@ -806,6 +807,17 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
                     break;
                 }
                 case 4:
+                {
+                    // Fallen into liquid - set invisible
+                    m_pRenderComponent->SetVisible(false);
+
+                    // Create tar splash
+                    Point splashPosition(
+                        m_pPositionComponent->GetPosition().x,
+                        m_pPositionComponent->GetPosition().y - 56);
+                    ActorTemplates::CreateSingleAnimation(splashPosition, AnimationType_TarSplash);
+                    break;
+                }
                 case 5:
                 case 6:
                 case 7:

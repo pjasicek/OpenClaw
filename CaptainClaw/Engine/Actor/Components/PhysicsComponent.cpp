@@ -40,7 +40,8 @@ PhysicsComponent::PhysicsComponent() :
     m_pTopLadderContact(NULL),
     m_pMovingPlatformContact(NULL),
     m_bClampToGround(false),
-    m_DoNothingTimeout(0)
+    m_DoNothingTimeout(0),
+    m_bIsForcedUp(false)
 { }
 
 PhysicsComponent::~PhysicsComponent()
@@ -310,6 +311,26 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         }
     }
 
+    if (!m_IsJumping)
+    {
+        m_MaxJumpHeight = m_pControllableComponent->GetMaxJumpHeight();
+    }
+
+    if (m_bIsForcedUp)
+    {
+        if (m_IsFalling || m_pControllableComponent->VIsAttachedToRope() || m_pControllableComponent->IsClimbing())
+        {
+            m_bIsForcedUp = false;
+            m_MaxJumpHeight = g_pApp->GetGlobalOptions()->maxJumpHeight;
+        }
+        else
+        {
+            m_MaxJumpHeight = 400;
+            m_CurrentSpeed.y = -10;
+        }
+    }
+
+
     if (m_OverlappingKinematicBodiesList.empty())
     {
         m_ExternalSourceSpeed.Set(0, 0);
@@ -479,7 +500,6 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
                 m_pControllableComponent->VOnDirectionChange(m_Direction);
             }
 
-            LOG("SHOULD NOT BE HERE");
             SetVelocity(Point(0, 0));
             m_CurrentSpeed = Point(0, 0);
             m_ClimbingSpeed = Point(0, 0);
@@ -650,6 +670,12 @@ set_velocity:
         else
         {
             m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0.0f);
+        }
+
+        if (m_bIsForcedUp)
+        {
+            velocity = GetVelocity();
+            SetVelocity(Point(velocity.x, -10.5));
         }
 
         /*if (true && applyForce)
@@ -1016,6 +1042,7 @@ void PhysicsComponent::RemoveOverlappingKinematicBody(const b2Body* pBody)
 void PhysicsComponent::SetForceFall()
 {
     m_IsRunning = false;
+    m_bIsForcedUp = false;
     m_IsStopped = false;
     m_IsFalling = true;
     m_IsJumping = false;
@@ -1040,4 +1067,34 @@ void PhysicsComponent::OnAttachedToRope()
 void PhysicsComponent::OnDetachedFromRope()
 {
     m_HeightInAir = 0;
+}
+
+void PhysicsComponent::SetIsForcedUp(bool isForcedUp)
+{
+    m_bIsForcedUp = isForcedUp;
+    if (isForcedUp)
+    {
+        m_IsJumping = true;
+        m_IsFalling = false;
+    }
+}
+
+void PhysicsComponent::SetMaxJumpHeight(int32 maxJumpHeight)
+{
+    //m_MaxJumpHeight = maxJumpHeight; 
+    // HACK:
+    if (m_pControllableComponent)
+    {
+        m_pControllableComponent->SetMaxJumpHeight(maxJumpHeight);
+    }
+}
+
+void PhysicsComponent::SetControllableComponent(ControllableComponent* pComp)
+{
+    m_pControllableComponent = pComp;
+    // HACK:
+    if (m_pControllableComponent)
+    {
+        m_pControllableComponent->SetMaxJumpHeight(m_MaxJumpHeight);
+    }
 }
