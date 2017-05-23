@@ -683,7 +683,7 @@ struct SpringBoardDef
 {
     SpringBoardDef()
     {
-        appliedForce = 0.0;
+        springHeight = 0.0;
         springFrameIdx = 0;
         springDelay = 0;
     }
@@ -705,14 +705,14 @@ struct SpringBoardDef
     {
         assert(pElem != NULL);
 
-        cond_assert(strict, ParseValueFromXmlElem(&appliedForce, pElem->FirstChildElement("AppliedForce")));
+        cond_assert(strict, ParseValueFromXmlElem(&springHeight, pElem->FirstChildElement("SpringHeight")));
         cond_assert(strict, ParseValueFromXmlElem(&springFrameIdx, pElem->FirstChildElement("SpringFrameIdx")));
         cond_assert(strict, ParseValueFromXmlElem(&idleAnimName, pElem->FirstChildElement("IdleAnimName")));
         cond_assert(strict, ParseValueFromXmlElem(&springAnimName, pElem->FirstChildElement("SpringAnimName")));
         cond_assert(strict, ParseValueFromXmlElem(&springDelay, pElem->FirstChildElement("SpringDelay")));
     }
 
-    double appliedForce;
+    double springHeight;
     int springFrameIdx;
     int springDelay;
     std::string idleAnimName;

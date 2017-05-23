@@ -13,10 +13,15 @@
     <AnimationComponent>
 	</AnimationComponent>
 	<SpringBoardComponent>
-		<AppliedForce>0</AppliedForce>
+        <!-- DEFINED IN CODE -->
+		<SpringHeight>0</SpringHeight>
+        <!-- DEFINED IN CHILD XML -->
         <SpringFrameIdx>0</SpringFrameIdx>
+        <!-- DEFINED IN CHILD XML -->
         <SpringDelay>0</SpringDelay>
+        <!-- DEFINED IN CHILD XML -->
         <IdleAnimName>NONE</IdleAnimName>
+        <!-- DEFINED IN CHILD XML -->
         <SpringAnimName>NONE</SpringAnimName>
 	</SpringBoardComponent>
 	<PhysicsComponent>

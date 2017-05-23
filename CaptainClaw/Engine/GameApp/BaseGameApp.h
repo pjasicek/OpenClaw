@@ -127,6 +127,9 @@ struct GlobalOptions
         startLookUpOrDownTime = 1500;
         maxLookUpOrDownDistance = 250;
         lookUpOrDownSpeed = 250;
+        clawRunningSpeed = 5.0;
+        //springBoardSpringHeight = 450;
+        springBoardSpringSpeed = 11;
     }
 
     int cpuDelayMs;
@@ -141,6 +144,9 @@ struct GlobalOptions
     int maxLookUpOrDownDistance;
     int lookUpOrDownSpeed; 
     std::string scoreScreenPalPath;
+    double clawRunningSpeed;
+    //int springBoardSpringHeight;
+    double springBoardSpringSpeed;
 };
 
 class EventMgr;

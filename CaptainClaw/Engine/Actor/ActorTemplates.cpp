@@ -1966,6 +1966,21 @@ namespace ActorTemplates
         return pActorElem;
     }
 
+    TiXmlElement* CreateXmlData_SpringBoard(ActorPrototype proto, const Point& position, const SpringBoardDef& def)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- SpringBoardComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.SpringBoardComponent.SpringHeight", def.springHeight));
+
+        return pActorElem;
+    }
+
     StrongActorPtr CreateActor(ActorPrototype proto, Point position)
     {
         return CreateAndReturnActor(CreateXmlData_Actor(proto, position));

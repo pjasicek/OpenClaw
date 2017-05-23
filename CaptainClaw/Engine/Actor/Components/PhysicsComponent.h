@@ -92,7 +92,7 @@ public:
 
     bool IsAwake() { return m_pPhysics->VIsAwake(_owner->GetGUID()); }
 
-    void SetIsForcedUp(bool isForcedUp);
+    void SetIsForcedUp(bool isForcedUp, int forcedUpHeight);
     bool GetIsForcedUp() { return m_bIsForcedUp; }
 
     void AddOverlappingLadder(const b2Fixture* ladder) { m_OverlappingLaddersList.push_back(ladder); }
@@ -152,6 +152,7 @@ private:
 
     // Spring caused us to go up
     bool m_bIsForcedUp;
+    int m_ForcedUpHeight;
 
     b2Contact* m_pTopLadderContact;
     b2Contact* m_pMovingPlatformContact;

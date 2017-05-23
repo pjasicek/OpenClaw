@@ -14,9 +14,13 @@
     <BossStagerTriggerComponent>
         <BossDistance>300</BossDistance>
         <CameraSpeed>300</CameraSpeed>
+        <!-- DEFINED IN CHILD XML -->
         <ClawDialogSound>__NONE__</ClawDialogSound>
+        <!-- DEFINED IN CHILD XML -->
         <BossDialogSound>__NONE__</BossDialogSound>
+        <!-- DEFINED IN CHILD XML -->
         <PopupTitleImageSet>__NONE__</PopupTitleImageSet>
+        <!-- DEFINED IN CHILD XML -->
         <PopupTitleSound>__NONE__</PopupTitleSound>
         <PopupTitleSpeed>200</PopupTitleSpeed>
     </BossStagerTriggerComponent>

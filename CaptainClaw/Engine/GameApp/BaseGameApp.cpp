@@ -532,6 +532,12 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("LookUpOrDownSpeed"));
         ParseValueFromXmlElem(&m_GlobalOptions.scoreScreenPalPath,
             pGlobalOptionsRootElem->FirstChildElement("ScoreScreenPalPath"));
+        ParseValueFromXmlElem(&m_GlobalOptions.clawRunningSpeed,
+            pGlobalOptionsRootElem->FirstChildElement("ClawRunningSpeed"));
+        /*ParseValueFromXmlElem(&m_GlobalOptions.springBoardSpringHeight,
+            pGlobalOptionsRootElem->FirstChildElement("SpringBoardSpringHeight"));*/
+        ParseValueFromXmlElem(&m_GlobalOptions.springBoardSpringSpeed,
+            pGlobalOptionsRootElem->FirstChildElement("SpringBoardSpringSpeed"));
     }
 
     return true;

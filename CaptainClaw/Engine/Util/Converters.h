@@ -1241,17 +1241,25 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         {
             proto = ActorPrototype_Level4_SpringBoard;
         }
-
         assert(proto != ActorPrototype_None && "Unsupported level ?");
 
         Point position(wwdObject->x, wwdObject->y);
 
+        SpringBoardDef def;
+        def.springHeight = wwdObject->maxY;
+        //LOG("Position: " + position.ToString() + ", SpringHeight: " + ToStr(def.springHeight));
+        if (def.springHeight == 0)
+        {
+            def.springHeight = 450;
+        }
+
         SAFE_DELETE(pActorElem);
 
         // Everything should be in XML here
-        return ActorTemplates::CreateXmlData_Actor(
+        return ActorTemplates::CreateXmlData_SpringBoard(
             proto,
-            position);
+            position,
+            def);
     }
     else
     {

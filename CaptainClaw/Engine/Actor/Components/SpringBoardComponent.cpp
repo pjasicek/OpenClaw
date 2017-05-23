@@ -52,7 +52,7 @@ void SpringBoardComponent::VOnAnimationFrameChanged(Animation* pAnimation, Anima
                 auto pPC = MakeStrongPtr(pStandingActor->GetComponent<PhysicsComponent>());
                 if (pPC)
                 {
-                    pPC->SetIsForcedUp(true);
+                    pPC->SetIsForcedUp(true, (int)m_Properties.springHeight);
                 }
             }
         }

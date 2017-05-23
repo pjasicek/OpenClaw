@@ -6,7 +6,6 @@
 		<AnimationPath>/LEVEL4/ANIS/SPRINGYFERN/*</AnimationPath>
 	</AnimationComponent>
 	<SpringBoardComponent>
-		<AppliedForce>200</AppliedForce>
         <SpringFrameIdx>1</SpringFrameIdx>
         <SpringDelay>500</SpringDelay>
         <IdleAnimName>idle</IdleAnimName>

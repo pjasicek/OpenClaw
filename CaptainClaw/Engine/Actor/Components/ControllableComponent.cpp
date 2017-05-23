@@ -814,7 +814,7 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
                     // Create tar splash
                     Point splashPosition(
                         m_pPositionComponent->GetPosition().x,
-                        m_pPositionComponent->GetPosition().y - 56);
+                        m_pPositionComponent->GetPosition().y - 30);
                     ActorTemplates::CreateSingleAnimation(splashPosition, AnimationType_TarSplash);
                     break;
                 }

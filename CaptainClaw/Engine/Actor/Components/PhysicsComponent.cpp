@@ -41,7 +41,8 @@ PhysicsComponent::PhysicsComponent() :
     m_pMovingPlatformContact(NULL),
     m_bClampToGround(false),
     m_DoNothingTimeout(0),
-    m_bIsForcedUp(false)
+    m_bIsForcedUp(false),
+    m_ForcedUpHeight(0)
 { }
 
 PhysicsComponent::~PhysicsComponent()
@@ -321,11 +322,12 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         if (m_IsFalling || m_pControllableComponent->VIsAttachedToRope() || m_pControllableComponent->IsClimbing())
         {
             m_bIsForcedUp = false;
+            m_ForcedUpHeight = 0;
             m_MaxJumpHeight = g_pApp->GetGlobalOptions()->maxJumpHeight;
         }
         else
         {
-            m_MaxJumpHeight = 400;
+            m_MaxJumpHeight = m_ForcedUpHeight;
             m_CurrentSpeed.y = -10;
         }
     }
@@ -651,15 +653,19 @@ set_velocity:
         bool disableGravity = false;
         Point gravity = m_pPhysics->GetGravity();
         velocity = GetVelocity();
-        if (velocity.y < -8.8)
+
+        double maxJumpSpeed = -1.0 * fabs(g_pApp->GetGlobalOptions()->maxJumpSpeed);
+        double maxFallSpeed = fabs(g_pApp->GetGlobalOptions()->maxFallSpeed);
+
+        if (velocity.y < maxJumpSpeed)
         {
-            SetVelocity(Point(velocity.x, -8.8));
+            SetVelocity(Point(velocity.x, maxJumpSpeed));
             applyForce = false;
         }
-        if (velocity.y > 14)
+        if (velocity.y > maxFallSpeed)
         {
             //LOG("Velocity: " + ToStr(velocity.y));
-            SetVelocity(Point(velocity.x, 14));
+            SetVelocity(Point(velocity.x, maxFallSpeed));
             applyForce = false;
         }
         if (applyForce)
@@ -675,7 +681,9 @@ set_velocity:
         if (m_bIsForcedUp)
         {
             velocity = GetVelocity();
-            SetVelocity(Point(velocity.x, -10.5));
+
+            double springSpeed = -1.0 * fabs(g_pApp->GetGlobalOptions()->springBoardSpringSpeed);
+            SetVelocity(Point(velocity.x, springSpeed));
         }
 
         /*if (true && applyForce)
@@ -1072,13 +1080,19 @@ void PhysicsComponent::OnDetachedFromRope()
     m_HeightInAir = 0;
 }
 
-void PhysicsComponent::SetIsForcedUp(bool isForcedUp)
+void PhysicsComponent::SetIsForcedUp(bool isForcedUp, int forcedUpHeight)
 {
     m_bIsForcedUp = isForcedUp;
     if (isForcedUp)
     {
         m_IsJumping = true;
         m_IsFalling = false;
+        m_ForcedUpHeight = forcedUpHeight;
+        m_MaxJumpHeight = m_ForcedUpHeight;
+    }
+    else
+    {
+        m_ForcedUpHeight = 0;
     }
 }
 

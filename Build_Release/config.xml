@@ -51,8 +51,11 @@
         <MaxJumpHeight>142</MaxJumpHeight>
         <PowerupMaxJumpHeight>200</PowerupMaxJumpHeight>
         <SkipMenu>false</SkipMenu>
-	<StartLookUpOrDownTime>1500</StartLookUpOrDownTime>
-	<MaxLookUpOrDownDistance>250</MaxLookUpOrDownDistance>
-	<LookUpOrDownSpeed>250</LookUpOrDownSpeed>
+		<StartLookUpOrDownTime>1500</StartLookUpOrDownTime>
+		<MaxLookUpOrDownDistance>250</MaxLookUpOrDownDistance>
+		<LookUpOrDownSpeed>250</LookUpOrDownSpeed>
+		<ClawRunningSpeed>5</ClawRunningSpeed>
+		<SpringBoardSpringHeight>UNUSED</SpringBoardSpringHeight>
+		<SpringBoardSpringSpeed>11</SpringBoardSpringSpeed>
     </GlobalOptions>
 </Configuration>
