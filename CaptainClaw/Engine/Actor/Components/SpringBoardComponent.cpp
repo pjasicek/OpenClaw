@@ -89,7 +89,10 @@ void SpringBoardComponent::OnActorEndContact(Actor* pActor)
 {
     for (auto actorIter = m_StandingActorsList.begin(); actorIter != m_StandingActorsList.end(); ++actorIter)
     {
-        m_StandingActorsList.erase(actorIter);
-        return;
+        if (pActor == (*actorIter))
+        {
+            m_StandingActorsList.erase(actorIter);
+            return;
+        }
     }
 }
