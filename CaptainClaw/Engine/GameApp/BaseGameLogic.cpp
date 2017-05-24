@@ -123,7 +123,7 @@ std::string BaseGameLogic::GetActorXml(uint32 actorId)
 
 bool BaseGameLogic::VEnterMenu(const char* xmlMenuResource)
 {
-    TiXmlElement* pXmlLevelRoot = XmlResourceLoader::LoadAndReturnRootXmlElement(xmlMenuResource, true);
+    TiXmlElement* pXmlLevelRoot = XmlResourceLoader::LoadAndReturnRootXmlElement(xmlMenuResource);
     if (pXmlLevelRoot == NULL)
     {
         LOG_ERROR("Could not load menu resource file: " + std::string(xmlMenuResource));
