@@ -49,7 +49,7 @@ TiXmlElement* HealthComponent::VGenerateXml()
 
 void HealthComponent::AddHealth(int32 health, DamageType damageType, Point impactPoint)
 {
-    if (m_bInvulnerable && health < 0)
+    if ((m_bInvulnerable && health < 0) && (damageType != DamageType_DeathTile))
     {
         return;
     }
