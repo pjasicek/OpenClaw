@@ -2,6 +2,8 @@
 
 #include "MainLoop.h"
 
+#include <fstream>
+
 int RunGameEngine(int argc, char** argv)
 {
     if (SDL_SetThreadPriority(SDL_THREAD_PRIORITY_HIGH) != 0)
@@ -9,11 +11,23 @@ int RunGameEngine(int argc, char** argv)
         LOG_WARNING("Failed to set high priority class to this process");
     }
 
-#ifndef ANDROID
     std::string configDir = "";
-#else
-    std::string configDir = "/sdcard/claw/";
+
+#if (__ANDROID__ == 1)
+    configDir = "/sdcard/claw/";
+#elif (__LINUX__ == 1)
+    configDir = "/usr/share/captainclaw/config.xml";
+#elif (__WINDOWS__ == 1)
+    configDir = "";
 #endif
+
+    // Temporary hack - always prefer config in the same folder as binary to default config
+    std::ifstream f("config.xml");
+    if (f.good())
+    {
+        configDir = "";
+        f.close();
+    }
 
     // Load options
     if (!g_pApp->LoadGameOptions(std::string(configDir + "config.xml").c_str()))
