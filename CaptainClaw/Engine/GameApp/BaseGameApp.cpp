@@ -421,16 +421,18 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     TiXmlElement* assetsElem = configRoot->FirstChildElement("Assets");
     if (assetsElem)
     {
-        ParseValueFromXmlElem(&m_GameOptions.rezArchivePath,
-            assetsElem->FirstChildElement("RezArchive"));
-        ParseValueFromXmlElem(&m_GameOptions.customArchivePath,
-            assetsElem->FirstChildElement("CustomArchive"));
-        ParseValueFromXmlElem(&m_GameOptions.resourceCacheSize,
-            assetsElem->FirstChildElement("ResourceCacheSize"));
+        ParseValueFromXmlElem(&m_GameOptions.assetsFolder,
+            assetsElem->FirstChildElement("AssetsFolder"));
+        assert(ParseValueFromXmlElem(&m_GameOptions.rezArchive,
+            assetsElem->FirstChildElement("RezArchive")));
+        assert(ParseValueFromXmlElem(&m_GameOptions.customArchive,
+            assetsElem->FirstChildElement("CustomArchive")));
+        assert(ParseValueFromXmlElem(&m_GameOptions.resourceCacheSize,
+            assetsElem->FirstChildElement("ResourceCacheSize")));
         ParseValueFromXmlElem(&m_GameOptions.tempDir,
             assetsElem->FirstChildElement("TempDir"));
-        ParseValueFromXmlElem(&m_GameOptions.savesFile,
-            assetsElem->FirstChildElement("SavesFile"));
+        assert(ParseValueFromXmlElem(&m_GameOptions.savesFile,
+            assetsElem->FirstChildElement("SavesFile")));
     }
 
     //-------------------------------------------------------------------------
@@ -445,7 +447,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
         {
             if (fontElem->GetText())
             {
-                m_GameOptions.fontNames.push_back(fontElem->GetText());
+                std::string fontPath = m_GameOptions.assetsFolder + std::string(fontElem->GetText());
+                m_GameOptions.fontNames.push_back(fontPath.c_str());
             }
         }
 
@@ -455,7 +458,7 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             consoleFontElem->Attribute("size", (int*)&m_GameOptions.consoleFontSize);
             if (const char* fontName = consoleFontElem->Attribute("font"))
             {
-                m_GameOptions.consoleFontName = fontName;
+                m_GameOptions.consoleFontName = m_GameOptions.assetsFolder + fontName;
             }
         }
     }
@@ -497,6 +500,11 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pConsoleRootElem->FirstChildElement("CommandPrompt"));
         ParseValueFromXmlElem(&m_GameOptions.consoleConfig.fontPath,
             pConsoleRootElem->FirstChildElement("FontPath"));
+
+        m_GameOptions.consoleConfig.backgroundImagePath =
+            m_GameOptions.assetsFolder + m_GameOptions.consoleConfig.backgroundImagePath;
+        m_GameOptions.consoleConfig.fontPath =
+            m_GameOptions.assetsFolder + m_GameOptions.consoleConfig.fontPath;
     }
     else
     {
@@ -666,18 +674,20 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
 {
     LOG(">>>>> Initializing resource cache...");
 
-    if (gameOptions.rezArchivePath.empty())
+    if (gameOptions.rezArchive.empty())
     {
         LOG_ERROR("No specified assets resource files in configuration.");
         return false;
     }
 
-    IResourceFile* rezArchive = new ResourceRezArchive(gameOptions.rezArchivePath);
+    std::string rezArchivePath = gameOptions.assetsFolder + gameOptions.rezArchive;
+
+    IResourceFile* rezArchive = new ResourceRezArchive(rezArchivePath);
 
     m_pResourceCache = new ResourceCache(gameOptions.resourceCacheSize, rezArchive, ORIGINAL_RESOURCE);
     if (!m_pResourceCache->Init())
     {
-        LOG_ERROR("Failed to initialize resource cachce from resource file: " + std::string(gameOptions.rezArchivePath));
+        LOG_ERROR("Failed to initialize resource cachce from resource file: " + std::string(rezArchivePath));
         return false;
     }
 
@@ -691,11 +701,13 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
     m_pResourceCache->RegisterLoader(MidiResourceLoader::Create());
     m_pResourceCache->RegisterLoader(PcxResourceLoader::Create());
 
-    IResourceFile* pCustomArchive = new ResourceZipArchive(gameOptions.customArchivePath);
+    std::string customArchivePath = gameOptions.assetsFolder + gameOptions.customArchive;
+
+    IResourceFile* pCustomArchive = new ResourceZipArchive(customArchivePath);
     ResourceCache* pCustomCache = new ResourceCache(50, pCustomArchive, CUSTOM_RESOURCE);
     if (!pCustomCache->Init())
     {
-        LOG_ERROR("Failed to initialize resource cachce from resource file: " + gameOptions.customArchivePath);
+        LOG_ERROR("Failed to initialize resource cachce from resource file: " + customArchivePath);
         return false;
     }
 

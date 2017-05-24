@@ -37,8 +37,8 @@ struct GameOptions
         consoleFontName = "clacon.ttf";
         consoleFontSize = 20;
 
-        rezArchivePath = "CLAW.REZ";
-        customArchivePath = "ASSETS.ZIP";
+        rezArchive = "CLAW.REZ";
+        customArchive = "ASSETS.ZIP";
         resourceCacheSize = 50;
         tempDir = ".";
         savesFile = "SAVES.XML";
@@ -76,8 +76,9 @@ struct GameOptions
     unsigned consoleFontSize;
 
     // Assets
-    std::string rezArchivePath;
-    std::string customArchivePath;
+    std::string assetsFolder;
+    std::string rezArchive;
+    std::string customArchive;
     unsigned resourceCacheSize;
     std::string tempDir;
     std::string savesFile;

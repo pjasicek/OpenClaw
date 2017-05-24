@@ -87,13 +87,13 @@ bool BaseGameLogic::Initialize()
 {
     m_pActorFactory = VCreateActorFactory();
 
-    std::string savesFile = g_pApp->GetGameConfig()->savesFile;
+    std::string savesFilePath = g_pApp->GetGameConfig()->assetsFolder + g_pApp->GetGameConfig()->savesFile;
 
-    TiXmlDocument gameSaves(savesFile.c_str());
+    TiXmlDocument gameSaves(savesFilePath.c_str());
     gameSaves.LoadFile();
     if (gameSaves.Error())
     {
-        LOG_ERROR("Error while loading " + savesFile
+        LOG_ERROR("Error while loading " + savesFilePath
              + ": " + std::string(gameSaves.ErrorDesc()));
         return false;
     }
