@@ -13,13 +13,15 @@ int RunGameEngine(int argc, char** argv)
 
     std::string configDir = "";
 
-#if (__ANDROID__ == 1)
+#if defined __ANDROID__ && __ANDROID__ == 1
     configDir = "/sdcard/claw/";
-#elif (__LINUX__ == 1)
-    configDir = "/usr/share/captainclaw/config.xml";
-#elif (__WINDOWS__ == 1)
+#elif defined __LINUX__ && __LINUX__ == 1
+    configDir = "/usr/share/captainclaw/";
+#elif defined __WINDOWS__ && _WINDOWS__ == 1
     configDir = "";
 #endif
+
+    LOG("Looking for: " + configDir + "config.xml");
 
     // Temporary hack - always prefer config in the same folder as binary to default config
     std::ifstream f("config.xml");
@@ -28,6 +30,8 @@ int RunGameEngine(int argc, char** argv)
         configDir = "";
         f.close();
     }
+
+    LOG("Looking for: " + configDir + "config.xml");
 
     // Load options
     if (!g_pApp->LoadGameOptions(std::string(configDir + "config.xml").c_str()))
