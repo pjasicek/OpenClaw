@@ -5,4 +5,3 @@
 #cpudelay 50
 #teleport 8450, 4100
 #teleport 17000 720
-teleport 16000 1500
