@@ -1,4 +1,4 @@
-<FinishedLevelScreen Level="1">
+<FinishedLevelScreen Level="2">
 	<BackgroundSound>
 		<SoundPath>/STATES/BOOTY/SOUNDS/AMULET.WAV</SoundPath>
 		<Volume>50</Volume>

@@ -1,14 +1,14 @@
-<FinishedLevelScreen Level="2">
+<FinishedLevelScreen Level="4">
 	<BackgroundSound>
 		<SoundPath>/STATES/BOOTY/SOUNDS/AMULET.WAV</SoundPath>
 		<Volume>50</Volume>
 		<IsMusic>false</IsMusic>
 		<IsLooping>false</IsLooping>
 	</BackgroundSound>
-	<InitialBackgroundScreen>/STATES/BOOTY/SCREENS/007AMULET.PCX</InitialBackgroundScreen>
-	<ScoreBackgroundScreen>/STATES/BOOTY/SCREENS/004AMULET.PCX</ScoreBackgroundScreen>
+	<InitialBackgroundScreen>/STATES/BOOTY/SCREENS/011AMULET.PCX</InitialBackgroundScreen>
+	<ScoreBackgroundScreen>/STATES/BOOTY/SCREENS/008AMULET.PCX</ScoreBackgroundScreen>
 	<ClawCommentSound>
-		<SoundPath>/STATES/BOOTY/SOUNDS/CLAW/1110023.WAV</SoundPath>
+		<SoundPath>/STATES/BOOTY/SOUNDS/CLAW/1110024.WAV</SoundPath>
 		<Delay>3000</Delay>
 	</ClawCommentSound>
 

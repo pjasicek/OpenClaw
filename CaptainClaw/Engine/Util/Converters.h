@@ -1066,9 +1066,19 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
 
         //assert(levelNumber == 2 && "Expected only level 2");
+        ActorPrototype proto = ActorPrototype_None;
+        if (levelNumber == 2)
+        {
+            proto = ActorPrototype_Level2_BossStager;
+        }
+        else if (levelNumber == 4)
+        {
+            proto = ActorPrototype_Level4_BossStager;
+        }
+        assert(proto != ActorPrototype_None);
 
         Point position(wwdObject->x, wwdObject->y);
-        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level2_BossStager, position);
+        return ActorTemplates::CreateXmlData_Actor(proto, position);
     }
     else if (logic == "Raux")
     {
@@ -1076,6 +1086,18 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         return ActorTemplates::CreateXmlData_EnemyAIActor(
             ActorPrototype_Level2_LaRaux,
+            Point(wwdObject->x, wwdObject->y),
+            {},
+            wwdObject->minX,
+            wwdObject->maxX,
+            false);
+    }
+    else if (logic == "Katherine")
+    {
+        SAFE_DELETE(pActorElem);
+
+        return ActorTemplates::CreateXmlData_EnemyAIActor(
+            ActorPrototype_Level4_Katherine,
             Point(wwdObject->x, wwdObject->y),
             {},
             wwdObject->minX,
