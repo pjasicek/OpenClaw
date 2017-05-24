@@ -26,6 +26,7 @@ const char* RangedAttackAIStateComponent::g_Name = "RangedAttackAIStateComponent
 const char* DuckRangedAttackAIStateComponent::g_Name = "DuckRangedAttackAIStateComponent";
 const char* BaseBossAIStateComponennt::g_Name = "BaseBossAIStateComponennt";
 const char* LaRauxBossAIStateComponent::g_Name = "LaRauxBossAIStateComponent";
+const char* KatherineBossAIStateComponent::g_Name = "KatherineBossAIStateComponent";
 
 #define MAX_STATE_PRIORITY INT32_MAX
 #define MIN_STATE_PRIORITY INT32_MIN
@@ -1171,6 +1172,64 @@ void LaRauxBossAIStateComponent::VOnBossFightEnded(bool isBossDead)
             new EventData_Request_Play_Sound(soundInfo)));
 
         soundInfo.soundToPlay = SOUND_LEVEL2_BOSS_DEAD;
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(soundInfo)));
+    }
+}
+
+//=====================================================================================================================
+// LaRauxBossAIStateComponent
+//=====================================================================================================================
+
+KatherineBossAIStateComponent::KatherineBossAIStateComponent()
+    :
+    BaseBossAIStateComponennt("KatherineBossAIStateComponent")
+{
+
+}
+
+KatherineBossAIStateComponent::~KatherineBossAIStateComponent()
+{
+
+}
+
+bool KatherineBossAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    assert(pData);
+
+    if (!BaseBossAIStateComponennt::VDelegateInit(pData))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void KatherineBossAIStateComponent::VUpdate(uint32 msDiff)
+{
+
+}
+
+void KatherineBossAIStateComponent::VOnStateEnter()
+{
+
+}
+
+void KatherineBossAIStateComponent::VOnStateLeave()
+{
+
+}
+
+void KatherineBossAIStateComponent::VOnBossFightStarted()
+{
+    m_pEnemyAIComponent->EnterBestState(true);
+}
+
+void KatherineBossAIStateComponent::VOnBossFightEnded(bool isBossDead)
+{
+    if (isBossDead)
+    {
+        SoundInfo soundInfo(SOUND_GAME_AMULET_RISE);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
     }

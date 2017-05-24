@@ -112,6 +112,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<RopeComponent>(RopeComponent::GetIdFromName(RopeComponent::g_Name));
     _componentFactory.Register<SteppingGroundComponent>(SteppingGroundComponent::GetIdFromName(SteppingGroundComponent::g_Name));
     _componentFactory.Register<SpringBoardComponent>(SpringBoardComponent::GetIdFromName(SpringBoardComponent::g_Name));
+    _componentFactory.Register<KatherineBossAIStateComponent>(KatherineBossAIStateComponent::GetIdFromName(KatherineBossAIStateComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

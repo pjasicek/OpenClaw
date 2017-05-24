@@ -294,9 +294,11 @@ enum ActorPrototype
 
     // Boss stagers
     ActorPrototype_Level2_BossStager,
+    ActorPrototype_Level4_BossStager,
 
     // Bosses
     ActorPrototype_Level2_LaRaux,
+    ActorPrototype_Level4_Katherine,
 
     // Stepping stones
     ActorPrototype_Level4_SteppingGround,
