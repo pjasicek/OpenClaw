@@ -1,0 +1,62 @@
+<Configuration>
+    <Display>
+        <Size width="1200" height="900" />
+        <Scale>1</Scale>
+        <UseVerticalSync>false</UseVerticalSync>
+        <IsFullscreen>false</IsFullscreen>
+        <IsFullscreenDesktop>false</IsFullscreenDesktop>
+    </Display>
+    <Audio>
+        <Frequency>44100</Frequency>
+        <SoundChannels>1</SoundChannels>
+        <MixingChannels>64</MixingChannels>
+        <ChunkSize>2048</ChunkSize>
+        <SoundVolume>80</SoundVolume>
+        <MusicVolume>20</MusicVolume>
+        <SoundOn>true</SoundOn>
+        <MusicOn>true</MusicOn>
+        <MusicRpcServerPath>MidiProc.exe</MusicRpcServerPath>
+    </Audio>
+    <Font>
+        <Fontt>clacon.ttf</Fontt>
+        <ConsoleFont font="clacon.ttf" size="20" />
+    </Font>
+    <Assets>
+        <AssetsFolder>/usr/share/captainclaw/</AssetsFolder>
+        <RezArchive>CLAW.REZ</RezArchive>
+        <CustomArchive>ASSETS.ZIP</CustomArchive>
+        <ResourceCacheSize>150</ResourceCacheSize>
+	<TempDir>/tmp/</TempDir>
+        <SavesFile>SAVES.XML</SavesFile>
+    </Assets>
+    <Console>
+        <BackgroundImagePath>console02.tga</BackgroundImagePath>
+        <StretchBackgroundImage></StretchBackgroundImage>
+        <WidthRatio>1.0</WidthRatio>
+        <HeightRatio>0.5</HeightRatio>
+        <LineSeparatorHeight>3</LineSeparatorHeight>
+        <CommandPromptOffsetY>10</CommandPromptOffsetY>
+        <ConsoleAnimationSpeed>0.7</ConsoleAnimationSpeed>
+        <FontPath>clacon.ttf</FontPath>
+        <FontColor r="255" g="255" b="255" />
+        <FontHeight>20</FontHeight>
+        <LeftOffset>5</LeftOffset>
+        <CommandPrompt>> </CommandPrompt>
+    </Console>
+    <GlobalOptions>
+        <CpuDelay>0</CpuDelay>
+        <MaxJumpSpeed>8.8</MaxJumpSpeed>
+        <MaxFallSpeed>14.0</MaxFallSpeed>
+        <IdleSoundQuoteInterval>15000</IdleSoundQuoteInterval>
+        <PlatformSpeedModifier>0.015</PlatformSpeedModifier>
+        <MaxJumpHeight>142</MaxJumpHeight>
+        <PowerupMaxJumpHeight>200</PowerupMaxJumpHeight>
+        <SkipMenu>false</SkipMenu>
+		<StartLookUpOrDownTime>1500</StartLookUpOrDownTime>
+		<MaxLookUpOrDownDistance>250</MaxLookUpOrDownDistance>
+		<LookUpOrDownSpeed>250</LookUpOrDownSpeed>
+		<ClawRunningSpeed>5</ClawRunningSpeed>
+		<SpringBoardSpringHeight>UNUSED</SpringBoardSpringHeight>
+		<SpringBoardSpringSpeed>11</SpringBoardSpringSpeed>
+    </GlobalOptions>
+</Configuration>
