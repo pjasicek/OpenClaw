@@ -500,7 +500,6 @@ bool AmmoPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
     {
         for (auto ammoPair : m_AmmoPickupList)
         {
-            LOG("Ammo count: " + ToStr(ammoPair.second));
             pAmmoComponent->AddAmmo(ammoPair.first, ammoPair.second);
         }
 

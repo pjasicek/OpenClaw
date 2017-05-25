@@ -327,7 +327,15 @@ void ClawGameLogic::ModifyActorStatDelegate(IEventDataPtr pEventData)
 
         if (pCastEventData->AddToExistingStat())
         {
-            pAmmoComponent->AddAmmo(ammoType, pCastEventData->GetStatValue());
+            int currentAmmoCount = pAmmoComponent->GetRemainingAmmo(ammoType);
+            if ((currentAmmoCount + pCastEventData->GetStatValue()) > 99)
+            {
+                pAmmoComponent->SetAmmo(ammoType, 99);
+            }
+            else
+            {
+                pAmmoComponent->AddAmmo(ammoType, pCastEventData->GetStatValue());
+            }
         }
         else
         {

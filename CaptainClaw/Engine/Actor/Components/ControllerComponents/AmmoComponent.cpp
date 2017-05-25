@@ -53,13 +53,11 @@ void AmmoComponent::SetAmmo(AmmoType ammoType, int32 ammoCount)
     uint32 oldAmmo = m_AmmoMap[ammoType];
     if (ammoCount < 0)
     {
-        LOG_ERROR("Negative remaininig ammo. Clamping to 0. This is most likely logic error.");
-        m_AmmoMap[ammoType] = 0;
+        ammoCount = 0;
     }
     if (ammoCount > 99)
     {
-        LOG_ERROR("Ammo exceeded value 99. Clamping to 99. This should be handled by game logic !");
-        m_AmmoMap[ammoType] = 99;
+        ammoCount = 99;
     }
 
     m_AmmoMap[ammoType] = ammoCount;
