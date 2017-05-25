@@ -2027,6 +2027,34 @@ private:
 };
 
 //---------------------------------------------------------------------------------------------------------------------
+// EventData_Claw_Health_Below_Zero
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Claw_Health_Below_Zero : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Claw_Health_Below_Zero(uint32 actorId)
+    {
+        m_ActorId = actorId;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Claw_Health_Below_Zero(m_ActorId));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_ActorId; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_ActorId; }
+
+    uint32 GetActorId(void) const { return m_ActorId; }
+    virtual const char* GetName(void) const { return "EventData_Claw_Health_Below_Zero"; }
+
+private:
+    uint32 m_ActorId;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
 // EventData_Request_Play_Sound
 //---------------------------------------------------------------------------------------------------------------------
 class EventData_Request_Play_Sound : public BaseEventData

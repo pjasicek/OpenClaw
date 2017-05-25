@@ -220,6 +220,8 @@ public:
     Point FindClosestHostileActorOffset();
 
 private:
+    void ClawHealthBelowZeroDelegate(IEventDataPtr pEventData);
+
     int m_AttackDelay;
 
 protected:

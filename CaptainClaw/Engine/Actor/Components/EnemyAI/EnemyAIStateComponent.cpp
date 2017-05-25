@@ -562,12 +562,12 @@ BaseAttackAIStateComponent::BaseAttackAIStateComponent(std::string stateName)
     m_AttackDelay(0),
     BaseEnemyAIStateComponent(stateName)
 {
-
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseAttackAIStateComponent::ClawHealthBelowZeroDelegate), EventData_Claw_Health_Below_Zero::sk_EventType);
 }
 
 BaseAttackAIStateComponent::~BaseAttackAIStateComponent()
 {
-
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseAttackAIStateComponent::ClawHealthBelowZeroDelegate), EventData_Claw_Health_Below_Zero::sk_EventType);
 }
 
 bool BaseAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
@@ -792,6 +792,12 @@ bool BaseAttackAIStateComponent::VCanEnter()
     }
 
     return true;
+}
+
+void BaseAttackAIStateComponent::ClawHealthBelowZeroDelegate(IEventDataPtr pEventData)
+{
+    m_EnemyAgroList.clear();
+    m_pEnemyAIComponent->EnterBestState(true);
 }
 
 //=====================================================================================================================

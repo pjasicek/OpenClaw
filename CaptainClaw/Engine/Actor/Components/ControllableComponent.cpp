@@ -767,6 +767,8 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
         return;
     }
 
+    IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Claw_Health_Below_Zero(_owner->GetGUID())));
+
     // TODO: Track how exactly claw died
     if (m_pClawAnimationComponent->GetCurrentAnimationName() != "spikedeath")
     {

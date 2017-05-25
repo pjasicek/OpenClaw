@@ -55,6 +55,8 @@ const EventType EventData_Entered_Boss_Area::sk_EventType(0x6a51ffff);
 const EventType EventData_Boss_Fight_Started::sk_EventType(0x62ccc8af);
 const EventType EventData_Boss_Fight_Ended::sk_EventType(0x62cdd8af);
 const EventType EventData_Boss_Health_Changed::sk_EventType(0x2222d8af);
+const EventType EventData_Claw_Health_Below_Zero::sk_EventType(0xfffff8af);
+
 
 /*bool EventData_PlaySound::VBuildEventFromScript(void)
 {
