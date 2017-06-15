@@ -12,7 +12,7 @@ public:
 
     void SetControlledObject(shared_ptr<SceneNode> controlledObject) { m_pControlledObject = controlledObject; }
     void OnUpdate(uint32 msDiff);
-    bool AttackHandler();
+    void HandleAction(ActionType actionType);
 
     // Interface
     bool VOnKeyDown(SDL_Keycode key);
@@ -26,7 +26,7 @@ private:
     shared_ptr<SceneNode> m_pControlledObject;
     float m_Speed;
 
-    std::map<int, bool> InputKeys;
+    std::map<int, bool> m_InputKeys;
 
     // SDL_Scancode array
     const uint8* m_pKeyStates;
