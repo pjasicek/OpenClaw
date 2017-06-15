@@ -12,6 +12,7 @@ public:
 
     void SetControlledObject(shared_ptr<SceneNode> controlledObject) { m_pControlledObject = controlledObject; }
     void OnUpdate(uint32 msDiff);
+    bool AttackHandler();
 
     // Interface
     bool VOnKeyDown(SDL_Keycode key);
