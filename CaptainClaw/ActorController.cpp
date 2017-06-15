@@ -12,6 +12,30 @@ ActorController::ActorController(shared_ptr<SceneNode> controlledObject, float s
     m_MouseLeftButtonDown = m_MouseRightButtonDown = false;
 }
 
+bool ActorController::AttackHandler()
+{
+    if (InputKeys[SDLK_LALT] || m_MouseLeftButtonDown)
+    {
+        shared_ptr<EventData_Actor_Fire> pClimbEvent(new EventData_Actor_Fire(m_pControlledObject->VGetProperties()->GetActorId()));
+        IEventMgr::Get()->VTriggerEvent(pClimbEvent);
+        return true;
+    }
+    else if (InputKeys[SDLK_LCTRL] || m_MouseRightButtonDown)
+    {
+        shared_ptr<EventData_Actor_Attack> pClimbEvent(new EventData_Actor_Attack(m_pControlledObject->VGetProperties()->GetActorId()));
+        IEventMgr::Get()->VTriggerEvent(pClimbEvent);
+        return true;
+    }
+    else if (InputKeys[SDLK_LSHIFT] || InputKeys[SDLK_e])
+    {
+        shared_ptr<EventData_Request_Change_Ammo_Type> pEvent(new EventData_Request_Change_Ammo_Type(m_pControlledObject->VGetProperties()->GetActorId()));
+        IEventMgr::Get()->VTriggerEvent(pEvent);
+        return true;
+    }
+
+    return false;
+}
+
 void ActorController::OnUpdate(uint32 msDiff)
 {
     int count;
@@ -25,27 +49,27 @@ void ActorController::OnUpdate(uint32 msDiff)
 
     // We need two conditions because I want behaviour such as when both right and left
     // buttons are pressed, I dont want actor to move, e.g. to have the move effect nullyfied
-    if (InputKeys[SDLK_RIGHT])
+    if (InputKeys[SDLK_RIGHT] || InputKeys[SDLK_d])
     {
         moveX += m_Speed * (float)msDiff;
     }
-    if (InputKeys[SDLK_LEFT])
+    if (InputKeys[SDLK_LEFT] || InputKeys[SDLK_a])
     {
         moveX -= m_Speed * (float)msDiff;
     }
 
     // CLimbing
-    if (InputKeys[SDLK_DOWN])
+    if (InputKeys[SDLK_DOWN] || InputKeys[SDLK_s])
     {
         climbY += 5.0;
     }
-    if (InputKeys[SDLK_UP])
+    if (InputKeys[SDLK_UP] || InputKeys[SDLK_w])
     {
         climbY -= 5.0;
     }
 
     // Jumping
-    if (InputKeys[SDLK_SPACE])
+    if (InputKeys[SDLK_SPACE] || InputKeys[SDLK_UP] || InputKeys[SDLK_w])
     {
         moveY -= m_Speed * (float)msDiff;
     }
@@ -77,26 +101,10 @@ void ActorController::OnUpdate(uint32 msDiff)
 
 bool ActorController::VOnKeyDown(SDL_Keycode key)
 {
-    if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LALT)
-    {
-        shared_ptr<EventData_Actor_Fire> pClimbEvent(new EventData_Actor_Fire(m_pControlledObject->VGetProperties()->GetActorId()));
-        IEventMgr::Get()->VTriggerEvent(pClimbEvent);
-        return true;
-    }
-    else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LCTRL)
-    {
-        shared_ptr<EventData_Actor_Attack> pClimbEvent(new EventData_Actor_Attack(m_pControlledObject->VGetProperties()->GetActorId()));
-        IEventMgr::Get()->VTriggerEvent(pClimbEvent);
-        return true;
-    }
-    else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LSHIFT)
-    {
-        shared_ptr<EventData_Request_Change_Ammo_Type> pEvent(new EventData_Request_Change_Ammo_Type(m_pControlledObject->VGetProperties()->GetActorId()));
-        IEventMgr::Get()->VTriggerEvent(pEvent);
-        return true;
-    }
-
     InputKeys[key] = true;
+
+    if (AttackHandler())
+        return true;
 
     return false;
 }
@@ -114,16 +122,12 @@ bool ActorController::VOnPointerMove(SDL_MouseMotionEvent& mouseEvent)
 
 bool ActorController::VOnPointerButtonDown(SDL_MouseButtonEvent& mouseEvent)
 {
-    if (mouseEvent.button == SDL_BUTTON_LEFT)
-    {
-        m_MouseLeftButtonDown = true;
-        return true;
-    }
-    else if (mouseEvent.button == SDL_BUTTON_RIGHT)
-    {
-        m_MouseRightButtonDown = true;
-        return true;
-    }
+    m_MouseLeftButtonDown = (mouseEvent.button == SDL_BUTTON_LEFT);
+    m_MouseRightButtonDown = (mouseEvent.button == SDL_BUTTON_RIGHT);
+    
+    if (m_MouseLeftButtonDown || m_MouseRightButtonDown)
+        if (AttackHandler())
+            return true;
 
     return false;
 }
