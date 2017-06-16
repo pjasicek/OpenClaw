@@ -23,6 +23,13 @@ class ActorComponent;
 typedef std::shared_ptr<ActorComponent> StrongActorComponentPtr;
 typedef std::weak_ptr<ActorComponent> WeakActorComponentPtr;
 
+enum ActionType
+{
+    ActionType_Fire,
+    ActionType_Attack,
+    ActionType_Change_Ammo_Type
+};
+
 enum Direction
 {
     Direction_None,

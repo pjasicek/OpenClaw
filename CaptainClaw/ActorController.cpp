@@ -12,6 +12,31 @@ ActorController::ActorController(shared_ptr<SceneNode> controlledObject, float s
     m_MouseLeftButtonDown = m_MouseRightButtonDown = false;
 }
 
+void ActorController::HandleAction(ActionType actionType)
+{
+    switch(actionType)
+    {
+        case ActionType_Fire:
+        {
+            shared_ptr<EventData_Actor_Fire> pClimbEvent(new EventData_Actor_Fire(m_pControlledObject->VGetProperties()->GetActorId()));
+            IEventMgr::Get()->VTriggerEvent(pClimbEvent);
+            break;
+        }
+        case ActionType_Attack:
+        {
+            shared_ptr<EventData_Actor_Attack> pClimbEvent(new EventData_Actor_Attack(m_pControlledObject->VGetProperties()->GetActorId()));
+            IEventMgr::Get()->VTriggerEvent(pClimbEvent);
+            break;
+        }
+        case ActionType_Change_Ammo_Type:
+        {
+            shared_ptr<EventData_Request_Change_Ammo_Type> pEvent(new EventData_Request_Change_Ammo_Type(m_pControlledObject->VGetProperties()->GetActorId()));
+            IEventMgr::Get()->VTriggerEvent(pEvent);
+            break;
+        }
+    }
+}
+
 void ActorController::OnUpdate(uint32 msDiff)
 {
     int count;
@@ -25,32 +50,32 @@ void ActorController::OnUpdate(uint32 msDiff)
 
     // We need two conditions because I want behaviour such as when both right and left
     // buttons are pressed, I dont want actor to move, e.g. to have the move effect nullyfied
-    if (InputKeys[SDLK_RIGHT])
+    if (m_InputKeys[SDLK_RIGHT] || m_InputKeys[SDLK_d])
     {
         moveX += m_Speed * (float)msDiff;
     }
-    if (InputKeys[SDLK_LEFT])
+    if (m_InputKeys[SDLK_LEFT] || m_InputKeys[SDLK_a])
     {
         moveX -= m_Speed * (float)msDiff;
     }
 
     // CLimbing
-    if (InputKeys[SDLK_DOWN])
+    if (m_InputKeys[SDLK_DOWN] || m_InputKeys[SDLK_s])
     {
         climbY += 5.0;
     }
-    if (InputKeys[SDLK_UP])
+    if (m_InputKeys[SDLK_UP] || m_InputKeys[SDLK_w])
     {
         climbY -= 5.0;
     }
 
     // Jumping
-    if (InputKeys[SDLK_SPACE])
+    if (m_InputKeys[SDLK_SPACE] || m_InputKeys[SDLK_UP] || m_InputKeys[SDLK_w])
     {
         moveY -= m_Speed * (float)msDiff;
     }
 
-    if (InputKeys[SDL_SCANCODE_LSHIFT] || InputKeys[SDL_SCANCODE_RSHIFT])
+    if (m_InputKeys[SDL_SCANCODE_LSHIFT] || m_InputKeys[SDL_SCANCODE_RSHIFT])
     {
         moveX *= 10;
         moveY *= 10;
@@ -79,31 +104,28 @@ bool ActorController::VOnKeyDown(SDL_Keycode key)
 {
     if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LALT)
     {
-        shared_ptr<EventData_Actor_Fire> pClimbEvent(new EventData_Actor_Fire(m_pControlledObject->VGetProperties()->GetActorId()));
-        IEventMgr::Get()->VTriggerEvent(pClimbEvent);
+        HandleAction(ActionType_Fire);
         return true;
     }
     else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LCTRL)
     {
-        shared_ptr<EventData_Actor_Attack> pClimbEvent(new EventData_Actor_Attack(m_pControlledObject->VGetProperties()->GetActorId()));
-        IEventMgr::Get()->VTriggerEvent(pClimbEvent);
+        HandleAction(ActionType_Attack);
         return true;
     }
-    else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LSHIFT)
+    else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LSHIFT || key == SDLK_e)
     {
-        shared_ptr<EventData_Request_Change_Ammo_Type> pEvent(new EventData_Request_Change_Ammo_Type(m_pControlledObject->VGetProperties()->GetActorId()));
-        IEventMgr::Get()->VTriggerEvent(pEvent);
+        HandleAction(ActionType_Change_Ammo_Type);
         return true;
     }
 
-    InputKeys[key] = true;
+    m_InputKeys[key] = true;
 
     return false;
 }
 
 bool ActorController::VOnKeyUp(SDL_Keycode key)
 {
-    InputKeys[key] = false;
+    m_InputKeys[key] = false;
     return false;
 }
 
@@ -117,11 +139,13 @@ bool ActorController::VOnPointerButtonDown(SDL_MouseButtonEvent& mouseEvent)
     if (mouseEvent.button == SDL_BUTTON_LEFT)
     {
         m_MouseLeftButtonDown = true;
+        HandleAction(ActionType_Fire);
         return true;
     }
     else if (mouseEvent.button == SDL_BUTTON_RIGHT)
     {
         m_MouseRightButtonDown = true;
+        HandleAction(ActionType_Attack);
         return true;
     }
 
