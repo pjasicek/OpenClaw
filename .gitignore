@@ -9,3 +9,6 @@ Build_Release/SAVES_test.XML
 build/
 Build/
 tags
+Build_Release/startup_commands.txt
+CaptainClaw.sdf
+CaptainClaw.opensdf
