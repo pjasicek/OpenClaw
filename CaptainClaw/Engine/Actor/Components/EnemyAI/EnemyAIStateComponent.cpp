@@ -19,6 +19,7 @@
 const char* BaseEnemyAIStateComponent::g_Name = "BaseEnemyAIStateComponent";
 const char* TakeDamageAIStateComponent::g_Name = "TakeDamageAIStateComponent";
 const char* PatrolEnemyAIStateComponent::g_Name = "PatrolEnemyAIStateComponent";
+const char* ParryEnemyAIStateComponent::g_Name = "ParryEnemyAIStateComponent";
 const char* BaseAttackAIStateComponent::g_Name = "BaseAttackAIStateComponent";
 const char* MeleeAttackAIStateComponent::g_Name = "MeleeAttackAIStateComponent";
 const char* DuckMeleeAttackAIStateComponent::g_Name = "DuckMeleeAttackAIStateComponent";
@@ -551,6 +552,125 @@ void PatrolEnemyAIStateComponent::CommenceIdleBehaviour()
     {
         ChangeDirection(ToOppositeDirection(m_Direction));
     }
+}
+
+//=====================================================================================================================
+// ParryEnemyAIStateComponent
+//=====================================================================================================================
+
+ParryEnemyAIStateComponent::ParryEnemyAIStateComponent()
+    : 
+    BaseEnemyAIStateComponent("ParryState")
+{
+
+}
+
+bool ParryEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    if (TiXmlElement* pParrySoundsElem = pData->FirstChildElement("ParrySounds"))
+    {
+        for (TiXmlElement* pElem = pParrySoundsElem->FirstChildElement("ParrySound");
+            pElem != NULL;
+            pElem = pElem->NextSiblingElement("ParrySound"))
+        {
+            m_ParrySoundList.push_back(pElem->GetText());
+        }
+    }
+
+    if (TiXmlElement* pParryChancesElem = pData->FirstChildElement("ParryChances"))
+    {
+        for (TiXmlElement* pElem = pParryChancesElem->FirstChildElement("ParryChance");
+            pElem != NULL;
+            pElem = pElem->NextSiblingElement("ParryChance"))
+        {
+            std::string damageTypeStr;
+            std::string parryChanceStr;
+            ParseAttributeFromXmlElem(&damageTypeStr, "DamageType", pElem);
+            ParseAttributeFromXmlElem(&parryChanceStr, "Chance", pElem);
+
+            DamageType damageType = StringToDamageTypeEnum(damageTypeStr);
+            int parryChance = std::stoi(parryChanceStr);
+
+            m_ParryChanceMap.insert(std::make_pair(damageType, parryChance));
+        }
+    }
+
+    assert(ParseValueFromXmlElem(&m_ParryAnimFrameIdx, pData->FirstChildElement("ParryAnimFrameIdx")));
+    assert(ParseValueFromXmlElem(&m_ParryAnimation, pData->FirstChildElement("ParryAnimation")));
+
+    assert(m_ParrySoundList.size() > 0);
+    assert(m_ParryChanceMap.size() > 0);
+
+    return true;
+}
+
+void ParryEnemyAIStateComponent::VPostInit()
+{
+    BaseEnemyAIStateComponent::VPostInit();
+
+    m_pAnimationComponent->AddObserver(this);
+}
+
+void ParryEnemyAIStateComponent::VOnStateEnter()
+{
+    m_pAnimationComponent->ResetAnimation();
+    m_pAnimationComponent->SetAnimation(m_ParryAnimation);
+
+    Util::PlayRandomSoundFromList(m_ParrySoundList);
+
+    // When taking damage, nothing can interrupt him
+    m_StatePriority = MAX_STATE_PRIORITY;
+
+    m_IsActive = true;
+}
+
+void ParryEnemyAIStateComponent::VOnStateLeave()
+{
+    m_IsActive = false;
+    m_StatePriority = MIN_STATE_PRIORITY;
+}
+
+void ParryEnemyAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
+{
+    if (!m_IsActive)
+    {
+        return;
+    }
+
+    m_StatePriority = MIN_STATE_PRIORITY;
+
+    m_pEnemyAIComponent->EnterBestState(true);
+}
+
+bool ParryEnemyAIStateComponent::CanParry(DamageType damageType, EnemyAIState currentState)
+{
+    auto findIt = m_ParryChanceMap.find(damageType);
+    if (findIt == m_ParryChanceMap.end())
+    {
+        return false;
+    }
+
+    int parryChance = findIt->second;
+    int parryRand = Util::GetRandomNumber(1, 100);
+
+    // If unit is capable of parrying and it is already parrying, he should be able to parry again
+    if (currentState == EnemyAIState_Parry)
+    {
+        parryRand = 0;
+    }
+    /*else if (currentState == EnemyAIState_DuckMeleeAttacking ||
+             currentState == EnemyAIState_MeleeAttacking ||
+             currentState == EnemyAIState_DuckRangedAttacking ||
+             currentState == EnemyAIState_DuckRangedAttacking)
+    {
+        // Lower chance to parry if enemy is already attacking 
+        if (m_pAnimationComponent->GetCurrentAnimation()->GetCurrentAnimationFrame()->idx > 1)
+        {
+            parryChance /= 2;
+        }
+    }*/
+
+    return (parryChance >= parryRand);
 }
 
 //=====================================================================================================================

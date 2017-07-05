@@ -25,6 +25,21 @@
         <TakeDamageAnimation>hithigh</TakeDamageAnimation>
         <InvulnerabilityTime>1000</InvulnerabilityTime>
     </TakeDamageAIStateComponent>
+    <ParryEnemyAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <ParryChances>
+            <ParryChance DamageType="DamageType_Bullet" Chance="100" />
+            <ParryChance DamageType="DamageType_Magic" Chance="100" />
+            <ParryChance DamageType="DamageType_Explosion" Chance="100" />
+            <ParryChance DamageType="DamageType_MeleeAttack" Chance="50" />
+        </ParryChances>
+        <ParrySounds>
+            <ParrySound>/LEVEL2/SOUNDS/RAUX/BLOCK1.WAV</ParrySound>
+            <ParrySound>/LEVEL2/SOUNDS/RAUX/BLOCK2.WAV</ParrySound>
+        </ParrySounds>
+        <ParryAnimFrameIdx>0</ParryAnimFrameIdx>
+        <ParryAnimation>blockhigh</ParryAnimation>
+    </ParryEnemyAIStateComponent>
     <PatrolEnemyAIStateComponent>
         <IsAlwaysIdle>false</IsAlwaysIdle>
         <StatePriority>0</StatePriority>

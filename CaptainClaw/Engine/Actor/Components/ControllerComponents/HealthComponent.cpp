@@ -62,6 +62,13 @@ void HealthComponent::AddHealth(int32 health, DamageType damageType, Point impac
         }
     }
 
+    // TODO: Is this against subject-observer pattern ? Seems odd.
+    if (AskCanResistDamage(damageType, impactPoint))
+    {
+        NotifyResistDamage(damageType, impactPoint);
+        return;
+    }
+
     int32 oldHealth = m_CurrentHealth;
     m_CurrentHealth += health;
     if (m_CurrentHealth > m_MaxHealth)
@@ -124,4 +131,25 @@ void HealthSubject::NotifyHealthBelowZero(DamageType damageType)
     {
         pObserver->VOnHealthBelowZero(damageType);
     }
+}
+
+void HealthSubject::NotifyResistDamage(DamageType damageType, Point impactPoint)
+{
+    for (HealthObserver* pObserver : m_Observers)
+    {
+        pObserver->VOnResistDamage(damageType, impactPoint);
+    }
+}
+
+bool HealthSubject::AskCanResistDamage(DamageType damageType, Point impactPoint)
+{
+    for (HealthObserver* pObserver : m_Observers)
+    {
+        if (pObserver->VCanResistDamage(damageType, impactPoint))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

@@ -546,6 +546,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("SpringBoardSpringHeight"));*/
         ParseValueFromXmlElem(&m_GlobalOptions.springBoardSpringSpeed,
             pGlobalOptionsRootElem->FirstChildElement("SpringBoardSpringSpeed"));
+        ParseValueFromXmlElem(&m_GlobalOptions.skipBossFightIntro,
+            pGlobalOptionsRootElem->FirstChildElement("SkipBossFightIntro"));
     }
 
     return true;

@@ -59,7 +59,6 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<PositionComponent>(ActorComponent::GetIdFromName(PositionComponent::g_Name));
     _componentFactory.Register<CollisionComponent>(ActorComponent::GetIdFromName(CollisionComponent::g_Name));
     _componentFactory.Register<PhysicsComponent>(ActorComponent::GetIdFromName(PhysicsComponent::g_Name));
-    //_componentFactory.Register<ControllableComponent>(ActorComponent::GetIdFromName(ControllableComponent::g_Name));
     _componentFactory.Register<AnimationComponent>(ActorComponent::GetIdFromName(AnimationComponent::g_Name));
     _componentFactory.Register<SoundComponent>(SoundComponent::GetIdFromName(SoundComponent::g_Name));
     _componentFactory.Register<ActorRenderComponent>(ActorRenderComponent::GetIdFromName(ActorRenderComponent::g_Name));
@@ -92,6 +91,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<CheckpointComponent>(CheckpointComponent::GetIdFromName(CheckpointComponent::g_Name));
     _componentFactory.Register<EnemyAIComponent>(EnemyAIComponent::GetIdFromName(EnemyAIComponent::g_Name));
     _componentFactory.Register<PatrolEnemyAIStateComponent>(PatrolEnemyAIStateComponent::GetIdFromName(PatrolEnemyAIStateComponent::g_Name));
+    _componentFactory.Register<ParryEnemyAIStateComponent>(ParryEnemyAIStateComponent::GetIdFromName(ParryEnemyAIStateComponent::g_Name));
     _componentFactory.Register<MeleeAttackAIStateComponent>(MeleeAttackAIStateComponent::GetIdFromName(MeleeAttackAIStateComponent::g_Name));
     _componentFactory.Register<DuckMeleeAttackAIStateComponent>(DuckMeleeAttackAIStateComponent::GetIdFromName(DuckMeleeAttackAIStateComponent::g_Name));
     _componentFactory.Register<RangedAttackAIStateComponent>(RangedAttackAIStateComponent::GetIdFromName(RangedAttackAIStateComponent::g_Name));

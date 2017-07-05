@@ -10,6 +10,7 @@ enum EnemyAIState
 {
     EnemyAIState_None,
     EnemyAIState_Patrolling,
+    EnemyAIState_Parry,
     EnemyAIState_MeleeAttacking,
     EnemyAIState_DuckMeleeAttacking,
     EnemyAIState_RangedAttacking,
@@ -70,7 +71,6 @@ public:
     bool IsActive() { return m_IsActive; }
 
     // EnemyAIStateComponent API
-    virtual void VUpdate(uint32 msDiff) override = 0;
     virtual void VOnStateEnter() = 0;
     virtual void VOnStateLeave() = 0;
     virtual EnemyAIState VGetStateType() const = 0;
@@ -179,6 +179,42 @@ private:
 
     //EnemyAIAction* m_pCurrentAction;
     //EnemyActionMap m_ActionMap;
+};
+
+//=====================================================================================================================
+// ParryEnemyAIStateComponent
+//=====================================================================================================================
+typedef std::map<DamageType, int> ParryChanceMap;
+class ParryEnemyAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver
+{
+public:
+    ParryEnemyAIStateComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+    virtual void VPostInit() override;
+
+    // Only on-demand
+    virtual bool VCanEnter() { return false; }
+
+    // EnemyAIStateComponent API
+    virtual void VOnStateEnter() override;
+    virtual void VOnStateLeave() override;
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_Parry; }
+
+    // AnimationObserver API
+    virtual void VOnAnimationLooped(Animation* pAnimation) override;
+
+    // Component specific
+    bool CanParry(DamageType damageType, EnemyAIState currentState);
+
+private:
+    int m_ParryAnimFrameIdx;
+    std::string m_ParryAnimation;
+    std::vector<std::string> m_ParrySoundList;
+    ParryChanceMap m_ParryChanceMap;
 };
 
 //=====================================================================================================================

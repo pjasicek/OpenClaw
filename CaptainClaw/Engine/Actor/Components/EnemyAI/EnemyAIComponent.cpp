@@ -177,6 +177,29 @@ void EnemyAIComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, Damage
     }
 }
 
+void EnemyAIComponent::VOnResistDamage(DamageType damageType, Point impactPoint)
+{
+    if (HasState(EnemyAIState_Parry))
+    {
+        AcquireStateLock();
+        EnterState(EnemyAIState_Parry);
+    }
+}
+
+bool EnemyAIComponent::VCanResistDamage(DamageType damageType, Point impactPoint)
+{
+    if (HasState(EnemyAIState_Parry))
+    {
+        shared_ptr<ParryEnemyAIStateComponent> pParryStateComponent =
+            MakeStrongPtr(_owner->GetComponent<ParryEnemyAIStateComponent>());
+        assert(pParryStateComponent);
+
+        return pParryStateComponent->CanParry(damageType, GetCurrentState()->VGetStateType());
+    }
+
+    return false;
+}
+
 void EnemyAIComponent::LeaveAllStates()
 {
     for (auto stateIter : m_StateMap)
@@ -204,6 +227,7 @@ void EnemyAIComponent::EnterState(EnemyAIState state)
         if (stateIter.second->VGetStateType() == state)
         {
             stateIter.second->VOnStateEnter();
+            return;
         }
     }
 

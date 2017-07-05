@@ -34,6 +34,8 @@ public:
 
     virtual void VOnHealthBelowZero(DamageType damageType) override;
     virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) override;
+    virtual bool VCanResistDamage(DamageType damageType, Point impactPoint) override;
+    virtual void VOnResistDamage(DamageType damageType, Point impactPoint) override;
 
     Point FindClosestHostileActorOffset();
 

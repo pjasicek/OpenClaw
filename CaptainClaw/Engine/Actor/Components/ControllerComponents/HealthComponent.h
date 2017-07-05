@@ -10,6 +10,8 @@ class HealthSubject : public Subject<HealthObserver>
 public:
     void NotifyHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint);
     void NotifyHealthBelowZero(DamageType damageType);
+    bool AskCanResistDamage(DamageType damageType, Point impactPoint);
+    void NotifyResistDamage(DamageType damageType, Point impactPoint);
 };
 
 class HealthObserver
@@ -17,6 +19,8 @@ class HealthObserver
 public:
     virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) { }
     virtual void VOnHealthBelowZero(DamageType damageType) { }
+    virtual bool VCanResistDamage(DamageType damageType, Point impactPoint) { return false; }
+    virtual void VOnResistDamage(DamageType damageType, Point impactPoint) { }
 };
 
 class HealthComponent : public ActorComponent, public HealthSubject
