@@ -966,6 +966,12 @@ void DeathFadeInOutProcess::VOnUpdate(uint32 msDiff)
             if (m_CurrentTime >= m_EndDelay)
             {
                 Succeed();
+
+                // This should not be here, since it does not know that Claw died here...
+                StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor();
+                assert(pClaw != nullptr);
+
+                IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Claw_Respawned(pClaw->GetGUID())));
             }
             break;
         }

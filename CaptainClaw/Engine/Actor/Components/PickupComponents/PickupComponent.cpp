@@ -364,7 +364,13 @@ bool TeleportPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
         SoundInfo soundInfo(m_PickupSound);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
-        return false;
+
+        shared_ptr<EventData_Checkpoint_Reached> pEvent(new EventData_Checkpoint_Reached(
+            pActorWhoPickedThis->GetGUID(),
+            m_Destination,
+            false,
+            0));
+        IEventMgr::Get()->VTriggerEvent(pEvent);
     }
 
     shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));

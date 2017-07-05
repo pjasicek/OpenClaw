@@ -88,6 +88,8 @@ public:
     void SetRunning(bool running) { m_bRunning = running; }
     bool IsRunning() { return m_bRunning; }
 
+    StrongActorPtr GetClawActor();
+
 protected:
     virtual ActorFactory* VCreateActorFactory();
 
@@ -102,8 +104,6 @@ protected:
     void FinishedLevelDelegate(IEventDataPtr pEventData);
     void ActorEnteredBossAreaDelegate(IEventDataPtr pEventData);
     void BossFightStartedDelegate(IEventDataPtr pEventData);
-
-    StrongActorPtr GetClawActor();
 
     uint32 m_Lifetime;
     ProcessMgr* m_pProcessMgr;

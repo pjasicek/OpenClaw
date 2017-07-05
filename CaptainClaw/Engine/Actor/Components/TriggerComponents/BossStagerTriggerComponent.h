@@ -39,9 +39,11 @@ public:
     virtual TiXmlElement* VGenerateXml() override;
 
     virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered) override;
+    virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft) override;
 
 private:
     void BossFightEndedDelegate(IEventDataPtr pEvent);
+    void ClawRespawnedDelegate(IEventDataPtr pEvent);
 
     // XML Data
     int m_BossDistance;
@@ -64,6 +66,8 @@ private:
     int m_CurrentDelay;
 
     shared_ptr<CameraNode> m_pCamera;
+
+    Actor* m_pOverlappingActor;
 };
 
 #endif

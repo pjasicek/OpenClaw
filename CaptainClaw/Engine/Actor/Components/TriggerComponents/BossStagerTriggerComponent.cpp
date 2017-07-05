@@ -4,6 +4,7 @@
 #include "../PositionComponent.h"
 
 #include "../../../GameApp/BaseGameApp.h"
+#include "../../../GameApp/BaseGameLogic.h"
 #include "../../../UserInterface/HumanView.h"
 #include "../../../Audio/Audio.h"
 
@@ -28,14 +29,17 @@ BossStagerTriggerComponent::BossStagerTriggerComponent()
     m_Delay(0),
     m_CurrentDelay(0),
     m_State(BossStagerState_None),
-    m_ActorWhoEnteredId(INVALID_ACTOR_ID)
+    m_ActorWhoEnteredId(INVALID_ACTOR_ID),
+    m_pOverlappingActor(NULL)
 { 
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BossStagerTriggerComponent::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BossStagerTriggerComponent::ClawRespawnedDelegate), EventData_Claw_Respawned::sk_EventType);
 }
 
 BossStagerTriggerComponent::~BossStagerTriggerComponent()
 {
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BossStagerTriggerComponent::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BossStagerTriggerComponent::ClawRespawnedDelegate), EventData_Claw_Respawned::sk_EventType);
 }
 
 bool BossStagerTriggerComponent::VInit(TiXmlElement* pData)
@@ -214,21 +218,41 @@ void BossStagerTriggerComponent::VUpdate(uint32 msDiff)
 
 void BossStagerTriggerComponent::VOnActorEnteredTrigger(Actor* pActorWhoPickedThis)
 {
+    // Boss staging already commenced
     if (m_bActivated)
     {
         return;
     }
+    
+    g_pApp->GetAudio()->StopAllSounds();
 
     shared_ptr<ClawControllableComponent> pClaw =
         MakeStrongPtr(pActorWhoPickedThis->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
     assert(pClaw != nullptr);
 
     m_ActorWhoEnteredId = pActorWhoPickedThis->GetGUID();
-    g_pApp->GetAudio()->StopAllSounds();
 
     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Entered_Boss_Area(m_ActorWhoEnteredId, INVALID_ACTOR_ID)));
 
+    // We already died to the boss at least once
+    if (m_State == BossStagerState_Done)
+    {
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Boss_Fight_Started(m_ActorWhoEnteredId, INVALID_ACTOR_ID)));
+    }
+
     m_bActivated = true;
+
+    m_pOverlappingActor = pActorWhoPickedThis;
+}
+
+void BossStagerTriggerComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft)
+{
+    shared_ptr<ClawControllableComponent> pClaw =
+        MakeStrongPtr(pActorWhoLeft->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
+    if (pClaw != nullptr)
+    {
+        m_pOverlappingActor = NULL;
+    }
 }
 
 void BossStagerTriggerComponent::BossFightEndedDelegate(IEventDataPtr pEvent)
@@ -239,10 +263,30 @@ void BossStagerTriggerComponent::BossFightEndedDelegate(IEventDataPtr pEvent)
     if (!pCastEventData->GetIsBossDead())
     {
         m_bActivated = false;
-        m_State = BossStagerState_None;
+        m_State = BossStagerState_Done;
     }
     else
     {
         IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Destroy_Actor(_owner->GetGUID())));
+    }
+}
+
+// Hack - no easy way to clear contact list, I need to force boss stager to go through its logic
+void BossStagerTriggerComponent::ClawRespawnedDelegate(IEventDataPtr pEvent)
+{
+    shared_ptr<EventData_Claw_Respawned> pCastEventData =
+        static_pointer_cast<EventData_Claw_Respawned>(pEvent);
+
+    if (m_State == BossStagerState_Done)
+    {
+        // Make sure it is Claw
+        StrongActorPtr pClawActor = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(pCastEventData->GetActorId()));
+        assert(pClawActor != nullptr);
+
+        shared_ptr<ClawControllableComponent> pClaw =
+            MakeStrongPtr(pClawActor->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
+        assert(pClaw != nullptr && "Not Claw ?!");
+
+        VOnActorEnteredTrigger(pClawActor.get());
     }
 }

@@ -38,6 +38,7 @@ Point GetSpawnPosition(uint32 levelNumber, uint32 checkpointNumber)
             assert(false && "Not implemented yet");
     }
 
+    LOG_ERROR("Conflicting LevelNumber: " + ToStr(levelNumber) + ", conflicting CheckpointNumber: " + ToStr(checkpointNumber));
     assert(false && "Unknown level / checkpoint number.");
     return Point();
 }

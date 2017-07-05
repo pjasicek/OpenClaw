@@ -1184,7 +1184,7 @@ void LaRauxBossAIStateComponent::VOnBossFightEnded(bool isBossDead)
 }
 
 //=====================================================================================================================
-// LaRauxBossAIStateComponent
+// KatherineBossAIStateComponent
 //=====================================================================================================================
 
 KatherineBossAIStateComponent::KatherineBossAIStateComponent()

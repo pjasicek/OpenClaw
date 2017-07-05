@@ -74,7 +74,10 @@ struct CheckpointSave
         assert(checkpointIdx <= 2);
     }
 
-    uint32 checkpointIdx; // 0 - start / new game, 1, 2
+    // 0 - start / new game, 
+    // 1 - first checkpoint
+    // 2 - second checkpoint
+    uint32 checkpointIdx; 
 
     uint32 score;
     uint32 health;
