@@ -12,3 +12,5 @@ tags
 Build_Release/startup_commands.txt
 CaptainClaw.sdf
 CaptainClaw.opensdf
+Build_Release/CaptainClaw.exe
+Build_Release/CaptainClaw.pdb

@@ -386,6 +386,11 @@ namespace Util
         return uni(rng);
     }
 
+    bool RollDice(int chanceToSucceed)
+    {
+        return (GetRandomNumber(0, 100) < chanceToSucceed);
+    }
+
     void PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume)
     {
         if (!sounds.empty())

@@ -19,7 +19,9 @@ EnemyAIComponent::EnemyAIComponent()
     :
     m_bInitialized(false),
     m_bDead(false),
-    m_bHasStateLock(true)
+    m_bHasStateLock(true),
+    m_TimeSinceLastSpeechSound(0),
+    m_MinTimeIntervalForSpeechSound(0)
 {
 
 }
@@ -75,6 +77,8 @@ bool EnemyAIComponent::VInit(TiXmlElement* pData)
             }
         }
     }
+
+    ParseValueFromXmlElem(&m_MinTimeIntervalForSpeechSound, pData->FirstChildElement("MinTimeIntervalForSpeechSound"));
 
     return true;
 }
@@ -138,6 +142,10 @@ void EnemyAIComponent::VUpdate(uint32 msDiff)
 
             pAnimComp->SetAnimation(m_DeathAnimation);
         }
+    }
+    else
+    {
+        m_TimeSinceLastSpeechSound += msDiff;
     }
 }
 
@@ -347,3 +355,35 @@ bool EnemyAIComponent::HasState(EnemyAIState state)
 
     return false;
 }
+
+bool EnemyAIComponent::TryPlaySpeechSound(int chance, const SoundList& speechSounds)
+{
+    if (Util::RollDice(chance) && (m_TimeSinceLastSpeechSound > m_MinTimeIntervalForSpeechSound))
+    {
+        Util::PlayRandomSoundFromList(speechSounds);
+        m_TimeSinceLastSpeechSound = 0;
+        return true;
+    }
+
+    return false;
+}
+
+/*bool EnemyAIComponent::TryFindClosestHostileActorOffset(Point& outOffset)
+{
+    outOffset = Point(DBL_MAX, DBL_MAX);
+    bool found = false;
+
+    for (auto stateIter : m_StateMap)
+    {
+        if (BaseAttackAIStateComponent* pEnemyState = dynamic_cast<BaseAttackAIStateComponent*>(stateIter.second))
+        {
+            if (pEnemyState->FindClosestHostileActorOffset().Length() < outOffset.Length())
+            {
+                outOffset = pEnemyState->FindClosestHostileActorOffset();
+                found = true;
+            }
+        }
+    }
+
+    return found;
+}*/

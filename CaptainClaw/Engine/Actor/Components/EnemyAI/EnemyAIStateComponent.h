@@ -177,8 +177,9 @@ private:
 
     std::shared_ptr<IGamePhysics> m_pPhysics;
 
-    //EnemyAIAction* m_pCurrentAction;
-    //EnemyActionMap m_ActionMap;
+    SoundList m_IdleSoundList;
+    int m_IdleSpeechSoundMaxDistance;
+    int m_IdleSpeechSoundPlayChance;
 };
 
 //=====================================================================================================================
@@ -259,6 +260,9 @@ private:
     void ClawHealthBelowZeroDelegate(IEventDataPtr pEventData);
 
     int m_AttackDelay;
+
+    SoundList m_AttackSpeechSoundList;
+    int m_AttackSpeechSoundPlayChance;
 
 protected:
     AttackActionList m_AttackActions;

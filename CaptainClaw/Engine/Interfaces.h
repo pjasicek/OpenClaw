@@ -23,6 +23,8 @@ class ActorComponent;
 typedef std::shared_ptr<ActorComponent> StrongActorComponentPtr;
 typedef std::weak_ptr<ActorComponent> WeakActorComponentPtr;
 
+typedef std::vector<std::string> SoundList;
+
 enum ActionType
 {
     ActionType_Fire,

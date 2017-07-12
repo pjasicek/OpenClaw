@@ -24,6 +24,7 @@ namespace Util
     void PrintRect(SDL_Rect rect, std::string comment);
 
     int GetRandomNumber(int fromRange, int toRange);
+    bool RollDice(int chanceToSucceed);
 
     void PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume = 100);
 

@@ -12,7 +12,6 @@ class PositionComponent;
 class ActorRenderComponent;
 
 typedef std::map<std::string, BaseEnemyAIStateComponent*> EnemyStateMap;
-typedef std::vector<std::string> SoundList;
 
 class EnemyAIComponent : public ActorComponent, public HealthObserver
 {
@@ -37,7 +36,9 @@ public:
     virtual bool VCanResistDamage(DamageType damageType, Point impactPoint) override;
     virtual void VOnResistDamage(DamageType damageType, Point impactPoint) override;
 
-    Point FindClosestHostileActorOffset();
+    // bool TryFindClosestHostileActorOffset(Point& outOffset);
+
+    bool TryPlaySpeechSound(int chance, const SoundList& speechSounds);
 
     //void OnStateCanFinish();
     bool EnterBestState(bool canForceEnter);
@@ -63,6 +64,9 @@ private:
     bool m_bDead;
     bool m_bHasStateLock;
     EnemyStateMap m_StateMap;
+
+    int m_TimeSinceLastSpeechSound;
+    int m_MinTimeIntervalForSpeechSound;
 
     std::string m_DeathAnimation;
 

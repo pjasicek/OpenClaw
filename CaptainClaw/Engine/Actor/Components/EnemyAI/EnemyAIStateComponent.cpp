@@ -226,7 +226,9 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     m_PatrolSpeed(0.0),
     m_bInitialized(false),
     m_bRetainDirection(false),
-    m_IsAlwaysIdle(false)
+    m_IsAlwaysIdle(false),
+    m_IdleSpeechSoundMaxDistance(0),
+    m_IdleSpeechSoundPlayChance(0)
 {
 
 }
@@ -287,6 +289,19 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     }
 
     ParseValueFromXmlElem(&m_IsAlwaysIdle, pData->FirstChildElement("IsAlwaysIdle"));
+
+    if (TiXmlElement* pElem = pData->FirstChildElement("IdleSpeech"))
+    {
+        for (TiXmlElement* pSoundElem = pElem->FirstChildElement("IdleSpeechSound");
+            pSoundElem != NULL;
+            pSoundElem = pSoundElem->NextSiblingElement("IdleSpeechSound"))
+        {
+            m_IdleSoundList.push_back(pSoundElem->GetText());
+        }
+
+        assert(ParseValueFromXmlElem(&m_IdleSpeechSoundMaxDistance, pElem->FirstChildElement("IdleSpeechSoundMaxDistance")));
+        assert(ParseValueFromXmlElem(&m_IdleSpeechSoundPlayChance, pElem->FirstChildElement("IdleSpeechSoundPlayChance")));
+    }
 
     /*m_LeftPatrolBorder = 6330;
     m_RightPatrolBorder = 6550;*/
@@ -547,6 +562,17 @@ void PatrolEnemyAIStateComponent::CommenceIdleBehaviour()
         m_pAnimationComponent->SetAnimation(m_pIdleAction->animations[0]);
         m_pAnimationComponent->GetCurrentAnimation()->SetDelay(m_pIdleAction->animDelay);
         m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), Point(0.0, 0.0));
+        
+        // TODO: Try to play idle sound
+
+        // Hack
+        StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor();
+        assert(pClaw);
+
+        if ((_owner->GetPositionComponent()->GetPosition() - pClaw->GetPositionComponent()->GetPosition()).Length() < m_IdleSpeechSoundMaxDistance)
+        {
+            m_pEnemyAIComponent->TryPlaySpeechSound(m_IdleSpeechSoundPlayChance, m_IdleSoundList);
+        }
     }
     else
     {
@@ -680,6 +706,7 @@ bool ParryEnemyAIStateComponent::CanParry(DamageType damageType, EnemyAIState cu
 BaseAttackAIStateComponent::BaseAttackAIStateComponent(std::string stateName)
     :
     m_AttackDelay(0),
+    m_AttackSpeechSoundPlayChance(0),
     BaseEnemyAIStateComponent(stateName)
 {
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseAttackAIStateComponent::ClawHealthBelowZeroDelegate), EventData_Claw_Health_Below_Zero::sk_EventType);
@@ -713,6 +740,18 @@ bool BaseAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
     }
 
     ParseValueFromXmlElem(&m_AttackDelay, pData->FirstChildElement("AttackDelay"));
+
+    if (TiXmlElement* pElem = pData->FirstChildElement("AttackSpeech"))
+    {
+        for (TiXmlElement* pSoundElem = pElem->FirstChildElement("AttackSpeechSound");
+            pSoundElem != NULL;
+            pSoundElem = pSoundElem->NextSiblingElement("AttackSpeechSound"))
+        {
+            m_AttackSpeechSoundList.push_back(pSoundElem->GetText());
+        }
+
+        assert(ParseValueFromXmlElem(&m_AttackSpeechSoundPlayChance, pElem->FirstChildElement("AttackSpeechSoundPlayChance")));
+    }
 
     assert(!m_AttackActions.empty());
     assert(m_AttackActions.size() == 1 && "Only supporting one attack action per state component");
@@ -822,6 +861,8 @@ void BaseAttackAIStateComponent::OnEnemyEnterAgroRange(Actor* pEnemy)
 {
     m_EnemyAgroList.push_back(pEnemy);
     m_pEnemyAIComponent->EnterBestState(false);
+
+    m_pEnemyAIComponent->TryPlaySpeechSound(m_AttackSpeechSoundPlayChance, m_AttackSpeechSoundList);
 }
 
 void BaseAttackAIStateComponent::OnEnemyLeftAgroRange(Actor* pEnemy)
