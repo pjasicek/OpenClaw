@@ -1,6 +1,6 @@
 #InfiniteJump on
 #Invincible on
-physicsdebug on
+#physicsdebug on
 #teleport 12600 4100
 #teleport 5793 4351
 #cpudelay 50
@@ -17,4 +17,4 @@ physicsdebug on
 #teleport 14800 1470
 #teleport 13713 3620
 #teleport 5070 4850
-teleport 20200 2010
+#teleport 20200 2010
