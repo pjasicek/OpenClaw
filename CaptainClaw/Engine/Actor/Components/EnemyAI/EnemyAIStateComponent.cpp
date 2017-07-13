@@ -860,9 +860,15 @@ void BaseAttackAIStateComponent::VOnAnimationFrameChanged(
 void BaseAttackAIStateComponent::OnEnemyEnterAgroRange(Actor* pEnemy)
 {
     m_EnemyAgroList.push_back(pEnemy);
-    m_pEnemyAIComponent->EnterBestState(false);
 
-    m_pEnemyAIComponent->TryPlaySpeechSound(m_AttackSpeechSoundPlayChance, m_AttackSpeechSoundList);
+    bool wasInAttackState = dynamic_cast<BaseAttackAIStateComponent*>(m_pEnemyAIComponent->GetCurrentState()) != NULL;
+    m_pEnemyAIComponent->EnterBestState(false);
+    bool isInAttackState = dynamic_cast<BaseAttackAIStateComponent*>(m_pEnemyAIComponent->GetCurrentState()) != NULL;
+
+    if (!wasInAttackState && isInAttackState)
+    {
+        m_pEnemyAIComponent->TryPlaySpeechSound(m_AttackSpeechSoundPlayChance, m_AttackSpeechSoundList);
+    }
 }
 
 void BaseAttackAIStateComponent::OnEnemyLeftAgroRange(Actor* pEnemy)

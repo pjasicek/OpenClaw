@@ -391,7 +391,7 @@ namespace Util
         return (GetRandomNumber(0, 100) < chanceToSucceed);
     }
 
-    void PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume)
+    std::string PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume)
     {
         if (!sounds.empty())
         {
@@ -401,7 +401,11 @@ namespace Util
             soundInfo.soundVolume = volume;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
+
+            return soundInfo.soundToPlay;
         }
+
+        return "";
     }
 
     int GetSoundDurationMs(const std::string& soundPath)

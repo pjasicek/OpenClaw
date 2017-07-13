@@ -5,6 +5,7 @@
 #include "../ControllerComponents/HealthComponent.h"
 #include "../PhysicsComponent.h"
 #include "../AnimationComponent.h"
+#include "../FollowableComponent.h"
 
 #include "../../../GameApp/BaseGameApp.h"
 #include "../../../UserInterface/HumanView.h"
@@ -39,7 +40,6 @@ bool EnemyAIComponent::VInit(TiXmlElement* pData)
     {
         m_DeathAnimation = pElem->GetText();
     }
-
     
     if (TiXmlElement* pSoundsElem = pData->FirstChildElement("Sounds"))
     {
@@ -360,8 +360,16 @@ bool EnemyAIComponent::TryPlaySpeechSound(int chance, const SoundList& speechSou
 {
     if (Util::RollDice(chance) && (m_TimeSinceLastSpeechSound > m_MinTimeIntervalForSpeechSound))
     {
-        Util::PlayRandomSoundFromList(speechSounds);
+        std::string playedSound = Util::PlayRandomSoundFromList(speechSounds);
         m_TimeSinceLastSpeechSound = 0;
+
+        // Exclamation mark
+        shared_ptr<FollowableComponent> pExclamationMark = 
+            MakeStrongPtr(_owner->GetComponent<FollowableComponent>());
+        assert(pExclamationMark != nullptr);
+
+        pExclamationMark->Activate(Util::GetSoundDurationMs(playedSound));
+
         return true;
     }
 

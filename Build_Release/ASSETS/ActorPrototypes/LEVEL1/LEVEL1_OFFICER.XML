@@ -33,6 +33,7 @@
             <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340015.WAV" />
             <Sound SoundType="MeleeAttack" SoundName="/LEVEL1/SOUNDS/OFFICER/OFCSWSTB8-22.WAV" />
         </Sounds>
+        <MinTimeIntervalForSpeechSound>5000</MinTimeIntervalForSpeechSound>
     </EnemyAIComponent>
     <TakeDamageAIStateComponent>
         <StatePriority>0</StatePriority>
@@ -51,12 +52,18 @@
         </WalkAction>
         <IdleAction>
             <AnimationDelay>900</AnimationDelay>
-            <Animation>stand1</Animation>
-            <Animation>stand2</Animation>
-            <Animation>stand3</Animation>
-            <Animation>stand4</Animation>
             <Animation>stand5</Animation>
+            <Animation>stand4</Animation>
+            <Animation>stand3</Animation>
+            <Animation>stand2</Animation>
+            <Animation>stand1</Animation>
         </IdleAction>
+        <IdleSpeech>
+            <IdleSpeechSound>/LEVEL1/SOUNDS/OFFICER/EHEM1.WAV</IdleSpeechSound>
+            <IdleSpeechSound>/LEVEL1/SOUNDS/OFFICER/EHEM2.WAV</IdleSpeechSound>
+            <IdleSpeechSoundMaxDistance>350</IdleSpeechSoundMaxDistance>
+            <IdleSpeechSoundPlayChance>60</IdleSpeechSoundPlayChance>
+        </IdleSpeech>
     </PatrolEnemyAIStateComponent>
     <MeleeAttackAIStateComponent>
         <StatePriority>20</StatePriority>
@@ -83,6 +90,10 @@
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>
+        <AttackSpeech>
+            <AttackSpeechSound>/LEVEL1/SOUNDS/OFFICER/00340024.WAV</AttackSpeechSound>
+            <AttackSpeechSoundPlayChance>65</AttackSpeechSoundPlayChance>
+        </AttackSpeech>
     </MeleeAttackAIStateComponent>
     <DuckMeleeAttackAIStateComponent>
         <StatePriority>15</StatePriority>
@@ -110,6 +121,11 @@
             </AttackAction>
         </Attacks>
     </DuckMeleeAttackAIStateComponent>
+    <FollowableComponent>
+        <Offset x="-5" y="-92" />
+        <ImageSet>/GAME/IMAGES/EXCLAMATION/*</ImageSet>
+        <AnimationPath></AnimationPath>
+    </FollowableComponent>
     <PhysicsComponent>
         <BodyType>Dynamic</BodyType>
         <HasFootSensor>false</HasFootSensor>

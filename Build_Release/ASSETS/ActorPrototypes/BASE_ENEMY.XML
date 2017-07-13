@@ -30,6 +30,7 @@
         <!-- DEFINED IN CODE -->
     </LootComponent>
     <EnemyAIComponent>
+        <MinTimeIntervalForSpeechSound>3000</MinTimeIntervalForSpeechSound>
         <!-- OVERRIDEN IN PROTOTYPE -->
         <DeathAnimation>fall</DeathAnimation>
     </EnemyAIComponent>

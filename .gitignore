@@ -14,3 +14,6 @@ CaptainClaw.sdf
 CaptainClaw.opensdf
 Build_Release/CaptainClaw.exe
 Build_Release/CaptainClaw.pdb
+Build_Release/MidiProc.exe
+CaptainClaw.v12.suo
+Build_Release/MidiProc.pdb

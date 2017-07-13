@@ -26,7 +26,7 @@ namespace Util
     int GetRandomNumber(int fromRange, int toRange);
     bool RollDice(int chanceToSucceed);
 
-    void PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume = 100);
+    std::string PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume = 100);
 
     int GetSoundDurationMs(const std::string& soundPath);
     int GetSoundDurationMs(Mix_Chunk* pSound);

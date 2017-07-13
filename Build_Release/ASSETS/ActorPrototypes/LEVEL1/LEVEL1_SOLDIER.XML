@@ -33,6 +33,7 @@
             <Sound SoundType="MeleeAttack" SoundName="/LEVEL1/SOUNDS/SOLDIER/RFHEADBT8-22.WAV" />
             <Sound SoundType="RangedAttack" SoundName="/LEVEL1/SOUNDS/SOLDIER/SOLGUNFR8-22.WAV" />
         </Sounds>
+        <MinTimeIntervalForSpeechSound>5000</MinTimeIntervalForSpeechSound>
     </EnemyAIComponent>
     <TakeDamageAIStateComponent>
         <StatePriority>0</StatePriority>
@@ -107,6 +108,10 @@
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>
+        <AttackSpeech>
+            <AttackSpeechSound>/LEVEL1/SOUNDS/SOLDIER/00320020.WAV</AttackSpeechSound>
+            <AttackSpeechSoundPlayChance>65</AttackSpeechSoundPlayChance>
+        </AttackSpeech>
     </RangedAttackAIStateComponent>
     <DuckRangedAttackAIStateComponent>
         <StatePriority>5</StatePriority>
@@ -134,6 +139,11 @@
             </AttackAction>
         </Attacks>
     </DuckRangedAttackAIStateComponent>
+    <FollowableComponent>
+        <Offset x="-5" y="-92" />
+        <ImageSet>/GAME/IMAGES/EXCLAMATION/*</ImageSet>
+        <AnimationPath></AnimationPath>
+    </FollowableComponent>
     <PhysicsComponent>
         <BodyType>Dynamic</BodyType>
         <HasFootSensor>false</HasFootSensor>

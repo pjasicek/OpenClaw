@@ -49,6 +49,8 @@ public:
     const SoundList& GetDeathSounds() const { return m_DeathSounds; }
     const SoundList& GetQuotToHostileUnitSounds() const { return m_QuoteToHostileUnitSounds; }
 
+    BaseEnemyAIStateComponent* GetCurrentState();
+
 private:
     void LeaveAllStates();
     bool HasState(std::string stateName);
@@ -57,7 +59,6 @@ private:
     void EnterState(EnemyAIState state);
     void EnterState(BaseEnemyAIStateComponent* pState);
     void AcquireStateLock();
-    BaseEnemyAIStateComponent* GetCurrentState();
     BaseEnemyAIStateComponent* GetState(EnemyAIState state);
 
     bool m_bInitialized;
