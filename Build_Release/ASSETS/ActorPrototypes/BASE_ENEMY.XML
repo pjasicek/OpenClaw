@@ -40,6 +40,11 @@
         <TakeDamageAnimation>NONE</TakeDamageAnimation>
         <InvulnerabilityTime>0</InvulnerabilityTime>
     </TakeDamageAIStateComponent>
+    <FollowableComponent>
+        <Offset x="-5" y="-92" />
+        <ImageSet>/GAME/IMAGES/EXCLAMATION/*</ImageSet>
+        <AnimationPath></AnimationPath>
+    </FollowableComponent>
     <PhysicsComponent>
         <BodyType>Dynamic</BodyType>
         <HasFootSensor>false</HasFootSensor>
