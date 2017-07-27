@@ -792,6 +792,7 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
                 // Spikes
                 case 1:
                 case 3:
+                case 5:
                 case 9:
                 case 10:
                     break;
@@ -820,7 +821,6 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
                     ActorTemplates::CreateSingleAnimation(splashPosition, AnimationType_TarSplash);
                     break;
                 }
-                case 5:
                 case 6:
                 case 7:
                 case 8:

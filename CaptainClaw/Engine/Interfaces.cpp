@@ -39,12 +39,15 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         { ActorPrototype_Level4_Elevator, "ActorPrototype_Level4_Elevator" },
 
+        { ActorPrototype_Level5_Elevator, "ActorPrototype_Level5_Elevator" },
+
         { ActorPrototype_BasePathElevator, "ActorPrototype_BasePathElevator" },
 
         // Toggle pegs
         { ActorPrototype_BaseTogglePeg, "ActorPrototype_BaseTogglePeg" },
 
         { ActorPrototype_Level1_TogglePeg, "ActorPrototype_Level1_TogglePeg" },
+        { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" },
         { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" },
 
         // Projectile spawners
@@ -156,6 +159,8 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         { "ActorPrototype_Level4_Elevator", ActorPrototype_Level4_Elevator },
 
+        { "ActorPrototype_Level5_Elevator", ActorPrototype_Level5_Elevator },
+
         { "ActorPrototype_BasePathElevator", ActorPrototype_BasePathElevator },
 
         // Toggle pegs
@@ -163,6 +168,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         { "ActorPrototype_Level1_TogglePeg", ActorPrototype_Level1_TogglePeg },
         { "ActorPrototype_Level2_TogglePeg", ActorPrototype_Level2_TogglePeg },
+        { "ActorPrototype_Level5_TogglePeg", ActorPrototype_Level5_TogglePeg },
 
         // Projectile spawners
         { "ActorPrototype_Level2_TowerCannonLeft", ActorPrototype_Level2_TowerCannonLeft },

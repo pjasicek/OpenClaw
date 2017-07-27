@@ -790,6 +790,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         {
             elevatorProto = ActorPrototype_Level4_Elevator;
         }
+        else if (levelNumber == 5)
+        {
+            elevatorProto = ActorPrototype_Level5_Elevator;
+        }
         assert(elevatorProto != ActorPrototype_Start && "Unsupported level ?");
 
         return ActorTemplates::CreateXmlData_ElevatorActor(elevatorProto, position, elevatorDef);
@@ -863,7 +867,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         ActorPrototype proto = ActorPrototype_Start;
         if (levelNumber == 1) proto = ActorPrototype_Level1_TogglePeg;
-        if (levelNumber == 2) proto = ActorPrototype_Level2_TogglePeg;
+        else if (levelNumber == 2) proto = ActorPrototype_Level2_TogglePeg;
+        else if (levelNumber == 5) proto = ActorPrototype_Level5_TogglePeg;
 
         assert(proto != ActorPrototype_Start);
 

@@ -850,18 +850,17 @@ void BaseGameLogic::VChangeState(GameState newState)
     }
     else if (newState == GameState_LoadingLevel)
     {
-        // In case of debugging set it to level 1
+        // In case of debugging
         if (m_pCurrentLevel == nullptr)
         {
             m_pCurrentLevel.reset(new LevelData);
 
             m_pCurrentLevel->m_bIsNewGame = false;
-            m_pCurrentLevel->m_LeveNumber = 4;
+            m_pCurrentLevel->m_LeveNumber = 5;
             m_pCurrentLevel->m_LoadedCheckpoint = 0;
         }
 
         int levelNumber = m_pCurrentLevel->GetLevelNumber();
-        //assert(levelNumber == 1 && "Only level 1 is supported at this time");
         assert(levelNumber >= 0 && levelNumber <= 14);
 
         // Load Monolith's WWD, they are located in /LEVEL[1-14]/WORLDS/WORLD.WWD
@@ -1023,6 +1022,12 @@ void BaseGameLogic::CreateSinglePhysicsTile(int x, int y, const TileCollisionPro
     else if (m_pCurrentLevel->GetLevelNumber() == 4 && proto.id == 181)
     {
         Point position(x, y + 7);
+        Point size(64, 10);
+        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
+    }
+    else if (m_pCurrentLevel->GetLevelNumber() == 5 && (proto.id == 215 || proto.id == 221))
+    {
+        Point position(x, y - 14);
         Point size(64, 10);
         m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
     }

@@ -278,6 +278,7 @@ enum ActorPrototype
     ActorPrototype_Level3_Elevator_1,
     ActorPrototype_Level3_Elevator_2,
     ActorPrototype_Level4_Elevator,
+    ActorPrototype_Level5_Elevator,
 
     ActorPrototype_BasePathElevator,
 
@@ -286,6 +287,7 @@ enum ActorPrototype
 
     ActorPrototype_Level1_TogglePeg,
     ActorPrototype_Level2_TogglePeg,
+    ActorPrototype_Level5_TogglePeg,
 
     // Projectile spawners
     ActorPrototype_Level2_TowerCannonLeft,

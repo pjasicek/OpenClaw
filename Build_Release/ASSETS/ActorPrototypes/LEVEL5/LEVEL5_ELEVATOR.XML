@@ -1,0 +1,6 @@
+<Actor Type="Level5_Elevator" Parent="ActorPrototype_BaseElevator" ActorPrototypeName="ActorPrototype_Level5_Elevator">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL5/IMAGES/ELEVATOR/*</ImagePath>
+		<Palette>/LEVEL5/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+</Actor>
