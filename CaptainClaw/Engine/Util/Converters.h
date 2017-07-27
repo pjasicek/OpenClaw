@@ -701,7 +701,20 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     else if (logic.find("CrumblingPeg") != std::string::npos)
     {
         SAFE_DELETE(pActorElem);
-        return ActorTemplates::CreateXmlData_CrumblingPeg(tmpImageSet, Point(wwdObject->x, wwdObject->y), wwdObject->z);
+
+        Point position = Point(wwdObject->x, wwdObject->y);
+        ActorPrototype proto = ActorPrototype_None;
+
+        switch (levelNumber)
+        {
+            case 1: proto = ActorPrototype_Level1_CrumblingPeg; break;
+            case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
+            default: assert(false && "Nonexistant actor prototype"); break;
+        }
+
+        return ActorTemplates::CreateXmlData_Actor(proto, position);
+
+        //return ActorTemplates::CreateXmlData_CrumblingPeg(tmpImageSet, Point(wwdObject->x, wwdObject->y), wwdObject->z);
 
         pActorElem->LinkEndChild(CrumblingPegToXml(wwdObject));
 

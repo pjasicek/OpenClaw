@@ -267,6 +267,48 @@ struct TogglePegDef
 };
 
 //-------------------------------------------------------------------------------------------------
+// CrumblingPegDef - CrumblingPegAIComponent
+//-------------------------------------------------------------------------------------------------
+
+struct CrumblingPegDef
+{
+    CrumblingPegDef()
+    {
+        crumbleDelay = 0;
+        crumbleFrameIdx = 0;
+    }
+
+    TiXmlElement* ToXml()
+    {
+        TiXmlElement* pTogglePegComponent = new TiXmlElement("CrumblingPegAIComponent");
+
+        assert(false && "Unimplemented");
+
+        return pTogglePegComponent;
+    }
+
+    static CrumblingPegDef CreateFromXml(TiXmlElement* pElem, bool strict)
+    {
+        CrumblingPegDef def;
+        def.LoadFromXml(pElem, strict);
+        return def;
+    }
+
+    void LoadFromXml(TiXmlElement* pElem, bool strict)
+    {
+        assert(pElem != NULL);
+
+        cond_assert(strict, ParseValueFromXmlElem(&crumbleDelay, pElem->FirstChildElement("CrumbleDelay")));
+        cond_assert(strict, ParseValueFromXmlElem(&crumbleFrameIdx, pElem->FirstChildElement("CrumbleFrameIdx")));
+        cond_assert(strict, ParseValueFromXmlElem(&crumbleSound, pElem->FirstChildElement("CrumbleSound")));
+    }
+
+    int crumbleDelay;
+    int crumbleFrameIdx;
+    std::string crumbleSound;
+};
+
+//-------------------------------------------------------------------------------------------------
 // ProjectileDef - ProjectileAIComponent
 //-------------------------------------------------------------------------------------------------
 

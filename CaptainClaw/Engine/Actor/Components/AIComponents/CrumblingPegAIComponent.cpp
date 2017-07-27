@@ -16,7 +16,6 @@ const char* CrumblingPegAIComponent::g_Name = "CrumblingPegAIComponent";
 
 CrumblingPegAIComponent::CrumblingPegAIComponent()
     :
-    m_Size(Point(0, 0)),
     m_pPhysics(nullptr)
 {
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &CrumblingPegAIComponent::ClawDiedDelegate), EventData_Claw_Died::sk_EventType);
@@ -38,11 +37,7 @@ bool CrumblingPegAIComponent::VInit(TiXmlElement* data)
         return false;
     }
 
-    if (TiXmlElement* pElem = data->FirstChildElement("Size"))
-    {
-        pElem->Attribute("width", &m_Size.x);
-        pElem->Attribute("height", &m_Size.y);
-    }
+    m_Properties.LoadFromXml(data, true);
 
     return true;
 }
@@ -53,6 +48,7 @@ void CrumblingPegAIComponent::VPostInit()
         MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
     pAnimationComponent->AddObserver(this);
+    pAnimationComponent->SetDelay(m_Properties.crumbleDelay);
 }
 
 TiXmlElement* CrumblingPegAIComponent::VGenerateXml()
@@ -64,7 +60,7 @@ TiXmlElement* CrumblingPegAIComponent::VGenerateXml()
 
 void CrumblingPegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
 {
-    if (pNewFrame->idx == 9)
+    if (pNewFrame->idx == m_Properties.crumbleFrameIdx)
     {
         m_pPhysics->VDeactivate(_owner->GetGUID());
     }
@@ -89,7 +85,7 @@ void CrumblingPegAIComponent::OnContact(b2Body* pBody)
     assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
     pAnimationComponent->ResumeAnimation();
 
-    SoundInfo soundInfo(SOUND_LEVEL1_PEG_CRUMBLE);
+    SoundInfo soundInfo(m_Properties.crumbleSound);
     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
         new EventData_Request_Play_Sound(soundInfo)));
 }

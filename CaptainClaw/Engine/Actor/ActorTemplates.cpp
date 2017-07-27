@@ -1736,9 +1736,9 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_Actor(ActorPrototype enemyType, Point position)
+    TiXmlElement* CreateXmlData_Actor(ActorPrototype proto, Point position)
     {
-        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(enemyType);
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
         assert(pActorElem != NULL);
 
         //----------- Position

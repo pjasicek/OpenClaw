@@ -30,8 +30,9 @@ public:
     void ClawDiedDelegate(IEventDataPtr pEventData);
 
 private:
-    Point m_Size;
     shared_ptr<IGamePhysics> m_pPhysics;
+
+    CrumblingPegDef m_Properties;
 };
 
 #endif

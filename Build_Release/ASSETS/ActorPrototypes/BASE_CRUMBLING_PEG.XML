@@ -1,0 +1,48 @@
+<Actor Type="Base_CrumblingPeg" ActorPrototypeName="ActorPrototype_BaseCrumblingPeg">
+	<PositionComponent>
+		<Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
+	</PositionComponent>
+	<ActorRenderComponent>
+		<imgpath>NONE</imgpath>
+		<Visible>true</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>0</ZCoord>
+		<ImagePath>NONE</ImagePath>
+		<Palette>NONE</Palette>
+	</ActorRenderComponent>
+	<AnimationComponent>
+		<PauseOnStart>true</PauseOnStart>
+		<SpecialAnimation>
+			<Type>cycle</Type>
+			<FrameDuration>50</FrameDuration>
+			<HasPositionDelay>false</HasPositionDelay>
+		</SpecialAnimation>
+	</AnimationComponent>
+	<CrumblingPegAIComponent>
+		<CrumbleDelay>0</CrumbleDelay> <!-- DEFINED IN CODE -->
+		<CrumbleFrameIdx>0</CrumbleFrameIdx> <!-- DEFINED IN CODE -->
+		<CrumbleSound>NONE</CrumbleSound> <!-- DEFINED IN CODE -->
+	</CrumblingPegAIComponent>
+	<PhysicsComponent>
+        <BodyType>Static</BodyType>	
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>Ground</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="0" height="0" /> <!-- SET ACCORDING TO IMAGE IN PHYSICS COMPONENT -->
+        <GravityScale>1.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>1</CollisionFlag>
+        <CollisionMask>4294967295</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+    </PhysicsComponent>
+</Actor>
