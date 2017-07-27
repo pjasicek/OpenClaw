@@ -187,10 +187,10 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
         std::string imageSet = actorProperties.imageSet;
         std::string sound = actorProperties.sound;
 
+        WwdObject* wwdObject = &actorProperties;
         // Here should be any objects that cant for some reason by created in that function
         if (logic.find("StackedCrates") != std::string::npos)
         {
-            WwdObject* wwdObject = &actorProperties;
             if (wwdObject->height == 0)
             {
                 wwdObject->height = 1;
@@ -220,388 +220,32 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
                     5, wwdObject->z + crateIdx));
             }
         }
+        else if (logic == "BreakPlank")
+        {
+            Point position = Point(wwdObject->x, wwdObject->y);
+            ActorPrototype proto = ActorPrototype_None;
+
+            switch (levelNumber)
+            {
+            case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
+            default: assert(false && "Nonexistant actor prototype"); break;
+            }
+
+            int crumbleDelay = wwdObject->counter;
+            int width = wwdObject->width;
+
+            for (int pegIdx = 0; pegIdx < width; pegIdx++)
+            {
+                root->LinkEndChild(
+                    ActorTemplates::CreateXmlData_CrumblingPeg(proto, position, crumbleDelay));
+
+                position.x += 64;
+            }
+        }
         else
         {
             root->LinkEndChild(WwdObjectToXml(&actorProperties, imagesRootPath, levelNumber));
         }
-
-        continue;
-#if 0
-        //=============================================================================================================
-        // Deprecated, not used
-        //=============================================================================================================
-
-        bool visible = true;
-        bool hasCollisionComponent = false;
-
-
-        //----- [Level::Actors::ActorProperties]
-        TiXmlElement* actorPropertiesElem = new TiXmlElement("ActorProperties");
-        actorsElem->LinkEndChild(actorPropertiesElem);
-
-        XML_ADD_TEXT_ELEMENT("Name", actorProperties.name, actorPropertiesElem);
-        XML_ADD_TEXT_ELEMENT("Logic", actorProperties.logic, actorPropertiesElem);
-        XML_ADD_TEXT_ELEMENT("ImageSet", actorProperties.imageSet, actorPropertiesElem);
-        XML_ADD_TEXT_ELEMENT("Sound", actorProperties.sound, actorPropertiesElem);
-
-        //----- [Level::Actors::ActorProperties::PositionComponent]
-        TiXmlElement* positionComponent = new TiXmlElement("PositionComponent");
-        actorPropertiesElem->LinkEndChild(positionComponent);
-
-        XML_ADD_2_PARAM_ELEMENT("Position", "x", actorProperties.x, "y", actorProperties.y, positionComponent);
-
-        //----- [Level::Actors::ActorProperties::CollisionComponent]
-        TiXmlElement* collisionComponent = new TiXmlElement("CollisionComponent");
-        actorPropertiesElem->LinkEndChild(collisionComponent);
-
-        //----- [Level::Actors::ActorProperties::PhysicsComponent]
-        TiXmlElement* physicsComponent = new TiXmlElement("PhysicsComponent");
-        actorPropertiesElem->LinkEndChild(physicsComponent);
-
-
-
-        if (imageSet.find("GAME_HEALTH") != std::string::npos)
-        {
-            //----- [Level::Actors::ActorProperties::HealthPickupComponent]
-            TiXmlElement* healthPickupComponent = new TiXmlElement("HealthPickupComponent");
-            actorPropertiesElem->LinkEndChild(healthPickupComponent);
-
-            if (imageSet == "LEVEL_HEALTH")
-            {
-                XML_ADD_TEXT_ELEMENT("Health", "5", healthPickupComponent);
-            }
-            else if (imageSet == "GAME_HEALTH_POTION1")
-            {
-                XML_ADD_TEXT_ELEMENT("Health", "10", healthPickupComponent);
-            }
-            else if (imageSet == "GAME_HEALTH_POTION2")
-            {
-                XML_ADD_TEXT_ELEMENT("Health", "20", healthPickupComponent);
-            }
-            else if (imageSet == "GAME_HEALTH_POTION3")
-            {
-                XML_ADD_TEXT_ELEMENT("Health", "35", healthPickupComponent);
-            }
-            else
-            {
-                LOG_WARNING("Trying to parse unknown HealthPickupComponent" + imageSet);
-            }
-        }
-
-        if (imageSet.find("GAME_AMMO") != std::string::npos ||
-            imageSet.find("GAME_DYNAMITE") != std::string::npos ||
-            imageSet.find("GAME_MAGIC") != std::string::npos)
-        {
-            //----- [Level::Actors::ActorProperties::AmmoPickupComponent]
-            TiXmlElement* ammoPickupComponent = new TiXmlElement("AmmoPickupComponent");
-            actorPropertiesElem->LinkEndChild(ammoPickupComponent);
-
-            if (imageSet == "GAME_AMMO_SHOT")
-            {
-                XML_ADD_TEXT_ELEMENT("Gunpowder", "5", ammoPickupComponent);
-            }
-            else if (imageSet == "GAME_AMMO_SHOTBAG")
-            {
-                XML_ADD_TEXT_ELEMENT("Gunpowder", "10", ammoPickupComponent);
-            }
-            else if (imageSet == "GAME_AMMO_DEATHBAG")
-            {
-                XML_ADD_TEXT_ELEMENT("Gunpowder", "25", ammoPickupComponent);
-            }
-            else if (imageSet == "GAME_DYNAMITE")
-            {
-                XML_ADD_TEXT_ELEMENT("Dynamite", "5", ammoPickupComponent);
-            }
-            else if (imageSet == "GAME_MAGIC_GLOW")
-            {
-                XML_ADD_TEXT_ELEMENT("Magic", "5", ammoPickupComponent);
-            }
-            else if (imageSet == "GAME_MAGIC_STARGLOW")
-            {
-                XML_ADD_TEXT_ELEMENT("Magic", "10", ammoPickupComponent);
-            }
-            else if (imageSet == "GAME_MAGICCLAW")
-            {
-                XML_ADD_TEXT_ELEMENT("Magic", "25", ammoPickupComponent);
-            }
-            else
-            {
-                LOG_WARNING("Trying to parse unknown AmmoPickupComponent: " + imageSet);
-            }
-        }
-
-        // TODO: Use stuff from ActorTemplates.cpp
-        if (logic == "TreasurePowerup" || logic == "GlitterlessPowerup")
-        {
-            //----- [Level::Actors::ActorProperties::TreasurePickupComponent]
-            TiXmlElement* treasurePickupComponent = new TiXmlElement("TreasurePickupComponent");
-            actorPropertiesElem->LinkEndChild(treasurePickupComponent);
-
-            assert(imageSet.find("TREASURE") != std::string::npos);
-
-            int32 points = 0;
-            std::string pickupSound;
-
-            if (imageSet == "GAME_TREASURE_COINS")
-            {
-                points = 100;
-                pickupSound = SOUND_GAME_TREASURE_COIN;
-            }
-            else if (imageSet == "GAME_TREASURE_GOLDBARS")
-            {
-                points = 500;
-                pickupSound = SOUND_GAME_TREASURE_GOLDBAR;
-            }
-            else if (imageSet == "GAME_TREASURE_NECKLACE")
-            {
-                points = 10000;
-                pickupSound = SOUND_GAME_TREASURE_GECKO;
-            }
-            else if (imageSet.find("GAME_TREASURE_RINGS") != std::string::npos)
-            {
-                points = 1500;
-                pickupSound = SOUND_GAME_TREASURE_RING;
-            }
-            else if (imageSet.find("GAME_TREASURE_CHALICES") != std::string::npos)
-            {
-                points = 2500;
-                pickupSound = SOUND_GAME_TREASURE_CHALICE;
-            }
-            else if (imageSet.find("GAME_TREASURE_CROSSES") != std::string::npos)
-            {
-                points = 5000;
-                pickupSound = SOUND_GAME_TREASURE_CROSS;
-            }
-            else if (imageSet.find("GAME_TREASURE_SCEPTERS") != std::string::npos)
-            {
-                points = 7500;
-                pickupSound = SOUND_GAME_TREASURE_SCEPTER;
-            }
-            else if (imageSet.find("GAME_TREASURE_GECKOS") != std::string::npos)
-            {
-                points = 10000;
-                pickupSound = SOUND_GAME_TREASURE_GECKO;
-            }
-            else if (imageSet.find("GAME_TREASURE_CROWNS") != std::string::npos)
-            {
-                points = 15000;
-                pickupSound = SOUND_GAME_TREASURE_CROWN;
-            }
-            else if (imageSet.find("GAME_TREASURE_JEWELEDSKULL") != std::string::npos)
-            {
-                points = 25000;
-                pickupSound = SOUND_GAME_TREASURE_SKULL;
-            }
-            else
-            {
-                assert(false && "Unknown treasure");
-            }
-
-            XML_ADD_TEXT_ELEMENT("Points", ToStr(points).c_str(), treasurePickupComponent);
-            XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), treasurePickupComponent);
-        }
-
-        if (actorProperties.powerup != 0)
-        {
-            //----- [Level::Actors::ActorProperties::InventoryComponent]
-            TiXmlElement* inventorypComponent = new TiXmlElement("InventoryComponent");
-            actorPropertiesElem->LinkEndChild(inventorypComponent);
-
-            // If anyone can come up with better solution, go ahead lol
-            if (actorProperties.powerup != 0) XML_ADD_TEXT_ELEMENT("Item", ToStr(actorProperties.powerup).c_str(), inventorypComponent);
-            if (actorProperties.userRect1.top != 0) XML_ADD_TEXT_ELEMENT("Item", ToStr(actorProperties.userRect1.top).c_str(), inventorypComponent);
-            if (actorProperties.userRect1.left != 0) XML_ADD_TEXT_ELEMENT("Item", ToStr(actorProperties.userRect1.left).c_str(), inventorypComponent);
-            if (actorProperties.userRect1.bottom != 0) XML_ADD_TEXT_ELEMENT("Item", ToStr(actorProperties.userRect1.bottom).c_str(), inventorypComponent);
-            if (actorProperties.userRect1.right != 0) XML_ADD_TEXT_ELEMENT("Item", ToStr(actorProperties.userRect1.right).c_str(), inventorypComponent);
-            if (actorProperties.userRect2.top != 0) XML_ADD_TEXT_ELEMENT("Item", ToStr(actorProperties.userRect2.top).c_str(), inventorypComponent);
-            if (actorProperties.userRect2.left != 0) XML_ADD_TEXT_ELEMENT("Item", ToStr(actorProperties.userRect2.left).c_str(), inventorypComponent);
-            if (actorProperties.userRect2.bottom != 0) XML_ADD_TEXT_ELEMENT("Item", ToStr(actorProperties.userRect2.bottom).c_str(), inventorypComponent);
-            if (actorProperties.userRect2.right != 0) XML_ADD_TEXT_ELEMENT("Item", ToStr(actorProperties.userRect2.right).c_str(), inventorypComponent);
-        }
-
-        if (logic.find("Elevator") != std::string::npos)
-        {
-            //----- [Level::Actors::ActorProperties::AI_ElevatorComponent]
-            TiXmlElement* aiElevatorComponent = new TiXmlElement("AI_ElevatorComponent");
-            actorPropertiesElem->LinkEndChild(aiElevatorComponent);
-
-            if (logic == "TriggerElevator")
-            {
-                XML_ADD_TEXT_ELEMENT("TriggeredBehaviour", "true", aiElevatorComponent);
-            }
-            else if (logic == "StartElevator")
-            {
-                XML_ADD_TEXT_ELEMENT("StartBehaviour", "true", aiElevatorComponent);
-            }
-            else if (logic == "StopElevator")
-            {
-                XML_ADD_TEXT_ELEMENT("StopBehaviour", "true", aiElevatorComponent);
-            }
-            else if (logic == "Elevator")
-            {
-                XML_ADD_TEXT_ELEMENT("StandardBehaviour", "true", aiElevatorComponent);
-            }
-            else
-            {
-                LOG_WARNING("Unknown Elevator: " + logic)
-
-            }
-
-            XML_ADD_2_PARAM_ELEMENT("MinPosition", "x", ToStr(actorProperties.minX).c_str(), "y", ToStr(actorProperties.minY).c_str(), aiElevatorComponent);
-            XML_ADD_2_PARAM_ELEMENT("MaxPosition", "x", ToStr(actorProperties.maxX).c_str(), "y", ToStr(actorProperties.maxY).c_str(), aiElevatorComponent);
-        }
-
-        if (logic.find("TogglePeg") != std::string::npos)
-        {
-            //----- [Level::Actors::ActorProperties::AI_TogglePegComponent]
-            TiXmlElement* aiTogglePegComponent = new TiXmlElement("AI_TogglePegComponent");
-            actorPropertiesElem->LinkEndChild(aiTogglePegComponent);
-
-            if (logic == "TogglePeg")
-            {
-                XML_ADD_TEXT_ELEMENT("Delay", "0", aiTogglePegComponent);
-            }
-            else if (logic == "TogglePeg2")
-            {
-                XML_ADD_TEXT_ELEMENT("Delay", "750", aiTogglePegComponent);
-            }
-            else if (logic == "TogglePeg3")
-            {
-                XML_ADD_TEXT_ELEMENT("Delay", "1500", aiTogglePegComponent);
-            }
-            else if (logic == "TogglePeg4")
-            {
-                XML_ADD_TEXT_ELEMENT("Delay", "2250", aiTogglePegComponent);
-            }
-            else
-            {
-                LOG_WARNING("Unknown TogglePeg: " + logic)
-            }
-
-            XML_ADD_TEXT_ELEMENT("TimeOn", "1500", aiTogglePegComponent);
-            XML_ADD_TEXT_ELEMENT("TimeOff", "1500", aiTogglePegComponent);
-        }
-
-        if (logic.find("CrumblingPeg") != std::string::npos)
-        {
-            //----- [Level::Actors::ActorProperties::AI_CrumblingPegComponent]
-            TiXmlElement* aiCrumblingPegComponent = new TiXmlElement("AI_CrumblingPegComponent");
-            actorPropertiesElem->LinkEndChild(aiCrumblingPegComponent);
-
-            XML_ADD_TEXT_ELEMENT("FlootOffset", "10", aiCrumblingPegComponent);
-            XML_ADD_TEXT_ELEMENT("CrumbleFrameIdx", "10", aiCrumblingPegComponent);
-        }
-
-        if (logic.find("SoundTrigger") != std::string::npos)
-        {
-            //----- [Level::Actors::ActorProperties::AI_SoundTriggerComponent]
-            TiXmlElement* aiSoundTriggerComponent = new TiXmlElement("AI_SoundTriggerComponent");
-            actorPropertiesElem->LinkEndChild(aiSoundTriggerComponent);
-
-            visible = false;
-
-            int32 width = 0, height = 0;
-            if (logic.find("Tiny") != std::string::npos)
-            {
-                width = height = 32;
-            }
-            else if (logic.find("Small") != std::string::npos)
-            {
-                width = height = 64;
-            }
-            else if (logic.find("Big") != std::string::npos)
-            {
-                width = height = 256;
-            }
-            else if (logic.find("Huge") != std::string::npos)
-            {
-                width = height = 512;
-            }
-            else if (logic.find("Wide") != std::string::npos)
-            {
-                width = 200;
-                height = 64;
-            }
-            else if (logic.find("Tall") != std::string::npos)
-            {
-                width = 64;
-                height = 200;
-            }
-            else // Standard 
-            {
-                width = height = 128;
-            }
-
-            XML_ADD_2_PARAM_ELEMENT("Size", "width", ToStr(width).c_str(), "height", ToStr(height).c_str(), aiSoundTriggerComponent);
-
-
-            if (logic.find("ClawDialog") != std::string::npos)
-            {
-                XML_ADD_TEXT_ELEMENT("ShowClawDialog", "true", aiSoundTriggerComponent);
-            }
-            else
-            {
-                XML_ADD_TEXT_ELEMENT("ShowClawDialog", "false", aiSoundTriggerComponent);
-            }
-
-            int32 repeatTimes = actorProperties.smarts;
-            /*if (repeatTimes == -1)
-            {
-            repeatTimes = INT32_MAX;
-            }*/
-            XML_ADD_TEXT_ELEMENT("RepeatTimes", ToStr(repeatTimes).c_str(), aiSoundTriggerComponent);
-
-            XML_ADD_TEXT_ELEMENT("Sound", sound.c_str(), aiSoundTriggerComponent);
-        }
-
-
-        //----- [Level::Actors::ActorProperties::ActorRenderComponent]
-        TiXmlElement* actorRenderComponent = new TiXmlElement("ActorRenderComponent");
-        actorPropertiesElem->LinkEndChild(actorRenderComponent);
-
-        XML_ADD_TEXT_ELEMENT("Visible", ToStr(visible).c_str(), actorRenderComponent);
-        XML_ADD_TEXT_ELEMENT("Mirrored", ToStr((actorProperties.drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR) != 0).c_str(), actorRenderComponent);
-        XML_ADD_TEXT_ELEMENT("Inverted", ToStr((actorProperties.drawFlags & WAP_OBJECT_DRAW_FLAG_INVERT) != 0).c_str(), actorRenderComponent);
-
-        std::string tmpImagesRootPath = imagesRootPath;
-        std::string tmpImageSet = imageSet;
-        bool imageSetValid = false;
-        if (imageSet.find("LEVEL_") == 0)
-        {
-            tmpImageSet.erase(0, strlen("LEVEL_"));
-            imageSetValid = true;
-        }
-        else if (imageSet.find("GAME_") == 0)
-        {
-            tmpImageSet.erase(0, strlen("GAME_"));
-            tmpImagesRootPath = std::string("/GAME/IMAGES/");
-            imageSetValid = true;
-
-        }
-        else
-        {
-            LOG_WARNING("Unknown actor image path: " + imageSet);
-        }
-
-        if (imageSetValid)
-        {
-            std::replace(tmpImageSet.begin(), tmpImageSet.end(), '_', '/');
-            tmpImageSet += "/*";
-            tmpImageSet = tmpImagesRootPath + tmpImageSet;
-            XML_ADD_TEXT_ELEMENT("ImagePath", tmpImageSet.c_str(), actorRenderComponent);
-        }
-
-        // We probably should have valid animation frames in order to create an animation :d
-        if (imageSetValid)
-        {
-            //----- [Level::Actors::ActorProperties::AnimationComponent]
-            TiXmlElement* animationComponent = new TiXmlElement("AnimationComponent");
-            actorPropertiesElem->LinkEndChild(animationComponent);
-            std::string aniPath = tmpImageSet;
-            aniPath.replace(aniPath.find("/IMAGES/"), strlen("/IMAGES/"), "/ANIS/");
-            XML_ADD_TEXT_ELEMENT("AnimationPath", aniPath.c_str(), animationComponent);
-        }
-#endif
     }
 
 

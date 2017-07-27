@@ -1816,6 +1816,21 @@ namespace ActorTemplates
         return pActorElem;
     }
 
+    TiXmlElement* CreateXmlData_CrumblingPeg(ActorPrototype proto, const Point& position, int crumbleDelay)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- TogglePeg properties
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.CrumblingPegAIComponent.CrumbleDelay", crumbleDelay));
+
+        return pActorElem;
+    }
+
     TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);

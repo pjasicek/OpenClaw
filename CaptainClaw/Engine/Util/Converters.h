@@ -712,7 +712,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             default: assert(false && "Nonexistant actor prototype"); break;
         }
 
-        return ActorTemplates::CreateXmlData_Actor(proto, position);
+        return ActorTemplates::CreateXmlData_CrumblingPeg(proto, position, 0);
 
         //return ActorTemplates::CreateXmlData_CrumblingPeg(tmpImageSet, Point(wwdObject->x, wwdObject->y), wwdObject->z);
 
