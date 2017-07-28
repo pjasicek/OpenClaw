@@ -97,6 +97,7 @@ void CrumblingPegAIComponent::ClawDiedDelegate(IEventDataPtr pEventData)
         MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     pAnimationComponent->GetCurrentAnimation()->Reset();
     pAnimationComponent->GetCurrentAnimation()->Pause();
+    pAnimationComponent->SetDelay(m_Properties.crumbleDelay);
 
     auto pARC = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
     pARC->SetVisible(true);

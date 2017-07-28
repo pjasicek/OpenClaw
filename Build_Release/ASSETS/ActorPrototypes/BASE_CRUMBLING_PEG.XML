@@ -7,7 +7,7 @@
 		<Visible>true</Visible>
 		<Mirrored>false</Mirrored>
 		<Inverted>false</Inverted>
-		<ZCoord>0</ZCoord>
+		<ZCoord>1000</ZCoord>
 		<ImagePath>NONE</ImagePath>
 		<Palette>NONE</Palette>
 	</ActorRenderComponent>

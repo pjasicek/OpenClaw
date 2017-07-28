@@ -52,6 +52,13 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
         XML_ADD_TEXT_ELEMENT("TileId", ToStr(tileDescIdx).c_str(), tileDescElem);
         XML_ADD_2_PARAM_ELEMENT("Size", "width", wwdTileDesc.width, "height", wwdTileDesc.height, tileDescElem);
 
+        // This is Monolith's hack which I dont get
+        if (levelNumber == 5 && tileDescIdx == 509)
+        {
+            wwdTileDesc.insideAttrib = WAP_TILE_ATTRIBUTE_CLEAR;
+            wwdTileDesc.outsideAttrib = WAP_TILE_ATTRIBUTE_CLEAR;
+        }
+
         if (wwdTileDesc.type == WAP_TILE_TYPE_SINGLE)
         {
             XML_ADD_TEXT_ELEMENT("Type", "single", tileDescElem);
