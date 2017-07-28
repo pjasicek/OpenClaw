@@ -295,16 +295,18 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     Actor* pActor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
                     assert(pActor);
 
+                    bool bIsClaw = MakeStrongPtr(static_cast<Actor*>(pFixtureB->GetBody()->GetUserData())->GetComponent<ClawControllableComponent>()) != nullptr;
+
                     shared_ptr<CrumblingPegAIComponent> pCrumblingPegComponent =
                         MakeStrongPtr(pActor->GetComponent<CrumblingPegAIComponent>(CrumblingPegAIComponent::g_Name));
-                    if (pCrumblingPegComponent)
+                    if (pCrumblingPegComponent && bIsClaw)
                     {
                         pCrumblingPegComponent->OnContact(pFixtureB->GetBody());
                     }
 
                     shared_ptr<SteppingGroundComponent> pSteppingGroundComponent =
                         MakeStrongPtr(pActor->GetComponent<SteppingGroundComponent>());
-                    if (pSteppingGroundComponent)
+                    if (pSteppingGroundComponent && bIsClaw)
                     {
                         Actor* pOtherActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                         pSteppingGroundComponent->OnActorContact(pOtherActor);
@@ -312,7 +314,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
 
                     shared_ptr<SpringBoardComponent> pSpringBoardComponent =
                         MakeStrongPtr(pActor->GetComponent<SpringBoardComponent>());
-                    if (pSpringBoardComponent)
+                    if (pSpringBoardComponent && bIsClaw)
                     {
                         Actor* pOtherActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                         pSpringBoardComponent->OnActorBeginContact(pOtherActor);

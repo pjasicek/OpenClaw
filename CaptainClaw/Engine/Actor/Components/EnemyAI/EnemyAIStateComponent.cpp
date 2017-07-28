@@ -446,22 +446,22 @@ void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
     Point toLeftRay = Point(center.x - 10000, center.y);
     Point toRightRay = Point(center.x + 10000, center.y);
 
-    RaycastResult raycastResultLeft = m_pPhysics->VRayCast(center, toLeftRay, CollisionFlag_Solid);
-    RaycastResult raycastResultRight = m_pPhysics->VRayCast(center, toRightRay, CollisionFlag_Solid);
+    RaycastResult raycastResultLeft = m_pPhysics->VRayCast(center, toLeftRay, CollisionFlag_Solid | CollisionFlag_Ground);
+    RaycastResult raycastResultRight = m_pPhysics->VRayCast(center, toRightRay, CollisionFlag_Solid | CollisionFlag_Ground);
 
     if (!raycastResultLeft.foundIntersection)
     {
-        LOG_ERROR("Did not find raycastResultLeft intersection for actor: " + _owner->GetName() +
+        LOG_WARNING("Did not find raycastResultLeft intersection for actor: " + _owner->GetName() +
             " with position: " + _owner->GetPositionComponent()->GetPosition().ToString());
         // Dummy large value, should be sufficient
         raycastResultLeft.deltaX = center.x - 10000;
     }
     if (!raycastResultRight.foundIntersection)
     {
-        LOG_ERROR("Did not find raycastResultRight intersection for actor: " + _owner->GetName() +
+        LOG_WARNING("Did not find raycastResultRight intersection for actor: " + _owner->GetName() +
             " with position: " + _owner->GetPositionComponent()->GetPosition().ToString());
         // Dummy large value, should be sufficient
-        raycastResultLeft.deltaX = center.x + 10000;
+        raycastResultRight.deltaX = center.x + 10000;
     }
 
     double patrolLeftBorder = 0.0;

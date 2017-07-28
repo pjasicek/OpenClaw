@@ -931,7 +931,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "Rat" ||
              logic == "PunkRat" ||
              logic == "CutThroat" ||
-             logic == "RobberThief")
+             logic == "RobberThief" ||
+             logic == "TownGuard1")
     {
         std::vector<PickupType> loot;
         if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
@@ -1001,6 +1002,20 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             else if (logic == "RobberThief")
             {
                 actorProto = ActorPrototype_Level4_RobberThief;
+            }
+        }
+        else if (levelNumber == 5)
+        {
+            if (logic == "TownGuard1")
+            {
+                actorProto = ActorPrototype_Level5_TownGuard1;
+
+                // Jumping is not yet implemented. Make them patrol instead
+                if ((wwdObject->maxX - wwdObject->minX) <= 100)
+                {
+                    wwdObject->minX -= 80;
+                    wwdObject->maxX += 80;
+                }
             }
         }
         assert(actorProto != ActorPrototype_Start && "Unsupported level ?");

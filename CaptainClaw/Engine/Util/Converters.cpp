@@ -55,8 +55,8 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
         // This is Monolith's hack which I dont get
         if (levelNumber == 5 && tileDescIdx == 509)
         {
-            wwdTileDesc.insideAttrib = WAP_TILE_ATTRIBUTE_CLEAR;
-            wwdTileDesc.outsideAttrib = WAP_TILE_ATTRIBUTE_CLEAR;
+            /*wwdTileDesc.insideAttrib = WAP_TILE_ATTRIBUTE_CLEAR;
+            wwdTileDesc.outsideAttrib = WAP_TILE_ATTRIBUTE_CLEAR;*/
         }
 
         if (wwdTileDesc.type == WAP_TILE_TYPE_SINGLE)

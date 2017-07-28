@@ -236,14 +236,22 @@ void PhysicsComponent::VPostInit()
     {
         m_pPhysics->VAddDynamicActor(_owner);
     }
+}
 
+void PhysicsComponent::VPostPostInit()
+{
     if (m_bClampToGround)
     {
+        auto pPositionComponent = _owner->GetPositionComponent();
         // Position enemy to the floor
         Point fromPoint = pPositionComponent->GetPosition();
         Point toPoint = pPositionComponent->GetPosition() + Point(0, 1000);
         RaycastResult raycastDown = m_pPhysics->VRayCast(fromPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground));
-        assert(raycastDown.foundIntersection && "Did not find intersection. Enemy is too far in the air with no ground below him");
+        if (!raycastDown.foundIntersection)
+        {
+            LOG_ERROR("Failed to get raycast result down from position: " + pPositionComponent->GetPosition().ToString());
+            //assert(raycastDown.foundIntersection && "Did not find intersection. Enemy is too far in the air with no ground below him");
+        }
 
         double deltaY = raycastDown.deltaY - m_pPhysics->VGetAABB(_owner->GetGUID(), true).h / 2;
 

@@ -19,6 +19,7 @@ public:
     virtual bool VInit(TiXmlElement* data) override;
     virtual TiXmlElement* VGenerateXml() override;
     virtual void VPostInit() override;
+    virtual void VPostPostInit() override;
 
     virtual void VUpdate(uint32 msDiff) override;
 
