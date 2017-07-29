@@ -27,7 +27,7 @@ public:
     virtual void VOnChanged() { }
 
     // For potential editor
-    virtual TiXmlElement* VGenerateXml() = 0;
+    virtual TiXmlElement* VGenerateXml() { return NULL; }
 
     // This function has to be be overriden by the interface class
     virtual const char* VGetName() const = 0;

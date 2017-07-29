@@ -96,6 +96,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<DuckMeleeAttackAIStateComponent>(DuckMeleeAttackAIStateComponent::GetIdFromName(DuckMeleeAttackAIStateComponent::g_Name));
     _componentFactory.Register<RangedAttackAIStateComponent>(RangedAttackAIStateComponent::GetIdFromName(RangedAttackAIStateComponent::g_Name));
     _componentFactory.Register<DuckRangedAttackAIStateComponent>(DuckRangedAttackAIStateComponent::GetIdFromName(DuckRangedAttackAIStateComponent::g_Name));
+    _componentFactory.Register<DiveAttackAIStateComponent>(DiveAttackAIStateComponent::GetIdFromName(DiveAttackAIStateComponent::g_Name));
     _componentFactory.Register<PredefinedMoveComponent>(PredefinedMoveComponent::GetIdFromName(PredefinedMoveComponent::g_Name));
     _componentFactory.Register<SoundTriggerComponent>(SoundTriggerComponent::GetIdFromName(SoundTriggerComponent::g_Name));
     _componentFactory.Register<GlobalAmbientSoundComponent>(GlobalAmbientSoundComponent::GetIdFromName(GlobalAmbientSoundComponent::g_Name));

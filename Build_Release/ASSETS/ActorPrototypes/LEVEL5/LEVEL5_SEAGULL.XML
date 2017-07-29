@@ -18,6 +18,37 @@
             <Sound SoundType="Death" SoundName="/LEVEL5/SOUNDS/SEAGULL/SEAGULLDIE.WAV" />
         </Sounds>
     </EnemyAIComponent>
+    <DiveAttackAIStateComponent>
+        <StatePriority>20</StatePriority>
+        <DiveSound>/LEVEL5/SOUNDS/SEAGULL/SEAGULLDIVE.WAV</DiveSound>
+        <DiveInAnimation>dive3</DiveInAnimation>
+        <DiveOutAnimation>flying</DiveOutAnimation>
+        <DiveSpeed>5.0</DiveSpeed>
+        <DiveAreaSensorFixture>
+            <FixtureType>EnemyAIDiveAreaSensor</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>true</IsSensor>
+            <Size width="50" height="50" />
+            <Offset x="100" y="150" />
+            <CollisionFlag>4</CollisionFlag>
+            <CollisionMask>2</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>-1.#QNAN0</Restitution>
+        </DiveAreaSensorFixture>
+        <DiveAreaSensorFixture>
+            <FixtureType>EnemyAIDiveAreaSensor</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>true</IsSensor>
+            <Size width="50" height="50" />
+            <Offset x="-100" y="150" />
+            <CollisionFlag>4</CollisionFlag>
+            <CollisionMask>2</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>-1.#QNAN0</Restitution>
+        </DiveAreaSensorFixture>
+    </DiveAttackAIStateComponent>
     <TakeDamageAIStateComponent>
         <StatePriority>0</StatePriority>
         <TakeDamageAnimation>hithigh</TakeDamageAnimation>
@@ -36,8 +67,13 @@
     </PatrolEnemyAIStateComponent>
     <PhysicsComponent>
         <HasCapsuleShape>false</HasCapsuleShape>
-        <CollisionSize width="60" height="35" />
+        <CollisionSize width="60" height="45" />
         <GravityScale>0.000000</GravityScale>
         <ClampToGround>false</ClampToGround>
     </PhysicsComponent>
+    <DamageAuraComponent>
+        <ActorFixture>
+            <Size width="40" height="40" />
+        </ActorFixture>
+    </DamageAuraComponent>
 </Actor>

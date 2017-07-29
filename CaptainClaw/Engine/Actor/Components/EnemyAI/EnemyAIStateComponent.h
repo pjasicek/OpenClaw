@@ -15,6 +15,7 @@ enum EnemyAIState
     EnemyAIState_DuckMeleeAttacking,
     EnemyAIState_RangedAttacking,
     EnemyAIState_DuckRangedAttacking,
+    EnemyAIState_DiveAttacking,
     EnemyAIState_TakingDamage,
     EnemyAIState_Fleeing,
     EnemyAIState_Dying,
@@ -353,6 +354,56 @@ public:
     // BaseAttackAIStateComponent API
     virtual void VOnAttackFrame(std::shared_ptr<EnemyAttackAction> pAttack, Direction dir, const Point& offset) override;
     virtual bool VCanEnter() override;
+};
+
+//=====================================================================================================================
+// DiveAttackAIStateComponent
+//=====================================================================================================================
+// Lots of duplicated code here, should have better design
+class DiveAttackAIStateComponent : public BaseEnemyAIStateComponent
+{
+    enum DiveState
+    {
+        DiveState_None,
+        DiveState_DivingIn,
+        DiveState_DivingOut
+    };
+
+public:
+    DiveAttackAIStateComponent();
+    virtual ~DiveAttackAIStateComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
+    virtual void VPostPostInit() override;
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    virtual void VUpdate(uint32 msDiff) override;
+
+    // EnemyAIStateComponent API
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_DiveAttacking; }
+    virtual void VOnStateEnter() override;
+    virtual void VOnStateLeave() override;
+    virtual bool VCanEnter() override;
+
+    void OnEnemyEnterAgroRange(Actor* pActor);
+    void OnEnemyLeftAgroRange(Actor* pActor);
+
+private:
+    // XML
+    std::string m_DiveSound;
+    std::string m_DiveInAnimation;
+    std::string m_DiveOutAnimation;
+    float m_DiveSpeed;
+    std::vector<ActorFixtureDef> m_DiveAreaSensorFixtureList;
+
+    // Internal state
+    DiveState m_DiveState;
+    Point m_InitialPosition;
+    Point m_Destination;
+
+    ActorList m_EnemyAgroList;
 };
 
 //=====================================================================================================================

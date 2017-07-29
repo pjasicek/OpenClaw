@@ -446,6 +446,10 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
     {
         TryCallActorEnteredAgroRange<DuckRangedAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIDuckRangedSensor);
     }
+    // Enemy dive area agro range contact
+    {
+        TryCallActorEnteredAgroRange<DiveAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIDiveAreaSensor);
+    }
     // Damage aura
     {
         if (pFixtureB->GetUserData() == (void*)FixtureType_DamageAura)
@@ -628,6 +632,10 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
     // Enemy duck ranged agro range contact
     {
         TryCallActorLeftAgroRange<DuckRangedAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIDuckRangedSensor);
+    }
+    // Enemy dive area agro range contact
+    {
+        TryCallActorLeftAgroRange<DiveAttackAIStateComponent>(pFixtureA, pFixtureB, FixtureType_EnemyAIDiveAreaSensor);
     }
     // Damage aura
     {

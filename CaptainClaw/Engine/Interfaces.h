@@ -115,6 +115,7 @@ enum FixtureType
     FixtureType_EnemyAIDuckMeleeSensor,
     FixtureType_EnemyAIRangedSensor,
     FixtureType_EnemyAIDuckRangedSensor,
+    FixtureType_EnemyAIDiveAreaSensor,
     FixtureType_DamageAura,
     FixtureType_RopeSensor
 };

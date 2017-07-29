@@ -25,6 +25,7 @@ const char* MeleeAttackAIStateComponent::g_Name = "MeleeAttackAIStateComponent";
 const char* DuckMeleeAttackAIStateComponent::g_Name = "DuckMeleeAttackAIStateComponent";
 const char* RangedAttackAIStateComponent::g_Name = "RangedAttackAIStateComponent";
 const char* DuckRangedAttackAIStateComponent::g_Name = "DuckRangedAttackAIStateComponent";
+const char* DiveAttackAIStateComponent::g_Name = "DiveAttackAIStateComponent";
 const char* BaseBossAIStateComponennt::g_Name = "BaseBossAIStateComponennt";
 const char* LaRauxBossAIStateComponent::g_Name = "LaRauxBossAIStateComponent";
 const char* KatherineBossAIStateComponent::g_Name = "KatherineBossAIStateComponent";
@@ -1189,6 +1190,172 @@ bool DuckRangedAttackAIStateComponent::VCanEnter()
     }
 
     return false;
+}
+
+//=====================================================================================================================
+// DiveAttackAIStateComponent
+//=====================================================================================================================
+
+// --- This is a bit hacked together - serves only for Seagull enemies
+
+DiveAttackAIStateComponent::DiveAttackAIStateComponent()
+:
+    BaseEnemyAIStateComponent("DiveAttackAIStateComponent")
+{
+
+}
+
+DiveAttackAIStateComponent::~DiveAttackAIStateComponent()
+{
+
+}
+
+bool DiveAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    assert(pData);
+
+    assert(ParseValueFromXmlElem(&m_DiveSound, pData->FirstChildElement("DiveSound")));
+    assert(ParseValueFromXmlElem(&m_DiveInAnimation, pData->FirstChildElement("DiveInAnimation")));
+    assert(ParseValueFromXmlElem(&m_DiveOutAnimation, pData->FirstChildElement("DiveOutAnimation")));
+    assert(ParseValueFromXmlElem(&m_DiveSpeed, pData->FirstChildElement("DiveSpeed")));
+
+    for (TiXmlElement* pElem = pData->FirstChildElement("DiveAreaSensorFixture");
+        pElem != NULL;
+        pElem = pElem->NextSiblingElement("DiveAreaSensorFixture"))
+    {
+        m_DiveAreaSensorFixtureList.push_back(ActorTemplates::XmlToActorFixtureDef(pElem));
+    }
+
+    assert(m_DiveAreaSensorFixtureList.size() > 0);
+
+    return true;
+}
+
+void DiveAttackAIStateComponent::VPostPostInit()
+{
+    for (const ActorFixtureDef& diveFixture : m_DiveAreaSensorFixtureList)
+    {
+        g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(
+            _owner->GetGUID(),
+            &diveFixture);
+    }
+
+    m_InitialPosition = _owner->GetPositionComponent()->GetPosition();
+}
+
+void DiveAttackAIStateComponent::VUpdate(uint32 msDiff)
+{
+    if (!m_IsActive)
+    {
+        return;
+    }
+
+    assert(m_DiveState != DiveState_None);
+
+    Point currentPosition = _owner->GetPositionComponent()->GetPosition();
+    if (m_DiveState == DiveState_DivingIn)
+    {
+        if (currentPosition.y > m_Destination.y)
+        {
+            g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(_owner->GetGUID(), Point(0, -1.0f * m_DiveSpeed));
+            m_pAnimationComponent->SetAnimation(m_DiveOutAnimation);
+            m_DiveState = DiveState_DivingOut;
+        }
+    }
+    else
+    {
+        // On its way up - if already surpassed initial position, leave state
+        if (currentPosition.y < m_InitialPosition.y)
+        {
+            g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(_owner->GetGUID(), Point(0, 0));
+            m_EnemyAgroList.clear();
+            m_pEnemyAIComponent->EnterBestState(true);
+        }
+    }
+}
+
+void DiveAttackAIStateComponent::VOnStateEnter()
+{
+    assert(!m_EnemyAgroList.empty());
+
+    m_DiveState = DiveState_DivingIn;
+    m_Destination = m_EnemyAgroList[0]->GetPositionComponent()->GetPosition();
+
+    Point currentPosition = _owner->GetPositionComponent()->GetPosition();
+    Point positionDiff = currentPosition - m_Destination;
+    positionDiff.Set(abs(positionDiff.x), abs(positionDiff.y));
+
+    // Y speed is preset - this is the diving speed.
+    // X speed is calculated so that the dive ends up in defined location
+    float xyDistanceRatio = positionDiff.x / positionDiff.y;
+    float xSpeed = xyDistanceRatio * m_DiveSpeed;
+
+    if ((currentPosition.x - m_Destination.x) < 0)
+    {
+        m_pRenderComponent->SetMirrored(true);
+    }
+    else
+    {
+        m_pRenderComponent->SetMirrored(false);
+        xSpeed *= -1.0f;
+    }
+
+    g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(_owner->GetGUID(), Point(xSpeed, m_DiveSpeed));
+
+    m_pAnimationComponent->SetAnimation(m_DiveInAnimation);
+
+    SoundInfo soundInfo(m_DiveSound);
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+        new EventData_Request_Play_Sound(soundInfo)));
+
+    m_IsActive = true;
+}
+
+void DiveAttackAIStateComponent::VOnStateLeave()
+{
+    m_IsActive = false;
+    m_DiveState = DiveState_None;
+}
+
+bool DiveAttackAIStateComponent::VCanEnter()
+{
+    if (m_EnemyAgroList.size() > 0)
+    {
+        Point currentPosition = _owner->GetPositionComponent()->GetPosition();
+        Point destPosition = m_EnemyAgroList[0]->GetPositionComponent()->GetPosition();
+
+        // Can attack only in the direction where the enemy is looking
+        if (m_pRenderComponent->IsMirrored())
+        {
+            return (currentPosition.x - destPosition.x) < 0;
+        }
+        else
+        {
+            return (currentPosition.x - destPosition.x) > 0;
+        }
+    }
+
+    return false;
+}
+
+void DiveAttackAIStateComponent::OnEnemyEnterAgroRange(Actor* pActor)
+{
+    m_EnemyAgroList.push_back(pActor);
+    m_pEnemyAIComponent->EnterBestState(false);
+}
+
+void DiveAttackAIStateComponent::OnEnemyLeftAgroRange(Actor* pActor)
+{
+    for (auto iter = m_EnemyAgroList.begin(); iter != m_EnemyAgroList.end(); ++iter)
+    {
+        if ((*iter) == pActor)
+        {
+            m_EnemyAgroList.erase(iter);
+            return;
+        }
+    }
+
+    //LOG_WARNING("Could not remove enemy - no such actor found");
 }
 
 //=====================================================================================================================
