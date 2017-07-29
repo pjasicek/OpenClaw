@@ -23,7 +23,7 @@
         <DiveSound>/LEVEL5/SOUNDS/SEAGULL/SEAGULLDIVE.WAV</DiveSound>
         <DiveInAnimation>dive3</DiveInAnimation>
         <DiveOutAnimation>flying</DiveOutAnimation>
-        <DiveSpeed>5.0</DiveSpeed>
+        <DiveSpeed>4.5</DiveSpeed>
         <DiveAreaSensorFixture>
             <FixtureType>EnemyAIDiveAreaSensor</FixtureType>
             <CollisionShape>Rectangle</CollisionShape>
