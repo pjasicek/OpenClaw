@@ -1,0 +1,15 @@
+<Actor Type="Level5_LootStatue" Parent="ActorPrototype_BaseLootContainer" ActorPrototypeName="ActorPrototype_Level5_LootStatue">
+	<ActorRenderComponent>
+        <Mirrored>true</Mirrored>
+		<ImagePath>/LEVEL5/IMAGES/STATUE/*</ImagePath>
+		<Palette>/LEVEL5/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+    <DestroyableComponent>
+        <DeleteOnDestruction>false</DeleteOnDestruction>
+        <DeathSound>/GAME/SOUNDS/CRATEBREAK2.WAV</DeathSound>
+    </DestroyableComponent>
+    <PhysicsComponent>
+        <BodyType>Static</BodyType>
+        <GravityScale>0.000000</GravityScale>
+    </PhysicsComponent>
+</Actor>

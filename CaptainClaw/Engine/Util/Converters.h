@@ -686,9 +686,35 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         if (wwdObject->userRect1.right > 0) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
         if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
         if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
+        if (wwdObject->userRect2.left > 0) { loot.push_back(PickupType(wwdObject->userRect2.left)); }
+        if (wwdObject->userRect2.right > 0) { loot.push_back(PickupType(wwdObject->userRect2.right)); }
+        if (wwdObject->userRect2.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect2.bottom)); }
+        if (wwdObject->userRect2.top > 0) { loot.push_back(PickupType(wwdObject->userRect2.top)); }
 
         SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_CrateActor(tmpImageSet, Point(wwdObject->x, wwdObject->y), loot, 5, wwdObject->z);
+    }
+    else if (logic.find("Statue") != std::string::npos)
+    {
+        std::vector<PickupType> loot;
+        if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
+        if (wwdObject->userRect1.left > 0) { loot.push_back(PickupType(wwdObject->userRect1.left)); }
+        if (wwdObject->userRect1.right > 0) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
+        if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
+        if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
+        if (wwdObject->userRect2.left > 0) { loot.push_back(PickupType(wwdObject->userRect2.left)); }
+        if (wwdObject->userRect2.right > 0) { loot.push_back(PickupType(wwdObject->userRect2.right)); }
+        if (wwdObject->userRect2.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect2.bottom)); }
+        if (wwdObject->userRect2.top > 0) { loot.push_back(PickupType(wwdObject->userRect2.top)); }
+
+        assert(levelNumber == 5);
+
+        SAFE_DELETE(pActorElem);
+        return ActorTemplates::CreateXmlData_LootContainer(
+            ActorPrototype_Level5_LootStatue, 
+            Point(wwdObject->x, wwdObject->y), 
+            loot, 
+            wwdObject->z);
     }
     else if (logic.find("Candy") != std::string::npos)
     {

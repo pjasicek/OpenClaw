@@ -315,7 +315,7 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     assert(!m_pWalkAction->animations.empty());
     if (m_pIdleAction == nullptr)
     {
-        LOG_WARNING("No idle action");
+        //LOG_WARNING("No idle action");
     }
     else
     {

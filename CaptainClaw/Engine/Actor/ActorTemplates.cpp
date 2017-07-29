@@ -1831,6 +1831,29 @@ namespace ActorTemplates
         return pActorElem;
     }
 
+    TiXmlElement* CreateXmlData_LootContainer(ActorPrototype proto, const Point& position, const std::vector<PickupType>& loot, int zCoord)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- Z Coord
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ZCoord", zCoord));
+
+        //----------- Loot
+        TiXmlElement* pLootComponentElem = GetTiXmlElementFromPath(pActorElem, "Actor.LootComponent");
+        assert(pLootComponentElem != NULL);
+        for (PickupType item : loot)
+        {
+            XML_ADD_TEXT_ELEMENT("Item", ToStr((int)item).c_str(), pLootComponentElem);
+        }
+
+        return pActorElem;
+    }
+
     TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);

@@ -1,0 +1,59 @@
+<Actor Type="Base_LootContainer" ActorPrototypeName="ActorPrototype_BaseLootContainer">
+	<PositionComponent>
+        <!-- DEFINED IN CODE -->
+		<Position x="-1" y="-1" /> 
+	</PositionComponent>
+	<ActorRenderComponent>
+		<Visible>true</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>0</ZCoord>
+		<ImagePath>NONE</ImagePath>
+		<Palette>NONE</Palette>
+	</ActorRenderComponent>
+    <AnimationComponent>
+        <PauseOnStart>true</PauseOnStart>
+		<SpecialAnimation>
+			<Type>cycle</Type>
+			<FrameDuration>75</FrameDuration>
+			<HasPositionDelay>false</HasPositionDelay>
+		</SpecialAnimation>
+	</AnimationComponent>
+    <HealthComponent>
+        <!-- OVERRIDEN IN PROTOTYPE -->
+        <Health>5</Health>
+        <MaxHealth>5</MaxHealth>
+    </HealthComponent>
+    <LootComponent>
+        <LootSoundChance>33</LootSoundChance>
+        <!-- DEFINED IN CODE -->
+    </LootComponent>
+    <DestroyableComponent>
+        <DeleteOnDestruction>true</DeleteOnDestruction>
+        <RemoveFromPhysics>true</RemoveFromPhysics>
+        <DeathAnimationName>DEFAULT</DeathAnimationName>
+        <DeathSound>NONE</DeathSound>
+    </DestroyableComponent>
+    <PhysicsComponent>
+        <BodyType>Dynamic</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>Crate</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="0" height="0" />
+        <GravityScale>1.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>64</CollisionFlag>
+        <CollisionMask>328568</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+        <ClampToGround>false</ClampToGround>
+    </PhysicsComponent>
+</Actor>

@@ -247,7 +247,7 @@ enum ActorPrototype
     ActorPrototype_None = -1,
 
     ActorPrototype_Start,
-    
+
     //=======================================
     // Level specific
     //=======================================
@@ -329,6 +329,10 @@ enum ActorPrototype
 
     // Spring board
     ActorPrototype_Level4_SpringBoard,
+
+    // Loot containers
+    ActorPrototype_BaseLootContainer,
+    ActorPrototype_Level5_LootStatue,
 
     //=======================================
     // General
