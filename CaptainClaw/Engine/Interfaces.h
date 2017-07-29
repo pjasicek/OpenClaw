@@ -295,6 +295,9 @@ enum ActorPrototype
     ActorPrototype_BaseCrumblingPeg,
 
     ActorPrototype_Level1_CrumblingPeg,
+    ActorPrototype_Level3_CrumblingPeg_1,
+    ActorPrototype_Level3_CrumblingPeg_2,
+    ActorPrototype_Level4_CrumblingPeg,
     ActorPrototype_Level5_CrumblingPeg,
 
     // Projectile spawners

@@ -60,7 +60,7 @@
         <HasInitialImpulse>false</HasInitialImpulse>
         <InitialSpeed x="0" y="0" />
         <CollisionFlag>4</CollisionFlag>
-        <CollisionMask>1792</CollisionMask>
+        <CollisionMask>1793</CollisionMask>
         <Friction>0.000000</Friction>
         <Density>0.000000</Density>
         <Restitution>0.000000</Restitution>

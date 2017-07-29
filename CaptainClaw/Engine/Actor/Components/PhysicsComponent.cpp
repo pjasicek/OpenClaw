@@ -245,11 +245,12 @@ void PhysicsComponent::VPostPostInit()
         auto pPositionComponent = _owner->GetPositionComponent();
         // Position enemy to the floor
         Point fromPoint = pPositionComponent->GetPosition();
-        Point toPoint = pPositionComponent->GetPosition() + Point(0, 1000);
-        RaycastResult raycastDown = m_pPhysics->VRayCast(fromPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground));
+        Point toPoint = pPositionComponent->GetPosition() + Point(0, 100);
+        RaycastResult raycastDown = m_pPhysics->VRayCast(fromPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_All));
         if (!raycastDown.foundIntersection)
         {
             LOG_ERROR("Failed to get raycast result down from position: " + pPositionComponent->GetPosition().ToString());
+            return;
             //assert(raycastDown.foundIntersection && "Did not find intersection. Enemy is too far in the air with no ground below him");
         }
 
@@ -273,9 +274,7 @@ TiXmlElement* PhysicsComponent::VGenerateXml()
 // PhysicsComponent::VUpdate
 //
 //    Used to control movement of:
-//      - Controlled actor
-//      - Kinematic actors (moving platforms)
-//      - AI actors (enemies)
+//      - Controlled actor (Claw)
 //
 // TODO: HACK: (so I can easily search hacks and stuff): Note that this piece of code is absolutely terrible
 // since I dont know how to properly implement character control system. I really am aware that this
@@ -331,7 +330,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         {
             m_bIsForcedUp = false;
             m_ForcedUpHeight = 0;
-            m_MaxJumpHeight = g_pApp->GetGlobalOptions()->maxJumpHeight;
+            m_MaxJumpHeight = (int)g_pApp->GetGlobalOptions()->maxJumpHeight;
         }
         else
         {

@@ -708,12 +708,25 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         switch (levelNumber)
         {
             case 1: proto = ActorPrototype_Level1_CrumblingPeg; break;
+            case 3:
+            {
+                if (imageSet == "LEVEL_CRUMBLINPEG1")
+                {
+                    proto = ActorPrototype_Level3_CrumblingPeg_1;
+                }
+                else if (imageSet == "LEVEL_CRUMBLINPEG2")
+                {
+                    proto = ActorPrototype_Level3_CrumblingPeg_2;
+                }
+                break;
+            }
+            case 4: proto = ActorPrototype_Level4_CrumblingPeg; break;
             case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
             default: assert(false && "Nonexistant actor prototype"); break;
         }
+        assert(proto != ActorPrototype_Start && "Unsupported level ?");
 
         return ActorTemplates::CreateXmlData_CrumblingPeg(proto, position, 0);
-
         //return ActorTemplates::CreateXmlData_CrumblingPeg(tmpImageSet, Point(wwdObject->x, wwdObject->y), wwdObject->z);
 
         pActorElem->LinkEndChild(CrumblingPegToXml(wwdObject));

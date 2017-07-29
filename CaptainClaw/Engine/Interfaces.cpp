@@ -50,12 +50,14 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         { ActorPrototype_Level1_TogglePeg, "ActorPrototype_Level1_TogglePeg" },
         { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" },
-        { ActorPrototype_Level2_TogglePeg, "ActorPrototype_Level2_TogglePeg" },
 
         // Crumbling pegs
         { ActorPrototype_BaseCrumblingPeg, "ActorPrototype_BaseCrumblingPeg" },
 
         { ActorPrototype_Level1_CrumblingPeg, "ActorPrototype_Level1_CrumblingPeg" },
+        { ActorPrototype_Level3_CrumblingPeg_1, "ActorPrototype_Level3_CrumblingPeg_1" },
+        { ActorPrototype_Level3_CrumblingPeg_2, "ActorPrototype_Level3_CrumblingPeg_2" },
+        { ActorPrototype_Level4_CrumblingPeg, "ActorPrototype_Level4_CrumblingPeg" },
         { ActorPrototype_Level5_CrumblingPeg, "ActorPrototype_Level5_CrumblingPeg" },
 
         // Projectile spawners
@@ -177,6 +179,9 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_BaseTogglePeg", ActorPrototype_BaseTogglePeg },
 
         { "ActorPrototype_Level1_CrumblingPeg", ActorPrototype_Level1_CrumblingPeg },
+        { "ActorPrototype_Level3_CrumblingPeg_1", ActorPrototype_Level3_CrumblingPeg_1 },
+        { "ActorPrototype_Level3_CrumblingPeg_2", ActorPrototype_Level3_CrumblingPeg_2 },
+        { "ActorPrototype_Level4_CrumblingPeg", ActorPrototype_Level4_CrumblingPeg },
         { "ActorPrototype_Level5_CrumblingPeg", ActorPrototype_Level5_CrumblingPeg },
 
         { "ActorPrototype_Level1_TogglePeg", ActorPrototype_Level1_TogglePeg },

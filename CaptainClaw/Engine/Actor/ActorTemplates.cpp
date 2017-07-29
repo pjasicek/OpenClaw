@@ -1315,7 +1315,7 @@ namespace ActorTemplates
         XML_ADD_TEXT_ELEMENT("PickupSound", pickupSound.c_str(), pPowerupPickupComponent);
         pActor->LinkEndChild(pPowerupPickupComponent);
 
-        if (pickupType != PickupType_Powerup_Catnip_1 ||
+        if (pickupType != PickupType_Powerup_Catnip_1 &&
             pickupType != PickupType_Powerup_Catnip_2)
         {
             pActor->LinkEndChild(CreateCycleAnimationComponent(75, false));

@@ -968,6 +968,10 @@ private:
 TiXmlElement* BaseGameApp::GetActorPrototypeElem(ActorPrototype proto)
 {
     auto findIt = m_ActorXmlPrototypeMap.find(proto);
+    if (findIt == m_ActorXmlPrototypeMap.end())
+    {
+        LOG_ERROR("Failed to find ActorPrototype: " + ToStr((int)proto));
+    }
     assert(findIt != m_ActorXmlPrototypeMap.end());
 
     TiXmlNode* pCopy = findIt->second->Clone()->ToElement();

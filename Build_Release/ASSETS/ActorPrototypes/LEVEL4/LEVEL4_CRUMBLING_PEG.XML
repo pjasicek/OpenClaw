@@ -1,0 +1,16 @@
+<Actor Type="Level4_CrumblingPeg" Parent="ActorPrototype_BaseCrumblingPeg" ActorPrototypeName="ActorPrototype_Level4_CrumblingPeg">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL4/IMAGES/CRUMBLINGBUSH/*</ImagePath>
+		<Palette>/LEVEL4/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<AnimationComponent>
+		<SpecialAnimation>
+			<FrameDuration>75</FrameDuration>
+		</SpecialAnimation>
+	</AnimationComponent>
+	<CrumblingPegAIComponent>
+		<CrumbleDelay>0</CrumbleDelay>
+		<CrumbleFrameIdx>6</CrumbleFrameIdx>
+		<CrumbleSound>/LEVEL4/SOUNDS/PEGCRUMBLE.WAV</CrumbleSound>
+	</CrumblingPegAIComponent>
+</Actor>

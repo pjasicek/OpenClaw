@@ -1,6 +1,6 @@
 <Actor Type="Level5_TownGuard1" Parent="ActorPrototype_BaseEnemy" ActorPrototypeName="ActorPrototype_Level5_TownGuard1">
     <ActorRenderComponent>
-        <ZCoord>0</ZCoord>
+        <ZCoord>1020</ZCoord>
         <ImagePath>/LEVEL5/IMAGES/TOWNGUARD1/*</ImagePath>
         <Palette>/LEVEL5/PALETTES/MAIN.PAL</Palette>
     </ActorRenderComponent>
