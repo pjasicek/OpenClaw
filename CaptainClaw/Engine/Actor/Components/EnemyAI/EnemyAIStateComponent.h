@@ -165,6 +165,7 @@ private:
 
     int m_LeftPatrolBorder;
     int m_RightPatrolBorder;
+    bool m_bIsFlying;
 
     double m_PatrolSpeed;
 

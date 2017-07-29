@@ -1,0 +1,43 @@
+<Actor Type="Level5_Seagull" Parent="ActorPrototype_BaseEnemy" ActorPrototypeName="ActorPrototype_Level5_Seagull">
+    <ActorRenderComponent>
+        <ZCoord>1020</ZCoord>
+        <ImagePath>/LEVEL5/IMAGES/SEAGULL/*</ImagePath>
+        <Palette>/LEVEL5/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL5/ANIS/SEAGULL/*</AnimationPath>
+        <PauseOnStart>false</PauseOnStart>
+    </AnimationComponent>
+    <HealthComponent>
+        <Health>5</Health>
+        <MaxHealth>5</MaxHealth>
+    </HealthComponent>
+    <EnemyAIComponent>
+        <DeathAnimation>killfall</DeathAnimation>
+        <Sounds>
+            <Sound SoundType="Death" SoundName="/LEVEL5/SOUNDS/SEAGULL/SEAGULLDIE.WAV" />
+        </Sounds>
+    </EnemyAIComponent>
+    <TakeDamageAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <TakeDamageAnimation>hithigh</TakeDamageAnimation>
+        <InvulnerabilityTime>0</InvulnerabilityTime>
+    </TakeDamageAIStateComponent>
+    <PatrolEnemyAIStateComponent>
+        <IsAlwaysIdle>false</IsAlwaysIdle>
+        <StatePriority>0</StatePriority>
+        <PatrolSpeed>1.300000</PatrolSpeed>
+        <LeftPatrolBorder>0</LeftPatrolBorder> <!-- DEFINED IN CODE -->
+        <RightPatrolBorder>0</RightPatrolBorder> <!-- DEFINED IN CODE -->
+        <RetainDirection>false</RetainDirection>
+        <WalkAction>
+            <Animation>flying</Animation>
+        </WalkAction>
+    </PatrolEnemyAIStateComponent>
+    <PhysicsComponent>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <CollisionSize width="60" height="35" />
+        <GravityScale>0.000000</GravityScale>
+        <ClampToGround>false</ClampToGround>
+    </PhysicsComponent>
+</Actor>

@@ -223,6 +223,7 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     m_Direction(Direction_Left),
     //m_pCurrentAction(NULL),
     BaseEnemyAIStateComponent("PatrolState"),
+    m_bIsFlying(false),
     m_PatrolSpeed(0.0),
     m_bInitialized(false),
     m_bRetainDirection(false),
@@ -288,6 +289,7 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
         }
     }
 
+    ParseValueFromXmlElem(&m_bIsFlying, pData->FirstChildElement("IsFlying"));
     ParseValueFromXmlElem(&m_IsAlwaysIdle, pData->FirstChildElement("IsAlwaysIdle"));
 
     if (TiXmlElement* pElem = pData->FirstChildElement("IdleSpeech"))

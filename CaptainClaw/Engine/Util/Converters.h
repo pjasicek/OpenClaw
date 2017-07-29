@@ -945,7 +945,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "PunkRat" ||
              logic == "CutThroat" ||
              logic == "RobberThief" ||
-             logic == "TownGuard1")
+             logic == "TownGuard1" ||
+             logic == "Seagull")
     {
         std::vector<PickupType> loot;
         if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
@@ -1029,6 +1030,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                     wwdObject->minX -= 80;
                     wwdObject->maxX += 80;
                 }
+            }
+            else if (logic == "Seagull")
+            {
+                actorProto = ActorPrototype_Level5_Seagull;
             }
         }
         assert(actorProto != ActorPrototype_Start && "Unsupported level ?");

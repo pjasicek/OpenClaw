@@ -271,6 +271,7 @@ enum ActorPrototype
     ActorPrototype_Level4_RobberThief,
 
     ActorPrototype_Level5_TownGuard1,
+    ActorPrototype_Level5_Seagull,
 
     // Elevators
     ActorPrototype_BaseElevator,
