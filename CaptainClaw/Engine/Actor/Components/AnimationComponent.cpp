@@ -333,12 +333,12 @@ void AnimationComponent::OnAnimationFrameStarted(AnimationFrame* frame)
 
     // Notify render component to change frame image
     shared_ptr<ActorRenderComponent> renderComponent =
-        MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+        MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>());
     if (renderComponent)
     {
         renderComponent->SetImage(frame->imageName);
     }
-    else if ((renderComponent = MakeStrongPtr(_owner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name))))
+    else if ((renderComponent = MakeStrongPtr(_owner->GetComponent<HUDRenderComponent>())))
     {
         renderComponent->SetImage(frame->imageName);
     }

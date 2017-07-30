@@ -1,0 +1,15 @@
+<Actor Type="Level6_SteppingGround" Parent="ActorPrototype_BaseSteppingGround" ActorPrototypeName="ActorPrototype_Level6_SteppingGround">
+	<PositionComponent>
+		<!-- DEFINED IN CODE -->
+		<Position x="-1" y="-1" /> 
+	</PositionComponent>
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL6/IMAGES/SEWAGESTEPSTONE/*</ImagePath>
+	</ActorRenderComponent>
+	<SteppingGroundComponent>
+		<ToggleFrameIdx>1</ToggleFrameIdx>
+        <TimeOn>150</TimeOn>
+        <TimeOff>500</TimeOff>
+        <ToggleSound>/LEVEL6/SOUNDS/STONERISE3.WAV</ToggleSound>
+    </SteppingGroundComponent>
+</Actor>

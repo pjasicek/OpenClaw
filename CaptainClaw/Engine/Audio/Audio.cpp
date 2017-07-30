@@ -62,14 +62,14 @@ bool Audio::Initialize(const GameOptions& config)
 
     Mix_AllocateChannels(config.mixingChannels);
 
-    int reservedChannels = Mix_ReserveChannels(4);
-    if (reservedChannels != 4)
+    int reservedChannels = Mix_ReserveChannels(16);
+    if (reservedChannels != 16)
     {
         LOG_ERROR(std::string(Mix_GetError()));
         return false;
     }
 
-    Mix_GroupChannels(0, 3, 1);
+    Mix_GroupChannels(0, 15, 1);
 
     m_SoundVolume = config.soundVolume;
     m_MusicVolume = config.musicVolume;

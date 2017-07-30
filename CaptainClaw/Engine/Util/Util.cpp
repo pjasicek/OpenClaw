@@ -308,7 +308,7 @@ namespace Util
                 (IsInBetween(tileDesc->rect.right, 0, tileDesc->width - 1)) && (IsInBetween(tileDesc->rect.bottom, 0, tileDesc->height - 1)))
             {
                 //myfile << "Tile 11" << endl;
-                assert(false && "Paring rects case: 11");
+                //assert(false && "Paring rects case: 11");
             }
             // My paper case (12)
             // This yields 4 rectangles

@@ -268,6 +268,23 @@ bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
         m_CurrentImage = m_ImageMap.begin()->second;
     }
 
+    // Hacky. Rebuild image names which dont have "frame" in it after initialization
+    if (m_ImageMap.begin()->first.find("frame") == std::string::npos)
+    {
+        ImageMap normalizedImageMap;
+        int currImageIdx = 1;
+        for (auto& it : m_ImageMap)
+        {
+            std::string imageKey = "frame" + Util::ConvertToThreeDigitsString(currImageIdx);
+            normalizedImageMap.insert(std::make_pair(imageKey, it.second));
+            currImageIdx++;
+        }
+        m_ImageMap.clear();
+        m_ImageMap = normalizedImageMap;
+    }
+
+    //LOG("---------------------");
+
     return true;
 }
 
@@ -325,7 +342,7 @@ void ActorRenderComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElemen
 void ActorRenderComponent::SetImage(std::string imageName)
 {
     // Hack.. only 2, 3, 4
-    if (_owner->GetName() == "LEVEL_TORCH2")
+    /*if (_owner->GetName() == "LEVEL_TORCH2")
     {
         imageName = imageName.substr(7);
         int num = std::stoi(imageName) + 1;
@@ -334,6 +351,15 @@ void ActorRenderComponent::SetImage(std::string imageName)
     else if (_owner->GetName() == "Level4_SpringBoard")
     {
         imageName = imageName.substr(5);
+    }*/
+
+    if (_owner->GetName() == "StaticImage")
+    {
+        LOG("Map:");
+        for (auto& it : m_ImageMap)
+        {
+            LOG("Image: " + it.first);
+        }
     }
 
     if (m_ImageMap.count(imageName) > 0)
@@ -348,19 +374,30 @@ void ActorRenderComponent::SetImage(std::string imageName)
             return;
         }
 
+        LOG("Actor: " + _owner->GetName() + " ImageName: " + imageName);
+        return;
+        assert(false);
+
         // Try 01, 02, 03...
         std::string newImageName = imageName.substr(6);
         if (m_ImageMap.count(newImageName) > 0)
         {
             LOG("Setting: " + newImageName);
             m_CurrentImage = m_ImageMap[newImageName];
+            return;
         }
-        else
+
+        newImageName = imageName.substr(5);
+        if (m_ImageMap.count(newImageName) > 0)
         {
-            LOG("NewImageName: " + newImageName);
-            LOG_ERROR("Trying to set nonexistant image: " + imageName + " to render component of actor: " +
-                _owner->GetName());
+            LOG("Setting: " + newImageName);
+            m_CurrentImage = m_ImageMap[newImageName];
+            return;
         }
+
+        LOG("NewImageName: " + newImageName);
+        LOG_ERROR("Trying to set nonexistant image: " + imageName + " to render component of actor: " +
+            _owner->GetName());
 
         /*LOG("Actor has following images: ");
         for (auto iter : m_ImageMap)

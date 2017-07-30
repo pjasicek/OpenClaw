@@ -237,7 +237,7 @@ inline TiXmlElement* CrateToXml(WwdObject* pWwdObject)
 
 inline TiXmlElement* EyeCandyToXml(WwdObject* pWwdObject)
 {
-    if (std::string(pWwdObject->logic).find("AniCandy") != std::string::npos)
+    if (std::string(pWwdObject->logic).find("Ani") != std::string::npos)
     {
         TiXmlElement* animElem = new TiXmlElement("AnimationComponent");
         XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle150", animElem);
@@ -716,7 +716,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             loot, 
             wwdObject->z);
     }
-    else if (logic.find("Candy") != std::string::npos)
+    else if (logic.find("Candy") != std::string::npos ||
+             logic == "AniCycle")
     {
         TiXmlElement* elem = EyeCandyToXml(wwdObject);
         if (elem)
@@ -748,6 +749,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             }
             case 4: proto = ActorPrototype_Level4_CrumblingPeg; break;
             case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
+            case 6: proto = ActorPrototype_Level6_CrumblingPeg; break;
             default: assert(false && "Nonexistant actor prototype"); break;
         }
         assert(proto != ActorPrototype_Start && "Unsupported level ?");
@@ -845,6 +847,17 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         else if (levelNumber == 5)
         {
             elevatorProto = ActorPrototype_Level5_Elevator;
+        }
+        else if (levelNumber == 6)
+        {
+            if (imageSet == "LEVEL_GRILLELEVATOR")
+            {
+                elevatorProto = ActorPrototype_Level6_Elevator_1;
+            }
+            else
+            {
+                elevatorProto = ActorPrototype_Level6_Elevator_2;
+            }
         }
         assert(elevatorProto != ActorPrototype_Start && "Unsupported level ?");
 
@@ -1067,8 +1080,31 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 actorProto = ActorPrototype_Level5_Seagull;
             }
         }
-        assert(actorProto != ActorPrototype_Start && "Unsupported level ?");
+        else if (levelNumber == 6)
+        {
+            if (logic == "TownGuard1")
+            {
+                actorProto = ActorPrototype_Level6_TownGuard1;
+            }
+            else if (logic == "TownGuard2")
+            {
+                actorProto = ActorPrototype_Level6_TownGuard2;
+            }
+            else if (logic == "Seagull")
+            {
+                actorProto = ActorPrototype_Level6_Seagull;
+            }
+            else if (logic == "Rat")
+            {
+                actorProto = ActorPrototype_Level6_Rat;
+            }
+        }
 
+        if (actorProto == ActorPrototype_Start)
+        {
+            LOG_ERROR("Failed to find ActorPrototype for logic: " + logic + " in level: " + ToStr(levelNumber));
+            assert(false && "Unsupported level ?");
+        }
 
         return ActorTemplates::CreateXmlData_EnemyAIActor(
             actorProto,
@@ -1156,6 +1192,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         else if (levelNumber == 4)
         {
             proto = ActorPrototype_Level4_BossStager;
+        }
+        else if (levelNumber == 6)
+        {
+            proto = ActorPrototype_Level6_BossStager;
         }
         assert(proto != ActorPrototype_None);
 
@@ -1302,6 +1342,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         RopeDef def;
         def.timeToFlayBackAndForth = wwdObject->speedX;
+        if (def.timeToFlayBackAndForth == 0)
+        {
+            def.timeToFlayBackAndForth = 1500;
+        }
         assert(def.timeToFlayBackAndForth != 0);
 
         SAFE_DELETE(pActorElem);
@@ -1319,6 +1363,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         if (levelNumber == 4)
         {
             proto = ActorPrototype_Level4_SteppingGround;
+        }
+        else if (levelNumber == 6)
+        {
+            proto = ActorPrototype_Level6_SteppingGround;
         }
 
         assert(proto != ActorPrototype_None && "Unsupported level ?");

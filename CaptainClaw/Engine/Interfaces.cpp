@@ -32,18 +32,22 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level5_TownGuard2, "ActorPrototype_Level5_TownGuard2" },
         { ActorPrototype_Level5_Seagull, "ActorPrototype_Level5_Seagull" },
 
+        { ActorPrototype_Level6_TownGuard1, "ActorPrototype_Level6_TownGuard1" },
+        { ActorPrototype_Level6_TownGuard2, "ActorPrototype_Level6_TownGuard2" },
+        { ActorPrototype_Level6_Rat, "ActorPrototype_Level6_Rat" },
+        { ActorPrototype_Level6_Seagull, "ActorPrototype_Level6_Seagull" },
+
         // Elevators
         { ActorPrototype_BaseElevator, "ActorPrototype_BaseElevator" },
 
         { ActorPrototype_Level1_Elevator, "ActorPrototype_Level1_Elevator" },
         { ActorPrototype_Level2_Elevator, "ActorPrototype_Level2_Elevator" },
-
         { ActorPrototype_Level3_Elevator_1, "ActorPrototype_Level3_Elevator_1" },
         { ActorPrototype_Level3_Elevator_2, "ActorPrototype_Level3_Elevator_2" },
-
         { ActorPrototype_Level4_Elevator, "ActorPrototype_Level4_Elevator" },
-
         { ActorPrototype_Level5_Elevator, "ActorPrototype_Level5_Elevator" },
+        { ActorPrototype_Level6_Elevator_1, "ActorPrototype_Level6_Elevator_1" },
+        { ActorPrototype_Level6_Elevator_2, "ActorPrototype_Level6_Elevator_2" },
 
         { ActorPrototype_BasePathElevator, "ActorPrototype_BasePathElevator" },
 
@@ -61,6 +65,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level3_CrumblingPeg_2, "ActorPrototype_Level3_CrumblingPeg_2" },
         { ActorPrototype_Level4_CrumblingPeg, "ActorPrototype_Level4_CrumblingPeg" },
         { ActorPrototype_Level5_CrumblingPeg, "ActorPrototype_Level5_CrumblingPeg" },
+        { ActorPrototype_Level6_CrumblingPeg, "ActorPrototype_Level6_CrumblingPeg" },
 
         // Projectile spawners
         { ActorPrototype_Level2_TowerCannonLeft, "ActorPrototype_Level2_TowerCannonLeft" },
@@ -81,6 +86,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         // Boss Stagers
         { ActorPrototype_Level2_BossStager, "ActorPrototype_Level2_BossStager" },
         { ActorPrototype_Level4_BossStager, "ActorPrototype_Level4_BossStager" },
+        { ActorPrototype_Level6_BossStager, "ActorPrototype_Level6_BossStager" },
 
         // Bosses
         { ActorPrototype_Level2_LaRaux, "ActorPrototype_Level2_LaRaux" },
@@ -88,6 +94,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Stepping stones
         { ActorPrototype_Level4_SteppingGround, "ActorPrototype_Level4_SteppingGround" },
+        { ActorPrototype_Level6_SteppingGround, "ActorPrototype_Level6_SteppingGround" },
 
         // Spring board
         { ActorPrototype_Level4_SpringBoard, "ActorPrototype_Level4_SpringBoard" },
@@ -168,18 +175,22 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level5_TownGuard2", ActorPrototype_Level5_TownGuard2 },
         { "ActorPrototype_Level5_Seagull", ActorPrototype_Level5_Seagull },
 
+        { "ActorPrototype_Level6_TownGuard1", ActorPrototype_Level6_TownGuard1 },
+        { "ActorPrototype_Level6_TownGuard2", ActorPrototype_Level6_TownGuard2 },
+        { "ActorPrototype_Level6_Rat", ActorPrototype_Level6_Rat },
+        { "ActorPrototype_Level6_Seagull", ActorPrototype_Level6_Seagull },
+
         // Elevators
         { "ActorPrototype_BaseElevator", ActorPrototype_BaseElevator },
 
         { "ActorPrototype_Level1_Elevator", ActorPrototype_Level1_Elevator },
         { "ActorPrototype_Level2_Elevator", ActorPrototype_Level2_Elevator },
-
         { "ActorPrototype_Level3_Elevator_1", ActorPrototype_Level3_Elevator_1 },
         { "ActorPrototype_Level3_Elevator_2", ActorPrototype_Level3_Elevator_2 },
-
         { "ActorPrototype_Level4_Elevator", ActorPrototype_Level4_Elevator },
-
         { "ActorPrototype_Level5_Elevator", ActorPrototype_Level5_Elevator },
+        { "ActorPrototype_Level6_Elevator_1", ActorPrototype_Level6_Elevator_1 },
+        { "ActorPrototype_Level6_Elevator_2", ActorPrototype_Level6_Elevator_2 },
 
         { "ActorPrototype_BasePathElevator", ActorPrototype_BasePathElevator },
 
@@ -191,6 +202,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level3_CrumblingPeg_2", ActorPrototype_Level3_CrumblingPeg_2 },
         { "ActorPrototype_Level4_CrumblingPeg", ActorPrototype_Level4_CrumblingPeg },
         { "ActorPrototype_Level5_CrumblingPeg", ActorPrototype_Level5_CrumblingPeg },
+        { "ActorPrototype_Level6_CrumblingPeg", ActorPrototype_Level6_CrumblingPeg },
 
         { "ActorPrototype_Level1_TogglePeg", ActorPrototype_Level1_TogglePeg },
         { "ActorPrototype_Level2_TogglePeg", ActorPrototype_Level2_TogglePeg },
@@ -218,6 +230,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         // Boss Stagers
         { "ActorPrototype_Level2_BossStager", ActorPrototype_Level2_BossStager },
         { "ActorPrototype_Level4_BossStager", ActorPrototype_Level4_BossStager },
+        { "ActorPrototype_Level6_BossStager", ActorPrototype_Level6_BossStager },
 
         // Bosses
         { "ActorPrototype_Level2_LaRaux", ActorPrototype_Level2_LaRaux },
@@ -225,6 +238,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Stepping stones
         { "ActorPrototype_Level4_SteppingGround", ActorPrototype_Level4_SteppingGround },
+        { "ActorPrototype_Level6_SteppingGround", ActorPrototype_Level6_SteppingGround },
 
         // Spring board
         { "ActorPrototype_Level4_SpringBoard", ActorPrototype_Level4_SpringBoard },

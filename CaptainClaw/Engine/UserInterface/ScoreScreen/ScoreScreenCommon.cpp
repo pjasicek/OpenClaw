@@ -48,7 +48,8 @@ void UpdateScoreImageNumbers(int newNumber, ActorList& imageNumberActorList)
     for (Actor* pScoreNumber : imageNumberActorList)
     {
         int num = (newNumber / divider) % 10;
-        std::string imageNumStr = Util::ConvertToThreeDigitsString(num);
+        // All score images are automatically converted to frame00X format where frame001 is 0, frame002 is 1 etc.
+        std::string imageNumStr = "frame" + Util::ConvertToThreeDigitsString(num + 1);
         SetActorImage(pScoreNumber, imageNumStr);
 
         divider /= 10;

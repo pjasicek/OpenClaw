@@ -28,9 +28,17 @@ void OnPidLoaded(const char* resource, WapPid* pPid)
     {
         pPid->offsetX += 2;
     }
-    else if (resourceName.find("/images/powderkeg/frame") != std::string::npos)
+    else if (resourceName.find("/level2/images/powderkeg/frame") != std::string::npos)
     {
-        pPid->offsetY -= 46;
+        pPid->offsetY += 20;
+    }
+    else if (resourceName.find("/level3/images/powderkeg/frame") != std::string::npos)
+    {
+        pPid->offsetY -= 24;
+    }
+    else if (resourceName.find("/level6/images/powderkeg/frame") != std::string::npos)
+    {
+        pPid->offsetY += 4;
     }
     else if (resourceName.find("/level3/images/ratbomb/") != std::string::npos)
     {

@@ -1,0 +1,15 @@
+<Actor Type="Level6_CrumblingPeg" Parent="ActorPrototype_BaseCrumblingPeg" ActorPrototypeName="ActorPrototype_Level6_CrumblingPeg">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL6/IMAGES/BREAKINGLEDGE/*</ImagePath>
+		<Palette>/LEVEL6/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<CrumblingPegAIComponent>
+		<CrumbleDelay>0</CrumbleDelay>
+		<CrumbleFrameIdx>6</CrumbleFrameIdx>
+		<CrumbleSound>/LEVEL6/SOUNDS/PEGCRUMBLE.WAV</CrumbleSound>
+	</CrumblingPegAIComponent>
+	<PhysicsComponent>
+        <PositionOffset x="0" y="-20" />
+        <CollisionSize width="64" height="40" />
+    </PhysicsComponent>
+</Actor>

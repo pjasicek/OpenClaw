@@ -1,0 +1,7 @@
+<Actor Type="Level6_Seagull" Parent="ActorPrototype_Level5_Seagull" ActorPrototypeName="ActorPrototype_Level6_Seagull">
+    <ActorRenderComponent>
+        <ZCoord>1020</ZCoord>
+        <ImagePath>/LEVEL6/IMAGES/SEAGULL/*</ImagePath>
+        <Palette>/LEVEL6/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+</Actor>

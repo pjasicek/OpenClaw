@@ -1502,7 +1502,7 @@ namespace ActorTemplates
         pActor->SetAttribute("Type", imageSet.c_str());
 
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
-        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), zCoord));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), 0));
 
         /*ActorBodyDef bodyDef;
         bodyDef.bodyType = b2_dynamicBody;
