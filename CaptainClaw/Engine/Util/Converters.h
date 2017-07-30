@@ -972,6 +972,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "CutThroat" ||
              logic == "RobberThief" ||
              logic == "TownGuard1" ||
+             logic == "TownGuard2" ||
              logic == "Seagull")
     {
         std::vector<PickupType> loot;
@@ -1056,6 +1057,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                     wwdObject->minX -= 80;
                     wwdObject->maxX += 80;
                 }
+            }
+            else if (logic == "TownGuard2")
+            {
+                actorProto = ActorPrototype_Level5_TownGuard2;
             }
             else if (logic == "Seagull")
             {

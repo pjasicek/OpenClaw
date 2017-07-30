@@ -1,16 +1,16 @@
-<Actor Type="Level5_TownGuard1" Parent="ActorPrototype_BaseEnemy" ActorPrototypeName="ActorPrototype_Level5_TownGuard1">
+<Actor Type="Level5_TownGuard2" Parent="ActorPrototype_BaseEnemy" ActorPrototypeName="ActorPrototype_Level5_TownGuard2">
     <ActorRenderComponent>
         <ZCoord>1020</ZCoord>
-        <ImagePath>/LEVEL5/IMAGES/TOWNGUARD1/*</ImagePath>
+        <ImagePath>/LEVEL5/IMAGES/TOWNGUARD2/*</ImagePath>
         <Palette>/LEVEL5/PALETTES/MAIN.PAL</Palette>
     </ActorRenderComponent>
     <AnimationComponent>
-        <AnimationPath>/LEVEL5/ANIS/TOWNGUARD1/*</AnimationPath>
+        <AnimationPath>/LEVEL5/ANIS/TOWNGUARD2/*</AnimationPath>
         <PauseOnStart>false</PauseOnStart>
     </AnimationComponent>
     <HealthComponent>
-        <Health>20</Health>
-        <MaxHealth>20</MaxHealth>
+        <Health>25</Health>
+        <MaxHealth>25</MaxHealth>
     </HealthComponent>
     <EnemyAIComponent>
         <DeathAnimation>killfall</DeathAnimation>
@@ -46,7 +46,7 @@
         <Attacks>
             <AttackAction>
                 <Animation>strike2</Animation>
-                <AttackAnimFrameIdx>5</AttackAnimFrameIdx>
+                <AttackAnimFrameIdx>4</AttackAnimFrameIdx>
                 <AttackType>0</AttackType>
                 <AttackFxImageSet>NONE</AttackFxImageSet>
                 <AttackSpawnPositionOffset x="-30" y="0" />
@@ -81,7 +81,7 @@
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
-                <AttackAnimFrameIdx>5</AttackAnimFrameIdx>
+                <AttackAnimFrameIdx>4</AttackAnimFrameIdx>
                 <AttackType>0</AttackType>
                 <AttackFxImageSet>NONE</AttackFxImageSet>
                 <AttackSpawnPositionOffset x="-30" y="25" />
