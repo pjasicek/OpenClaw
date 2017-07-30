@@ -1200,7 +1200,8 @@ bool DuckRangedAttackAIStateComponent::VCanEnter()
 
 DiveAttackAIStateComponent::DiveAttackAIStateComponent()
 :
-    BaseEnemyAIStateComponent("DiveAttackAIStateComponent")
+    BaseEnemyAIStateComponent("DiveAttackAIStateComponent"),
+    m_DiveState(DiveState_None)
 {
 
 }
