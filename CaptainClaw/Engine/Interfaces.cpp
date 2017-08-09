@@ -98,6 +98,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Spring board
         { ActorPrototype_Level4_SpringBoard, "ActorPrototype_Level4_SpringBoard" },
+        { ActorPrototype_Level6_GroundBlower, "ActorPrototype_Level6_GroundBlower" },
 
         // Loot containers
         { ActorPrototype_BaseLootContainer, "ActorPrototype_BaseLootContainer" },
@@ -242,6 +243,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Spring board
         { "ActorPrototype_Level4_SpringBoard", ActorPrototype_Level4_SpringBoard },
+        { "ActorPrototype_Level6_GroundBlower", ActorPrototype_Level6_GroundBlower },
 
         // Loot containers
         { "ActorPrototype_BaseLootContainer", ActorPrototype_BaseLootContainer },

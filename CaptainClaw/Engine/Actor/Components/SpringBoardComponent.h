@@ -4,8 +4,9 @@
 #include "../../SharedDefines.h"
 #include "../ActorComponent.h"
 #include "AnimationComponent.h"
+#include "TriggerComponents/TriggerComponent.h"
 
-class SpringBoardComponent : public ActorComponent, public AnimationObserver
+class SpringBoardComponent : public ActorComponent, public AnimationObserver, public TriggerObserver
 {
 public:
     SpringBoardComponent();
@@ -21,6 +22,10 @@ public:
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
 
+    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered) override;
+    virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft) override;
+
+    // Internal
     void OnActorBeginContact(Actor* pActor);
     void OnActorEndContact(Actor* pActor);
 

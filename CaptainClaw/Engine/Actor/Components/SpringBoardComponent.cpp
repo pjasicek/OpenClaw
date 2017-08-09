@@ -1,6 +1,7 @@
 #include "SpringBoardComponent.h"
 #include "PositionComponent.h"
 #include "PhysicsComponent.h"
+#include "TriggerComponents/TriggerComponent.h"
 
 #include "../../GameApp/BaseGameApp.h"
 #include "../../GameApp/BaseGameLogic.h"
@@ -37,6 +38,11 @@ void SpringBoardComponent::VPostInit()
 
     m_pAnimationComponent->AddObserver(this);
     m_pAnimationComponent->SetAnimation(m_Properties.idleAnimName);
+
+    if (auto pTriggerComp = MakeStrongPtr(_owner->GetComponent<TriggerComponent>()))
+    {
+        pTriggerComp->AddObserver(this);
+    }
 }
 
 void SpringBoardComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
@@ -64,6 +70,16 @@ void SpringBoardComponent::VOnAnimationFrameChanged(Animation* pAnimation, Anima
             }
         }
     }
+}
+
+void SpringBoardComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
+{
+    OnActorBeginContact(pActorWhoEntered);
+}
+
+void SpringBoardComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft)
+{
+    OnActorEndContact(pActorWhoLeft);
 }
 
 void SpringBoardComponent::VOnAnimationLooped(Animation* pAnimation)

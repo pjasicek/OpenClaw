@@ -1385,13 +1385,18 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             position,
             def);
     }
-    else if (logic == "SpringBoard")
+    else if (logic == "SpringBoard" ||
+             logic == "GroundBlower")
     {
         ActorPrototype proto = ActorPrototype_None;
 
         if (levelNumber == 4)
         {
             proto = ActorPrototype_Level4_SpringBoard;
+        }
+        else if (levelNumber == 6)
+        {
+            proto = ActorPrototype_Level6_GroundBlower;
         }
         assert(proto != ActorPrototype_None && "Unsupported level ?");
 

@@ -1,0 +1,26 @@
+<Actor Type="Level6_GroundBlower" Parent="ActorPrototype_BaseSpringBoard" ActorPrototypeName="ActorPrototype_Level6_GroundBlower">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL6/IMAGES/BLOWING1/*.PID</ImagePath>
+	</ActorRenderComponent>
+    <TriggerComponent>
+        <TriggerUnlimited>true</TriggerUnlimited>
+        <IsStatic>true</IsStatic>
+    </TriggerComponent>
+    <AnimationComponent>
+		<AnimationPath>/LEVEL6/ANIS/GROUNDBLOWER.ANI</AnimationPath>
+	</AnimationComponent>
+	<SpringBoardComponent>
+        <SpringFrameIdx>2</SpringFrameIdx>
+        <SpringDelay>0</SpringDelay>
+        <IdleAnimName>groundblower</IdleAnimName>
+        <SpringAnimName>groundblower</SpringAnimName>
+	</SpringBoardComponent>
+    <PhysicsComponent>
+        <FixtureType>Trigger</FixtureType>
+        <HasSensorBehaviour>true</HasSensorBehaviour>
+        <PositionOffset x="0" y="40" />
+        <CollisionSize width="40" height="20" />
+        <CollisionFlag>16384</CollisionFlag>
+        <CollisionMask>1048578</CollisionMask>
+    </PhysicsComponent>
+</Actor>

@@ -340,6 +340,7 @@ enum ActorPrototype
 
     // Spring board
     ActorPrototype_Level4_SpringBoard,
+    ActorPrototype_Level6_GroundBlower,
 
     // Loot containers
     ActorPrototype_BaseLootContainer,

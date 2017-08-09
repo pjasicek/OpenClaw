@@ -353,6 +353,7 @@ void ActorRenderComponent::SetImage(std::string imageName)
         imageName = imageName.substr(5);
     }*/
 
+    // Hacks
     if (_owner->GetName() == "StaticImage")
     {
         LOG("Map:");
@@ -360,6 +361,10 @@ void ActorRenderComponent::SetImage(std::string imageName)
         {
             LOG("Image: " + it.first);
         }
+    }
+    else if (_owner->GetName() == "Level6_GroundBlower")
+    {
+        SetAlpha(255);
     }
 
     if (m_ImageMap.count(imageName) > 0)
@@ -371,6 +376,12 @@ void ActorRenderComponent::SetImage(std::string imageName)
         // Known... Treasure chest HUD
         if (imageName == "frame000")
         {
+            return;
+        }
+        else if (_owner->GetName() == "Level6_GroundBlower")
+        {
+            // This actor is missing a frame with empty image
+            SetAlpha(0);
             return;
         }
 
