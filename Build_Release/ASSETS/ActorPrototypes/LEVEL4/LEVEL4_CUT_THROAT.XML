@@ -41,6 +41,11 @@
         <WalkAction>
             <Animation>fastadvance</Animation>
         </WalkAction>
+        <IdleSpeech>
+            <IdleSpeechSound>/LEVEL4/SOUNDS/CUTTHROAT/00350003.WAV</IdleSpeechSound>
+            <IdleSpeechSoundMaxDistance>350</IdleSpeechSoundMaxDistance>
+            <IdleSpeechSoundPlayChance>40</IdleSpeechSoundPlayChance>
+        </IdleSpeech>
     </PatrolEnemyAIStateComponent>
     <MeleeAttackAIStateComponent>
         <StatePriority>20</StatePriority>
@@ -68,6 +73,10 @@
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>
+        <AttackSpeech>
+            <AttackSpeechSound>/LEVEL4/SOUNDS/CUTTHROAT/00350012.WAV</AttackSpeechSound>
+            <AttackSpeechSoundPlayChance>30</AttackSpeechSoundPlayChance>
+        </AttackSpeech>
     </MeleeAttackAIStateComponent>
     <RangedAttackAIStateComponent>
         <StatePriority>10</StatePriority>
@@ -93,6 +102,10 @@
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>
+        <AttackSpeech>
+            <AttackSpeechSound>/LEVEL4/SOUNDS/CUTTHROAT/00350013.WAV</AttackSpeechSound>
+            <AttackSpeechSoundPlayChance>30</AttackSpeechSoundPlayChance>
+        </AttackSpeech>
     </RangedAttackAIStateComponent>
     <DuckRangedAttackAIStateComponent>
         <AttackDelay>250</AttackDelay>

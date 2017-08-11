@@ -13,9 +13,8 @@
     <EnemyAIComponent>
         <DeathAnimation>killfall</DeathAnimation>
         <Sounds>
-            <Sound SoundType="TakeDamage" SoundName="/LEVEL3/SOUNDS/CUTTHROAT/00350010.WAV" />
-            <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340014.WAV" />
-            <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340015.WAV" />
+            <Sound SoundType="TakeDamage" SoundName="/LEVEL1/SOUNDS/HIT1.WAV" />
+            <Sound SoundType="Death" SoundName="/LEVEL3/SOUNDS/CUTTHROAT/00350010.WAV" />
             <Sound SoundType="MeleeAttack" SoundName="/LEVEL4/SOUNDS/STAB2.WAV" />
             <Sound SoundType="RangedAttack" SoundName="/LEVEL3/SOUNDS/CUTTHROAT/THROWHIGH.WAV" />
         </Sounds>
@@ -38,6 +37,11 @@
             <AnimationDelay>0</AnimationDelay>
             <Animation>idle</Animation>
         </IdleAction>
+        <IdleSpeech>
+            <IdleSpeechSound>/LEVEL3/SOUNDS/CUTTHROAT/00350003.WAV</IdleSpeechSound>
+            <IdleSpeechSoundMaxDistance>350</IdleSpeechSoundMaxDistance>
+            <IdleSpeechSoundPlayChance>40</IdleSpeechSoundPlayChance>
+        </IdleSpeech>
         <WalkAction>
             <Animation>fastadvance</Animation>
         </WalkAction>
@@ -68,6 +72,10 @@
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>
+        <AttackSpeech>
+            <AttackSpeechSound>/LEVEL3/SOUNDS/CUTTHROAT/00350012.WAV</AttackSpeechSound>
+            <AttackSpeechSoundPlayChance>30</AttackSpeechSoundPlayChance>
+        </AttackSpeech>
     </MeleeAttackAIStateComponent>
     <RangedAttackAIStateComponent>
         <StatePriority>10</StatePriority>
@@ -93,6 +101,10 @@
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>
+        <AttackSpeech>
+            <AttackSpeechSound>/LEVEL3/SOUNDS/CUTTHROAT/00350013.WAV</AttackSpeechSound>
+            <AttackSpeechSoundPlayChance>30</AttackSpeechSoundPlayChance>
+        </AttackSpeech>
     </RangedAttackAIStateComponent>
     <DuckRangedAttackAIStateComponent>
         <StatePriority>5</StatePriority>

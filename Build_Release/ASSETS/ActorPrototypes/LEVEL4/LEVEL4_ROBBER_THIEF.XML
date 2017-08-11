@@ -40,6 +40,12 @@
         <WalkAction>
             <Animation>fastadvance</Animation>
         </WalkAction>
+        <IdleSpeech>
+            <IdleSpeechSound>/LEVEL4/SOUNDS/ROBBERTHIEF/00360009.WAV</IdleSpeechSound>
+            <IdleSpeechSound>/LEVEL4/SOUNDS/ROBBERTHIEF/00360010.WAV</IdleSpeechSound>
+            <IdleSpeechSoundMaxDistance>350</IdleSpeechSoundMaxDistance>
+            <IdleSpeechSoundPlayChance>40</IdleSpeechSoundPlayChance>
+        </IdleSpeech>
     </PatrolEnemyAIStateComponent>
     <RangedAttackAIStateComponent>
         <StatePriority>10</StatePriority>
@@ -66,6 +72,10 @@
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>
+        <AttackSpeech>
+            <AttackSpeechSound>/LEVEL4/SOUNDS/ROBBERTHIEF/00340010.WAV</AttackSpeechSound>
+            <AttackSpeechSoundPlayChance>20</AttackSpeechSoundPlayChance>
+        </AttackSpeech>
     </RangedAttackAIStateComponent>
     <DuckRangedAttackAIStateComponent>
         <StatePriority>5</StatePriority>
