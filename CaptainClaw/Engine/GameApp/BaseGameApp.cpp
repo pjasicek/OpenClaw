@@ -526,6 +526,10 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("IdleSoundQuoteInterval"));
         ParseValueFromXmlElem(&m_GlobalOptions.platformSpeedModifier,
             pGlobalOptionsRootElem->FirstChildElement("PlatformSpeedModifier"));
+        ParseValueFromXmlElem(&m_GlobalOptions.runSpeed,
+            pGlobalOptionsRootElem->FirstChildElement("RunSpeed"));
+        ParseValueFromXmlElem(&m_GlobalOptions.powerupRunSpeed,
+            pGlobalOptionsRootElem->FirstChildElement("PowerupRunSpeed"));
         ParseValueFromXmlElem(&m_GlobalOptions.maxJumpHeight,
             pGlobalOptionsRootElem->FirstChildElement("MaxJumpHeight"));
         ParseValueFromXmlElem(&m_GlobalOptions.powerupMaxJumpHeight,

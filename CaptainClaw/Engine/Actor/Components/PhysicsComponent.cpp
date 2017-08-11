@@ -7,6 +7,7 @@
 
 #include "PositionComponent.h"
 #include "ControllableComponent.h"
+#include "ControllerComponents/PowerupComponent.h"
 
 #include "../../Events/EventMgr.h"
 #include "../../Events/Events.h"
@@ -603,7 +604,15 @@ set_velocity:
 
         if (fabs(m_CurrentSpeed.x) > DBL_EPSILON)
         {
-            SetVelocity(Point(m_CurrentSpeed.x < 0 ? -5 : 5, velocity.y));
+            double runSpeed = g_pApp->GetGlobalOptions()->runSpeed;
+            if (auto pPowerupComp = MakeStrongPtr(_owner->GetComponent<PowerupComponent>()))
+            {
+                if (pPowerupComp->HasPowerup(PowerupType_Catnip))
+                {
+                    runSpeed = g_pApp->GetGlobalOptions()->powerupRunSpeed;
+                }
+            }
+            SetVelocity(Point(m_CurrentSpeed.x < 0 ? -1.0 * runSpeed : runSpeed, velocity.y));
         }
         else
         {

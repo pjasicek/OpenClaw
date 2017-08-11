@@ -22,7 +22,7 @@
         <ConsoleFont font="clacon.ttf" size="20" />
     </Font>
     <Assets>
-		<AssetsFolder></AssetsFolder>
+        <AssetsFolder></AssetsFolder>
         <RezArchive>CLAW.REZ</RezArchive>
         <CustomArchive>ASSETS.ZIP</CustomArchive>
         <ResourceCacheSize>150</ResourceCacheSize>
@@ -52,12 +52,12 @@
         <MaxJumpHeight>142</MaxJumpHeight>
         <PowerupMaxJumpHeight>200</PowerupMaxJumpHeight>
         <SkipMenu>false</SkipMenu>
-	<StartLookUpOrDownTime>1500</StartLookUpOrDownTime>
-	<MaxLookUpOrDownDistance>250</MaxLookUpOrDownDistance>
-	<LookUpOrDownSpeed>250</LookUpOrDownSpeed>
-	<ClawRunningSpeed>5</ClawRunningSpeed>
-	<SpringBoardSpringHeight>UNUSED</SpringBoardSpringHeight>
-	<SpringBoardSpringSpeed>11</SpringBoardSpringSpeed>
-	<SkipBossFightIntro>false</SkipBossFightIntro>
+    <StartLookUpOrDownTime>1500</StartLookUpOrDownTime>
+    <MaxLookUpOrDownDistance>250</MaxLookUpOrDownDistance>
+    <LookUpOrDownSpeed>250</LookUpOrDownSpeed>
+    <ClawRunningSpeed>5</ClawRunningSpeed>
+    <SpringBoardSpringHeight>UNUSED</SpringBoardSpringHeight>
+    <SpringBoardSpringSpeed>11</SpringBoardSpringSpeed>
+    <SkipBossFightIntro>false</SkipBossFightIntro>
     </GlobalOptions>
 </Configuration>
