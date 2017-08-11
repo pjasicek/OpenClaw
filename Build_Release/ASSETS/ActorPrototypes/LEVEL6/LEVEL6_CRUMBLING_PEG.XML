@@ -9,7 +9,7 @@
 		<CrumbleSound>/LEVEL6/SOUNDS/PEGCRUMBLE.WAV</CrumbleSound>
 	</CrumblingPegAIComponent>
 	<PhysicsComponent>
-        <PositionOffset x="0" y="-20" />
-        <CollisionSize width="64" height="40" />
+        <PositionOffset x="0" y="-12" />
+        <CollisionSize width="75" height="20" />
     </PhysicsComponent>
 </Actor>
