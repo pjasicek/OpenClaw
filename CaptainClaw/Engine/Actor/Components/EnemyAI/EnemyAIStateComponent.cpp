@@ -1256,7 +1256,7 @@ void DiveAttackAIStateComponent::VUpdate(uint32 msDiff)
     Point currentPosition = _owner->GetPositionComponent()->GetPosition();
     if (m_DiveState == DiveState_DivingIn)
     {
-        if (currentPosition.y > m_Destination.y)
+        if ((currentPosition.y > m_Destination.y) || fabs(m_pPhysicsComponent->GetVelocity().y) < DBL_EPSILON)
         {
             g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(_owner->GetGUID(), Point(0, -1.0f * m_DiveSpeed));
             m_pAnimationComponent->SetAnimation(m_DiveOutAnimation);
