@@ -152,6 +152,7 @@ static Point GetRopeEndFramePosition(const Point& initialPosition, int frameIdx)
 
 RopeComponent::RopeComponent()
     :
+    m_TimeStanceAttach(0),
     m_pAttachedActor(NULL),
     m_pRopeEndTriggerActor(NULL)
 {
@@ -198,6 +199,11 @@ void RopeComponent::VPostPostInit()
     assert(pTrigger != nullptr);
 
     pTrigger->AddObserver(this);
+}
+
+void RopeComponent::VUpdate(uint32 msDiff)
+{
+    m_TimeStanceAttach += msDiff;
 }
 
 void RopeComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
@@ -248,12 +254,23 @@ void RopeComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFra
 
 void RopeComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
 {
-    assert(m_pAttachedActor == NULL);
-    m_pAttachedActor = pActorWhoEntered;
+    if (m_TimeStanceAttach < 250)
+    {
+        return;
+    }
+    m_TimeStanceAttach = 0;
 
     shared_ptr<ClawControllableComponent> pClawComponent =
         MakeStrongPtr(pActorWhoEntered->GetComponent<ClawControllableComponent>());
     assert(pClawComponent != nullptr);
+
+    if (pClawComponent->IsHoldingRope())
+    {
+        return;
+    }
+
+    assert(m_pAttachedActor == NULL);
+    m_pAttachedActor = pActorWhoEntered;
 
     pClawComponent->VOnAttachedToRope();
 

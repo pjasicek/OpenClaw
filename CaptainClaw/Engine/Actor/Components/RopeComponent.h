@@ -18,6 +18,8 @@ public:
     virtual void VPostInit() override;
     virtual void VPostPostInit() override;
 
+    virtual void VUpdate(uint32 msDiff) override;
+
     virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return NULL; }
 
     virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered) override;
@@ -30,6 +32,7 @@ private:
     void DetachActor();
 
     // Internal state
+    int m_TimeStanceAttach;
     Actor* m_pAttachedActor;
     Actor* m_pRopeEndTriggerActor;
 };

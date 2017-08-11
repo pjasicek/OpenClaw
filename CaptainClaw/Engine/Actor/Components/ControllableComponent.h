@@ -144,6 +144,8 @@ public:
     // Feels abit hacky
     virtual bool IsClimbing() override;
 
+    bool IsHoldingRope() { return m_State == ClawState_HoldingRope; }
+
     // AnimationObserver API
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
