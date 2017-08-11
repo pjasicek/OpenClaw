@@ -307,14 +307,17 @@ namespace Util
             else if (IsInBetween(tileDesc->rect.left, 0, tileDesc->width - 1) && (tileDesc->rect.top == 0) &&
                 (IsInBetween(tileDesc->rect.right, 0, tileDesc->width - 1)) && (IsInBetween(tileDesc->rect.bottom, 0, tileDesc->height - 1)))
             {
-                //myfile << "Tile 11" << endl;
-                //assert(false && "Paring rects case: 11");
+                SDL_Rect rect1 = { tileDesc->rect.left, tileDesc->rect.top, tileDesc->rect.right - tileDesc->rect.left, tileDesc->rect.bottom };
+                tilePrototype->collisionRectangles.push_back({ CollisionType(tileDesc->insideAttrib), rect1 });
+
+                assert(tileDesc->insideAttrib != WAP_TILE_ATTRIBUTE_CLEAR && tileDesc->outsideAttrib == WAP_TILE_ATTRIBUTE_CLEAR);
             }
             // My paper case (12)
             // This yields 4 rectangles
             else if (IsInBetween(tileDesc->rect.left, 0, tileDesc->width - 1) && IsInBetween(tileDesc->rect.top, 0, tileDesc->height - 1) &&
                 (tileDesc->rect.right == tileDesc->width - 1) && IsInBetween(tileDesc->rect.bottom, 0, tileDesc->height - 1))
             {
+                LOG_ERROR("Case 12: Tile " + ToStr(tileDesc->tileId) + " not implemented !");
                 //myfile << "Tile 12" << endl;
                 //assert(false && "Paring rects case: 12");
             }
