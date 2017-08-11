@@ -44,7 +44,7 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
     int numTileDescriptions = wapWwd->tileDescriptionsCount;
     for (int tileDescIdx = 0; tileDescIdx < numTileDescriptions; tileDescIdx++)
     {
-        WwdTileDescription wwdTileDesc = wapWwd->tileDescriptions[tileDescIdx];
+        WwdTileDescription& wwdTileDesc = wapWwd->tileDescriptions[tileDescIdx];
 
         TiXmlElement* tileDescElem = new TiXmlElement("TileDescription");
         tileDescRootElem->LinkEndChild(tileDescElem);

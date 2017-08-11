@@ -1066,7 +1066,7 @@ void BaseGameLogic::CollideableTileCreatedDelegate(IEventDataPtr pEventData)
         assert(false && "Unknown tile");
     }
 
-    TileCollisionPrototype& tileProto = findIt->second;
+    const TileCollisionPrototype& tileProto = findIt->second;
 
     //-------------------------------------------------------------------------
     // (2) Create the tile in the physics world appropriately
@@ -1086,7 +1086,7 @@ void BaseGameLogic::CollideableTileCreatedDelegate(IEventDataPtr pEventData)
 
         int countAttrTiles = 0;
         TileCollisionRectangle mergedRect;
-        for (TileCollisionRectangle& colRect : tileProto.collisionRectangles)
+        for (const TileCollisionRectangle& colRect : tileProto.collisionRectangles)
         {
             if (colRect.collisionType != CollisionType_None)
             {
