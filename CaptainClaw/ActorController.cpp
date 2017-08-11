@@ -3,6 +3,7 @@
 #include "Engine/Events/EventMgr.h"
 #include "Engine/Events/Events.h"
 #include "ClawEvents.h"
+#include "Engine/GameApp/BaseGameApp.h"
 
 ActorController::ActorController(shared_ptr<SceneNode> controlledObject, float speed)
 {
@@ -50,35 +51,60 @@ void ActorController::OnUpdate(uint32 msDiff)
 
     // We need two conditions because I want behaviour such as when both right and left
     // buttons are pressed, I dont want actor to move, e.g. to have the move effect nullyfied
-    if (m_InputKeys[SDLK_RIGHT] || m_InputKeys[SDLK_d])
-    {
-        moveX += m_Speed * (float)msDiff;
-    }
-    if (m_InputKeys[SDLK_LEFT] || m_InputKeys[SDLK_a])
-    {
-        moveX -= m_Speed * (float)msDiff;
-    }
 
-    // CLimbing
-    if (m_InputKeys[SDLK_DOWN] || m_InputKeys[SDLK_s])
+    if (g_pApp->GetGlobalOptions()->useAlternateControls)
     {
-        climbY += 5.0;
-    }
-    if (m_InputKeys[SDLK_UP] || m_InputKeys[SDLK_w])
-    {
-        climbY -= 5.0;
-    }
+        if (m_InputKeys[SDLK_d])
+        {
+            moveX += m_Speed * (float)msDiff;
+        }
+        if (m_InputKeys[SDLK_a])
+        {
+            moveX -= m_Speed * (float)msDiff;
+        }
 
-    // Jumping
-    if (m_InputKeys[SDLK_SPACE] || m_InputKeys[SDLK_UP] || m_InputKeys[SDLK_w])
-    {
-        moveY -= m_Speed * (float)msDiff;
-    }
+        // CLimbing
+        if (m_InputKeys[SDLK_s])
+        {
+            climbY += 5.0;
+        }
+        if (m_InputKeys[SDLK_w])
+        {
+            climbY -= 5.0;
+        }
 
-    if (m_InputKeys[SDL_SCANCODE_LSHIFT] || m_InputKeys[SDL_SCANCODE_RSHIFT])
+        // Jumping
+        if (m_InputKeys[SDLK_SPACE] || m_InputKeys[SDLK_w])
+        {
+            moveY -= m_Speed * (float)msDiff;
+        }
+    }
+    else
     {
-        moveX *= 10;
-        moveY *= 10;
+        if (m_InputKeys[SDLK_RIGHT])
+        {
+            moveX += m_Speed * (float)msDiff;
+        }
+        if (m_InputKeys[SDLK_LEFT])
+        {
+            moveX -= m_Speed * (float)msDiff;
+        }
+
+        // CLimbing
+        if (m_InputKeys[SDLK_DOWN])
+        {
+            climbY += 5.0;
+        }
+        if (m_InputKeys[SDLK_UP])
+        {
+            climbY -= 5.0;
+        }
+
+        // Jumping
+        if (m_InputKeys[SDLK_SPACE])
+        {
+            moveY -= m_Speed * (float)msDiff;
+        }
     }
 
     if (fabs(climbY) > FLT_EPSILON)
@@ -91,31 +117,40 @@ void ActorController::OnUpdate(uint32 msDiff)
         shared_ptr<EventData_Actor_Start_Move> pMoveEvent(new EventData_Actor_Start_Move(m_pControlledObject->VGetProperties()->GetActorId(), Point(moveX, moveY)));
         IEventMgr::Get()->VTriggerEvent(pMoveEvent);
     }
-
-    //LOG("Setting new position");
-
-    /*Point newPosition = m_pControlledObject->VGetProperties()->GetPosition();
-    newPosition.Set(newPosition.x + moveX, newPosition.y + moveY);
-    
-    m_pControlledObject->VSetPosition(newPosition);*/
 }
 
 bool ActorController::VOnKeyDown(SDL_Keycode key)
 {
-    if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LALT)
+    if (g_pApp->GetGlobalOptions()->useAlternateControls)
     {
-        HandleAction(ActionType_Fire);
-        return true;
+        if (key == SDLK_e)
+        {
+            HandleAction(ActionType_Change_Ammo_Type);
+            return true;
+        }
+        else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LSHIFT)
+        {
+            HandleAction(ActionType_Change_Ammo_Type);
+            return true;
+        }
     }
-    else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LCTRL)
+    else
     {
-        HandleAction(ActionType_Attack);
-        return true;
-    }
-    else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LSHIFT || key == SDLK_e)
-    {
-        HandleAction(ActionType_Change_Ammo_Type);
-        return true;
+        if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LALT)
+        {
+            HandleAction(ActionType_Fire);
+            return true;
+        }
+        else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LCTRL)
+        {
+            HandleAction(ActionType_Attack);
+            return true;
+        }
+        else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LSHIFT)
+        {
+            HandleAction(ActionType_Change_Ammo_Type);
+            return true;
+        }
     }
 
     m_InputKeys[key] = true;
@@ -139,13 +174,23 @@ bool ActorController::VOnPointerButtonDown(SDL_MouseButtonEvent& mouseEvent)
     if (mouseEvent.button == SDL_BUTTON_LEFT)
     {
         m_MouseLeftButtonDown = true;
-        HandleAction(ActionType_Fire);
+
+        if (g_pApp->GetGlobalOptions()->useAlternateControls)
+        {
+            HandleAction(ActionType_Fire);
+        }
+        
         return true;
     }
     else if (mouseEvent.button == SDL_BUTTON_RIGHT)
     {
         m_MouseRightButtonDown = true;
-        HandleAction(ActionType_Attack);
+
+        if (g_pApp->GetGlobalOptions()->useAlternateControls)
+        {
+            HandleAction(ActionType_Attack);
+        }
+
         return true;
     }
 

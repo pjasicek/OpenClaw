@@ -552,6 +552,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("SpringBoardSpringSpeed"));
         ParseValueFromXmlElem(&m_GlobalOptions.skipBossFightIntro,
             pGlobalOptionsRootElem->FirstChildElement("SkipBossFightIntro"));
+        ParseValueFromXmlElem(&m_GlobalOptions.useAlternateControls,
+            pGlobalOptionsRootElem->FirstChildElement("UseAlternateControls"));
     }
 
     return true;

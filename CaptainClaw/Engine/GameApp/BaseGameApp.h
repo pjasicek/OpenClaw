@@ -134,6 +134,7 @@ struct GlobalOptions
         //springBoardSpringHeight = 450;
         springBoardSpringSpeed = 11;
         skipBossFightIntro = false;
+        useAlternateControls = false;
     }
 
     int cpuDelayMs;
@@ -154,6 +155,7 @@ struct GlobalOptions
     //int springBoardSpringHeight;
     double springBoardSpringSpeed;
     bool skipBossFightIntro;
+    bool useAlternateControls;
 };
 
 class EventMgr;
