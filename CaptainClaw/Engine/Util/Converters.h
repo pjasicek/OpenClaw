@@ -1348,6 +1348,9 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         }
         assert(def.timeToFlayBackAndForth != 0);
 
+        // Specified value in WWD is only the time to flay in 1 direction
+        def.timeToFlayBackAndForth *= 2;
+
         SAFE_DELETE(pActorElem);
 
         return ActorTemplates::CreateXmlData_Rope(
