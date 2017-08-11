@@ -14,7 +14,6 @@
         <DeathAnimation>thrown</DeathAnimation>
         <Sounds>
             <Sound SoundType="TakeDamage" SoundName="/LEVEL3/SOUNDS/CUTTHROAT/00350010.WAV" />
-            <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/SOLDIER/00320006.WAV" />
             <Sound SoundType="MeleeAttack" SoundName="/LEVEL4/SOUNDS/STAB3.WAV" />
             <Sound SoundType="RangedAttack" SoundName="/LEVEL3/SOUNDS/ROBBERTHIEF/ARROWHIGH.WAV" />
         </Sounds>

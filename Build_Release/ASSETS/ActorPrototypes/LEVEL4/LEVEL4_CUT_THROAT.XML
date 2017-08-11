@@ -14,8 +14,7 @@
         <DeathAnimation>killfall</DeathAnimation>
         <Sounds>
             <Sound SoundType="TakeDamage" SoundName="/LEVEL4/SOUNDS/CUTTHROAT/00350010.WAV" />
-            <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340014.WAV" />
-            <Sound SoundType="Death" SoundName="/LEVEL1/SOUNDS/OFFICER/00340015.WAV" />
+            <Sound SoundType="Death" SoundName="/LEVEL4/SOUNDS/CUTTHROAT/00350010.WAV" />
             <Sound SoundType="MeleeAttack" SoundName="/LEVEL4/SOUNDS/STAB2.WAV" />
             <Sound SoundType="RangedAttack" SoundName="/LEVEL4/SOUNDS/CUTTHROAT/THROWHIGH.WAV" />
         </Sounds>
