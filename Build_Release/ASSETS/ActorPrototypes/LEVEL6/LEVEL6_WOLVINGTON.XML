@@ -1,0 +1,109 @@
+<Actor Type="Level6_Wolvington" Parent="ActorPrototype_BaseEnemy" ActorPrototypeName="ActorPrototype_Level6_Wolvington">
+    <ActorRenderComponent>
+        <ImagePath>/LEVEL6/IMAGES/WOLVINGTON/*</ImagePath>
+        <Palette>/LEVEL6/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL6/ANIS/WOLVINGTON/*.ANI</AnimationPath>
+    </AnimationComponent>
+    <HealthComponent>
+        <Health>150</Health>
+        <MaxHealth>150</MaxHealth>
+    </HealthComponent>
+    <LootComponent>
+        <Item>60</Item>
+    </LootComponent>
+    <EnemyAIComponent>
+        <DeathAnimation>idle</DeathAnimation>
+        <Sounds>
+            <Sound SoundType="Death" SoundName="/LEVEL6/SOUNDS/WOLVINGTON/00880003.WAV" />
+            <Sound SoundType="TakeDamage" SoundName="/LEVEL1/SOUNDS/HIT1.WAV" />
+            <Sound SoundType="RangedAttack" SoundName="/LEVEL6/SOUNDS/WOLVINGTON/WMAGIC.WAV" />
+        </Sounds>
+    </EnemyAIComponent>
+    <TakeDamageAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <TakeDamageAnimation>hithigh</TakeDamageAnimation>
+        <InvulnerabilityTime>1000</InvulnerabilityTime>
+    </TakeDamageAIStateComponent>
+    <PatrolEnemyAIStateComponent>
+        <IsAlwaysIdle>false</IsAlwaysIdle>
+        <StatePriority>0</StatePriority>
+        <PatrolSpeed>1.700000</PatrolSpeed>
+        <LeftPatrolBorder>0</LeftPatrolBorder> <!-- DEFINED IN CODE -->
+        <RightPatrolBorder>0</RightPatrolBorder> <!-- DEFINED IN CODE -->
+        <RetainDirection>false</RetainDirection>
+        <WalkAction>
+            <Animation>fastadvance</Animation>
+        </WalkAction>
+    </PatrolEnemyAIStateComponent>
+    <ParryEnemyAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <ParryChances>
+            <ParryChance DamageType="DamageType_Bullet" Chance="100" />
+            <ParryChance DamageType="DamageType_Magic" Chance="100" />
+            <ParryChance DamageType="DamageType_Explosion" Chance="100" />
+        </ParryChances>
+        <ParrySounds>
+            <ParrySound>/LEVEL6/SOUNDS/BLOCK2.WAV</ParrySound>
+        </ParrySounds>
+        <ParryAnimFrameIdx>0</ParryAnimFrameIdx>
+        <ParryAnimation>block</ParryAnimation>
+    </ParryEnemyAIStateComponent>
+    <MeleeAttackAIStateComponent>
+        <StatePriority>20</StatePriority>
+        <Attacks>
+            <AttackAction>
+                <Animation>strike2</Animation>
+                <AttackAnimFrameIdx>5</AttackAnimFrameIdx>
+                <AttackType>0</AttackType>
+                <AttackFxImageSet>NONE</AttackFxImageSet>
+                <AttackSpawnPositionOffset x="-100" y="0" />
+                <AttackAreaSize width="100" height="50" />
+                <Damage>35</Damage>
+                <AgroSensorFixture>
+                    <FixtureType>EnemyAIMeleeSensor</FixtureType>
+                    <CollisionShape>Rectangle</CollisionShape>
+                    <IsSensor>true</IsSensor>
+                    <Size width="200" height="50" />
+                    <Offset x="0" y="0" />
+                    <CollisionFlag>4</CollisionFlag>
+                    <CollisionMask>2</CollisionMask>
+                    <Friction>0.000000</Friction>
+                    <Density>0.000000</Density>
+                    <Restitution>0</Restitution>
+                </AgroSensorFixture>
+            </AttackAction>
+        </Attacks>
+    </MeleeAttackAIStateComponent>
+    <RangedAttackAIStateComponent>
+        <StatePriority>10</StatePriority>
+        <AttackDelay>100</AttackDelay>
+        <Attacks>
+            <AttackAction>
+                <Animation>strike3</Animation>
+                <AttackAnimFrameIdx>4</AttackAnimFrameIdx>
+                <ProjectilePrototype>ActorPrototype_Level6_WolvingtonMagic</ProjectilePrototype>
+                <AttackSpawnPositionOffset x="-42" y="2" />
+                <AttackAreaSize width="0" height="0" />
+                <Damage>10</Damage>
+                <AgroSensorFixture>
+                    <FixtureType>EnemyAIRangedSensor</FixtureType>
+                    <CollisionShape>Rectangle</CollisionShape>
+                    <IsSensor>true</IsSensor>
+                    <Size width="800" height="30" />
+                    <Offset x="0" y="-20" />
+                    <CollisionFlag>4</CollisionFlag>
+                    <CollisionMask>2</CollisionMask>
+                    <Friction>0.000000</Friction>
+                    <Density>0.000000</Density>
+                    <Restitution>0.000000</Restitution>
+                </AgroSensorFixture>
+            </AttackAction>
+        </Attacks>
+    </RangedAttackAIStateComponent>
+    <WolvingtonBossAIStateComponent>
+        <StatePriority>100</StatePriority>
+        <BossDialogAnimation>idle</BossDialogAnimation>
+    </WolvingtonBossAIStateComponent>
+</Actor>

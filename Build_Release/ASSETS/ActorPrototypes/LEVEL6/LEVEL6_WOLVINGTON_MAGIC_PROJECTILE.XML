@@ -1,0 +1,17 @@
+<Actor Type="Level6_WolvingtonMagic" Parent="ActorPrototype_BaseProjectile" ActorPrototypeName="ActorPrototype_Level6_WolvingtonMagic">
+	<ActorRenderComponent>
+		<Mirrored>false</Mirrored>
+		<ImagePath>/LEVEL6/IMAGES/WOLVINGTONMAGIC/*</ImagePath>
+		<Palette>/LEVEL6/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<ProjectileAIComponent>
+		<Damage>10</Damage>
+		<ProjectileType>DamageType_Bullet</ProjectileType>
+		<!-- CAN BE MODIFIED IN CODE -->
+		<ProjectileSpeed x="10.00000" y="0.000000" /> 
+	</ProjectileAIComponent>
+	<PhysicsComponent>
+        <CollisionFlag>262144</CollisionFlag>
+        <CollisionMask>1048834</CollisionMask>
+    </PhysicsComponent>
+</Actor>

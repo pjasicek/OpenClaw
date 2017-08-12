@@ -1226,6 +1226,18 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             wwdObject->maxX,
             false);
     }
+    else if (logic == "Wolvington")
+    {
+        SAFE_DELETE(pActorElem);
+
+        return ActorTemplates::CreateXmlData_EnemyAIActor(
+            ActorPrototype_Level6_Wolvington,
+            Point(wwdObject->x, wwdObject->y),
+            {},
+            wwdObject->minX,
+            wwdObject->maxX,
+            false);
+    }
     else if (logic == "PathElevator")
     {
         /*static bool wasHere = false;

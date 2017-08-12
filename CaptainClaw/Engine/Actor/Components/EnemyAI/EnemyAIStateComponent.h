@@ -20,7 +20,8 @@ enum EnemyAIState
     EnemyAIState_Fleeing,
     EnemyAIState_Dying,
     EnemyAIState_BrainLaRaux,
-    EnemyAIState_BrainKatherine
+    EnemyAIState_BrainKatherine,
+    EnemyAIState_BrainWolvington
 };
 
 struct EnemyAIAction
@@ -497,6 +498,34 @@ public:
     virtual void VOnStateEnter() override;
     virtual void VOnStateLeave() override;
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_BrainKatherine; }
+
+    // Can enemy enter this state ?
+    virtual bool VCanEnter() override { return m_bBossFightStarted == false; }
+
+protected:
+    virtual void VOnBossFightStarted() override;
+    virtual void VOnBossFightEnded(bool isBossDead) override;
+};
+
+//=====================================================================================================================
+// WolvingtonBossAIStateComponent
+//=====================================================================================================================
+class WolvingtonBossAIStateComponent : public BaseBossAIStateComponennt
+{
+public:
+    WolvingtonBossAIStateComponent();
+    virtual ~WolvingtonBossAIStateComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    // EnemyAIStateComponent API
+    virtual void VUpdate(uint32 msDiff) override { }
+    virtual void VOnStateEnter() override { }
+    virtual void VOnStateLeave() override { }
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_BrainWolvington; }
 
     // Can enemy enter this state ?
     virtual bool VCanEnter() override { return m_bBossFightStarted == false; }

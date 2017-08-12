@@ -279,6 +279,7 @@ void Animation::PlayFrameSound(const std::string& sound)
     //LOG("Sound: " + sound + ", Owner: " + _owner->_owner->GetName());
 
     SoundInfo soundInfo(sound);
+    soundInfo.setDistanceEffect = true;
     soundInfo.soundSourcePosition = _owner->_owner->GetPositionComponent()->GetPosition();
     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
         new EventData_Request_Play_Sound(soundInfo)));

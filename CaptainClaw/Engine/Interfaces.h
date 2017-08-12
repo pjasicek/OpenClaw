@@ -324,6 +324,7 @@ enum ActorPrototype
     ActorPrototype_Level4_RatBomb,
     ActorPrototype_Level4_ArrowProjectile,
     ActorPrototype_Level4_KnifeProjectile,
+    ActorPrototype_Level6_WolvingtonMagic,
 
     // Boss stagers
     ActorPrototype_Level2_BossStager,
@@ -333,6 +334,7 @@ enum ActorPrototype
     // Bosses
     ActorPrototype_Level2_LaRaux,
     ActorPrototype_Level4_Katherine,
+    ActorPrototype_Level6_Wolvington,
 
     // Stepping stones
     ActorPrototype_Level4_SteppingGround,

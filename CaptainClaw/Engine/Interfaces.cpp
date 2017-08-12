@@ -79,9 +79,11 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level3_ArrowProjectile, "ActorPrototype_Level3_ArrowProjectile" },
         { ActorPrototype_Level3_KnifeProjectile, "ActorPrototype_Level3_KnifeProjectile" },
 
-        { ActorPrototype_Level3_RatBomb, "ActorPrototype_Level4_RatBomb" },
-        { ActorPrototype_Level3_ArrowProjectile, "ActorPrototype_Level4_ArrowProjectile" },
-        { ActorPrototype_Level3_KnifeProjectile, "ActorPrototype_Level4_KnifeProjectile" },
+        { ActorPrototype_Level4_RatBomb, "ActorPrototype_Level4_RatBomb" },
+        { ActorPrototype_Level4_ArrowProjectile, "ActorPrototype_Level4_ArrowProjectile" },
+        { ActorPrototype_Level4_KnifeProjectile, "ActorPrototype_Level4_KnifeProjectile" },
+
+        { ActorPrototype_Level6_WolvingtonMagic, "ActorPrototype_Level6_WolvingtonMagic" },
 
         // Boss Stagers
         { ActorPrototype_Level2_BossStager, "ActorPrototype_Level2_BossStager" },
@@ -91,6 +93,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         // Bosses
         { ActorPrototype_Level2_LaRaux, "ActorPrototype_Level2_LaRaux" },
         { ActorPrototype_Level4_Katherine, "ActorPrototype_Level4_Katherine" },
+        { ActorPrototype_Level6_Wolvington, "ActorPrototype_Level6_Wolvington" },
 
         // Stepping stones
         { ActorPrototype_Level4_SteppingGround, "ActorPrototype_Level4_SteppingGround" },
@@ -228,6 +231,8 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level4_ArrowProjectile", ActorPrototype_Level4_ArrowProjectile },
         { "ActorPrototype_Level4_KnifeProjectile", ActorPrototype_Level4_KnifeProjectile },
 
+        { "ActorPrototype_Level6_WolvingtonMagic", ActorPrototype_Level6_WolvingtonMagic },
+
         // Boss Stagers
         { "ActorPrototype_Level2_BossStager", ActorPrototype_Level2_BossStager },
         { "ActorPrototype_Level4_BossStager", ActorPrototype_Level4_BossStager },
@@ -236,6 +241,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         // Bosses
         { "ActorPrototype_Level2_LaRaux", ActorPrototype_Level2_LaRaux },
         { "ActorPrototype_Level4_Katherine", ActorPrototype_Level4_Katherine },
+        { "ActorPrototype_Level6_Wolvington", ActorPrototype_Level6_Wolvington },
 
         // Stepping stones
         { "ActorPrototype_Level4_SteppingGround", ActorPrototype_Level4_SteppingGround },

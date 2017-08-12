@@ -29,6 +29,7 @@ const char* DiveAttackAIStateComponent::g_Name = "DiveAttackAIStateComponent";
 const char* BaseBossAIStateComponennt::g_Name = "BaseBossAIStateComponennt";
 const char* LaRauxBossAIStateComponent::g_Name = "LaRauxBossAIStateComponent";
 const char* KatherineBossAIStateComponent::g_Name = "KatherineBossAIStateComponent";
+const char* WolvingtonBossAIStateComponent::g_Name = "WolvingtonBossAIStateComponent";
 
 #define MAX_STATE_PRIORITY INT32_MAX
 #define MIN_STATE_PRIORITY INT32_MIN
@@ -1575,5 +1576,56 @@ void KatherineBossAIStateComponent::VOnBossFightEnded(bool isBossDead)
         SoundInfo soundInfo(SOUND_GAME_AMULET_RISE);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
+    }
+}
+
+//=====================================================================================================================
+// WolvingtonBossAIStateComponent
+//=====================================================================================================================
+
+WolvingtonBossAIStateComponent::WolvingtonBossAIStateComponent()
+:
+BaseBossAIStateComponennt("WolvingtonBossAIStateComponent")
+{
+
+}
+
+WolvingtonBossAIStateComponent::~WolvingtonBossAIStateComponent()
+{
+
+}
+
+bool WolvingtonBossAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    assert(pData);
+
+    if (!BaseBossAIStateComponennt::VDelegateInit(pData))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void WolvingtonBossAIStateComponent::VOnBossFightStarted()
+{
+    // To refresh contact list after Claw's death
+    g_pApp->GetGameLogic()->VGetGamePhysics()->VActivate(_owner->GetGUID());
+
+    m_pEnemyAIComponent->EnterBestState(true);
+}
+
+void WolvingtonBossAIStateComponent::VOnBossFightEnded(bool isBossDead)
+{
+    if (isBossDead)
+    {
+        SoundInfo soundInfo(SOUND_GAME_AMULET_RISE);
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(soundInfo)));
+    }
+    else
+    {
+        // To refresh contact list after Claw's death
+        g_pApp->GetGameLogic()->VGetGamePhysics()->VDeactivate(_owner->GetGUID());
     }
 }

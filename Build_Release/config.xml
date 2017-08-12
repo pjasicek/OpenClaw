@@ -11,7 +11,7 @@
         <SoundChannels>1</SoundChannels>
         <MixingChannels>64</MixingChannels>
         <ChunkSize>2048</ChunkSize>
-        <SoundVolume>80</SoundVolume>
+        <SoundVolume>50</SoundVolume>
         <MusicVolume>20</MusicVolume>
         <SoundOn>true</SoundOn>
         <MusicOn>true</MusicOn>
