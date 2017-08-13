@@ -137,13 +137,10 @@ bool BaseGameLogic::VEnterMenu(const char* xmlMenuResource)
             shared_ptr<HumanView> pHumanView = static_pointer_cast<HumanView>(pGameView);
             if (!pHumanView->EnterMenu(pXmlLevelRoot))
             {
-                SAFE_DELETE(pXmlLevelRoot);
                 return false;
             }
         }
     }
-
-    SAFE_DELETE(pXmlLevelRoot);
 
     return true;
 }
@@ -487,7 +484,11 @@ bool BaseGameLogic::VLoadScoreScreen(const char* xmlScoreScreenResource)
     int finishedLevelNumber = m_pCurrentLevel->GetLevelNumber();
     int nextLevelNumber = m_pCurrentLevel->GetLevelNumber() + 1;
 
-    m_pGameSaveMgr->AddCheckpointSave(nextLevelNumber, nextLevelCheckpoint);
+    // Level 6 is the last implemented level
+    if (nextLevelNumber <= 6)
+    {
+        m_pGameSaveMgr->AddCheckpointSave(nextLevelNumber, nextLevelCheckpoint);
+    }
 
     // Unload the finished level
     UnloadLevel();
@@ -747,6 +748,12 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
             break;
         }
 
+        case GameState_LoadingMenu:
+        {
+            VChangeState(GameState_Menu);
+            break;
+        }
+
         case GameState_Menu:
         {
             break;
@@ -836,12 +843,11 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
 
 void BaseGameLogic::VChangeState(GameState newState)
 {
-
     if (newState == GameState_Menu)
     {
         // Unload level if applicable
         UnloadLevel();
-        if (!VEnterMenu("MENU.xml"))
+        if (!VEnterMenu("MENU.XML"))
         {
             LOG_ERROR("Failed to enter menu");
             g_pApp->Terminate();

@@ -354,7 +354,7 @@ void ActorRenderComponent::SetImage(std::string imageName)
     }*/
 
     // Hacks
-    if (_owner->GetName() == "StaticImage")
+    /*if (_owner->GetName() == "StaticImage")
     {
         LOG("Map:");
         for (auto& it : m_ImageMap)
@@ -362,7 +362,7 @@ void ActorRenderComponent::SetImage(std::string imageName)
             LOG("Image: " + it.first);
         }
     }
-    else if (_owner->GetName() == "Level6_GroundBlower")
+    else */if (_owner->GetName() == "Level6_GroundBlower")
     {
         SetAlpha(255);
     }

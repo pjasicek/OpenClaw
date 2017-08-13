@@ -683,10 +683,6 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         int levelNumber = pCastEventData->GetLevelNumber();
         int checkpointNumber = pCastEventData->GetCheckpointNumber();
 
-        shared_ptr<LevelData> pLevelData(new LevelData(levelNumber, isNewGame, checkpointNumber));
-
-        g_pApp->GetGameLogic()->SetLevelData(pLevelData);
-
         // Reset Graphical representation of level
         m_ScreenElements.clear();
         m_pMenu.reset();
@@ -694,20 +690,37 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         m_pHUD.reset(new ScreenElementHUD());
         m_pScene->SetCamera(m_pCamera);
 
-        g_pApp->GetGameLogic()->VChangeState(GameState_LoadingLevel);
+        // Level 6 is currently the last level
+        if (levelNumber > 6)
+        {
+            IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Enter_Menu()));
+        }
+        else
+        {
+            shared_ptr<LevelData> pLevelData(new LevelData(levelNumber, isNewGame, checkpointNumber));
+            g_pApp->GetGameLogic()->SetLevelData(pLevelData);
+
+            g_pApp->GetGameLogic()->VChangeState(GameState_LoadingLevel);
+        }
     }
 }
 
 void HumanView::EnterMenuDelegate(IEventDataPtr pEventData)
 {
+    if (g_pApp->GetGameLogic()->GetGameState() == GameState_Menu)
+    {
+        LOG_WARNING("Already in menu state. Skipping.");
+        return;
+    }
+
     m_ScreenElements.clear();
     m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
     m_pHUD.reset();
 
     g_pApp->GetAudio()->StopAllSounds();
-    g_pApp->GetGameLogic()->UnloadLevel();
+    //g_pApp->GetGameLogic()->UnloadLevel();
 
-    g_pApp->GetGameLogic()->VChangeState(GameState_Menu);
+    g_pApp->GetGameLogic()->VChangeState(GameState_LoadingMenu);
 }
 
 void HumanView::FinishedLevelDelegate(IEventDataPtr pEventData)

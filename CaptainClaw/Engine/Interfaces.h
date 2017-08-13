@@ -474,6 +474,7 @@ enum GameState
 {
     GameState_Invalid,
     GameState_Initializing,
+    GameState_LoadingMenu,
     GameState_Menu,
     GameState_LoadingLevel,
     GameState_IngameRunning,

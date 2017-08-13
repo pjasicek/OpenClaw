@@ -10,6 +10,8 @@
 #include "../Actor/ActorTemplates.h"
 #include "../Actor/Components/PositionComponent.h"
 
+#include "../Resource/Loaders/XmlLoader.h"
+
 std::vector<std::string> g_AvailableCheats;
 
 #define COMMAND_SET_BOOL_VALUE(targetCommandName, targetValue) \
@@ -159,6 +161,12 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
                 return;
             }
         }
+    }
+
+    if (commandStr == "menu")
+    {
+        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Enter_Menu()));
+        wasCommandExecuted = true;
     }
 
     if (commandStr.find("cpudelay ") != std::string::npos && commandArgs.size() == 2)
