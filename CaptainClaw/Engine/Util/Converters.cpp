@@ -195,6 +195,12 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
         std::string sound = actorProperties.sound;
 
         WwdObject* wwdObject = &actorProperties;
+
+        if (logic == "CursePowerup" || logic == "JumpSwitch")
+        {
+            continue;
+        }
+
         // Here should be any objects that cant for some reason by created in that function
         if (logic.find("StackedCrates") != std::string::npos)
         {
