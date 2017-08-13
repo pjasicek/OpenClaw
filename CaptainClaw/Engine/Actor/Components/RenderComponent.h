@@ -11,6 +11,7 @@ typedef std::map<std::string, shared_ptr<Image>> ImageMap;
 // BaseRenderComponent Declaration
 //
 
+class PositionComponent;
 class SceneNode;
 class BaseRenderComponent : public ActorComponent
 {
@@ -44,6 +45,8 @@ protected:
     ImageMap m_ImageMap;
 
     shared_ptr<SceneNode> m_pSceneNode;
+
+    PositionComponent* m_pPositionComponent;
 
 private:
     shared_ptr<SceneNode> GetSceneNode();

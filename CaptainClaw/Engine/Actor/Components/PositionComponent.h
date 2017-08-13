@@ -14,13 +14,13 @@ public:
     virtual TiXmlElement* VGenerateXml() override;
 
     // API
-    Point GetPosition() const { return &m_Position; } 
-    double GetX() const { return m_Position.x; }
-    double GetY() const { return m_Position.y; }
-    void SetPosition(double x, double y) { m_Position.Set(x, y); }
-    void SetPosition(Point newPos) { m_Position = newPos; }
-    void SetX(double x) { m_Position.x = x; }
-    void SetY(double y) { m_Position.y = y; }
+    inline Point GetPosition() const { return &m_Position; } 
+    inline double GetX() const { return m_Position.x; }
+    inline double GetY() const { return m_Position.y; }
+    inline void SetPosition(double x, double y) { m_Position.Set(x, y); }
+    inline void SetPosition(Point newPos) { m_Position = newPos; }
+    inline void SetX(double x) { m_Position.x = x; }
+    inline void SetY(double y) { m_Position.y = y; }
 
 private:
     Point m_Position;

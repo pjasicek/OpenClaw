@@ -152,6 +152,9 @@ void BaseRenderComponent::VPostInit()
         shared_ptr<EventData_New_Render_Component> pEvent(new EventData_New_Render_Component(_owner->GetGUID(), pNode));
         IEventMgr::Get()->VTriggerEvent(pEvent);
     }
+
+    m_pPositionComponent = _owner->GetPositionComponent().get();
+    assert(m_pPositionComponent != NULL);
 }
 
 void BaseRenderComponent::VOnChanged()
@@ -297,20 +300,16 @@ SDL_Rect ActorRenderComponent::VGetPositionRect() const
         return positionRect;
     }
 
-    shared_ptr<PositionComponent> pPositionComponent = _owner->GetPositionComponent();
-    if (!pPositionComponent)
-    {
-        return positionRect;
-    }
-
     if (!m_CurrentImage)
     {
         return positionRect;
     }
 
+    Point position = m_pPositionComponent->GetPosition();
+
     positionRect = {
-        (int)pPositionComponent->GetX() - m_CurrentImage->GetWidth() / 2 + m_CurrentImage->GetOffsetX(),
-        (int)pPositionComponent->GetY() - m_CurrentImage->GetHeight() / 2 + m_CurrentImage->GetOffsetY(),
+        (int)position.GetX() - m_CurrentImage->GetWidth() / 2 + m_CurrentImage->GetOffsetX(),
+        (int)position.GetY() - m_CurrentImage->GetHeight() / 2 + m_CurrentImage->GetOffsetY(),
         m_CurrentImage->GetWidth(),
         m_CurrentImage->GetHeight()
     };
