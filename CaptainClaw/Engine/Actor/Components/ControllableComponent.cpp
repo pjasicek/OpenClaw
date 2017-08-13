@@ -708,10 +708,16 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             }
             else
             {
+                int damage = 10;
+                if (m_pPowerupComponent->HasPowerup(PowerupType_Catnip))
+                {
+                    damage = 100;
+                }
+
                 ActorTemplates::CreateAreaDamage(
                     position,
                     Point(50, 25),
-                    10,
+                    damage,
                     CollisionFlag_ClawAttack,
                     "Rectangle",
                     DamageType_MeleeAttack,
