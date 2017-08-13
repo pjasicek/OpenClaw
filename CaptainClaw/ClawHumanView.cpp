@@ -2,6 +2,7 @@
 #include "ClawGameLogic.h"
 #include "ActorController.h"
 #include "Engine/UserInterface/GameHUD.h"
+#include "Engine/UserInterface/IngameMenu.h"
 
 //---------------------------------------------------------------------------------------------------------------------
 // ClawHumanView
@@ -96,7 +97,14 @@ bool ClawHumanView::VLoadGameDelegate(TiXmlElement* pLevelXmlElem, LevelData* pL
         return false;
     }
 
+    if (!m_pIngameMenu->Initialize(g_pApp->GetRenderer(), m_pCamera))
+    {
+        LOG_ERROR("Failed to create in-game Menu");
+        return false;
+    }
+
     m_ScreenElements.push_back(m_pHUD);
+    m_ScreenElements.push_back(m_pIngameMenu);
 
     return true;
 }

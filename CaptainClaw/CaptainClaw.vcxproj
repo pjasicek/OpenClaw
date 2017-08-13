@@ -163,6 +163,7 @@
     <ClCompile Include="Engine\Resource\ResourceCache.cpp" />
     <ClCompile Include="Engine\Scene\Scene.cpp" />
     <ClCompile Include="Engine\Scene\SceneNodes.cpp" />
+    <ClCompile Include="Engine\UserInterface\IngameMenu.cpp" />
     <ClCompile Include="Engine\UserInterface\ScoreScreen\EndLevelScoreScreen.cpp" />
     <ClCompile Include="Engine\UserInterface\GameHUD.cpp" />
     <ClCompile Include="Engine\UserInterface\HumanView.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="Engine\Resource\Miniz.h" />
     <ClInclude Include="Engine\Resource\ResourceMgr.h" />
     <ClInclude Include="Engine\Resource\ZipFile.h" />
+    <ClInclude Include="Engine\UserInterface\IngameMenu.h" />
     <ClInclude Include="Engine\UserInterface\ScoreScreen\EndLevelScoreScreen.h" />
     <ClInclude Include="Engine\UserInterface\ScoreScreen\ScoreScreenCommon.h" />
     <ClInclude Include="Engine\UserInterface\ScoreScreen\ScoreScreenProcesses.h" />

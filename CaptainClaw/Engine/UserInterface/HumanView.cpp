@@ -8,6 +8,7 @@
 #include "../Resource/Loaders/WavLoader.h"
 #include "../Util/PrimeSearch.h"
 #include "ScoreScreen/EndLevelScoreScreen.h"
+#include "IngameMenu.h"
 
 const uint32 g_InvalidGameViewId = 0xFFFFFFFF;
 
@@ -27,6 +28,7 @@ HumanView::HumanView(SDL_Renderer* renderer)
         m_pScene.reset(new ScreenElementScene(renderer));
         m_pCamera.reset(new CameraNode(Point(0, 0), 0, 0));
         m_pHUD.reset(new ScreenElementHUD());
+        m_pIngameMenu.reset(new ScreenElementIngameMenu());
 
         m_pScene->AddChild(INVALID_ACTOR_ID, m_pCamera);
         m_pScene->SetCamera(m_pCamera);
@@ -140,12 +142,21 @@ bool HumanView::VOnEvent(SDL_Event& evt)
         }
     }
 
+    
+
     switch (evt.type)
     {
         case SDL_KEYDOWN:
         {
             if (evt.key.repeat == 0)
             {
+                if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_ESCAPE &&
+                    g_pApp->GetGameLogic()->GetGameState() == GameState_IngameRunning)
+                {
+                    m_pIngameMenu->VSetVisible(!m_pIngameMenu->VIsVisible());
+                    return true;
+                }
+
                 return m_pKeyboardHandler->VOnKeyDown(evt.key.keysym.sym);
             }
             break;
@@ -665,6 +676,7 @@ void HumanView::RequestResetLevelDelegate(IEventDataPtr pEventData)
     m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
     //m_pCamera.reset(new CameraNode(Point(0, 0), 0, 0));
     m_pHUD.reset(new ScreenElementHUD());
+    m_pIngameMenu.reset(new ScreenElementIngameMenu());
     m_pScene->AddChild(INVALID_ACTOR_ID, m_pCamera);
     m_pScene->SetCamera(m_pCamera);
     //m_pCamera->SetSize(g_pApp->GetWindowSize().x, g_pApp->GetWindowSize().y);
@@ -688,6 +700,7 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         m_pMenu.reset();
         m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
         m_pHUD.reset(new ScreenElementHUD());
+        m_pIngameMenu.reset(new ScreenElementIngameMenu());
         m_pScene->SetCamera(m_pCamera);
 
         // Level 6 is currently the last level
@@ -716,6 +729,7 @@ void HumanView::EnterMenuDelegate(IEventDataPtr pEventData)
     m_ScreenElements.clear();
     m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
     m_pHUD.reset();
+    m_pIngameMenu.reset();
 
     g_pApp->GetAudio()->StopAllSounds();
     //g_pApp->GetGameLogic()->UnloadLevel();

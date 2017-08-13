@@ -82,7 +82,7 @@ public:
     inline bool IsInverted() { return m_IsInverted; }
     inline int GetAlpha() { return m_Alpha; }
     inline void SetAlpha(int alpha) { m_Alpha = alpha; }
-    SDL_Color GetColorMod() { return m_ColorMod; }
+    inline SDL_Color GetColorMod() { return m_ColorMod; }
     void SetColorMod(const SDL_Color& color) { m_ColorMod = color; }
 
 protected:
