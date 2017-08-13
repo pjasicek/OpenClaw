@@ -38,7 +38,7 @@ void ScreenElementIngameMenu::VOnLostDevice()
 
 void ScreenElementIngameMenu::VOnRender(uint32 msDiff)
 {
-    SDL_Rect renderRect = { 0, 0, m_pCamera->GetWidth(), m_pCamera->GetHeight() };
+    SDL_Rect renderRect = { 0, 0, (int)m_pCamera->GetWidth(), (int)m_pCamera->GetHeight() };
     SDL_RenderCopy(m_pRenderer, m_pBackground, NULL, &renderRect);
 }
 
