@@ -7,7 +7,8 @@ ScreenElementIngameMenu::ScreenElementIngameMenu()
     :
     m_IsVisible(false),
     m_pRenderer(NULL),
-    m_pCamera(nullptr)
+    m_pCamera(nullptr),
+    m_pBackground(NULL)
 {
 
 }
