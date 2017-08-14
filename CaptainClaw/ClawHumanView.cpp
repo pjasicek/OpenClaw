@@ -2,7 +2,7 @@
 #include "ClawGameLogic.h"
 #include "ActorController.h"
 #include "Engine/UserInterface/GameHUD.h"
-#include "Engine/UserInterface/IngameMenu.h"
+#include "Engine/Resource/Loaders/XmlLoader.h"
 
 //---------------------------------------------------------------------------------------------------------------------
 // ClawHumanView
@@ -97,7 +97,11 @@ bool ClawHumanView::VLoadGameDelegate(TiXmlElement* pLevelXmlElem, LevelData* pL
         return false;
     }
 
-    if (!m_pIngameMenu->Initialize(g_pApp->GetRenderer(), m_pCamera))
+    TiXmlElement* pXmlIngameMenuRoot = XmlResourceLoader::LoadAndReturnRootXmlElement("INGAME_MENU.XML");
+    assert(pXmlIngameMenuRoot != NULL);
+
+    m_pIngameMenu.reset(new ScreenElementMenu(g_pApp->GetRenderer()));
+    if (!m_pIngameMenu->Initialize(pXmlIngameMenuRoot))
     {
         LOG_ERROR("Failed to create in-game Menu");
         return false;
@@ -105,6 +109,7 @@ bool ClawHumanView::VLoadGameDelegate(TiXmlElement* pLevelXmlElem, LevelData* pL
 
     m_ScreenElements.push_back(m_pHUD);
     m_ScreenElements.push_back(m_pIngameMenu);
+    m_pIngameMenu->VSetVisible(false);
 
     return true;
 }

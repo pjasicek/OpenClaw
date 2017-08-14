@@ -1,0 +1,80 @@
+<GameMenu>
+    <MenuType>MenuType_IngameMenu</MenuType>
+    <StartingPage>MenuPage_Main</StartingPage>
+    <BackgroundImage>IngameMenuBackground</BackgroundImage>
+    <BackgroundMusic></BackgroundMusic>
+    <MenuEnterSound>/STATES/MENU/SOUNDS/SELECT.WAV</MenuEnterSound>
+    
+    <!-- MAIN (DEFAULT) PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_Main</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>ResumeGame</Type>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <MenuItem>
+            <Name>RESUME_GAME_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>R</Hotkey>
+            <State>Active</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/001_RETURN.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/002_RETURN.PID</ActiveImage>
+            <Position x="182" y="145" />
+            <GeneratedEvent>
+                <Type>ResumeGame</Type>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>END_LIFE_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>L</Hotkey>
+            <State>Inactive</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/003_CLAWICIDE.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/004_CLAWICIDE.PID</ActiveImage>
+            <Position x="234" y="180" />
+            <GeneratedEvent>
+                <Type>EndLife</Type>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>OPTIONS_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>O</Hotkey>
+            <State>Inactive</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/005_OPTIONS.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/006_OPTIONS.PID</ActiveImage>
+            <Position x="238" y="215" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>HELP_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>H</Hotkey>
+            <State>Inactive</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/007_HELP.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/008_HELP.PID</ActiveImage>
+            <Position x="270" y="250" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_SinglePlayer</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>END_GAME_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>E</Hotkey>
+            <State>Inactive</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/009_ENDGAME.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/010_ENDGAME.PID</ActiveImage>
+            <Position x="220" y="285" />
+            <GeneratedEvent>
+                <Type>EndGame</Type>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+</GameMenu>

@@ -7,13 +7,11 @@ target_sources(captainclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/HumanView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/MovementController.h
     ${CMAKE_CURRENT_SOURCE_DIR}/UserInterface.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/IngameMenu.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Console.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/GameHUD.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/HumanView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MovementController.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/UserInterface.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/IngameMenu.cpp
 )
 
 add_subdirectory(ScoreScreen)

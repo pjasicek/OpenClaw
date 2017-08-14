@@ -57,6 +57,9 @@ const EventType EventData_Boss_Fight_Ended::sk_EventType(0x62cdd8af);
 const EventType EventData_Boss_Health_Changed::sk_EventType(0x2222d8af);
 const EventType EventData_Claw_Health_Below_Zero::sk_EventType(0xfffff8af);
 const EventType EventData_Claw_Respawned::sk_EventType(0xffabc8af);
+const EventType EventData_IngameMenu_Resume_Game::sk_EventType(0x44abc8af);
+const EventType EventData_IngameMenu_End_Life::sk_EventType(0x455bc8af);
+const EventType EventData_IngameMenu_End_Game::sk_EventType(0x455bcfff);
 
 /*bool EventData_PlaySound::VBuildEventFromScript(void)
 {

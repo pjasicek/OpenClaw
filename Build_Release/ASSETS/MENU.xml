@@ -1,6 +1,8 @@
 <GameMenu>
+    <MenuType>MenuType_MainMenu</MenuType>
     <StartingPage>MenuPage_Main</StartingPage>
     <BackgroundImage>/STATES/MENU/SCREENS/MENU.PCX</BackgroundImage>
+    <BackgroundMusic>/STATES/MENU/SOUNDS/MENUBED.WAV</BackgroundMusic>
     
     <!-- MAIN (DEFAULT) PAGE -->
     <MenuPage>

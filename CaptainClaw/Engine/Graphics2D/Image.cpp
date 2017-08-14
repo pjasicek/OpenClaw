@@ -14,6 +14,16 @@ Image::Image()
     
 }
 
+Image::Image(SDL_Texture* pSDLTexture)
+    :
+    m_pTexture(pSDLTexture),
+    m_OffsetX(0),
+    m_OffsetY(0)
+{
+    assert(pSDLTexture != NULL);
+    SDL_QueryTexture(pSDLTexture, NULL, NULL, &m_Width, &m_Height);
+}
+
 Image::~Image()
 {
     SDL_DestroyTexture(m_pTexture);

@@ -6,6 +6,7 @@
 #include "../GameApp/GameSaves.h"
 #include "../Resource/Loaders/PcxLoader.h"
 #include "../Resource/Loaders/PngLoader.h"
+#include "../Resource/Loaders/PidLoader.h"
 #include "../Resource/ResourceMgr.h"
 #include "../Audio/Audio.h"
 
@@ -151,6 +152,10 @@ static shared_ptr<Image> LoadImageFromXmlElement(TiXmlElement* pElem)
     else if (extension == ".png")
     {
         pImage = PngResourceLoader::LoadAndReturnImage(imagePath.c_str());
+    }
+    else if (extension == ".pid")
+    {
+        pImage = PidResourceLoader::LoadAndReturnImage(imagePath.c_str(), g_pApp->GetCurrentPalette());
     }
     else if (extension == ".jpg")
     {
@@ -335,6 +340,18 @@ static IEventDataPtr XmlElemToGeneratedEvent(TiXmlElement* pElem)
 
         pEventData.reset(new EventData_Set_Volume(deltaVolume, true, isMusic));
     }
+    else if (eventType == "ResumeGame")
+    {
+        pEventData.reset(new EventData_IngameMenu_Resume_Game());
+    }
+    else if (eventType == "EndLife")
+    {
+        pEventData.reset(new EventData_IngameMenu_End_Life());
+    }
+    else if (eventType == "EndGame")
+    {
+        pEventData.reset(new EventData_IngameMenu_End_Game());
+    }
     else
     {
         return nullptr;
@@ -353,7 +370,9 @@ Point g_MenuScale = Point(1.0, 1.0);
 
 ScreenElementMenu::ScreenElementMenu(SDL_Renderer* pRenderer)
     :
-    m_pRenderer(pRenderer)
+    m_pRenderer(pRenderer),
+    m_bIsVisible(true),
+    m_MenuType(MenuType_None)
 {
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &ScreenElementMenu::SwitchPageDelegate), EventData_Menu_SwitchPage::sk_EventType);
@@ -365,10 +384,6 @@ ScreenElementMenu::ScreenElementMenu(SDL_Renderer* pRenderer)
 
 ScreenElementMenu::~ScreenElementMenu()
 {
-    // Restore scale
-    Point scale = Point(g_pApp->GetGameConfig()->scale, g_pApp->GetGameConfig()->scale);
-    SDL_RenderSetScale(m_pRenderer, (float)scale.x, (float)scale.y);
-
     m_MenuPageMap.clear();
 
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
@@ -377,6 +392,16 @@ ScreenElementMenu::~ScreenElementMenu()
         this, &ScreenElementMenu::ModifyMenuItemVisibilityDelegate), EventData_Menu_Modifiy_Item_Visibility::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
         this, &ScreenElementMenu::ModifyMenuItemStateDelegate), EventData_Menu_Modify_Item_State::sk_EventType);
+
+    if (m_MenuType == MenuType_IngameMenu)
+    {
+        IEventMgr::Get()->VRemoveListener(MakeDelegate(
+            this, &ScreenElementMenu::IngameMenuResumeGameDelegate), EventData_IngameMenu_Resume_Game::sk_EventType);
+        IEventMgr::Get()->VRemoveListener(MakeDelegate(
+            this, &ScreenElementMenu::IngameMenuEndLifeDelegate), EventData_IngameMenu_End_Life::sk_EventType);
+        IEventMgr::Get()->VRemoveListener(MakeDelegate(
+            this, &ScreenElementMenu::IngameMenuEndGameDelegate), EventData_IngameMenu_End_Game::sk_EventType);
+    }
 }
 
 void ScreenElementMenu::VOnUpdate(uint32 msDiff)
@@ -387,6 +412,9 @@ void ScreenElementMenu::VOnUpdate(uint32 msDiff)
 
 void ScreenElementMenu::VOnRender(uint32 msDiff)
 {
+    // Menu DOES NOT use renderer scaling
+    SDL_RenderSetScale(m_pRenderer, 1.0f, 1.0f);
+
     assert(m_pBackground != nullptr);
     assert(m_pBackground->GetTexture() != NULL);
 
@@ -395,6 +423,10 @@ void ScreenElementMenu::VOnRender(uint32 msDiff)
 
     assert(m_pActiveMenuPage);
     m_pActiveMenuPage->VOnRender(msDiff);
+
+    // Restore scale
+    Point scale = Point(g_pApp->GetGameConfig()->scale, g_pApp->GetGameConfig()->scale);
+    SDL_RenderSetScale(m_pRenderer, (float)scale.x, (float)scale.y);
 }
 
 bool ScreenElementMenu::VOnEvent(SDL_Event& evt)
@@ -402,17 +434,106 @@ bool ScreenElementMenu::VOnEvent(SDL_Event& evt)
     return m_pActiveMenuPage->VOnEvent(evt);
 }
 
+void ScreenElementMenu::VSetVisible(bool visible)
+{
+    if (visible == m_bIsVisible)
+    {
+        return;
+    }
+
+    if (visible)
+    {
+        if (g_pApp && g_pApp->GetGameLogic())
+        {
+            g_pApp->GetGameLogic()->SetRunning(false);
+        }
+
+        if (!m_MenuEnterSound.empty())
+        {
+            // Play some music
+            SoundInfo soundInfo(m_MenuEnterSound);
+            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                new EventData_Request_Play_Sound(soundInfo)));
+        }
+    }
+    else
+    {
+        if (g_pApp && g_pApp->GetGameLogic())
+        {
+            g_pApp->GetGameLogic()->SetRunning(true);
+        }
+    }
+
+    m_bIsVisible = visible;
+}
+
 bool ScreenElementMenu::Initialize(TiXmlElement* pElem)
 {
-    // Menu DOES NOT use renderer scaling
-    SDL_RenderSetScale(m_pRenderer, 1.0f, 1.0f);
+    assert(m_pRenderer != NULL);
+
+    std::string menuTypeStr;
+    assert(ParseValueFromXmlElem(&menuTypeStr, pElem->FirstChildElement("MenuType")));
+    if (menuTypeStr == "MenuType_MainMenu")
+    {
+        m_MenuType = MenuType_MainMenu;
+    }
+    else if (menuTypeStr == "MenuType_IngameMenu")
+    {
+        m_MenuType = MenuType_IngameMenu;
+    }
+    
+    assert(m_MenuType != MenuType_None);
+
+    if (m_MenuType == MenuType_IngameMenu)
+    {
+        IEventMgr::Get()->VAddListener(MakeDelegate(
+            this, &ScreenElementMenu::IngameMenuResumeGameDelegate), EventData_IngameMenu_Resume_Game::sk_EventType);
+        IEventMgr::Get()->VAddListener(MakeDelegate(
+            this, &ScreenElementMenu::IngameMenuEndLifeDelegate), EventData_IngameMenu_End_Life::sk_EventType);
+        IEventMgr::Get()->VAddListener(MakeDelegate(
+            this, &ScreenElementMenu::IngameMenuEndGameDelegate), EventData_IngameMenu_End_Game::sk_EventType);
+    }
 
     std::string defaultMenuPageName;
     ParseValueFromXmlElem(&defaultMenuPageName, pElem->FirstChildElement("StartingPage"));
     MenuPage defaultPage = StringToMenuPageEnum(defaultMenuPageName);
 
+    //
+    // ---------- Background Image ----------
+    //
     std::string backgroundImagePath;
     ParseValueFromXmlElem(&backgroundImagePath, pElem->FirstChildElement("BackgroundImage"));
+
+    // This is hack for now
+    if (backgroundImagePath == "IngameMenuBackground")
+    {
+        m_pBackground = shared_ptr<Image>(new Image(Util::CreateSDLTextureRect(640, 480, COLOR_BLACK, m_pRenderer, 127)));
+    }
+    else
+    {
+        m_pBackground = PcxResourceLoader::LoadAndReturnImage(backgroundImagePath.c_str());
+    }
+    assert(m_pBackground != nullptr);
+
+    //
+    // ---------- Background Music ----------
+    //
+    std::string backgroundMusicPath;
+    ParseValueFromXmlElem(&backgroundMusicPath, pElem->FirstChildElement("BackgroundMusic"));
+
+    if (!backgroundMusicPath.empty())
+    {
+        // Play some music
+        SoundInfo soundInfo(backgroundMusicPath);
+        soundInfo.loops = -1;
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(soundInfo)));
+    }
+
+    //
+    // ---------- Enter Menu Sound ----------
+    //
+    ParseValueFromXmlElem(&m_MenuEnterSound, pElem->FirstChildElement("MenuEnterSound"));
 
     // Load all menu pages
     for (TiXmlElement* pMenuPageElem = pElem->FirstChildElement("MenuPage");
@@ -437,20 +558,10 @@ bool ScreenElementMenu::Initialize(TiXmlElement* pElem)
     m_pActiveMenuPage = m_MenuPageMap[defaultPage];
     assert(m_pActiveMenuPage != nullptr);
 
-    // Load background image
-    m_pBackground = PcxResourceLoader::LoadAndReturnImage(backgroundImagePath.c_str());
-    assert(m_pBackground != nullptr);
-
     // Lets just assume that the background will take the whole screen
     // From that we can calculate current scale (can't use predefined scale here)
     Point windowSize = g_pApp->GetWindowSize();
     g_MenuScale.Set(windowSize.x / m_pBackground->GetWidth(), windowSize.y / m_pBackground->GetHeight());
-
-    // Play some music
-    SoundInfo soundInfo(SOUND_MENU_MENUMUSIC);
-    soundInfo.loops = -1;
-    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-        new EventData_Request_Play_Sound(soundInfo)));
 
     return true;
 }
@@ -508,6 +619,21 @@ void ScreenElementMenu::ModifyMenuItemStateDelegate(IEventDataPtr pEventData)
     {
         LOG_ERROR("Could not find menu item: " + pCastEventData->GetMenuItemName());
     }
+}
+
+void ScreenElementMenu::IngameMenuResumeGameDelegate(IEventDataPtr pEventData)
+{
+    VSetVisible(false);
+}
+
+void ScreenElementMenu::IngameMenuEndLifeDelegate(IEventDataPtr pEventData)
+{
+    VSetVisible(false);
+}
+
+void ScreenElementMenu::IngameMenuEndGameDelegate(IEventDataPtr pEventData)
+{
+    VSetVisible(false);
 }
 
 //-----------------------------------------------------------------------------
@@ -844,7 +970,7 @@ void ScreenElementMenuItem::VOnRender(uint32 msDiff)
     }
 
     SDL_Rect renderRect;
-    renderRect.x = (int)(m_Position.x * g_MenuScale.x);
+    renderRect.x = (int)((m_Position.x + pCurrImage->GetOffsetX()) * g_MenuScale.x);
     renderRect.y = (int)(m_Position.y * g_MenuScale.y);
     renderRect.w = (int)(pCurrImage->GetWidth() * g_MenuScale.x);
     renderRect.h = (int)(pCurrImage->GetHeight() * g_MenuScale.y);

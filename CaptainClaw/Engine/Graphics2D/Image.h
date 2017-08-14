@@ -9,6 +9,7 @@ class Image
 {
 public:
     Image();
+    Image(SDL_Texture* pSDLTexture);
     ~Image();
 
     static SDL_Texture* GetTextureFromPid(WapPid* pid, SDL_Renderer* renderer);

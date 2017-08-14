@@ -1193,6 +1193,17 @@ void BaseGameLogic::BossFightStartedDelegate(IEventDataPtr pEventData)
     pClawComponent->SetFrozen(false);
 }
 
+void BaseGameLogic::IngameMenuEndLifeDelegate(IEventDataPtr pEventData)
+{
+    StrongActorPtr pClaw = GetClawActor();
+    assert(pClaw != nullptr);
+
+    shared_ptr<HealthComponent> pClawHealthComponent = MakeStrongPtr(pClaw->GetComponent<HealthComponent>());
+    assert(pClawHealthComponent != nullptr);
+
+    pClawHealthComponent->SetCurrentHealth(-1);
+}
+
 StrongActorPtr BaseGameLogic::GetClawActor()
 {
     for (auto actorIter : m_ActorMap)
@@ -1272,6 +1283,7 @@ void BaseGameLogic::RegisterAllDelegates()
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::MoveActorDelegate), EventData_Move_Actor::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::IngameMenuEndLifeDelegate), EventData_IngameMenu_End_Life::sk_EventType);
 }
 
 void BaseGameLogic::RemoveAllDelegates()
@@ -1284,6 +1296,7 @@ void BaseGameLogic::RemoveAllDelegates()
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::MoveActorDelegate), EventData_Move_Actor::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::IngameMenuEndLifeDelegate), EventData_IngameMenu_End_Life::sk_EventType);
 }
 
 void BaseGameLogic::ExecuteStartupCommands(const std::string& startupCommandsFile)

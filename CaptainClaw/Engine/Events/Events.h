@@ -2591,4 +2591,67 @@ private:
     int m_HealthLeft;
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_IngameMenu_Resume_Game
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_IngameMenu_Resume_Game : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_IngameMenu_Resume_Game() { }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_IngameMenu_Resume_Game());
+    }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Cannot be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Cannot be serialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_IngameMenu_Resume_Game"; }
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_IngameMenu_End_Life
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_IngameMenu_End_Life : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_IngameMenu_End_Life() { }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_IngameMenu_End_Life());
+    }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Cannot be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Cannot be serialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_IngameMenu_End_Life"; }
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_IngameMenu_End_Game
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_IngameMenu_End_Game : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_IngameMenu_End_Game() { }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_IngameMenu_End_Game());
+    }
+    virtual void VSerialize(std::ostringstream& out) const { assert(false && "Cannot be serialized"); }
+    virtual void VDeserialize(std::istringstream& in) { assert(false && "Cannot be serialized"); }
+
+    virtual const char* GetName(void) const { return "EventData_IngameMenu_End_Game"; }
+};
+
 #endif

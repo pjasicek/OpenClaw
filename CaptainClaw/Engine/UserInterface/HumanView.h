@@ -16,7 +16,6 @@ typedef std::list<shared_ptr<IGameView>> GameViewList;
 class LevelData;
 class Scene;
 class CameraNode;
-class ScreenElementIngameMenu;
 class HumanView : public IGameView
 {
 public:
@@ -81,6 +80,7 @@ protected:
     void FinishedLevelDelegate(IEventDataPtr pEventData);
     void ActorEnteredBossAreaDelegate(IEventDataPtr pEventData);
     void BossFightEndedDelegate(IEventDataPtr pEventData);
+    void IngameMenuEndGameDelegate(IEventDataPtr pEventData);
 
     uint32 m_ViewId;
     uint32 m_ActorId;
@@ -96,7 +96,7 @@ protected:
     shared_ptr<ScreenElementHUD> m_pHUD;
     shared_ptr<CameraNode> m_pCamera;
     shared_ptr<Console> m_pConsole;
-    shared_ptr<ScreenElementIngameMenu> m_pIngameMenu;
+    shared_ptr<ScreenElementMenu> m_pIngameMenu;
 
     shared_ptr<IKeyboardHandler> m_pKeyboardHandler;
     shared_ptr<IPointerHandler> m_pPointerHandler;

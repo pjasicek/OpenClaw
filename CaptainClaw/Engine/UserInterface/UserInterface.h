@@ -102,6 +102,13 @@ enum MenuItem
     //....
 };
 
+enum MenuType
+{
+    MenuType_None,
+    MenuType_MainMenu,
+    MenuType_IngameMenu
+};
+
 class Image;
 class ScreenElementMenuPage;
 
@@ -119,10 +126,10 @@ public:
     virtual void VOnUpdate(uint32 msDiff);
     virtual void VOnRender(uint32 msDiff);
 
-    virtual int32 VGetZOrder() const { return 0; }
+    virtual int32 VGetZOrder() const { return 20000; }
     virtual void VSetZOrder(int32 const zOrder) { }
-    virtual bool VIsVisible() { return true; }
-    virtual void VSetVisible(bool visible) { }
+    virtual bool VIsVisible() override { return m_bIsVisible; }
+    virtual void VSetVisible(bool visible) override;
 
     virtual bool VOnEvent(SDL_Event& evt);
 
@@ -132,6 +139,15 @@ private:
     void SwitchPageDelegate(IEventDataPtr pEventData);
     void ModifyMenuItemVisibilityDelegate(IEventDataPtr pEventData);
     void ModifyMenuItemStateDelegate(IEventDataPtr pEventData);
+    void IngameMenuResumeGameDelegate(IEventDataPtr pEventData);
+    void IngameMenuEndLifeDelegate(IEventDataPtr pEventData);
+    void IngameMenuEndGameDelegate(IEventDataPtr pEventData);
+
+    bool m_bIsVisible;
+
+    MenuType m_MenuType;
+
+    std::string m_MenuEnterSound;
 
     shared_ptr<Image> m_pBackground;
     SDL_Renderer* m_pRenderer;

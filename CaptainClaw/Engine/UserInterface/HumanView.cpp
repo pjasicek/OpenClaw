@@ -8,7 +8,6 @@
 #include "../Resource/Loaders/WavLoader.h"
 #include "../Util/PrimeSearch.h"
 #include "ScoreScreen/EndLevelScoreScreen.h"
-#include "IngameMenu.h"
 
 const uint32 g_InvalidGameViewId = 0xFFFFFFFF;
 
@@ -28,7 +27,6 @@ HumanView::HumanView(SDL_Renderer* renderer)
         m_pScene.reset(new ScreenElementScene(renderer));
         m_pCamera.reset(new CameraNode(Point(0, 0), 0, 0));
         m_pHUD.reset(new ScreenElementHUD());
-        m_pIngameMenu.reset(new ScreenElementIngameMenu());
 
         m_pScene->AddChild(INVALID_ACTOR_ID, m_pCamera);
         m_pScene->SetCamera(m_pCamera);
@@ -358,6 +356,8 @@ void HumanView::RegisterAllDelegates()
         this, &HumanView::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &HumanView::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::IngameMenuEndGameDelegate), EventData_IngameMenu_End_Game::sk_EventType);
     
 }
 
@@ -390,6 +390,8 @@ void HumanView::RemoveAllDelegates()
         this, &HumanView::FinishedLevelDelegate), EventData_Finished_Level::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
         this, &HumanView::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(
+        this, &HumanView::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(
         this, &HumanView::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
 }
@@ -676,7 +678,6 @@ void HumanView::RequestResetLevelDelegate(IEventDataPtr pEventData)
     m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
     //m_pCamera.reset(new CameraNode(Point(0, 0), 0, 0));
     m_pHUD.reset(new ScreenElementHUD());
-    m_pIngameMenu.reset(new ScreenElementIngameMenu());
     m_pScene->AddChild(INVALID_ACTOR_ID, m_pCamera);
     m_pScene->SetCamera(m_pCamera);
     //m_pCamera->SetSize(g_pApp->GetWindowSize().x, g_pApp->GetWindowSize().y);
@@ -700,7 +701,6 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         m_pMenu.reset();
         m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
         m_pHUD.reset(new ScreenElementHUD());
-        m_pIngameMenu.reset(new ScreenElementIngameMenu());
         m_pScene->SetCamera(m_pCamera);
 
         // Level 6 is currently the last level
@@ -862,6 +862,11 @@ void HumanView::TeleportActorDelegate(IEventDataPtr pEventData)
         // Needs to be called here
         pTeleportSfxProcess->VOnInit();
     }
+}
+
+void HumanView::IngameMenuEndGameDelegate(IEventDataPtr pEventData)
+{
+    IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Enter_Menu()));
 }
 
 //=================================================================================================

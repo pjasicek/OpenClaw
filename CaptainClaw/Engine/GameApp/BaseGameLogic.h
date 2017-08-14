@@ -104,6 +104,7 @@ protected:
     void FinishedLevelDelegate(IEventDataPtr pEventData);
     void ActorEnteredBossAreaDelegate(IEventDataPtr pEventData);
     void BossFightStartedDelegate(IEventDataPtr pEventData);
+    void IngameMenuEndLifeDelegate(IEventDataPtr pEventData);
 
     uint32 m_Lifetime;
     ProcessMgr* m_pProcessMgr;
