@@ -34,8 +34,8 @@ public:
     bool IsSoundActive() { return m_bSoundOn; }
     bool IsMusicActive() { return m_bMusicOn; }
 
-    void SetSoundActive(bool active) { Mix_HaltChannel(-1); m_bSoundOn = active; }
-    void SetMusicActive(bool active) { StopMusic(); m_bMusicOn = active; }
+    void SetSoundActive(bool active);
+    void SetMusicActive(bool active);
 
     int GetSoundVolume();
     int GetMusicVolume();

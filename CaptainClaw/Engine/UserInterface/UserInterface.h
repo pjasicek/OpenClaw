@@ -150,6 +150,7 @@ private:
     bool m_bIsVisible;
 
     MenuType m_MenuType;
+    MenuPage m_DefaultMenuPage;
 
     std::string m_MenuEnterSound;
 

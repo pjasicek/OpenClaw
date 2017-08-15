@@ -338,6 +338,44 @@ void Audio::ResumeAllSounds()
 #endif //_WIN32
 }
 
+void Audio::SetSoundActive(bool active)
+{ 
+    if (m_bSoundOn == active)
+    {
+        return;
+    }
+
+    if (active)
+    {
+        Mix_Resume(-1);
+    }
+    else
+    {
+        Mix_Pause(-1);
+    }
+
+    m_bSoundOn = active; 
+}
+
+void Audio::SetMusicActive(bool active)
+{ 
+    if (m_bMusicOn == active)
+    {
+        return;
+    }
+
+    if (active)
+    {
+        ResumeMusic();
+    }
+    else
+    {
+        PauseMusic();
+    }
+
+    m_bMusicOn = active; 
+}
+
 #ifdef _WIN32
 //############################################
 //############## MIDI RPC ####################

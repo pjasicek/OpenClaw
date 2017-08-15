@@ -49,7 +49,7 @@
             <Position x="238" y="215" />
             <GeneratedEvent>
                 <Type>SwitchPage</Type>
-                <PageName>MenuPage_SinglePlayer</PageName>
+                <PageName>MenuPage_Options</PageName>
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
@@ -100,6 +100,7 @@
         <MenuItem>
             <Name>YES_BUTTON</Name>
             <Type>Button</Type>
+            <Hotkey>Y</Hotkey>
             <State>Active</State>
             <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/ENDGAME/001_YES.PID</InactiveImage>
             <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/ENDGAME/002_YES.PID</ActiveImage>
@@ -111,6 +112,7 @@
         <MenuItem>
             <Name>NO_BUTTON</Name>
             <Type>Button</Type>
+            <Hotkey>N</Hotkey>
             <State>Inactive</State>
             <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/ENDGAME/003_NO.PID</InactiveImage>
             <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/ENDGAME/004_NO.PID</ActiveImage>
@@ -142,6 +144,7 @@
         <MenuItem>
             <Name>YES_BUTTON</Name>
             <Type>Button</Type>
+            <Hotkey>Y</Hotkey>
             <State>Active</State>
             <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/CLAWICIDE/001_YES.PID</InactiveImage>
             <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/CLAWICIDE/002_YES.PID</ActiveImage>
@@ -153,6 +156,7 @@
         <MenuItem>
             <Name>NO_BUTTON</Name>
             <Type>Button</Type>
+            <Hotkey>N</Hotkey>
             <State>Inactive</State>
             <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/CLAWICIDE/003_NO.PID</InactiveImage>
             <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/CLAWICIDE/004_NO.PID</ActiveImage>
@@ -189,5 +193,506 @@
                 <PageName>MenuPage_Main</PageName>
             </GeneratedEvent>
         </KeyboardEvent>
+    </MenuPage>
+
+    <!-- OPTIONS PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_Options</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <MenuItem>
+            <Name>AUDIO_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>A</Hotkey>
+            <State>Active</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/OPTIONS/005_AUDIO.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/OPTIONS/006_AUDIO.PID</ActiveImage>
+            <Position x="260" y="205" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Options_Audio</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>B</Hotkey>
+            <State>Inactive</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/OPTIONS/007_PREVIOUSMENU.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/OPTIONS/008_PREVIOUSMENU.PID</ActiveImage>
+            <Position x="266" y="240" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+
+    <!-- AUDIO PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_Options_Audio</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Options</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        
+        <MenuItem>
+            <Name>SOUND_ON_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>S</Hotkey>
+            <State>Active</State>
+            <VisibilityCondition>
+                <ConditionType>SoundOn</ConditionType>
+            </VisibilityCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/001_SOUNDON.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/003_SOUNDON.PCX</ActiveImage>
+            <Position x="48" y="150" />
+            <GeneratedEvent>
+                <Type>ChangeSoundEnabled</Type>
+                <IsEnabled>false</IsEnabled>
+                <IsMusic>false</IsMusic>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>SOUND_ON_BUTTON</MenuItemName>
+                <IsVisible>false</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>SOUND_ON_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>SOUND_OFF_BUTTON</MenuItemName>
+                <IsVisible>true</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>SOUND_OFF_BUTTON</MenuItemName>
+                <State>Active</State>
+            </GeneratedEvent>
+
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>VOICE_OFF_BUTTON</MenuItemName>
+                <State>Disabled</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>VOICE_ON_BUTTON</MenuItemName>
+                <State>Disabled</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>AMBIENT_OFF_BUTTON</MenuItemName>
+                <State>Disabled</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>AMBIENT_ON_BUTTON</MenuItemName>
+                <State>Disabled</State>
+            </GeneratedEvent>
+
+            <StateEnterEvents>
+                <Event>
+                    <ForState>Active</ForState>
+                    <Type>ModifyMenuItemState</Type>
+                    <MenuItemName>SOUND_KNOB</MenuItemName>
+                    <State>Active</State>
+                </Event>
+            </StateEnterEvents>
+            <StateLeaveEvents>
+                <Event>
+                    <ForState>Active</ForState>
+                    <Type>ModifyMenuItemState</Type>
+                    <MenuItemName>SOUND_KNOB</MenuItemName>
+                    <State>Inactive</State>
+                </Event>
+            </StateLeaveEvents>
+
+            <KeyEvents>
+                <KeyEvent>
+                    <Key>LeftArrow</Key>
+                    <Event>
+                        <Type>ModifyVolume</Type>
+                        <DeltaVolume>-10</DeltaVolume>
+                        <IsMusic>false</IsMusic>
+                    </Event>
+                    <Event>
+                        <Type>PlaySound</Type>
+                        <SoundName>/STATES/MENU/SOUNDS/CLICK.WAV</SoundName>
+                        <Volume>100</Volume>
+                        <IsMusic>false</IsMusic>
+                        <Loops>-0</Loops>
+                    </Event>
+                </KeyEvent>
+                <KeyEvent>
+                    <Key>RightArrow</Key>
+                    <Event>
+                        <Type>ModifyVolume</Type>
+                        <DeltaVolume>10</DeltaVolume>
+                        <IsMusic>false</IsMusic>
+                    </Event>
+                    <Event>
+                        <Type>PlaySound</Type>
+                        <SoundName>/STATES/MENU/SOUNDS/CLICK.WAV</SoundName>
+                        <Volume>100</Volume>
+                        <IsMusic>false</IsMusic>
+                        <Loops>-0</Loops>
+                    </Event>
+                </KeyEvent>
+            </KeyEvents>
+        </MenuItem>
+        <MenuItem>
+            <Name>SOUND_OFF_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>S</Hotkey>
+            <State>Active</State>
+            <VisibilityCondition>
+                <ConditionType>SoundOff</ConditionType>
+            </VisibilityCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/002_SOUNDOFF.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/004_SOUNDOFF.PCX</ActiveImage>
+            <Position x="48" y="150" />
+            <GeneratedEvent>
+                <Type>ChangeSoundEnabled</Type>
+                <IsEnabled>true</IsEnabled>
+                <IsMusic>false</IsMusic>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>SOUND_OFF_BUTTON</MenuItemName>
+                <IsVisible>false</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>SOUND_OFF_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>SOUND_ON_BUTTON</MenuItemName>
+                <IsVisible>true</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>SOUND_ON_BUTTON</MenuItemName>
+                <State>Active</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>PlaySound</Type>
+                <SoundName>/STATES/MENU/SOUNDS/SELECT.WAV</SoundName>
+                <Volume>100</Volume>
+                <IsMusic>false</IsMusic>
+                <Loops>-0</Loops>
+            </GeneratedEvent>
+
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>VOICE_OFF_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>VOICE_ON_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>AMBIENT_OFF_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>AMBIENT_ON_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+        </MenuItem>
+        
+        <MenuItem>
+            <Name>VOICE_ON_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>V</Hotkey>
+            <State>Active</State>
+            <VisibilityCondition>
+                <ConditionType>VoiceOn</ConditionType>
+            </VisibilityCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/005_VOICEON.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/007_VOICEON.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/032_VOICEON.PCX</DisabledImage>
+            <Position x="214" y="185" />
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>VOICE_ON_BUTTON</MenuItemName>
+                <IsVisible>false</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>VOICE_ON_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>VOICE_OFF_BUTTON</MenuItemName>
+                <IsVisible>true</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>VOICE_OFF_BUTTON</MenuItemName>
+                <State>Active</State>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>VOICE_OFF_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>V</Hotkey>
+            <State>Active</State>
+            <VisibilityCondition>
+                <ConditionType>VoiceOff</ConditionType>
+            </VisibilityCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/006_VOICDOFF.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/008_VOICEOFF.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/033_VOICEOFF.PCX</DisabledImage>
+            <Position x="214" y="185" />
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>VOICE_OFF_BUTTON</MenuItemName>
+                <IsVisible>false</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>VOICE_OFF_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>VOICE_ON_BUTTON</MenuItemName>
+                <IsVisible>true</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>VOICE_ON_BUTTON</MenuItemName>
+                <State>Active</State>
+            </GeneratedEvent>
+        </MenuItem>
+        
+        <MenuItem>
+            <Name>AMBIENT_ON_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>A</Hotkey>
+            <State>Active</State>
+            <VisibilityCondition>
+                <ConditionType>AmbientOn</ConditionType>
+            </VisibilityCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/009_AMBIENTON.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/011_AMBIENTON.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/034_AMBIENTON.PCX</DisabledImage>
+            <Position x="188" y="220" />
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>AMBIENT_ON_BUTTON</MenuItemName>
+                <IsVisible>false</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>AMBIENT_ON_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>AMBIENT_OFF_BUTTON</MenuItemName>
+                <IsVisible>true</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>AMBIENT_OFF_BUTTON</MenuItemName>
+                <State>Active</State>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>AMBIENT_OFF_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>A</Hotkey>
+            <State>Active</State>
+            <VisibilityCondition>
+                <ConditionType>AmbientOff</ConditionType>
+            </VisibilityCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/010_AMBIENTOFF.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/012_AMBIENTOFF.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/035_AMBIENTOFF.PCX</DisabledImage>
+            <Position x="188" y="220" />
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>AMBIENT_OFF_BUTTON</MenuItemName>
+                <IsVisible>false</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>AMBIENT_OFF_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>AMBIENT_ON_BUTTON</MenuItemName>
+                <IsVisible>true</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>AMBIENT_ON_BUTTON</MenuItemName>
+                <State>Active</State>
+            </GeneratedEvent>
+        </MenuItem>
+
+        <MenuItem>
+            <Name>MUSIC_ON_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>M</Hotkey>
+            <State>Active</State>
+            <VisibilityCondition>
+                <ConditionType>SoundOn</ConditionType>
+            </VisibilityCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/013_MUSICON.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/015_MUSICON.PCX</ActiveImage>
+            <Position x="52" y="255" />
+            <GeneratedEvent>
+                <Type>ChangeSoundEnabled</Type>
+                <IsEnabled>false</IsEnabled>
+                <IsMusic>true</IsMusic>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>MUSIC_ON_BUTTON</MenuItemName>
+                <IsVisible>false</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>MUSIC_ON_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>MUSIC_OFF_BUTTON</MenuItemName>
+                <IsVisible>true</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>MUSIC_OFF_BUTTON</MenuItemName>
+                <State>Active</State>
+            </GeneratedEvent>
+        
+            <StateEnterEvents>
+                <Event>
+                    <ForState>Active</ForState>
+                    <Type>ModifyMenuItemState</Type>
+                    <MenuItemName>MUSIC_KNOB</MenuItemName>
+                    <State>Active</State>
+                </Event>
+            </StateEnterEvents>
+            <StateLeaveEvents>
+                <Event>
+                    <ForState>Active</ForState>
+                    <Type>ModifyMenuItemState</Type>
+                    <MenuItemName>MUSIC_KNOB</MenuItemName>
+                    <State>Inactive</State>
+                </Event>
+            </StateLeaveEvents>
+                
+            <KeyEvents>
+                <KeyEvent>
+                    <Key>LeftArrow</Key>
+                    <Event>
+                        <Type>ModifyVolume</Type>
+                        <DeltaVolume>-2</DeltaVolume>
+                        <IsMusic>true</IsMusic>
+                    </Event>
+                </KeyEvent>
+            <KeyEvent>
+                <Key>RightArrow</Key>
+                    <Event>
+                        <Type>ModifyVolume</Type>
+                        <DeltaVolume>2</DeltaVolume>
+                        <IsMusic>true</IsMusic>
+                    </Event>
+                </KeyEvent>
+            </KeyEvents>
+        </MenuItem>
+        <MenuItem>
+            <Name>MUSIC_OFF_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>M</Hotkey>
+            <State>Active</State>
+            <VisibilityCondition>
+                <ConditionType>SoundOff</ConditionType>
+            </VisibilityCondition>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/014_MUSICOFF.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/016_MUSICOFF.PCX</ActiveImage>
+            <Position x="52" y="255" />
+            <GeneratedEvent>
+                <Type>ChangeSoundEnabled</Type>
+                <IsEnabled>true</IsEnabled>
+                <IsMusic>true</IsMusic>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>MUSIC_OFF_BUTTON</MenuItemName>
+                <IsVisible>false</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>MUSIC_OFF_BUTTON</MenuItemName>
+                <State>Inactive</State>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemVisibility</Type>
+                <MenuItemName>MUSIC_ON_BUTTON</MenuItemName>
+                <IsVisible>true</IsVisible>
+            </GeneratedEvent>
+            <GeneratedEvent>
+                <Type>ModifyMenuItemState</Type>
+                <MenuItemName>MUSIC_ON_BUTTON</MenuItemName>
+                <State>Active</State>
+            </GeneratedEvent>
+        </MenuItem>
+
+        <MenuItem>
+            <Name>SOUND_KNOB</Name>
+            <Type>Slider</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/041_REDKNOB.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/042_REDKNOB.PCX</ActiveImage>
+            <Position x="367" y="152" />
+        </MenuItem>
+        
+        <MenuItem>
+            <Name>MUSIC_KNOB</Name>
+            <Type>Slider</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/045_BLUEKNOB.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/046_BLUEKNOB.PCX</ActiveImage>
+            <Position x="363" y="257" />
+        </MenuItem>
+
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type>
+            <Hotkey>B</Hotkey>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/012_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/013_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="290" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Options</PageName>
+            </GeneratedEvent>
+        </MenuItem>
     </MenuPage>
 </GameMenu>

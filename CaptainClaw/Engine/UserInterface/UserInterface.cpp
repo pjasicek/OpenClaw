@@ -461,6 +461,10 @@ void ScreenElementMenu::VSetVisible(bool visible)
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
         }
+
+        // Use SwitchPage event ?
+        m_pActiveMenuPage = m_MenuPageMap[m_DefaultMenuPage];
+        m_pActiveMenuPage->OnPageLoaded();
     }
     else
     {
@@ -502,7 +506,7 @@ bool ScreenElementMenu::Initialize(TiXmlElement* pElem)
 
     std::string defaultMenuPageName;
     ParseValueFromXmlElem(&defaultMenuPageName, pElem->FirstChildElement("StartingPage"));
-    MenuPage defaultPage = StringToMenuPageEnum(defaultMenuPageName);
+    m_DefaultMenuPage = StringToMenuPageEnum(defaultMenuPageName);
 
     //
     // ---------- Background Image ----------
@@ -561,7 +565,7 @@ bool ScreenElementMenu::Initialize(TiXmlElement* pElem)
         m_MenuPageMap.insert(std::make_pair(pageType, pPage));
     }
 
-    m_pActiveMenuPage = m_MenuPageMap[defaultPage];
+    m_pActiveMenuPage = m_MenuPageMap[m_DefaultMenuPage];
     assert(m_pActiveMenuPage != nullptr);
 
     // Lets just assume that the background will take the whole screen
@@ -1001,7 +1005,9 @@ void ScreenElementMenuItem::VOnRender(uint32 msDiff)
 
 bool ScreenElementMenuItem::VOnEvent(SDL_Event& evt)
 {
-    if (evt.type == SDL_KEYDOWN && SDL_GetScancodeFromKey(evt.key.keysym.sym) == m_Hotkey)
+    if (evt.type == SDL_KEYDOWN && 
+        SDL_GetScancodeFromKey(evt.key.keysym.sym) == m_Hotkey &&
+        m_bVisible)
     {
         return Press();
     }
