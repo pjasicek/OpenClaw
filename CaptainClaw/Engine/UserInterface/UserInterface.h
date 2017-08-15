@@ -74,7 +74,11 @@ enum MenuPage
     MenuPage_Options_Audio,
 
     MenuPage_Multiplayer_LevelRacing,
-    MenuPage_Multiplayer_EditMacros
+    MenuPage_Multiplayer_EditMacros,
+
+    // Ingame menu
+    MenuPage_EndLife,
+    MenuPage_EndGame
 };
 
 // These are MENU ITEMS - Buttons, sliders and such

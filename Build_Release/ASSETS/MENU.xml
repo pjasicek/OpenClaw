@@ -99,6 +99,20 @@
                 <Type>SwitchPage</Type>
                 <PageName>MenuPage_Help</PageName>
             </GeneratedEvent>
+            <KeyboardEvent>
+                <KeyType>Space</KeyType>
+                <GeneratedEvent>
+                    <Type>SwitchPage</Type>
+                    <PageName>MenuPage_Main</PageName>
+                </GeneratedEvent>
+            </KeyboardEvent>
+            <KeyboardEvent>
+                <KeyType>Enter</KeyType>
+                <GeneratedEvent>
+                    <Type>SwitchPage</Type>
+                    <PageName>MenuPage_Main</PageName>
+                </GeneratedEvent>
+            </KeyboardEvent>
         </MenuItem>
         <MenuItem>
             <Name>QUIT_BUTTON</Name>
@@ -526,6 +540,33 @@
                 <PageName>MenuPage_SinglePlayer</PageName>
             </GeneratedEvent>
         </MenuItem>
+    </MenuPage>
+
+    <!-- HELP PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_Help</PageName>
+        <BackgroundImage>/STATES/HELP/SCREENS/HELP.PCX</BackgroundImage>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <KeyboardEvent>
+            <KeyType>Space</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <KeyboardEvent>
+            <KeyType>Enter</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
     </MenuPage>
     
     <!-- LOAD GAME PAGE -->

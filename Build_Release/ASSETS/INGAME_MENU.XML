@@ -35,7 +35,8 @@
             <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/004_CLAWICIDE.PID</ActiveImage>
             <Position x="234" y="180" />
             <GeneratedEvent>
-                <Type>EndLife</Type>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_EndLife</PageName>
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
@@ -61,7 +62,7 @@
             <Position x="270" y="250" />
             <GeneratedEvent>
                 <Type>SwitchPage</Type>
-                <PageName>MenuPage_SinglePlayer</PageName>
+                <PageName>MenuPage_Help</PageName>
             </GeneratedEvent>
         </MenuItem>
         <MenuItem>
@@ -73,8 +74,120 @@
             <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/010_ENDGAME.PID</ActiveImage>
             <Position x="220" y="285" />
             <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_EndGame</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+
+    <!-- END GAME PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_EndGame</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <MenuItem>
+            <Name>QUIT_GAME_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/ENDGAME/005_AREYOUSURE.PID</InactiveImage>
+            <Position x="176" y="170" />
+        </MenuItem>
+        <MenuItem>
+            <Name>YES_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/ENDGAME/001_YES.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/ENDGAME/002_YES.PID</ActiveImage>
+            <Position x="282" y="260" />
+            <GeneratedEvent>
                 <Type>EndGame</Type>
             </GeneratedEvent>
         </MenuItem>
+        <MenuItem>
+            <Name>NO_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Inactive</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/ENDGAME/003_NO.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/ENDGAME/004_NO.PID</ActiveImage>
+            <Position x="292" y="300" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+
+    <!-- END LIFE PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_EndLife</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <MenuItem>
+            <Name>END_LIFE_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/CLAWICIDE/005_AREYOUSURE.PID</InactiveImage>
+            <Position x="142" y="170" />
+        </MenuItem>
+        <MenuItem>
+            <Name>YES_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/CLAWICIDE/001_YES.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/CLAWICIDE/002_YES.PID</ActiveImage>
+            <Position x="282" y="260" />
+            <GeneratedEvent>
+                <Type>EndLife</Type>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>NO_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Inactive</State>
+            <InactiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/CLAWICIDE/003_NO.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/INGAMEMENU/MAIN/CLAWICIDE/004_NO.PID</ActiveImage>
+            <Position x="292" y="300" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+
+    <!-- HELP PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_Help</PageName>
+        <BackgroundImage>/STATES/HELP/SCREENS/HELP.PCX</BackgroundImage>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <KeyboardEvent>
+            <KeyType>Space</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <KeyboardEvent>
+            <KeyType>Enter</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
     </MenuPage>
 </GameMenu>

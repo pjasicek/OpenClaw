@@ -149,9 +149,11 @@ bool HumanView::VOnEvent(SDL_Event& evt)
             if (evt.key.repeat == 0)
             {
                 if (SDL_GetScancodeFromKey(evt.key.keysym.sym) == SDL_SCANCODE_ESCAPE &&
-                    g_pApp->GetGameLogic()->GetGameState() == GameState_IngameRunning)
+                    g_pApp->GetGameLogic()->GetGameState() == GameState_IngameRunning &&
+                    m_pIngameMenu &&
+                    !m_pIngameMenu->VIsVisible())
                 {
-                    m_pIngameMenu->VSetVisible(!m_pIngameMenu->VIsVisible());
+                    m_pIngameMenu->VSetVisible(true);
                     return true;
                 }
 

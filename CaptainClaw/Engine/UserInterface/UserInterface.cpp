@@ -47,12 +47,18 @@ std::map<std::string, MenuPage> g_StringToMenuPageEnumMap =
     { "MenuPage_Options_Display",               MenuPage_Options_Display },
     { "MenuPage_Options_Audio",                 MenuPage_Options_Audio },
     { "MenuPage_Multiplayer_LevelRacing",       MenuPage_Multiplayer_LevelRacing },
-    { "MenuPage_Multiplayer_EditMacros",        MenuPage_Multiplayer_EditMacros }
+    { "MenuPage_Multiplayer_EditMacros",        MenuPage_Multiplayer_EditMacros },
+
+    // Ingame menu
+    { "MenuPage_EndGame",                       MenuPage_EndGame },
+    { "MenuPage_EndLife",                       MenuPage_EndLife }
 };
 
 std::map<std::string, SDL_Scancode> g_StringToSDLKeyCodeMap =
 {
     { "Escape", SDL_SCANCODE_ESCAPE },
+    { "Space",  SDL_SCANCODE_SPACE },
+    { "Enter",  SDL_SCANCODE_RETURN },
     { "A", SDL_SCANCODE_A },
     { "B", SDL_SCANCODE_B },
     { "C", SDL_SCANCODE_C },
@@ -685,7 +691,10 @@ void ScreenElementMenuPage::VOnRender(uint32 msDiff)
 bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
 {
     int activeMenuItemIdx = GetActiveMenuItemIdx();
-    assert(activeMenuItemIdx >= 0);
+    if (m_MenuItems.size() > 0)
+    {
+        assert(activeMenuItemIdx >= 0);
+    }
 
     // Cannot be switch-case since I have to check the "repeat" aswell
     if (evt.type == SDL_KEYDOWN)
@@ -706,6 +715,20 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
             MoveToMenuItemIdx(activeMenuItemIdx, -1);
             return true;
         }
+        else if (m_KeyToEventMap.find(keyCode) != m_KeyToEventMap.end())
+        {
+            // HACK:
+            if (keyCode == SDL_SCANCODE_ESCAPE ||
+                keyCode == SDL_SCANCODE_SPACE || 
+                keyCode == SDL_SCANCODE_RETURN)
+            {
+                SoundInfo soundInfo(SOUND_MENU_SELECT_MENU_ITEM);
+                IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                    new EventData_Request_Play_Sound(soundInfo)));
+            }
+            IEventMgr::Get()->VQueueEvent(m_KeyToEventMap[keyCode]);
+            return true;
+        }
         else if (keyCode == SDL_SCANCODE_SPACE ||
                  keyCode == SDL_SCANCODE_RETURN ||
                  keyCode == SDL_SCANCODE_KP_ENTER)
@@ -716,23 +739,12 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
                 {
                     LOG_WARNING("No event is assigned to button: " + pActiveMenuItem->GetName());
                 }
+                return true;
             }
             else
             {
                 LOG_WARNING("Could not find any active menu item !");
             }
-            return true;
-        }
-        else if (m_KeyToEventMap.find(keyCode) != m_KeyToEventMap.end())
-        {
-            // HACK:
-            if (keyCode == SDL_SCANCODE_ESCAPE)
-            {
-                SoundInfo soundInfo(SOUND_MENU_SELECT_MENU_ITEM);
-                IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-                    new EventData_Request_Play_Sound(soundInfo)));
-            }
-            IEventMgr::Get()->VQueueEvent(m_KeyToEventMap[keyCode]);
         }
     }
     else if (evt.type == SDL_MOUSEBUTTONDOWN)
@@ -780,6 +792,9 @@ bool ScreenElementMenuPage::Initialize(TiXmlElement* pElem)
     ParseValueFromXmlElem(&pageName, pElem->FirstChildElement("PageName"));
     m_PageType = StringToMenuPageEnum(pageName);
 
+    // This can be nullptr
+    m_pBackground = LoadImageFromXmlElement(pElem->FirstChildElement("BackgroundImage"));
+
     // Load all menu items
     for (TiXmlElement* pMenuItemElem = pElem->FirstChildElement("MenuItem");
         pMenuItemElem != NULL;
@@ -801,7 +816,8 @@ bool ScreenElementMenuPage::Initialize(TiXmlElement* pElem)
         pKeyboardEvent = pKeyboardEvent->NextSiblingElement("KeyboardEvent"))
     {
         std::string keyStr;
-        ParseValueFromXmlElem(&keyStr, pKeyboardEvent->FirstChildElement("KeyType"));
+        assert(ParseValueFromXmlElem(&keyStr, pKeyboardEvent->FirstChildElement("KeyType")));
+
         auto findIt = g_StringToSDLKeyCodeMap.find(keyStr);
         if (findIt == g_StringToSDLKeyCodeMap.end())
         {
@@ -864,6 +880,11 @@ shared_ptr<ScreenElementMenuItem> ScreenElementMenuPage::GetActiveMenuItem()
 
 bool ScreenElementMenuPage::MoveToMenuItemIdx(int oldIdx, int idxIncrement, bool playSound)
 {
+    if (m_MenuItems.empty())
+    {
+        return false;
+    }
+
     DeactivateAllMenuItems();
 
     // Moving up
