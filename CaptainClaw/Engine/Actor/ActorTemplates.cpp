@@ -197,7 +197,7 @@ namespace ActorTemplates
             { PickupType_Ammo_Shotbag,              "GAME_AMMO_SHOTBAG" },
             { PickupType_Powerup_Catnip_1,          "GAME_CATNIPS_NIP1" },
             { PickupType_Powerup_Catnip_2,          "GAME_CATNIPS_NIP2" },
-            { PickupType_Health_Breadwater,         "GAME_HEALTH_BREADWATER" },
+            { PickupType_Health_Breadwater,         "LEVEL_HEALTH" },
             { PickupType_Health_25,                 "GAME_HEALTH_POTION3" },
             { PickupType_Health_10,                 "GAME_HEALTH_POTION1" },
             { PickupType_Health_15,                 "GAME_HEALTH_POTION2" },
