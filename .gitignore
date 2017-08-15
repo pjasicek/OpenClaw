@@ -19,3 +19,5 @@ Build_Release/MidiProc.exe
 CaptainClaw.v12.suo
 Build_Release/MidiProc.pdb
 CaptainClaw/Debug/
+ClawLauncher/bin/
+ClawLauncher/obj/
