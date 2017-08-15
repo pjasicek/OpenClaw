@@ -62,18 +62,35 @@ namespace ClawLauncher
             /*SoundPlayer audio = new SoundPlayer(ClawLauncher.Properties.Resources.tap_warm);
             audio.Play();*/
 
+            // TODO: Clarify how to get Claw bin path.
+            // The most straightforward approach would be to assume that the binary
+            // is in the same folder as this launcher
+
             string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
                    Environment.OSVersion.Platform == PlatformID.MacOSX)
                 ? Environment.GetEnvironmentVariable("HOME")
                 : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
 
+            string binPath = "";
+            if (IsLinux)
+            {
+                binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + 
+                    "/captainclaw";
+            }
+            else
+            {
+                binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + 
+                    "/CaptainClaw.exe";
+            }
+
             string[] possibleClawExePaths = 
             {
-                "CaptainClaw.exe",
+                /*"CaptainClaw.exe",
                 "Claw.exe",
                 homePath + "/CaptainClaw/Build_Release/CaptainClaw.exe",
                 homePath + "/CaptainClaw/Build_Release/captainclaw",
-                "/usr/bin/captainclaw",
+                "/usr/bin/captainclaw",*/
+                binPath
             };
 
             String clawExePath = "";
@@ -110,7 +127,9 @@ namespace ClawLauncher
 
         private void OptionsButton_Click(object sender, EventArgs e)
         {
-
+            ClawOptions optionsForm = new ClawOptions();
+            optionsForm.Hide();
+            optionsForm.ShowDialog(this);
         }
 
         private void ExitButton_Click(object sender, EventArgs e)
