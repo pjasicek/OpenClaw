@@ -59,5 +59,32 @@ namespace ClawLauncher.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream slide_scissors {
+            get {
+                return ResourceManager.GetStream("slide_scissors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream tap_warm {
+            get {
+                return ResourceManager.GetStream("tap_warm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream TITLE {
+            get {
+                return ResourceManager.GetStream("TITLE", resourceCulture);
+            }
+        }
     }
 }

@@ -36,11 +36,13 @@
             // 
             // PlayButton
             // 
-            this.PlayButton.BackColor = System.Drawing.SystemColors.Highlight;
-            this.PlayButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PlayButton.Location = new System.Drawing.Point(294, 210);
+            this.PlayButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.PlayButton.BackColor = System.Drawing.Color.Goldenrod;
+            this.PlayButton.Font = new System.Drawing.Font("Sitka Text", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlayButton.Location = new System.Drawing.Point(660, 467);
+            this.PlayButton.Margin = new System.Windows.Forms.Padding(5);
             this.PlayButton.Name = "PlayButton";
-            this.PlayButton.Size = new System.Drawing.Size(130, 32);
+            this.PlayButton.Size = new System.Drawing.Size(220, 50);
             this.PlayButton.TabIndex = 0;
             this.PlayButton.Text = "Play";
             this.PlayButton.UseVisualStyleBackColor = false;
@@ -48,11 +50,13 @@
             // 
             // OptionsButton
             // 
-            this.OptionsButton.BackColor = System.Drawing.SystemColors.Highlight;
-            this.OptionsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OptionsButton.Location = new System.Drawing.Point(294, 245);
+            this.OptionsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OptionsButton.BackColor = System.Drawing.Color.Goldenrod;
+            this.OptionsButton.Font = new System.Drawing.Font("Sitka Text", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OptionsButton.Location = new System.Drawing.Point(660, 527);
+            this.OptionsButton.Margin = new System.Windows.Forms.Padding(5);
             this.OptionsButton.Name = "OptionsButton";
-            this.OptionsButton.Size = new System.Drawing.Size(130, 32);
+            this.OptionsButton.Size = new System.Drawing.Size(220, 50);
             this.OptionsButton.TabIndex = 1;
             this.OptionsButton.Text = "Options";
             this.OptionsButton.UseVisualStyleBackColor = false;
@@ -60,11 +64,13 @@
             // 
             // ExitButton
             // 
-            this.ExitButton.BackColor = System.Drawing.SystemColors.Highlight;
-            this.ExitButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ExitButton.Location = new System.Drawing.Point(294, 280);
+            this.ExitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ExitButton.BackColor = System.Drawing.Color.Goldenrod;
+            this.ExitButton.Font = new System.Drawing.Font("Sitka Text", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ExitButton.Location = new System.Drawing.Point(660, 587);
+            this.ExitButton.Margin = new System.Windows.Forms.Padding(5);
             this.ExitButton.Name = "ExitButton";
-            this.ExitButton.Size = new System.Drawing.Size(130, 32);
+            this.ExitButton.Size = new System.Drawing.Size(220, 50);
             this.ExitButton.TabIndex = 2;
             this.ExitButton.Text = "Exit";
             this.ExitButton.UseVisualStyleBackColor = false;
@@ -72,16 +78,17 @@
             // 
             // ClawLauncherForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(449, 336);
+            this.ClientSize = new System.Drawing.Size(944, 681);
             this.Controls.Add(this.ExitButton);
             this.Controls.Add(this.OptionsButton);
             this.Controls.Add(this.PlayButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ClawLauncherForm";
             this.Text = "Claw Launcher";
             this.ResumeLayout(false);

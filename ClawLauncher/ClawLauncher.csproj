@@ -81,6 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="launcher_icon.ico" />
+    <None Include="Resources\tap-warm.wav" />
+    <None Include="Resources\slide-scissors.wav" />
+    <None Include="Resources\TITLE.WAV" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

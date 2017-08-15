@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Media;
 
 namespace ClawLauncher
 {
@@ -17,6 +18,34 @@ namespace ClawLauncher
             InitializeComponent();
 
             CenterToScreen();
+
+            PlayButton.TabStop = false;
+            PlayButton.FlatStyle = FlatStyle.Flat;
+            PlayButton.FlatAppearance.BorderSize = 3;
+            PlayButton.FlatAppearance.BorderColor = Color.FromArgb(255, 0, 0, 0);
+
+            OptionsButton.TabStop = false;
+            OptionsButton.FlatStyle = FlatStyle.Flat;
+            OptionsButton.FlatAppearance.BorderSize = 3;
+            OptionsButton.FlatAppearance.BorderColor = Color.FromArgb(255, 0, 0, 0);
+
+            ExitButton.TabStop = false;
+            ExitButton.FlatStyle = FlatStyle.Flat;
+            ExitButton.FlatAppearance.BorderSize = 3;
+            ExitButton.FlatAppearance.BorderColor = Color.FromArgb(255, 0, 0, 0);
+
+            PlayButton.MouseHover += new EventHandler(Button_OnMouseOver);
+            OptionsButton.MouseHover += new EventHandler(Button_OnMouseOver);
+            ExitButton.MouseHover += new EventHandler(Button_OnMouseOver);
+
+            SoundPlayer audio = new SoundPlayer(ClawLauncher.Properties.Resources.TITLE);
+            audio.Play();
+        }
+
+        void Button_OnMouseOver(object sender, EventArgs e)
+        {
+            /*SoundPlayer audio = new SoundPlayer(ClawLauncher.Properties.Resources.slide_scissors);
+            audio.Play();*/
         }
 
         public static bool IsLinux
@@ -30,6 +59,9 @@ namespace ClawLauncher
 
         private void PlayButton_Click(object sender, EventArgs e)
         {
+            /*SoundPlayer audio = new SoundPlayer(ClawLauncher.Properties.Resources.tap_warm);
+            audio.Play();*/
+
             string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
                    Environment.OSVersion.Platform == PlatformID.MacOSX)
                 ? Environment.GetEnvironmentVariable("HOME")
