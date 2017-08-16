@@ -59,3 +59,19 @@ For all platforms you will need original CLAW.REZ game archive from original gam
 ![alt tag](http://s2.postimg.org/yaxu8sfcp/screenshot_27.png)
 ![alt tag](http://s2.postimg.org/7r596net5/screenshot_28.png)
 ![alt tag](http://s2.postimg.org/az9qjp12x/screenshot_29.png)
+
+# Claw Launcher
+
+  - Precompiled for Windows natively and for Linux use thorugh Mono runtime
+  - Locates Claw binary and corresponding config.xml file
+  - Provides GUI to modify configuration (Video/Audio/Assets)
+
+### For Linux
+
+  Prerequisites for Ubuntu 16.04 (should be almost identical for Fedora/CentOS/*):
+  `sudo apt install mono-runtime libmono-system4.0-cil libmono-system-windows-forms4.0-cil` 
+  Then run it like this:
+  `~/CaptainClaw/Build_Release$ mono ClawLauncher.exe`
+ 
+![alt tag](https://s12.postimg.org/a0fzk9wil/screenshot_23.png)
+![alt tag](https://s30.postimg.org/664o7wa4h/screenshot_24.png)
