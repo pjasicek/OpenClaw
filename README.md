@@ -56,9 +56,9 @@ For all platforms you will need original CLAW.REZ game archive from original gam
  
 # In-game images
 ![alt tag](http://s2.postimg.org/gwdm0ii7t/screenshot_26.png)
-![alt tag](http://s2.postimg.org/yaxu8sfcp/screenshot_27.png)
-![alt tag](http://s2.postimg.org/7r596net5/screenshot_28.png)
-![alt tag](http://s2.postimg.org/az9qjp12x/screenshot_29.png)
+![alt tag](https://s3.postimg.org/3y0a97xkj/screenshot_27.png)
+![alt tag](https://s17.postimg.org/fhd9hm9wv/screenshot_26.png)
+![alt tag](https://s27.postimg.org/7ocuxo78z/screenshot_25.png)
 
 # Claw Launcher
 
