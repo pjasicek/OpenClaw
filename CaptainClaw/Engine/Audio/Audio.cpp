@@ -87,6 +87,9 @@ bool Audio::Initialize(const GameOptions& config)
     SetSoundVolume(m_SoundVolume);
     SetMusicVolume(m_MusicVolume);
 
+    SetSoundActive(m_bSoundOn);
+    SetMusicActive(m_bMusicOn);
+
     m_bIsAudioInitialized = true;
 
     return true;
@@ -125,7 +128,16 @@ static int SetupPlayMusicThread(void* pData)
         MidiRPC_PrepareNewSong();
         MidiRPC_AddChunk(pMusicInfo->musicSize, (byte*)pMusicInfo->pMusicData);
         MidiRPC_PlaySong(pMusicInfo->looping);
-        MidiRPC_ChangeVolume(pMusicInfo->musicVolume);
+
+        if (pMusicInfo->musicVolume == -1)
+        {
+            MidiRPC_PauseSong();
+        }
+        else
+        {
+            MidiRPC_ResumeSong();
+            MidiRPC_ChangeVolume(pMusicInfo->musicVolume);
+        }
     }
         RpcExcept(1)
     {
@@ -139,6 +151,15 @@ static int SetupPlayMusicThread(void* pData)
         LOG_ERROR("Mix_LoadMUS_RW: " + std::string(Mix_GetError()));
     }
     Mix_PlayMusic(pMusic, pMusicInfo->looping ? -1 : 0);
+
+    if (pMusicInfo->musicVolume == -1)
+    {
+        Mix_PauseMusic();
+    }
+    else
+    {
+        Mix_ResumeMusic();
+    }
 #endif //_WIN32
 
     SAFE_DELETE(pMusicInfo);
@@ -148,40 +169,11 @@ static int SetupPlayMusicThread(void* pData)
 
 void Audio::PlayMusic(const char* musicData, size_t musicSize, bool looping)
 {
-    if (!m_bMusicOn)
-    {
-        return;
-    }
-
-    _MusicInfo* pMusicInfo = new _MusicInfo(musicData, musicSize, looping, m_MusicVolume);
+    _MusicInfo* pMusicInfo = new _MusicInfo(musicData, musicSize, looping, m_bMusicOn ? m_MusicVolume : -1);
 
     // Playing music track takes ALOT of time for some reason so play it in another thread
     SDL_Thread* pThread = SDL_CreateThread(SetupPlayMusicThread, "SetupPlayMusicThread", (void*)pMusicInfo);
     SDL_DetachThread(pThread);
-}
-
-// This is probably slow as fuck, should be removed, only used for debugging afaik
-void Audio::PlayMusic(const char* musicPath, bool looping)
-{
-    if (!m_bMusicOn)
-    {
-        return;
-    }
-
-    std::ifstream musicFileStream(musicPath, std::ios::binary);
-    if (!musicFileStream.is_open())
-    {
-        return;
-    }
-
-    // Read whole file
-    std::vector<char> musicFileContents((std::istreambuf_iterator<char>(musicFileStream)), std::istreambuf_iterator<char>());
-    if (!musicFileStream.good())
-    {
-        return;
-    }
-
-    PlayMusic(musicFileContents.data(), musicFileContents.size(), looping);
 }
 
 void Audio::PauseMusic()
@@ -207,6 +199,7 @@ void Audio::ResumeMusic()
     RpcTryExcept
     {
         MidiRPC_ResumeSong();
+        MidiRPC_ChangeVolume(m_MusicVolume);
     }
         RpcExcept(1)
     {
@@ -275,11 +268,6 @@ bool Audio::PlaySound(const char* soundData, size_t soundSize, const SoundProper
 
 bool Audio::PlaySound(Mix_Chunk* sound, const SoundProperties& soundProperties)
 {
-    if (!m_bSoundOn)
-    {
-        return true;
-    }
-
     int chunkVolume = (int)((((float)soundProperties.volume) / 100.0f) * (float)m_SoundVolume);
 
     Mix_VolumeChunk(sound, chunkVolume);
@@ -296,6 +284,11 @@ bool Audio::PlaySound(Mix_Chunk* sound, const SoundProperties& soundProperties)
         return false;
     }
 
+    if (!m_bSoundOn)
+    {
+        Mix_Pause(channel);
+    }
+
     return true;
 }
 
@@ -308,7 +301,10 @@ void Audio::SetSoundVolume(int volumePercentage)
     }
     m_SoundVolume = (int)((((float)volumePercentage) / 100.0f) * (float)MIX_MAX_VOLUME);
 
-    Mix_Volume(-1, m_SoundVolume);
+    if (m_bSoundOn)
+    {
+        Mix_Volume(-1, m_SoundVolume);
+    }
 }
 
 int Audio::GetSoundVolume()
@@ -348,6 +344,7 @@ void Audio::SetSoundActive(bool active)
     if (active)
     {
         Mix_Resume(-1);
+        Mix_Volume(-1, m_SoundVolume);
     }
     else
     {

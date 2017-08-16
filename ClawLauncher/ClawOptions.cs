@@ -287,21 +287,87 @@ namespace ClawLauncher
             try
             {
                 // Resolution
-                //videoRoot.SelectSingleNode("Size").Attributes["width"].InnerText = m_ClawConfig.Resolution.X.ToString();
-                //videoRoot.SelectSingleNode("Size").Attributes["height"].InnerText = m_ClawConfig.Resolution.Y.ToString();
+                if (!Video_ResolutionComboBox.SelectedItem.ToString().Contains("Custom"))
+                {
+                    string resolutionStr = Video_ResolutionComboBox.SelectedItem.ToString();
+                    string widthStr = resolutionStr.Split('x')[0];
+                    string heightStr = resolutionStr.Split('x').Last();
+                    heightStr = heightStr.Split(' ')[0];
+
+                    videoRoot.SelectSingleNode("Size").Attributes["width"].InnerText = widthStr;
+                    videoRoot.SelectSingleNode("Size").Attributes["height"].InnerText = heightStr;
+                }
 
                 // Scale
-                videoRoot.SelectSingleNode("Scale").InnerText = Video_ScaleTextBox.Text;
+                float dummy = 0;
+                if (float.TryParse(Video_ScaleTextBox.Text, out dummy))
+                {
+                    videoRoot.SelectSingleNode("Scale").InnerText = Video_ScaleTextBox.Text;
+                }
 
                 // Vertical Sync
                 videoRoot.SelectSingleNode("UseVerticalSync").InnerText = Video_VerticalSyncCheckBox.Checked.ToString().ToLower();
 
-                //videoRoot.SelectSingleNode("IsFullscreen").InnerText = m_ClawConfig.bFullscreen.ToString();
-                //videoRoot.SelectSingleNode("IsFullscreenDesktop").InnerText = m_ClawConfig.bFullscreenDesktop.ToString();
+                // Display Mode
+                string displayModeStr = Video_DisplayModeComboBox.SelectedItem.ToString();
+                if (displayModeStr.Equals("Windowed Fullscreen"))
+                {
+                    videoRoot.SelectSingleNode("IsFullscreen").InnerText = "false";
+                    videoRoot.SelectSingleNode("IsFullscreenDesktop").InnerText = "true";
+                }
+                else if (displayModeStr.Equals("Fullscreen"))
+                {
+                    videoRoot.SelectSingleNode("IsFullscreen").InnerText = "true";
+                    videoRoot.SelectSingleNode("IsFullscreenDesktop").InnerText = "false";
+                }
+                else
+                {
+                    videoRoot.SelectSingleNode("IsFullscreen").InnerText = "false";
+                    videoRoot.SelectSingleNode("IsFullscreenDesktop").InnerText = "false";
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Something went wrong: \n\n" + ex.Message + "\n\nNo changes were made in Video section !", "Error applying changes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            // ============= Video ==============
+            XmlNode audioRoot = root.SelectSingleNode("Audio");
+            try
+            {
+                // Frequency
+                string frequencyStr = Audio_FrequencyComboBox.SelectedItem.ToString();
+                if (frequencyStr.Equals("11025 Hz"))
+                {
+                    audioRoot.SelectSingleNode("Frequency").InnerText = "11025";
+                }
+                else if (frequencyStr.Equals("22050 Hz"))
+                {
+                    audioRoot.SelectSingleNode("Frequency").InnerText = "22050";
+                }
+                if (frequencyStr.Equals("44100 Hz"))
+                {
+                    audioRoot.SelectSingleNode("Frequency").InnerText = "44100";
+                }
+
+                // Mixing Channels
+                audioRoot.SelectSingleNode("MixingChannels").InnerText = Audio_MixingChannelsTextBox.Text;
+
+                // Sound Volume
+                audioRoot.SelectSingleNode("SoundVolume").InnerText = Audio_SoundVolumeTextBox.Text;
+
+                // Music Volume
+                audioRoot.SelectSingleNode("MusicVolume").InnerText = Audio_MusicVolumeTextBox.Text;
+
+                // Sound On
+                audioRoot.SelectSingleNode("SoundOn").InnerText = Audio_SoundOnCheckBox.Checked.ToString().ToLower();
+
+                // Music On
+                audioRoot.SelectSingleNode("MusicOn").InnerText = Audio_MusicOnCheckBox.Checked.ToString().ToLower();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Something went wrong: \n\n" + ex.Message + "\n\nNo changes were made in Audio section !", "Error applying changes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             
 
@@ -310,12 +376,84 @@ namespace ClawLauncher
 
         private void Audio_ApplyChangesButton_Click(object sender, EventArgs e)
         {
+            XmlDocument configDoc = new XmlDocument();
+            configDoc.Load(ClawLauncherForm.ClawConfigPath);
 
+            XmlElement root = configDoc.DocumentElement;
+
+            // ============= Audio ==============
+            XmlNode audioRoot = root.SelectSingleNode("Audio");
+            try
+            {
+                // Frequency
+                string frequencyStr = Audio_FrequencyComboBox.SelectedItem.ToString();
+                if (frequencyStr.Equals("11025 Hz"))
+                {
+                    audioRoot.SelectSingleNode("Frequency").InnerText = "11025";
+                }
+                else if (frequencyStr.Equals("22050 Hz"))
+                {
+                    audioRoot.SelectSingleNode("Frequency").InnerText = "22050";
+                }
+                if (frequencyStr.Equals("44100 Hz (Recommended)"))
+                {
+                    audioRoot.SelectSingleNode("Frequency").InnerText = "44100";
+                }
+
+                // Mixing Channels
+                audioRoot.SelectSingleNode("MixingChannels").InnerText = Audio_MixingChannelsTextBox.Text;
+
+                // Sound Volume
+                audioRoot.SelectSingleNode("SoundVolume").InnerText = Audio_SoundVolumeTextBox.Text;
+
+                // Music Volume
+                audioRoot.SelectSingleNode("MusicVolume").InnerText = Audio_MusicVolumeTextBox.Text;
+
+                // Sound On
+                audioRoot.SelectSingleNode("SoundOn").InnerText = Audio_SoundOnCheckBox.Checked.ToString().ToLower();
+
+                // Music On
+                audioRoot.SelectSingleNode("MusicOn").InnerText = Audio_MusicOnCheckBox.Checked.ToString().ToLower();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Something went wrong: \n\n" + ex.Message + "\n\nNo changes were made in Audio section !", "Error applying changes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+
+            configDoc.Save(ClawLauncherForm.ClawConfigPath);
         }
 
         private void Assets_ApplyChangesButton_Click(object sender, EventArgs e)
         {
+            XmlDocument configDoc = new XmlDocument();
+            configDoc.Load(ClawLauncherForm.ClawConfigPath);
 
+            XmlElement root = configDoc.DocumentElement;
+
+            // ============= Assets ==============
+            XmlNode assetsRoot = root.SelectSingleNode("Assets");
+            try
+            {
+                // REZ Archive
+                assetsRoot.SelectSingleNode("RezArchive").InnerText = Assets_RezArchivePathTextBox.Text;
+
+                // ZIP Archive
+                assetsRoot.SelectSingleNode("CustomArchive").InnerText = Assets_ZipArchivePathTextBox.Text;
+
+                // Saves File
+                assetsRoot.SelectSingleNode("SavesFile").InnerText = Assets_SavesFilePathTextBox.Text;
+
+                // Resource Cache Size
+                assetsRoot.SelectSingleNode("ResourceCacheSize").InnerText = Assets_ResCacheSizeTextBox.Text;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Something went wrong: \n\n" + ex.Message + "\n\nNo changes were made in Assets section !", "Error applying changes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+
+            configDoc.Save(ClawLauncherForm.ClawConfigPath);
         }
 
         private void Video_ScaleTextBox_TextChanged(object sender, EventArgs e)

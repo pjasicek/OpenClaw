@@ -20,7 +20,6 @@ public:
     void SetSoundVolume(int volumePercentage); 
 
     void PlayMusic(const char* musicData, size_t musicSize, bool looping);
-    void PlayMusic(const char* musicPath, bool looping);
     void PauseMusic();
     void ResumeMusic();
     void StopMusic();

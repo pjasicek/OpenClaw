@@ -558,7 +558,7 @@
             <Hotkey>M</Hotkey>
             <State>Active</State>
             <VisibilityCondition>
-                <ConditionType>SoundOn</ConditionType>
+                <ConditionType>MusicOn</ConditionType>
             </VisibilityCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/013_MUSICON.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/015_MUSICON.PCX</ActiveImage>
@@ -631,7 +631,7 @@
             <Hotkey>M</Hotkey>
             <State>Active</State>
             <VisibilityCondition>
-                <ConditionType>SoundOff</ConditionType>
+                <ConditionType>MusicOff</ConditionType>
             </VisibilityCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/014_MUSICOFF.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/016_MUSICOFF.PCX</ActiveImage>

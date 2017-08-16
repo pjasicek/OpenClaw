@@ -2453,13 +2453,6 @@
             </GeneratedEvent>
             <GeneratedEvent>
                 <Type>PlaySound</Type>
-                <SoundName>/STATES/MENU/SOUNDS/MENUBED.WAV</SoundName>
-                <Volume>100</Volume>
-                <IsMusic>false</IsMusic>
-                <Loops>-1</Loops>
-            </GeneratedEvent>
-            <GeneratedEvent>
-                <Type>PlaySound</Type>
                 <SoundName>/STATES/MENU/SOUNDS/SELECT.WAV</SoundName>
                 <Volume>100</Volume>
                 <IsMusic>false</IsMusic>
@@ -2623,7 +2616,7 @@
             <Type>Button</Type>
             <State>Active</State>
             <VisibilityCondition>
-                <ConditionType>SoundOn</ConditionType>
+                <ConditionType>MusicOn</ConditionType>
             </VisibilityCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/013_MUSICON.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/015_MUSICON.PCX</ActiveImage>
@@ -2709,7 +2702,7 @@
             <Type>Button</Type>
             <State>Active</State>
             <VisibilityCondition>
-                <ConditionType>SoundOff</ConditionType>
+                <ConditionType>MusicOff</ConditionType>
             </VisibilityCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/014_MUSICOFF.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/016_MUSICOFF.PCX</ActiveImage>
