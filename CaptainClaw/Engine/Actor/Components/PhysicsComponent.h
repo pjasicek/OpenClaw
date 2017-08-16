@@ -27,6 +27,9 @@ public:
 
     void SetControllableComponent(ControllableComponent* pComp);
 
+    Direction GetDirection() { return m_Direction; }
+    void SetDirection(Direction newDirection);
+
     bool CanBounce() const { return m_CanBounce; }
     void SetCanBounce(bool canBounce) { m_CanBounce = canBounce; }
 

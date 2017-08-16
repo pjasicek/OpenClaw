@@ -1131,3 +1131,18 @@ void PhysicsComponent::SetControllableComponent(ControllableComponent* pComp)
         m_pControllableComponent->SetMaxJumpHeight(m_MaxJumpHeight);
     }
 }
+
+void PhysicsComponent::SetDirection(Direction newDirection)
+{
+    if (m_Direction == newDirection)
+    {
+        return;
+    }
+
+    if (m_pControllableComponent)
+    {
+        m_pControllableComponent->VOnDirectionChange(newDirection);
+    }
+
+    m_Direction = newDirection;
+}

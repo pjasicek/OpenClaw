@@ -1,7 +1,7 @@
 #include "RopeComponent.h"
 #include "PositionComponent.h"
 #include "ControllableComponent.h"
-#include "RenderComponent.h"
+#include "PhysicsComponent.h"
 
 #include "../../Events/EventMgr.h"
 #include "../../Events/Events.h"
@@ -237,17 +237,17 @@ void RopeComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFra
 
         UpdateAttachedActorPosition(newPosition);
 
-        shared_ptr<ActorRenderComponent> pARC =
-            MakeStrongPtr(m_pAttachedActor->GetComponent<ActorRenderComponent>());
-        assert(pARC != nullptr);
+        shared_ptr<PhysicsComponent> pRopeActorPhysicsComponent =
+            MakeStrongPtr(m_pAttachedActor->GetComponent<PhysicsComponent>());
+        assert(pRopeActorPhysicsComponent != nullptr);
 
         if (pNewFrame->idx > 60)
         {
-            pARC->SetMirrored(true);
+            pRopeActorPhysicsComponent->SetDirection(Direction_Left);
         }
         else
         {
-            pARC->SetMirrored(false);
+            pRopeActorPhysicsComponent->SetDirection(Direction_Right);
         }
     }
 }
