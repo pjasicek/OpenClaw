@@ -305,6 +305,7 @@ void KinematicComponent::ClawDiedDelegate(IEventDataPtr pEventData)
         m_Properties.hasTriggerBehaviour || 
         m_Properties.hasStopBehaviour)
     {
+        m_CurrentSpeed = Point(0.0, 0.0);
         m_LastSpeed = m_InitialSpeed;
     }
 
