@@ -13,6 +13,9 @@ namespace ClawLauncher
 {
     public partial class ClawLauncherForm : Form
     {
+        public static string ClawExecutablePath;
+        public static string ClawConfigPath;
+
         public ClawLauncherForm()
         {
             InitializeComponent();
@@ -38,8 +41,58 @@ namespace ClawLauncher
             OptionsButton.MouseHover += new EventHandler(Button_OnMouseOver);
             ExitButton.MouseHover += new EventHandler(Button_OnMouseOver);
 
-            SoundPlayer audio = new SoundPlayer(ClawLauncher.Properties.Resources.TITLE);
-            audio.Play();
+            this.Activated += ClawLauncherForm_OnFormShown;
+        }
+
+        bool GetClawPaths()
+        {
+            string clawLauncherDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+
+            ClawConfigPath = "";
+            ClawExecutablePath = "";
+
+            if (IsLinux)
+            {
+                ClawExecutablePath = clawLauncherDir + "/" + "captainclaw";
+                if (clawLauncherDir.Contains("/usr/bin/"))
+                {
+                    ClawConfigPath = "/usr/share/captainclaw/config.xml";
+                }
+                else
+                {
+                    ClawConfigPath = clawLauncherDir + "/" + "config.xml";
+                }
+            }
+            else
+            {
+                ClawExecutablePath = clawLauncherDir + "/" + "CaptainClaw.exe";
+                ClawConfigPath = clawLauncherDir + "/" + "config.xml";
+            }
+
+            if (!File.Exists(ClawExecutablePath))
+            {
+
+                MessageBox.Show("Could not locate CaptainClaw binary - it has to be in the same folder as is this Launcher.\nExpected location:\n\n" + ClawExecutablePath, "CaptainClaw bin not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                //Application.Exit();
+                //Close();
+                return false;
+            }
+
+            if (!File.Exists(ClawConfigPath))
+            {
+                MessageBox.Show("Could not locate CaptainClaw config.xml.\nExpected location:\n\n" + ClawConfigPath, "CaptainClaw config.xml not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                //Application.Exit();
+                //Close();
+                return false;
+            }
+
+            ClawPathsLabel.Text = "Claw Binary Path:  " + ClawExecutablePath + "\n" +
+                                  "Claw Config Path:  " + ClawConfigPath + "\n";
+            ClawPathsLabel.Height *= 2;
+
+            return true;
         }
 
         void Button_OnMouseOver(object sender, EventArgs e)
@@ -62,63 +115,8 @@ namespace ClawLauncher
             /*SoundPlayer audio = new SoundPlayer(ClawLauncher.Properties.Resources.tap_warm);
             audio.Play();*/
 
-            // TODO: Clarify how to get Claw bin path.
-            // The most straightforward approach would be to assume that the binary
-            // is in the same folder as this launcher
-
-            string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
-                   Environment.OSVersion.Platform == PlatformID.MacOSX)
-                ? Environment.GetEnvironmentVariable("HOME")
-                : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
-
-            string binPath = "";
-            if (IsLinux)
-            {
-                binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + 
-                    "/captainclaw";
-            }
-            else
-            {
-                binPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + 
-                    "/CaptainClaw.exe";
-            }
-
-            string[] possibleClawExePaths = 
-            {
-                /*"CaptainClaw.exe",
-                "Claw.exe",
-                homePath + "/CaptainClaw/Build_Release/CaptainClaw.exe",
-                homePath + "/CaptainClaw/Build_Release/captainclaw",
-                "/usr/bin/captainclaw",*/
-                binPath
-            };
-
-            String clawExePath = "";
-            foreach (string possibleExe in possibleClawExePaths)
-            {
-                if (System.IO.File.Exists(possibleExe))
-                {
-                    clawExePath = possibleExe;
-                    break;
-                }
-            }
-
-            if (String.IsNullOrEmpty(clawExePath))
-            {
-                String searchedPaths = "";
-                foreach (string possibleExe in possibleClawExePaths)
-                {
-                    searchedPaths += possibleExe + "\n";
-                }
-
-                MessageBox.Show("Could not locate CaptainClaw binary on your system.\nSearched paths:\n\n" + searchedPaths, "CaptainClaw bin not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                Application.Exit();
-                return;
-            }
-
             Process proc = new Process();
-            proc.StartInfo.FileName = clawExePath;
+            proc.StartInfo.FileName = ClawExecutablePath;
             proc.StartInfo.UseShellExecute = false;
             proc.Start();
 
@@ -135,6 +133,25 @@ namespace ClawLauncher
         private void ExitButton_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void ClawLauncherForm_Load(object sender, EventArgs e)
+        {
+            if (!GetClawPaths())
+            {
+                Application.Exit();
+                Close();
+                Environment.Exit(1);
+                return;
+            }
+
+            SoundPlayer audio = new SoundPlayer(ClawLauncher.Properties.Resources.TITLE);
+            audio.Play();
+        }
+
+        private void ClawLauncherForm_OnFormShown(object sender, EventArgs e)
+        {
+            
         }
     }
 }

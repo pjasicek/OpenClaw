@@ -31,7 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClawOptions));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.Video_ApplyChangesButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Video_ScaleTextBox = new System.Windows.Forms.TextBox();
             this.Video_DisplayModeComboBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -40,45 +42,53 @@
             this.Video_ResolutionComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.Audio_ApplyChangesButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.Audio_MusicVolumeTextBox = new System.Windows.Forms.TextBox();
+            this.Audio_SoundVolumeTextBox = new System.Windows.Forms.TextBox();
+            this.Audio_MixingChannelsTextBox = new System.Windows.Forms.TextBox();
+            this.Audio_MixingChannelsSlider = new System.Windows.Forms.TrackBar();
+            this.label11 = new System.Windows.Forms.Label();
+            this.Audio_MusicOnCheckBox = new System.Windows.Forms.CheckBox();
+            this.Audio_MusicVolumeSlider = new System.Windows.Forms.TrackBar();
+            this.Audio_SoundVolumeSlider = new System.Windows.Forms.TrackBar();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.Audio_SoundOnCheckBox = new System.Windows.Forms.CheckBox();
+            this.Audio_3DSoundChannelsComboBox = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.comboBox6 = new System.Windows.Forms.ComboBox();
+            this.Audio_FrequencyComboBox = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.trackBar2 = new System.Windows.Forms.TrackBar();
-            this.label11 = new System.Windows.Forms.Label();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.trackBar3 = new System.Windows.Forms.TrackBar();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.Assets_ApplyChangesButton = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.Assets_SavesFilePathChooseButton = new System.Windows.Forms.Button();
+            this.Assets_ZipArchivePathChooseButton = new System.Windows.Forms.Button();
+            this.Assets_RezArchivePathChooseButton = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
+            this.Assets_ResCacheSizeTextBox = new System.Windows.Forms.TextBox();
+            this.Assets_SavesFilePathTextBox = new System.Windows.Forms.TextBox();
+            this.Assets_ZipArchivePathTextBox = new System.Windows.Forms.TextBox();
+            this.Assets_RezArchivePathTextBox = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OkButton = new System.Windows.Forms.Button();
-            this.Video_ScaleTextBox = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Audio_MixingChannelsSlider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Audio_MusicVolumeSlider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Audio_SoundVolumeSlider)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -91,21 +101,36 @@
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(427, 455);
+            this.tabControl1.Size = new System.Drawing.Size(458, 560);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage1.Controls.Add(this.Video_ApplyChangesButton);
             this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(419, 429);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
+            this.tabPage1.Size = new System.Drawing.Size(450, 531);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Video";
+            // 
+            // Video_ApplyChangesButton
+            // 
+            this.Video_ApplyChangesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Video_ApplyChangesButton.Location = new System.Drawing.Point(162, 460);
+            this.Video_ApplyChangesButton.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Video_ApplyChangesButton.Name = "Video_ApplyChangesButton";
+            this.Video_ApplyChangesButton.Size = new System.Drawing.Size(145, 39);
+            this.Video_ApplyChangesButton.TabIndex = 4;
+            this.Video_ApplyChangesButton.Text = "Apply Changes";
+            this.Video_ApplyChangesButton.UseVisualStyleBackColor = true;
+            this.Video_ApplyChangesButton.Click += new System.EventHandler(this.Video_ApplyChangesButton_Click);
             // 
             // groupBox1
             // 
@@ -118,41 +143,55 @@
             this.groupBox1.Controls.Add(this.Video_ResolutionComboBox);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.groupBox1.Location = new System.Drawing.Point(8, 20);
+            this.groupBox1.Location = new System.Drawing.Point(11, 25);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(403, 173);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Size = new System.Drawing.Size(430, 213);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Video";
             // 
+            // Video_ScaleTextBox
+            // 
+            this.Video_ScaleTextBox.Location = new System.Drawing.Point(155, 70);
+            this.Video_ScaleTextBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Video_ScaleTextBox.Name = "Video_ScaleTextBox";
+            this.Video_ScaleTextBox.Size = new System.Drawing.Size(92, 24);
+            this.Video_ScaleTextBox.TabIndex = 8;
+            this.Video_ScaleTextBox.TextChanged += new System.EventHandler(this.Video_ScaleTextBox_TextChanged);
+            // 
             // Video_DisplayModeComboBox
             // 
+            this.Video_DisplayModeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Video_DisplayModeComboBox.FormattingEnabled = true;
             this.Video_DisplayModeComboBox.Items.AddRange(new object[] {
             "Windowed",
             "Windowed Fullscreen",
             "Fullscreen"});
-            this.Video_DisplayModeComboBox.Location = new System.Drawing.Point(116, 92);
-            this.Video_DisplayModeComboBox.Margin = new System.Windows.Forms.Padding(5);
+            this.Video_DisplayModeComboBox.Location = new System.Drawing.Point(155, 106);
+            this.Video_DisplayModeComboBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.Video_DisplayModeComboBox.Name = "Video_DisplayModeComboBox";
-            this.Video_DisplayModeComboBox.Size = new System.Drawing.Size(142, 23);
+            this.Video_DisplayModeComboBox.Size = new System.Drawing.Size(188, 26);
             this.Video_DisplayModeComboBox.TabIndex = 7;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(16, 95);
+            this.label4.Location = new System.Drawing.Point(21, 110);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(85, 15);
+            this.label4.Size = new System.Drawing.Size(102, 18);
             this.label4.TabIndex = 6;
             this.label4.Text = "Display Mode:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(16, 126);
+            this.label3.Location = new System.Drawing.Point(21, 150);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(79, 15);
+            this.label3.Size = new System.Drawing.Size(97, 18);
             this.label3.TabIndex = 5;
             this.label3.Text = "Vertical Sync:";
             this.label3.Click += new System.EventHandler(this.label3_Click);
@@ -160,10 +199,10 @@
             // Video_VerticalSyncCheckBox
             // 
             this.Video_VerticalSyncCheckBox.AutoSize = true;
-            this.Video_VerticalSyncCheckBox.Location = new System.Drawing.Point(116, 129);
-            this.Video_VerticalSyncCheckBox.Margin = new System.Windows.Forms.Padding(5);
+            this.Video_VerticalSyncCheckBox.Location = new System.Drawing.Point(155, 154);
+            this.Video_VerticalSyncCheckBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.Video_VerticalSyncCheckBox.Name = "Video_VerticalSyncCheckBox";
-            this.Video_VerticalSyncCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.Video_VerticalSyncCheckBox.Size = new System.Drawing.Size(18, 17);
             this.Video_VerticalSyncCheckBox.TabIndex = 4;
             this.Video_VerticalSyncCheckBox.UseVisualStyleBackColor = true;
             this.Video_VerticalSyncCheckBox.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
@@ -171,14 +210,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 62);
+            this.label2.Location = new System.Drawing.Point(21, 70);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 15);
+            this.label2.Size = new System.Drawing.Size(49, 18);
             this.label2.TabIndex = 2;
             this.label2.Text = "Scale:";
             // 
             // Video_ResolutionComboBox
             // 
+            this.Video_ResolutionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Video_ResolutionComboBox.FormattingEnabled = true;
             this.Video_ResolutionComboBox.Items.AddRange(new object[] {
             "640x480 (original)",
@@ -189,319 +230,456 @@
             "1920x1080",
             "2560x1440",
             "Custom"});
-            this.Video_ResolutionComboBox.Location = new System.Drawing.Point(116, 26);
-            this.Video_ResolutionComboBox.Margin = new System.Windows.Forms.Padding(5);
+            this.Video_ResolutionComboBox.Location = new System.Drawing.Point(155, 32);
+            this.Video_ResolutionComboBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.Video_ResolutionComboBox.Name = "Video_ResolutionComboBox";
-            this.Video_ResolutionComboBox.Size = new System.Drawing.Size(142, 23);
+            this.Video_ResolutionComboBox.Size = new System.Drawing.Size(188, 26);
             this.Video_ResolutionComboBox.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 29);
+            this.label1.Location = new System.Drawing.Point(21, 36);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 15);
+            this.label1.Size = new System.Drawing.Size(83, 18);
             this.label1.TabIndex = 0;
             this.label1.Text = "Resolution:";
             // 
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.Audio_ApplyChangesButton);
             this.tabPage2.Controls.Add(this.groupBox2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(419, 429);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
+            this.tabPage2.Size = new System.Drawing.Size(450, 531);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Audio";
             // 
-            // tabPage3
+            // Audio_ApplyChangesButton
             // 
-            this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage3.Controls.Add(this.groupBox3);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(419, 429);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Assets";
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(419, 429);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Console";
-            // 
-            // tabPage5
-            // 
-            this.tabPage5.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(419, 429);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Gameplay";
+            this.Audio_ApplyChangesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Audio_ApplyChangesButton.Location = new System.Drawing.Point(162, 460);
+            this.Audio_ApplyChangesButton.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Audio_ApplyChangesButton.Name = "Audio_ApplyChangesButton";
+            this.Audio_ApplyChangesButton.Size = new System.Drawing.Size(145, 39);
+            this.Audio_ApplyChangesButton.TabIndex = 5;
+            this.Audio_ApplyChangesButton.Text = "Apply Changes";
+            this.Audio_ApplyChangesButton.UseVisualStyleBackColor = true;
+            this.Audio_ApplyChangesButton.Click += new System.EventHandler(this.Audio_ApplyChangesButton_Click);
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.trackBar3);
+            this.groupBox2.Controls.Add(this.Audio_MusicVolumeTextBox);
+            this.groupBox2.Controls.Add(this.Audio_SoundVolumeTextBox);
+            this.groupBox2.Controls.Add(this.Audio_MixingChannelsTextBox);
+            this.groupBox2.Controls.Add(this.Audio_MixingChannelsSlider);
             this.groupBox2.Controls.Add(this.label11);
-            this.groupBox2.Controls.Add(this.checkBox3);
-            this.groupBox2.Controls.Add(this.trackBar2);
-            this.groupBox2.Controls.Add(this.trackBar1);
+            this.groupBox2.Controls.Add(this.Audio_MusicOnCheckBox);
+            this.groupBox2.Controls.Add(this.Audio_MusicVolumeSlider);
+            this.groupBox2.Controls.Add(this.Audio_SoundVolumeSlider);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.checkBox2);
-            this.groupBox2.Controls.Add(this.comboBox5);
+            this.groupBox2.Controls.Add(this.Audio_SoundOnCheckBox);
+            this.groupBox2.Controls.Add(this.Audio_3DSoundChannelsComboBox);
             this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.comboBox6);
+            this.groupBox2.Controls.Add(this.Audio_FrequencyComboBox);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.groupBox2.Location = new System.Drawing.Point(8, 20);
+            this.groupBox2.Location = new System.Drawing.Point(11, 25);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(403, 309);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox2.Size = new System.Drawing.Size(430, 380);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Audio";
             // 
+            // Audio_MusicVolumeTextBox
+            // 
+            this.Audio_MusicVolumeTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.Audio_MusicVolumeTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Audio_MusicVolumeTextBox.Location = new System.Drawing.Point(382, 237);
+            this.Audio_MusicVolumeTextBox.Name = "Audio_MusicVolumeTextBox";
+            this.Audio_MusicVolumeTextBox.ReadOnly = true;
+            this.Audio_MusicVolumeTextBox.Size = new System.Drawing.Size(40, 24);
+            this.Audio_MusicVolumeTextBox.TabIndex = 18;
+            this.Audio_MusicVolumeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // Audio_SoundVolumeTextBox
+            // 
+            this.Audio_SoundVolumeTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.Audio_SoundVolumeTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Audio_SoundVolumeTextBox.Location = new System.Drawing.Point(382, 174);
+            this.Audio_SoundVolumeTextBox.Name = "Audio_SoundVolumeTextBox";
+            this.Audio_SoundVolumeTextBox.ReadOnly = true;
+            this.Audio_SoundVolumeTextBox.Size = new System.Drawing.Size(40, 24);
+            this.Audio_SoundVolumeTextBox.TabIndex = 17;
+            this.Audio_SoundVolumeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // Audio_MixingChannelsTextBox
+            // 
+            this.Audio_MixingChannelsTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.Audio_MixingChannelsTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Audio_MixingChannelsTextBox.Location = new System.Drawing.Point(382, 111);
+            this.Audio_MixingChannelsTextBox.Name = "Audio_MixingChannelsTextBox";
+            this.Audio_MixingChannelsTextBox.ReadOnly = true;
+            this.Audio_MixingChannelsTextBox.Size = new System.Drawing.Size(40, 24);
+            this.Audio_MixingChannelsTextBox.TabIndex = 16;
+            this.Audio_MixingChannelsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // Audio_MixingChannelsSlider
+            // 
+            this.Audio_MixingChannelsSlider.LargeChange = 16;
+            this.Audio_MixingChannelsSlider.Location = new System.Drawing.Point(192, 111);
+            this.Audio_MixingChannelsSlider.Margin = new System.Windows.Forms.Padding(4);
+            this.Audio_MixingChannelsSlider.Maximum = 128;
+            this.Audio_MixingChannelsSlider.Name = "Audio_MixingChannelsSlider";
+            this.Audio_MixingChannelsSlider.Size = new System.Drawing.Size(183, 56);
+            this.Audio_MixingChannelsSlider.TabIndex = 15;
+            this.Audio_MixingChannelsSlider.Value = 64;
+            this.Audio_MixingChannelsSlider.Scroll += new System.EventHandler(this.Audio_MixingChannelsSlider_Scroll);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(21, 335);
+            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(76, 18);
+            this.label11.TabIndex = 14;
+            this.label11.Text = "Music On:";
+            // 
+            // Audio_MusicOnCheckBox
+            // 
+            this.Audio_MusicOnCheckBox.AutoSize = true;
+            this.Audio_MusicOnCheckBox.Location = new System.Drawing.Point(200, 338);
+            this.Audio_MusicOnCheckBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Audio_MusicOnCheckBox.Name = "Audio_MusicOnCheckBox";
+            this.Audio_MusicOnCheckBox.Size = new System.Drawing.Size(18, 17);
+            this.Audio_MusicOnCheckBox.TabIndex = 13;
+            this.Audio_MusicOnCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // Audio_MusicVolumeSlider
+            // 
+            this.Audio_MusicVolumeSlider.LargeChange = 10;
+            this.Audio_MusicVolumeSlider.Location = new System.Drawing.Point(192, 240);
+            this.Audio_MusicVolumeSlider.Margin = new System.Windows.Forms.Padding(4);
+            this.Audio_MusicVolumeSlider.Maximum = 100;
+            this.Audio_MusicVolumeSlider.Name = "Audio_MusicVolumeSlider";
+            this.Audio_MusicVolumeSlider.Size = new System.Drawing.Size(183, 56);
+            this.Audio_MusicVolumeSlider.TabIndex = 12;
+            this.Audio_MusicVolumeSlider.Value = 50;
+            this.Audio_MusicVolumeSlider.Scroll += new System.EventHandler(this.Audio_MusicVolumeSlider_Scroll);
+            // 
+            // Audio_SoundVolumeSlider
+            // 
+            this.Audio_SoundVolumeSlider.LargeChange = 10;
+            this.Audio_SoundVolumeSlider.Location = new System.Drawing.Point(192, 177);
+            this.Audio_SoundVolumeSlider.Margin = new System.Windows.Forms.Padding(4);
+            this.Audio_SoundVolumeSlider.Maximum = 100;
+            this.Audio_SoundVolumeSlider.Name = "Audio_SoundVolumeSlider";
+            this.Audio_SoundVolumeSlider.Size = new System.Drawing.Size(183, 56);
+            this.Audio_SoundVolumeSlider.TabIndex = 11;
+            this.Audio_SoundVolumeSlider.Value = 50;
+            this.Audio_SoundVolumeSlider.Scroll += new System.EventHandler(this.Audio_SoundVolumeSlider_Scroll);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(21, 240);
+            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(106, 18);
+            this.label10.TabIndex = 10;
+            this.label10.Text = "Music Volume:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(21, 177);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(109, 18);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "Sound Volume:";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(16, 95);
+            this.label5.Location = new System.Drawing.Point(21, 117);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(102, 15);
+            this.label5.Size = new System.Drawing.Size(120, 18);
             this.label5.TabIndex = 6;
             this.label5.Text = "Mixing Channels:";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(16, 248);
+            this.label6.Location = new System.Drawing.Point(21, 305);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(65, 15);
+            this.label6.Size = new System.Drawing.Size(79, 18);
             this.label6.TabIndex = 5;
             this.label6.Text = "Sound On:";
             // 
-            // checkBox2
+            // Audio_SoundOnCheckBox
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(150, 251);
-            this.checkBox2.Margin = new System.Windows.Forms.Padding(5);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(15, 14);
-            this.checkBox2.TabIndex = 4;
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.Audio_SoundOnCheckBox.AutoSize = true;
+            this.Audio_SoundOnCheckBox.Location = new System.Drawing.Point(200, 309);
+            this.Audio_SoundOnCheckBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Audio_SoundOnCheckBox.Name = "Audio_SoundOnCheckBox";
+            this.Audio_SoundOnCheckBox.Size = new System.Drawing.Size(18, 17);
+            this.Audio_SoundOnCheckBox.TabIndex = 4;
+            this.Audio_SoundOnCheckBox.UseVisualStyleBackColor = true;
             // 
-            // comboBox5
+            // Audio_3DSoundChannelsComboBox
             // 
-            this.comboBox5.Enabled = false;
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Items.AddRange(new object[] {
+            this.Audio_3DSoundChannelsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Audio_3DSoundChannelsComboBox.Enabled = false;
+            this.Audio_3DSoundChannelsComboBox.FormattingEnabled = true;
+            this.Audio_3DSoundChannelsComboBox.Items.AddRange(new object[] {
             "1 (Default)",
             "2",
             "3",
             "4"});
-            this.comboBox5.Location = new System.Drawing.Point(150, 59);
-            this.comboBox5.Margin = new System.Windows.Forms.Padding(5);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(121, 23);
-            this.comboBox5.TabIndex = 3;
+            this.Audio_3DSoundChannelsComboBox.Location = new System.Drawing.Point(200, 73);
+            this.Audio_3DSoundChannelsComboBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Audio_3DSoundChannelsComboBox.Name = "Audio_3DSoundChannelsComboBox";
+            this.Audio_3DSoundChannelsComboBox.Size = new System.Drawing.Size(219, 26);
+            this.Audio_3DSoundChannelsComboBox.TabIndex = 3;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(16, 62);
+            this.label7.Location = new System.Drawing.Point(21, 76);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(120, 15);
+            this.label7.Size = new System.Drawing.Size(144, 18);
             this.label7.TabIndex = 2;
             this.label7.Text = "3D Sound Channels:";
             // 
-            // comboBox6
+            // Audio_FrequencyComboBox
             // 
-            this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Items.AddRange(new object[] {
+            this.Audio_FrequencyComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Audio_FrequencyComboBox.Items.AddRange(new object[] {
+            "11025 Hz",
             "22050 Hz",
-            "44100 Hz"});
-            this.comboBox6.Location = new System.Drawing.Point(150, 26);
-            this.comboBox6.Margin = new System.Windows.Forms.Padding(5);
-            this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(121, 23);
-            this.comboBox6.TabIndex = 1;
+            "44100 Hz (Recommended)"});
+            this.Audio_FrequencyComboBox.Location = new System.Drawing.Point(200, 32);
+            this.Audio_FrequencyComboBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Audio_FrequencyComboBox.Name = "Audio_FrequencyComboBox";
+            this.Audio_FrequencyComboBox.Size = new System.Drawing.Size(219, 26);
+            this.Audio_FrequencyComboBox.TabIndex = 1;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(16, 29);
+            this.label8.Location = new System.Drawing.Point(21, 36);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(67, 15);
+            this.label8.Size = new System.Drawing.Size(81, 18);
             this.label8.TabIndex = 0;
             this.label8.Text = "Frequency:";
             // 
-            // label9
+            // tabPage3
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(16, 144);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(91, 15);
-            this.label9.TabIndex = 8;
-            this.label9.Text = "Sound Volume:";
+            this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage3.Controls.Add(this.Assets_ApplyChangesButton);
+            this.tabPage3.Controls.Add(this.groupBox3);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(4);
+            this.tabPage3.Size = new System.Drawing.Size(450, 531);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Assets";
             // 
-            // label10
+            // Assets_ApplyChangesButton
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(16, 195);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(88, 15);
-            this.label10.TabIndex = 10;
-            this.label10.Text = "Music Volume:";
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.LargeChange = 10;
-            this.trackBar1.Location = new System.Drawing.Point(144, 144);
-            this.trackBar1.Maximum = 100;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(171, 45);
-            this.trackBar1.TabIndex = 11;
-            this.trackBar1.Value = 50;
-            // 
-            // trackBar2
-            // 
-            this.trackBar2.LargeChange = 10;
-            this.trackBar2.Location = new System.Drawing.Point(144, 195);
-            this.trackBar2.Maximum = 100;
-            this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(171, 45);
-            this.trackBar2.TabIndex = 12;
-            this.trackBar2.Value = 50;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(16, 272);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(62, 15);
-            this.label11.TabIndex = 14;
-            this.label11.Text = "Music On:";
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(150, 275);
-            this.checkBox3.Margin = new System.Windows.Forms.Padding(5);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(15, 14);
-            this.checkBox3.TabIndex = 13;
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
-            // trackBar3
-            // 
-            this.trackBar3.LargeChange = 10;
-            this.trackBar3.Location = new System.Drawing.Point(144, 90);
-            this.trackBar3.Maximum = 100;
-            this.trackBar3.Name = "trackBar3";
-            this.trackBar3.Size = new System.Drawing.Size(171, 45);
-            this.trackBar3.TabIndex = 15;
-            this.trackBar3.Value = 50;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(16, 29);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(104, 15);
-            this.label18.TabIndex = 0;
-            this.label18.Text = "REZ Archive Path:";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(16, 60);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(98, 15);
-            this.label17.TabIndex = 2;
-            this.label17.Text = "ZIP Archive Path:";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(16, 122);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(156, 15);
-            this.label15.TabIndex = 6;
-            this.label15.Text = "Resource Cache Size [MB]:";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(178, 26);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(5);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(176, 21);
-            this.textBox1.TabIndex = 16;
+            this.Assets_ApplyChangesButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Assets_ApplyChangesButton.Location = new System.Drawing.Point(162, 460);
+            this.Assets_ApplyChangesButton.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Assets_ApplyChangesButton.Name = "Assets_ApplyChangesButton";
+            this.Assets_ApplyChangesButton.Size = new System.Drawing.Size(145, 39);
+            this.Assets_ApplyChangesButton.TabIndex = 5;
+            this.Assets_ApplyChangesButton.Text = "Apply Changes";
+            this.Assets_ApplyChangesButton.UseVisualStyleBackColor = true;
+            this.Assets_ApplyChangesButton.Click += new System.EventHandler(this.Assets_ApplyChangesButton_Click);
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label12);
+            this.groupBox3.Controls.Add(this.Assets_SavesFilePathChooseButton);
+            this.groupBox3.Controls.Add(this.Assets_ZipArchivePathChooseButton);
+            this.groupBox3.Controls.Add(this.Assets_RezArchivePathChooseButton);
             this.groupBox3.Controls.Add(this.label13);
-            this.groupBox3.Controls.Add(this.textBox4);
-            this.groupBox3.Controls.Add(this.textBox3);
-            this.groupBox3.Controls.Add(this.textBox2);
-            this.groupBox3.Controls.Add(this.textBox1);
+            this.groupBox3.Controls.Add(this.Assets_ResCacheSizeTextBox);
+            this.groupBox3.Controls.Add(this.Assets_SavesFilePathTextBox);
+            this.groupBox3.Controls.Add(this.Assets_ZipArchivePathTextBox);
+            this.groupBox3.Controls.Add(this.Assets_RezArchivePathTextBox);
             this.groupBox3.Controls.Add(this.label15);
             this.groupBox3.Controls.Add(this.label17);
             this.groupBox3.Controls.Add(this.label18);
             this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.groupBox3.Location = new System.Drawing.Point(8, 20);
+            this.groupBox3.Location = new System.Drawing.Point(11, 25);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(403, 164);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox3.Size = new System.Drawing.Size(430, 230);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Assets";
             // 
-            // textBox2
+            // label12
             // 
-            this.textBox2.Location = new System.Drawing.Point(178, 57);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(5);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(176, 21);
-            this.textBox2.TabIndex = 17;
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label12.Location = new System.Drawing.Point(21, 35);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(324, 15);
+            this.label12.TabIndex = 25;
+            this.label12.Text = "Note: All paths are by default relative to CaptainClaw binary";
             // 
-            // textBox3
+            // Assets_SavesFilePathChooseButton
             // 
-            this.textBox3.Location = new System.Drawing.Point(178, 88);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(5);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(176, 21);
-            this.textBox3.TabIndex = 18;
+            this.Assets_SavesFilePathChooseButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Assets_SavesFilePathChooseButton.Location = new System.Drawing.Point(380, 139);
+            this.Assets_SavesFilePathChooseButton.Name = "Assets_SavesFilePathChooseButton";
+            this.Assets_SavesFilePathChooseButton.Size = new System.Drawing.Size(34, 24);
+            this.Assets_SavesFilePathChooseButton.TabIndex = 24;
+            this.Assets_SavesFilePathChooseButton.Text = "...";
+            this.Assets_SavesFilePathChooseButton.UseVisualStyleBackColor = true;
+            this.Assets_SavesFilePathChooseButton.Click += new System.EventHandler(this.Assets_SavesFilePathChooseButton_Click);
             // 
-            // textBox4
+            // Assets_ZipArchivePathChooseButton
             // 
-            this.textBox4.Location = new System.Drawing.Point(178, 119);
-            this.textBox4.Margin = new System.Windows.Forms.Padding(5);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(56, 21);
-            this.textBox4.TabIndex = 19;
+            this.Assets_ZipArchivePathChooseButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Assets_ZipArchivePathChooseButton.Location = new System.Drawing.Point(380, 101);
+            this.Assets_ZipArchivePathChooseButton.Name = "Assets_ZipArchivePathChooseButton";
+            this.Assets_ZipArchivePathChooseButton.Size = new System.Drawing.Size(34, 24);
+            this.Assets_ZipArchivePathChooseButton.TabIndex = 23;
+            this.Assets_ZipArchivePathChooseButton.Text = "...";
+            this.Assets_ZipArchivePathChooseButton.UseVisualStyleBackColor = true;
+            this.Assets_ZipArchivePathChooseButton.Click += new System.EventHandler(this.Assets_ZipArchivePathChooseButton_Click);
+            // 
+            // Assets_RezArchivePathChooseButton
+            // 
+            this.Assets_RezArchivePathChooseButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.Assets_RezArchivePathChooseButton.Location = new System.Drawing.Point(380, 63);
+            this.Assets_RezArchivePathChooseButton.Name = "Assets_RezArchivePathChooseButton";
+            this.Assets_RezArchivePathChooseButton.Size = new System.Drawing.Size(34, 24);
+            this.Assets_RezArchivePathChooseButton.TabIndex = 22;
+            this.Assets_RezArchivePathChooseButton.Text = "...";
+            this.Assets_RezArchivePathChooseButton.UseVisualStyleBackColor = true;
+            this.Assets_RezArchivePathChooseButton.Click += new System.EventHandler(this.Assets_RezArchivePathChooseButton_Click);
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(16, 91);
+            this.label13.Location = new System.Drawing.Point(21, 143);
+            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(94, 15);
+            this.label13.Size = new System.Drawing.Size(114, 18);
             this.label13.TabIndex = 21;
             this.label13.Text = "Saves File Path:";
             // 
+            // Assets_ResCacheSizeTextBox
+            // 
+            this.Assets_ResCacheSizeTextBox.Location = new System.Drawing.Point(188, 177);
+            this.Assets_ResCacheSizeTextBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Assets_ResCacheSizeTextBox.Name = "Assets_ResCacheSizeTextBox";
+            this.Assets_ResCacheSizeTextBox.Size = new System.Drawing.Size(73, 24);
+            this.Assets_ResCacheSizeTextBox.TabIndex = 19;
+            // 
+            // Assets_SavesFilePathTextBox
+            // 
+            this.Assets_SavesFilePathTextBox.Location = new System.Drawing.Point(188, 139);
+            this.Assets_SavesFilePathTextBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Assets_SavesFilePathTextBox.Name = "Assets_SavesFilePathTextBox";
+            this.Assets_SavesFilePathTextBox.Size = new System.Drawing.Size(182, 24);
+            this.Assets_SavesFilePathTextBox.TabIndex = 18;
+            // 
+            // Assets_ZipArchivePathTextBox
+            // 
+            this.Assets_ZipArchivePathTextBox.Location = new System.Drawing.Point(188, 101);
+            this.Assets_ZipArchivePathTextBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Assets_ZipArchivePathTextBox.Name = "Assets_ZipArchivePathTextBox";
+            this.Assets_ZipArchivePathTextBox.Size = new System.Drawing.Size(182, 24);
+            this.Assets_ZipArchivePathTextBox.TabIndex = 17;
+            // 
+            // Assets_RezArchivePathTextBox
+            // 
+            this.Assets_RezArchivePathTextBox.Location = new System.Drawing.Point(188, 63);
+            this.Assets_RezArchivePathTextBox.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Assets_RezArchivePathTextBox.Name = "Assets_RezArchivePathTextBox";
+            this.Assets_RezArchivePathTextBox.Size = new System.Drawing.Size(182, 24);
+            this.Assets_RezArchivePathTextBox.TabIndex = 16;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(21, 181);
+            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(150, 18);
+            this.label15.TabIndex = 6;
+            this.label15.Text = "ResCache Size [MB]:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(21, 105);
+            this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(120, 18);
+            this.label17.TabIndex = 2;
+            this.label17.Text = "ZIP Archive Path:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(21, 67);
+            this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(128, 18);
+            this.label18.TabIndex = 0;
+            this.label18.Text = "REZ Archive Path:";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(4);
+            this.tabPage4.Size = new System.Drawing.Size(450, 531);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Console";
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage5.Location = new System.Drawing.Point(4, 25);
+            this.tabPage5.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(4);
+            this.tabPage5.Size = new System.Drawing.Size(450, 531);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Gameplay";
+            // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(221, 490);
-            this.CancelButton.Margin = new System.Windows.Forms.Padding(5);
+            this.CancelButton.Location = new System.Drawing.Point(245, 601);
+            this.CancelButton.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(109, 32);
+            this.CancelButton.Size = new System.Drawing.Size(145, 39);
             this.CancelButton.TabIndex = 2;
             this.CancelButton.Text = "Cancel";
             this.CancelButton.UseVisualStyleBackColor = true;
@@ -510,33 +688,26 @@
             // OkButton
             // 
             this.OkButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.OkButton.Location = new System.Drawing.Point(102, 489);
-            this.OkButton.Margin = new System.Windows.Forms.Padding(5);
+            this.OkButton.Location = new System.Drawing.Point(86, 600);
+            this.OkButton.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(109, 32);
+            this.OkButton.Size = new System.Drawing.Size(145, 39);
             this.OkButton.TabIndex = 3;
             this.OkButton.Text = "OK";
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
-            // Video_ScaleTextBox
-            // 
-            this.Video_ScaleTextBox.Location = new System.Drawing.Point(116, 62);
-            this.Video_ScaleTextBox.Margin = new System.Windows.Forms.Padding(5);
-            this.Video_ScaleTextBox.Name = "Video_ScaleTextBox";
-            this.Video_ScaleTextBox.Size = new System.Drawing.Size(70, 21);
-            this.Video_ScaleTextBox.TabIndex = 8;
-            // 
             // ClawOptions
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 556);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(458, 671);
             this.Controls.Add(this.OkButton);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ClawOptions";
             this.Text = "Settings";
             this.tabControl1.ResumeLayout(false);
@@ -544,12 +715,12 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Audio_MixingChannelsSlider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Audio_MusicVolumeSlider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Audio_SoundVolumeSlider)).EndInit();
+            this.tabPage3.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -570,34 +741,44 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TrackBar trackBar3;
+        private System.Windows.Forms.TrackBar Audio_MixingChannelsSlider;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.CheckBox checkBox3;
-        private System.Windows.Forms.TrackBar trackBar2;
-        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.CheckBox Audio_MusicOnCheckBox;
+        private System.Windows.Forms.TrackBar Audio_MusicVolumeSlider;
+        private System.Windows.Forms.TrackBar Audio_SoundVolumeSlider;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.ComboBox comboBox5;
+        private System.Windows.Forms.CheckBox Audio_SoundOnCheckBox;
+        private System.Windows.Forms.ComboBox Audio_3DSoundChannelsComboBox;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox comboBox6;
+        private System.Windows.Forms.ComboBox Audio_FrequencyComboBox;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox Assets_ResCacheSizeTextBox;
+        private System.Windows.Forms.TextBox Assets_SavesFilePathTextBox;
+        private System.Windows.Forms.TextBox Assets_ZipArchivePathTextBox;
+        private System.Windows.Forms.TextBox Assets_RezArchivePathTextBox;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OkButton;
         private System.Windows.Forms.TextBox Video_ScaleTextBox;
+        private System.Windows.Forms.TextBox Audio_MusicVolumeTextBox;
+        private System.Windows.Forms.TextBox Audio_SoundVolumeTextBox;
+        private System.Windows.Forms.TextBox Audio_MixingChannelsTextBox;
+        private System.Windows.Forms.Button Assets_SavesFilePathChooseButton;
+        private System.Windows.Forms.Button Assets_ZipArchivePathChooseButton;
+        private System.Windows.Forms.Button Assets_RezArchivePathChooseButton;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button Video_ApplyChangesButton;
+        private System.Windows.Forms.Button Audio_ApplyChangesButton;
+        private System.Windows.Forms.Button Assets_ApplyChangesButton;
     }
 }

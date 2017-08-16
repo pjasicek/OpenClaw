@@ -46,50 +46,21 @@ namespace ClawLauncher
 
             CenterToScreen();
 
-            String configPath = GetClawConfigPath();
+            String configPath = ClawLauncherForm.ClawConfigPath;
             m_ClawConfig = ParseClawConfig(configPath);
 
             SetupControlsFromConfig(m_ClawConfig);
         }
 
-        private String GetClawConfigPath()
-        {
-            String[] possibleClawConfigPaths = 
-            {
-                "/usr/share/captainclaw/config.xml",
-                System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "/config.xml"
-            };
-
-            String clawConfigPath = "";
-            foreach (string possibleConfig in possibleClawConfigPaths)
-            {
-                if (System.IO.File.Exists(possibleConfig))
-                {
-                    clawConfigPath = possibleConfig;
-                    break;
-                }
-            }
-
-            if (String.IsNullOrEmpty(clawConfigPath))
-            {
-                String searchedPaths = "";
-                foreach (string possibleConfig in possibleClawConfigPaths)
-                {
-                    searchedPaths += possibleConfig + "\n";
-                }
-
-                MessageBox.Show("Could not locate CaptainClaw config.xml on your system.\nSearched paths:\n\n" + searchedPaths, "CaptainClaw bin not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                this.Close();
-                Application.Exit();
-            }
-
-            return clawConfigPath;
-        }
-
         private void SaveOptionsToConfig()
         {
+            // lol
+            object o = null;
+            EventArgs e = null;
 
+            Video_ApplyChangesButton_Click(o, e);
+            Audio_ApplyChangesButton_Click(o, e);
+            Assets_ApplyChangesButton_Click(o, e);
         }
 
         private ClawConfig ParseClawConfig(String configPath)
@@ -189,6 +160,50 @@ namespace ClawLauncher
                 Video_DisplayModeComboBox.SelectedItem =
                     Video_DisplayModeComboBox.Items[1];
             }
+
+            // ============= Audio ==============
+            {
+                // Frequency
+                Audio_FrequencyComboBox.SelectedItem =
+                    Audio_FrequencyComboBox.Items[Audio_FrequencyComboBox.Items.Count - 1];
+                string cmpText = config.Frequency.ToString();
+                foreach (var item in Audio_FrequencyComboBox.Items)
+                {
+                    string cbItemStr = item.ToString();
+                    if (cbItemStr.Contains(cmpText))
+                    {
+                        Audio_FrequencyComboBox.SelectedItem = item;
+                        break;
+                    }
+                }
+
+                // 3D Sound Channles - fixed
+                Audio_3DSoundChannelsComboBox.SelectedItem = Audio_3DSoundChannelsComboBox.Items[0];
+
+                // Mixing Channels
+                Audio_MixingChannelsSlider.Value = config.MixingChannels;
+                Audio_MixingChannelsTextBox.Text = config.MixingChannels.ToString();
+
+                // Sound Volume
+                Audio_SoundVolumeSlider.Value = config.SoundVolume;
+                Audio_SoundVolumeTextBox.Text = config.SoundVolume.ToString();
+
+                // Music Volume
+                Audio_MusicVolumeSlider.Value = config.MusicVolume;
+                Audio_MusicVolumeTextBox.Text = config.MusicVolume.ToString();
+
+                // Sound On
+                Audio_SoundOnCheckBox.Checked = config.bSoundOn;
+
+                // Music On
+                Audio_MusicOnCheckBox.Checked = config.bMusicOn;
+            }
+
+            // ============= Assets ==============
+            Assets_RezArchivePathTextBox.Text = config.RezArchivePath;
+            Assets_ZipArchivePathTextBox.Text = config.ZipArchivePath;
+            Assets_SavesFilePathTextBox.Text = config.SavesFilePath;
+            Assets_ResCacheSizeTextBox.Text = config.ResourceCacheSize.ToString();
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -210,6 +225,102 @@ namespace ClawLauncher
         private void CancelButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void Audio_MixingChannelsSlider_Scroll(object sender, EventArgs e)
+        {
+            Audio_MixingChannelsTextBox.Text = Audio_MixingChannelsSlider.Value.ToString();
+        }
+
+        private void Audio_SoundVolumeSlider_Scroll(object sender, EventArgs e)
+        {
+            Audio_SoundVolumeTextBox.Text = Audio_SoundVolumeSlider.Value.ToString();
+        }
+
+        private void Audio_MusicVolumeSlider_Scroll(object sender, EventArgs e)
+        {
+            Audio_MusicVolumeTextBox.Text = Audio_MusicVolumeSlider.Value.ToString();
+        }
+
+        private void Assets_RezArchivePathChooseButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.FileName = "CLAW.REZ";
+            ofd.Filter = "REZ files (*.REZ)|*.rez";
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Assets_RezArchivePathTextBox.Text = ofd.FileName;
+            }
+        }
+
+        private void Assets_ZipArchivePathChooseButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.FileName = "ASSETS.ZIP";
+            ofd.Filter = "ZIP files (*.ZIP)|*.zip";
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Assets_ZipArchivePathTextBox.Text = ofd.FileName;
+            }
+        }
+
+        private void Assets_SavesFilePathChooseButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.FileName = "SAVES.XML";
+            ofd.Filter = "XML files (*.XML)|*.xml";
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Assets_SavesFilePathTextBox.Text = ofd.FileName;
+            }
+        }
+
+        private void Video_ApplyChangesButton_Click(object sender, EventArgs e)
+        {
+            XmlDocument configDoc = new XmlDocument();
+            configDoc.Load(ClawLauncherForm.ClawConfigPath);
+
+            XmlElement root = configDoc.DocumentElement;
+
+            // ============= Video ==============
+            XmlNode videoRoot = root.SelectSingleNode("Display");
+            try
+            {
+                // Resolution
+                //videoRoot.SelectSingleNode("Size").Attributes["width"].InnerText = m_ClawConfig.Resolution.X.ToString();
+                //videoRoot.SelectSingleNode("Size").Attributes["height"].InnerText = m_ClawConfig.Resolution.Y.ToString();
+
+                // Scale
+                videoRoot.SelectSingleNode("Scale").InnerText = Video_ScaleTextBox.Text;
+
+                // Vertical Sync
+                videoRoot.SelectSingleNode("UseVerticalSync").InnerText = Video_VerticalSyncCheckBox.Checked.ToString().ToLower();
+
+                //videoRoot.SelectSingleNode("IsFullscreen").InnerText = m_ClawConfig.bFullscreen.ToString();
+                //videoRoot.SelectSingleNode("IsFullscreenDesktop").InnerText = m_ClawConfig.bFullscreenDesktop.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Something went wrong: \n\n" + ex.Message + "\n\nNo changes were made in Video section !", "Error applying changes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            
+
+            configDoc.Save(ClawLauncherForm.ClawConfigPath);
+        }
+
+        private void Audio_ApplyChangesButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Assets_ApplyChangesButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Video_ScaleTextBox_TextChanged(object sender, EventArgs e)
+        {
+            
         }
     }
 }
