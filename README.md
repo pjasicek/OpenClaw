@@ -68,9 +68,12 @@ For all platforms you will need original CLAW.REZ game archive from original gam
 
 ### For Linux
 
-  Prerequisites for Ubuntu 16.04 (should be almost identical for Fedora/CentOS/*):
+  **Prerequisites for Ubuntu 16.04 (should be almost identical for Fedora/CentOS/*):**
+  
   `sudo apt install mono-runtime libmono-system4.0-cil libmono-system-windows-forms4.0-cil` 
-  Then run it like this:
+  
+  **Then run it like this:**
+  
   `~/CaptainClaw/Build_Release$ mono ClawLauncher.exe`
  
 ![alt tag](https://s12.postimg.org/a0fzk9wil/screenshot_23.png)
