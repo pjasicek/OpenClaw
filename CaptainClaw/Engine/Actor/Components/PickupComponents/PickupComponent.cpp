@@ -299,7 +299,7 @@ bool HealthPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
             return false;
         }
 
-        pHealthComponent->AddHealth(m_NumRestoredHealth, DamageType_None, Point(0, 0));
+        pHealthComponent->AddHealth(m_NumRestoredHealth, DamageType_None, Point(0, 0), _owner->GetGUID());
 
         shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);

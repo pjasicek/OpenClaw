@@ -108,12 +108,14 @@ void ClawControllableComponent::VPostInit()
     m_pAmmoComponent = MakeStrongPtr(_owner->GetComponent<AmmoComponent>(AmmoComponent::g_Name)).get();
     m_pPowerupComponent = MakeStrongPtr(_owner->GetComponent<PowerupComponent>(PowerupComponent::g_Name)).get();
     m_pHealthComponent = MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name)).get();
+    m_pExclamationMark = MakeStrongPtr(_owner->GetComponent<FollowableComponent>()).get();
     assert(m_pClawAnimationComponent);
     assert(m_pRenderComponent);
     assert(m_pPositionComponent);
     assert(m_pAmmoComponent);
     assert(m_pPowerupComponent);
     assert(m_pHealthComponent);
+    assert(m_pExclamationMark);
     m_pClawAnimationComponent->AddObserver(this);
 
     auto pHealthComponent = MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name));
@@ -177,12 +179,7 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
 
-            shared_ptr<FollowableComponent> pExclamationMark =
-                MakeStrongPtr(_owner->GetComponent<FollowableComponent>(FollowableComponent::g_Name));
-            if (pExclamationMark)
-            {
-                pExclamationMark->Activate(2000);
-            }
+            m_pExclamationMark->Activate(2000);
 
             m_pClawAnimationComponent->SetAnimation("idle");
 
@@ -641,7 +638,32 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
                 projectileType, 
                 m_Direction, 
                 Point(m_pPositionComponent->GetX() + offsetX, 
-                m_pPositionComponent->GetY() + offsetY));
+                m_pPositionComponent->GetY() + offsetY),
+                _owner->GetGUID());
+
+            int soundPlayChance = 33;
+            if (!m_pExclamationMark->IsActive() && 
+                Util::RollDice(soundPlayChance) &&
+                animName.find("duck") == std::string::npos &&
+                animName.find("jump") == std::string::npos)
+            {
+                if (projectileType == AmmoType_Pistol)
+                {
+                    SoundInfo soundInfo(SOUND_CLAW_KILL_PISTOL1);
+                    soundInfo.soundVolume = 200;
+                    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                        new EventData_Request_Play_Sound(soundInfo)));
+                    m_pExclamationMark->Activate(Util::GetSoundDurationMs(SOUND_CLAW_KILL_PISTOL1));
+                }
+                else if ((projectileType == AmmoType_Dynamite) && Util::RollDice(soundPlayChance))
+                {
+                    SoundInfo soundInfo(SOUND_CLAW_SCREW_ALL_THIS);
+                    soundInfo.soundVolume = 200;
+                    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                        new EventData_Request_Play_Sound(soundInfo)));
+                    m_pExclamationMark->Activate(Util::GetSoundDurationMs(SOUND_CLAW_SCREW_ALL_THIS));
+                }
+            }
 
             if (IsDucking())
             {
@@ -690,21 +712,24 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
                 ActorTemplates::CreateActor_Projectile(
                     ActorPrototype_FireSwordProjectile,
                     position,
-                    m_Direction);
+                    m_Direction,
+                    _owner->GetGUID());
             }
             else if (m_pPowerupComponent->HasPowerup(PowerupType_FrostSword))
             {
                 ActorTemplates::CreateActor_Projectile(
                     ActorPrototype_FrostSwordProjectile,
                     position,
-                    m_Direction);
+                    m_Direction,
+                    _owner->GetGUID());
             }
             else if (m_pPowerupComponent->HasPowerup(PowerupType_LightningSword))
             {
                 ActorTemplates::CreateActor_Projectile(
                     ActorPrototype_LightningSwordProjectile,
                     position,
-                    m_Direction);
+                    m_Direction,
+                    _owner->GetGUID());
             }
             else
             {
@@ -721,7 +746,8 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
                     CollisionFlag_ClawAttack,
                     "Rectangle",
                     DamageType_MeleeAttack,
-                    m_Direction);
+                    m_Direction,
+                    _owner->GetGUID());
             }
         }
         if (pAnimation->IsAtLastAnimFrame())
@@ -766,7 +792,7 @@ bool ClawControllableComponent::IsAttackingOrShooting()
     return false;
 }
 
-void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
+void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType, int sourceActorId)
 {
     if (m_State == ClawState_Dying)
     {
@@ -865,7 +891,7 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType)
     }
 }
 
-void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint)
+void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, int sourceActorId)
 {
     // When claw takes damage but does not actually die
     if (newHealth > 0 && oldHealth > newHealth)
@@ -978,4 +1004,32 @@ void ClawControllableComponent::BossFightEndedDelegate(IEventDataPtr pEvent)
     m_TakeDamageDuration = 500;
 
     m_bIsInBossFight = false;
+}
+
+void ClawControllableComponent::OnClawKilledEnemy(DamageType killDamageType, Actor* pKilledEnemyActor)
+{
+    assert(pKilledEnemyActor != NULL);
+
+    LOG("Claw killed enemy: " + pKilledEnemyActor->GetName());
+
+    std::vector<std::string> s_OnEnemyKillSoundList =
+    {
+        SOUND_CLAW_KILL_MELEE1,
+        SOUND_CLAW_KILL_MELEE2,
+        SOUND_CLAW_KILL_MELEE3,
+        SOUND_CLAW_KILL_MELEE4,
+        SOUND_CLAW_KILL_MELEE5,
+        SOUND_CLAW_KILL_MELEE6,
+        SOUND_CLAW_LAND_LOVER1_SHORT,
+        SOUND_CLAW_LAND_LOVER2_LONG
+    };
+
+    int soundPlayChance = 36;
+    if ((killDamageType == DamageType_MeleeAttack) && 
+        !m_pExclamationMark->IsActive() &&
+        Util::RollDice(soundPlayChance))
+    {
+        std::string snd = Util::PlayRandomSoundFromList(s_OnEnemyKillSoundList, 260);
+        m_pExclamationMark->Activate(Util::GetSoundDurationMs(snd));
+    }
 }

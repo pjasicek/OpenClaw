@@ -1008,7 +1008,8 @@ void MeleeAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackActi
         CollisionFlag_EnemyAIAttack,
         "Rectangle",
         DamageType_MeleeAttack,
-        dir);
+        dir,
+        _owner->GetGUID());
 
     // Play melee attack sound
     Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetMeleeAttackSounds());
@@ -1051,7 +1052,8 @@ void DuckMeleeAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttack
         CollisionFlag_EnemyAIAttack,
         "Rectangle",
         DamageType_MeleeAttack,
-        dir);
+        dir,
+        _owner->GetGUID());
 
     // Play melee attack sound
     Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetMeleeAttackSounds());
@@ -1096,14 +1098,16 @@ void RangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAct
             dir,
             m_pPositionComponent->GetPosition() + offset,
             CollisionFlag_EnemyAIProjectile,
-            (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController));
+            (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController),
+            _owner->GetGUID());
     }
     else
     {
         ActorTemplates::CreateActor_Projectile(
             pAttack->projectileProto,
             m_pPositionComponent->GetPosition() + offset,
-            dir);
+            dir,
+            _owner->GetGUID());
     }
 
     // Play ranged attack sound
@@ -1149,14 +1153,16 @@ void DuckRangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttac
             dir,
             m_pPositionComponent->GetPosition() + offset,
             CollisionFlag_EnemyAIProjectile,
-            (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController));
+            (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController),
+            _owner->GetGUID());
     }
     else
     {
         ActorTemplates::CreateActor_Projectile(
             pAttack->projectileProto,
             m_pPositionComponent->GetPosition() + offset,
-            dir);
+            dir,
+            _owner->GetGUID());
     }
 
     // Play ranged attack sound
@@ -1405,7 +1411,7 @@ void BaseBossAIStateComponennt::VPostInit()
     m_pAnimationComponent->SetAnimation(m_BossDialogAnimation);
 }
 
-void BaseBossAIStateComponennt::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint)
+void BaseBossAIStateComponennt::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, int sourceActorId)
 {
     int maxHealth = m_pHealthComponent->GetMaxHealth();
     float newHealthPercentage = ((float)newHealth / (float)maxHealth) * 100;
@@ -1416,7 +1422,7 @@ void BaseBossAIStateComponennt::VOnHealthChanged(int32 oldHealth, int32 newHealt
     }
 }
 
-void BaseBossAIStateComponennt::VOnHealthBelowZero(DamageType damageType)
+void BaseBossAIStateComponennt::VOnHealthBelowZero(DamageType damageType, int sourceActorId)
 {
     IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Boss_Fight_Ended(true)));
 }

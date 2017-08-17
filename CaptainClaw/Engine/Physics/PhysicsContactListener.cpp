@@ -425,7 +425,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     MakeStrongPtr(pActor->GetComponent<HealthComponent>(HealthComponent::g_Name));
                 if (pHealthComponent)
                 {
-                    pHealthComponent->AddHealth(-1 * (pHealthComponent->GetHealth() + 1), DamageType_DeathTile, Point(0, 0));
+                    pHealthComponent->AddHealth(-1 * (pHealthComponent->GetHealth() + 1), DamageType_DeathTile, Point(0, 0), INVALID_ACTOR_ID);
                 }
             }
         }

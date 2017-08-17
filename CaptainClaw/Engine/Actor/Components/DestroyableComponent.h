@@ -23,7 +23,7 @@ public:
     virtual TiXmlElement* VGenerateXml() override;
 
     // Health observer
-    virtual void VOnHealthBelowZero(DamageType damageType) override;
+    virtual void VOnHealthBelowZero(DamageType damageType, int sourceActorId) override;
 
     // Animation observer
     virtual void VOnAnimationAtLastFrame(Animation* pAnimation) override;

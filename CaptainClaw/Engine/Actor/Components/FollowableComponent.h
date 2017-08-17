@@ -26,7 +26,7 @@ public:
 
     virtual void VUpdate(uint32 msDiff) override;
 
-    // Duration of 
+    bool IsActive() { return m_CurrentMsDuration > 0; }
     void Activate(int msDuration);
     void Deactivate();
 

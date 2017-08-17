@@ -431,8 +431,8 @@ public:
     // Can enemy enter this state ?
     virtual bool VCanEnter() = 0;
 
-    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) override;
-    virtual void VOnHealthBelowZero(DamageType damageType) override;
+    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, int sourceActorId) override;
+    virtual void VOnHealthBelowZero(DamageType damageType, int sourceActorId) override;
 
 private:
     void ActorEnteredBossAreaDelegate(IEventDataPtr pEvent);

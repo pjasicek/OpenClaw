@@ -28,6 +28,7 @@ private:
     int32 m_Damage;
     DamageType m_DamageType;
     Point m_ProjectileSpeed;
+    int m_SourceActorId;
 
     // Internal state
     shared_ptr<IGamePhysics> m_pPhysics;

@@ -204,6 +204,6 @@ void DamageAuraComponent::VOnAuraApply(Actor* pActorInAura)
     if (pHealthComponent)
     {
         // TODO: In original game this causes the damage impact anim effect
-        pHealthComponent->AddHealth((-1) * m_Damage, DamageType_None, Point(0, 0));
+        pHealthComponent->AddHealth((-1) * m_Damage, DamageType_None, Point(0, 0), _owner->GetGUID());
     }
 }

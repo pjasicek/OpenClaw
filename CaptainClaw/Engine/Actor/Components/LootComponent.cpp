@@ -60,7 +60,7 @@ TiXmlElement* LootComponent::VGenerateXml()
     return baseElement;
 }
 
-void LootComponent::VOnHealthBelowZero(DamageType damageType)
+void LootComponent::VOnHealthBelowZero(DamageType damageType, int sourceActorId)
 {
     bool hadRareTreasure = false;
     for (PickupType item : m_Loot)

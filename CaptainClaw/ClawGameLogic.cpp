@@ -279,7 +279,7 @@ void ClawGameLogic::ModifyActorStatDelegate(IEventDataPtr pEventData)
         }
         if (pCastEventData->AddToExistingStat())
         {
-            pHealthComponent->AddHealth(pCastEventData->GetStatValue(), DamageType_None, Point(0, 0));
+            pHealthComponent->AddHealth(pCastEventData->GetStatValue(), DamageType_None, Point(0, 0), INVALID_ACTOR_ID);
         }
         else
         {

@@ -19,7 +19,7 @@ public:
     virtual TiXmlElement* VGenerateXml() override;
 
     // Health observer
-    virtual void VOnHealthBelowZero(DamageType damageType) override;
+    virtual void VOnHealthBelowZero(DamageType damageType, int sourceActorId) override;
 
 private:
     Point m_ExplosionSize;

@@ -28,6 +28,7 @@ private:
     Direction m_HitDirection;
     DamageType m_DamageType;
     int32 m_ActiveTime;
+    int m_SourceActorId;
 };
 
 #endif

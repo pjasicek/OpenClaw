@@ -122,7 +122,8 @@ void ProjectileSpawnerComponent::VOnAnimationFrameChanged(
             ActorTemplates::CreateActor_Projectile(
                 m_Properties.projectileProto,
                 projectilePosition,
-                m_Properties.projectileDirection);
+                m_Properties.projectileDirection,
+                _owner->GetGUID());
         }
     }
 }

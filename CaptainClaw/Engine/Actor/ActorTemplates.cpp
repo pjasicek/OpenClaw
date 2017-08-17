@@ -869,7 +869,7 @@ namespace ActorTemplates
         return pExplodeableComponent;
     }
 
-    TiXmlElement* CreateAreaDamageComponent(int damage, int areaDuration, DamageType damageType, Direction hitDirection)
+    TiXmlElement* CreateAreaDamageComponent(int damage, int areaDuration, DamageType damageType, Direction hitDirection, int sourceActorId)
     {
         TiXmlElement* pAreaDamageComponent = new TiXmlElement("AreaDamageComponent");
 
@@ -877,6 +877,7 @@ namespace ActorTemplates
         XML_ADD_TEXT_ELEMENT("Duration", ToStr(areaDuration).c_str(), pAreaDamageComponent);
         XML_ADD_TEXT_ELEMENT("DamageType", ToStr((int)damageType).c_str(), pAreaDamageComponent);
         XML_ADD_TEXT_ELEMENT("HitDirection", ToStr((int)hitDirection).c_str(), pAreaDamageComponent);
+        XML_ADD_TEXT_ELEMENT("SourceActorId", ToStr((int)sourceActorId).c_str(), pAreaDamageComponent);
 
         return pAreaDamageComponent;
     }
@@ -1370,7 +1371,7 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_ClawProjectileActor(AmmoType ammoType, Direction direction, Point position)
+    TiXmlElement* CreateXmlData_ClawProjectileActor(AmmoType ammoType, Direction direction, Point position, int sourceActorId)
     {
         std::string imageSet = GetImageSetFromClawAmmoType(ammoType);
 
@@ -1422,13 +1423,14 @@ namespace ActorTemplates
         TiXmlElement* pProjectileAIComponent = new TiXmlElement("ProjectileAIComponent");
         XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pProjectileAIComponent);
         XML_ADD_TEXT_ELEMENT("ProjectileType", projectileTypeStr.c_str(), pProjectileAIComponent);
+        XML_ADD_TEXT_ELEMENT("SourceActorId", ToStr(sourceActorId).c_str(), pProjectileAIComponent);
         XML_ADD_2_PARAM_ELEMENT("Speed", "x", ToStr(speed).c_str(), "y", "0", pProjectileAIComponent);
         pActor->LinkEndChild(pProjectileAIComponent);
 
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_ProjectileActor(std::string imageSet, uint32 damage, DamageType damageType, Direction direction, Point position, CollisionFlag collisionFlag, uint32 collisionMask)
+    TiXmlElement* CreateXmlData_ProjectileActor(std::string imageSet, uint32 damage, DamageType damageType, Direction direction, Point position, CollisionFlag collisionFlag, uint32 collisionMask, int sourceActorId)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", imageSet.c_str());
@@ -1454,6 +1456,7 @@ namespace ActorTemplates
         TiXmlElement* pProjectileAIComponent = new TiXmlElement("ProjectileAIComponent");
         XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pProjectileAIComponent);
         XML_ADD_TEXT_ELEMENT("ProjectileType", "DamageType_Bullet", pProjectileAIComponent);
+        XML_ADD_TEXT_ELEMENT("SourceActorId", ToStr(sourceActorId).c_str(), pProjectileAIComponent);
         XML_ADD_2_PARAM_ELEMENT("Speed", "x", ToStr(speed).c_str(), "y", "0", pProjectileAIComponent);
         pActor->LinkEndChild(pProjectileAIComponent);
 
@@ -1548,7 +1551,7 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_AreaDamageActor(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, DamageType damageType, Direction hitDirection, Point positionOffset, std::string imageSet = "", int32 zCoord = 0)
+    TiXmlElement* CreateXmlData_AreaDamageActor(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, DamageType damageType, Direction hitDirection, int sourceActorId, Point positionOffset, std::string imageSet = "", int32 zCoord = 0)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", "AreaDamage");
@@ -1620,7 +1623,7 @@ namespace ActorTemplates
         pActor->LinkEndChild(CreatePhysicsComponent(&bodyDef));*/
 
         pActor->LinkEndChild(CreateTriggerComponent(-1, false, false));
-        pActor->LinkEndChild(CreateAreaDamageComponent(damage, 150, damageType, hitDirection));
+        pActor->LinkEndChild(CreateAreaDamageComponent(damage, 150, damageType, hitDirection, sourceActorId));
 
         return pActor;
     }
@@ -1854,7 +1857,7 @@ namespace ActorTemplates
         return pActorElem;
     }
 
-    TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir)
+    TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir, int sourceActorId)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
         assert(pActorElem != NULL);
@@ -1862,6 +1865,10 @@ namespace ActorTemplates
         //----------- Position
         assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
+
+        TiXmlElement* pProjectileAIComponent = GetTiXmlElementFromPath(pActorElem, "Actor.ProjectileAIComponent");
+        assert(pProjectileAIComponent != NULL);
+        AddXmlTextElement("SourceActorId", sourceActorId, pProjectileAIComponent);
 
         if (dir == Direction_Left)
         {
@@ -2024,9 +2031,9 @@ namespace ActorTemplates
         return CreateAndReturnActor(CreateXmlData_Actor(proto, position));
     }
 
-    StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir)
+    StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir, int sourceActorId)
     {
-        return CreateAndReturnActor(CreateXmlData_ProjectileActor(proto, position, dir));
+        return CreateAndReturnActor(CreateXmlData_ProjectileActor(proto, position, dir, sourceActorId));
     }
 
     StrongActorPtr CreateActor_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef)
@@ -2413,9 +2420,9 @@ namespace ActorTemplates
         return CreateAndReturnActor(CreateXmlData_PowerupSparkleActor("GAME_SPARKLE"));
     }
 
-    StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position)
+    StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position, int sourceActorId)
     {
-        return CreateAndReturnActor(CreateXmlData_ClawProjectileActor(ammoType, direction, position));
+        return CreateAndReturnActor(CreateXmlData_ClawProjectileActor(ammoType, direction, position, sourceActorId));
     }
 
     StrongActorPtr CreateProjectile(
@@ -2425,7 +2432,8 @@ namespace ActorTemplates
         Direction direction, 
         Point position, 
         CollisionFlag collisionFlag, 
-        uint32 collisionMask)
+        uint32 collisionMask,
+        int sourceActorId)
     {
         return CreateAndReturnActor(CreateXmlData_ProjectileActor(
             imageSet, 
@@ -2434,12 +2442,13 @@ namespace ActorTemplates
             direction, 
             position, 
             collisionFlag, 
-            collisionMask));
+            collisionMask,
+            sourceActorId));
     }
 
-    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, DamageType damageType, Direction hitDirection, Point positionOffset, std::string imageSet, int32 zCoord)
+    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, DamageType damageType, Direction hitDirection, int sourceActorId, Point positionOffset, std::string imageSet, int32 zCoord)
     {
-        return CreateAndReturnActor(CreateXmlData_AreaDamageActor(position, size, damage, collisionFlag, shape, damageType, hitDirection, positionOffset, imageSet, zCoord));
+        return CreateAndReturnActor(CreateXmlData_AreaDamageActor(position, size, damage, collisionFlag, shape, damageType, hitDirection, sourceActorId, positionOffset, imageSet, zCoord));
     }
 
     StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord)

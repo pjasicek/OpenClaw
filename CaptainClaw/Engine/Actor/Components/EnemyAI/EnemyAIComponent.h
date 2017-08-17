@@ -31,8 +31,8 @@ public:
 
     void RegisterState(std::string stateName, BaseEnemyAIStateComponent* pState) { m_StateMap[stateName] = pState; }
 
-    virtual void VOnHealthBelowZero(DamageType damageType) override;
-    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) override;
+    virtual void VOnHealthBelowZero(DamageType damageType, int sourceActorId) override;
+    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, int sourceActorId) override;
     virtual bool VCanResistDamage(DamageType damageType, Point impactPoint) override;
     virtual void VOnResistDamage(DamageType damageType, Point impactPoint) override;
 

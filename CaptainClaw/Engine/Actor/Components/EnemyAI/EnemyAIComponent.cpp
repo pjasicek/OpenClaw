@@ -7,7 +7,10 @@
 #include "../AnimationComponent.h"
 #include "../FollowableComponent.h"
 
+#include "../ControllableComponent.h"
+
 #include "../../../GameApp/BaseGameApp.h"
+#include "../../../GameApp/BaseGameLogic.h"
 #include "../../../UserInterface/HumanView.h"
 #include "../../../Scene/SceneNodes.h"
 
@@ -149,7 +152,7 @@ void EnemyAIComponent::VUpdate(uint32 msDiff)
     }
 }
 
-void EnemyAIComponent::VOnHealthBelowZero(DamageType damageType)
+void EnemyAIComponent::VOnHealthBelowZero(DamageType damageType, int sourceActorId)
 {
     m_bDead = true;
     for (auto stateComponentIter : m_StateMap)
@@ -165,9 +168,21 @@ void EnemyAIComponent::VOnHealthBelowZero(DamageType damageType)
     assert(pPhysicsComponent);
 
     pPhysicsComponent->Destroy();
+
+    // HACK: This should be general like Subject/Observer but this is the only place so far
+    // that the killed-by information is used
+    StrongActorPtr pKiller = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(sourceActorId));
+    if (pKiller != nullptr)
+    {
+        shared_ptr<ClawControllableComponent> pClaw = MakeStrongPtr(pKiller->GetComponent<ClawControllableComponent>());
+        if (pClaw)
+        {
+            pClaw->OnClawKilledEnemy(damageType, _owner.get());
+        }
+    }
 }
 
-void EnemyAIComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint)
+void EnemyAIComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, int sourceActorId)
 {
     // If he died we do not care
     if (newHealth >= 0)

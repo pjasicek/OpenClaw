@@ -100,6 +100,7 @@ class AnimationComponent;
 class AmmoComponent;
 class PowerupComponent;
 class HealthComponent;
+class FollowableComponent;
 class ClawControllableComponent : 
     public ControllableComponent, 
     public AnimationObserver, 
@@ -146,13 +147,15 @@ public:
 
     bool IsHoldingRope() { return m_State == ClawState_HoldingRope; }
 
+    void OnClawKilledEnemy(DamageType killDamageType, Actor* pKilledEnemyActor);
+
     // AnimationObserver API
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
 
     // HealthObserver API
-    virtual void VOnHealthBelowZero(DamageType damageType) override;
-    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) override;
+    virtual void VOnHealthBelowZero(DamageType damageType, int sourceActorId) override;
+    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, int sourceActorId) override;
 
 private:
     void BossFightStartedDelegate(IEventDataPtr pEvent);
@@ -183,6 +186,7 @@ private:
     AmmoComponent* m_pAmmoComponent;
     PowerupComponent* m_pPowerupComponent;
     HealthComponent* m_pHealthComponent;
+    FollowableComponent* m_pExclamationMark;
 };
 
 #endif

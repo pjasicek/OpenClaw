@@ -126,7 +126,7 @@ void DestroyableComponent::VUpdate(uint32 msDiff)
     }
 }
 
-void DestroyableComponent::VOnHealthBelowZero(DamageType damageType)
+void DestroyableComponent::VOnHealthBelowZero(DamageType damageType, int sourceActorId)
 {
     m_bIsDead = true;
 

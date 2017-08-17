@@ -43,7 +43,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle);
     TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, Point position, const ElevatorDef& elevatorDef);
     TiXmlElement* CreateXmlData_TogglePegActor(ActorPrototype togglePegProto, Point position, const TogglePegDef& togglePegDef);
-    TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir);
+    TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir, int sourceActorId);
     TiXmlElement* CreateXmlData_LocalAmbientSound(ActorPrototype proto, Point position, const LocalAmbientSoundDef& soundDef);
     TiXmlElement* CreateXmlData_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef);
     TiXmlElement* CreateXmlData_PathElevator(ActorPrototype proto, const Point& position, const std::string& imagePath, const PathElevatorDef& def);
@@ -55,7 +55,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_LootContainer(ActorPrototype proto, const Point& position, const std::vector<PickupType>& loot, int zCoord);
 
     StrongActorPtr CreateActor(ActorPrototype proto, Point position);
-    StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir);
+    StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir, int sourceActorId);
 
     StrongActorPtr CreateActor_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef);
     //StrongActorPtr CreateActor_StaticAnimatedImage(ActorPrototype proto, Point position, const std::string& imagePath);
@@ -88,9 +88,9 @@ namespace ActorTemplates
     // This is used by the game itself
     StrongActorPtr CreateActorPickup(PickupType pickupType, Point position, bool isStatic = false);
     StrongActorPtr CreatePowerupSparkleActor();
-    StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position);
-    StrongActorPtr CreateProjectile(std::string imageSet, uint32 damage, DamageType damageType, Direction direction, Point position, CollisionFlag collisionFlag, uint32 collisionMask);
-    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, DamageType damageType, Direction hitDirection, Point positionOffset = Point(0, 0), std::string imageSet = "", int32 zCoord = 0);
+    StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position, int sourceActorId);
+    StrongActorPtr CreateProjectile(std::string imageSet, uint32 damage, DamageType damageType, Direction direction, Point position, CollisionFlag collisionFlag, uint32 collisionMask, int sourceActorId);
+    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, DamageType damageType, Direction hitDirection, int sourceActorId, Point positionOffset = Point(0, 0), std::string imageSet = "", int32 zCoord = 0);
     StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord = 1010);
     //StrongActorPtr CreatePopupActor(Point position, std::string imageSet, std::vector<PredefinedMove>& moves, int32 zCoord = 0);
     StrongActorPtr CreateScorePopupActor(Point position, int score);

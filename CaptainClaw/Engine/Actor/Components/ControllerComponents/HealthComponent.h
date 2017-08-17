@@ -8,8 +8,8 @@ class HealthObserver;
 class HealthSubject : public Subject<HealthObserver>
 {
 public:
-    void NotifyHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint);
-    void NotifyHealthBelowZero(DamageType damageType);
+    void NotifyHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, int sourceActorId);
+    void NotifyHealthBelowZero(DamageType damageType, int sourceActorId);
     bool AskCanResistDamage(DamageType damageType, Point impactPoint);
     void NotifyResistDamage(DamageType damageType, Point impactPoint);
 };
@@ -17,8 +17,8 @@ public:
 class HealthObserver
 {
 public:
-    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint) { }
-    virtual void VOnHealthBelowZero(DamageType damageType) { }
+    virtual void VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, int sourceActorId) { }
+    virtual void VOnHealthBelowZero(DamageType damageType, int sourceActorId) { }
     virtual bool VCanResistDamage(DamageType damageType, Point impactPoint) { return false; }
     virtual void VOnResistDamage(DamageType damageType, Point impactPoint) { }
 };
@@ -38,7 +38,7 @@ public:
     int32 GetHealth() { return m_CurrentHealth; }
     int GetMaxHealth() { return m_MaxHealth; }
 
-    void AddHealth(int32 health, DamageType damageType, Point impactPoint);
+    void AddHealth(int32 health, DamageType damageType, Point impactPoint, int sourceActorId);
     void SetCurrentHealth(int32 health);
     int32 GetCurrentHealth() { return m_CurrentHealth; }
     bool HasMaxHealth() { return m_CurrentHealth >= m_MaxHealth; }
@@ -48,7 +48,7 @@ public:
     void SetInvulnerable(bool invulnerable) { m_bInvulnerable = invulnerable; }
 
 private:
-    void BroadcastHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, bool isInitial = false);
+    void BroadcastHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, int sourceActorId, bool isInitial = false);
 
     bool m_IsController;
     bool m_bInvulnerable;

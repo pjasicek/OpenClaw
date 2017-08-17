@@ -65,11 +65,20 @@ TiXmlElement* ExplodeableComponent::VGenerateXml()
     return baseElement;
 }
 
-void ExplodeableComponent::VOnHealthBelowZero(DamageType damageType)
+void ExplodeableComponent::VOnHealthBelowZero(DamageType damageType, int sourceActorId)
 {
     shared_ptr<PositionComponent> pPositionComponent =
         MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     assert(pPositionComponent);
 
-    ActorTemplates::CreateAreaDamage(pPositionComponent->GetPosition(), m_ExplosionSize, m_Damage, CollisionFlag_Explosion, "Circle", DamageType_Explosion, Direction_None, Point(0, 40));
+    ActorTemplates::CreateAreaDamage(
+        pPositionComponent->GetPosition(), 
+        m_ExplosionSize, 
+        m_Damage, 
+        CollisionFlag_Explosion, 
+        "Circle", 
+        DamageType_Explosion, 
+        Direction_None, 
+        _owner->GetGUID(),
+        Point(0, 40));
 }

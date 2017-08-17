@@ -26,7 +26,8 @@ ProjectileAIComponent::ProjectileAIComponent()
     m_Damage(0),
     m_DamageType(DamageType_None),
     m_pPhysics(nullptr),
-    m_IsActive(true)
+    m_IsActive(true),
+    m_SourceActorId(INVALID_ACTOR_ID)
 { }
 
 ProjectileAIComponent::~ProjectileAIComponent()
@@ -50,6 +51,7 @@ bool ProjectileAIComponent::VInit(TiXmlElement* pData)
     ParseValueFromXmlElem(&m_Damage, pData->FirstChildElement("Damage"));
     ParseValueFromXmlElem(&damageTypeStr, pData->FirstChildElement("ProjectileType"));
     ParseValueFromXmlElem(&m_ProjectileSpeed, pData->FirstChildElement("ProjectileSpeed"), "x", "y");
+    ParseValueFromXmlElem(&m_SourceActorId, pData->FirstChildElement("SourceActorId"));
 
     m_DamageType = StringToDamageTypeEnum(damageTypeStr);
 
@@ -115,7 +117,8 @@ void ProjectileAIComponent::OnCollidedWithSolidTile()
                 CollisionFlag_Explosion,
                 "Circle",
                 DamageType_Explosion,
-                Direction_None);
+                Direction_None,
+                m_SourceActorId);
         }
     }
 }
@@ -141,7 +144,7 @@ void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)
             contactPoint.x = areaDamageAABB.x - areaDamageAABB.w / 2;
         }
 
-        pHealthComponent->AddHealth((-1) * m_Damage, m_DamageType, contactPoint);
+        pHealthComponent->AddHealth((-1) * m_Damage, m_DamageType, contactPoint, m_SourceActorId);
     }
 
     if (m_DamageType == DamageType_Bullet)

@@ -13,7 +13,8 @@ AreaDamageComponent::AreaDamageComponent()
     m_Duration(50),
     m_ActiveTime(0),
     m_HitDirection(Direction_None),
-    m_DamageType(DamageType_None)
+    m_DamageType(DamageType_None),
+    m_SourceActorId(INVALID_ACTOR_ID)
 { }
 
 bool AreaDamageComponent::VDelegateInit(TiXmlElement* pData)
@@ -22,6 +23,7 @@ bool AreaDamageComponent::VDelegateInit(TiXmlElement* pData)
 
     ParseValueFromXmlElem(&m_Duration, pData->FirstChildElement("Duration"));
     ParseValueFromXmlElem(&m_Damage, pData->FirstChildElement("Damage"));
+    ParseValueFromXmlElem(&m_SourceActorId, pData->FirstChildElement("SourceActorId"));
 
     int damageType;
     if (ParseValueFromXmlElem(&damageType, pData->FirstChildElement("DamageType")))
@@ -92,7 +94,7 @@ bool AreaDamageComponent::VOnApply(Actor* pActorWhoPickedThis)
             }
         }
         
-        pHealthComponent->AddHealth(-m_Damage, m_DamageType, contactPoint);
+        pHealthComponent->AddHealth(-m_Damage, m_DamageType, contactPoint, m_SourceActorId);
     }
 
     return false;
