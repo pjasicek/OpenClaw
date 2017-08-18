@@ -28,7 +28,7 @@ public:
 
     // Interface for subclasses
     virtual void VOnStartFalling() = 0;
-    virtual void VOnLandOnGround() = 0;
+    virtual void VOnLandOnGround(float fromHeight) = 0;
     virtual void VOnStartJumping() = 0;
     virtual void VOnDirectionChange(Direction direction) = 0;
     virtual void VOnStopMoving() = 0;
@@ -120,7 +120,7 @@ public:
 
     // Interface for subclasses
     virtual void VOnStartFalling() override;
-    virtual void VOnLandOnGround() override;
+    virtual void VOnLandOnGround(float fromHeight) override;
     virtual void VOnStartJumping() override;
     virtual void VOnDirectionChange(Direction direction) override;
     virtual void VOnStopMoving() override;

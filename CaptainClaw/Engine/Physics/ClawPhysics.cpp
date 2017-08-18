@@ -263,6 +263,7 @@ void ClawPhysics::VSyncVisibleScene()
                     // He might be on platform
                     if (pPhysicsComponent->IsOnGround())
                     {
+                        pPhysicsComponent->SetFallHeight(0);
                         pPhysicsComponent->SetFalling(false);
                         pPhysicsComponent->SetJumping(false);
                         if (pActorBody->GetLinearVelocity().y < -5)
@@ -288,6 +289,7 @@ void ClawPhysics::VSyncVisibleScene()
                         pPhysicsComponent->SetJumping(false);
                         }*/
 
+                        pPhysicsComponent->AddFallHeight(fabs(bodyPixelPosition.y - actorPixelPosition.y));
                         pPhysicsComponent->SetFalling(true);
                         pPhysicsComponent->SetJumping(false);
                     }
@@ -295,6 +297,7 @@ void ClawPhysics::VSyncVisibleScene()
                     {
                         if (pPhysicsComponent->CanJump())
                         {
+                            pPhysicsComponent->SetFallHeight(0);
                             pPhysicsComponent->SetFalling(false);
                             pPhysicsComponent->SetJumping(true);
                             pPhysicsComponent->AddJumpHeight(fabs(bodyPixelPosition.y - actorPixelPosition.y));

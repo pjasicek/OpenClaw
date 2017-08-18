@@ -119,6 +119,8 @@
 #define SOUND_CLAW_FROST_SWORD "/CLAW/SOUNDS/ICESWORD.WAV"
 #define SOUND_CLAW_LIGHTNING_SWORD "/CLAW/SOUNDS/LIGHTSWORD.WAV"
 
+#define SOUND_CLAW_LAND_SHORT "/CLAW/SOUNDS/LEFTFOOT1.WAV"
+
 // NOTE: Other Claw sound strings should be embedded into anis
 
 // Fade in/out sounds

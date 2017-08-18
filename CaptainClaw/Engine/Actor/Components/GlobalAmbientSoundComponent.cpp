@@ -96,6 +96,7 @@ void GlobalAmbientSoundComponent::VUpdate(uint32 msDiff)
 
         SoundInfo soundInfo(m_Sound);
         soundInfo.loops = soundLoops;
+        soundInfo.soundVolume = m_SoundVolume;
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
 

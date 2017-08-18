@@ -80,6 +80,10 @@ public:
     float GetHeightInAir() { return m_HeightInAir; }
     void SetHeightInAir(float heightInAir) { m_HeightInAir = heightInAir; }
 
+    void AddFallHeight(float deltaFallHeight) { m_FallHeight += deltaFallHeight; }
+    void SetFallHeight(float fallHeight) { m_FallHeight = fallHeight; }
+    float GetFallHeight() { return m_FallHeight; }
+
     void SetForceFall();
 
     bool AttachToLadder();
@@ -132,6 +136,8 @@ private:
     bool m_IsFalling;
     bool m_IsJumping;
     float m_HeightInAir;
+
+    float m_FallHeight;
 
     bool m_HasConstantSpeed;
     Point m_ConstantSpeed;

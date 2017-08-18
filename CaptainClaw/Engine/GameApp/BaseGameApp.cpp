@@ -554,6 +554,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("SkipBossFightIntro"));
         ParseValueFromXmlElem(&m_GlobalOptions.useAlternateControls,
             pGlobalOptionsRootElem->FirstChildElement("UseAlternateControls"));
+        ParseValueFromXmlElem(&m_GlobalOptions.clawMinFallHeight,
+            pGlobalOptionsRootElem->FirstChildElement("ClawMinFallHeight"));
     }
 
     return true;

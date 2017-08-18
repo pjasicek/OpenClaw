@@ -298,9 +298,22 @@ void ClawControllableComponent::VOnStartFalling()
     m_State = ClawState_Falling;
 }
 
-void ClawControllableComponent::VOnLandOnGround()
+void ClawControllableComponent::VOnLandOnGround(float fromHeight)
 {
-    m_pClawAnimationComponent->SetAnimation("stand");
+    if (fromHeight > g_pApp->GetGlobalOptions()->clawMinFallHeight)
+    {
+        m_pClawAnimationComponent->SetAnimation("land");
+    }
+    else
+    {
+        m_pClawAnimationComponent->SetAnimation("stand");
+
+        SoundInfo soundInfo(SOUND_CLAW_LAND_SHORT);
+        soundInfo.soundVolume = 150;
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(soundInfo)));
+    }
+
     m_State = ClawState_Standing;
 }
 
@@ -337,13 +350,18 @@ void ClawControllableComponent::VOnStopMoving()
         return;
     }
 
-    m_pClawAnimationComponent->SetAnimation("stand");
+    if (m_pClawAnimationComponent->GetCurrentAnimationName() != "land")
+    {
+        m_pClawAnimationComponent->SetAnimation("stand");
+    }
+    
     m_State = ClawState_Standing;
 }
 
 void ClawControllableComponent::VOnRun()
 {
-    if (m_State == ClawState_Shooting)
+    if (m_State == ClawState_Shooting ||
+        m_pClawAnimationComponent->GetCurrentAnimationName() == "land")
     {
         return;
     }
@@ -572,6 +590,7 @@ bool ClawControllableComponent::CanMove()
         m_State == ClawState_DuckAttacking ||
         m_State == ClawState_DuckShooting ||
         m_State == ClawState_TakingDamage ||
+        m_pClawAnimationComponent->GetCurrentAnimationName() == "land" ||
         m_bFrozen)
     {
         return false;
@@ -774,6 +793,10 @@ void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
              animName == "damage2")
     {
         SetCurrentPhysicsState();
+    }
+    else if (animName == "land")
+    {
+        m_pClawAnimationComponent->SetAnimation("stand");
     }
 }
 
@@ -1009,8 +1032,6 @@ void ClawControllableComponent::BossFightEndedDelegate(IEventDataPtr pEvent)
 void ClawControllableComponent::OnClawKilledEnemy(DamageType killDamageType, Actor* pKilledEnemyActor)
 {
     assert(pKilledEnemyActor != NULL);
-
-    LOG("Claw killed enemy: " + pKilledEnemyActor->GetName());
 
     std::vector<std::string> s_OnEnemyKillSoundList =
     {

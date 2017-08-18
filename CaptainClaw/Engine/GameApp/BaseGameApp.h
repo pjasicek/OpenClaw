@@ -135,6 +135,7 @@ struct GlobalOptions
         springBoardSpringSpeed = 11;
         skipBossFightIntro = false;
         useAlternateControls = false;
+        clawMinFallHeight = 500.0f;
     }
 
     int cpuDelayMs;
@@ -156,6 +157,7 @@ struct GlobalOptions
     double springBoardSpringSpeed;
     bool skipBossFightIntro;
     bool useAlternateControls;
+    float clawMinFallHeight;
 };
 
 class EventMgr;

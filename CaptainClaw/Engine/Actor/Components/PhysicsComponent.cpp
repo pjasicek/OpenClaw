@@ -820,7 +820,7 @@ void PhysicsComponent::OnBeginFootContact()
     {
         if (m_pControllableComponent && (m_HeightInAir > 2 /*|| !m_OverlappingKinematicBodiesList.empty()*/))
         {
-            m_pControllableComponent->VOnLandOnGround();
+            m_pControllableComponent->VOnLandOnGround(m_FallHeight);
         }
     }
 

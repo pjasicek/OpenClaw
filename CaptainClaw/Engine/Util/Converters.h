@@ -550,9 +550,9 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 soundVolume /= 5;
             }
             // Also non-looping sounds require tweaks
-            if ((levelNumber == 2 || levelNumber == 3 || levelNumber == 4) && !isLooping)
+            if ((levelNumber == 1 || levelNumber == 2 || levelNumber == 3 || levelNumber == 4) && !isLooping)
             {
-                soundVolume = (int)((float)soundVolume / 1.5f);
+                //soundVolume = (int)((float)soundVolume / 1.5f);
             }
 
             SAFE_DELETE(pActorElem);
