@@ -9,6 +9,16 @@
 class Image;
 struct AnimationFrame
 {
+    AnimationFrame()
+    {
+        imageId = 0;
+        imageName = "";
+        idx = 0;
+        duration = 0;
+        eventName = "";
+        hasEvent = false;
+    }
+
     uint32 imageId;
     std::string imageName;
     uint32 idx;

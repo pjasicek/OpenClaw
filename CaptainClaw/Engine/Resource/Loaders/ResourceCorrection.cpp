@@ -44,6 +44,16 @@ void OnPidLoaded(const char* resource, WapPid* pPid)
     {
         pPid->offsetY -= 40;
     }
+    else if (resourceName == "/claw/images/frame383.pid" ||
+        resourceName == "/claw/images/frame384.pid" ||
+        resourceName == "/claw/images/frame385.pid" ||
+        resourceName == "/claw/images/frame386.pid" ||
+        resourceName == "/claw/images/frame387.pid" ||
+        resourceName == "/claw/images/frame388.pid" ||
+        resourceName == "/claw/images/frame389.pid")
+    {
+        pPid->offsetY = 0;
+    }
 }
 
 void OnAniLoaded(const char* resource, WapAni* pAni)

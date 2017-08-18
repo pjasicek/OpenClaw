@@ -78,8 +78,9 @@ public:
     void ResetAnimation();
     void SetDelay(uint32 msDelay);
     void SetReverseAnimation(bool reverse);
-    Animation* GetCurrentAnimation() const { return _currentAnimation; }
-    std::string GetCurrentAnimationName() const;
+    inline Animation* GetCurrentAnimation() const { return _currentAnimation; }
+    inline std::string GetCurrentAnimationName() const { return _currentAnimation->GetName(); }
+    bool AddAnimation(std::string animName, Animation* pAnim);
 
 private:
 

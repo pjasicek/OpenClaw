@@ -1203,6 +1203,54 @@ SDL_Rect ClawPhysics::VGetAABB(uint32_t actorId, bool discardSensors)
     return aabbRect;
 }
 
+/// Callback to check for overlap of given body.
+struct CheckOverlapCallback : b2QueryCallback
+{
+    CheckOverlapCallback(const b2Body* body, FixtureType overlapType) :
+    m_body(body), m_isOverlap(false), m_TestOverlapType(overlapType) {}
+
+    // override
+    bool ReportFixture(b2Fixture* fixture)
+    {
+        // Skip self.
+        if (fixture->GetBody() == m_body)
+            return true;
+
+        for (const b2Fixture* bodyFixture = m_body->GetFixtureList(); bodyFixture;
+            bodyFixture = bodyFixture->GetNext())
+        {
+            if (b2TestOverlap(fixture->GetShape(), 0, bodyFixture->GetShape(), 0,
+                fixture->GetBody()->GetTransform(), m_body->GetTransform()))
+            {
+                if (fixture->GetUserData() == (void*)m_TestOverlapType)
+                {
+                    m_isOverlap = true;
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    FixtureType m_TestOverlapType;
+    const b2Body* m_body;
+    bool m_isOverlap;
+};
+
+bool ClawPhysics::VIsActorOverlap(uint32_t actorId, FixtureType overlapType)
+{
+    if (b2Body* pBody = FindBox2DBody(actorId))
+    {
+        CheckOverlapCallback callback(pBody, overlapType);
+        b2AABB aabb = GetBodyAABB(pBody, true);
+        m_pWorld->QueryAABB(&callback, aabb);
+        return callback.m_isOverlap;
+    }
+
+    return false;
+}
+
 class RayCastCallback_Filtered : public b2RayCastCallback
 {
 public:

@@ -43,7 +43,8 @@ PhysicsComponent::PhysicsComponent() :
     m_bClampToGround(false),
     m_DoNothingTimeout(0),
     m_bIsForcedUp(false),
-    m_ForcedUpHeight(0)
+    m_ForcedUpHeight(0),
+    m_FallHeight(0.0f)
 { }
 
 PhysicsComponent::~PhysicsComponent()
@@ -495,7 +496,9 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
                     m_pTopLadderContact->SetEnabled(false);
                 }
 
-                m_pControllableComponent->VOnClimb();
+                bool bIsOnTopLadder = CheckOverlap(FixtureType_TopLadderGround);
+                bool bIsClimbingUp = m_ClimbingSpeed.y < (-1.0 * DBL_EPSILON);
+                m_pControllableComponent->VOnClimb(bIsClimbingUp, bIsOnTopLadder);
             }
             m_ClimbingSpeed = Point(0, 0);
 
@@ -1012,12 +1015,20 @@ void PhysicsComponent::RequestClimb(Point climbMovement)
     {
         if (AttachToLadder())
         {
+            bool bIsOnTopLadder = CheckOverlap(FixtureType_TopLadderGround);
+            bool bIsClimbingUp = m_ClimbingSpeed.y < (-1.0 * DBL_EPSILON);
+            m_pControllableComponent->VOnClimb(bIsClimbingUp, bIsOnTopLadder);
+
             m_IsClimbing = true;
-            m_pControllableComponent->VOnClimb();
             m_IgnoreJump = true;
             m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0);
         }
     }
+}
+
+bool PhysicsComponent::CheckOverlap(FixtureType withWhatFixture)
+{
+    return m_pPhysics->VIsActorOverlap(_owner->GetGUID(), withWhatFixture);
 }
 
 void PhysicsComponent::RemoveOverlappingLadder(const b2Fixture* ladder)

@@ -455,6 +455,7 @@ public:
     virtual Point VGetPosition(uint32_t actorId) = 0;
 
     virtual SDL_Rect VGetAABB(uint32_t actorId, bool discardSensors) = 0;
+    virtual bool VIsActorOverlap(uint32_t actorId, FixtureType overlapType) = 0;
 
     virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32_t filterMask) = 0;
 

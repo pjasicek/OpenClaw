@@ -307,11 +307,6 @@ void AnimationComponent::ResetAnimation()
     _currentAnimation->Reset();
 }
 
-std::string AnimationComponent::GetCurrentAnimationName() const
-{
-    return _currentAnimation->GetName();
-}
-
 //-------------------------------------------------------------------------------------------------
 // Animation listeners
 //
@@ -381,6 +376,18 @@ void AnimationComponent::SetDelay(uint32 msDelay)
 void AnimationComponent::SetReverseAnimation(bool reverse)
 {
     _currentAnimation->SetReverseAnim(reverse);
+}
+
+bool AnimationComponent::AddAnimation(std::string animName, Animation* pAnim)
+{
+    if (_animationMap.find(animName) != _animationMap.end())
+    {
+        return false;
+    }
+
+    _animationMap[animName] = pAnim;
+
+    return true;
 }
 
 //=====================================================================================================================

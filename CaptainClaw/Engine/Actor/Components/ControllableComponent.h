@@ -33,7 +33,7 @@ public:
     virtual void VOnDirectionChange(Direction direction) = 0;
     virtual void VOnStopMoving() = 0;
     virtual void VOnRun() = 0;
-    virtual void VOnClimb() = 0;
+    virtual void VOnClimb(bool bIsClimbingUp, bool bIsOnTopEdge) = 0;
     virtual void VOnStopClimbing() = 0;
     virtual void OnAttack() = 0;
     virtual void OnFire(bool outOfAmmo = false) = 0;
@@ -125,7 +125,7 @@ public:
     virtual void VOnDirectionChange(Direction direction) override;
     virtual void VOnStopMoving() override;
     virtual void VOnRun() override;
-    virtual void VOnClimb() override;
+    virtual void VOnClimb(bool bIsClimbingUp, bool bIsOnTopEdge) override;
     virtual void VOnStopClimbing() override;
     virtual void OnAttack() override;
     virtual void OnFire(bool outOfAmmo = false) override;

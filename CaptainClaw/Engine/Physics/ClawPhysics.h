@@ -68,6 +68,7 @@ public:
     virtual Point VGetPosition(uint32_t actorId) override;
 
     virtual SDL_Rect VGetAABB(uint32_t actorId, bool discardSensors) override;
+    virtual bool VIsActorOverlap(uint32_t actorId, FixtureType overlapType) override;
 
     virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32 filterMask) override;
 
@@ -201,6 +202,7 @@ public:
     virtual Point VGetPosition(uint32_t actorId) override { return Point(); }
 
     virtual SDL_Rect VGetAABB(uint32_t actorId, bool discardSensors) override  { return{ 0, 0, 0, 0 }; }
+    virtual bool VIsActorOverlap(uint32_t actorId, FixtureType overlapType) { return false; }
 
     virtual RaycastResult VRayCast(const Point& fromPoint, const Point& toPoint, uint32 filterMask) override { return RaycastResult(); }
 

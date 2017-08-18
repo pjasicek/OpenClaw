@@ -88,6 +88,8 @@ public:
 
     bool AttachToLadder();
 
+    bool CheckOverlap(FixtureType withWhatFixture);
+
     void SetExternalSourceSpeed(const Point& externalSpeed) { m_ExternalSourceSpeed = externalSpeed; }
     void SetMovingPlatformContact(b2Contact* pContact) { m_pMovingPlatformContact = pContact; }
 

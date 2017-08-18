@@ -144,6 +144,39 @@ void ClawControllableComponent::VPostInit()
     m_IdleQuoteSoundList.push_back(SOUND_CLAW_IDLE12);
 
     m_pIdleQuotesSequence.reset(new PrimeSearch(m_IdleQuoteSoundList.size()));
+
+    // No existing animation for the top-ladder climb...
+    {
+        std::vector<AnimationFrame> climbAnimFrames;
+        for (int i = 0, climbImageId = 383; climbImageId <= 389; climbImageId++, i++)
+        {
+            AnimationFrame frame;
+            frame.idx = i;
+            frame.imageId = climbImageId;
+            frame.imageName = "frame" + ToStr(climbImageId);
+            frame.duration = 55;
+            climbAnimFrames.push_back(frame);
+        }
+        Animation* pClimbAnim = Animation::CreateAnimation(climbAnimFrames, "topclimb", m_pClawAnimationComponent);
+        assert(pClimbAnim);
+        assert(m_pClawAnimationComponent->AddAnimation("topclimb", pClimbAnim));
+    }
+
+    {
+        std::vector<AnimationFrame> climbAnimFrames;
+        for (int i = 0, climbImageId = 389; climbImageId >= 383; climbImageId--, i++)
+        {
+            AnimationFrame frame;
+            frame.idx = i;
+            frame.imageId = climbImageId;
+            frame.imageName = "frame" + ToStr(climbImageId);
+            frame.duration = 55;
+            climbAnimFrames.push_back(frame);
+        }
+        Animation* pClimbAnim = Animation::CreateAnimation(climbAnimFrames, "topclimbdown", m_pClawAnimationComponent);
+        assert(pClimbAnim);
+        assert(m_pClawAnimationComponent->AddAnimation("topclimbdown", pClimbAnim));
+    }
 }
 
 void ClawControllableComponent::VPostPostInit()
@@ -371,10 +404,27 @@ void ClawControllableComponent::VOnRun()
     m_State = ClawState_Walking;
 }
 
-void ClawControllableComponent::VOnClimb()
+void ClawControllableComponent::VOnClimb(bool bIsClimbingUp, bool bIsOnTopEdge)
 {
+    // TODO: Decide whether to keep it
+    static bool useAlternativeClimbAnim = true;
+    if (bIsOnTopEdge && useAlternativeClimbAnim)
+    {
+        if (!bIsClimbingUp)
+        {
+            m_pClawAnimationComponent->SetAnimation("topclimbdown");
+        }
+        else
+        {
+            m_pClawAnimationComponent->SetAnimation("topclimb");
+        }
+    }
+    else
+    {
+        m_pClawAnimationComponent->SetAnimation("climb");
+    }
+    
     m_pClawAnimationComponent->ResumeAnimation();
-    m_pClawAnimationComponent->SetAnimation("climb");
     m_State = ClawState_Climbing;
 }
 
