@@ -1,4 +1,4 @@
-# Captain Claw remiplementation
+# Captain Claw reimplementation
 
  - This project is a multiplatform C++ reimplementation of original Captain Claw (1997) platformer game
  - Whole codebase was written from scratch
