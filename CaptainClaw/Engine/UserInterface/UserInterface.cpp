@@ -412,6 +412,14 @@ ScreenElementMenu::~ScreenElementMenu()
 
 void ScreenElementMenu::VOnUpdate(uint32 msDiff)
 {
+    if (m_bIsVisible && m_MenuType == MenuType_IngameMenu)
+    {
+        if (g_pApp && g_pApp->GetGameLogic())
+        {
+            g_pApp->GetGameLogic()->SetRunning(false);
+        }
+    }
+
     assert(m_pActiveMenuPage);
     m_pActiveMenuPage->VOnUpdate(msDiff);
 }
