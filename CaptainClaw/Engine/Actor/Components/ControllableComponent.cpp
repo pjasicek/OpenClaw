@@ -421,7 +421,14 @@ void ClawControllableComponent::VOnClimb(bool bIsClimbingUp, bool bIsOnTopEdge)
     }
     else
     {
-        m_pClawAnimationComponent->SetAnimation("climb");
+        if (!bIsClimbingUp)
+        {
+            m_pClawAnimationComponent->SetAnimation("climbdown");
+        }
+        else
+        {
+            m_pClawAnimationComponent->SetAnimation("climb");
+        }
     }
     
     m_pClawAnimationComponent->ResumeAnimation();
