@@ -396,6 +396,17 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         if (m_ClimbingSpeed.y > DBL_EPSILON)
         {
             m_pControllableComponent->AddDuckingTime(msDiff);
+            m_pControllableComponent->SetLookingUpTime(0);
+        }
+        else if (m_ClimbingSpeed.y < (-1.0 * DBL_EPSILON))
+        {
+            m_pControllableComponent->AddLookingUpTime(msDiff);
+            m_pControllableComponent->SetDuckingTime(0);
+        }
+        else
+        {
+            m_pControllableComponent->SetLookingUpTime(0);
+            m_pControllableComponent->SetDuckingTime(0);
         }
 
         m_CurrentSpeed = Point(0, 0);

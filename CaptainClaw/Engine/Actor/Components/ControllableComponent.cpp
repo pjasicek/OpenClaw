@@ -366,6 +366,8 @@ void ClawControllableComponent::VOnRun()
         return;
     }
     m_pClawAnimationComponent->SetAnimation("walk");
+    m_LookingUpTime = 0;
+    m_DuckingTime = 0;
     m_State = ClawState_Walking;
 }
 
@@ -591,6 +593,7 @@ bool ClawControllableComponent::CanMove()
         m_State == ClawState_DuckShooting ||
         m_State == ClawState_TakingDamage ||
         m_pClawAnimationComponent->GetCurrentAnimationName() == "land" ||
+        (m_LookingUpTime > g_pApp->GetGlobalOptions()->startLookUpOrDownTime) ||
         m_bFrozen)
     {
         return false;
@@ -773,6 +776,11 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
         {
             SetCurrentPhysicsState();
         }
+    }
+
+    if (animName == "lookup" && pAnimation->IsAtLastAnimFrame())
+    {
+        pAnimation->Pause();
     }
 }
 
