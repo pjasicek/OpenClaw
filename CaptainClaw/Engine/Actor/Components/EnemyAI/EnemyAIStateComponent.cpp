@@ -231,7 +231,8 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     m_bRetainDirection(false),
     m_IsAlwaysIdle(false),
     m_IdleSpeechSoundMaxDistance(0),
-    m_IdleSpeechSoundPlayChance(0)
+    m_IdleSpeechSoundPlayChance(0),
+    m_bRecalculatePatrolBorders(true)
 {
 
 }
@@ -293,6 +294,7 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
 
     ParseValueFromXmlElem(&m_bIsFlying, pData->FirstChildElement("IsFlying"));
     ParseValueFromXmlElem(&m_IsAlwaysIdle, pData->FirstChildElement("IsAlwaysIdle"));
+    ParseValueFromXmlElem(&m_bRecalculatePatrolBorders, pData->FirstChildElement("RecalculatePatrolBorders"));
 
     if (TiXmlElement* pElem = pData->FirstChildElement("IdleSpeech"))
     {
@@ -338,7 +340,7 @@ void PatrolEnemyAIStateComponent::VPostInit()
 
 void PatrolEnemyAIStateComponent::VPostPostInit()
 {
-    if (!m_IsAlwaysIdle)
+    if (m_bRecalculatePatrolBorders && !m_IsAlwaysIdle)
     {
         CalculatePatrolBorders();
     }

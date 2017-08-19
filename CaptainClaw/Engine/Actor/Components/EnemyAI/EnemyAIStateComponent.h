@@ -164,6 +164,7 @@ private:
 
     bool m_bInitialized;
     bool m_bRetainDirection;
+    bool m_bRecalculatePatrolBorders;
 
     int m_LeftPatrolBorder;
     int m_RightPatrolBorder;

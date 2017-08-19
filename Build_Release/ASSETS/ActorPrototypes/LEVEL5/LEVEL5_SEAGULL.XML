@@ -60,6 +60,7 @@
         <PatrolSpeed>1.300000</PatrolSpeed>
         <LeftPatrolBorder>0</LeftPatrolBorder> <!-- DEFINED IN CODE -->
         <RightPatrolBorder>0</RightPatrolBorder> <!-- DEFINED IN CODE -->
+        <RecalculatePatrolBorders>false</RecalculatePatrolBorders>
         <RetainDirection>false</RetainDirection>
         <WalkAction>
             <Animation>flying</Animation>
