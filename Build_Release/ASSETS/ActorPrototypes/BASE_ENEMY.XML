@@ -90,7 +90,7 @@
             <FixtureType>DamageAura</FixtureType>
             <CollisionShape>Rectangle</CollisionShape>
             <IsSensor>true</IsSensor>
-            <Size width="40" height="85" />
+            <Size width="40" height="50" />
             <Offset x="0" y="0" />
             <CollisionFlag>262144</CollisionFlag>
             <CollisionMask>1048578</CollisionMask>

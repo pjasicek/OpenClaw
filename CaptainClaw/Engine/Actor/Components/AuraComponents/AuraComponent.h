@@ -90,6 +90,7 @@ protected:
 
 private:
     int m_Damage;
+    bool m_bIsEnemyUnit;
 };
 
 #endif

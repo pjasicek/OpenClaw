@@ -3,6 +3,7 @@
 #include "../../Actor.h"
 #include "../../../GameApp/BaseGameApp.h"
 #include "../../../GameApp/BaseGameLogic.h"
+#include "../EnemyAI/EnemyAIComponent.h"
 
 const char* BaseAuraComponent::g_Name = "BaseAuraComponent";
 const char* DamageAuraComponent::g_Name = "DamageAuraComponent";
@@ -174,7 +175,8 @@ void BaseAuraComponent::SetEnabled(bool enabled)
 
 DamageAuraComponent::DamageAuraComponent()
     :
-    m_Damage(0)
+    m_Damage(0),
+    m_bIsEnemyUnit(false)
 {
 }
 
@@ -189,7 +191,7 @@ bool DamageAuraComponent::VDelegateInit(TiXmlElement* data)
 
 void DamageAuraComponent::VPostInit()
 {
-    
+    m_bIsEnemyUnit = MakeStrongPtr(_owner->GetComponent<EnemyAIComponent>()) != nullptr;
 }
 
 void DamageAuraComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement)
@@ -203,6 +205,19 @@ void DamageAuraComponent::VOnAuraApply(Actor* pActorInAura)
         MakeStrongPtr(pActorInAura->GetComponent<HealthComponent>(HealthComponent::g_Name));
     if (pHealthComponent)
     {
+        // If owner of this aura is some Enemy and he is not in combat, do not apply this aura
+        if (m_bIsEnemyUnit)
+        {
+            EnemyAIComponent* pEnemyAIComponent = MakeStrongPtr(_owner->GetComponent<EnemyAIComponent>()).get();
+            assert(pEnemyAIComponent != NULL);
+            if (pEnemyAIComponent->GetCurrentState() == NULL ||
+                pEnemyAIComponent->GetCurrentState()->VGetStateType() == EnemyAIState_None ||
+                pEnemyAIComponent->GetCurrentState()->VGetStateType() == EnemyAIState_Patrolling)
+            {
+                return;
+            }
+        }
+
         // TODO: In original game this causes the damage impact anim effect
         pHealthComponent->AddHealth((-1) * m_Damage, DamageType_None, Point(0, 0), _owner->GetGUID());
     }
