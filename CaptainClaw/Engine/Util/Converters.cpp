@@ -233,6 +233,10 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
                     5, wwdObject->z + crateIdx));
             }
         }
+        else if (levelNumber == 3 && sound == "LEVEL_AMBIENT_ANVIL")
+        {
+            continue;
+        }
         else if (logic == "BreakPlank")
         {
             Point position = Point(wwdObject->x, wwdObject->y);
