@@ -130,6 +130,11 @@ void EnemyAIComponent::VUpdate(uint32 msDiff)
                 {
                     shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
                     IEventMgr::Get()->VQueueEvent(pEvent);
+
+                    // This is really weird... but it is in original game exactly like this
+                    SoundInfo splashSound("/GAME/SOUNDS/SPLASH.WAV");
+                    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                        new EventData_Request_Play_Sound(splashSound)));
                 }
             }
             else
