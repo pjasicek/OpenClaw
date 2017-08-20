@@ -26,6 +26,8 @@ bool FloorSpikeComponent::VInit(TiXmlElement* pData)
     assert(ParseValueFromXmlElem(&m_ActiveFrameIdx, pData->FirstChildElement("ActiveFrameIdx")));
     assert(ParseValueFromXmlElem(&m_StartDelay, pData->FirstChildElement("StartDelay")));
     assert(ParseValueFromXmlElem(&m_TimeOn, pData->FirstChildElement("TimeOn")));
+    ParseValueFromXmlElem(&m_ActivateSound, pData->FirstChildElement("ActivateSound"));
+    ParseValueFromXmlElem(&m_DeactivateSound, pData->FirstChildElement("DeactivateSound"));
 
     return true;
 }
@@ -71,15 +73,18 @@ void FloorSpikeComponent::VOnAnimationFrameChanged(Animation* pAnimation, Animat
     sound.setPositionEffect = true;
     sound.setDistanceEffect = true;
     sound.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
-    if (pLastFrame->idx == 0 && pNewFrame->idx == 1)
+    if (!m_ActivateSound.empty() && (pLastFrame->idx == 0 && pNewFrame->idx == 1))
     {
-        sound.soundToPlay = "/LEVEL3/SOUNDS/FLOORSPIKEUP.WAV";
+        sound.soundToPlay = m_ActivateSound;
 
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(sound)));
     }
-    else if (pLastFrame->idx == pAnimation->GetAnimFramesSize() - 1 && pNewFrame->idx == pAnimation->GetAnimFramesSize() - 2)
+    else if (!m_DeactivateSound.empty() && 
+        (pLastFrame->idx == pAnimation->GetAnimFramesSize() - 1) && 
+        (pNewFrame->idx == pAnimation->GetAnimFramesSize() - 2))
     {
-        sound.soundToPlay = "/LEVEL3/SOUNDS/FLOORSPIKEDOWN.WAV";
+        sound.soundToPlay = m_DeactivateSound;
+        //sound.soundToPlay = "/LEVEL3/SOUNDS/FLOORSPIKEDOWN.WAV";
 
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(sound)));
     }

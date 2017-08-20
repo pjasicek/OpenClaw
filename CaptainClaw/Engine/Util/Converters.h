@@ -1329,10 +1329,14 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         if (levelNumber == 3)
         {
             def.activeFrameIdx = 5;
+            def.activateSound = "/LEVEL3/SOUNDS/FLOORSPIKEUP.WAV";
+            def.deactivateSound = "/LEVEL3/SOUNDS/FLOORSPIKEDOWN.WAV";
         }
         else if (levelNumber == 4)
         {
             def.activeFrameIdx = 4;
+            def.activateSound = "/LEVEL4/SOUNDS/FLOORSPIKEUP.WAV";
+            def.deactivateSound = "/LEVEL4/SOUNDS/FLOORSPIKEDOWN.WAV";
         }
         def.startDelay = delay;
         def.damage = 5;
@@ -1346,6 +1350,13 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             position,
             tmpImageSet,
             def);
+    }
+    else if (logic == "GooVent")
+    {
+        Point position(wwdObject->x, wwdObject->y);
+
+        SAFE_DELETE(pActorElem);
+        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level6_GooVent, position);
     }
     else if (logic == "AniRope")
     {

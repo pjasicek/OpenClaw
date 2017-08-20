@@ -348,6 +348,9 @@ enum ActorPrototype
     ActorPrototype_BaseLootContainer,
     ActorPrototype_Level5_LootStatue,
 
+    // Floor Spikes / Floor goovents etc
+    ActorPrototype_Level6_GooVent,
+
     //=======================================
     // General
     //=======================================

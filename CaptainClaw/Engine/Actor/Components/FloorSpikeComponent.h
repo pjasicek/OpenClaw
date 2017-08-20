@@ -27,6 +27,8 @@ private:
     int m_ActiveFrameIdx;
     int m_StartDelay;
     int m_TimeOn;
+    std::string m_ActivateSound;
+    std::string m_DeactivateSound;
 
     // Internal state
     DamageAuraComponent* m_pDamageAuraComponent;

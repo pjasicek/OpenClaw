@@ -631,6 +631,8 @@ struct FloorSpikeDef
         cond_assert(strict, ParseValueFromXmlElem(&damagePulseInterval, pElem->FirstChildElement("DamagePulseInterval")));
         cond_assert(strict, ParseValueFromXmlElem(&cycleDuration, pElem->FirstChildElement("CycleDuration")));
         cond_assert(strict, ParseValueFromXmlElem(&startDelay, pElem->FirstChildElement("StartDelay")));
+        cond_assert(strict, ParseValueFromXmlElem(&activateSound, pElem->FirstChildElement("ActivateSound")));
+        cond_assert(strict, ParseValueFromXmlElem(&deactivateSound, pElem->FirstChildElement("DeactivateSound")));
     }
 
     int activeFrameIdx;
@@ -639,6 +641,8 @@ struct FloorSpikeDef
     int damagePulseInterval;
     int cycleDuration;
     int startDelay;
+    std::string activateSound;
+    std::string deactivateSound;
 };
 
 //-------------------------------------------------------------------------------------------------

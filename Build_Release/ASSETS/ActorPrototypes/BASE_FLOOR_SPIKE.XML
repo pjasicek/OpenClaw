@@ -21,6 +21,8 @@
 		<ActiveFrameIdx>0</ActiveFrameIdx>
         <StartDelay>0</StartDelay>
         <TimeOn>0</TimeOn>
+        <ActivateSound></ActivateSound>
+        <DeactivateSound></DeactivateSound>
 	</FloorSpikeComponent>
 	<PhysicsComponent>
         <BodyType>Static</BodyType>

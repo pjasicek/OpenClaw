@@ -107,6 +107,8 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_BaseLootContainer, "ActorPrototype_BaseLootContainer" },
         { ActorPrototype_Level5_LootStatue, "ActorPrototype_Level5_LootStatue" },
 
+        { ActorPrototype_Level6_GooVent, "ActorPrototype_Level6_GooVent" },
+
         //=======================================
         // General
         //=======================================
@@ -254,6 +256,8 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         // Loot containers
         { "ActorPrototype_BaseLootContainer", ActorPrototype_BaseLootContainer },
         { "ActorPrototype_Level5_LootStatue", ActorPrototype_Level5_LootStatue },
+
+        { "ActorPrototype_Level6_GooVent", ActorPrototype_Level6_GooVent },
 
         //=======================================
         // General

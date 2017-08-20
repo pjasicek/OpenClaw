@@ -1970,6 +1970,8 @@ namespace ActorTemplates
         assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.ActiveFrameIdx", def.activeFrameIdx));
         assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.StartDelay", def.startDelay));
         assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.TimeOn", def.timeOn));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.ActivateSound", def.activateSound));
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.DeactivateSound", def.deactivateSound));
 
         return pActorElem;
     }

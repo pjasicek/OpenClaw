@@ -1,0 +1,25 @@
+<Actor Type="Level6_GooVent" Parent="ActorPrototype_BaseFloorSpike" ActorPrototypeName="ActorPrototype_Level6_GooVent">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL6/IMAGES/GOOVENT/*</ImagePath>
+	</ActorRenderComponent>
+    <AnimationComponent>
+		<SpecialAnimation>
+			<Type>cycle</Type>
+			<FrameDuration>200</FrameDuration>
+			<HasPositionDelay>true</HasPositionDelay>
+		</SpecialAnimation>
+	</AnimationComponent>
+	<FloorSpikeComponent>
+		<ActiveFrameIdx>4</ActiveFrameIdx>
+        <StartDelay>0</StartDelay>
+        <TimeOn>0</TimeOn>
+	</FloorSpikeComponent>
+    <DamageAuraComponent>
+        <PulseInterval>750</PulseInterval>
+        <ActorFixture>
+            <Size width="115" height="10" />
+            <Offset x="0" y="0" />
+        </ActorFixture>
+        <Damage>1</Damage>
+    </DamageAuraComponent>
+</Actor>
