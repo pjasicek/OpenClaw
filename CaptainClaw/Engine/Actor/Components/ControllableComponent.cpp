@@ -177,6 +177,20 @@ void ClawControllableComponent::VPostInit()
         assert(pClimbAnim);
         assert(m_pClawAnimationComponent->AddAnimation("topclimbdown", pClimbAnim));
     }
+
+    {
+        std::vector<AnimationFrame> highFallAnimFrames;
+        AnimationFrame frame;
+        frame.idx = 0;
+        frame.imageId = 401;
+        frame.imageName = "frame401";
+        frame.duration = 2000;
+        highFallAnimFrames.push_back(frame);
+
+        Animation* pHighFallAnim = Animation::CreateAnimation(highFallAnimFrames, "highfall", m_pClawAnimationComponent);
+        assert(pHighFallAnim);
+        assert(m_pClawAnimationComponent->AddAnimation("highfall", pHighFallAnim));
+    }
 }
 
 void ClawControllableComponent::VPostPostInit()
@@ -311,6 +325,13 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_IdleTime = 0;
         m_LookingUpTime = 0;
         m_DuckingTime = 0;
+    }
+
+    if (m_pPhysicsComponent->IsFalling() && 
+        m_pClawAnimationComponent->GetCurrentAnimationName() == "fall" &&
+        m_pPhysicsComponent->GetFallHeight() > g_pApp->GetGlobalOptions()->clawMinFallHeight)
+    {
+        m_pClawAnimationComponent->SetAnimation("highfall");
     }
 
     //LOG("State: " + ToStr((int)m_State));
