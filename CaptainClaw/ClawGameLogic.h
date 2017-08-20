@@ -19,6 +19,7 @@ public:
     void ControlledActorStartMoveDelegate(IEventDataPtr pEventData);
     void ControlledActorStartClimbDelegate(IEventDataPtr pEventData);
     void ActorFireDelegate(IEventDataPtr pEventData);
+    void ActorFireEndedDelegate(IEventDataPtr pEventData);
     void ActorAttackDelegate(IEventDataPtr pEventData);
     void NewLifeDelegate(IEventDataPtr pEventData);
     void TeleportActorDelegate(IEventDataPtr pEventData);

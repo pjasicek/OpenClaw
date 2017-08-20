@@ -37,6 +37,7 @@ public:
     virtual void VOnStopClimbing() = 0;
     virtual void OnAttack() = 0;
     virtual void OnFire(bool outOfAmmo = false) = 0;
+    virtual void OnFireEnded() = 0;
     virtual void OnDuck() = 0;
     virtual void OnStand() = 0;
     virtual void VOnAttachedToRope() = 0;
@@ -129,6 +130,7 @@ public:
     virtual void VOnStopClimbing() override;
     virtual void OnAttack() override;
     virtual void OnFire(bool outOfAmmo = false) override;
+    virtual void OnFireEnded() override;
     virtual void OnDuck() override;
 
     virtual void VOnAttachedToRope() override;

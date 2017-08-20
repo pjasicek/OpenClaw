@@ -1196,6 +1196,32 @@ private:
 };
 
 //---------------------------------------------------------------------------------------------------------------------
+// EventData_Actor_Fire_Ended - When fire button is released
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Actor_Fire_Ended : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Actor_Fire_Ended(uint32 actorId) { m_ActorId = actorId; }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Actor_Fire_Ended(m_ActorId));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_ActorId;  }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_ActorId; }
+
+    virtual const char* GetName(void) const { return "EventData_Actor_Fire_Ended"; }
+
+    uint32 GetActorId() { return m_ActorId; }
+
+private:
+    uint32 m_ActorId;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
 // EventData_Actor_Attack - Sent when attack button is pressed.
 //---------------------------------------------------------------------------------------------------------------------
 class EventData_Actor_Attack : public BaseEventData

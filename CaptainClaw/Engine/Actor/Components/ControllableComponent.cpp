@@ -662,6 +662,11 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
     }
 }
 
+void ClawControllableComponent::OnFireEnded()
+{
+    LOG("Fire Ended !");
+}
+
 bool ClawControllableComponent::CanMove()
 {
     if (m_State == ClawState_Shooting ||

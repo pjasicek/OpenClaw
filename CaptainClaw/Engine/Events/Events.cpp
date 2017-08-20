@@ -60,6 +60,7 @@ const EventType EventData_Claw_Respawned::sk_EventType(0xffabc8af);
 const EventType EventData_IngameMenu_Resume_Game::sk_EventType(0x44abc8af);
 const EventType EventData_IngameMenu_End_Life::sk_EventType(0x455bc8af);
 const EventType EventData_IngameMenu_End_Game::sk_EventType(0x455bcfff);
+const EventType EventData_Actor_Fire_Ended::sk_EventType(0x666bcfff);
 
 /*bool EventData_PlaySound::VBuildEventFromScript(void)
 {

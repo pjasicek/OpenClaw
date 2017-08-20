@@ -160,6 +160,21 @@ bool ActorController::VOnKeyDown(SDL_Keycode key)
 
 bool ActorController::VOnKeyUp(SDL_Keycode key)
 {
+    if (g_pApp->GetGlobalOptions()->useAlternateControls)
+    {
+
+    }
+    else
+    {
+        if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LALT)
+        {
+            shared_ptr<EventData_Actor_Fire_Ended> pFireEndedEvent(new EventData_Actor_Fire_Ended(m_pControlledObject->VGetProperties()->GetActorId()));
+            IEventMgr::Get()->VTriggerEvent(pFireEndedEvent);
+
+            return true;
+        }
+    }
+
     m_InputKeys[key] = false;
     return false;
 }
@@ -201,6 +216,9 @@ bool ActorController::VOnPointerButtonUp(SDL_MouseButtonEvent& mouseEvent)
 {
     if (mouseEvent.button == SDL_BUTTON_LEFT)
     {
+        shared_ptr<EventData_Actor_Fire_Ended> pFireEndedEvent(new EventData_Actor_Fire_Ended(m_pControlledObject->VGetProperties()->GetActorId()));
+        IEventMgr::Get()->VTriggerEvent(pFireEndedEvent);
+
         m_MouseLeftButtonDown = false;
         return true;
     }
