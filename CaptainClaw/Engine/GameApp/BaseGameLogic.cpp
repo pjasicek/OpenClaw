@@ -488,6 +488,14 @@ bool BaseGameLogic::VLoadScoreScreen(const char* xmlScoreScreenResource)
     if (nextLevelNumber <= 6)
     {
         m_pGameSaveMgr->AddCheckpointSave(nextLevelNumber, nextLevelCheckpoint);
+
+        // If not in testing mode
+        if (!g_pApp->GetGlobalOptions()->loadAllLevelSaves)
+        {
+            TiXmlDocument saveGamesDoc;
+            saveGamesDoc.LinkEndChild(m_pGameSaveMgr->ToXml());
+            saveGamesDoc.SaveFile(g_pApp->GetGameConfig()->savesFile.c_str());
+        }
     }
 
     // Unload the finished level
