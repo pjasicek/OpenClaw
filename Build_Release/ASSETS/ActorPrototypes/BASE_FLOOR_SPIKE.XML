@@ -21,8 +21,8 @@
 		<ActiveFrameIdx>0</ActiveFrameIdx>
         <StartDelay>0</StartDelay>
         <TimeOn>0</TimeOn>
-        <ActivateSound></ActivateSound>
-        <DeactivateSound></DeactivateSound>
+        <ActivateSound>/GAME/SOUNDS/NULL.WAV</ActivateSound>
+        <DeactivateSound>/GAME/SOUNDS/NULL.WAV</DeactivateSound>
 	</FloorSpikeComponent>
 	<PhysicsComponent>
         <BodyType>Static</BodyType>
