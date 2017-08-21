@@ -1450,6 +1450,10 @@ namespace ActorTemplates
             XML_ADD_TEXT_ELEMENT("DetonationTime", "1000", pProjectileAIComponent);
             XML_ADD_TEXT_ELEMENT("NumSparkles", "10", pProjectileAIComponent);
         }
+        else if (ammoType == AmmoType_Magic)
+        {
+            XML_ADD_TEXT_ELEMENT("NumSparkles", "25", pProjectileAIComponent);
+        }
         pActor->LinkEndChild(pProjectileAIComponent);
 
         return pActor;

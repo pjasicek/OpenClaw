@@ -82,7 +82,7 @@ void ProjectileAIComponent::VPostInit()
 
     for (int sparkleIdx = 0; sparkleIdx < m_NumSparkles; sparkleIdx++)
     {
-        StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor(40);
+        StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor(50);
         assert(pPowerupSparkle);
 
         shared_ptr<PositionComponent> pPositionComponent =
@@ -97,8 +97,8 @@ void ProjectileAIComponent::VPostInit()
             MakeStrongPtr(pPowerupSparkle->GetComponent<PowerupSparkleAIComponent>(PowerupSparkleAIComponent::g_Name));
         assert(pPowerupSparkleAIComponent);
 
-        pPowerupSparkleAIComponent->SetTargetPositionComponent(pPositionComponent.get());
         pPowerupSparkleAIComponent->SetTargetSize(pPhysicsComponent->GetBodySize());
+        pPowerupSparkleAIComponent->SetTargetPositionComponent(pPositionComponent.get());
         
         shared_ptr<ActorRenderComponent> pSparkleRenderComponent = MakeStrongPtr(pPowerupSparkle->GetComponent<ActorRenderComponent>());
         assert(pSparkleRenderComponent != nullptr);
