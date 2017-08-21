@@ -405,6 +405,14 @@ void ClawGameLogic::CheckpointReachedDelegate(IEventDataPtr pEventData)
         checkpointSave.dynamiteCount = pAmmoComponent->GetRemainingAmmo(AmmoType_Dynamite);
 
         m_pGameSaveMgr->AddCheckpointSave(m_pCurrentLevel->GetLevelNumber(), checkpointSave);
+
+        // If not in testing mode
+        if (!g_pApp->GetGlobalOptions()->loadAllLevelSaves)
+        {
+            TiXmlDocument saveGamesDoc;
+            saveGamesDoc.LinkEndChild(m_pGameSaveMgr->ToXml());
+            saveGamesDoc.SaveFile(g_pApp->GetGameConfig()->savesFile.c_str());
+        }
     }
 }
 

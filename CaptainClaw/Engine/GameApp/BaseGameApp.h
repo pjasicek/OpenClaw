@@ -136,6 +136,7 @@ struct GlobalOptions
         skipBossFightIntro = false;
         useAlternateControls = false;
         clawMinFallHeight = 500.0f;
+        loadAllLevelSaves = false;
     }
 
     int cpuDelayMs;
@@ -158,6 +159,7 @@ struct GlobalOptions
     bool skipBossFightIntro;
     bool useAlternateControls;
     float clawMinFallHeight;
+    bool loadAllLevelSaves;
 };
 
 class EventMgr;

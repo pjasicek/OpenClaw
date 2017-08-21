@@ -2,6 +2,7 @@
 #define __GAME_SAVES_H__
 
 #include "../SharedDefines.h"
+#include "BaseGameApp.h"
 
 // This can be refactored into classes, but this is not a pressing concern for me right now
 // as it works as intended
@@ -192,6 +193,12 @@ class GameSaveMgr
 public:
     bool Initialize(TiXmlElement* pGameSaveData)
     {
+        if (g_pApp->GetGlobalOptions()->loadAllLevelSaves)
+        {
+            InitializeWithAllLevels();
+            return true;
+        }
+
         if (!pGameSaveData)
         {
             return false;
@@ -213,6 +220,60 @@ public:
         }
 
         return true;
+    }
+
+    void InitializeWithAllLevels()
+    {
+        int lastLevel = 6;
+
+        CheckpointSave fullCheckpoint0;
+        fullCheckpoint0.bulletCount = 99;
+        fullCheckpoint0.checkpointIdx = 0;
+        fullCheckpoint0.dynamiteCount = 99;
+        fullCheckpoint0.health = 100;
+        fullCheckpoint0.lives = 9;
+        fullCheckpoint0.magicCount = 99;
+        fullCheckpoint0.score = 0;
+
+        CheckpointSave fullCheckpoint1;
+        fullCheckpoint1.bulletCount = 99;
+        fullCheckpoint1.checkpointIdx = 1;
+        fullCheckpoint1.dynamiteCount = 99;
+        fullCheckpoint1.health = 100;
+        fullCheckpoint1.lives = 9;
+        fullCheckpoint1.magicCount = 99;
+        fullCheckpoint1.score = 0;
+
+        CheckpointSave fullCheckpoint2;
+        fullCheckpoint2.bulletCount = 99;
+        fullCheckpoint2.checkpointIdx = 2;
+        fullCheckpoint2.dynamiteCount = 99;
+        fullCheckpoint2.health = 100;
+        fullCheckpoint2.lives = 9;
+        fullCheckpoint2.magicCount = 99;
+        fullCheckpoint2.score = 0;
+
+        for (int levelIdx = 1; levelIdx <= lastLevel; levelIdx++)
+        {
+            LevelSave levelSave;
+            switch (levelIdx)
+            {
+                case 1: levelSave.levelName = "La Roca"; break;
+                case 2: levelSave.levelName = "Battlements"; break;
+                case 3: levelSave.levelName = "Thief's Forest"; break;
+                case 4: levelSave.levelName = "Dark Woods"; break;
+                case 5: levelSave.levelName = "Town"; break;
+                case 6: levelSave.levelName = "Puerto De Lobo"; break;
+                default: assert(false); break;
+            }
+            levelSave.levelNumber = levelIdx;
+
+            levelSave.checkpointMap[0] = fullCheckpoint0;
+            levelSave.checkpointMap[1] = fullCheckpoint1;
+            levelSave.checkpointMap[2] = fullCheckpoint2;
+
+            m_LevelSaveMap[levelIdx] = levelSave;
+        }
     }
 
     TiXmlElement* ToXml()

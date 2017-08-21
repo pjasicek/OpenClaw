@@ -556,6 +556,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("UseAlternateControls"));
         ParseValueFromXmlElem(&m_GlobalOptions.clawMinFallHeight,
             pGlobalOptionsRootElem->FirstChildElement("ClawMinFallHeight"));
+        ParseValueFromXmlElem(&m_GlobalOptions.loadAllLevelSaves,
+            pGlobalOptionsRootElem->FirstChildElement("LoadAllLevelSaves"));
     }
 
     return true;

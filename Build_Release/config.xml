@@ -11,8 +11,8 @@
     <SoundChannels>1</SoundChannels>
     <MixingChannels>64</MixingChannels>
     <ChunkSize>2048</ChunkSize>
-    <SoundVolume>50</SoundVolume>
-    <MusicVolume>14</MusicVolume>
+    <SoundVolume>30</SoundVolume>
+    <MusicVolume>7</MusicVolume>
     <SoundOn>true</SoundOn>
     <MusicOn>true</MusicOn>
     <MusicRpcServerPath>MidiProc.exe</MusicRpcServerPath>
@@ -63,6 +63,7 @@
     <SpringBoardSpringSpeed>11</SpringBoardSpringSpeed>
     <SkipBossFightIntro>false</SkipBossFightIntro>
     <UseAlternateControls>false</UseAlternateControls>
-	<ClawMinFallHeight>500</ClawMinFallHeight>
+    <ClawMinFallHeight>500</ClawMinFallHeight>
+	<LoadAllLevelSaves>true</LoadAllLevelSaves>
   </GlobalOptions>
 </Configuration>
