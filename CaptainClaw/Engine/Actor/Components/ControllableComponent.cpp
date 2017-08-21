@@ -706,7 +706,7 @@ void ClawControllableComponent::OnFireEnded()
 
 bool ClawControllableComponent::CanMove()
 {
-    if (m_State == ClawState_Shooting ||
+    if ((m_State == ClawState_Shooting && m_pClawAnimationComponent->GetCurrentAnimationName() != "predynamite") ||
         m_State == ClawState_Attacking ||
         m_State == ClawState_Dying ||
         m_State == ClawState_DuckAttacking ||
@@ -787,14 +787,14 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             Point initialImpulse(0, 0);
             if (animName.find("postdynamite") != std::string::npos)
             {
-                initialImpulse.Set(8, -7);
+                initialImpulse.Set(10, -10);
                 float factor = (float)m_ThrowingTime / (float)2000.0f;
                 initialImpulse.x *= factor;
                 initialImpulse.y *= factor;
             }
             else if (animName == "jumpdynamite")
             {
-                initialImpulse.Set(2, 0);
+                initialImpulse.Set(3.2, 0);
             }
 
             ActorTemplates::CreateClawProjectile(

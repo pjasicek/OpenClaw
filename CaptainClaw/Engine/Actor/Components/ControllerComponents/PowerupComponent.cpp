@@ -48,7 +48,7 @@ void PowerupComponent::VPostInit()
     // Create powerup sparkles. Is this a good place ?
     for (int i = 0; i < 30; i++)
     {
-        StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor();
+        StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor(75);
         assert(pPowerupSparkle);
 
         shared_ptr<PositionComponent> pPositionComponent =

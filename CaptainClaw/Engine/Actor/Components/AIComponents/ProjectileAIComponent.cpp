@@ -37,7 +37,8 @@ ProjectileAIComponent::~ProjectileAIComponent()
 {
     for (auto pSparkle : m_PowerupSparkles)
     {
-        pSparkle->Destroy();
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(pSparkle->GetGUID()));
+        IEventMgr::Get()->VQueueEvent(pEvent);
     }
 
     m_PowerupSparkles.clear();
@@ -61,7 +62,7 @@ bool ProjectileAIComponent::VInit(TiXmlElement* pData)
     ParseValueFromXmlElem(&m_ProjectileSpeed, pData->FirstChildElement("ProjectileSpeed"), "x", "y");
     ParseValueFromXmlElem(&m_SourceActorId, pData->FirstChildElement("SourceActorId"));
     ParseValueFromXmlElem(&m_DetonationTime, pData->FirstChildElement("DetonationTime"));
-    //ParseValueFromXmlElem(&m_NumSparkles, pData->FirstChildElement("NumSparkles"));
+    ParseValueFromXmlElem(&m_NumSparkles, pData->FirstChildElement("NumSparkles"));
 
     m_bHasDetonationTime = m_DetonationTime > 0;
     m_DamageType = StringToDamageTypeEnum(damageTypeStr);
@@ -81,7 +82,7 @@ void ProjectileAIComponent::VPostInit()
 
     for (int sparkleIdx = 0; sparkleIdx < m_NumSparkles; sparkleIdx++)
     {
-        StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor();
+        StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor(40);
         assert(pPowerupSparkle);
 
         shared_ptr<PositionComponent> pPositionComponent =

@@ -16,6 +16,7 @@ public:
 
     virtual bool VInit(TiXmlElement* pData) override;
     virtual void VPostInit() override;
+    virtual void VPostPostInit() override;
     virtual TiXmlElement* VGenerateXml() override;
 
     void SetTargetPositionComponent(PositionComponent* pTarget);
@@ -24,6 +25,8 @@ public:
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
 
 private:
+    void ChooseNewPosition();
+
     PositionComponent* m_pTargetPositionComponent;
     PositionComponent* m_pPositonComponent;
     Point m_TargetSize;

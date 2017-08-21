@@ -401,6 +401,12 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                  pFixtureB->GetUserData() == (void*)FixtureType_TopLadderGround ||
                  pFixtureB->GetUserData() == (void*)FixtureType_Ground)*/)
             {
+                if (pFixtureB->GetUserData() == (void*)FixtureType_TopLadderGround)
+                {
+                    pContact->SetEnabled(false);
+                    return;
+                }
+
                 shared_ptr<ProjectileAIComponent> pProjectileComponent = GetProjectileAIComponentFromB2Body(pFixtureA->GetBody());
                 if (pProjectileComponent)
                 {

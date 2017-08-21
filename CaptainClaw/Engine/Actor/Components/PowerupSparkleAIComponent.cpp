@@ -37,6 +37,11 @@ void PowerupSparkleAIComponent::VPostInit()
     assert(m_pPositonComponent);
 }
 
+void PowerupSparkleAIComponent::VPostPostInit()
+{
+    
+}
+
 TiXmlElement* PowerupSparkleAIComponent::VGenerateXml()
 {
     return NULL;
@@ -48,20 +53,26 @@ TiXmlElement* PowerupSparkleAIComponent::VGenerateXml()
 
 void PowerupSparkleAIComponent::VOnAnimationLooped(Animation* pAnimation)
 {
-    assert(m_pPositonComponent);
-    assert(m_pTargetPositionComponent);
-
-    Point targetPos = m_pTargetPositionComponent->GetPosition();
-    srand((long)this + (int)m_pPositonComponent->GetX() + (int)m_pPositonComponent->GetY() + time(NULL));
-    m_pPositonComponent->SetX(targetPos.x - m_TargetSize.x / 2 + rand() % (int)m_TargetSize.x);
-    m_pPositonComponent->SetY(targetPos.y - m_TargetSize.y / 2  + rand() % (int)m_TargetSize.y);
-
-    shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(_owner->GetGUID(), m_pPositonComponent->GetPosition()));
-    IEventMgr::Get()->VTriggerEvent(pEvent);
+    ChooseNewPosition();
 }
 
 void PowerupSparkleAIComponent::SetTargetPositionComponent(PositionComponent* pTarget)
 {
     assert(pTarget);
     m_pTargetPositionComponent = pTarget;
+    //ChooseNewPosition();
+}
+
+void PowerupSparkleAIComponent::ChooseNewPosition()
+{
+    assert(m_pPositonComponent);
+    assert(m_pTargetPositionComponent);
+
+    Point targetPos = m_pTargetPositionComponent->GetPosition();
+    srand((long)this + (int)m_pPositonComponent->GetX() + (int)m_pPositonComponent->GetY() + time(NULL));
+    m_pPositonComponent->SetX(targetPos.x - m_TargetSize.x / 2 + rand() % (int)m_TargetSize.x);
+    m_pPositonComponent->SetY(targetPos.y - m_TargetSize.y / 2 + rand() % (int)m_TargetSize.y);
+
+    shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(_owner->GetGUID(), m_pPositonComponent->GetPosition()));
+    IEventMgr::Get()->VTriggerEvent(pEvent);
 }

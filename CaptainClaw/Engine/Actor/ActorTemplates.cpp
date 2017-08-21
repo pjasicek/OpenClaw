@@ -1356,14 +1356,14 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_PowerupSparkleActor(std::string imageSet)
+    TiXmlElement* CreateXmlData_PowerupSparkleActor(const std::string& imageSet, int cycleDuration)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", imageSet.c_str());
 
         pActor->LinkEndChild(CreatePositionComponent(0, 0));
         pActor->LinkEndChild(CreateActorRenderComponent(imageSet, 8000, false));
-        pActor->LinkEndChild(CreateCycleAnimationComponent(75));
+        pActor->LinkEndChild(CreateCycleAnimationComponent(cycleDuration));
 
         TiXmlElement* pPowerupSparkleAIComponent = new TiXmlElement("PowerupSparkleAIComponent");
         pActor->LinkEndChild(pPowerupSparkleAIComponent);
@@ -1420,9 +1420,9 @@ namespace ActorTemplates
             speed, // If it does, specify it here
             collisionFlag,  // Collision flag - e.g. What is this actor ?
             colMask,  // Collision mask - e.g. With what does this actor collide with ?
-            0.0f,  // Density - determines if this character bounces
-            1000.0f, // Friction - with floor and so
-            0.0f)); // Restitution - makes object bounce
+            10.0f,  // Density - determines if this character bounces
+            0.5f, // Friction - with floor and so
+            0.4f)); // Restitution - makes object bounce
 
         if (ammoType == AmmoType_Magic)
         {
@@ -1448,7 +1448,7 @@ namespace ActorTemplates
         if (ammoType == AmmoType_Dynamite)
         {
             XML_ADD_TEXT_ELEMENT("DetonationTime", "1000", pProjectileAIComponent);
-            XML_ADD_TEXT_ELEMENT("NumSparkles", "20", pProjectileAIComponent);
+            XML_ADD_TEXT_ELEMENT("NumSparkles", "10", pProjectileAIComponent);
         }
         pActor->LinkEndChild(pProjectileAIComponent);
 
@@ -2442,9 +2442,9 @@ namespace ActorTemplates
         return CreateAndReturnActor(pActor);
     }
 
-    StrongActorPtr CreatePowerupSparkleActor()
+    StrongActorPtr CreatePowerupSparkleActor(int cycleDuration)
     {
-        return CreateAndReturnActor(CreateXmlData_PowerupSparkleActor("GAME_SPARKLE"));
+        return CreateAndReturnActor(CreateXmlData_PowerupSparkleActor("GAME_SPARKLE", cycleDuration));
     }
 
     StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position, int sourceActorId, const Point& initialImpulse)
