@@ -9,6 +9,7 @@
 #include "ControllerComponents/AmmoComponent.h"
 #include "ControllerComponents/PowerupComponent.h"
 #include "ControllerComponents/HealthComponent.h"
+#include "ControllerComponents/LifeComponent.h"
 #include "FollowableComponent.h"
 
 #include "../../GameApp/BaseGameApp.h"
@@ -937,8 +938,13 @@ void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
     std::string animName = pAnimation->GetName();
     if (pAnimation->GetName().find("death") != std::string::npos)
     {
-        shared_ptr<EventData_Claw_Died> pEvent(
-            new EventData_Claw_Died(_owner->GetGUID(), m_pPositionComponent->GetPosition()));
+        shared_ptr<LifeComponent> pClawLifeComponent = MakeStrongPtr(_owner->GetComponent<LifeComponent>());
+        assert(pClawLifeComponent != nullptr);
+
+        shared_ptr<EventData_Claw_Died> pEvent(new EventData_Claw_Died(
+            _owner->GetGUID(), 
+            m_pPositionComponent->GetPosition(), 
+            pClawLifeComponent->GetLives() - 1));
         IEventMgr::Get()->VTriggerEvent(pEvent);
 
         SetCurrentPhysicsState();

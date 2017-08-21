@@ -6,6 +6,7 @@
 #include "../Audio/Audio.h"
 #include "../Resource/Loaders/MidiLoader.h"
 #include "../Resource/Loaders/WavLoader.h"
+#include "../Resource/Loaders/XmlLoader.h"
 #include "../Util/PrimeSearch.h"
 #include "ScoreScreen/EndLevelScoreScreen.h"
 
@@ -844,11 +845,27 @@ void HumanView::ClawDiedDelegate(IEventDataPtr pEventData)
     shared_ptr<EventData_Claw_Died> pCastEventData =
         static_pointer_cast<EventData_Claw_Died>(pEventData);
 
-    StrongProcessPtr pDeathProcess(
-        new DeathFadeInOutProcess(pCastEventData->GetDeathPosition(), 1450, 1450, 0, 0));
-    m_pProcessMgr->AttachProcess(pDeathProcess);
-    // Needs to be called here
-    pDeathProcess->VOnInit();
+    if (pCastEventData->GetRemainingLives() < 0)
+    {
+        TiXmlElement* pXmlGameOverMenuRoot = XmlResourceLoader::LoadAndReturnRootXmlElement("GAME_OVER_MENU.XML");
+        assert(pXmlGameOverMenuRoot != NULL);
+
+        shared_ptr<ScreenElementMenu> pGameOverMenu(new ScreenElementMenu(g_pApp->GetRenderer()));
+        assert(pGameOverMenu->Initialize(pXmlGameOverMenuRoot));
+
+        m_ScreenElements.push_back(pGameOverMenu);
+        pGameOverMenu->VSetVisible(true);
+
+        IEventMgr::Get()->VAbortAllEvents();
+    }
+    else
+    {
+        StrongProcessPtr pDeathProcess(
+            new DeathFadeInOutProcess(pCastEventData->GetDeathPosition(), 1450, 1450, 0, 0));
+        m_pProcessMgr->AttachProcess(pDeathProcess);
+        // Needs to be called here
+        pDeathProcess->VOnInit();
+    }
 }
 
 void HumanView::TeleportActorDelegate(IEventDataPtr pEventData)

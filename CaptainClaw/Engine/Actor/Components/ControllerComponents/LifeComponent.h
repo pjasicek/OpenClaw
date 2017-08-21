@@ -15,7 +15,7 @@ public:
     virtual void VPostInit() override;
     virtual TiXmlElement* VGenerateXml() override;
 
-    uint32 GetLives() { return m_CurrentLives; }
+    int GetLives() { return m_CurrentLives; }
 
     void AddLives(uint32 numLives);
     void SetCurrentLives(uint32 numLives);
@@ -23,7 +23,7 @@ public:
 private:
     void BroadcastLivesChanged(uint32 oldLives, uint32 newLives, bool isInitial = false);
 
-    uint32 m_CurrentLives;
+    int m_CurrentLives;
 };
 
 #endif

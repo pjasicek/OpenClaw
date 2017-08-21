@@ -1,0 +1,38 @@
+<GameMenu>
+    <MenuType>MenuType_IngameMenu</MenuType>
+    <StartingPage>MenuPage_Main</StartingPage>
+    <BackgroundImage>IngameMenuBackground</BackgroundImage>
+    <BackgroundMusic></BackgroundMusic>
+    <MenuEnterSound>/GAME/SOUNDS/NULL.WAV</MenuEnterSound>
+    
+    <!-- MAIN (DEFAULT) PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_Main</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>EndGame</Type>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <KeyboardEvent>
+            <KeyType>Enter</KeyType>
+            <GeneratedEvent>
+                <Type>EndGame</Type>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <KeyboardEvent>
+            <KeyType>Space</KeyType>
+            <GeneratedEvent>
+                <Type>EndGame</Type>
+            </GeneratedEvent>
+        </KeyboardEvent>
+         <MenuItem>
+            <Name>MAIN_MENU_TEXT</Name>
+            <Type>Text</Type>
+            <State>Active</State>
+            <InactiveImage>/GAME/IMAGES/MESSAGES/GAMEOVER4.PID</InactiveImage>
+            <ActiveImage>/GAME/IMAGES/MESSAGES/GAMEOVER4.PID</ActiveImage>
+            <Position x="177" y="193" />
+        </MenuItem>
+    </MenuPage>
+</GameMenu>

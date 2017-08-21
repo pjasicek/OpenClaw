@@ -2029,27 +2029,30 @@ class EventData_Claw_Died : public BaseEventData
 public:
     static const EventType sk_EventType;
 
-    EventData_Claw_Died(uint32 actorId, Point deathPosition)
+    EventData_Claw_Died(uint32 actorId, Point deathPosition, int remainingLives)
     {
         m_ActorId = actorId;
         m_DeathPosition = deathPosition;
+        m_RemainingLives = remainingLives;
     }
 
     virtual const EventType& VGetEventType(void) const { return sk_EventType; }
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Claw_Died(m_ActorId, m_DeathPosition));
+        return IEventDataPtr(new EventData_Claw_Died(m_ActorId, m_DeathPosition, m_RemainingLives));
     }
-    virtual void VSerialize(std::ostringstream& out) const { out << m_ActorId << m_DeathPosition.x << m_DeathPosition.y; }
-    virtual void VDeserialize(std::istringstream& in) { in >> m_ActorId >> m_DeathPosition.x >> m_DeathPosition.y; }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_ActorId << m_DeathPosition.x << m_DeathPosition.y << m_RemainingLives; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_ActorId >> m_DeathPosition.x >> m_DeathPosition.y >> m_RemainingLives; }
 
     uint32 GetActorId(void) const { return m_ActorId; }
     Point GetDeathPosition() { return m_DeathPosition; }
+    int GetRemainingLives() { return m_RemainingLives; }
     virtual const char* GetName(void) const { return "EventData_Claw_Died"; }
 
 private:
     uint32 m_ActorId;
     Point m_DeathPosition;
+    int m_RemainingLives;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
