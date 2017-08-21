@@ -548,6 +548,8 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
     {
         return;
     }
+    
+    assert(pStrongActor->GetName() == "Claw");
 
     shared_ptr<PositionComponent> pPositionComponent =
         MakeStrongPtr(pStrongActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
@@ -579,7 +581,7 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
     pBody->SetGravityScale(pPhysicsComponent->GetGravityScale());
 
     b2CircleShape bodyShape;
-    bodyShape.m_p.Set(0, b2BodySize.x / 2 - b2BodySize.y / 2);
+    bodyShape.m_p.Set(0, (b2BodySize.x / 2 - b2BodySize.y / 2) + PixelsToMeters(5));
     bodyShape.m_radius = b2BodySize.x / 2;
 
     b2FixtureDef fixtureDef;
@@ -589,7 +591,7 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
     fixtureDef.filter.categoryBits = CollisionFlag_Controller;
     pBody->CreateFixture(&fixtureDef);
 
-    bodyShape.m_p.Set(0, b2BodySize.y / 2 - b2BodySize.x / 2);
+    bodyShape.m_p.Set(0, (b2BodySize.y / 2 - b2BodySize.x / 2) + PixelsToMeters(10));
     fixtureDef.shape = &bodyShape;
     //fixtureDef.friction = 100.0;
     pBody->CreateFixture(&fixtureDef);

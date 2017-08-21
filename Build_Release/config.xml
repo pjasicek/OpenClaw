@@ -52,13 +52,13 @@
     <MaxFallSpeed>14.0</MaxFallSpeed>
     <IdleSoundQuoteInterval>15000</IdleSoundQuoteInterval>
     <PlatformSpeedModifier>0.015</PlatformSpeedModifier>
-    <MaxJumpHeight>146</MaxJumpHeight>
-    <PowerupMaxJumpHeight>200</PowerupMaxJumpHeight>
+    <MaxJumpHeight>155</MaxJumpHeight>
+    <PowerupMaxJumpHeight>205</PowerupMaxJumpHeight>
     <SkipMenu>false</SkipMenu>
     <StartLookUpOrDownTime>1500</StartLookUpOrDownTime>
     <MaxLookUpOrDownDistance>250</MaxLookUpOrDownDistance>
     <LookUpOrDownSpeed>250</LookUpOrDownSpeed>
-    <ClawRunningSpeed>5</ClawRunningSpeed>
+    <ClawRunningSpeed>4.5</ClawRunningSpeed>
     <SpringBoardSpringHeight>UNUSED</SpringBoardSpringHeight>
     <SpringBoardSpringSpeed>11</SpringBoardSpringSpeed>
     <SkipBossFightIntro>false</SkipBossFightIntro>

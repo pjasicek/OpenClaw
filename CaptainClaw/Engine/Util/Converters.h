@@ -1492,8 +1492,8 @@ inline TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
 
     pClawActor->LinkEndChild(CreatePositionComponent(pWapWwd->properties.startX, pWapWwd->properties.startY));
     //pClawActor->LinkEndChild(CreatePositionComponent(6250, 4350));
-    pClawActor->LinkEndChild(CreateCollisionComponent(40, 110));
-    pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, g_pApp->GetGlobalOptions()->maxJumpHeight, 40, 110, 4.0, 0.0, 0.5));
+    //pClawActor->LinkEndChild(CreateCollisionComponent(40, 100));
+    pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, g_pApp->GetGlobalOptions()->maxJumpHeight, 40, 90, 4.0, 0.0, 0.5));
     pClawActor->LinkEndChild(CreateControllableComponent(true));
     pClawActor->LinkEndChild(CreateAnimationComponent("/CLAW/ANIS/*"));
     pClawActor->LinkEndChild(CreateSoundComponent("/CLAW/SOUNDS/*"));
