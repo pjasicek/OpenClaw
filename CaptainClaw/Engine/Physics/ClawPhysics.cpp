@@ -603,7 +603,7 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
 
     // Add foot sensor
     float sensorHeight = PixelsToMeters(24);
-    polygonShape.SetAsBox(b2BodySize.x / 2 - PixelsToMeters(2), sensorHeight / 2, b2Vec2(0, b2BodySize.y / 2), 0);
+    polygonShape.SetAsBox(b2BodySize.x / 2 - PixelsToMeters(2), sensorHeight / 2, b2Vec2(0, (b2BodySize.y / 2) + PixelsToMeters(10)), 0);
     fixtureDef.shape = &polygonShape;
     fixtureDef.isSensor = true;
     fixtureDef.userData = (void*)FixtureType_FootSensor;
