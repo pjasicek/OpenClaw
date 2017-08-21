@@ -898,6 +898,12 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             else
             {
                 int damage = 10;
+
+                // When Claw is ducking he deals 1/2 damage
+                if (IsDucking())
+                {
+                    damage = 5;
+                }
                 if (m_pPowerupComponent->HasPowerup(PowerupType_Catnip))
                 {
                     damage = 100;
