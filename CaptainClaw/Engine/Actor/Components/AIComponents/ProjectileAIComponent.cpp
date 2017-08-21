@@ -27,12 +27,20 @@ ProjectileAIComponent::ProjectileAIComponent()
     m_DamageType(DamageType_None),
     m_pPhysics(nullptr),
     m_IsActive(true),
-    m_SourceActorId(INVALID_ACTOR_ID)
+    m_SourceActorId(INVALID_ACTOR_ID),
+    m_DetonationTime(0),
+    m_bHasDetonationTime(false),
+    m_NumSparkles(0)
 { }
 
 ProjectileAIComponent::~ProjectileAIComponent()
 {
+    for (auto pSparkle : m_PowerupSparkles)
+    {
+        pSparkle->Destroy();
+    }
 
+    m_PowerupSparkles.clear();
 }
 
 bool ProjectileAIComponent::VInit(TiXmlElement* pData)
@@ -52,7 +60,10 @@ bool ProjectileAIComponent::VInit(TiXmlElement* pData)
     ParseValueFromXmlElem(&damageTypeStr, pData->FirstChildElement("ProjectileType"));
     ParseValueFromXmlElem(&m_ProjectileSpeed, pData->FirstChildElement("ProjectileSpeed"), "x", "y");
     ParseValueFromXmlElem(&m_SourceActorId, pData->FirstChildElement("SourceActorId"));
+    ParseValueFromXmlElem(&m_DetonationTime, pData->FirstChildElement("DetonationTime"));
+    //ParseValueFromXmlElem(&m_NumSparkles, pData->FirstChildElement("NumSparkles"));
 
+    m_bHasDetonationTime = m_DetonationTime > 0;
     m_DamageType = StringToDamageTypeEnum(damageTypeStr);
 
     assert(m_DamageType != DamageType_None);
@@ -66,6 +77,34 @@ void ProjectileAIComponent::VPostInit()
     if (!m_ProjectileSpeed.IsZeroXY())
     {
         m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), m_ProjectileSpeed);
+    }
+
+    for (int sparkleIdx = 0; sparkleIdx < m_NumSparkles; sparkleIdx++)
+    {
+        StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor();
+        assert(pPowerupSparkle);
+
+        shared_ptr<PositionComponent> pPositionComponent =
+            MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        assert(pPositionComponent);
+
+        shared_ptr<PhysicsComponent> pPhysicsComponent =
+            MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+        assert(pPhysicsComponent);
+
+        shared_ptr<PowerupSparkleAIComponent> pPowerupSparkleAIComponent =
+            MakeStrongPtr(pPowerupSparkle->GetComponent<PowerupSparkleAIComponent>(PowerupSparkleAIComponent::g_Name));
+        assert(pPowerupSparkleAIComponent);
+
+        pPowerupSparkleAIComponent->SetTargetPositionComponent(pPositionComponent.get());
+        pPowerupSparkleAIComponent->SetTargetSize(pPhysicsComponent->GetBodySize());
+        
+        shared_ptr<ActorRenderComponent> pSparkleRenderComponent = MakeStrongPtr(pPowerupSparkle->GetComponent<ActorRenderComponent>());
+        assert(pSparkleRenderComponent != nullptr);
+
+        pSparkleRenderComponent->SetVisible(true);
+
+        m_PowerupSparkles.push_back(pPowerupSparkle);
     }
 }
 
@@ -88,39 +127,55 @@ void ProjectileAIComponent::VUpdate(uint32 msDiff)
         shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
     }
+
+    if (!m_IsActive && m_bHasDetonationTime)
+    {
+        m_DetonationTime -= msDiff;
+        if (m_DetonationTime <= 0)
+        {
+            Detonate();
+            m_bHasDetonationTime = false;
+        }
+    }
 }
 
+void ProjectileAIComponent::Detonate()
+{
+    m_pPhysics->VRemoveActor(_owner->GetGUID());
+
+    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+    IEventMgr::Get()->VQueueEvent(pEvent);
+
+    m_IsActive = false;
+
+    if (m_DamageType == DamageType_Explosion)
+    {
+        ActorTemplates::CreateSingleAnimation(_owner->GetPositionComponent()->GetPosition(), AnimationType_Explosion);
+
+        SoundInfo soundInfo(SOUND_LEVEL1_KEG_EXPLODE);
+        //soundInfo.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(soundInfo)));
+        ActorTemplates::CreateAreaDamage(
+            _owner->GetPositionComponent()->GetPosition(),
+            Point(150, 150),
+            50,
+            CollisionFlag_Explosion,
+            "Circle",
+            DamageType_Explosion,
+            Direction_None,
+            m_SourceActorId);
+    }
+}
 
 void ProjectileAIComponent::OnCollidedWithSolidTile()
 {
-    if (m_IsActive)
+    if (m_IsActive && !m_bHasDetonationTime)
     {
-        m_pPhysics->VRemoveActor(_owner->GetGUID());
-
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
-        IEventMgr::Get()->VQueueEvent(pEvent);
-
-        m_IsActive = false;
-
-        if (m_DamageType == DamageType_Explosion)
-        {
-            ActorTemplates::CreateSingleAnimation(_owner->GetPositionComponent()->GetPosition(), AnimationType_Explosion);
-
-            SoundInfo soundInfo(SOUND_LEVEL1_KEG_EXPLODE);
-            //soundInfo.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
-            IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
-                new EventData_Request_Play_Sound(soundInfo)));
-            ActorTemplates::CreateAreaDamage(
-                _owner->GetPositionComponent()->GetPosition(),
-                Point(150, 150),
-                50,
-                CollisionFlag_Explosion,
-                "Circle",
-                DamageType_Explosion,
-                Direction_None,
-                m_SourceActorId);
-        }
+        Detonate();
     }
+
+    m_IsActive = false;
 }
 
 void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)

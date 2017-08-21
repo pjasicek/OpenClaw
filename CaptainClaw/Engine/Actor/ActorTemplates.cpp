@@ -449,7 +449,7 @@ namespace ActorTemplates
         }
         else if (ammoType == AmmoType_Dynamite)
         {
-            return "GAME_DYNAMITE";
+            return "GAME_DYNAMITELIT";
         }
 
         assert(false && "Unknwon ammo type");
@@ -1371,60 +1371,85 @@ namespace ActorTemplates
         return pActor;
     }
 
-    TiXmlElement* CreateXmlData_ClawProjectileActor(AmmoType ammoType, Direction direction, Point position, int sourceActorId)
+    TiXmlElement* CreateXmlData_ClawProjectileActor(AmmoType ammoType, Direction direction, Point position, int sourceActorId, const Point& initialImpulse)
     {
         std::string imageSet = GetImageSetFromClawAmmoType(ammoType);
 
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", imageSet.c_str());
 
-        double speed = 9.5;
-        if (direction == Direction_Left) { speed *= -1; }
+        Point speed(9.5, 0);
+        if (direction == Direction_Left) { speed.x *= -1; }
 
         CollisionFlag collisionFlag = CollisionFlag_Bullet;
         if (ammoType == AmmoType_Magic) { collisionFlag = CollisionFlag_Magic; }
         else if (ammoType == AmmoType_Dynamite) { collisionFlag = CollisionFlag_Explosion; }
 
+        bool hasInitialImpulse = ammoType == AmmoType_Dynamite;
+        bool hasInitialSpeed = !hasInitialImpulse;
+
+        int colMask = (CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Solid);
+        int gravityScale = 0.0f;
+        if (ammoType == AmmoType_Dynamite)
+        {
+            colMask = (CollisionFlag_Solid | CollisionFlag_Ground);
+            gravityScale = 2.0f;
+            speed = initialImpulse;
+            if (direction == Direction_Left)
+            {
+                speed.x *= -1.0;
+            }
+        }
+
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
-        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), 5000));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet.c_str(), 2000));
         pActor->LinkEndChild(CreatePhysicsComponent(
             "Dynamic",  // Type - "Dynamic", "Kinematic", "Static"
             false,      // Has foot sensor ?
             false,      // Has capsule shape ?
             true,       // Has bullet behaviour ?
-            true,       // Has sensor behaviour ?
+            ammoType != AmmoType_Dynamite,       // Has sensor behaviour ?
             "Projectile",  // Fixture type
             position,      // Position
             Point(0, 0),   // Offset - where to move the body upon its placement
             "Rectangle",   // Body shape - "Rectangle" or "Circle"
             Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
-            0.0f,          // Gravity scale - set to 0.0f if no gravity is desired
-            true,          // Has any initial speed ?
-            false,
-            Point(speed, 0), // If it does, specify it here
+            gravityScale,          // Gravity scale - set to 0.0f if no gravity is desired
+            hasInitialSpeed,          // Has any initial speed ?
+            hasInitialImpulse,
+            speed, // If it does, specify it here
             collisionFlag,  // Collision flag - e.g. What is this actor ?
-            (CollisionFlag_Crate | CollisionFlag_PowderKeg | CollisionFlag_DynamicActor | CollisionFlag_Solid),  // Collision mask - e.g. With what does this actor collide with ?
+            colMask,  // Collision mask - e.g. With what does this actor collide with ?
             0.0f,  // Density - determines if this character bounces
-            0.0f, // Friction - with floor and so
+            1000.0f, // Friction - with floor and so
             0.0f)); // Restitution - makes object bounce
 
         if (ammoType == AmmoType_Magic)
         {
             pActor->LinkEndChild(CreateCycleAnimationComponent(75));
         }
+        else if (ammoType == AmmoType_Dynamite)
+        {
+            pActor->LinkEndChild(CreateAnimationComponent("/GAME/ANIS/DYNAMITELIT.ANI", false));
+        }
 
         std::string projectileTypeStr;
         int32 damage = 0;
         if (ammoType == AmmoType_Pistol) { projectileTypeStr = "DamageType_Bullet"; damage = 20; }
         else if (ammoType == AmmoType_Magic) { projectileTypeStr = "DamageType_Magic"; damage = 50; }
-        else if (ammoType == AmmoType_Dynamite) { projectileTypeStr = "DamageType_Explosion"; damage = 50; }
+        else if (ammoType == AmmoType_Dynamite) { projectileTypeStr = "DamageType_Explosion"; damage = 25; }
         else { assert(false && "Unknown projectile"); }
 
         TiXmlElement* pProjectileAIComponent = new TiXmlElement("ProjectileAIComponent");
         XML_ADD_TEXT_ELEMENT("Damage", ToStr(damage).c_str(), pProjectileAIComponent);
         XML_ADD_TEXT_ELEMENT("ProjectileType", projectileTypeStr.c_str(), pProjectileAIComponent);
         XML_ADD_TEXT_ELEMENT("SourceActorId", ToStr(sourceActorId).c_str(), pProjectileAIComponent);
-        XML_ADD_2_PARAM_ELEMENT("Speed", "x", ToStr(speed).c_str(), "y", "0", pProjectileAIComponent);
+        XML_ADD_2_PARAM_ELEMENT("Speed", "x", ToStr(speed.x).c_str(), "y", "0", pProjectileAIComponent);
+        if (ammoType == AmmoType_Dynamite)
+        {
+            XML_ADD_TEXT_ELEMENT("DetonationTime", "1000", pProjectileAIComponent);
+            XML_ADD_TEXT_ELEMENT("NumSparkles", "20", pProjectileAIComponent);
+        }
         pActor->LinkEndChild(pProjectileAIComponent);
 
         return pActor;
@@ -2422,9 +2447,9 @@ namespace ActorTemplates
         return CreateAndReturnActor(CreateXmlData_PowerupSparkleActor("GAME_SPARKLE"));
     }
 
-    StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position, int sourceActorId)
+    StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position, int sourceActorId, const Point& initialImpulse)
     {
-        return CreateAndReturnActor(CreateXmlData_ClawProjectileActor(ammoType, direction, position, sourceActorId));
+        return CreateAndReturnActor(CreateXmlData_ClawProjectileActor(ammoType, direction, position, sourceActorId, initialImpulse));
     }
 
     StrongActorPtr CreateProjectile(

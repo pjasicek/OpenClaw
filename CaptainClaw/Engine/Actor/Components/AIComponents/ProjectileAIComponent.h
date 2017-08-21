@@ -24,16 +24,21 @@ public:
     void OnCollidedWithActor(Actor* pActorWhoWasShot);
 
 private:
+    void Detonate();
+
     // XML Data
     int32 m_Damage;
     DamageType m_DamageType;
     Point m_ProjectileSpeed;
     int m_SourceActorId;
+    int m_DetonationTime;
+    int m_NumSparkles;
 
     // Internal state
     shared_ptr<IGamePhysics> m_pPhysics;
     bool m_IsActive;
     std::vector<StrongActorPtr> m_PowerupSparkles;
+    bool m_bHasDetonationTime;
 };
 
 #endif

@@ -396,8 +396,10 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                 }
             }
             // Projectile collided with solid tile
-            else if (pFixtureB->GetBody()->GetType() == b2_staticBody &&
-                pFixtureB->GetUserData() == (void*)FixtureType_Solid)
+            else if (pFixtureB->GetBody()->GetType() == b2_staticBody/* &&
+                (pFixtureB->GetUserData() == (void*)FixtureType_Solid ||
+                 pFixtureB->GetUserData() == (void*)FixtureType_TopLadderGround ||
+                 pFixtureB->GetUserData() == (void*)FixtureType_Ground)*/)
             {
                 shared_ptr<ProjectileAIComponent> pProjectileComponent = GetProjectileAIComponentFromB2Body(pFixtureA->GetBody());
                 if (pProjectileComponent)

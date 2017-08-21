@@ -30,7 +30,7 @@ public:
     virtual void VOnStartFalling() = 0;
     virtual void VOnLandOnGround(float fromHeight) = 0;
     virtual void VOnStartJumping() = 0;
-    virtual void VOnDirectionChange(Direction direction) = 0;
+    virtual bool VOnDirectionChange(Direction direction) = 0;
     virtual void VOnStopMoving() = 0;
     virtual void VOnRun() = 0;
     virtual void VOnClimb(bool bIsClimbingUp, bool bIsOnTopEdge) = 0;
@@ -123,7 +123,7 @@ public:
     virtual void VOnStartFalling() override;
     virtual void VOnLandOnGround(float fromHeight) override;
     virtual void VOnStartJumping() override;
-    virtual void VOnDirectionChange(Direction direction) override;
+    virtual bool VOnDirectionChange(Direction direction) override;
     virtual void VOnStopMoving() override;
     virtual void VOnRun() override;
     virtual void VOnClimb(bool bIsClimbingUp, bool bIsOnTopEdge) override;
@@ -170,6 +170,8 @@ private:
 
     int m_TakeDamageDuration;
     int m_TakeDamageTimeLeftMs;
+
+    int m_ThrowingTime;
 
     ClawState m_State;
     ClawState m_LastState;

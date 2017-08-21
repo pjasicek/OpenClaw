@@ -82,6 +82,7 @@ ClawControllableComponent::ClawControllableComponent()
     m_TakeDamageDuration = 500; // TODO: Data drive
     m_TakeDamageTimeLeftMs = 0;
     m_bIsInBossFight = false;
+    m_ThrowingTime = 0;
 
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &ClawControllableComponent::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &ClawControllableComponent::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
@@ -334,6 +335,30 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_pClawAnimationComponent->SetAnimation("highfall");
     }
 
+    if (m_pClawAnimationComponent->GetCurrentAnimationName().find("predynamite") != std::string::npos ||
+        m_pClawAnimationComponent->GetCurrentAnimationName().find("postdynamite") != std::string::npos)
+    {
+        if (m_pClawAnimationComponent->GetCurrentAnimationName().find("predynamite") != std::string::npos)
+        {
+            m_ThrowingTime += msDiff;
+            if (m_ThrowingTime >= 2000)
+            {
+                if (IsDucking())
+                {
+                    m_pClawAnimationComponent->SetAnimation("duckpostdynamite");
+                }
+                else
+                {
+                    m_pClawAnimationComponent->SetAnimation("postdynamite");
+                }
+            }
+        }
+    }
+    else
+    {
+        m_ThrowingTime = 0;
+    }
+
     //LOG("State: " + ToStr((int)m_State));
 
     m_LastState = m_State;
@@ -384,15 +409,17 @@ void ClawControllableComponent::VOnStartJumping()
     m_State = ClawState_Jumping;
 }
 
-void ClawControllableComponent::VOnDirectionChange(Direction direction)
+bool ClawControllableComponent::VOnDirectionChange(Direction direction)
 {
-    if (m_bFrozen)
+    if (m_bFrozen/* || (IsAttackingOrShooting() && fabs(m_pPhysicsComponent->GetVelocity().x) < DBL_EPSILON)*/)
     {
-        return;
+        return false;
     }
 
     m_pRenderComponent->SetMirrored(direction == Direction_Left);
     m_Direction = direction;
+
+    return true;
 }
 
 void ClawControllableComponent::VOnStopMoving()
@@ -614,7 +641,7 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
         {
             if (m_pAmmoComponent->CanFire())
             {
-                m_pClawAnimationComponent->SetAnimation("duckpostdynamite");
+                m_pClawAnimationComponent->SetAnimation("duckpredynamite");
             }
             else
             {
@@ -651,7 +678,7 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
         {
             if (m_pAmmoComponent->CanFire())
             {
-                m_pClawAnimationComponent->SetAnimation("postdynamite");
+                m_pClawAnimationComponent->SetAnimation("predynamite");
             }
             else
             {
@@ -664,7 +691,17 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
 
 void ClawControllableComponent::OnFireEnded()
 {
-    LOG("Fire Ended !");
+    if (m_pClawAnimationComponent->GetCurrentAnimationName().find("predynamite") != std::string::npos)
+    {
+        if (IsDucking())
+        {
+            m_pClawAnimationComponent->SetAnimation("duckpostdynamite");
+        }
+        else
+        {
+            m_pClawAnimationComponent->SetAnimation("postdynamite");
+        }
+    }
 }
 
 bool ClawControllableComponent::CanMove()
@@ -725,7 +762,13 @@ void ClawControllableComponent::SetCurrentPhysicsState()
 
 void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
 {
-    std::string animName = pAnimation->GetName();
+    const std::string animName = pAnimation->GetName();
+
+    if (animName.find("predynamite") != std::string::npos && pAnimation->IsAtLastAnimFrame())
+    {
+        pAnimation->Pause();
+        return;
+    }
 
     // Shooting, only magic and pistol supported at the moment
     if (((animName.find("pistol") != std::string::npos) && pNewFrame->hasEvent) ||
@@ -739,12 +782,28 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
             if (m_Direction == Direction_Left) { offsetX *= -1; }
             int32 offsetY = -20;
             if (IsDucking()) { offsetY += 40; }
+
+            // Dynamite hacks
+            Point initialImpulse(0, 0);
+            if (animName.find("postdynamite") != std::string::npos)
+            {
+                initialImpulse.Set(8, -7);
+                float factor = (float)m_ThrowingTime / (float)2000.0f;
+                initialImpulse.x *= factor;
+                initialImpulse.y *= factor;
+            }
+            else if (animName == "jumpdynamite")
+            {
+                initialImpulse.Set(2, 0);
+            }
+
             ActorTemplates::CreateClawProjectile(
                 projectileType, 
                 m_Direction, 
                 Point(m_pPositionComponent->GetX() + offsetX, 
                 m_pPositionComponent->GetY() + offsetY),
-                _owner->GetGUID());
+                _owner->GetGUID(),
+                initialImpulse);
 
             int soundPlayChance = 33;
             if (!m_pExclamationMark->IsActive() && 

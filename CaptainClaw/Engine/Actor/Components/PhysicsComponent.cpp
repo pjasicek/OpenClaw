@@ -382,8 +382,10 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     {
         if (fabs(m_CurrentSpeed.x) > DBL_EPSILON)
         {
-            m_Direction = m_CurrentSpeed.x < 0 ? Direction_Left : Direction_Right;
-            m_pControllableComponent->VOnDirectionChange(m_Direction);
+            Direction direction = m_CurrentSpeed.x < 0 ? Direction_Left : Direction_Right;
+            //m_pControllableComponent->VOnDirectionChange(m_Direction);
+
+            SetDirection(direction);
         }
 
         //LOG("RETURN 1");
@@ -520,8 +522,10 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
 
             if (fabs(m_CurrentSpeed.x) > DBL_EPSILON)
             {
-                m_Direction = m_CurrentSpeed.x < 0 ? Direction_Left : Direction_Right;
-                m_pControllableComponent->VOnDirectionChange(m_Direction);
+                Direction direction = m_CurrentSpeed.x < 0 ? Direction_Left : Direction_Right;
+                //m_pControllableComponent->VOnDirectionChange(m_Direction);
+
+                SetDirection(direction);
             }
 
             SetVelocity(Point(0, 0));
@@ -749,11 +753,12 @@ set_velocity:
         bool wasRunning = m_IsRunning;
         bool wasStopped = m_IsStopped;
         Direction prevDirection = m_Direction;
+        Direction currDirection = m_Direction;
 
         velocity = GetVelocity();
         if (fabs(velocity.x) > DBL_EPSILON)
         {
-            m_Direction = velocity.x < 0 ? Direction_Left : Direction_Right;
+            currDirection = velocity.x < 0 ? Direction_Left : Direction_Right;
             if (!IsInAir() && IsOnGround())
             {
                 m_IsRunning = true;
@@ -772,9 +777,9 @@ set_velocity:
         //LOG("Running: " + ToStr(m_IsRunning) + ", Stopped: " + ToStr(m_IsStopped));
         if (m_pControllableComponent)
         {
-            if (prevDirection != m_Direction)
+            if (prevDirection != currDirection)
             {
-                m_pControllableComponent->VOnDirectionChange(m_Direction);
+                SetDirection(currDirection);
             }
             if (m_IsRunning && IsOnGround()) // TODO: Dont poll here. State changing didnt work.
             {
@@ -1161,10 +1166,8 @@ void PhysicsComponent::SetDirection(Direction newDirection)
         return;
     }
 
-    if (m_pControllableComponent)
+    if (m_pControllableComponent && m_pControllableComponent->VOnDirectionChange(newDirection))
     {
-        m_pControllableComponent->VOnDirectionChange(newDirection);
+        m_Direction = newDirection;
     }
-
-    m_Direction = newDirection;
 }
