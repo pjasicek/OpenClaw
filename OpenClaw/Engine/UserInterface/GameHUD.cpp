@@ -299,7 +299,7 @@ void ScreenElementHUD::UpdateFPS(uint32 newFPS)
 
 void ScreenElementHUD::UpdateCameraPosition()
 {
-    if (!m_pPositionTexture)
+    if (m_pPositionTexture)
     {
         SDL_DestroyTexture(m_pPositionTexture);
         m_pPositionTexture = NULL;
