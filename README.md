@@ -1,4 +1,4 @@
-# Captain Claw reimplementation
+# OpenClaw - Captain Claw (1997) reimplementation
 
  - This project is a multiplatform C++ reimplementation of original Captain Claw (1997) platformer game
  - Whole codebase was written from scratch
@@ -37,14 +37,14 @@ For all platforms you will need original CLAW.REZ game archive from original gam
   
   **Compilation:**
   
-  - git clone https://github.com/pjasicek/CaptainClaw.git
-  - cd CaptainClaw
+  - git clone https://github.com/pjasicek/OpenClaw.git
+  - cd OpenClaw
   - mkdir build
   - cd build
   - cmake ..
   - make -j4 (for best performance, replace "4" with whatever number of simultaneous threads your machine can run)
   - cd ../Build_Release
-  - ./captainclaw (Considering you have CLAW.REZ from original game in the same folder)
+  - ./openclaw (Considering you have CLAW.REZ from original game in the same folder)
 
  **Remarks:**
 
@@ -74,7 +74,7 @@ For all platforms you will need original CLAW.REZ game archive from original gam
   
   **Then run it like this:**
   
-  `~/CaptainClaw/Build_Release$ mono ClawLauncher.exe`
+  `~/OpenClaw/Build_Release$ mono ClawLauncher.exe`
  
 ![alt tag](https://s12.postimg.org/a0fzk9wil/screenshot_23.png)
 ![alt tag](https://s30.postimg.org/664o7wa4h/screenshot_24.png)
