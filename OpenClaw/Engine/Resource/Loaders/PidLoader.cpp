@@ -38,7 +38,7 @@ void PidResourceExtraData::LoadImage(char* rawBuffer, uint32 size, WapPal* palet
         SDL_Renderer* renderer = g_pApp->GetRenderer();
         _image = shared_ptr<Image>(Image::CreateImage(_pid, renderer));
         WAP_PidDestroy(_pid); _pid = NULL;
-        SAFE_DELETE_ARRAY(rawBuffer);
+        //SAFE_DELETE_ARRAY(rawBuffer);
     }
 }
 
