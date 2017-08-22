@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.Windows;
 
 namespace ClawLauncher
 {
@@ -159,6 +160,15 @@ namespace ClawLauncher
                 // Fullscreen 
                 Video_DisplayModeComboBox.SelectedItem =
                     Video_DisplayModeComboBox.Items[1];
+            }
+
+            if (config.bFullscreen || config.bFullscreenDesktop)
+            {
+                // Custom resolution
+                Video_ResolutionComboBox.SelectedItem =
+                    Video_ResolutionComboBox.Items[Video_ResolutionComboBox.Items.Count - 1];
+
+                Video_ResolutionComboBox.Enabled = false;
             }
 
             // ============= Audio ==============
@@ -314,11 +324,25 @@ namespace ClawLauncher
                 {
                     videoRoot.SelectSingleNode("IsFullscreen").InnerText = "false";
                     videoRoot.SelectSingleNode("IsFullscreenDesktop").InnerText = "true";
+
+                    videoRoot.SelectSingleNode("Size").Attributes["width"].InnerText = Screen.PrimaryScreen.Bounds.Width.ToString();
+                    videoRoot.SelectSingleNode("Size").Attributes["height"].InnerText = Screen.PrimaryScreen.Bounds.Height.ToString();
+
+                    // Custom resolution
+                    Video_ResolutionComboBox.SelectedItem =
+                        Video_ResolutionComboBox.Items[Video_ResolutionComboBox.Items.Count - 1];
                 }
                 else if (displayModeStr.Equals("Fullscreen"))
                 {
                     videoRoot.SelectSingleNode("IsFullscreen").InnerText = "true";
                     videoRoot.SelectSingleNode("IsFullscreenDesktop").InnerText = "false";
+
+                    videoRoot.SelectSingleNode("Size").Attributes["width"].InnerText = Screen.PrimaryScreen.Bounds.Width.ToString();
+                    videoRoot.SelectSingleNode("Size").Attributes["height"].InnerText = Screen.PrimaryScreen.Bounds.Height.ToString();
+
+                    // Custom resolution
+                    Video_ResolutionComboBox.SelectedItem =
+                        Video_ResolutionComboBox.Items[Video_ResolutionComboBox.Items.Count - 1];
                 }
                 else
                 {
@@ -459,6 +483,22 @@ namespace ClawLauncher
         private void Video_ScaleTextBox_TextChanged(object sender, EventArgs e)
         {
             
+        }
+
+        private void Video_DisplayModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Video_DisplayModeComboBox.SelectedItem.ToString().Equals("Windowed"))
+            {
+                Video_ResolutionComboBox.Enabled = true;
+            }
+            else
+            {
+                Video_ResolutionComboBox.Enabled = false;
+
+                // Custom resolution
+                Video_ResolutionComboBox.SelectedItem =
+                    Video_ResolutionComboBox.Items[Video_ResolutionComboBox.Items.Count - 1];
+            }
         }
     }
 }
