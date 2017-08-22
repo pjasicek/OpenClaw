@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include <Box2D/Box2D.h>
-#include <Tinyxml/tinyxml.h>
 #include <stdint.h>
 #include <memory>
 #include <list>
