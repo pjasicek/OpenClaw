@@ -238,10 +238,8 @@ public:
 
     bool LoadLevel(const char* levelResource);
 
-    GameCheats* GetGameCheats() { return &m_GameCheats; }
-
+    const GameCheats* GetGameCheats() const { return &m_GameCheats; }
     const ConsoleConfig* GetConsoleConfig() const { return &m_GameOptions.consoleConfig; }
-
     const GameOptions* GetGameConfig() const { return &m_GameOptions; }
     const GlobalOptions* GetGlobalOptions() const { return &m_GlobalOptions; }
 
