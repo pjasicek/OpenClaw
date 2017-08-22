@@ -243,7 +243,7 @@ public:
     const ConsoleConfig* GetConsoleConfig() const { return &m_GameOptions.consoleConfig; }
 
     const GameOptions* GetGameConfig() const { return &m_GameOptions; }
-    GlobalOptions* GetGlobalOptions() { return &m_GlobalOptions; }
+    const GlobalOptions* GetGlobalOptions() const { return &m_GlobalOptions; }
 
     TiXmlElement* GetActorPrototypeElem(ActorPrototype proto);
 
