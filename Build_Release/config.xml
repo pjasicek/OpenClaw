@@ -64,6 +64,8 @@
     <SkipBossFightIntro>false</SkipBossFightIntro>
     <UseAlternateControls>false</UseAlternateControls>
     <ClawMinFallHeight>500</ClawMinFallHeight>
-	<LoadAllLevelSaves>true</LoadAllLevelSaves>
+    <LoadAllLevelSaves>true</LoadAllLevelSaves>
+    <ShowFps>true</ShowFps>
+    <ShowPosition>true</ShowPosition>
   </GlobalOptions>
 </Configuration>

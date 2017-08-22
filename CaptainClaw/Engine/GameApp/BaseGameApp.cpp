@@ -558,6 +558,10 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("ClawMinFallHeight"));
         ParseValueFromXmlElem(&m_GlobalOptions.loadAllLevelSaves,
             pGlobalOptionsRootElem->FirstChildElement("LoadAllLevelSaves"));
+        ParseValueFromXmlElem(&m_GlobalOptions.showFps,
+            pGlobalOptionsRootElem->FirstChildElement("ShowFps"));
+        ParseValueFromXmlElem(&m_GlobalOptions.showPosition,
+            pGlobalOptionsRootElem->FirstChildElement("ShowPosition"));
     }
 
     return true;

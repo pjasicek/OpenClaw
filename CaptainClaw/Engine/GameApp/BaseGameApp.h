@@ -137,6 +137,8 @@ struct GlobalOptions
         useAlternateControls = false;
         clawMinFallHeight = 500.0f;
         loadAllLevelSaves = false;
+        showFps = true;
+        showPosition = true;
     }
 
     int cpuDelayMs;
@@ -160,6 +162,8 @@ struct GlobalOptions
     bool useAlternateControls;
     float clawMinFallHeight;
     bool loadAllLevelSaves;
+    bool showFps;
+    bool showPosition;
 };
 
 class EventMgr;

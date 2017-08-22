@@ -76,11 +76,6 @@ BaseGameLogic::~BaseGameLogic()
     m_ActorMap.clear();
 
     RemoveAllDelegates();
-
-    // TODO: Remove this after its tested
-    TiXmlDocument saveGamesDoc;
-    saveGamesDoc.LinkEndChild(m_pGameSaveMgr->ToXml());
-    saveGamesDoc.SaveFile("SAVES_test.XML");
 }
 
 bool BaseGameLogic::Initialize()
@@ -180,10 +175,12 @@ void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Po
     SDL_DestroyTexture(pRemainingProgressBar);
 }
 
-bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
+bool BaseGameLogic::VLoadGame(TiXmlElement* pXmlLevelRoot)
 {
     PROFILE_CPU("GAME LOADING");
     PROFILE_MEMORY("GAME LOADING");
+    
+    assert(pXmlLevelRoot != NULL);
 
     // Stop all audio
     g_pApp->GetAudio()->StopAllSounds();
@@ -212,18 +209,18 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     RenderLoadingScreen(pBackgroundImage, backgroundRect, scale, loadingProgress);
 
     // Level is going to be loaded from XML WWD
-    TiXmlElement* pXmlLevelRoot = XmlResourceLoader::LoadAndReturnRootXmlElement(xmlLevelResource, true);
+    /*TiXmlElement* pXmlLevelRoot = XmlResourceLoader::LoadAndReturnRootXmlElement(xmlLevelResource, true);
     if (pXmlLevelRoot == NULL)
     {
         LOG_ERROR("Could not load level resource file: " + std::string(xmlLevelResource));
         return false;
-    }
+    }*/
 
     // Get level palette
     TiXmlElement* pLevelProperties = pXmlLevelRoot->FirstChildElement("LevelProperties");
     if (!pLevelProperties)
     {
-        LOG_ERROR("Level: " + std::string(xmlLevelResource) + " does not have level properties node.");
+        LOG_ERROR("Level does not have level properties node.");
         return false;
     }
 
@@ -408,8 +405,6 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     LOG("Level name: " + m_pCurrentLevel->m_LevelName);
     LOG("Level author: " + m_pCurrentLevel->m_LevelAuthor);
     LOG("Level created date: " + m_pCurrentLevel->m_LevelCreatedDate);
-
-    SAFE_DELETE(pXmlLevelRoot);
 
     // TODO: This is a bit hacky but it helps with development (prevents entering cheats over and over again). It can be data driven.
     LOG("Loading startup ingame commands...");
@@ -887,18 +882,23 @@ void BaseGameLogic::VChangeState(GameState newState)
         TiXmlElement* pXmlLevel = WwdToXml(pWwd, levelNumber);
         assert(pXmlLevel != NULL);
 
+        /*
         // Save converted level to file, e.g. LEVEL1.xml
         TiXmlDocument xmlDoc;
         xmlDoc.LinkEndChild(pXmlLevel);
         std::string outFileLevelName = g_pApp->GetGameConfig()->tempDir + "/" + levelName + ".xml";
         xmlDoc.SaveFile(outFileLevelName.c_str());
+        */
 
         // Load saved level file, e.g. LEVEL1.xml
-        if (!VLoadGame(outFileLevelName.c_str()))
+        if (!VLoadGame(pXmlLevel))
         {
             LOG_ERROR("Could not load level");
+            SAFE_DELETE(pXmlLevel);
             exit(1);
         }
+
+        SAFE_DELETE(pXmlLevel);
     }
     else if (newState == GameState_ScoreScreen)
     {

@@ -283,6 +283,12 @@ void ScreenElementHUD::UpdateFPS(uint32 newFPS)
     if (m_pFPSTexture)
     {
         SDL_DestroyTexture(m_pFPSTexture);
+        m_pFPSTexture = NULL;
+    }
+
+    if (!g_pApp->GetGlobalOptions()->showFps)
+    {
+        return;
     }
 
     std::string fpsString = "FPS: " + ToStr(newFPS);
@@ -293,9 +299,15 @@ void ScreenElementHUD::UpdateFPS(uint32 newFPS)
 
 void ScreenElementHUD::UpdateCameraPosition()
 {
-    if (m_pPositionTexture)
+    if (!m_pPositionTexture)
     {
         SDL_DestroyTexture(m_pPositionTexture);
+        m_pPositionTexture = NULL;
+    }
+
+    if (!g_pApp->GetGlobalOptions()->showPosition)
+    {
+        return;
     }
 
     Point scale = g_pApp->GetScale();
