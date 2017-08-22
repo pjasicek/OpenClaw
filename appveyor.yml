@@ -3,6 +3,6 @@ configuration: Release
 platform:
     - Win32
 build:
-  project: CaptainClaw.sln
+  project: OpenClaw.sln
   parallel: true
 deploy: off

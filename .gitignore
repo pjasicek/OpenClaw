@@ -21,3 +21,8 @@ Build_Release/MidiProc.pdb
 CaptainClaw/Debug/
 ClawLauncher/bin/
 ClawLauncher/obj/
+Build_Release/OpenClaw_obj/
+OpenClaw/Debug/
+OpenClaw.opensdf
+OpenClaw.sdf
+Build_Release/vim.exe.stackdump
