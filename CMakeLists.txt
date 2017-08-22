@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 option(Android "Android" OFF)
 
-project(CaptainClaw)
+project(OpenClaw)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -34,12 +34,12 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../android/libs/armeabi-v7a)
 
 if(Android)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANDROID")
-    add_library(captainclaw SHARED "")
+    add_library(openclaw SHARED "")
 else (Android)
-    add_executable(captainclaw "")
+    add_executable(openclaw "")
 endif(Android)
 
-add_subdirectory(CaptainClaw)
+add_subdirectory(OpenClaw)
 
 list(APPEND TARGET_LIBS
     libwap
@@ -64,4 +64,4 @@ if(Android)
     )
 endif(Android)
 
-target_link_libraries(captainclaw ${TARGET_LIBS})
+target_link_libraries(openclaw ${TARGET_LIBS})

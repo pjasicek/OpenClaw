@@ -545,7 +545,7 @@
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(324, 15);
             this.label12.TabIndex = 25;
-            this.label12.Text = "Note: All paths are by default relative to CaptainClaw binary";
+            this.label12.Text = "Note: All paths are by default relative to OpenClaw binary";
             // 
             // Assets_SavesFilePathChooseButton
             // 

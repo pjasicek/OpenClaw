@@ -53,10 +53,10 @@ namespace ClawLauncher
 
             if (IsLinux)
             {
-                ClawExecutablePath = clawLauncherDir + "/" + "captainclaw";
+                ClawExecutablePath = clawLauncherDir + "/" + "openclaw";
                 if (clawLauncherDir.Contains("/usr/bin/"))
                 {
-                    ClawConfigPath = "/usr/share/captainclaw/config.xml";
+                    ClawConfigPath = "/usr/share/openclaw/config.xml";
                 }
                 else
                 {
@@ -65,14 +65,14 @@ namespace ClawLauncher
             }
             else
             {
-                ClawExecutablePath = clawLauncherDir + "/" + "CaptainClaw.exe";
+                ClawExecutablePath = clawLauncherDir + "/" + "OpenClaw.exe";
                 ClawConfigPath = clawLauncherDir + "/" + "config.xml";
             }
 
             if (!File.Exists(ClawExecutablePath))
             {
 
-                MessageBox.Show("Could not locate CaptainClaw binary - it has to be in the same folder as is this Launcher.\nExpected location:\n\n" + ClawExecutablePath, "CaptainClaw bin not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Could not locate OpenClaw binary - it has to be in the same folder as is this Launcher.\nExpected location:\n\n" + ClawExecutablePath, "OpenClaw bin not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 //Application.Exit();
                 //Close();
@@ -81,7 +81,7 @@ namespace ClawLauncher
 
             if (!File.Exists(ClawConfigPath))
             {
-                MessageBox.Show("Could not locate CaptainClaw config.xml.\nExpected location:\n\n" + ClawConfigPath, "CaptainClaw config.xml not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Could not locate OpenClaw config.xml.\nExpected location:\n\n" + ClawConfigPath, "OpenClaw config.xml not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 //Application.Exit();
                 //Close();
