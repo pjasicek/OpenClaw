@@ -496,7 +496,7 @@ public:
     virtual StrongActorPtr VCreateActor(const std::string& actorResource, TiXmlElement* overrides) = 0;
     virtual StrongActorPtr VCreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides) = 0;
     virtual void VDestroyActor(const uint32_t actorId) = 0;
-    virtual bool VLoadGame(TiXmlElement* xmlLevelElem) = 0;
+    virtual bool VLoadGame(const char* xmlLevelResource) = 0;
     virtual bool VEnterMenu(const char* xmlMenuResource) = 0;
     virtual void VSetProxy() = 0;
     virtual void VOnUpdate(uint32_t msDiff) = 0;

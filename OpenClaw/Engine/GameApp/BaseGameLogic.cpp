@@ -175,12 +175,10 @@ void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Po
     SDL_DestroyTexture(pRemainingProgressBar);
 }
 
-bool BaseGameLogic::VLoadGame(TiXmlElement* pXmlLevelRoot)
+bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
 {
     PROFILE_CPU("GAME LOADING");
     PROFILE_MEMORY("GAME LOADING");
-    
-    assert(pXmlLevelRoot != NULL);
 
     // Stop all audio
     g_pApp->GetAudio()->StopAllSounds();
@@ -193,6 +191,8 @@ bool BaseGameLogic::VLoadGame(TiXmlElement* pXmlLevelRoot)
     // Preload level resources
     std::string levelPath = "/LEVEL" + ToStr(m_pCurrentLevel->GetLevelNumber()) + "/*";
     g_pApp->GetResourceCache()->Preload(levelPath, NULL);
+
+    // ============== LOADING SCREEN RENDERING ==============
 
     // Start rendering the loading screen
     Point windowSize = g_pApp->GetWindowSize();
@@ -208,13 +208,17 @@ bool BaseGameLogic::VLoadGame(TiXmlElement* pXmlLevelRoot)
 
     RenderLoadingScreen(pBackgroundImage, backgroundRect, scale, loadingProgress);
 
-    // Level is going to be loaded from XML WWD
-    /*TiXmlElement* pXmlLevelRoot = XmlResourceLoader::LoadAndReturnRootXmlElement(xmlLevelResource, true);
+    // ============== LEVEL LOADING ==============
+
+    WapWwd* pWwd = WwdResourceLoader::LoadAndReturnWwd(xmlLevelResource);
+    assert(pWwd != NULL);
+
+    TiXmlElement* pXmlLevelRoot = WwdToXml(pWwd, m_pCurrentLevel->GetLevelNumber());
     if (pXmlLevelRoot == NULL)
     {
         LOG_ERROR("Could not load level resource file: " + std::string(xmlLevelResource));
         return false;
-    }*/
+    }
 
     // Get level palette
     TiXmlElement* pLevelProperties = pXmlLevelRoot->FirstChildElement("LevelProperties");
@@ -437,6 +441,8 @@ bool BaseGameLogic::VLoadGame(TiXmlElement* pXmlLevelRoot)
         m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Purple] +
         m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Green];
     LOG("Rings count: " + ToStr(Rings));*/
+
+    SAFE_DELETE(pXmlLevelRoot);
 
     return true;
 }
@@ -872,33 +878,15 @@ void BaseGameLogic::VChangeState(GameState newState)
         int levelNumber = m_pCurrentLevel->GetLevelNumber();
         assert(levelNumber >= 0 && levelNumber <= 14);
 
-        // Load Monolith's WWD, they are located in /LEVEL[1-14]/WORLDS/WORLD.WWD
         std::string levelName = "LEVEL" + ToStr(levelNumber);
-        std::string pathToLevelWwd = "/" + levelName + "/WORLDS/WORLD.WWD";
-        WapWwd* pWwd = WwdResourceLoader::LoadAndReturnWwd(pathToLevelWwd.c_str());
-        assert(pWwd != NULL);
-
-        // Convert Monolith .WWD format to my .XML format
-        TiXmlElement* pXmlLevel = WwdToXml(pWwd, levelNumber);
-        assert(pXmlLevel != NULL);
-
-        /*
-        // Save converted level to file, e.g. LEVEL1.xml
-        TiXmlDocument xmlDoc;
-        xmlDoc.LinkEndChild(pXmlLevel);
-        std::string outFileLevelName = g_pApp->GetGameConfig()->tempDir + "/" + levelName + ".xml";
-        xmlDoc.SaveFile(outFileLevelName.c_str());
-        */
+        std::string wwdLevelPath = "/" + levelName + "/WORLDS/WORLD.WWD";
 
         // Load saved level file, e.g. LEVEL1.xml
-        if (!VLoadGame(pXmlLevel))
+        if (!VLoadGame(wwdLevelPath.c_str()))
         {
             LOG_ERROR("Could not load level");
-            SAFE_DELETE(pXmlLevel);
             exit(1);
         }
-
-        SAFE_DELETE(pXmlLevel);
     }
     else if (newState == GameState_ScoreScreen)
     {
