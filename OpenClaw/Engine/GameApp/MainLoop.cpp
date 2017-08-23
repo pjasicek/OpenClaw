@@ -27,7 +27,7 @@ int RunGameEngine(int argc, char** argv)
     }
     assert(homedir != NULL);
 
-    userDirectory = std::string(homedir) + "/";
+    userDirectory = std::string(homedir) + "/.config/openclaw/";
 
 #elif defined __WINDOWS__ && _WINDOWS__ == 1
     configDir = "";

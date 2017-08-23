@@ -82,7 +82,7 @@ bool BaseGameLogic::Initialize()
 {
     m_pActorFactory = VCreateActorFactory();
 
-    std::string savesFilePath = g_pApp->GetGameConfig()->assetsFolder + g_pApp->GetGameConfig()->savesFile;
+    std::string savesFilePath = g_pApp->GetGameConfig()->userDirectory + g_pApp->GetGameConfig()->savesFile;
 
     TiXmlDocument gameSaves(savesFilePath.c_str());
     gameSaves.LoadFile();

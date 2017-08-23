@@ -1,0 +1,5 @@
+#!/bin/sh
+
+mkdir -p ~/.config/openclaw
+cp /usr/share/openclaw/config.xml ~/.config/openclaw
+cp /usr/share/openclaw/SAVES.XML ~/.config/openclaw

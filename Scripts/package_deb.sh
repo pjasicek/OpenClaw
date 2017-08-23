@@ -37,6 +37,8 @@ ensure_exists $BINARY_BUILD_DIR/config_linux_release.xml
 ensure_exists $BINARY_BUILD_DIR/clawlauncher
 ensure_exists $BINARY_BUILD_DIR/ClawLauncher.exe
 ensure_exists control
+ensure_exists postinst
+ensure_exists postrm
 
 mkdir -p $TARGET_BINARY_DIR
 mkdir -p $TARGET_ASSETS_DIR
@@ -51,9 +53,10 @@ cp $BINARY_BUILD_DIR/config_linux_release.xml $TARGET_ASSETS_DIR/config.xml
 cp $BINARY_BUILD_DIR/ClawLauncher.exe $TARGET_BINARY_DIR
 cp $BINARY_BUILD_DIR/clawlauncher $TARGET_BINARY_DIR
 
-# TODO: Add deb package command
 mkdir -p $TARGET_DIR/DEBIAN
 cp control $TARGET_DIR/DEBIAN
+cp postinst $TARGET_DIR/DEBIAN
+cp postrm $TARGET_DIR/DEBIAN
 
 echo "dpkg-deb --build $TARGET_DIR"
 dpkg-deb --build $TARGET_DIR
