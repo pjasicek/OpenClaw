@@ -54,13 +54,14 @@ namespace ClawLauncher
             if (IsLinux)
             {
                 ClawExecutablePath = clawLauncherDir + "/" + "openclaw";
-                if (clawLauncherDir.Contains("/usr/bin/"))
+
+                if (File.Exists("config.xml"))
                 {
-                    ClawConfigPath = "/usr/share/openclaw/config.xml";
+                    ClawConfigPath = clawLauncherDir + "/" + "config.xml";
                 }
                 else
                 {
-                    ClawConfigPath = clawLauncherDir + "/" + "config.xml";
+                    ClawConfigPath = "/usr/share/openclaw/config.xml";
                 }
             }
             else
