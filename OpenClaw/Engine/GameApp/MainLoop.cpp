@@ -16,7 +16,7 @@ int RunGameEngine(int argc, char** argv)
 #if defined __ANDROID__ && __ANDROID__ == 1
     configDir = "/sdcard/claw/";
 #elif defined __LINUX__ && __LINUX__ == 1
-    configDir = "/usr/share/captainclaw/";
+    configDir = "/usr/share/openclaw/";
 #elif defined __WINDOWS__ && _WINDOWS__ == 1
     configDir = "";
 #endif
