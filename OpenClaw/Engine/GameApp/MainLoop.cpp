@@ -4,6 +4,7 @@
 
 #if defined __LINUX__ && __LINUX__ == 1
 #include <pwd.h>
+#include <unistd.h>
 #endif
 
 int RunGameEngine(int argc, char** argv)
@@ -26,7 +27,7 @@ int RunGameEngine(int argc, char** argv)
     }
     assert(homedir != NULL);
 
-    userDirectory = std::string(homeDir) + "/";
+    userDirectory = std::string(homedir) + "/";
 
 #elif defined __WINDOWS__ && _WINDOWS__ == 1
     configDir = "";
