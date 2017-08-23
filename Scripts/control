@@ -1,0 +1,8 @@
+Package: openclaw
+Version: 1.0-1
+Section: base
+Priority: optional
+Architecture: amd64
+Depends: libsdl2-2.0-0 (>= 2.0.0), libsdl2-gfx-1.0-0 (>= 1.0.0), libsdl2-image-2.0-0 (>= 2.0.0), libsdl2-mixer-2.0-0 (>= 2.0.0), libsdl2-ttf-2.0-0 (>= 2.0.0), libtinyxml-dev, mono-runtime, libmono-system-windows-forms4.0-cil, libmono-system4.0-cil  
+Maintainer: Petr Jasicek <pjasicek@gmail.com>
+Description: OpenClaw - Captain Claw (1997) platormer game open source reimplementation
