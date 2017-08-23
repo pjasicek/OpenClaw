@@ -411,7 +411,7 @@ void ClawGameLogic::CheckpointReachedDelegate(IEventDataPtr pEventData)
         {
             TiXmlDocument saveGamesDoc;
             saveGamesDoc.LinkEndChild(m_pGameSaveMgr->ToXml());
-            std::string savesFilePath = g_pApp->GetGameConfig()->assetsFolder + g_pApp->GetGameConfig()->savesFile;
+            std::string savesFilePath = g_pApp->GetGameConfig()->userDirectory + g_pApp->GetGameConfig()->savesFile;
             saveGamesDoc.SaveFile(savesFilePath.c_str());
         }
     }

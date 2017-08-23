@@ -42,6 +42,7 @@ struct GameOptions
         resourceCacheSize = 50;
         tempDir = ".";
         savesFile = "SAVES.XML";
+        userDirectory = "";
 
         startupCommandsFile = "startup_commands.txt";
     }
@@ -50,6 +51,8 @@ struct GameOptions
     {
         SetDefaults();
     }
+
+    void SetSavesFilePath(std::string savesPath) { savesFile = savesPath; }
 
     // Display options
     int windowWidth;
@@ -82,6 +85,8 @@ struct GameOptions
     unsigned resourceCacheSize;
     std::string tempDir;
     std::string savesFile;
+    // For LINUX ONLY - this is generally ~/.config/openclaw/
+    std::string userDirectory;
 
     // Console config
     ConsoleConfig consoleConfig;
@@ -240,7 +245,7 @@ public:
 
     const GameCheats* GetGameCheats() const { return &m_GameCheats; }
     const ConsoleConfig* GetConsoleConfig() const { return &m_GameOptions.consoleConfig; }
-    const GameOptions* GetGameConfig() const { return &m_GameOptions; }
+    GameOptions* GetGameConfig() { return &m_GameOptions; }
     const GlobalOptions* GetGlobalOptions() const { return &m_GlobalOptions; }
 
     TiXmlElement* GetActorPrototypeElem(ActorPrototype proto);
