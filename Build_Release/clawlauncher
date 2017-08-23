@@ -1,0 +1,24 @@
+#!/bin/sh
+
+EXPECTED_CONFIG_DIR=~/.config/openclaw/
+EXPECTED_CONFIG_PATH=$EXPECTED_CONFIG_DIR/config.xml
+INSTALLED_CONFIG_PATH=/usr/share/openclaw/config.xml
+
+if [ -e "config.xml" ]
+then
+	echo "[INFO] Looks like we are in development directory => using local config.xml"
+elif [ ! -e $EXPECTED_CONFIG_PATH ]
+then
+	echo "[INFO] Claw config does not exist at: $EXPECTED_CONFIG_PATH"
+	echo "[INFO] Trying to copy from $INSTALLED_CONFIG_PATH ..."
+	if [ -e $INSTALLED_CONFIG_PATH ]
+	then
+		mkdir -p $EXPECTED_CONFIG_DIR
+		cp $INSTALLED_CONFIG_PATH $EXPECTED_CONFIG_PATH
+		echo "[INFO] OK"
+	else
+		echo "[ERROR] $INSTALLED_CONFIG_PATH does not exist. Is openclaw deb package installed ?"
+	fi
+fi
+
+mono `dirname $0`/ClawLauncher.exe
