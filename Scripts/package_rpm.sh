@@ -3,10 +3,10 @@
 PROJECT_ROOT=..
 BINARY_BUILD_DIR=$PROJECT_ROOT/Build_Release
 
-TARGET_TOPDIR=/tmp/captainclaw
+TARGET_TOPDIR=/tmp/openclaw
 TARGET_DIR=$TARGET_TOPDIR/BUILDROOT
 TARGET_BINARY_DIR=$TARGET_DIR/usr/bin
-TARGET_ASSETS_DIR=$TARGET_DIR/usr/share/captainclaw
+TARGET_ASSETS_DIR=$TARGET_DIR/usr/share/openclaw
 
 function ensure_exists 
 {
