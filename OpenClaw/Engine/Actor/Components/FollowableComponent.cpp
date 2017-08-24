@@ -40,7 +40,7 @@ bool FollowableComponent::VInit(TiXmlElement* pData)
     }
 
     SetStringIfDefined(&m_ImageSet, pData->FirstChildElement("ImageSet"));
-    SetStringIfDefined(&m_ImageSet, pData->FirstChildElement("AnimationPath"));
+    SetStringIfDefined(&m_AnimationPath, pData->FirstChildElement("AnimationPath"));
 
     return true;
 }
