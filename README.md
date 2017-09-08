@@ -5,6 +5,7 @@
  - Game uses assets from original game archive (CLAW.REZ)
 
 **Level 1 youtube playthrough:**
+
 [![OpenClaw - Level 1](https://img.youtube.com/vi/ikXQNV_aw68/0.jpg)](https://www.youtube.com/watch?v=ikXQNV_aw68)
 
 # Build status
