@@ -287,6 +287,7 @@
     <ClInclude Include="Engine\Process\Process.h" />
     <ClInclude Include="Engine\Process\ProcessMgr.h" />
     <ClInclude Include="Engine\Graphics2D\Image.h" />
+    <ClInclude Include="Engine\Util\EnumString.h" />
     <ClInclude Include="Engine\Util\Memory\MemoryMacros.h" />
     <ClInclude Include="Engine\Util\Memory\MemoryPool.h" />
     <ClInclude Include="Engine\Util\PrimeSearch.h" />

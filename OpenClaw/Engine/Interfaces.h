@@ -12,6 +12,7 @@
 #include <float.h>
 #include <vector>
 #include <assert.h>
+#include "Util/EnumString.h"
 
 class Actor;
 typedef std::shared_ptr<Actor> StrongActorPtr;

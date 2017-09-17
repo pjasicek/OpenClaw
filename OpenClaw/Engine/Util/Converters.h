@@ -750,9 +750,15 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             case 4: proto = ActorPrototype_Level4_CrumblingPeg; break;
             case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
             case 6: proto = ActorPrototype_Level6_CrumblingPeg; break;
-            default: assert(false && "Nonexistant actor prototype"); break;
+            default: return NULL;
         }
-        assert(proto != ActorPrototype_Start && "Unsupported level ?");
+
+        if (proto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        // assert(proto != ActorPrototype_Start && "Unsupported level ?");
 
         return ActorTemplates::CreateXmlData_CrumblingPeg(proto, position, 0);
         //return ActorTemplates::CreateXmlData_CrumblingPeg(tmpImageSet, Point(wwdObject->x, wwdObject->y), wwdObject->z);
@@ -820,7 +826,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         Point position(wwdObject->x, wwdObject->y);
 
-        ActorPrototype elevatorProto = ActorPrototype_Start;
+        ActorPrototype elevatorProto = ActorPrototype_None;
         if (levelNumber == 1)
         {
             elevatorProto = ActorPrototype_Level1_Elevator;
@@ -859,7 +865,13 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 elevatorProto = ActorPrototype_Level6_Elevator_2;
             }
         }
-        assert(elevatorProto != ActorPrototype_Start && "Unsupported level ?");
+
+        if (elevatorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        // assert(elevatorProto != ActorPrototype_Start && "Unsupported level ?");
 
         return ActorTemplates::CreateXmlData_ElevatorActor(elevatorProto, position, elevatorDef);
     }
@@ -930,12 +942,17 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         Point position(wwdObject->x, wwdObject->y);
 
-        ActorPrototype proto = ActorPrototype_Start;
+        ActorPrototype proto = ActorPrototype_None;
         if (levelNumber == 1) proto = ActorPrototype_Level1_TogglePeg;
         else if (levelNumber == 2) proto = ActorPrototype_Level2_TogglePeg;
         else if (levelNumber == 5) proto = ActorPrototype_Level5_TogglePeg;
 
-        assert(proto != ActorPrototype_Start);
+        if (proto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        // assert(proto != ActorPrototype_Start);
 
         return ActorTemplates::CreateXmlData_TogglePegActor(
             proto,
@@ -997,7 +1014,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         SAFE_DELETE(pActorElem);
 
-        ActorPrototype actorProto = ActorPrototype_Start;
+        ActorPrototype actorProto = ActorPrototype_None;
         if (levelNumber == 1)
         {
             if (logic == "Rat")
@@ -1100,10 +1117,11 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             }
         }
 
-        if (actorProto == ActorPrototype_Start)
+        if (actorProto == ActorPrototype_None)
         {
-            LOG_ERROR("Failed to find ActorPrototype for logic: " + logic + " in level: " + ToStr(levelNumber));
-            assert(false && "Unsupported level ?");
+            //LOG_ERROR("Failed to find ActorPrototype for logic: " + logic + " in level: " + ToStr(levelNumber));
+            return NULL;
+            // assert(false && "Unsupported level ?");
         }
 
         return ActorTemplates::CreateXmlData_EnemyAIActor(
@@ -1197,7 +1215,13 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         {
             proto = ActorPrototype_Level6_BossStager;
         }
-        assert(proto != ActorPrototype_None);
+
+        if (proto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        // assert(proto != ActorPrototype_None);
 
         Point position(wwdObject->x, wwdObject->y);
         return ActorTemplates::CreateXmlData_Actor(proto, position);
@@ -1283,7 +1307,12 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             pathElevatorDef.elevatorPath.push_back(GetElevatorStepDef(wwdObject->clipRect.right, wwdObject->clipRect.bottom));
         }
 
-        assert(pathElevatorDef.speed > 0);
+        // Default value. First occurance in level 7
+        if (pathElevatorDef.speed == 0)
+        {
+            pathElevatorDef.speed = 125;
+        }
+
         assert(pathElevatorDef.elevatorPath.size() > 2);
 
         Point position(wwdObject->x, wwdObject->y);
@@ -1395,7 +1424,12 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             proto = ActorPrototype_Level6_SteppingGround;
         }
 
-        assert(proto != ActorPrototype_None && "Unsupported level ?");
+        if (proto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        // assert(proto != ActorPrototype_None && "Unsupported level ?");
 
         Point position(wwdObject->x, wwdObject->y);
 
@@ -1424,7 +1458,13 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         {
             proto = ActorPrototype_Level6_GroundBlower;
         }
-        assert(proto != ActorPrototype_None && "Unsupported level ?");
+
+        if (proto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        // assert(proto != ActorPrototype_None && "Unsupported level ?");
 
         Point position(wwdObject->x, wwdObject->y);
 

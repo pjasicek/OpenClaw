@@ -1,5 +1,5 @@
 #include "Converters.h"
-//#include <regex>
+#include "../Events/Events.h"
 
 TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
 {
@@ -185,6 +185,8 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
     imagesRootPath += '/';
     imagesRootPath.insert(0, 1, '/');
 
+    std::vector<std::string> notLoadedActorList;
+
     for (uint32 actorIdx = 0; actorIdx < actorsCount; actorIdx++)
     {
         WwdObject actorProperties = wwdActors[actorIdx];
@@ -261,10 +263,31 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
         }
         else
         {
-            root->LinkEndChild(WwdObjectToXml(&actorProperties, imagesRootPath, levelNumber));
+            if (TiXmlElement* pActorElem = WwdObjectToXml(&actorProperties, imagesRootPath, levelNumber))
+            {
+                root->LinkEndChild(pActorElem);
+            }
+            else
+            {
+                notLoadedActorList.push_back(actorProperties.logic);
+            }
         }
     }
 
+    if (notLoadedActorList.size() > 0)
+    {
+        // sort | uniq
+        std::sort(notLoadedActorList.begin(), notLoadedActorList.end());
+        notLoadedActorList.erase(unique(notLoadedActorList.begin(), notLoadedActorList.end()), notLoadedActorList.end());
+
+        LOG_ERROR("Failed to load certain actors:");
+        for (const std::string& actorLogic : notLoadedActorList)
+        {
+            LOG_ERROR("NOT LOADED: " + actorLogic);
+        }
+
+        FAIL("Failed to load level " + ToStr(levelNumber) + " due to unimplemented actor prototypes");
+    }
 
     root->LinkEndChild(CreateClawActor(wapWwd));
 
