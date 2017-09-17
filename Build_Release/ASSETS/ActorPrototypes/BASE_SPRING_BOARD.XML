@@ -10,8 +10,6 @@
 		<ZCoord>2000</ZCoord>
 		<ImagePath>NONE</ImagePath>
 	</ActorRenderComponent>
-    <AnimationComponent>
-	</AnimationComponent>
 	<SpringBoardComponent>
         <!-- DEFINED IN CODE -->
 		<SpringHeight>0</SpringHeight>

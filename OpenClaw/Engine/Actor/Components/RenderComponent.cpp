@@ -500,7 +500,7 @@ TileList TilePlaneRenderComponent::GetAllContinuousTiles(const TileList& tileLis
 
 TileInfo TilePlaneRenderComponent::GetTileInfo(const TileList& tileList, int tileIdx)
 {
-    assert(tileIdx < tileList.size());
+    assert(tileIdx < (int)tileList.size());
 
     TileInfo tileInfo;
 
@@ -639,9 +639,13 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
 
             m_TileImageList.push_back(m_pFillImage.get());
         }
+        else if (m_PlaneProperties.name == "Front") // Empty image on front plane most likely. First occurance on level 7
+        {
+            m_TileImageList.push_back(NULL);
+        }
         else
         {
-            LOG_ERROR("Could not find plane tile: " + tileFileName);
+            LOG_ERROR("Could not find plane tile: " + tileFileName + " on plane: " + m_PlaneProperties.name);
             return false;
         }
 

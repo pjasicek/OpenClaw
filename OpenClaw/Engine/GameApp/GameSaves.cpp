@@ -35,6 +35,10 @@ Point GetSpawnPosition(uint32 levelNumber, uint32 checkpointNumber)
             else if (checkpointNumber == 2) { return Point(19831, 5999); }
             break;
         case 7:
+            if (checkpointNumber == 0) { return Point(1665, 7200); }
+            else if (checkpointNumber == 1) { return Point(9360, 7370); }
+            else if (checkpointNumber == 2) { return Point(25210, 7180); }
+            break;
         case 8:
         case 9:
         case 10:

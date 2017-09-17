@@ -1046,6 +1046,16 @@ void BaseGameLogic::CreateSinglePhysicsTile(int x, int y, const TileCollisionPro
         Point size(64, 10);
         m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
     }
+    else if (m_pCurrentLevel->GetLevelNumber() == 7 && (proto.id == 110 || proto.id == 113 || proto.id == 119 || proto.id == 394))
+    {
+        Point position(x, y + 8);
+        if (proto.id == 110)
+        {
+            position.y = y + 24;
+        }
+        Point size(64, 10);
+        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
+    }
 }
 
 void BaseGameLogic::CollideableTileCreatedDelegate(IEventDataPtr pEventData)

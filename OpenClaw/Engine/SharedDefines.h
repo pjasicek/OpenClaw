@@ -59,8 +59,6 @@ typedef int8_t int8;
 #define max(a, b) ((a) < (b) ? (b) : (a))
 #endif
 
-
-
 // Resource caches
 // Hardcoding this saves A LOT of headaches
 #define ORIGINAL_RESOURCE "CLAW_REZ"

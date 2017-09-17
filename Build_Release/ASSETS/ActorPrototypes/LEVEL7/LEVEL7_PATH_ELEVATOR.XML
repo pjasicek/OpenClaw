@@ -1,0 +1,21 @@
+<Actor Type="Level7_PathElevator" Parent="ActorPrototype_BasePathElevator" ActorPrototypeName="ActorPrototype_Level7_PathElevator">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL7/IMAGES/AIRCART/*</ImagePath>
+		<Palette>/LEVEL7/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<PhysicsComponent>
+        <CollisionMask>0</CollisionMask>
+		<ActorFixture>
+            <FixtureType>Ground</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>false</IsSensor>
+            <Size width="180" height="35" />
+            <Offset x="0" y="80" />
+            <CollisionFlag>1</CollisionFlag>
+            <CollisionMask>16386</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>0.000000</Restitution>
+        </ActorFixture>
+    </PhysicsComponent>
+</Actor>

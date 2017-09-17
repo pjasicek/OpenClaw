@@ -750,6 +750,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             case 4: proto = ActorPrototype_Level4_CrumblingPeg; break;
             case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
             case 6: proto = ActorPrototype_Level6_CrumblingPeg; break;
+            case 7: proto = ActorPrototype_Level7_CrumblingPeg; break;
             default: return NULL;
         }
 
@@ -864,6 +865,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             {
                 elevatorProto = ActorPrototype_Level6_Elevator_2;
             }
+        }
+        else if (levelNumber == 7)
+        {
+            elevatorProto = ActorPrototype_Level7_Elevator;
         }
 
         if (elevatorProto == ActorPrototype_None)
@@ -1116,6 +1121,13 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
                 actorProto = ActorPrototype_Level6_Rat;
             }
         }
+        else if (levelNumber == 7)
+        {
+            if (logic == "Seagull")
+            {
+                actorProto = ActorPrototype_Level7_Seagull;
+            }
+        }
 
         if (actorProto == ActorPrototype_None)
         {
@@ -1268,6 +1280,12 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         if (wasHere) return pActorElem;
         wasHere = true;*/
 
+        ActorPrototype proto = ActorPrototype_BasePathElevator;
+        if (levelNumber == 7)
+        {
+            proto = ActorPrototype_Level7_PathElevator;
+        }
+
         PathElevatorDef pathElevatorDef;
 
         pathElevatorDef.speed = wwdObject->speed;
@@ -1320,7 +1338,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
 
         return ActorTemplates::CreateXmlData_PathElevator(
-            ActorPrototype_BasePathElevator,
+            proto,
             position,
             tmpImageSet,
             pathElevatorDef);
@@ -1413,6 +1431,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic.find("SteppingStone") != std::string::npos)
     {
+        SAFE_DELETE(pActorElem);
+
         ActorPrototype proto = ActorPrototype_None;
 
         if (levelNumber == 4)
@@ -1422,6 +1442,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         else if (levelNumber == 6)
         {
             proto = ActorPrototype_Level6_SteppingGround;
+        }
+        else if (levelNumber == 7)
+        {
+            proto = ActorPrototype_Level7_SteppingGround;
         }
 
         if (proto == ActorPrototype_None)
@@ -1437,8 +1461,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SteppingGroundDef def;
         def.timeOn = 150;
         def.timeOff = 500;
-
-        SAFE_DELETE(pActorElem);
 
         return ActorTemplates::CreateXmlData_SteppingGround(
             proto,
@@ -1457,6 +1479,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         else if (levelNumber == 6)
         {
             proto = ActorPrototype_Level6_GroundBlower;
+        }
+        else if (levelNumber == 7)
+        {
+            proto = ActorPrototype_Level7_SpringBoard;
         }
 
         if (proto == ActorPrototype_None)

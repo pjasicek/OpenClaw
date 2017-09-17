@@ -1051,6 +1051,17 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType, int so
                     break;
                 }
                 case 7:
+                {
+                    // Fallen into liquid - set invisible
+                    m_pRenderComponent->SetVisible(false);
+
+                    // Create tar splash
+                    Point splashPosition(
+                        m_pPositionComponent->GetPosition().x,
+                        m_pPositionComponent->GetPosition().y - 20);
+                    ActorTemplates::CreateSingleAnimation(splashPosition, AnimationType_TarSplash);
+                    break;
+                }
                 case 8:
                 case 11:
                 case 12:

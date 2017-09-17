@@ -36,6 +36,13 @@ void SpringBoardComponent::VPostInit()
     m_pAnimationComponent = MakeStrongPtr(_owner->GetComponent<AnimationComponent>()).get();
     assert(m_pAnimationComponent != NULL);
 
+    if (m_Properties.idleAnimName == "NONE")
+    {
+        Animation* pIdleAnim = Animation::CreateAnimation(1, 0, "NONE", m_pAnimationComponent);
+        assert(pIdleAnim);
+        assert(m_pAnimationComponent->AddAnimation("NONE", pIdleAnim));
+    }
+
     m_pAnimationComponent->AddObserver(this);
     m_pAnimationComponent->SetAnimation(m_Properties.idleAnimName);
 

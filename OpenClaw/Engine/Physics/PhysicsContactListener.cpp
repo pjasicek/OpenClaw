@@ -159,16 +159,20 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     return;
                 }
 
+                bool checkFurther = false;
                 Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
-                if (pActor->GetName() == "Claw")
+                Actor* pGroundActor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
+                /*if (pActor->GetName() == "Claw" && pGroundActor && pGroundActor->GetName() == "Level7_SpringBoard")
                 {
-                    //LOG("Contact");
-                }
+                    LOG("Contact");
+                    checkFurther = true;
+                }*/
 
                 pContact->SetEnabled(false);
                 for (int pointIdx = 0; pointIdx < numPoints; pointIdx++)
                 {
                     b2Vec2 pointVelocity = pFixtureB->GetBody()->GetLinearVelocityFromWorldPoint(worldManifold.points[pointIdx]);
+
                     if (pointVelocity.y > -2)
                     {
                         b2AABB bodyAABB = GetBodyAABB(pFixtureB->GetBody(), true);
@@ -186,18 +190,45 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                         b2Vec2 relativePointB = pFixtureB->GetBody()->GetLocalPoint(worldManifold.points[pointIdx]);
                         //LOG("Relative point Y: " + ToStr(relativePoint.y));
                         float platformFaceY = 0.5f;//front of platform, from fixture definition :(
-                        if (relativePointA.y < platformFaceY - 0.05)
+
+                        /*if (pActor->GetName() == "Claw" && pGroundActor && pGroundActor->GetName() == "Level7_SpringBoard")
+                        {
+                            LOG("RelativePointA.y: " + ToStr(relativePointA.y));
+                        }*/
+
+                        //platformFaceY *= (width / height);
+
+                        const b2AABB& groundAABB = pFixtureA->GetAABB(0);
+                        /*float width = aabb.upperBound.x - aabb.lowerBound.x;
+                        float height = aabb.upperBound.y - aabb.lowerBound.y;
+                        float ratio = width / height;
+
+                        // Extra wide and thin stuff.. First appearance on level 7 - Aircart elevators
+                        if (ratio > 3.0)
+                        {
+                            //relativePointA.y /= 2 * ratio;
+                        }*/
+
+                        /*Point bodyPos = b2Vec2ToPoint(MetersToPixels(pFixtureA->GetBody()->GetPosition()));
+                        Point fixturePos = b2Vec2ToPoint(MetersToPixels(aabb.GetCenter()));
+
+                        LOG("BodyPos: " + bodyPos.ToString() + ", FixturePos: " + fixturePos.ToString());*/
+
+                        // In case the origin of the fixture is not in the body's center
+                        relativePointA += pFixtureA->GetBody()->GetPosition() - groundAABB.GetCenter();
+
+                        if (relativePointA.y < (platformFaceY - 0.05))
                         {
                             
-                            if (pActor->GetName() == "Claw")
+                            /*if (pActor->GetName() == "Claw" && pFixtureA->GetBody()->GetType() == b2_kinematicBody)
                             {
-                                /*LOG("y: " + ToStr(relativePoint.y));
-                                LOG("x: " + ToStr(relativePoint.x));
-                                LOG("PointVelocity.y: " + ToStr(pointVelocity.y));*/
-                            }
+                                LOG("y: " + ToStr(relativePointA.y));
+                                LOG("x: " + ToStr(relativePointA.x));
+                                LOG("PointVelocity.y: " + ToStr(pointVelocity.y));
+                            }*/
                             
                             // Only allow to actually land from ABOVE not from the side when still below
-                            // Still hacked though... Causes some items to fall thorugh when level load maybe ? (crates level 2)
+                            // Still hacked though... Causes some items to fall through when level load maybe ? (crates level 2)
                             if (fabs(relativePointA.y) < 0.1f && fabs(relativePointA.x) > 0.1f && fabs(relativePointB.x) > 0.01)
                             {
                                 /*if (pActor->GetName() == "Claw")
@@ -224,12 +255,17 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                             // If bellow the platform the contact should be disabled
                             if (relativePointA.y > 0.1f)
                             {
-                                /*if (pActor->GetName() == "Claw")
+                                /*if (pActor->GetName() == "Claw" && pGroundActor && pGroundActor->GetName() == "Level7_SpringBoard")
                                 {
-                                    LOG("Nope 2");
+                                    LOG("Nope 2: RelativePointA.y: " + ToStr(relativePointA.y));
                                 }*/
                                 return;
                             }
+
+                            /*if (pActor->GetName() == "Claw" && pGroundActor && pGroundActor->GetName() == "Level7_SpringBoard")
+                            {
+                                LOG("Yep: RelativePointA.y: " + ToStr(relativePointA.y));
+                            }*/
 
                             // TODO: Think about better solution and rename this to something better
                             if (pFixtureA->GetUserData() == (void*)FixtureType_TopLadderGround)
@@ -253,7 +289,17 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     {
                         //LOG("Velocity = " + ToStr(pointVelocity.y));
                     }
+
+                    /*if (pActor->GetName() == "Claw" && pFixtureA->GetBody()->GetType() == b2_kinematicBody)
+                    {
+                        LOG("TEST 2");
+                    }*/
                 }
+
+                /*if (checkFurther)
+                {
+                    LOG("Is enabled in the end: " + ToStr(pContact->IsEnabled()));
+                }*/
 #if 0
                 b2AABB bodyAABB = GetBodyAABB(pFixtureB->GetBody());
                 if (/*pFixtureB->GetBody()->GetLinearVelocity().y >= 0 &&*/
@@ -272,7 +318,6 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                 // Moving platform (elevator)
                 if (pContact->IsEnabled() /*!pFixtureA->IsSensor()*/ && pFixtureA->GetBody()->GetType() == b2_kinematicBody && !pFixtureB->IsSensor())
                 {
-                    //LOG("ADDED");
                     if (shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody()))
                     {
                         pKinematicComponent->AddCarriedBody(pFixtureB->GetBody());
@@ -321,10 +366,10 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                     }
                 }
 
-                if (pActor->GetName() == "Claw")
+                /*if (pActor->GetName() == "Claw")
                 {
                     //LOG("Contact was enabled: " + ToStr(pContact->IsEnabled()));
-                }
+                }*/
             }
         }
     }

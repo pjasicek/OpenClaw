@@ -1,0 +1,18 @@
+<Actor Type="Level7_SpringBoard" Parent="ActorPrototype_BaseSpringBoard" ActorPrototypeName="ActorPrototype_Level7_SpringBoard">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL7/IMAGES/WATERROCK/*.PID</ImagePath>
+	</ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL7/ANIS/WATERSPLASH.ANI</AnimationPath>
+	</AnimationComponent>
+	<SpringBoardComponent>
+        <SpringFrameIdx>2</SpringFrameIdx>
+        <SpringDelay>500</SpringDelay>
+        <IdleAnimName>NONE</IdleAnimName>
+        <SpringAnimName>watersplash</SpringAnimName>
+	</SpringBoardComponent>
+    <PhysicsComponent>
+        <PositionOffset x="0" y="50" />
+        <CollisionSize width="60" height="35" />
+    </PhysicsComponent>
+</Actor>

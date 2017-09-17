@@ -382,6 +382,14 @@ enum ActorPrototype
 
     ActorPrototype_BaseRope,
 
+    // Level 7
+    ActorPrototype_Level7_CrumblingPeg,
+    ActorPrototype_Level7_Elevator,
+    ActorPrototype_Level7_PathElevator,
+    ActorPrototype_Level7_Seagull,
+    ActorPrototype_Level7_SpringBoard,
+    ActorPrototype_Level7_SteppingGround,
+
     ActorPrototype_Max
 };
 

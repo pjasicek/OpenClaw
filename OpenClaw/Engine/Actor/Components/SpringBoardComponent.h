@@ -33,6 +33,8 @@ private:
     // XML Data
     SpringBoardDef m_Properties;
 
+    bool m_bHasIdleAnimation;
+
     ActorList m_StandingActorsList;
 
     bool m_bIsSteppedOn;
