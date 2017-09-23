@@ -35,7 +35,7 @@ BossStagerTriggerComponent::BossStagerTriggerComponent()
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BossStagerTriggerComponent::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BossStagerTriggerComponent::ClawRespawnedDelegate), EventData_Claw_Respawned::sk_EventType);
 
-    if (g_pApp->GetGlobalOptions()->skipBossFightIntro)
+    if (g_pApp->GetDebugOptions()->bSkipBossFightIntro)
     {
         m_State = BossStagerState_Done;
     }

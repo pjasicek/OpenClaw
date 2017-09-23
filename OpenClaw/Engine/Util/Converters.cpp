@@ -191,12 +191,47 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
     {
         WwdObject actorProperties = wwdActors[actorIdx];
 
+        WwdObject* wwdObject = &actorProperties;
+
         std::string name = actorProperties.name;
         std::string logic = actorProperties.logic;
         std::string imageSet = actorProperties.imageSet;
         std::string sound = actorProperties.sound;
 
-        WwdObject* wwdObject = &actorProperties;
+        // Get image set of actor, e.g. /LEVEL1/IMAGES/SOLDIER/*.PID
+        // TODO: This is code duplication. Fix it
+        std::string tmpImagesRootPath = imagesRootPath;
+        std::string tmpImageSet = wwdObject->imageSet;
+        bool imageSetValid = false;
+
+        if (tmpImageSet.find("LEVEL_") == 0)
+        {
+            // Remove "LEVEL_" from tmpImageSet, e.g. "LEVEL_SOLDIER" -> "SOLDIER"
+            tmpImageSet.erase(0, strlen("LEVEL_"));
+            tmpImagesRootPath = "/LEVEL" + ToStr(levelNumber) + "/IMAGES/";
+            imageSetValid = true;
+        }
+        else if (tmpImageSet.find("GAME_") == 0)
+        {
+            // Remove "GAME_" from tmpImageSet, e.g. "GAME_TREASURE_COINS" -> "TREASURE_COINS"
+            tmpImageSet.erase(0, strlen("GAME_"));
+            tmpImagesRootPath = std::string("/GAME/IMAGES/");
+            std::replace(tmpImageSet.begin(), tmpImageSet.end(), '_', '/');
+            imageSetValid = true;
+
+        }
+        else
+        {
+            LOG_WARNING("Unknown actor image path: " + std::string(wwdObject->imageSet));
+        }
+
+
+        if (imageSetValid)
+        {
+            //std::replace(tmpImageSet.begin(), tmpImageSet.end(), '_', '/');
+            tmpImageSet += "/*";
+            tmpImageSet = tmpImagesRootPath + tmpImageSet;
+        }
 
         if (logic == "CursePowerup" || logic == "JumpSwitch")
         {
@@ -246,9 +281,12 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
 
             switch (levelNumber)
             {
-            case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
-            default: assert(false && "Nonexistant actor prototype"); break;
+                case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
+                default: assert(false && "Nonexistant actor prototype"); break;
             }
+
+            // Temporary hack
+            assert(proto == ActorPrototype_Level5_CrumblingPeg);
 
             int crumbleDelay = wwdObject->counter;
             int width = wwdObject->width;
@@ -256,7 +294,7 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
             for (int pegIdx = 0; pegIdx < width; pegIdx++)
             {
                 root->LinkEndChild(
-                    ActorTemplates::CreateXmlData_CrumblingPeg(proto, position, crumbleDelay));
+                    ActorTemplates::CreateXmlData_CrumblingPeg(proto, position, tmpImageSet, crumbleDelay));
 
                 position.x += 64;
             }

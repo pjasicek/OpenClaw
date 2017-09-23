@@ -17,6 +17,8 @@
 #include "../../UserInterface/HumanView.h"
 #include "../../Scene/SceneNodes.h"
 
+#include "../../Util/ClawLevelUtil.h"
+
 const char* ControllableComponent::g_Name = "ControllableComponent";
 const char* ClawControllableComponent::g_Name = "ClawControllableComponent";
 
@@ -1003,76 +1005,11 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType, int so
             // Sound should be always like this
             deathSound = "/LEVEL" + ToStr(currentLevel) + "/SOUNDS/DEATHTILE.WAV";
 
-            // Any special effect linked to the death and level
-            switch (currentLevel)
+            // Check if we fell into some stuff (tar, water) - if yes, hide Claw's body since he is underwater 
+            // or something similar
+            if (ClawLevelUtil::CreateSpecialDeathEffect(m_pPositionComponent->GetPosition(), currentLevel) != nullptr)
             {
-                // Spikes
-                case 1:
-                case 3:
-                case 5:
-                case 9:
-                case 10:
-                    break;
-                // Liquid
-                case 2:
-                {
-                    // Fallen into liquid - set invisible
-                    m_pRenderComponent->SetVisible(false);
-
-                    // Create tar splash
-                    Point splashPosition(
-                        m_pPositionComponent->GetPosition().x,
-                        m_pPositionComponent->GetPosition().y - 42);
-                    ActorTemplates::CreateSingleAnimation(splashPosition, AnimationType_TarSplash);
-                    break;
-                }
-                case 4:
-                {
-                    // Fallen into liquid - set invisible
-                    m_pRenderComponent->SetVisible(false);
-
-                    // Create tar splash
-                    Point splashPosition(
-                        m_pPositionComponent->GetPosition().x,
-                        m_pPositionComponent->GetPosition().y - 30);
-                    ActorTemplates::CreateSingleAnimation(splashPosition, AnimationType_TarSplash);
-                    break;
-                }
-                case 6:
-                {
-                    // Fallen into liquid - set invisible
-                    m_pRenderComponent->SetVisible(false);
-
-                    // Create tar splash
-                    Point splashPosition(
-                        m_pPositionComponent->GetPosition().x,
-                        m_pPositionComponent->GetPosition().y - 8);
-                    ActorTemplates::CreateSingleAnimation(splashPosition, AnimationType_TarSplash);
-                    break;
-                }
-                case 7:
-                {
-                    // Fallen into liquid - set invisible
-                    m_pRenderComponent->SetVisible(false);
-
-                    // Create tar splash
-                    Point splashPosition(
-                        m_pPositionComponent->GetPosition().x,
-                        m_pPositionComponent->GetPosition().y - 20);
-                    ActorTemplates::CreateSingleAnimation(splashPosition, AnimationType_TarSplash);
-                    break;
-                }
-                case 8:
-                case 11:
-                case 12:
-                case 13:
-                case 14:
-                    assert(false && "Unsupported at the moment");
-                    break;
-
-                default:
-                    assert(false && "Unknown level");
-                    break;
+                m_pRenderComponent->SetVisible(false);
             }
         }
         

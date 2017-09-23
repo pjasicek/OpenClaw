@@ -1805,7 +1805,7 @@ namespace ActorTemplates
         return pActorElem;
     }
 
-    TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, Point position, const ElevatorDef& elevatorDef)
+    TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, Point position, const std::string& imagePath, const ElevatorDef& elevatorDef)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(elevatorProto);
         assert(pActorElem != NULL);
@@ -1813,6 +1813,9 @@ namespace ActorTemplates
         //----------- Position
         assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position", 
             "x", (int)position.x, "y", (int)position.y));
+
+        //----------- ActorRenderComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
 
         //----------- Elevator properties
         assert(SetTiXmlNode2Attribute(pActorElem, "Actor.KinematicComponent.Speed", 
@@ -1848,7 +1851,7 @@ namespace ActorTemplates
         return pActorElem;
     }
 
-    TiXmlElement* CreateXmlData_CrumblingPeg(ActorPrototype proto, const Point& position, int crumbleDelay)
+    TiXmlElement* CreateXmlData_CrumblingPeg(ActorPrototype proto, const Point& position, const std::string& imagePath, int crumbleDelay)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
         assert(pActorElem != NULL);
@@ -1856,6 +1859,9 @@ namespace ActorTemplates
         //----------- Position
         assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
+
+        //----------- ActorRenderComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
 
         //----------- TogglePeg properties
         assert(SetTiXmlNodeValue(pActorElem, "Actor.CrumblingPegAIComponent.CrumbleDelay", crumbleDelay));

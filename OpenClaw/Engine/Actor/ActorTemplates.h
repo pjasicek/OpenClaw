@@ -41,7 +41,7 @@ namespace ActorTemplates
     // Actor prototypes
     TiXmlElement* CreateXmlData_Actor(ActorPrototype actorProto, Point position);
     TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle);
-    TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, Point position, const ElevatorDef& elevatorDef);
+    TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, Point position, const std::string& imagePath, const ElevatorDef& elevatorDef);
     TiXmlElement* CreateXmlData_TogglePegActor(ActorPrototype togglePegProto, Point position, const TogglePegDef& togglePegDef);
     TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir, int sourceActorId);
     TiXmlElement* CreateXmlData_LocalAmbientSound(ActorPrototype proto, Point position, const LocalAmbientSoundDef& soundDef);
@@ -51,7 +51,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_Rope(ActorPrototype proto, const Point& position, const std::string& imagePath, const RopeDef& def);
     TiXmlElement* CreateXmlData_SteppingGround(ActorPrototype proto, const Point& position, const SteppingGroundDef& def);
     TiXmlElement* CreateXmlData_SpringBoard(ActorPrototype proto, const Point& position, const SpringBoardDef& def);
-    TiXmlElement* CreateXmlData_CrumblingPeg(ActorPrototype proto, const Point& position, int crumbleDelay);
+    TiXmlElement* CreateXmlData_CrumblingPeg(ActorPrototype proto, const Point& position, const std::string& imagePath, int crumbleDelay);
     TiXmlElement* CreateXmlData_LootContainer(ActorPrototype proto, const Point& position, const std::vector<PickupType>& loot, int zCoord);
 
     StrongActorPtr CreateActor(ActorPrototype proto, Point position);

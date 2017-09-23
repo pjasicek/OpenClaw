@@ -171,7 +171,7 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
 
     if (commandStr.find("cpudelay ") != std::string::npos && commandArgs.size() == 2)
     {
-        g_pApp->m_GlobalOptions.cpuDelayMs = std::stoi(commandArgs[1]);
+        g_pApp->m_DebugOptions.cpuDelayMs = std::stoi(commandArgs[1]);
         wasCommandExecuted = true;
     }
 

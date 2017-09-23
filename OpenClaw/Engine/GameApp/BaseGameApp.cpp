@@ -229,7 +229,7 @@ int32 BaseGameApp::Run()
         }
 
         // Artificially decrease fps. Configurable from console
-        SDL_Delay(m_GlobalOptions.cpuDelayMs);
+        SDL_Delay(m_DebugOptions.cpuDelayMs);
     }
 
     Terminate();
@@ -516,8 +516,6 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     //-------------------------------------------------------------------------
     if (TiXmlElement* pGlobalOptionsRootElem = configRoot->FirstChildElement("GlobalOptions"))
     {
-        ParseValueFromXmlElem(&m_GlobalOptions.cpuDelayMs, 
-            pGlobalOptionsRootElem->FirstChildElement("CpuDelay"));
         ParseValueFromXmlElem(&m_GlobalOptions.maxJumpSpeed,
             pGlobalOptionsRootElem->FirstChildElement("MaxJumpSpeed"));
         ParseValueFromXmlElem(&m_GlobalOptions.maxFallSpeed,
@@ -534,8 +532,6 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("MaxJumpHeight"));
         ParseValueFromXmlElem(&m_GlobalOptions.powerupMaxJumpHeight,
             pGlobalOptionsRootElem->FirstChildElement("PowerupMaxJumpHeight"));
-        ParseValueFromXmlElem(&m_GlobalOptions.skipMenu,
-            pGlobalOptionsRootElem->FirstChildElement("SkipMenu"));
         ParseValueFromXmlElem(&m_GlobalOptions.startLookUpOrDownTime,
             pGlobalOptionsRootElem->FirstChildElement("StartLookUpOrDownTime"));
         ParseValueFromXmlElem(&m_GlobalOptions.maxLookUpOrDownDistance,
@@ -550,8 +546,6 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("SpringBoardSpringHeight"));*/
         ParseValueFromXmlElem(&m_GlobalOptions.springBoardSpringSpeed,
             pGlobalOptionsRootElem->FirstChildElement("SpringBoardSpringSpeed"));
-        ParseValueFromXmlElem(&m_GlobalOptions.skipBossFightIntro,
-            pGlobalOptionsRootElem->FirstChildElement("SkipBossFightIntro"));
         ParseValueFromXmlElem(&m_GlobalOptions.useAlternateControls,
             pGlobalOptionsRootElem->FirstChildElement("UseAlternateControls"));
         ParseValueFromXmlElem(&m_GlobalOptions.clawMinFallHeight,
@@ -562,6 +556,21 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("ShowFps"));
         ParseValueFromXmlElem(&m_GlobalOptions.showPosition,
             pGlobalOptionsRootElem->FirstChildElement("ShowPosition"));
+    }
+
+    //-------------------------------------------------------------------------
+    // Debug options
+    //-------------------------------------------------------------------------
+    if (TiXmlElement* pDebugOptionsRootElem = configRoot->FirstChildElement("DebugOptions"))
+    {
+        ParseValueFromXmlElem(&m_DebugOptions.bSkipBossFightIntro,
+            pDebugOptionsRootElem->FirstChildElement("SkipBossFightIntro"));
+        ParseValueFromXmlElem(&m_DebugOptions.bSkipMenu,
+            pDebugOptionsRootElem->FirstChildElement("SkipMenu"));
+        ParseValueFromXmlElem(&m_DebugOptions.cpuDelayMs,
+            pDebugOptionsRootElem->FirstChildElement("CpuDelay"));
+        ParseValueFromXmlElem(&m_DebugOptions.lastImplementedLevel,
+            pDebugOptionsRootElem->FirstChildElement("LastImplementedLevel"));
     }
 
     return true;

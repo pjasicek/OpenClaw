@@ -16,4 +16,6 @@ target_sources(openclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/PrimeSearch.h
     ${CMAKE_CURRENT_SOURCE_DIR}/XmlUtil.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/XmlUtil.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ClawLevelUtil.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ClawLevelUtil.h
 )

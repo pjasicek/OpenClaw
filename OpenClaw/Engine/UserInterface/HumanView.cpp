@@ -707,7 +707,7 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         m_pScene->SetCamera(m_pCamera);
 
         // Level 6 is currently the last level
-        if (levelNumber > 7)
+        if (levelNumber > g_pApp->GetDebugOptions()->lastImplementedLevel)
         {
             IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Enter_Menu()));
         }

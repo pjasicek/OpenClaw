@@ -47,25 +47,28 @@
     <CommandPrompt>&gt; </CommandPrompt>
   </Console>
   <GlobalOptions>
-    <CpuDelay>0</CpuDelay>
     <MaxJumpSpeed>8.8</MaxJumpSpeed>
     <MaxFallSpeed>14.0</MaxFallSpeed>
     <IdleSoundQuoteInterval>15000</IdleSoundQuoteInterval>
     <PlatformSpeedModifier>0.015</PlatformSpeedModifier>
     <MaxJumpHeight>155</MaxJumpHeight>
     <PowerupMaxJumpHeight>205</PowerupMaxJumpHeight>
-    <SkipMenu>false</SkipMenu>
     <StartLookUpOrDownTime>1500</StartLookUpOrDownTime>
     <MaxLookUpOrDownDistance>250</MaxLookUpOrDownDistance>
     <LookUpOrDownSpeed>250</LookUpOrDownSpeed>
     <ClawRunningSpeed>4.5</ClawRunningSpeed>
     <SpringBoardSpringHeight>UNUSED</SpringBoardSpringHeight>
     <SpringBoardSpringSpeed>11</SpringBoardSpringSpeed>
-    <SkipBossFightIntro>false</SkipBossFightIntro>
     <UseAlternateControls>false</UseAlternateControls>
     <ClawMinFallHeight>500</ClawMinFallHeight>
     <LoadAllLevelSaves>true</LoadAllLevelSaves>
     <ShowFps>true</ShowFps>
     <ShowPosition>true</ShowPosition>
   </GlobalOptions>
+  <DebugOptions>
+    <SkipMenu>false</SkipMenu>
+    <LastImplementedLevel>7</LastImplementedLevel>
+    <SkipBossFightIntro>false</SkipBossFightIntro>
+    <CpuDelay>0</CpuDelay>
+  </DebugOptions>
 </Configuration>

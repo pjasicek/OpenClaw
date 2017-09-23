@@ -19,6 +19,7 @@
 #include "../Actor/Components/ControllableComponent.h"
 
 #include "../Util/Converters.h"
+#include "../Util/ClawLevelUtil.h"
 
 #include "GameSaves.h"
 #include "BaseGameLogic.h"
@@ -746,7 +747,7 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
 #ifdef ANDROID
             VChangeState(GameState_LoadingLevel);
 #else
-            if (g_pApp->GetGlobalOptions()->skipMenu)
+            if (g_pApp->GetDebugOptions()->bSkipMenu)
             {
                 VChangeState(GameState_LoadingLevel);
             }
@@ -869,11 +870,7 @@ void BaseGameLogic::VChangeState(GameState newState)
         // In case of debugging
         if (m_pCurrentLevel == nullptr)
         {
-            m_pCurrentLevel.reset(new LevelData);
-
-            m_pCurrentLevel->m_bIsNewGame = false;
-            m_pCurrentLevel->m_LeveNumber = 7;
-            m_pCurrentLevel->m_LoadedCheckpoint = 0;
+            m_pCurrentLevel = ClawLevelUtil::GetDebugLoadLevelData();
         }
 
         int levelNumber = m_pCurrentLevel->GetLevelNumber();
@@ -997,63 +994,12 @@ void BaseGameLogic::CreateSinglePhysicsTile(int x, int y, const TileCollisionPro
             CollisonToFixtureType(tileCollisionRect.collisionType));
     }
 
-    // LEVEL1: Top of the ladder
-    if (m_pCurrentLevel->GetLevelNumber() == 1 && proto.id == 310)
+    Point topLadderOffset;
+    if (ClawLevelUtil::TryGetTopLadderInfo(m_pCurrentLevel->GetLevelNumber(), proto.id, topLadderOffset))
     {
-        Point position(x, y);
+        Point position = Point(x, y) + topLadderOffset;
         Point size(64, 10);
-        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
-    }
-    else if (m_pCurrentLevel->GetLevelNumber() == 2 && proto.id == 16)
-    {
-        Point position(x, y + 50);
-        Point size(64, 10);
-        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
-    }
-    else if (m_pCurrentLevel->GetLevelNumber() == 3 && proto.id == 668)
-    {
-        Point position(x, y + 5);
-        Point size(64, 10);
-        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
-    }
-    else if (m_pCurrentLevel->GetLevelNumber() == 3 && proto.id == 667)
-    {
-        Point position(x, y);
-        Point size(64, 10);
-        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
-    }
-    else if (m_pCurrentLevel->GetLevelNumber() == 4 && proto.id == 181)
-    {
-        Point position(x, y + 7);
-        Point size(64, 10);
-        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
-    }
-    else if (m_pCurrentLevel->GetLevelNumber() == 5 && (proto.id == 215 || proto.id == 221))
-    {
-        Point position(x, y - 14);
-        Point size(64, 10);
-        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
-    }
-    else if (m_pCurrentLevel->GetLevelNumber() == 5 && (proto.id == 516))
-    {
-        Point position(x, y);
-        Point size(64, 10);
-        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
-    }
-    else if (m_pCurrentLevel->GetLevelNumber() == 6 && (proto.id == 16 /*|| proto.id == 25*/ || proto.id == 139))
-    {
-        Point position(x, y);
-        Point size(64, 10);
-        m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
-    }
-    else if (m_pCurrentLevel->GetLevelNumber() == 7 && (proto.id == 110 || proto.id == 113 || proto.id == 119 || proto.id == 394))
-    {
-        Point position(x, y + 8);
-        if (proto.id == 110)
-        {
-            position.y = y + 24;
-        }
-        Point size(64, 10);
+
         m_pPhysics->VAddStaticGeometry(position, size, CollisionType_Ground, FixtureType_TopLadderGround);
     }
 }

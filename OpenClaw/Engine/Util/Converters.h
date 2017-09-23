@@ -6,12 +6,16 @@
 #include "../SharedDefines.h"
 #include "../Actor/ActorTemplates.h"
 #include "../GameApp/BaseGameApp.h"
+#include "ClawLevelUtil.h"
 
 //
 //
 // TODO TODO TODO: Somehow refactor this, delete unneeded ones and use everything from Actor/ActorTemplates.cpp
 //
 //
+
+ActorPrototype ActorLogicToActorPrototype(const std::string& logic, int levelNumber);
+TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber);
 
 #define INSERT_POSITION_COMPONENT(x, y, rootElem) \
 { \
@@ -108,7 +112,6 @@ inline TiXmlElement* CreateCycleAnimation(int animFrameTime)
 
 //=====================================================================================================================
 
-
 inline TiXmlElement* EyeCandyToXml(WwdObject* pWwdObject)
 {
     if (std::string(pWwdObject->logic).find("Ani") != std::string::npos)
@@ -120,92 +123,6 @@ inline TiXmlElement* EyeCandyToXml(WwdObject* pWwdObject)
     }
 
     return NULL;
-}
-
-inline TiXmlElement* TogglePegToXml(WwdObject* pWwdObject)
-{
-    TiXmlElement* pTogglePegAIElem = new TiXmlElement("TogglePegAIComponent");
-    pTogglePegAIElem->SetAttribute("Type", pWwdObject->logic);
-    pTogglePegAIElem->SetAttribute("resource", "created");
-
-    std::string logic = pWwdObject->logic;
-    std::string imageSet = pWwdObject->imageSet;
-
-    uint32 delay = 0;
-    if (logic == "TogglePeg")
-    {
-        delay = 0;
-    }
-    else if (logic == "TogglePeg2")
-    {
-        delay = 750;
-    }
-    else if (logic == "TogglePeg3")
-    {
-        delay = 1500;
-    }
-    else if (logic == "TogglePeg4")
-    {
-        delay = 2250;
-    }
-    else
-    {
-        LOG_WARNING("Unknown TogglePeg: " + logic)
-    }
-
-    if (pWwdObject->speed > 0)
-    {
-        delay = pWwdObject->speed;
-    }
-
-    XML_ADD_TEXT_ELEMENT("Delay", ToStr(delay).c_str(), pTogglePegAIElem);
-
-    uint32 timeOn = 0;
-    uint32 timeOff = 0;
-    if (pWwdObject->speedX > 0)
-    {
-        timeOn = pWwdObject->speedX;
-    }
-    else
-    {
-        timeOn = 1500;
-    }
-    if (pWwdObject->speedY > 0)
-    {
-        timeOff = pWwdObject->speedY;
-    }
-    else
-    {
-        timeOff = 1500;
-    }
-
-    if (pWwdObject->smarts & 0x1)
-    {
-        XML_ADD_TEXT_ELEMENT("AlwaysOn", "true", pTogglePegAIElem);
-    }
-    else
-    {
-        XML_ADD_TEXT_ELEMENT("TimeOn", ToStr(timeOn).c_str(), pTogglePegAIElem);
-        XML_ADD_TEXT_ELEMENT("TimeOff", ToStr(timeOff).c_str(), pTogglePegAIElem);
-    }
-
-    // Different image sets have different anim frames at which they toggle
-
-    int toggleFrameIdx = -1;
-    if (imageSet == "LEVEL_PEG") // LEVEL 1
-    {
-        toggleFrameIdx = 9;
-    }
-    else if (imageSet == "LEVEL_PEGSLIDER") // LEVEL 2
-    {
-        toggleFrameIdx = 2;
-    }
-
-    assert(toggleFrameIdx != -1);
-
-    XML_ADD_TEXT_ELEMENT("ToggleFrameIdx", ToStr(toggleFrameIdx).c_str(), pTogglePegAIElem);
-
-    return pTogglePegAIElem;
 }
 
 // @moveType: Left/Right/LeftTop/... or stop for a certain time only 1-9 are valid
@@ -335,6 +252,9 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     //=========================================================================
     // Specific logics to XML
     //=========================================================================
+
+    ActorPrototype actorProto = ClawLevelUtil::ActorLogicToActorPrototype(levelNumber, logic);
+    const Point actorPosition = Point(wwdObject->x, wwdObject->y);
 
     //LOG("Logic: " + logic);
     if (logic.find("AmbientSound") != std::string::npos)
@@ -506,6 +426,12 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic.find("Statue") != std::string::npos)
     {
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
         std::vector<PickupType> loot;
         if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
         if (wwdObject->userRect1.left > 0) { loot.push_back(PickupType(wwdObject->userRect1.left)); }
@@ -517,9 +443,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         if (wwdObject->userRect2.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect2.bottom)); }
         if (wwdObject->userRect2.top > 0) { loot.push_back(PickupType(wwdObject->userRect2.top)); }
 
-        assert(levelNumber == 5);
-
-        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_LootContainer(
             ActorPrototype_Level5_LootStatue, 
             Point(wwdObject->x, wwdObject->y), 
@@ -538,45 +461,21 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     else if (logic.find("CrumblingPeg") != std::string::npos)
     {
         SAFE_DELETE(pActorElem);
-
-        Point position = Point(wwdObject->x, wwdObject->y);
-        ActorPrototype proto = ActorPrototype_None;
-
-        switch (levelNumber)
-        {
-            case 1: proto = ActorPrototype_Level1_CrumblingPeg; break;
-            case 3:
-            {
-                if (imageSet == "LEVEL_CRUMBLINPEG1")
-                {
-                    proto = ActorPrototype_Level3_CrumblingPeg_1;
-                }
-                else if (imageSet == "LEVEL_CRUMBLINPEG2")
-                {
-                    proto = ActorPrototype_Level3_CrumblingPeg_2;
-                }
-                break;
-            }
-            case 4: proto = ActorPrototype_Level4_CrumblingPeg; break;
-            case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
-            case 6: proto = ActorPrototype_Level6_CrumblingPeg; break;
-            case 7: proto = ActorPrototype_Level7_CrumblingPeg; break;
-            default: return NULL;
-        }
-
-        if (proto == ActorPrototype_None)
+        if (actorProto == ActorPrototype_None)
         {
             return NULL;
         }
 
-        // assert(proto != ActorPrototype_Start && "Unsupported level ?");
-
-        return ActorTemplates::CreateXmlData_CrumblingPeg(proto, position, 0);
+        return ActorTemplates::CreateXmlData_CrumblingPeg(actorProto, actorPosition, tmpImageSet, 0);
     }
     else if (logic.find("Elevator") != std::string::npos &&
              logic != "PathElevator")
     {
         SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
 
         std::string logic = wwdObject->logic;
 
@@ -630,62 +529,15 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         Point position(wwdObject->x, wwdObject->y);
 
-        ActorPrototype elevatorProto = ActorPrototype_None;
-        if (levelNumber == 1)
-        {
-            elevatorProto = ActorPrototype_Level1_Elevator;
-        }
-        else if (levelNumber == 2)
-        {
-            elevatorProto = ActorPrototype_Level2_Elevator;
-        }
-        else if (levelNumber == 3)
-        {
-            if (imageSet == "LEVEL_ELEVATOR1")
-            {
-                elevatorProto = ActorPrototype_Level3_Elevator_1;
-            }
-            else
-            {
-                elevatorProto = ActorPrototype_Level3_Elevator_2;
-            }
-        }
-        else if (levelNumber == 4)
-        {
-            elevatorProto = ActorPrototype_Level4_Elevator;
-        }
-        else if (levelNumber == 5)
-        {
-            elevatorProto = ActorPrototype_Level5_Elevator;
-        }
-        else if (levelNumber == 6)
-        {
-            if (imageSet == "LEVEL_GRILLELEVATOR")
-            {
-                elevatorProto = ActorPrototype_Level6_Elevator_1;
-            }
-            else
-            {
-                elevatorProto = ActorPrototype_Level6_Elevator_2;
-            }
-        }
-        else if (levelNumber == 7)
-        {
-            elevatorProto = ActorPrototype_Level7_Elevator;
-        }
-
-        if (elevatorProto == ActorPrototype_None)
-        {
-            return NULL;
-        }
-
-        // assert(elevatorProto != ActorPrototype_Start && "Unsupported level ?");
-
-        return ActorTemplates::CreateXmlData_ElevatorActor(elevatorProto, position, elevatorDef);
+        return ActorTemplates::CreateXmlData_ElevatorActor(actorProto, position, tmpImageSet, elevatorDef);
     }
     else if (logic.find("TogglePeg") != std::string::npos)
     {
         SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
 
         std::string logic = wwdObject->logic;
         std::string imageSet = wwdObject->imageSet;
@@ -766,12 +618,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             proto,
             position,
             togglePegDef);
-
-        /*pActorElem->LinkEndChild(TogglePegToXml(wwdObject));
-
-        TiXmlElement* animElem = new TiXmlElement("AnimationComponent");
-        XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle75", animElem);
-        pActorElem->LinkEndChild(animElem);*/
     }
     else if (logic.find("Checkpoint") != std::string::npos)
     {
@@ -813,141 +659,23 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "TownGuard2" ||
              logic == "Seagull" ||
              logic == "RedTailPirate" ||
-             logic == "BearSailor")
+             logic == "BearSailor" ||
+             logic == "Raux" ||
+             logic == "Katherine" ||
+             logic == "Wolvington")
     {
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
         std::vector<PickupType> loot;
         if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
         if (wwdObject->userRect1.left > 0) { loot.push_back(PickupType(wwdObject->userRect1.left)); }
         if (wwdObject->userRect1.right > 0) { loot.push_back(PickupType(wwdObject->userRect1.right)); }
         if (wwdObject->userRect1.bottom > 0) { loot.push_back(PickupType(wwdObject->userRect1.bottom)); }
         if (wwdObject->userRect1.top > 0) { loot.push_back(PickupType(wwdObject->userRect1.top)); }
-
-        SAFE_DELETE(pActorElem);
-
-        ActorPrototype actorProto = ActorPrototype_None;
-        if (levelNumber == 1)
-        {
-            if (logic == "Rat")
-            {
-                actorProto = ActorPrototype_Level1_Rat;
-            }
-            else if (logic == "Soldier")
-            {
-                actorProto = ActorPrototype_Level1_Soldier;
-            }
-            else if (logic == "Officer")
-            {
-                actorProto = ActorPrototype_Level1_Officer;
-            }
-        }
-        else if (levelNumber == 2)
-        {
-            if (logic == "Soldier")
-            {
-                actorProto = ActorPrototype_Level2_Soldier;
-            }
-            else if (logic == "Officer")
-            {
-                actorProto = ActorPrototype_Level2_Officer;
-            }
-            else if (logic == "PunkRat")
-            {
-                actorProto = ActorPrototype_Level2_PunkRat;
-            }
-        }
-        else if (levelNumber == 3)
-        {
-            if (logic == "Rat")
-            {
-                actorProto = ActorPrototype_Level3_Rat;
-            }
-            else if (logic == "CutThroat")
-            {
-                actorProto = ActorPrototype_Level3_CutThroat;
-            }
-            else if (logic == "RobberThief")
-            {
-                actorProto = ActorPrototype_Level3_RobberThief;
-            }
-        }
-        else if (levelNumber == 4)
-        {
-            if (logic == "Rat")
-            {
-                actorProto = ActorPrototype_Level4_Rat;
-            }
-            else if (logic == "CutThroat")
-            {
-                actorProto = ActorPrototype_Level4_CutThroat;
-            }
-            else if (logic == "RobberThief")
-            {
-                actorProto = ActorPrototype_Level4_RobberThief;
-            }
-        }
-        else if (levelNumber == 5)
-        {
-            if (logic == "TownGuard1")
-            {
-                actorProto = ActorPrototype_Level5_TownGuard1;
-
-                // Jumping is not yet implemented. Make them patrol instead
-                if ((wwdObject->maxX - wwdObject->minX) <= 100)
-                {
-                    wwdObject->minX -= 80;
-                    wwdObject->maxX += 80;
-                }
-            }
-            else if (logic == "TownGuard2")
-            {
-                actorProto = ActorPrototype_Level5_TownGuard2;
-            }
-            else if (logic == "Seagull")
-            {
-                actorProto = ActorPrototype_Level5_Seagull;
-            }
-        }
-        else if (levelNumber == 6)
-        {
-            if (logic == "TownGuard1")
-            {
-                actorProto = ActorPrototype_Level6_TownGuard1;
-            }
-            else if (logic == "TownGuard2")
-            {
-                actorProto = ActorPrototype_Level6_TownGuard2;
-            }
-            else if (logic == "Seagull")
-            {
-                actorProto = ActorPrototype_Level6_Seagull;
-            }
-            else if (logic == "Rat")
-            {
-                actorProto = ActorPrototype_Level6_Rat;
-            }
-        }
-        else if (levelNumber == 7)
-        {
-            if (logic == "Seagull")
-            {
-                actorProto = ActorPrototype_Level7_Seagull;
-            }
-            if (logic == "RedTailPirate")
-            {
-                actorProto = ActorPrototype_Level7_RedTailPirate;
-            }
-            if (logic == "BearSailor")
-            {
-                actorProto = ActorPrototype_Level7_BearSailor;
-            }
-        }
-
-        if (actorProto == ActorPrototype_None)
-        {
-            //LOG_ERROR("Failed to find ActorPrototype for logic: " + logic + " in level: " + ToStr(levelNumber));
-            return NULL;
-            // assert(false && "Unsupported level ?");
-        }
 
         return ActorTemplates::CreateXmlData_EnemyAIActor(
             actorProto,
@@ -1007,96 +735,42 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     else if (logic == "TowerCannonLeft")
     {
         SAFE_DELETE(pActorElem);
-
-        assert(levelNumber == 2 && "Expected only level 2");
-
-        Point position(wwdObject->x, wwdObject->y);
-        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level2_TowerCannonLeft, position);
-    }
-    else if (logic == "TowerCannonRight")
-    {
-        SAFE_DELETE(pActorElem);
-
-        assert(levelNumber == 2 && "Expected only level 2");
-
-        Point position(wwdObject->x, wwdObject->y);
-        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level2_TowerCannonRight, position);
-    }
-    else if (logic == "BossStager")
-    {
-        SAFE_DELETE(pActorElem);
-
-        //assert(levelNumber == 2 && "Expected only level 2");
-        ActorPrototype proto = ActorPrototype_None;
-        if (levelNumber == 2)
-        {
-            proto = ActorPrototype_Level2_BossStager;
-        }
-        else if (levelNumber == 4)
-        {
-            proto = ActorPrototype_Level4_BossStager;
-        }
-        else if (levelNumber == 6)
-        {
-            proto = ActorPrototype_Level6_BossStager;
-        }
-
-        if (proto == ActorPrototype_None)
+        if (actorProto == ActorPrototype_None)
         {
             return NULL;
         }
 
-        // assert(proto != ActorPrototype_None);
+        Point position(wwdObject->x, wwdObject->y);
+        return ActorTemplates::CreateXmlData_Actor(actorProto, position);
+    }
+    else if (logic == "TowerCannonRight")
+    {
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
 
         Point position(wwdObject->x, wwdObject->y);
-        return ActorTemplates::CreateXmlData_Actor(proto, position);
+        return ActorTemplates::CreateXmlData_Actor(actorProto, position);
     }
-    else if (logic == "Raux")
+    else if (logic == "BossStager")
     {
         SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
 
-        return ActorTemplates::CreateXmlData_EnemyAIActor(
-            ActorPrototype_Level2_LaRaux,
-            Point(wwdObject->x, wwdObject->y),
-            {},
-            wwdObject->minX,
-            wwdObject->maxX,
-            false);
-    }
-    else if (logic == "Katherine")
-    {
-        SAFE_DELETE(pActorElem);
-
-        return ActorTemplates::CreateXmlData_EnemyAIActor(
-            ActorPrototype_Level4_Katherine,
-            Point(wwdObject->x, wwdObject->y),
-            {},
-            wwdObject->minX,
-            wwdObject->maxX,
-            false);
-    }
-    else if (logic == "Wolvington")
-    {
-        SAFE_DELETE(pActorElem);
-
-        return ActorTemplates::CreateXmlData_EnemyAIActor(
-            ActorPrototype_Level6_Wolvington,
-            Point(wwdObject->x, wwdObject->y),
-            {},
-            wwdObject->minX,
-            wwdObject->maxX,
-            false);
+        Point position(wwdObject->x, wwdObject->y);
+        return ActorTemplates::CreateXmlData_Actor(actorProto, position);
     }
     else if (logic == "PathElevator")
     {
-        /*static bool wasHere = false;
-        if (wasHere) return pActorElem;
-        wasHere = true;*/
-
-        ActorPrototype proto = ActorPrototype_BasePathElevator;
-        if (levelNumber == 7)
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
         {
-            proto = ActorPrototype_Level7_PathElevator;
+            return NULL;
         }
 
         PathElevatorDef pathElevatorDef;
@@ -1151,7 +825,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
 
         return ActorTemplates::CreateXmlData_PathElevator(
-            proto,
+            actorProto,
             position,
             tmpImageSet,
             pathElevatorDef);
@@ -1213,10 +887,16 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic == "GooVent")
     {
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
         Point position(wwdObject->x, wwdObject->y);
 
         SAFE_DELETE(pActorElem);
-        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level6_GooVent, position);
+        return ActorTemplates::CreateXmlData_Actor(actorProto, position);
     }
     else if (logic == "AniRope")
     {
@@ -1245,28 +925,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     else if (logic.find("SteppingStone") != std::string::npos)
     {
         SAFE_DELETE(pActorElem);
-
-        ActorPrototype proto = ActorPrototype_None;
-
-        if (levelNumber == 4)
-        {
-            proto = ActorPrototype_Level4_SteppingGround;
-        }
-        else if (levelNumber == 6)
-        {
-            proto = ActorPrototype_Level6_SteppingGround;
-        }
-        else if (levelNumber == 7)
-        {
-            proto = ActorPrototype_Level7_SteppingGround;
-        }
-
-        if (proto == ActorPrototype_None)
+        if (actorProto == ActorPrototype_None)
         {
             return NULL;
         }
-
-        // assert(proto != ActorPrototype_None && "Unsupported level ?");
 
         Point position(wwdObject->x, wwdObject->y);
 
@@ -1276,34 +938,18 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         def.timeOff = 500;
 
         return ActorTemplates::CreateXmlData_SteppingGround(
-            proto,
+            actorProto,
             position,
             def);
     }
     else if (logic == "SpringBoard" ||
              logic == "GroundBlower")
     {
-        ActorPrototype proto = ActorPrototype_None;
-
-        if (levelNumber == 4)
-        {
-            proto = ActorPrototype_Level4_SpringBoard;
-        }
-        else if (levelNumber == 6)
-        {
-            proto = ActorPrototype_Level6_GroundBlower;
-        }
-        else if (levelNumber == 7)
-        {
-            proto = ActorPrototype_Level7_SpringBoard;
-        }
-
-        if (proto == ActorPrototype_None)
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
         {
             return NULL;
         }
-
-        // assert(proto != ActorPrototype_None && "Unsupported level ?");
 
         Point position(wwdObject->x, wwdObject->y);
 
@@ -1319,7 +965,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         // Everything should be in XML here
         return ActorTemplates::CreateXmlData_SpringBoard(
-            proto,
+            actorProto,
             position,
             def);
     }
@@ -1342,6 +988,13 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             s_ReportedUnknownLogicsList.push_back(logic);
             LOG_WARNING("Unknown logic: " + logic);
         }
+    }
+
+    // If we have actor prototype defined and not processed, it is a failure on our side
+    if (actorProto != ActorPrototype_None)
+    {
+        SAFE_DELETE(pActorElem);
+        return NULL;
     }
 
     return pActorElem;
@@ -1497,8 +1150,5 @@ inline TiXmlElement* CreateHUDElement(const HUDElementDef& def)
         def.HUDElemKey,
         def.isVisible);
 }
-
-TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber);
-
 
 #endif

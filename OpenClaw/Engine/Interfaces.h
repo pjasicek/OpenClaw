@@ -284,15 +284,6 @@ enum ActorPrototype
     // Elevators
     ActorPrototype_BaseElevator,
 
-    ActorPrototype_Level1_Elevator,
-    ActorPrototype_Level2_Elevator,
-    ActorPrototype_Level3_Elevator_1,
-    ActorPrototype_Level3_Elevator_2,
-    ActorPrototype_Level4_Elevator,
-    ActorPrototype_Level5_Elevator,
-    ActorPrototype_Level6_Elevator_1,
-    ActorPrototype_Level6_Elevator_2,
-
     ActorPrototype_BasePathElevator,
 
     // Toggle pegs
@@ -306,8 +297,7 @@ enum ActorPrototype
     ActorPrototype_BaseCrumblingPeg,
 
     ActorPrototype_Level1_CrumblingPeg,
-    ActorPrototype_Level3_CrumblingPeg_1,
-    ActorPrototype_Level3_CrumblingPeg_2,
+    ActorPrototype_Level3_CrumblingPeg,
     ActorPrototype_Level4_CrumblingPeg,
     ActorPrototype_Level5_CrumblingPeg,
     ActorPrototype_Level6_CrumblingPeg,
@@ -384,7 +374,6 @@ enum ActorPrototype
 
     // Level 7
     ActorPrototype_Level7_CrumblingPeg,
-    ActorPrototype_Level7_Elevator,
     ActorPrototype_Level7_PathElevator,
     ActorPrototype_Level7_Seagull,
     ActorPrototype_Level7_SpringBoard,

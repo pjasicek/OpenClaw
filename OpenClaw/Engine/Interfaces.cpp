@@ -40,15 +40,6 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         // Elevators
         { ActorPrototype_BaseElevator, "ActorPrototype_BaseElevator" },
 
-        { ActorPrototype_Level1_Elevator, "ActorPrototype_Level1_Elevator" },
-        { ActorPrototype_Level2_Elevator, "ActorPrototype_Level2_Elevator" },
-        { ActorPrototype_Level3_Elevator_1, "ActorPrototype_Level3_Elevator_1" },
-        { ActorPrototype_Level3_Elevator_2, "ActorPrototype_Level3_Elevator_2" },
-        { ActorPrototype_Level4_Elevator, "ActorPrototype_Level4_Elevator" },
-        { ActorPrototype_Level5_Elevator, "ActorPrototype_Level5_Elevator" },
-        { ActorPrototype_Level6_Elevator_1, "ActorPrototype_Level6_Elevator_1" },
-        { ActorPrototype_Level6_Elevator_2, "ActorPrototype_Level6_Elevator_2" },
-
         { ActorPrototype_BasePathElevator, "ActorPrototype_BasePathElevator" },
 
         // Toggle pegs
@@ -61,8 +52,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_BaseCrumblingPeg, "ActorPrototype_BaseCrumblingPeg" },
 
         { ActorPrototype_Level1_CrumblingPeg, "ActorPrototype_Level1_CrumblingPeg" },
-        { ActorPrototype_Level3_CrumblingPeg_1, "ActorPrototype_Level3_CrumblingPeg_1" },
-        { ActorPrototype_Level3_CrumblingPeg_2, "ActorPrototype_Level3_CrumblingPeg_2" },
+        { ActorPrototype_Level3_CrumblingPeg, "ActorPrototype_Level3_CrumblingPeg" },
         { ActorPrototype_Level4_CrumblingPeg, "ActorPrototype_Level4_CrumblingPeg" },
         { ActorPrototype_Level5_CrumblingPeg, "ActorPrototype_Level5_CrumblingPeg" },
         { ActorPrototype_Level6_CrumblingPeg, "ActorPrototype_Level6_CrumblingPeg" },
@@ -139,7 +129,6 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Level 7
         { ActorPrototype_Level7_CrumblingPeg, "ActorPrototype_Level7_CrumblingPeg" },
-        { ActorPrototype_Level7_Elevator, "ActorPrototype_Level7_Elevator" },
         { ActorPrototype_Level7_Seagull, "ActorPrototype_Level7_Seagull" },
         { ActorPrototype_Level7_SpringBoard, "ActorPrototype_Level7_SpringBoard" },
         { ActorPrototype_Level7_SteppingGround, "ActorPrototype_Level7_SteppingGround" },
@@ -199,23 +188,13 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         // Elevators
         { "ActorPrototype_BaseElevator", ActorPrototype_BaseElevator },
 
-        { "ActorPrototype_Level1_Elevator", ActorPrototype_Level1_Elevator },
-        { "ActorPrototype_Level2_Elevator", ActorPrototype_Level2_Elevator },
-        { "ActorPrototype_Level3_Elevator_1", ActorPrototype_Level3_Elevator_1 },
-        { "ActorPrototype_Level3_Elevator_2", ActorPrototype_Level3_Elevator_2 },
-        { "ActorPrototype_Level4_Elevator", ActorPrototype_Level4_Elevator },
-        { "ActorPrototype_Level5_Elevator", ActorPrototype_Level5_Elevator },
-        { "ActorPrototype_Level6_Elevator_1", ActorPrototype_Level6_Elevator_1 },
-        { "ActorPrototype_Level6_Elevator_2", ActorPrototype_Level6_Elevator_2 },
-
         { "ActorPrototype_BasePathElevator", ActorPrototype_BasePathElevator },
 
         // Toggle pegs
         { "ActorPrototype_BaseTogglePeg", ActorPrototype_BaseTogglePeg },
 
         { "ActorPrototype_Level1_CrumblingPeg", ActorPrototype_Level1_CrumblingPeg },
-        { "ActorPrototype_Level3_CrumblingPeg_1", ActorPrototype_Level3_CrumblingPeg_1 },
-        { "ActorPrototype_Level3_CrumblingPeg_2", ActorPrototype_Level3_CrumblingPeg_2 },
+        { "ActorPrototype_Level3_CrumblingPeg", ActorPrototype_Level3_CrumblingPeg },
         { "ActorPrototype_Level4_CrumblingPeg", ActorPrototype_Level4_CrumblingPeg },
         { "ActorPrototype_Level5_CrumblingPeg", ActorPrototype_Level5_CrumblingPeg },
         { "ActorPrototype_Level6_CrumblingPeg", ActorPrototype_Level6_CrumblingPeg },
@@ -299,7 +278,6 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Level 7
         { "ActorPrototype_Level7_CrumblingPeg", ActorPrototype_Level7_CrumblingPeg },
-        { "ActorPrototype_Level7_Elevator", ActorPrototype_Level7_Elevator },
         { "ActorPrototype_Level7_PathElevator", ActorPrototype_Level7_PathElevator },
         { "ActorPrototype_Level7_Seagull", ActorPrototype_Level7_Seagull },
         { "ActorPrototype_Level7_SpringBoard", ActorPrototype_Level7_SpringBoard },

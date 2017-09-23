@@ -173,6 +173,7 @@
     <ClCompile Include="Engine\Events\EventMgr.cpp" />
     <ClCompile Include="Engine\Events\EventMgrImpl.cpp" />
     <ClCompile Include="Engine\Graphics2D\Image.cpp" />
+    <ClCompile Include="Engine\Util\ClawLevelUtil.cpp" />
     <ClCompile Include="Engine\Util\Converters.cpp" />
     <ClCompile Include="Engine\Util\Memory\MemoryPool.cpp" />
     <ClCompile Include="Engine\Util\PrimeSearch.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="Engine\UserInterface\ScoreScreen\EndLevelScoreScreen.h" />
     <ClInclude Include="Engine\UserInterface\ScoreScreen\ScoreScreenCommon.h" />
     <ClInclude Include="Engine\UserInterface\ScoreScreen\ScoreScreenProcesses.h" />
+    <ClInclude Include="Engine\Util\ClawLevelUtil.h" />
     <ClInclude Include="Engine\Util\Converters.h" />
     <ClInclude Include="Engine\GameApp\CommandHandler.h" />
     <ClInclude Include="Engine\GameApp\GameSaves.h" />

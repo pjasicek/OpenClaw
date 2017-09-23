@@ -126,7 +126,6 @@ struct GlobalOptions
 {
     GlobalOptions()
     {
-        cpuDelayMs = 0;
         maxJumpSpeed = 8.8;
         maxFallSpeed = 14.0;
         idleSoundQuoteIntervalMs = 15000;
@@ -135,14 +134,12 @@ struct GlobalOptions
         powerupRunSpeed = 5.5f;
         maxJumpHeight = 150;
         powerupMaxJumpHeight = 200;
-        skipMenu = false;
         startLookUpOrDownTime = 1500;
         maxLookUpOrDownDistance = 250;
         lookUpOrDownSpeed = 250;
         clawRunningSpeed = 5.0;
         //springBoardSpringHeight = 450;
         springBoardSpringSpeed = 11;
-        skipBossFightIntro = false;
         useAlternateControls = false;
         clawMinFallHeight = 500.0f;
         loadAllLevelSaves = false;
@@ -150,7 +147,6 @@ struct GlobalOptions
         showPosition = true;
     }
 
-    int cpuDelayMs;
     double maxJumpSpeed;
     double maxFallSpeed;
     int idleSoundQuoteIntervalMs;
@@ -159,7 +155,6 @@ struct GlobalOptions
     float powerupRunSpeed;
     float maxJumpHeight;
     float powerupMaxJumpHeight;
-    bool skipMenu;
     int startLookUpOrDownTime;
     int maxLookUpOrDownDistance;
     int lookUpOrDownSpeed; 
@@ -167,12 +162,27 @@ struct GlobalOptions
     double clawRunningSpeed;
     //int springBoardSpringHeight;
     double springBoardSpringSpeed;
-    bool skipBossFightIntro;
     bool useAlternateControls;
     float clawMinFallHeight;
     bool loadAllLevelSaves;
     bool showFps;
     bool showPosition;
+};
+
+struct DebugOptions
+{
+    DebugOptions()
+    {
+        cpuDelayMs = 0;
+        bSkipBossFightIntro = false;
+        bSkipMenu = false;
+        lastImplementedLevel = 7;
+    }
+
+    int cpuDelayMs;
+    bool bSkipMenu;
+    int lastImplementedLevel;
+    bool bSkipBossFightIntro;
 };
 
 class EventMgr;
@@ -251,6 +261,7 @@ public:
     const ConsoleConfig* GetConsoleConfig() const { return &m_GameOptions.consoleConfig; }
     GameOptions* GetGameConfig() { return &m_GameOptions; }
     const GlobalOptions* GetGlobalOptions() const { return &m_GlobalOptions; }
+    const DebugOptions* GetDebugOptions() const { return &m_DebugOptions; }
 
     TiXmlElement* GetActorPrototypeElem(ActorPrototype proto);
 
@@ -304,6 +315,7 @@ private:
 
     GameCheats m_GameCheats;
     GlobalOptions m_GlobalOptions;
+    DebugOptions m_DebugOptions;
 
     ActorXmlPrototypeMap m_ActorXmlPrototypeMap;
 };
