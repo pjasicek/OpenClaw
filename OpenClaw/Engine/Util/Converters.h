@@ -9,7 +9,7 @@
 
 //
 //
-// TODO TODO TODO: Somehow refactor this, delete unneeded ones and usse everything from Actor/ActorTemplates.cpp
+// TODO TODO TODO: Somehow refactor this, delete unneeded ones and use everything from Actor/ActorTemplates.cpp
 //
 //
 
@@ -77,15 +77,6 @@ inline TiXmlElement* CreateAnimationComponent(const char* aniPath)
     return elem;
 }
 
-inline TiXmlElement* CreateSoundComponent(const char* soundPath)
-{
-    TiXmlElement* elem = new TiXmlElement("SoundComponent");
-
-    XML_ADD_TEXT_ELEMENT("SoundPath", soundPath, elem);
-
-    return elem;
-}
-
 inline TiXmlElement* CreateActorRenderComponent(const char* imagesPath, int32 zCoord, bool visible = true)
 {
     TiXmlElement* elem = new TiXmlElement("ActorRenderComponent");
@@ -95,17 +86,6 @@ inline TiXmlElement* CreateActorRenderComponent(const char* imagesPath, int32 zC
 
     return elem;
 }
-
-inline TiXmlElement* CreatePlayAreaElement(int x, int y, int w, int h)
-{
-    TiXmlElement* pPlayAreaElement = new TiXmlElement("PlayArea");
-    pPlayAreaElement->SetAttribute("x", x);
-    pPlayAreaElement->SetAttribute("y", y);
-    pPlayAreaElement->SetAttribute("width", w);
-    pPlayAreaElement->SetAttribute("height", h);
-    return pPlayAreaElement;
-}
-
 
 //=====================================================================================================================
 
@@ -126,114 +106,8 @@ inline TiXmlElement* CreateCycleAnimation(int animFrameTime)
     return cycleElem;
 }
 
-inline TiXmlElement* CreateTriggerComponent(int enterCount, bool onceALife, bool isStatic)
-{
-    TiXmlElement* pTriggerComponent = new TiXmlElement("TriggerComponent");
-    if (onceALife)
-    {
-        XML_ADD_TEXT_ELEMENT("TriggerOnce", "true", pTriggerComponent);
-    }
-    else if (enterCount > 0)
-    {
-        XML_ADD_TEXT_ELEMENT("TriggerFinitedTimes", ToStr(enterCount).c_str(), pTriggerComponent);
-    }
-    else
-    {
-        XML_ADD_TEXT_ELEMENT("TriggerUnlimited", "true", pTriggerComponent);
-    }
-    if (isStatic)
-    {
-        XML_ADD_TEXT_ELEMENT("IsStatic", "true", pTriggerComponent);
-    }
-
-    return pTriggerComponent;
-}
-
 //=====================================================================================================================
 
-// This is really ugly as fuck
-inline TiXmlElement* AmbientSoundToXml(WwdObject* pWwdObject)
-{
-    TiXmlElement* pAmbientSoundElem = new TiXmlElement("AmbientSound");
-
-    std::string logicName = pWwdObject->logic;
-    if (logicName == "GlobalAmbientSound" ||
-        logicName == "AmbientSound")
-    {
-        if (pWwdObject->hitRect.right != 0 && pWwdObject->hitRect.bottom != 0)
-        {
-            pAmbientSoundElem->LinkEndChild(CreatePlayAreaElement(pWwdObject->hitRect.left, pWwdObject->hitRect.top,
-                pWwdObject->hitRect.right - pWwdObject->hitRect.left, pWwdObject->hitRect.bottom - pWwdObject->hitRect.top));
-        }
-        else
-        {
-            XML_ADD_TEXT_ELEMENT("Global", "true", pAmbientSoundElem);
-        }
-    }
-    else if (logicName == "SpotAmbientSound")
-    {
-        if (pWwdObject->maxX != 0 && pWwdObject->maxY != 0)
-        {
-            pAmbientSoundElem->LinkEndChild(CreatePlayAreaElement(pWwdObject->minX, pWwdObject->minY,
-                pWwdObject->maxX - pWwdObject->minX, pWwdObject->maxY - pWwdObject->minY));
-        }
-        if (pWwdObject->attackRect.top != 0 && pWwdObject->attackRect.left != 0)
-        {
-            pAmbientSoundElem->LinkEndChild(CreatePlayAreaElement(pWwdObject->attackRect.left, pWwdObject->attackRect.top,
-                pWwdObject->attackRect.right - pWwdObject->attackRect.left, pWwdObject->attackRect.bottom - pWwdObject->attackRect.top));
-        }
-    } 
-    else
-    {
-        LOG_WARNING("Unknown AmbientSound logic: " + logicName);
-    }
-
-    // Sound play interval
-    if (pWwdObject->moveRect.right != 0 && pWwdObject->moveRect.bottom != 0)
-    {
-        TiXmlElement* pPlayIntervalElem = new TiXmlElement("PlayInterval");
-        pPlayIntervalElem->SetAttribute("minTimeOn", pWwdObject->moveRect.left);
-        pPlayIntervalElem->SetAttribute("maxTimeOn", pWwdObject->moveRect.right);
-        pPlayIntervalElem->SetAttribute("minTimeOff", pWwdObject->moveRect.top);
-        pPlayIntervalElem->SetAttribute("maxTimeOff", pWwdObject->moveRect.bottom);
-        pAmbientSoundElem->LinkEndChild(pPlayIntervalElem);
-    }
-    else
-    {
-        XML_ADD_TEXT_ELEMENT("Looping", "true", pAmbientSoundElem);
-    }
-
-    // Volume
-    int soundVolume = 100;
-    if (pWwdObject->damage != 0)
-    {
-        soundVolume = pWwdObject->damage;
-    }
-
-    XML_ADD_TEXT_ELEMENT("Volume", ToStr(soundVolume).c_str(), pAmbientSoundElem);
-
-    XML_ADD_TEXT_ELEMENT("Sound", pWwdObject->sound, pAmbientSoundElem);
-
-    return pAmbientSoundElem;
-}
-
-inline TiXmlElement* SoundTriggerToXml(WwdObject* pWwdObject)
-{
-    TiXmlElement* pSoundTriggerElem = new TiXmlElement("SoundTrigger");
-
-
-    return pSoundTriggerElem;
-}
-
-inline TiXmlElement* StackedCratesToXml(WwdObject* pWwdObject)
-{
-    return NULL;
-}
-
-inline TiXmlElement* CrateToXml(WwdObject* pWwdObject)
-{
-    return NULL;
-}
 
 inline TiXmlElement* EyeCandyToXml(WwdObject* pWwdObject)
 {
@@ -245,70 +119,6 @@ inline TiXmlElement* EyeCandyToXml(WwdObject* pWwdObject)
         return animElem;
     }
 
-    return NULL;
-}
-
-inline TiXmlElement* CrumblingPegToXml(WwdObject* pWwdObject)
-{
-    TiXmlElement* pCrumblingPegAIComponent = new TiXmlElement("CrumblingPegAIComponent");
-
-    XML_ADD_TEXT_ELEMENT("FloorOffset", "10", pCrumblingPegAIComponent);
-    XML_ADD_TEXT_ELEMENT("CrumbleFrameIdx", "10", pCrumblingPegAIComponent);
-
-    return pCrumblingPegAIComponent;
-}
-
-inline TiXmlElement* SuperCheckpointToXml(WwdObject* pWwdObject)
-{
-    return NULL;
-}
-
-inline TiXmlElement* CheckpointToXml(WwdObject* pWwdObject)
-{
-    return NULL;
-}
-
-inline TiXmlElement* PowderKegToXml(WwdObject* pWwdObject)
-{
-    return NULL;
-}
-
-inline TiXmlElement* OfficerToXml(WwdObject* pWwdObject)
-{
-    return NULL;
-}
-
-inline TiXmlElement* SoldierToXml(WwdObject* pWwdObject)
-{
-    return NULL;
-}
-
-inline TiXmlElement* RatToXml(WwdObject* pWwdObject)
-{
-    return NULL;
-}
-
-inline TiXmlElement* AmmoToXml(WwdObject* pWwdObject)
-{
-    return NULL;
-}
-
-inline TiXmlElement* TreasureToXml(WwdObject* pWwdObject)
-{
-    if (std::string(pWwdObject->imageSet) == "GAME_TREASURE_COINS")
-    {
-        TiXmlElement* animElem = new TiXmlElement("AnimationComponent");
-        //animElem->LinkEndChild(CreateCycleAnimation(100));
-        XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle100", animElem);
-
-        return animElem;
-    }
-
-    return NULL;
-}
-
-inline TiXmlElement* SpecialPowerupToXml(WwdObject* pWwdObject)
-{
     return NULL;
 }
 
@@ -762,13 +572,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         // assert(proto != ActorPrototype_Start && "Unsupported level ?");
 
         return ActorTemplates::CreateXmlData_CrumblingPeg(proto, position, 0);
-        //return ActorTemplates::CreateXmlData_CrumblingPeg(tmpImageSet, Point(wwdObject->x, wwdObject->y), wwdObject->z);
-
-        pActorElem->LinkEndChild(CrumblingPegToXml(wwdObject));
-
-        TiXmlElement* animElem = new TiXmlElement("AnimationComponent");
-        XML_ADD_1_PARAM_ELEMENT("Animation", "type", "cycle50", animElem);
-        pActorElem->LinkEndChild(animElem);
     }
     else if (logic.find("Elevator") != std::string::npos &&
              logic != "PathElevator")
@@ -1008,7 +811,9 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "RobberThief" ||
              logic == "TownGuard1" ||
              logic == "TownGuard2" ||
-             logic == "Seagull")
+             logic == "Seagull" ||
+             logic == "RedTailPirate" ||
+             logic == "BearSailor")
     {
         std::vector<PickupType> loot;
         if (wwdObject->powerup > 0) { loot.push_back(PickupType(wwdObject->powerup)); }
@@ -1126,6 +931,14 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             if (logic == "Seagull")
             {
                 actorProto = ActorPrototype_Level7_Seagull;
+            }
+            if (logic == "RedTailPirate")
+            {
+                actorProto = ActorPrototype_Level7_RedTailPirate;
+            }
+            if (logic == "BearSailor")
+            {
+                actorProto = ActorPrototype_Level7_BearSailor;
             }
         }
 
@@ -1562,7 +1375,6 @@ inline TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
     pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, g_pApp->GetGlobalOptions()->maxJumpHeight, 40, 90, 4.0, 0.0, 0.5));
     pClawActor->LinkEndChild(CreateControllableComponent(true));
     pClawActor->LinkEndChild(CreateAnimationComponent("/CLAW/ANIS/*"));
-    pClawActor->LinkEndChild(CreateSoundComponent("/CLAW/SOUNDS/*"));
     pClawActor->LinkEndChild(CreateActorRenderComponent("/CLAW/IMAGES/*", 4000));
     pClawActor->LinkEndChild(ActorTemplates::CreateFollowableComponent(Point(-5, -80), "/GAME/IMAGES/EXCLAMATION/*", ""));
 

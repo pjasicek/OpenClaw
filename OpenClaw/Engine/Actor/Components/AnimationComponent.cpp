@@ -37,7 +37,7 @@ bool AnimationComponent::VInit(TiXmlElement* data)
         std::vector<std::string> matchingAnimNames =
             g_pApp->GetResourceCache()->Match(animationsPath);
 
-        for (std::string animPath : matchingAnimNames)
+        for (std::string& animPath : matchingAnimNames)
         {
             WapAni* wapAni = AniResourceLoader::LoadAndReturnAni(animPath.c_str());
             std::string animNameKey = StripPathAndExtension(animPath);

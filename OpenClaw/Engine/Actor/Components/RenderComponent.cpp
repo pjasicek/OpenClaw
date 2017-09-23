@@ -70,7 +70,7 @@ bool BaseRenderComponent::VInit(TiXmlElement* pXmlData)
             }
         }
 
-        for (std::string imagePath : matchingPathNames)
+        for (std::string& imagePath : matchingPathNames)
         {
             // Only load known image formats
             if (!WildcardMatch("*.pid", imagePath.c_str()))
