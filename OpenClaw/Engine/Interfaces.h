@@ -380,6 +380,7 @@ enum ActorPrototype
     ActorPrototype_Level7_SteppingGround,
     ActorPrototype_Level7_BearSailor,
     ActorPrototype_Level7_RedTailPirate,
+    ActorPrototype_Level7_HermitCrab,
 
     ActorPrototype_Max
 };

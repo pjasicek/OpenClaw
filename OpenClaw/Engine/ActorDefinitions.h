@@ -732,6 +732,7 @@ struct SpringBoardDef
         springHeight = 0.0;
         springFrameIdx = 0;
         springDelay = 0;
+        springSound = "/GAME/SOUNDS/NULL.WAV";
     }
 
     static SpringBoardDef CreateFromXml(TiXmlElement* pElem, bool strict)
@@ -756,6 +757,7 @@ struct SpringBoardDef
         cond_assert(strict, ParseValueFromXmlElem(&idleAnimName, pElem->FirstChildElement("IdleAnimName")));
         cond_assert(strict, ParseValueFromXmlElem(&springAnimName, pElem->FirstChildElement("SpringAnimName")));
         cond_assert(strict, ParseValueFromXmlElem(&springDelay, pElem->FirstChildElement("SpringDelay")));
+        ParseValueFromXmlElem(&springSound, pElem->FirstChildElement("SpringSound"));
     }
 
     double springHeight;
@@ -763,6 +765,7 @@ struct SpringBoardDef
     int springDelay;
     std::string idleAnimName;
     std::string springAnimName;
+    std::string springSound;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -10,6 +10,7 @@
         <SpringDelay>500</SpringDelay>
         <IdleAnimName>NONE</IdleAnimName>
         <SpringAnimName>watersplash</SpringAnimName>
+        <SpringSound>/LEVEL7/SOUNDS/GEYSER2.WAV</SpringSound>
 	</SpringBoardComponent>
     <PhysicsComponent>
         <PositionOffset x="0" y="50" />

@@ -106,6 +106,7 @@ namespace ClawLevelUtil
             { { 7, "SpringBoard" }, ActorPrototype_Level7_SpringBoard },
             { { 7, "StartSteppingStone" }, ActorPrototype_Level7_SteppingGround },
             { { 7, "SteppingStone" }, ActorPrototype_Level7_SteppingGround },
+            { { 7, "HermitCrab" }, ActorPrototype_Level7_HermitCrab },
 
             // Level 8
         };
@@ -160,12 +161,40 @@ namespace ClawLevelUtil
                 else if (checkpointNumber == 2) { return Point(25210, 7180); }
                 break;
             case 8:
+                if (checkpointNumber == 0) { return Point(1046, 5520); }
+                else if (checkpointNumber == 1) { return Point(12121, 4995);  }
+                else if (checkpointNumber == 2) { return Point(22557, 4996); }
+                break;
             case 9:
+                if (checkpointNumber == 0) { return Point(1594, 7750); }
+                else if (checkpointNumber == 1) { return Point(8721, 7759); }
+                else if (checkpointNumber == 2) { return Point(14289, 7756); }
+                break;
             case 10:
+                if (checkpointNumber == 0) { return Point(740, 7744); }
+                else if (checkpointNumber == 1) { return Point(6939, 9159); }
+                else if (checkpointNumber == 2) { return Point(22679, 8067); }
+                break;
             case 11:
+                if (checkpointNumber == 0) { return Point(3372, 1159); }
+                else if (checkpointNumber == 1) { return Point(17168, 1417); }
+                else if (checkpointNumber == 2) { return Point(10897, 3912); }
+                break;
             case 12:
+                if (checkpointNumber == 0) { return Point(1709, 2258); }
+                else if (checkpointNumber == 1) { return Point(11519, 3144); }
+                else if (checkpointNumber == 2) { return Point(31537, 3596); }
+                break;
             case 13:
+                if (checkpointNumber == 0) { return Point(712, 2387); }
+                else if (checkpointNumber == 1) { return Point(13428, 1672); }
+                else if (checkpointNumber == 2) { return Point(24496, 1992); }
+                break;
             case 14:
+                if (checkpointNumber == 0) { return Point(1723, 3173); }
+                else if (checkpointNumber == 1) { return Point(9845, 3037); }
+                else if (checkpointNumber == 2) { return Point(19892, 3549); }
+                break;
             default:
             assert(false && "Not implemented yet");
         }
@@ -233,7 +262,7 @@ namespace ClawLevelUtil
 
     bool TryGetTopLadderInfo(int levelNumber, int tileId, Point& fixtureOffset)
     {
-        std::map<std::pair<int, int>, Point> s_EndLadderInfoMap =
+        static std::map<std::pair<int, int>, Point> s_EndLadderInfoMap =
         {
             // Level 1
             { { 1, 310 }, Point(0, 0) },

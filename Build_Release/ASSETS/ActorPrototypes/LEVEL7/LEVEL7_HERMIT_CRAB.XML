@@ -1,0 +1,89 @@
+<Actor Type="Level7_HermitCrab" Parent="ActorPrototype_BaseEnemy" ActorPrototypeName="ActorPrototype_Level7_HermitCrab">
+    <ActorRenderComponent>
+        <ZCoord>30</ZCoord>
+        <ImagePath>/LEVEL7/IMAGES/HERMITCRAB/*</ImagePath>
+        <Palette>/LEVEL7/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL7/ANIS/HERMITCRAB/*.ANI</AnimationPath>
+        <PauseOnStart>false</PauseOnStart>
+    </AnimationComponent>
+    <HealthComponent>
+        <Health>5</Health>
+        <MaxHealth>5</MaxHealth>
+    </HealthComponent>
+    <EnemyAIComponent>
+        <DeathAnimation>killfall</DeathAnimation>
+        <Sounds>
+            <Sound SoundType="Death" SoundName="/LEVEL7/SOUNDS/HERMITCRAB/CRABDEATH.WAV" />
+            <Sound SoundType="MeleeAttack" SoundName="/LEVEL7/SOUNDS/HERMITCRAB/CRABSNIP.WAV" />
+        </Sounds>
+        <MinTimeIntervalForSpeechSound>5000</MinTimeIntervalForSpeechSound>
+    </EnemyAIComponent>
+    <TakeDamageAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <TakeDamageAnimation>hit</TakeDamageAnimation>
+        <InvulnerabilityTime>0</InvulnerabilityTime>
+    </TakeDamageAIStateComponent>
+    <PatrolEnemyAIStateComponent>
+        <IsAlwaysIdle>true</IsAlwaysIdle>
+        <StatePriority>0</StatePriority>
+        <PatrolSpeed>1.300000</PatrolSpeed>
+        <LeftPatrolBorder>0</LeftPatrolBorder> <!-- DEFINED IN CODE -->
+        <RightPatrolBorder>0</RightPatrolBorder> <!-- DEFINED IN CODE -->
+        <RetainDirection>false</RetainDirection>
+        <WalkAction>
+            <Animation>fastadvance</Animation>
+        </WalkAction>
+        <IdleAction>
+            <AnimationDelay>0</AnimationDelay>
+            <Animation>idle</Animation>
+        </IdleAction>
+    </PatrolEnemyAIStateComponent>
+    <MeleeAttackAIStateComponent>
+        <StatePriority>20</StatePriority>
+        <AttackDelay>150</AttackDelay>
+        <Attacks>
+            <AttackAction>
+                <Animation>strike1</Animation>
+                <AttackAnimFrameIdx>4</AttackAnimFrameIdx>
+                <AttackType>0</AttackType>
+                <AttackFxImageSet>NONE</AttackFxImageSet>
+                <AttackSpawnPositionOffset x="-30" y="0" />
+                <AttackAreaSize width="80" height="50" />
+                <Damage>5</Damage>
+                <AgroSensorFixture>
+                    <FixtureType>EnemyAIMeleeSensor</FixtureType>
+                    <CollisionShape>Rectangle</CollisionShape>
+                    <IsSensor>true</IsSensor>
+                    <Size width="130" height="50" />
+                    <Offset x="0" y="0" />
+                    <CollisionFlag>4</CollisionFlag>
+                    <CollisionMask>2</CollisionMask>
+                    <Friction>0.000000</Friction>
+                    <Density>0.000000</Density>
+                    <Restitution>-1.#QNAN0</Restitution>
+                </AgroSensorFixture>
+            </AttackAction>
+        </Attacks>
+    </MeleeAttackAIStateComponent>
+    <ParryEnemyAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <IgnoreParryInAnim>
+            <Animation>strike1</Animation>
+            <RequiredMinAnimIdx>2</RequiredMinAnimIdx>
+        </IgnoreParryInAnim>
+        <ParryChances>
+            <ParryChance DamageType="DamageType_Bullet" Chance="100" />
+            <ParryChance DamageType="DamageType_MeleeAttack" Chance="100" />
+        </ParryChances>
+        <ParrySounds>
+            <ParrySound>/GAME/SOUNDS/BOINKJR.WAV</ParrySound>
+        </ParrySounds>
+        <ParryAnimFrameIdx>0</ParryAnimFrameIdx>
+        <ParryAnimation>crouch4</ParryAnimation>
+    </ParryEnemyAIStateComponent>
+    <PhysicsComponent>
+        <CollisionSize width="50" height="51" />
+    </PhysicsComponent>
+</Actor>

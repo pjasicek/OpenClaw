@@ -609,6 +609,17 @@ bool ParryEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
         }
     }
 
+    for (TiXmlElement* pElem = pData->FirstChildElement("IgnoreParryInAnim");
+        pElem != NULL;
+        pElem = pElem->NextSiblingElement("IgnoreParryInAnim"))
+    {
+        IgnoreParryInAnim def;
+        ParseValueFromXmlElem(&def.animationName, pElem->FirstChildElement("Animation"));
+        ParseValueFromXmlElem(&def.minAnimIdx, pElem->FirstChildElement("RequiredMinAnimIdx"));
+
+        m_IgnoreParryInAnimList.push_back(def);
+    }
+
     if (TiXmlElement* pParryChancesElem = pData->FirstChildElement("ParryChances"))
     {
         for (TiXmlElement* pElem = pParryChancesElem->FirstChildElement("ParryChance");
@@ -680,6 +691,15 @@ bool ParryEnemyAIStateComponent::CanParry(DamageType damageType, EnemyAIState cu
     if (findIt == m_ParryChanceMap.end())
     {
         return false;
+    }
+
+    for (const IgnoreParryInAnim& ignoreParryDef : m_IgnoreParryInAnimList)
+    {
+        if ((m_pAnimationComponent->GetCurrentAnimationName() == ignoreParryDef.animationName) &&
+            (m_pAnimationComponent->GetCurrentAnimation()->GetCurrentAnimationFrame()->idx >= ignoreParryDef.minAnimIdx))
+        {
+            return false;
+        }
     }
 
     int parryChance = findIt->second;

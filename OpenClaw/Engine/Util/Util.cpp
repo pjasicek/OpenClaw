@@ -411,6 +411,14 @@ namespace Util
         return "";
     }
 
+    void PlaySimpleSound(const std::string& sound, int volume)
+    {
+        SoundInfo soundInfo(sound);
+        soundInfo.soundVolume = volume;
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+            new EventData_Request_Play_Sound(soundInfo)));
+    }
+
     int GetSoundDurationMs(const std::string& soundPath)
     {
         shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(soundPath.c_str());

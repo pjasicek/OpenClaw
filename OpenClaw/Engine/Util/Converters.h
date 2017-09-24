@@ -660,6 +660,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "Seagull" ||
              logic == "RedTailPirate" ||
              logic == "BearSailor" ||
+             logic == "HermitCrab" ||
              logic == "Raux" ||
              logic == "Katherine" ||
              logic == "Wolvington")

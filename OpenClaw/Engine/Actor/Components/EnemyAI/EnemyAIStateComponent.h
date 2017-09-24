@@ -189,7 +189,20 @@ private:
 //=====================================================================================================================
 // ParryEnemyAIStateComponent
 //=====================================================================================================================
+
+struct IgnoreParryInAnim
+{
+    IgnoreParryInAnim()
+    {
+        minAnimIdx = 0;
+    }
+
+    std::string animationName;
+    int minAnimIdx;
+};
+
 typedef std::map<DamageType, int> ParryChanceMap;
+typedef std::vector<IgnoreParryInAnim> IgnoreParryInAnimList;
 class ParryEnemyAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver
 {
 public:
@@ -220,6 +233,7 @@ private:
     std::string m_ParryAnimation;
     std::vector<std::string> m_ParrySoundList;
     ParryChanceMap m_ParryChanceMap;
+    IgnoreParryInAnimList m_IgnoreParryInAnimList;
 };
 
 //=====================================================================================================================

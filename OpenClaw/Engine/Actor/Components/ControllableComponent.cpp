@@ -1143,7 +1143,7 @@ void ClawControllableComponent::OnClawKilledEnemy(DamageType killDamageType, Act
 {
     assert(pKilledEnemyActor != NULL);
 
-    std::vector<std::string> s_OnEnemyKillSoundList =
+    static std::vector<std::string> s_OnEnemyKillSoundList =
     {
         SOUND_CLAW_KILL_MELEE1,
         SOUND_CLAW_KILL_MELEE2,

@@ -135,6 +135,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level7_PathElevator, "ActorPrototype_Level7_PathElevator" },
         { ActorPrototype_Level7_BearSailor, "ActorPrototype_Level7_BearSailor" },
         { ActorPrototype_Level7_RedTailPirate, "ActorPrototype_Level7_RedTailPirate" },
+        { ActorPrototype_Level7_HermitCrab, "ActorPrototype_Level7_HermitCrab" },
 
         //=======================================
         // Menu
@@ -284,6 +285,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level7_SteppingGround", ActorPrototype_Level7_SteppingGround },
         { "ActorPrototype_Level7_BearSailor", ActorPrototype_Level7_BearSailor },
         { "ActorPrototype_Level7_RedTailPirate", ActorPrototype_Level7_RedTailPirate },
+        { "ActorPrototype_Level7_HermitCrab", ActorPrototype_Level7_HermitCrab },
 
         //=======================================
         // Menu

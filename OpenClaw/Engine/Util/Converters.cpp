@@ -282,7 +282,7 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
             switch (levelNumber)
             {
                 case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
-                default: assert(false && "Nonexistant actor prototype"); break;
+                default: notLoadedActorList.push_back(actorProperties.logic); continue;
             }
 
             // Temporary hack

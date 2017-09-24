@@ -68,6 +68,8 @@ void SpringBoardComponent::VOnAnimationFrameChanged(Animation* pAnimation, Anima
                     pPC->SetIsForcedUp(true, (int)m_Properties.springHeight);
                 }
             }
+
+            Util::PlaySimpleSound(m_Properties.springSound);
         }
         if (pAnimation->IsAtLastAnimFrame())
         {

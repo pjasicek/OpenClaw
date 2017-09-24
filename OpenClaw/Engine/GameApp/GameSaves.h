@@ -224,7 +224,7 @@ public:
 
     void InitializeWithAllLevels()
     {
-        int lastLevel = 7;
+        int lastLevel = 14;
 
         CheckpointSave fullCheckpoint0;
         fullCheckpoint0.bulletCount = 99;
@@ -264,7 +264,14 @@ public:
                 case 4: levelSave.levelName = "Dark Woods"; break;
                 case 5: levelSave.levelName = "Town"; break;
                 case 6: levelSave.levelName = "Puerto De Lobo"; break;
-                case 7: levelSave.levelName = "Shipyards"; break;
+                case 7: levelSave.levelName = "Docks"; break;
+                case 8: levelSave.levelName = "Shipyards"; break;
+                case 9: levelSave.levelName = "Pirate's Cove"; break;
+                case 10: levelSave.levelName = "Cliffs"; break;
+                case 11: levelSave.levelName = "Caverns"; break;
+                case 12: levelSave.levelName = "Undersea Caves"; break;
+                case 13: levelSave.levelName = "Tiger Island"; break;
+                case 14: levelSave.levelName = "Temple"; break;
                 default: assert(false); break;
             }
             levelSave.levelNumber = levelIdx;
