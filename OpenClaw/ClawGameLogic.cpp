@@ -433,20 +433,20 @@ void ClawGameLogic::ClawDiedDelegate(IEventDataPtr pEventData)
     pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Modify_Player_Stat(pCastEventData->GetActorId(), PlayerStat_Health, 1000, true)));
 
     // Clamp Claw to the floor when spawning him
-    Point fromPoint = m_CurrentSpawnPosition;
-    Point toPoint = m_CurrentSpawnPosition + Point(0, 100);
-    RaycastResult raycastDown = m_pPhysics->VRayCast(fromPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_All));
+    Point spawnPoint = m_CurrentSpawnPosition;
+    Point toPoint = spawnPoint + Point(0, 300);
+    RaycastResult raycastDown = m_pPhysics->VRayCast(spawnPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_All));
     if (!raycastDown.foundIntersection)
     {
-        LOG_ERROR("Failed to get raycast result down from position: " + fromPoint.ToString());
-        return;
-        //assert(raycastDown.foundIntersection && "Did not find intersection. Enemy is too far in the air with no ground below him");
+        LOG_ERROR("Failed to get raycast result down from position: " + spawnPoint.ToString());
+    }
+    else
+    {
+        double deltaY = raycastDown.deltaY - m_pPhysics->VGetAABB(pActor->GetGUID(), true).h / 2;
+        spawnPoint = spawnPoint + Point(0, deltaY - 9);
     }
 
-    double deltaY = raycastDown.deltaY - m_pPhysics->VGetAABB(pActor->GetGUID(), true).h / 2;
-    Point clampedSpawnPosition = m_CurrentSpawnPosition + Point(0, deltaY - 9);
-
-    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(pCastEventData->GetActorId(), clampedSpawnPosition)));
+    pEventMgr->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(pCastEventData->GetActorId(), spawnPoint)));
 }
 
 void ClawGameLogic::UpdatedPowerupStatusDelegate(IEventDataPtr pEventData)
