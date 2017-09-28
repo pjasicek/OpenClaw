@@ -2131,14 +2131,14 @@
             <Name>CREDITS_IMAGE_PETR</Name>
             <Type>Text</Type>
             <State>Disabled</State>
-            <DisabledImage>/Credits/credits_ja.png</DisabledImage>
+            <DisabledImage>/CREDITS/credits_ja.png</DisabledImage>
             <Position x="44" y="150" />
         </MenuItem>
         <MenuItem>
             <Name>CREDITS_IMAGE_PETR</Name>
             <Type>Text</Type>
             <State>Disabled</State>
-            <DisabledImage>/Credits/credits_pavel.png</DisabledImage>
+            <DisabledImage>/CREDITS/credits_pavel.png</DisabledImage>
             <Position x="340" y="150" />
         </MenuItem>
         <MenuItem>
