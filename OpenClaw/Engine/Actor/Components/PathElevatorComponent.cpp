@@ -52,7 +52,7 @@ bool PathElevatorComponent::VInit(TiXmlElement* pData)
 
 void PathElevatorComponent::VPostInit()
 {
-    auto pPC = MakeStrongPtr(_owner->GetComponent<PositionComponent>());
+    auto pPC = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>());
     assert(pPC != nullptr);
 
     m_LastPosition = pPC->GetPosition();
@@ -77,7 +77,7 @@ void PathElevatorComponent::VPostInit()
     m_Properties.speed *= g_pApp->GetGlobalOptions()->platformSpeedModifier;
 
     m_CurrentSpeed = CalculateSpeed(m_Properties.speed, m_CurrentStepDef.direction);
-    m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), m_CurrentSpeed);
+    m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), m_CurrentSpeed);
 }
 
 Point PathElevatorComponent::CalculateSpeed(double speed, Direction dir)
@@ -115,7 +115,7 @@ void PathElevatorComponent::ChangeToNextStep()
 
     m_CurrentStepDef = m_Properties.elevatorPath[m_CurrentStepDefIdx];
     m_CurrentSpeed = CalculateSpeed(m_Properties.speed, m_CurrentStepDef.direction);
-    m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), m_CurrentSpeed);
+    m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), m_CurrentSpeed);
     m_StepElapsedDistance = 0;
 }
 

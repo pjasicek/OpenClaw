@@ -41,8 +41,8 @@ void PowerupComponent::VPostInit()
 {
     if (HasPowerup())
     {
-        BroadcastPowerupStatusUpdated(_owner->GetGUID(), m_ActivePowerup, false);
-        BroadcastPowerupTimeUpdated(_owner->GetGUID(), m_ActivePowerup, m_RemainingPowerupTime);
+        BroadcastPowerupStatusUpdated(m_pOwner->GetGUID(), m_ActivePowerup, false);
+        BroadcastPowerupTimeUpdated(m_pOwner->GetGUID(), m_ActivePowerup, m_RemainingPowerupTime);
     }
 
     // Create powerup sparkles. Is this a good place ?
@@ -52,11 +52,11 @@ void PowerupComponent::VPostInit()
         assert(pPowerupSparkle);
 
         shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
         assert(pPositionComponent);
 
         shared_ptr<PhysicsComponent> pPhysicsComponent =
-            MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
         assert(pPhysicsComponent);
 
         shared_ptr<PowerupSparkleAIComponent> pPowerupSparkleAIComponent =
@@ -86,7 +86,7 @@ void PowerupComponent::VUpdate(uint32 msDiff)
 
         if (m_RemainingPowerupTime <= 0)
         {
-            BroadcastPowerupStatusUpdated(_owner->GetGUID(), m_ActivePowerup, true);
+            BroadcastPowerupStatusUpdated(m_pOwner->GetGUID(), m_ActivePowerup, true);
             m_ActivePowerup = PowerupType_None;
             m_RemainingPowerupTime = 0;
 
@@ -94,7 +94,7 @@ void PowerupComponent::VUpdate(uint32 msDiff)
         }
         else if (oldSecsRemaining != currentSecsRemainig)
         {
-            BroadcastPowerupTimeUpdated(_owner->GetGUID(), m_ActivePowerup, currentSecsRemainig);
+            BroadcastPowerupTimeUpdated(m_pOwner->GetGUID(), m_ActivePowerup, currentSecsRemainig);
         }
     }
 }
@@ -113,8 +113,8 @@ void PowerupComponent::ApplyPowerup(PowerupType powerupType, int32 msDuration)
         m_RemainingPowerupTime = msDuration;
         int32 secondsRemaining = m_RemainingPowerupTime / 1000;
 
-        BroadcastPowerupStatusUpdated(_owner->GetGUID(), m_ActivePowerup, false);
-        BroadcastPowerupTimeUpdated(_owner->GetGUID(), m_ActivePowerup, secondsRemaining);
+        BroadcastPowerupStatusUpdated(m_pOwner->GetGUID(), m_ActivePowerup, false);
+        BroadcastPowerupTimeUpdated(m_pOwner->GetGUID(), m_ActivePowerup, secondsRemaining);
 
         if (m_ActivePowerup == PowerupType_Catnip)
         {
@@ -153,7 +153,7 @@ void PowerupComponent::ClawDiedDelegate(IEventDataPtr pEventData)
 {
     if (HasPowerup())
     {
-        BroadcastPowerupStatusUpdated(_owner->GetGUID(), m_ActivePowerup, true);
+        BroadcastPowerupStatusUpdated(m_pOwner->GetGUID(), m_ActivePowerup, true);
 
         m_RemainingPowerupTime = 0;
         SetPowerupSparklesVisibility(false);

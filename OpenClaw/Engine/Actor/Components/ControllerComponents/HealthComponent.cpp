@@ -33,7 +33,7 @@ bool HealthComponent::VInit(TiXmlElement* pData)
 
 void HealthComponent::VPostInit()
 {
-    if (MakeStrongPtr(_owner->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name)))
+    if (MakeStrongPtr(m_pOwner->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name)))
     {
         m_IsController = true;
     }
@@ -56,7 +56,7 @@ void HealthComponent::AddHealth(int32 health, DamageType damageType, Point impac
 
     if (g_pApp->GetGameCheats()->clawInvincible && health < 0)
     {
-        if (MakeStrongPtr(_owner->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name)))
+        if (MakeStrongPtr(m_pOwner->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name)))
         {
             return;
         }

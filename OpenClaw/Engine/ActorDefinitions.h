@@ -916,4 +916,16 @@ struct SoundProperties
     int distance;
 };
 
+struct ActorSpawnInfo
+{
+    ActorSpawnInfo()
+    {
+        actorProto = ActorPrototype_None;
+    }
+
+    ActorPrototype actorProto;
+    Point spawnPositionOffset;
+    Point initialVelocity;
+};
+
 #endif

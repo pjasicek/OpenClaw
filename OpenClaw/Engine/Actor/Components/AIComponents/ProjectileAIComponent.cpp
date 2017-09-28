@@ -77,7 +77,7 @@ void ProjectileAIComponent::VPostInit()
 {
     if (!m_ProjectileSpeed.IsZeroXY())
     {
-        m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), m_ProjectileSpeed);
+        m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), m_ProjectileSpeed);
     }
 
     for (int sparkleIdx = 0; sparkleIdx < m_NumSparkles; sparkleIdx++)
@@ -86,11 +86,11 @@ void ProjectileAIComponent::VPostInit()
         assert(pPowerupSparkle);
 
         shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
         assert(pPositionComponent);
 
         shared_ptr<PhysicsComponent> pPhysicsComponent =
-            MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
         assert(pPhysicsComponent);
 
         shared_ptr<PowerupSparkleAIComponent> pPowerupSparkleAIComponent =
@@ -122,10 +122,10 @@ void ProjectileAIComponent::VUpdate(uint32 msDiff)
 {
     assert(g_pApp->GetHumanView() && g_pApp->GetHumanView()->GetCamera());
 
-    Point projectilePos = _owner->GetPositionComponent()->GetPosition();
+    Point projectilePos = m_pOwner->GetPositionComponent()->GetPosition();
     if (!g_pApp->GetHumanView()->GetCamera()->IntersectsWithPoint(projectilePos, 1.25f))
     {
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
     }
 
@@ -142,23 +142,23 @@ void ProjectileAIComponent::VUpdate(uint32 msDiff)
 
 void ProjectileAIComponent::Detonate()
 {
-    m_pPhysics->VRemoveActor(_owner->GetGUID());
+    m_pPhysics->VRemoveActor(m_pOwner->GetGUID());
 
-    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
     IEventMgr::Get()->VQueueEvent(pEvent);
 
     m_IsActive = false;
 
     if (m_DamageType == DamageType_Explosion)
     {
-        ActorTemplates::CreateSingleAnimation(_owner->GetPositionComponent()->GetPosition(), AnimationType_Explosion);
+        ActorTemplates::CreateSingleAnimation(m_pOwner->GetPositionComponent()->GetPosition(), AnimationType_Explosion);
 
         SoundInfo soundInfo(SOUND_LEVEL1_KEG_EXPLODE);
-        //soundInfo.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
+        //soundInfo.soundSourcePosition = m_pOwner->GetPositionComponent()->GetPosition();
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
         ActorTemplates::CreateAreaDamage(
-            _owner->GetPositionComponent()->GetPosition(),
+            m_pOwner->GetPositionComponent()->GetPosition(),
             Point(150, 150),
             50,
             CollisionFlag_Explosion,
@@ -185,8 +185,8 @@ void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)
         MakeStrongPtr(pActorWhoWasShot->GetComponent<HealthComponent>(HealthComponent::g_Name));
     if (pHealthComponent)
     {
-        SDL_Rect areaDamageAABB = g_pApp->GetGameLogic()->VGetGamePhysics()->VGetAABB(_owner->GetGUID(), false);
-        Point projectileSpeed = m_pPhysics->VGetVelocity(_owner->GetGUID());
+        SDL_Rect areaDamageAABB = g_pApp->GetGameLogic()->VGetGamePhysics()->VGetAABB(m_pOwner->GetGUID(), false);
+        Point projectileSpeed = m_pPhysics->VGetVelocity(m_pOwner->GetGUID());
 
         Direction dir = Direction_Right;
         if (projectileSpeed.x < 0)

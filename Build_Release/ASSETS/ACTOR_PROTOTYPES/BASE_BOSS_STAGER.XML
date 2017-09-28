@@ -26,7 +26,7 @@
     </BossStagerTriggerComponent>
 	<TriggerComponent>
         <TriggerUnlimited>true</TriggerUnlimited>
-        <IsStatic>true</IsStatic>
+        <IsStatic>false</IsStatic>
     </TriggerComponent>
     <PhysicsComponent>
         <BodyType>Static</BodyType>

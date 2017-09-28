@@ -54,7 +54,7 @@ void BaseAuraComponent::VPostPostInit()
 {
     assert(g_pApp->GetGameLogic()->VGetGamePhysics() != nullptr);
 
-    g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(_owner->GetGUID(), &m_AuraFixtureDef);
+    g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(m_pOwner->GetGUID(), &m_AuraFixtureDef);
 }
 
 TiXmlElement* BaseAuraComponent::VGenerateXml()
@@ -191,7 +191,7 @@ bool DamageAuraComponent::VDelegateInit(TiXmlElement* data)
 
 void DamageAuraComponent::VPostInit()
 {
-    m_bIsEnemyUnit = MakeStrongPtr(_owner->GetComponent<EnemyAIComponent>()) != nullptr;
+    m_bIsEnemyUnit = MakeStrongPtr(m_pOwner->GetComponent<EnemyAIComponent>()) != nullptr;
 }
 
 void DamageAuraComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement)
@@ -208,7 +208,7 @@ void DamageAuraComponent::VOnAuraApply(Actor* pActorInAura)
         // If owner of this aura is some Enemy and he is not in combat, do not apply this aura
         if (m_bIsEnemyUnit)
         {
-            EnemyAIComponent* pEnemyAIComponent = MakeStrongPtr(_owner->GetComponent<EnemyAIComponent>()).get();
+            EnemyAIComponent* pEnemyAIComponent = MakeStrongPtr(m_pOwner->GetComponent<EnemyAIComponent>()).get();
             assert(pEnemyAIComponent != NULL);
             if (pEnemyAIComponent->GetCurrentState() == NULL ||
                 pEnemyAIComponent->GetCurrentState()->VGetStateType() == EnemyAIState_None ||
@@ -219,6 +219,6 @@ void DamageAuraComponent::VOnAuraApply(Actor* pActorInAura)
         }
 
         // TODO: In original game this causes the damage impact anim effect
-        pHealthComponent->AddHealth((-1) * m_Damage, DamageType_None, Point(0, 0), _owner->GetGUID());
+        pHealthComponent->AddHealth((-1) * m_Damage, DamageType_None, Point(0, 0), m_pOwner->GetGUID());
     }
 }

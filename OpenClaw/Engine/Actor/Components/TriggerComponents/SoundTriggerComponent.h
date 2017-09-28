@@ -21,7 +21,7 @@ public:
     virtual void VPostInit() override;
     virtual TiXmlElement* VGenerateXml() override;
 
-    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered) override;
+    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType) override;
 
 private:
     std::string m_TriggerSound;

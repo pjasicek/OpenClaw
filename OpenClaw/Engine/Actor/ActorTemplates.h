@@ -53,6 +53,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_SpringBoard(ActorPrototype proto, const Point& position, const SpringBoardDef& def);
     TiXmlElement* CreateXmlData_CrumblingPeg(ActorPrototype proto, const Point& position, const std::string& imagePath, int crumbleDelay);
     TiXmlElement* CreateXmlData_LootContainer(ActorPrototype proto, const Point& position, const std::vector<PickupType>& loot, int zCoord);
+    TiXmlElement* CreateXmlData_ActorSpawner(ActorPrototype proto, const Point& position, const Point& spawnOffset, const Point& spawnSize, const std::vector<ActorSpawnInfo>& spawnedActorList);
 
     StrongActorPtr CreateActor(ActorPrototype proto, Point position);
     StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir, int sourceActorId);

@@ -34,8 +34,8 @@ bool FloorSpikeComponent::VInit(TiXmlElement* pData)
 
 void FloorSpikeComponent::VPostInit()
 {
-    m_pDamageAuraComponent = MakeStrongPtr(_owner->GetComponent<DamageAuraComponent>()).get();
-    shared_ptr<AnimationComponent> pAnimComponent = MakeStrongPtr(_owner->GetComponent<AnimationComponent>());
+    m_pDamageAuraComponent = MakeStrongPtr(m_pOwner->GetComponent<DamageAuraComponent>()).get();
+    shared_ptr<AnimationComponent> pAnimComponent = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>());
 
     assert(m_pDamageAuraComponent != NULL);
     assert(pAnimComponent != nullptr);
@@ -72,7 +72,7 @@ void FloorSpikeComponent::VOnAnimationFrameChanged(Animation* pAnimation, Animat
     sound.soundVolume = 40;
     sound.setPositionEffect = true;
     sound.setDistanceEffect = true;
-    sound.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
+    sound.soundSourcePosition = m_pOwner->GetPositionComponent()->GetPosition();
     if (!m_ActivateSound.empty() && (pLastFrame->idx == 0 && pNewFrame->idx == 1))
     {
         sound.soundToPlay = m_ActivateSound;

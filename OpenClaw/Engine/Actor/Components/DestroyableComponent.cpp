@@ -59,24 +59,24 @@ void DestroyableComponent::VPostInit()
 {
     if (m_PossibleDestructionSounds.empty())
     {
-        //LOG_WARNING("Destruction component has no death sounds. Actor: " + _owner->GetName());
+        //LOG_WARNING("Destruction component has no death sounds. Actor: " + m_pOwner->GetName());
     }
 
     shared_ptr<HealthComponent> pHealthComponent =
-        MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<HealthComponent>(HealthComponent::g_Name));
     if (pHealthComponent)
     {
         pHealthComponent->AddObserver(this);
     }
 
     shared_ptr<AnimationComponent> pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     if (pAnimationComponent)
     {
         pAnimationComponent->AddObserver(this);
     }
 
-    m_pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>()).get();
+    m_pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>()).get();
     assert(m_pRenderComponent != NULL);
 }
 
@@ -98,7 +98,7 @@ void DestroyableComponent::VUpdate(uint32 msDiff)
         m_DeleteDelayTimeLeft -= msDiff;
 
         shared_ptr<AnimationComponent> pAnimationComponent =
-            MakeStrongPtr(_owner->GetComponent<AnimationComponent>());
+            MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>());
 
         int cycleState = m_DeleteDelayTimeLeft / 350;
         if (cycleState % 2 == 0)
@@ -120,7 +120,7 @@ void DestroyableComponent::VUpdate(uint32 msDiff)
 
         if (m_DeleteDelayTimeLeft <= 0)
         {
-            m_pPhysics->VRemoveActor(_owner->GetGUID());
+            m_pPhysics->VRemoveActor(m_pOwner->GetGUID());
             DeleteActor();
         }
     }
@@ -132,13 +132,13 @@ void DestroyableComponent::VOnHealthBelowZero(DamageType damageType, int sourceA
 
     if (m_bRemoveFromPhysics && m_DeleteDelay == 0)
     {
-        m_pPhysics->VRemoveActor(_owner->GetGUID());
+        m_pPhysics->VRemoveActor(m_pOwner->GetGUID());
     }
 
     if (m_DeleteDelay > 0)
     {
         Point nullSpeed(0, 0);
-        m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), nullSpeed);
+        m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), nullSpeed);
     }
 
     if (!m_PossibleDestructionSounds.empty())
@@ -156,7 +156,7 @@ void DestroyableComponent::VOnHealthBelowZero(DamageType damageType, int sourceA
     if (!m_DeathAnimationName.empty())
     {
         shared_ptr<AnimationComponent> pAnimationComponent =
-            MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
         if (pAnimationComponent)
         {
             if (m_DeathAnimationName == "DEFAULT")
@@ -201,6 +201,6 @@ void DestroyableComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
 
 void DestroyableComponent::DeleteActor()
 {
-    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
     IEventMgr::Get()->VQueueEvent(pEvent);
 }

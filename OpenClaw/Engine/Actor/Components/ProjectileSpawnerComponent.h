@@ -23,8 +23,8 @@ public:
 
     virtual void VUpdate(uint32 msDiff) override;
 
-    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered) override;
-    virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft) override;
+    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType) override;
+    virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType) override;
 
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;

@@ -1024,7 +1024,7 @@ namespace ActorTemplates
         pActorElem->SetAttribute("Type", sound.c_str());
 
         pActorElem->LinkEndChild(CreatePositionComponent(position.x, position.y));
-        pActorElem->LinkEndChild(CreateTriggerComponent(enterCount, false, true));
+        pActorElem->LinkEndChild(CreateTriggerComponent(enterCount, false, false));
 
         ActorBodyDef bodyDef;
         bodyDef.makeSensor = true;
@@ -1887,6 +1887,41 @@ namespace ActorTemplates
         for (PickupType item : loot)
         {
             XML_ADD_TEXT_ELEMENT("Item", ToStr((int)item).c_str(), pLootComponentElem);
+        }
+
+        return pActorElem;
+    }
+
+    TiXmlElement* CreateXmlData_ActorSpawner(ActorPrototype proto, const Point& position, const Point& spawnAreaOffset, const Point& spawnAreaSize, const std::vector<ActorSpawnInfo>& spawnedActorList)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- Physics
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PhysicsComponent.PositionOffset",
+            "x", (int)spawnAreaOffset.x, "y", (int)spawnAreaOffset.y));
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PhysicsComponent.CollisionSize",
+            "width", (int)spawnAreaSize.x, "height", (int)spawnAreaSize.y));
+
+        //----------- SpawnAreaComponent
+        TiXmlElement* pActorSpawnerComponent = GetTiXmlElementFromPath(pActorElem, "Actor.ActorSpawnerComponent");
+        assert(pActorSpawnerComponent != NULL);
+        for (const ActorSpawnInfo& spawnInfo : spawnedActorList)
+        {
+            TiXmlElement* pActorSpawnInfoElem = new TiXmlElement("ActorSpawnInfo");
+            AddXmlTextElement("ActorPrototype", EnumToString_ActorPrototype(spawnInfo.actorProto), pActorSpawnInfoElem);
+            XML_ADD_2_PARAM_ELEMENT("SpawnPositionOffset", 
+                "x", ToStr(spawnInfo.spawnPositionOffset.x).c_str(), 
+                "y", ToStr(spawnInfo.spawnPositionOffset.y).c_str(), pActorSpawnInfoElem);
+            XML_ADD_2_PARAM_ELEMENT("InitialVelocity", 
+                "x", ToStr(spawnInfo.initialVelocity.x).c_str(),
+                "y", ToStr(spawnInfo.initialVelocity.y).c_str(), pActorSpawnInfoElem);
+
+            pActorSpawnerComponent->LinkEndChild(pActorSpawnInfoElem);
         }
 
         return pActorElem;

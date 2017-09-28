@@ -19,6 +19,7 @@ enum EnemyAIState
     EnemyAIState_TakingDamage,
     EnemyAIState_Fleeing,
     EnemyAIState_Dying,
+    EnemyAIState_Falling,
     EnemyAIState_BrainLaRaux,
     EnemyAIState_BrainKatherine,
     EnemyAIState_BrainWolvington
@@ -73,8 +74,12 @@ public:
     bool IsActive() { return m_IsActive; }
 
     // EnemyAIStateComponent API
-    virtual void VOnStateEnter() = 0;
-    virtual void VOnStateLeave() = 0;
+
+    // @pPreviousState can be NULL !
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) = 0;
+
+    // @pNextState can be NULL !
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) = 0;
     virtual EnemyAIState VGetStateType() const = 0;
 
     // Can enemy enter this state ?
@@ -117,8 +122,8 @@ public:
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override;
-    virtual void VOnStateEnter() override;
-    virtual void VOnStateLeave() override;
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override;
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_TakingDamage; }
 
     // AnimationObserver API
@@ -126,6 +131,34 @@ public:
 
 private:
     TakeDamageAnimList m_TakeDamageAnimations;
+};
+
+//=====================================================================================================================
+// FallAIStateComponent
+//=====================================================================================================================
+class FallAIStateComponent : public BaseEnemyAIStateComponent
+{
+public:
+    FallAIStateComponent();
+    virtual ~FallAIStateComponent() { }
+
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+
+    // This state is entered manually
+    virtual bool VCanEnter() override;
+
+    // EnemyAIStateComponent API
+    virtual void VUpdate(uint32 msDiff) override;
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override;
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_Falling; }
+
+private:
+    std::string m_FallAnimation;
+    bool m_bAlreadyFell;
 };
 
 //=====================================================================================================================
@@ -149,8 +182,8 @@ public:
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override;
-    virtual void VOnStateEnter() override;
-    virtual void VOnStateLeave() override;
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override;
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_Patrolling; }
 
     // AnimationObserver API
@@ -218,8 +251,8 @@ public:
     virtual bool VCanEnter() { return false; }
 
     // EnemyAIStateComponent API
-    virtual void VOnStateEnter() override;
-    virtual void VOnStateLeave() override;
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override;
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_Parry; }
 
     // AnimationObserver API
@@ -256,8 +289,8 @@ public:
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override { };
-    virtual void VOnStateEnter() override;
-    virtual void VOnStateLeave() override;
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override;
     virtual EnemyAIState VGetStateType() const = 0;
     virtual bool VCanEnter() override;
 
@@ -399,8 +432,8 @@ public:
 
     // EnemyAIStateComponent API
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_DiveAttacking; }
-    virtual void VOnStateEnter() override;
-    virtual void VOnStateLeave() override;
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override;
     virtual bool VCanEnter() override;
 
     void OnEnemyEnterAgroRange(Actor* pActor);
@@ -439,8 +472,8 @@ public:
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override = 0;
-    virtual void VOnStateEnter() = 0;
-    virtual void VOnStateLeave() = 0;
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) = 0;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) = 0;
     virtual EnemyAIState VGetStateType() const = 0;
 
     // Can enemy enter this state ?
@@ -482,8 +515,8 @@ public:
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override;
-    virtual void VOnStateEnter() override;
-    virtual void VOnStateLeave() override;
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override;
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_BrainLaRaux; }
 
     // Can enemy enter this state ?
@@ -510,8 +543,8 @@ public:
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override;
-    virtual void VOnStateEnter() override;
-    virtual void VOnStateLeave() override;
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override;
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_BrainKatherine; }
 
     // Can enemy enter this state ?
@@ -538,8 +571,8 @@ public:
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override { }
-    virtual void VOnStateEnter() override { }
-    virtual void VOnStateLeave() override { }
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override { }
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override { }
     virtual EnemyAIState VGetStateType() const override { return EnemyAIState_BrainWolvington; }
 
     // Can enemy enter this state ?

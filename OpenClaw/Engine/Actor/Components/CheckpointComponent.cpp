@@ -49,13 +49,13 @@ void CheckpointComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement
 bool CheckpointComponent::VOnApply(Actor* pActorWhoPickedThis)
 {
     shared_ptr<AnimationComponent> pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     assert(pAnimationComponent);
     pAnimationComponent->ResumeAnimation();
     pAnimationComponent->AddObserver(this);
 
     shared_ptr<PhysicsComponent> pPhysicsComponent =
-        MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
     assert(pPhysicsComponent);
     pPhysicsComponent->Destroy();
 
@@ -74,7 +74,7 @@ void CheckpointComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
     if (!(pAnimation->GetName() == "wave"))
     {
         shared_ptr<AnimationComponent> pAnimationComponent =
-            MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
         assert(pAnimationComponent);
 
         assert(pAnimationComponent->SetAnimation("wave"));

@@ -53,7 +53,7 @@ TiXmlElement* PredefinedMoveComponent::VGenerateXml()
 
 void PredefinedMoveComponent::VPostInit()
 {
-    m_pPositonComponent = MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+    m_pPositonComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
     assert(m_pPositonComponent && "Cannot have PredefinedMoveComponent without PositionComponent");
 }
 
@@ -62,7 +62,7 @@ void PredefinedMoveComponent::VUpdate(uint32 msDiff)
     // If there are no more cycles to loop through, popup is at end
     if (!m_bIsInfinite && m_CurrMoveIdx >= m_PredefinedMoves.size())
     {
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
     }
     else
@@ -75,7 +75,7 @@ void PredefinedMoveComponent::VUpdate(uint32 msDiff)
 
         m_pPositonComponent->SetPosition(currentPos + moveDelta);
 
-        shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(_owner->GetGUID(), m_pPositonComponent->GetPosition()));
+        shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(m_pOwner->GetGUID(), m_pPositonComponent->GetPosition()));
         IEventMgr::Get()->VTriggerEvent(pEvent);
 
         m_CurrMoveTime += msDiff;

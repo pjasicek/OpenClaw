@@ -14,15 +14,15 @@ const char* TriggerComponent::g_Name = "TriggerComponent";
 TriggerComponent::TriggerComponent()
     :
     /*m_IsTriggerOnce(false),
-    m_IsTriggerUnlimited(false),
     m_TriggerRemaining(0),*/
+    m_IsTriggerUnlimited(true),
     m_Size(Point(0, 0)),
     m_IsStatic(false)
 { }
 
 TriggerComponent::~TriggerComponent()
 {
-    m_pPhysics->VRemoveActor(_owner->GetGUID());
+    m_pPhysics->VRemoveActor(m_pOwner->GetGUID());
 }
 
 bool TriggerComponent::VInit(TiXmlElement* data)
@@ -35,20 +35,11 @@ bool TriggerComponent::VInit(TiXmlElement* data)
         LOG_ERROR("Invalid physics");
         return false;
     }
-    
-    if (TiXmlElement* pElem = data->FirstChildElement("Size"))
-    {
-        pElem->Attribute("width", &m_Size.x);
-        pElem->Attribute("height", &m_Size.y);
-    }
-    if (TiXmlElement* pElem = data->FirstChildElement("IsStatic"))
-    {
-        m_IsStatic = std::string(pElem->GetText()) == "true";
-    }
-    if (TiXmlElement* pElem = data->FirstChildElement("IsTriggerUnlimited"))
-    {
-        m_IsTriggerUnlimited = std::string(pElem->GetText()) == "true";
-    }
+
+    ParseValueFromXmlElem(&m_Size, data->FirstChildElement("Size"), "width", "height");
+    ParseValueFromXmlElem(&m_IsStatic, data->FirstChildElement("IsStatic"));
+    ParseValueFromXmlElem(&m_IsTriggerUnlimited, data->FirstChildElement("IsTriggerUnlimited"));
+
     /*if (TiXmlElement* pElem = data->FirstChildElement("IsTriggerOnce"))
     {
         m_IsTriggerOnce = std::string(pElem->GetText()) == "true";
@@ -58,6 +49,38 @@ bool TriggerComponent::VInit(TiXmlElement* data)
         m_TriggerRemaining = std::stoi(std::string(pElem->GetText()));
     }*/
 
+    //ParseValueFromXmlElem(&m_EnterSound, data->FirstChildElement("EnterSound"));
+
+    for (TiXmlElement* pElem = data->FirstChildElement("EnterSound");
+        pElem != NULL;
+        pElem = pElem->NextSiblingElement("EnterSound"))
+    {
+        std::string fixtureTypeStr;
+        std::string sound;
+
+        assert(ParseAttributeFromXmlElem(&fixtureTypeStr, "TriggerFixtureType", pElem));
+        assert(ParseAttributeFromXmlElem(&sound, "Sound", pElem));
+
+        FixtureType fixtureType = FixtureTypeStringToEnum(fixtureTypeStr);
+
+        m_TriggerEnterSoundMap.insert(std::make_pair(fixtureType, sound));
+    }
+
+    for (TiXmlElement* pElem = data->FirstChildElement("LeaveSound");
+        pElem != NULL;
+        pElem = pElem->NextSiblingElement("LeaveSound"))
+    {
+        std::string fixtureTypeStr;
+        std::string sound;
+
+        assert(ParseAttributeFromXmlElem(&fixtureTypeStr, "TriggerFixtureType", pElem));
+        assert(ParseAttributeFromXmlElem(&sound, "Sound", pElem));
+
+        FixtureType fixtureType = FixtureTypeStringToEnum(fixtureTypeStr);
+
+        m_TriggerLeaveSoundMap.insert(std::make_pair(fixtureType, sound));
+    }
+
     return true;
 }
 
@@ -65,6 +88,9 @@ void TriggerComponent::VPostInit()
 {
     if (m_IsStatic)
     {
+        LOG_ERROR("Creating physics body for fixture like this is deprecated ! Offending actor: " + m_pOwner->GetName());
+        assert(false && "Deprecated !");
+
         int offsetX = 0;
         int offsetY = 0;
 
@@ -72,7 +98,7 @@ void TriggerComponent::VPostInit()
         if (fabs(m_Size.x) < DBL_EPSILON || fabs(m_Size.y) < DBL_EPSILON)
         {
             shared_ptr<ActorRenderComponent> pRenderComponent =
-                MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+                MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
             //assert(pRenderComponent);
             if (pRenderComponent == nullptr)
             {
@@ -89,12 +115,12 @@ void TriggerComponent::VPostInit()
         }
 
         shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
         assert(pPositionComponent);
 
         Point physPos = Point(pPositionComponent->GetX() + offsetX, pPositionComponent->GetY() + offsetY);
 
-        m_pPhysics->VCreateTrigger(_owner, physPos , m_Size, m_IsStatic);
+        m_pPhysics->VCreateTrigger(m_pOwner, physPos , m_Size, m_IsStatic);
     }
 }
 
@@ -107,35 +133,70 @@ TiXmlElement* TriggerComponent::VGenerateXml()
     return baseElement;
 }
 
-void TriggerComponent::OnActorEntered(Actor* pActor)
+void TriggerComponent::OnActorEntered(Actor* pActor, FixtureType triggerType)
 {
+    if (m_DeactivatedTriggerTypesMap[triggerType] == true)
+    {
+        return;
+    }
+
     // Part of the actor may already be inside the trigger. If it is, ignore it
     if (HasOverlappingActor(pActor))
     {
         AddOverlappingActor(pActor);
         return;
     }
+
+    auto findIt = m_TriggerEnterSoundMap.find(triggerType);
+    if (findIt != m_TriggerEnterSoundMap.end())
+    {
+        SoundInfo soundInfo(findIt->second);
+        soundInfo.soundSourcePosition = m_pOwner->GetPositionComponent()->GetPosition();
+        soundInfo.setPositionEffect = true;
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));
+    }
+
     AddOverlappingActor(pActor);
 
-    NotifyEnterTrigger(pActor);
+    NotifyEnterTrigger(pActor, triggerType);
 
     /*m_TriggerRemaining--;
     if (!m_IsTriggerUnlimited && (m_IsTriggerOnce || (m_TriggerRemaining <= 0)))
     {
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
+        IEventMgr::Get()->VQueueEvent(pEvent);
+    }*/
+
+    /*if (!m_IsTriggerUnlimited)
+    {
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
     }*/
 }
 
-void TriggerComponent::OnActorLeft(Actor* pActor)
+void TriggerComponent::OnActorLeft(Actor* pActor, FixtureType triggerType)
 {
+    if (m_DeactivatedTriggerTypesMap[triggerType] == true)
+    {
+        return;
+    }
+
     RemoveOverlappingActor(pActor);
     if (HasOverlappingActor(pActor))
     {
         return;
     }
 
-    NotifyLeaveTrigger(pActor);
+    auto findIt = m_TriggerLeaveSoundMap.find(triggerType);
+    if (findIt != m_TriggerLeaveSoundMap.end())
+    {
+        SoundInfo soundInfo(findIt->second);
+        soundInfo.soundSourcePosition = m_pOwner->GetPositionComponent()->GetPosition();
+        soundInfo.setPositionEffect = true;
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));
+    }
+
+    NotifyLeaveTrigger(pActor, triggerType);
 }
 
 SDL_Rect TriggerComponent::GetTriggerArea()
@@ -143,7 +204,7 @@ SDL_Rect TriggerComponent::GetTriggerArea()
     SDL_Rect triggerArea = { 0 };
 
     shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     if (!pPositionComponent)
     {
         return triggerArea;
@@ -187,18 +248,18 @@ bool TriggerComponent::HasOverlappingActor(Actor* pActor)
 // TriggerSubject implementation
 //=====================================================================================================================
 
-void TriggerSubject::NotifyEnterTrigger(Actor* pActorWhoEntered)
+void TriggerSubject::NotifyEnterTrigger(Actor* pActorWhoEntered, FixtureType triggerType)
 {
     for (TriggerObserver* pObserver : m_Observers)
     {
-        pObserver->VOnActorEnteredTrigger(pActorWhoEntered);
+        pObserver->VOnActorEnteredTrigger(pActorWhoEntered, triggerType);
     }
 }
 
-void TriggerSubject::NotifyLeaveTrigger(Actor* pActorWhoLeft)
+void TriggerSubject::NotifyLeaveTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
 {
     for (TriggerObserver* pObserver : m_Observers)
     {
-        pObserver->VOnActorLeftTrigger(pActorWhoLeft);
+        pObserver->VOnActorLeftTrigger(pActorWhoLeft, triggerType);
     }
 }

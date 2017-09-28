@@ -37,7 +37,7 @@ TiXmlElement* LocalAmbientSoundComponent::VGenerateXml()
 void LocalAmbientSoundComponent::VPostInit()
 {
     shared_ptr<TriggerComponent> pTriggerComponent =
-        MakeStrongPtr(_owner->GetComponent<TriggerComponent>());
+        MakeStrongPtr(m_pOwner->GetComponent<TriggerComponent>());
     assert(pTriggerComponent != nullptr);
 
     pTriggerComponent->AddObserver(this);
@@ -57,7 +57,7 @@ void LocalAmbientSoundComponent::VPostPostInit()
         fixtureDef.collisionFlag = CollisionFlag_Trigger;
         fixtureDef.isSensor = true;
 
-        g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(_owner->GetGUID(), &fixtureDef);
+        g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(m_pOwner->GetGUID(), &fixtureDef);
     }
 }
 
@@ -69,7 +69,7 @@ void LocalAmbientSoundComponent::VUpdate(uint32 msDiff)
     }
 }
 
-void LocalAmbientSoundComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
+void LocalAmbientSoundComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType)
 {
     m_ActorsInTriggerArea++;
     m_pActorInArea = pActorWhoEntered;
@@ -78,7 +78,7 @@ void LocalAmbientSoundComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
     PlayAmbientSound();
 }
 
-void LocalAmbientSoundComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft)
+void LocalAmbientSoundComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
 {
     m_ActorsInTriggerArea--;
     m_pActorInArea = NULL;
@@ -123,7 +123,7 @@ void LocalAmbientSoundComponent::UpdateAmbientSound()
     assert(m_pActorInArea != NULL);
 
     Point soundDistanceDelta =
-        _owner->GetPositionComponent()->GetPosition() - m_pActorInArea->GetPositionComponent()->GetPosition();
+        m_pOwner->GetPositionComponent()->GetPosition() - m_pActorInArea->GetPositionComponent()->GetPosition();
     double distance = soundDistanceDelta.Length();
     double distanceRatio = distance / m_DiagonalLength;
 

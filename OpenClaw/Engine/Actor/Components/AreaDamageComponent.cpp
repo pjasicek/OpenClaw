@@ -70,7 +70,7 @@ bool AreaDamageComponent::VOnApply(Actor* pActorWhoPickedThis)
     {
         
         // This is a hacky part
-        SDL_Rect areaDamageAABB = g_pApp->GetGameLogic()->VGetGamePhysics()->VGetAABB(_owner->GetGUID(), false);
+        SDL_Rect areaDamageAABB = g_pApp->GetGameLogic()->VGetGamePhysics()->VGetAABB(m_pOwner->GetGUID(), false);
         SDL_Rect actorAABB = g_pApp->GetGameLogic()->VGetGamePhysics()->VGetAABB(pActorWhoPickedThis->GetGUID(), true);
 
         SDL_Rect impactRect;
@@ -106,7 +106,7 @@ void AreaDamageComponent::VUpdate(uint32 msDiff)
 
     if (m_ActiveTime >= m_Duration)
     {
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
     }
 }

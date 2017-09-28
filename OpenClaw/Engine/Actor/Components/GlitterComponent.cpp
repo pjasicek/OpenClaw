@@ -52,7 +52,7 @@ bool GlitterComponent::VInit(TiXmlElement* pData)
 
 void GlitterComponent::VPostInit()
 {
-    m_pPositonComponent = MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+    m_pPositonComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
     assert(m_pPositonComponent);
 
     if (m_SpawnImmediate)
@@ -82,7 +82,7 @@ void GlitterComponent::VUpdate(uint32 msDiff)
     else if (!m_pGlitter && m_Active)
     {
         shared_ptr<PhysicsComponent> pPhysicsComponent = 
-            MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
         assert(pPhysicsComponent && "Sparkle not spawned in post init and sparkle cannot be spawned in update");
 
         // Spawn sparkle if actor is still

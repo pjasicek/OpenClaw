@@ -52,13 +52,13 @@ public:
     BaseEnemyAIStateComponent* GetCurrentState();
 
 private:
-    void LeaveAllStates();
+    void LeaveAllStates(BaseEnemyAIStateComponent* pNextState);
     bool HasState(std::string stateName);
     bool HasState(EnemyAIState state);
     void EnterState(std::string stateName);
     void EnterState(EnemyAIState state);
     void EnterState(BaseEnemyAIStateComponent* pState);
-    void AcquireStateLock();
+    void AcquireStateLock(BaseEnemyAIStateComponent* pNewState);
     BaseEnemyAIStateComponent* GetState(EnemyAIState state);
 
     bool m_bInitialized;

@@ -51,6 +51,7 @@
 #include "Components/RopeComponent.h"
 #include "Components/SteppingGroundComponent.h"
 #include "Components/SpringBoardComponent.h"
+#include "Components/ActorSpawnerComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -115,6 +116,8 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<SpringBoardComponent>(SpringBoardComponent::GetIdFromName(SpringBoardComponent::g_Name));
     _componentFactory.Register<KatherineBossAIStateComponent>(KatherineBossAIStateComponent::GetIdFromName(KatherineBossAIStateComponent::g_Name));
     _componentFactory.Register<WolvingtonBossAIStateComponent>(WolvingtonBossAIStateComponent::GetIdFromName(WolvingtonBossAIStateComponent::g_Name));
+    _componentFactory.Register<FallAIStateComponent>(FallAIStateComponent::GetIdFromName(FallAIStateComponent::g_Name));
+    _componentFactory.Register<ActorSpawnerComponent>(ActorSpawnerComponent::GetIdFromName(ActorSpawnerComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

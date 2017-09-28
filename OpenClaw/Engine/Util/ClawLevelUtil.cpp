@@ -107,6 +107,7 @@ namespace ClawLevelUtil
             { { 7, "StartSteppingStone" }, ActorPrototype_Level7_SteppingGround },
             { { 7, "SteppingStone" }, ActorPrototype_Level7_SteppingGround },
             { { 7, "HermitCrab" }, ActorPrototype_Level7_HermitCrab },
+            { { 7, "CrabNest" }, ActorPrototype_Level7_CrabNest },
 
             // Level 8
         };

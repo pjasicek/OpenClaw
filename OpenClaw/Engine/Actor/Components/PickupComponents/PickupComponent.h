@@ -21,7 +21,7 @@ public:
     virtual TiXmlElement* VGenerateXml() override;
 
     virtual bool VOnApply(Actor* pActorWhoPickedThis) = 0;
-    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered) override;
+    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType) override;
 
     PickupType GetPickupType() { return m_PickupType; }
 

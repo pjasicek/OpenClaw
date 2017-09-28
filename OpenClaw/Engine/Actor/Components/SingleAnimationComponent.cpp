@@ -24,7 +24,7 @@ void SingleAnimationComponent::VPostInit()
 void SingleAnimationComponent::VPostPostInit()
 {
     shared_ptr<AnimationComponent> pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     assert(pAnimationComponent != nullptr);
     assert(pAnimationComponent->GetCurrentAnimation() != NULL);
     pAnimationComponent->AddObserver(this);
@@ -32,6 +32,6 @@ void SingleAnimationComponent::VPostPostInit()
 
 void SingleAnimationComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
 {
-    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
     IEventMgr::Get()->VQueueEvent(pEvent);
 }

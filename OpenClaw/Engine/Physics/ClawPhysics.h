@@ -88,6 +88,8 @@ private:
 
     std::vector<uint32> m_ActorsToBeDestroyed;
     std::vector<const ActorBodyDef*> m_ActorBodiesToBeCreated;
+    std::vector<std::pair<uint32, const ActorFixtureDef*>> m_FixturesToBeCreated;
+    std::vector<std::pair<uint32, const Point>> m_DeferredAppliedForce;
     
     ActorIDToBox2DBodyMap m_ActorToBodyMap;
     Box2DBodyToActorIDMap m_BodyToActorMap;

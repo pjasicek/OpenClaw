@@ -26,7 +26,7 @@ bool PowerupSparkleAIComponent::VInit(TiXmlElement* data)
 void PowerupSparkleAIComponent::VPostInit()
 {
     shared_ptr<AnimationComponent> pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>());
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>());
     assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
     pAnimationComponent->AddObserver(this);
 
@@ -40,7 +40,7 @@ void PowerupSparkleAIComponent::VPostInit()
         pAnimationComponent->GetCurrentAnimation()->SetNextFrame();
     }
 
-    m_pPositonComponent = MakeStrongPtr(_owner->GetComponent<PositionComponent>()).get();
+    m_pPositonComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>()).get();
     assert(m_pPositonComponent);
 }
 
@@ -68,7 +68,7 @@ void PowerupSparkleAIComponent::SetTargetPositionComponent(PositionComponent* pT
     assert(pTarget);
     m_pTargetPositionComponent = pTarget;
 
-    shared_ptr<EventData_Teleport_Actor> pEvent(new EventData_Teleport_Actor(_owner->GetGUID(), m_pTargetPositionComponent->GetPosition()));
+    shared_ptr<EventData_Teleport_Actor> pEvent(new EventData_Teleport_Actor(m_pOwner->GetGUID(), m_pTargetPositionComponent->GetPosition()));
     IEventMgr::Get()->VTriggerEvent(pEvent);
 
     ChooseNewPosition();
@@ -84,6 +84,6 @@ void PowerupSparkleAIComponent::ChooseNewPosition()
     m_pPositonComponent->SetX(targetPos.x - m_TargetSize.x / 2 + rand() % (int)m_TargetSize.x);
     m_pPositonComponent->SetY(targetPos.y - m_TargetSize.y / 2 + rand() % (int)m_TargetSize.y);
 
-    shared_ptr<EventData_Teleport_Actor> pEvent(new EventData_Teleport_Actor(_owner->GetGUID(), m_pPositonComponent->GetPosition()));
+    shared_ptr<EventData_Teleport_Actor> pEvent(new EventData_Teleport_Actor(m_pOwner->GetGUID(), m_pPositonComponent->GetPosition()));
     IEventMgr::Get()->VTriggerEvent(pEvent);
 }

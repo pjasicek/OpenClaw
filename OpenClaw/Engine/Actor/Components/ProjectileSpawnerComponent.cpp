@@ -39,13 +39,13 @@ TiXmlElement* ProjectileSpawnerComponent::VGenerateXml()
 void ProjectileSpawnerComponent::VPostInit()
 {
     m_pAnimationComponent = 
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>()).get();
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>()).get();
     assert(m_pAnimationComponent != NULL);
 
     m_pAnimationComponent->SetAnimation(m_Properties.idleAnim);
 
     shared_ptr<TriggerComponent> pTriggerComponent = 
-        MakeStrongPtr(_owner->GetComponent<TriggerComponent>());
+        MakeStrongPtr(m_pOwner->GetComponent<TriggerComponent>());
     assert(pTriggerComponent != nullptr);
 
     m_pAnimationComponent->AddObserver(this);
@@ -65,7 +65,7 @@ void ProjectileSpawnerComponent::VPostPostInit()
         fixtureDef.collisionFlag = CollisionFlag_Trigger;
         fixtureDef.isSensor = true;
 
-        g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(_owner->GetGUID(), &fixtureDef);
+        g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(m_pOwner->GetGUID(), &fixtureDef);
     }
 }
 
@@ -83,14 +83,14 @@ void ProjectileSpawnerComponent::VUpdate(uint32 msDiff)
     TryToFire();
 }
 
-void ProjectileSpawnerComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
+void ProjectileSpawnerComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType)
 {
     TryToFire();
     m_ActorsInTriggerArea++;
     assert(m_ActorsInTriggerArea >= 0);
 }
 
-void ProjectileSpawnerComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft)
+void ProjectileSpawnerComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
 {
     m_ActorsInTriggerArea--;
     assert(m_ActorsInTriggerArea >= 0);
@@ -114,16 +114,16 @@ void ProjectileSpawnerComponent::VOnAnimationFrameChanged(
 
         // Check if the spawned projectile is within some bounds of Claw's Human View display
         // If not, then we can't either hear it nor do we care that there is some projectile
-        Point projectilePos = _owner->GetPositionComponent()->GetPosition();
+        Point projectilePos = m_pOwner->GetPositionComponent()->GetPosition();
         if (g_pApp->GetHumanView()->GetCamera()->IntersectsWithPoint(projectilePos, 1.25f))
         {
             // Spawn the projectile
-            Point projectilePosition = _owner->GetPositionComponent()->GetPosition() + m_Properties.projectileSpawnOffset;
+            Point projectilePosition = m_pOwner->GetPositionComponent()->GetPosition() + m_Properties.projectileSpawnOffset;
             ActorTemplates::CreateActor_Projectile(
                 m_Properties.projectileProto,
                 projectilePosition,
                 m_Properties.projectileDirection,
-                _owner->GetGUID());
+                m_pOwner->GetGUID());
         }
     }
 }

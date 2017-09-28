@@ -49,7 +49,7 @@ bool TogglePegAIComponent::VInit(TiXmlElement* pData)
 void TogglePegAIComponent::VPostInit()
 {
     m_pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
     assert(m_pAnimationComponent);
 
     if (m_Properties.isAlwaysOn)
@@ -124,18 +124,18 @@ static void DelayEvent(IEventDataPtr pEvent, uint32 msDelay)
 void TogglePegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
 {
     bool didToggle = false;
-    /*LOG(ToStr(_owner->GetGUID()));
+    /*LOG(ToStr(m_pOwner->GetGUID()));
     LOG(ToStr(pLastFrame->idx) + " - " + ToStr(pNewFrame->idx));*/
     if ((pLastFrame->idx == (m_Properties.toggleFrameIdx - 1)) && 
         (pNewFrame->idx == m_Properties.toggleFrameIdx))
     {
-        m_pPhysics->VDeactivate(_owner->GetGUID());
+        m_pPhysics->VDeactivate(m_pOwner->GetGUID());
         didToggle = true;
     }
     else if ((pLastFrame->idx == m_Properties.toggleFrameIdx) && 
             (pNewFrame->idx == (m_Properties.toggleFrameIdx - 1)))
     {
-        m_pPhysics->VActivate(_owner->GetGUID());
+        m_pPhysics->VActivate(m_pOwner->GetGUID());
         didToggle = true;
     }
 
@@ -153,7 +153,7 @@ void TogglePegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, Anima
     {
         SoundInfo sound(m_Properties.toggleSound);
         sound.setDistanceEffect = true;
-        sound.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
+        sound.soundSourcePosition = m_pOwner->GetPositionComponent()->GetPosition();
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(sound)));
     }

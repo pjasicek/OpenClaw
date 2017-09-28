@@ -426,6 +426,20 @@ void ClawPhysics::VOnUpdate(const uint32 msDiff)
         VAddActorBody(pActorBodyDef);
     }
     m_ActorBodiesToBeCreated.clear();
+
+    // Create any pending fixtures
+    for (const auto& fixturePair : m_FixturesToBeCreated)
+    {
+        VAddActorFixtureToBody(fixturePair.first, fixturePair.second);
+    }
+    m_FixturesToBeCreated.clear();
+
+    // Create any pending fixtures
+    for (const auto& forcePair : m_DeferredAppliedForce)
+    {
+        VApplyForce(forcePair.first, forcePair.second);
+    }
+    m_DeferredAppliedForce.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -848,14 +862,24 @@ void ClawPhysics::AddActorFixtureToBody(b2Body* pBody, const ActorFixtureDef* pF
     fixture.isSensor = pFixtureDef->isSensor;
     fixture.filter.categoryBits = pFixtureDef->collisionFlag;
     fixture.filter.maskBits = pFixtureDef->collisionMask;
-    pBody->CreateFixture(&fixture);
+    assert(pBody->CreateFixture(&fixture));
 }
 
 void ClawPhysics::VAddActorFixtureToBody(uint32_t actorId, const ActorFixtureDef* pFixtureDef)
 {
+    if (m_pWorld->IsLocked())
+    {
+        m_FixturesToBeCreated.push_back(std::make_pair(actorId, pFixtureDef));
+        return;
+    }
+
     if (b2Body* pBody = FindBox2DBody(actorId))
     {
         AddActorFixtureToBody(pBody, pFixtureDef);
+    }
+    else
+    {
+        LOG_WARNING("Failed to add fixture to body. Is Physics world updating: " + ToStr(m_pWorld->IsLocked()));
     }
 }
 
@@ -957,9 +981,19 @@ void ClawPhysics::VCreateTrigger(WeakActorPtr pActor, const Point& pos, Point& s
 //
 void ClawPhysics::VApplyForce(uint32_t actorId, const Point& force)
 {
+    if (m_pWorld->IsLocked())
+    {
+        m_DeferredAppliedForce.push_back(std::make_pair(actorId, force));
+        return;
+    }
+
     if (b2Body* pBody = FindBox2DBody(actorId))
     {
-        pBody->ApplyForceToCenter(PointToB2Vec2(force), true);
+        pBody->ApplyLinearImpulseToCenter(PointToB2Vec2(force), true);
+    }
+    else
+    {
+        LOG_WARNING("Failed to find actor's body");
     }
 }
 

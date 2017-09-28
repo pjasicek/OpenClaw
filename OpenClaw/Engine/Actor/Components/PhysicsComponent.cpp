@@ -49,7 +49,7 @@ PhysicsComponent::PhysicsComponent() :
 
 PhysicsComponent::~PhysicsComponent()
 {
-    m_pPhysics->VRemoveActor(_owner->GetGUID());
+    m_pPhysics->VRemoveActor(m_pOwner->GetGUID());
 }
 
 bool PhysicsComponent::VInit(TiXmlElement* data)
@@ -190,7 +190,7 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
 void PhysicsComponent::VPostInit()
 {
     shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     assert(pPositionComponent);
 
     if (m_ActorBodyDef.collisionFlag != CollisionFlag_None)
@@ -200,7 +200,7 @@ void PhysicsComponent::VPostInit()
         if (fabs(m_ActorBodyDef.size.x) < DBL_EPSILON || fabs(m_ActorBodyDef.size.y) < DBL_EPSILON)
         {
             shared_ptr<ActorRenderComponent> pRenderComponent =
-                MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+                MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
             assert(pRenderComponent);
 
             shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage());
@@ -223,20 +223,20 @@ void PhysicsComponent::VPostInit()
             }
 
             // HACK:
-            if (_owner->GetName() == "/LEVEL1/IMAGES/RATBOMB/*")
+            if (m_pOwner->GetName() == "/LEVEL1/IMAGES/RATBOMB/*")
             {
                 pImage->SetOffset(0, 0);
             }
         }
 
         m_ActorBodyDef.position += m_ActorBodyDef.positionOffset;
-        m_ActorBodyDef.pActor = _owner;
+        m_ActorBodyDef.pActor = m_pOwner;
 
         m_pPhysics->VAddActorBody(&m_ActorBodyDef);
     }
     else
     {
-        m_pPhysics->VAddDynamicActor(_owner);
+        m_pPhysics->VAddDynamicActor(m_pOwner);
     }
 }
 
@@ -244,7 +244,7 @@ void PhysicsComponent::VPostPostInit()
 {
     if (m_bClampToGround)
     {
-        auto pPositionComponent = _owner->GetPositionComponent();
+        auto pPositionComponent = m_pOwner->GetPositionComponent();
         // Position enemy to the floor
         Point fromPoint = pPositionComponent->GetPosition();
         Point toPoint = pPositionComponent->GetPosition() + Point(0, 100);
@@ -256,10 +256,10 @@ void PhysicsComponent::VPostPostInit()
             //assert(raycastDown.foundIntersection && "Did not find intersection. Enemy is too far in the air with no ground below him");
         }
 
-        double deltaY = raycastDown.deltaY - m_pPhysics->VGetAABB(_owner->GetGUID(), true).h / 2;
+        double deltaY = raycastDown.deltaY - m_pPhysics->VGetAABB(m_pOwner->GetGUID(), true).h / 2;
 
         pPositionComponent->SetY(pPositionComponent->GetY() + deltaY - 1);
-        m_pPhysics->VSetPosition(_owner->GetGUID(), pPositionComponent->GetPosition());
+        m_pPhysics->VSetPosition(m_pOwner->GetGUID(), pPositionComponent->GetPosition());
     }
 }
 
@@ -307,7 +307,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     if (m_DoNothingTimeout > 0)
     {
         SetVelocity(Point(0, 0));
-        m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0.0f);
+        m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), 0.0f);
         m_CurrentSpeed.Set(0, 0);
         return;
     }
@@ -354,7 +354,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         m_ClimbingSpeed = Point(0, 0);
         m_IsClimbing = false;
         // When Claw takes damage while ducking he stands up.. TODO: Think of better solution
-        m_pPhysics->VScaleActor(_owner->GetGUID(), 2.0);
+        m_pPhysics->VScaleActor(m_pOwner->GetGUID(), 2.0);
 
         m_pControllableComponent->SetDuckingTime(0);
         m_pControllableComponent->SetLookingUpTime(0);
@@ -373,7 +373,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     {
         m_pControllableComponent->OnStand();
         // TODO: HACK: one of the biggest hacks so far
-        m_pPhysics->VScaleActor(_owner->GetGUID(), 2.0);
+        m_pPhysics->VScaleActor(m_pOwner->GetGUID(), 2.0);
     }
 
     if (m_pControllableComponent && 
@@ -435,9 +435,9 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             m_IsJumping = false;
             m_IsFalling = false;
             m_HeightInAir = 0;
-            m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale);
+            m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), m_GravityScale);
             //m_pControllableComponent->VOnStopMoving();
-            m_pPhysics->VSetLinearSpeedEx(_owner->GetGUID(), Point(0,0));
+            m_pPhysics->VSetLinearSpeedEx(m_pOwner->GetGUID(), Point(0,0));
             return;
         }*/
 
@@ -464,7 +464,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             m_IsJumping = true;
             m_IsFalling = false;
             m_HeightInAir = 0;
-            m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale);
+            m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), m_GravityScale);
             goto set_velocity;
         }
         else if (!m_IgnoreJump && (fabs(m_CurrentSpeed.y) > DBL_EPSILON))
@@ -475,17 +475,17 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             m_IsJumping = true;
             m_IsFalling = false;
             m_HeightInAir = 0;
-            m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale);
+            m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), m_GravityScale);
         }
         if (m_OverlappingLaddersList.empty())
         {
             m_IsClimbing = false;
-            m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale);
+            m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), m_GravityScale);
         }
         else
         {
             //LOG("ClimbingSpeed: " + ToStr(m_ClimbingSpeed.y));
-            m_pPhysics->VSetLinearSpeedEx(_owner->GetGUID(), Point(0, m_ClimbingSpeed.y));
+            m_pPhysics->VSetLinearSpeedEx(m_pOwner->GetGUID(), Point(0, m_ClimbingSpeed.y));
             if (m_pControllableComponent && fabs(m_ClimbingSpeed.y) < DBL_EPSILON)
             {
                 m_pControllableComponent->VOnStopClimbing();
@@ -518,7 +518,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         {
             m_pControllableComponent->OnDuck();
             // TODO: HACK: one of the biggest hacks so far
-            m_pPhysics->VScaleActor(_owner->GetGUID(), 0.5);
+            m_pPhysics->VScaleActor(m_pOwner->GetGUID(), 0.5);
 
             if (fabs(m_CurrentSpeed.x) > DBL_EPSILON)
             {
@@ -541,7 +541,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         if (!m_pControllableComponent->IsDucking())
         {
             // TODO: HACK: one of the biggest hacks so far
-            m_pPhysics->VScaleActor(_owner->GetGUID(), 2.0);
+            m_pPhysics->VScaleActor(m_pOwner->GetGUID(), 2.0);
         }
     }
 
@@ -605,7 +605,7 @@ set_velocity:
         Point velocity = GetVelocity();
 
         double ySpeed = m_CurrentSpeed.y;
-        if (_owner->GetName() == "Claw")
+        if (m_pOwner->GetName() == "Claw")
         {
             //LOG("CurrentSpeed.y: " + ToStr(m_CurrentSpeed.y));
         }
@@ -623,7 +623,7 @@ set_velocity:
         if (fabs(m_CurrentSpeed.x) > DBL_EPSILON)
         {
             double runSpeed = g_pApp->GetGlobalOptions()->runSpeed;
-            if (auto pPowerupComp = MakeStrongPtr(_owner->GetComponent<PowerupComponent>()))
+            if (auto pPowerupComp = MakeStrongPtr(m_pOwner->GetComponent<PowerupComponent>()))
             {
                 if (pPowerupComp->HasPowerup(PowerupType_Catnip))
                 {
@@ -647,7 +647,7 @@ set_velocity:
             // Moving while on platform
             m_pMovingPlatformContact->SetFriction(0.0f);
             Point externalSourceSpeedX(m_ExternalSourceSpeed.x, 0);
-            m_pPhysics->VAddLinearSpeed(_owner->GetGUID(), externalSourceSpeedX);
+            m_pPhysics->VAddLinearSpeed(m_pOwner->GetGUID(), externalSourceSpeedX);
 
             // If moving on platform, be slower
             velocity = GetVelocity();
@@ -704,12 +704,12 @@ set_velocity:
         }
         if (applyForce)
         {
-            m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale);
+            m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), m_GravityScale);
             //ApplyForce(m_pPhysics->GetGravity());
         }
         else
         {
-            m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0.0f);
+            m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), 0.0f);
         }
 
         if (m_bIsForcedUp)
@@ -790,14 +790,14 @@ set_velocity:
                 m_pControllableComponent->VOnStopMoving();
             }
 
-            //LOG(ToStr(m_pPhysics->VGetVelocity(_owner->GetGUID()).x) + " - " + ToStr(m_pPhysics->VGetVelocity(_owner->GetGUID()).y));
+            //LOG(ToStr(m_pPhysics->VGetVelocity(m_pOwner->GetGUID()).x) + " - " + ToStr(m_pPhysics->VGetVelocity(m_pOwner->GetGUID()).y));
         }
         
     }
 
     /*if (m_HasConstantSpeed)
     {
-        m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), m_ConstantSpeed);
+        m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), m_ConstantSpeed);
     }*/
 
     if (m_ClimbingSpeed.y < (-1.0 * DBL_EPSILON))
@@ -820,7 +820,7 @@ set_velocity:
         if (m_CurrentSpeed.y >= (-1.0 * DBL_EPSILON))
         {
             SetVelocity(Point(0, 0));
-            m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0.0f);
+            m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), 0.0f);
         }
 
         //LOG("CurrentSpeed: " + m_CurrentSpeed.ToString());
@@ -983,7 +983,7 @@ bool PhysicsComponent::AttachToLadder()
     }
 
     shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     assert(pPositionComponent);
 
     Point actorPosition = pPositionComponent->GetPosition();
@@ -1003,7 +1003,7 @@ bool PhysicsComponent::AttachToLadder()
 
         if (actorPosition.x > topleft.x && actorPosition.x < bottomright.x)
         {
-            m_pPhysics->VSetPosition(_owner->GetGUID(), Point(center.x, actorPosition.y));
+            m_pPhysics->VSetPosition(m_pOwner->GetGUID(), Point(center.x, actorPosition.y));
             //LOG("CAN CLIMB");
             return true;
         }
@@ -1026,14 +1026,14 @@ void PhysicsComponent::RequestClimb(Point climbMovement)
 
             m_IsClimbing = true;
             m_IgnoreJump = true;
-            m_pPhysics->VSetGravityScale(_owner->GetGUID(), 0);
+            m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), 0);
         }
     }
 }
 
 bool PhysicsComponent::CheckOverlap(FixtureType withWhatFixture)
 {
-    return m_pPhysics->VIsActorOverlap(_owner->GetGUID(), withWhatFixture);
+    return m_pPhysics->VIsActorOverlap(m_pOwner->GetGUID(), withWhatFixture);
 }
 
 void PhysicsComponent::RemoveOverlappingLadder(const b2Fixture* ladder)
@@ -1050,7 +1050,7 @@ void PhysicsComponent::RemoveOverlappingLadder(const b2Fixture* ladder)
 
 void PhysicsComponent::AddOverlappingGround(const b2Fixture* pGround)
 {
-    //LOG_ERROR("owner: " + _owner->GetName());
+    //LOG_ERROR("owner: " + m_pOwner->GetName());
     if (std::find(m_OverlappingGroundsList.begin(), m_OverlappingGroundsList.end(), pGround) == m_OverlappingGroundsList.end())
     {
         m_OverlappingGroundsList.push_back(pGround); 

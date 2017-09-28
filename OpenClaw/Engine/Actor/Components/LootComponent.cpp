@@ -40,7 +40,7 @@ bool LootComponent::VInit(TiXmlElement* pData)
 
 void LootComponent::VPostInit()
 {
-    shared_ptr<HealthComponent> pHealthComponent = MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name));
+    shared_ptr<HealthComponent> pHealthComponent = MakeStrongPtr(m_pOwner->GetComponent<HealthComponent>(HealthComponent::g_Name));
     if (pHealthComponent)
     {
         pHealthComponent->AddObserver(this);
@@ -66,7 +66,7 @@ void LootComponent::VOnHealthBelowZero(DamageType damageType, int sourceActorId)
     for (PickupType item : m_Loot)
     {
         shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
         assert(pPositionComponent);
 
         StrongActorPtr pLoot = ActorTemplates::CreateActorPickup(item, pPositionComponent->GetPosition(), false);

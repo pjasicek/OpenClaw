@@ -4,7 +4,7 @@
 	</ActorRenderComponent>
     <TriggerComponent>
         <TriggerUnlimited>true</TriggerUnlimited>
-        <IsStatic>true</IsStatic>
+        <IsStatic>false</IsStatic>
     </TriggerComponent>
     <AnimationComponent>
 		<AnimationPath>/LEVEL6/ANIS/GROUNDBLOWER.ANI</AnimationPath>

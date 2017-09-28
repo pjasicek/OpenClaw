@@ -77,6 +77,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActorController.cpp" />
+    <ClCompile Include="Engine\Actor\Components\ActorSpawnerComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\AuraComponents\AuraComponent.cpp" />
     <ClCompile Include="ClawEvents.cpp" />
     <ClCompile Include="Engine\Actor\ActorTemplates.cpp" />
@@ -98,6 +99,7 @@
     <ClCompile Include="Engine\Actor\Components\GlobalAmbientSoundComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\LocalAmbientSoundComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PathElevatorComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\PawnComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\RopeComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\SpringBoardComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\SteppingGroundComponent.cpp" />
@@ -122,7 +124,6 @@
     <ClCompile Include="Engine\GameApp\CommandHandler.cpp" />
     <ClCompile Include="Engine\GameApp\GameSaves.cpp" />
     <ClCompile Include="Engine\Physics\ClawPhysics.cpp" />
-    <ClCompile Include="Engine\Physics\CollisionBody.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsContactListener.cpp" />
     <ClCompile Include="Engine\Physics\PhysicsDebugDrawer.cpp" />
     <ClCompile Include="Engine\Process\PowerupProcess.cpp" />
@@ -187,6 +188,7 @@
   <ItemGroup>
     <ClInclude Include="ActorController.h" />
     <ClInclude Include="Engine\ActorDefinitions.h" />
+    <ClInclude Include="Engine\Actor\Components\ActorSpawnerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\AuraComponents\AuraComponent.h" />
     <ClInclude Include="ClawEvents.h" />
     <ClInclude Include="Engine\Actor\ActorTemplates.h" />
@@ -210,6 +212,7 @@
     <ClInclude Include="Engine\Actor\Components\LocalAmbientSoundComponent.h" />
     <ClInclude Include="Engine\Actor\Components\LootComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PathElevatorComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\PawnComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PickupComponents\PickupComponent.h" />
     <ClInclude Include="Engine\Actor\Components\KinematicComponent.h" />
     <ClInclude Include="Engine\Actor\Components\PredefinedMoveComponent.h" />
@@ -239,7 +242,6 @@
     <ClInclude Include="Engine\GameApp\CommandHandler.h" />
     <ClInclude Include="Engine\GameApp\GameSaves.h" />
     <ClInclude Include="Engine\Physics\ClawPhysics.h" />
-    <ClInclude Include="Engine\Physics\CollisionBody.h" />
     <ClInclude Include="Engine\Physics\PhysicsContactListener.h" />
     <ClInclude Include="Engine\Physics\PhysicsDebugDrawer.h" />
     <ClInclude Include="Engine\Process\PowerupProcess.h" />

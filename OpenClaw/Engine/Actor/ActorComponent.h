@@ -17,7 +17,7 @@ class ActorComponent
     friend class ActorFactory;
 
 public:
-    virtual ~ActorComponent() { _owner.reset(); }
+    virtual ~ActorComponent() { m_pOwner.reset(); }
 
     // These functions are meant to be overriden by the implementation classes of the components
     virtual bool VInit(TiXmlElement* data) = 0;
@@ -39,10 +39,10 @@ public:
     }
 
 protected:
-    StrongActorPtr _owner;
+    StrongActorPtr m_pOwner;
 
 private:
-    void SetOwner(StrongActorPtr owner) { _owner = owner; }
+    void SetOwner(StrongActorPtr pOwner) { m_pOwner = pOwner; }
 };
 
 #endif

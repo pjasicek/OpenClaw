@@ -25,6 +25,10 @@
         <TakeDamageAnimation>hit</TakeDamageAnimation>
         <InvulnerabilityTime>0</InvulnerabilityTime>
     </TakeDamageAIStateComponent>
+    <FallAIStateComponent>
+        <StatePriority>100</StatePriority>
+        <FallAnimation>fall</FallAnimation>
+    </FallAIStateComponent>
     <PatrolEnemyAIStateComponent>
         <IsAlwaysIdle>true</IsAlwaysIdle>
         <StatePriority>0</StatePriority>
@@ -73,6 +77,10 @@
             <Animation>strike1</Animation>
             <RequiredMinAnimIdx>2</RequiredMinAnimIdx>
         </IgnoreParryInAnim>
+        <IgnoreParryInAnim>
+            <Animation>fall</Animation>
+            <RequiredMinAnimIdx>0</RequiredMinAnimIdx>
+        </IgnoreParryInAnim>
         <ParryChances>
             <ParryChance DamageType="DamageType_Bullet" Chance="100" />
             <ParryChance DamageType="DamageType_MeleeAttack" Chance="100" />
@@ -85,5 +93,7 @@
     </ParryEnemyAIStateComponent>
     <PhysicsComponent>
         <CollisionSize width="50" height="51" />
+        <Friction>10.000000</Friction>
+        <ClampToGround>false</ClampToGround>
     </PhysicsComponent>
 </Actor>

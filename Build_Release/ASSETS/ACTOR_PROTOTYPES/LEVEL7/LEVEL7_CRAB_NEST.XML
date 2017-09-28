@@ -1,0 +1,16 @@
+<Actor Type="Level7_CrabNest" Parent="ActorPrototype_BaseActorSpawner" ActorPrototypeName="ActorPrototype_Level7_CrabNest">
+    <ActorRenderComponent>
+        <ImagePath>/LEVEL7/IMAGES/SANDHOLE/*.PID</ImagePath>
+        <Palette>/LEVEL7/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL7/ANIS/HATCHNEST.ANI</AnimationPath>
+        <PauseOnStart>true</PauseOnStart>
+    </AnimationComponent>
+    <TriggerComponent>
+        <EnterSound TriggerFixtureType="Trigger_SpawnArea" Sound="/GAME/SOUNDS/BOINK.WAV" />
+    </TriggerComponent>
+    <ActorSpawnerComponent>
+        <SpawnAnimation>hatchnest</SpawnAnimation>
+	</ActorSpawnerComponent>
+</Actor>

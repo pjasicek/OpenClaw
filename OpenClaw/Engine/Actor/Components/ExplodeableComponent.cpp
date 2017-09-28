@@ -49,7 +49,7 @@ bool ExplodeableComponent::VInit(TiXmlElement* pData)
 void ExplodeableComponent::VPostInit()
 {
     shared_ptr<HealthComponent> pHealthComponent =
-        MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<HealthComponent>(HealthComponent::g_Name));
     // If there is no health component then the object cannot explode
     assert(pHealthComponent);
     if (pHealthComponent)
@@ -68,7 +68,7 @@ TiXmlElement* ExplodeableComponent::VGenerateXml()
 void ExplodeableComponent::VOnHealthBelowZero(DamageType damageType, int sourceActorId)
 {
     shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     assert(pPositionComponent);
 
     ActorTemplates::CreateAreaDamage(
@@ -79,6 +79,6 @@ void ExplodeableComponent::VOnHealthBelowZero(DamageType damageType, int sourceA
         "Circle", 
         DamageType_Explosion, 
         Direction_None, 
-        _owner->GetGUID(),
+        m_pOwner->GetGUID(),
         Point(0, 40));
 }

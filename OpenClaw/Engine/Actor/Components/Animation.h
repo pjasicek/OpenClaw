@@ -61,7 +61,7 @@ public:
 private:
     void AddAnimationFrame(AnimationFrame& animFrame) { _animationFrames.push_back(animFrame); }
     void SetName(const char* name) { _name = name; }
-    void SetOwner(AnimationComponent* owner) { assert(!_owner && owner); _owner = owner; }
+    void SetOwner(AnimationComponent* owner) { assert(!m_pOwner && owner); m_pOwner = owner; }
 
     bool Initialize(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner);
     bool Initialize(std::vector<AnimationFrame> animFrames, const char* animationName, AnimationComponent* owner);
@@ -76,7 +76,7 @@ private:
     bool _reversed;
     bool _isBeingReversed;
 
-    AnimationComponent* _owner;
+    AnimationComponent* m_pOwner;
 
     std::vector<AnimationFrame> _animationFrames;
 };

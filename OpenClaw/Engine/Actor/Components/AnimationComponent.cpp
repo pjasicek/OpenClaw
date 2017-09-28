@@ -110,21 +110,21 @@ void AnimationComponent::VPostInit()
             cycleDurationStr.erase(0, 5);
             int cycleDuration = std::stoi(cycleDurationStr);
 
-            shared_ptr<ActorRenderComponent> pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+            shared_ptr<ActorRenderComponent> pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
             if (!pRenderComponent)
             {
-                pRenderComponent = MakeStrongPtr(_owner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name));
+                pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name));
             }
             if (!pRenderComponent)
             {
-                LOG_ERROR("Actor has existing animation component but not render component. Actor: " + _owner->GetName());
+                LOG_ERROR("Actor has existing animation component but not render component. Actor: " + m_pOwner->GetName());
                 continue;
             }
 
             // If there is only 1 or 0 frames, we do not need to animate it
             if (pRenderComponent->GetImagesCount() <= 1)
             {
-                //LOG("Skipping creating " + animType + " animation for: " + _owner->GetName());
+                //LOG("Skipping creating " + animType + " animation for: " + m_pOwner->GetName());
                 continue;
             }
 
@@ -137,10 +137,10 @@ void AnimationComponent::VPostInit()
 
             // Set delay according to X coord
             shared_ptr<PositionComponent> pPositionComponent =
-                MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+                MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
             if (!pPositionComponent)
             {
-                LOG_ERROR("Actor is missing position component. Actor: " + _owner->GetName());
+                LOG_ERROR("Actor is missing position component. Actor: " + m_pOwner->GetName());
                 continue;
             }
             
@@ -167,14 +167,14 @@ void AnimationComponent::VPostInit()
 
         if (specialAnim.type == "cycle")
         {
-            shared_ptr<ActorRenderComponent> pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+            shared_ptr<ActorRenderComponent> pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
             if (!pRenderComponent)
             {
-                pRenderComponent = MakeStrongPtr(_owner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name));
+                pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name));
             }
             if (!pRenderComponent)
             {
-                LOG_ERROR("Actor has existing animation component but not render component. Actor: " + _owner->GetName());
+                LOG_ERROR("Actor has existing animation component but not render component. Actor: " + m_pOwner->GetName());
                 assert(false);
                 continue;
             }
@@ -182,7 +182,7 @@ void AnimationComponent::VPostInit()
             // If there is only 1 or 0 frames, we do not need to animate it
             if (pRenderComponent->GetImagesCount() <= 1)
             {
-                //LOG("Skipping creating " + animType + " animation for: " + _owner->GetName());
+                //LOG("Skipping creating " + animType + " animation for: " + m_pOwner->GetName());
                 continue;
             }
 
@@ -201,10 +201,10 @@ void AnimationComponent::VPostInit()
             {
                 // Set delay according to X coord
                 shared_ptr<PositionComponent> pPositionComponent =
-                    MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+                    MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
                 if (!pPositionComponent)
                 {
-                    LOG_ERROR("Actor is missing position component. Actor: " + _owner->GetName());
+                    LOG_ERROR("Actor is missing position component. Actor: " + m_pOwner->GetName());
                     continue;
                 }
 
@@ -218,7 +218,7 @@ void AnimationComponent::VPostInit()
 
     if (_animationMap.empty())
     {
-        LOG_ERROR("No animations in animation component. Offending actor: " + _owner->GetName());
+        LOG_ERROR("No animations in animation component. Offending actor: " + m_pOwner->GetName());
         //assert(false && "No animations in AnimationComponent at all !");
     }
 
@@ -262,7 +262,7 @@ bool AnimationComponent::SetAnimation(std::string animationName)
     auto findIt = _animationMap.find(animationName);
     if (findIt == _animationMap.end())
     {
-        LOG_WARNING("Could not find animation: " + animationName + " for actor: " + _owner->GetName());
+        LOG_WARNING("Could not find animation: " + animationName + " for actor: " + m_pOwner->GetName());
         return false;
     }
 
@@ -328,18 +328,18 @@ void AnimationComponent::OnAnimationFrameStarted(AnimationFrame* frame)
 
     // Notify render component to change frame image
     shared_ptr<ActorRenderComponent> renderComponent =
-        MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>());
+        MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>());
     if (renderComponent)
     {
         renderComponent->SetImage(frame->imageName);
     }
-    else if ((renderComponent = MakeStrongPtr(_owner->GetComponent<HUDRenderComponent>())))
+    else if ((renderComponent = MakeStrongPtr(m_pOwner->GetComponent<HUDRenderComponent>())))
     {
         renderComponent->SetImage(frame->imageName);
     }
     else
     {
-        LOG_WARNING("Could not find render component for actor: " + _owner->GetName());
+        LOG_WARNING("Could not find render component for actor: " + m_pOwner->GetName());
     }
 }
 

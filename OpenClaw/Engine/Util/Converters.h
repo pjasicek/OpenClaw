@@ -649,6 +649,39 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_PowderKegActor(tmpImageSet, Point(wwdObject->x, wwdObject->y), 50, wwdObject->z);
     }
+    else if (logic == "CrabNest")
+    {
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+        
+        Point spawnAreaPosition((wwdObject->minX + wwdObject->maxX) / 2, (wwdObject->minY + wwdObject->maxY) / 2);
+        Point spawnAreaSize(wwdObject->maxX - wwdObject->minX, wwdObject->maxY - wwdObject->minY);
+        Point spawnAreaOffset((spawnAreaPosition.x - actorPosition.x) / 2, (spawnAreaPosition.y - actorPosition.y));
+
+        int numCrabs = wwdObject->userValue1;
+        std::vector<ActorSpawnInfo> spawnedActorInfoList;
+        for (int i = 0; i < numCrabs; i++)
+        {
+            ActorSpawnInfo actorSpawnInfo;
+            actorSpawnInfo.actorProto = ActorPrototype_Level7_HermitCrab;
+            actorSpawnInfo.spawnPositionOffset = Point(0, -10);
+
+            double randVelocityX = (double)Util::GetRandomNumber(-1000, 1000) / 1000.0;
+            actorSpawnInfo.initialVelocity = Point(randVelocityX, -5);
+
+            spawnedActorInfoList.push_back(actorSpawnInfo);
+        }
+
+        return ActorTemplates::CreateXmlData_ActorSpawner(
+            actorProto,
+            actorPosition,
+            spawnAreaOffset,
+            spawnAreaSize,
+            spawnedActorInfoList);
+    }
     else if (logic == "Officer" ||
              logic == "Soldier" ||
              logic == "Rat" ||

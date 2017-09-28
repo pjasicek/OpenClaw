@@ -126,6 +126,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
 
         // Rope
         { ActorPrototype_BaseRope, "ActorPrototype_BaseRope" },
+        { ActorPrototype_BaseActorSpawner, "ActorPrototype_BaseActorSpawner" },
 
         // Level 7
         { ActorPrototype_Level7_CrumblingPeg, "ActorPrototype_Level7_CrumblingPeg" },
@@ -136,6 +137,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level7_BearSailor, "ActorPrototype_Level7_BearSailor" },
         { ActorPrototype_Level7_RedTailPirate, "ActorPrototype_Level7_RedTailPirate" },
         { ActorPrototype_Level7_HermitCrab, "ActorPrototype_Level7_HermitCrab" },
+        { ActorPrototype_Level7_CrabNest, "ActorPrototype_Level7_CrabNest" },
 
         //=======================================
         // Menu
@@ -276,6 +278,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 
         // Rope
         { "ActorPrototype_BaseRope", ActorPrototype_BaseRope },
+        { "ActorPrototype_BaseActorSpawner", ActorPrototype_BaseActorSpawner },
 
         // Level 7
         { "ActorPrototype_Level7_CrumblingPeg", ActorPrototype_Level7_CrumblingPeg },
@@ -286,6 +289,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level7_BearSailor", ActorPrototype_Level7_BearSailor },
         { "ActorPrototype_Level7_RedTailPirate", ActorPrototype_Level7_RedTailPirate },
         { "ActorPrototype_Level7_HermitCrab", ActorPrototype_Level7_HermitCrab },
+        { "ActorPrototype_Level7_CrabNest", ActorPrototype_Level7_CrabNest },
 
         //=======================================
         // Menu
@@ -332,6 +336,7 @@ FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
     else if (fixtureTypeStr == "EnemyAIDuckRangedSensor") { fixtureType = FixtureType_EnemyAIDuckRangedSensor; }
     else if (fixtureTypeStr == "EnemyAIDiveAreaSensor") { fixtureType = FixtureType_EnemyAIDiveAreaSensor; }
     else if (fixtureTypeStr == "DamageAura") { fixtureType = FixtureType_DamageAura; }
+    else if (fixtureTypeStr == "Trigger_SpawnArea") { fixtureType = FixtureType_Trigger_SpawnArea; }
     else
     {
         assert(false && "Unknown body type");

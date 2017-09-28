@@ -1,3 +1,4 @@
+#include <cstdint>
 #include "PhysicsContactListener.h"
 #include "ClawPhysics.h"
 #include "../SharedDefines.h"
@@ -89,6 +90,13 @@ void TryCallActorLeftAgroRange(
         false);
 }
 
+static bool IsTriggerFixture(FixtureType fixtureType)
+{
+    return (
+        fixtureType == FixtureType_Trigger ||
+        fixtureType == FixtureType_Trigger_SpawnArea);
+}
+
 //=====================================================================================================================
 //
 // PhysicsContactListener::BeginContact
@@ -98,6 +106,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
 {
     b2Fixture* pFixtureA = pContact->GetFixtureA();
     b2Fixture* pFixtureB = pContact->GetFixtureB();
+
     // Foot contact
     {
         // Make it in predictable order
@@ -375,12 +384,10 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
     }
     // , contact
     {
-        if (pFixtureB->GetUserData() == (void*)FixtureType_Trigger)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_Trigger)
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger);
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger_SpawnArea);
+        FixtureType fixtureType = FixtureType(reinterpret_cast<std::intptr_t>(pFixtureA->GetUserData()));
+        if (IsTriggerFixture(fixtureType))
         {
             if (pFixtureB->GetBody()->GetUserData() != NULL)
             {
@@ -390,7 +397,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                 shared_ptr<TriggerComponent> pTriggerComponent = GetTriggerComponentFromB2Body(pFixtureA->GetBody());
                 if (pTriggerComponent)
                 {
-                    pTriggerComponent->OnActorEntered(pActor);
+                    pTriggerComponent->OnActorEntered(pActor, fixtureType);
                 }
             }
         }
@@ -650,12 +657,10 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
     }
     // Trigger contact
     {
-        if (pFixtureB->GetUserData() == (void*)FixtureType_Trigger)
-        {
-            std::swap(pFixtureA, pFixtureB);
-        }
-
-        if (pFixtureA->GetUserData() == (void*)FixtureType_Trigger)
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger);
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger_SpawnArea);
+        FixtureType fixtureType = FixtureType(reinterpret_cast<std::intptr_t>(pFixtureA->GetUserData()));
+        if (IsTriggerFixture(fixtureType))
         {
             if (pFixtureB->GetBody()->GetUserData() != NULL)
             {
@@ -665,7 +670,7 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                 shared_ptr<TriggerComponent> pTriggerComponent = GetTriggerComponentFromB2Body(pFixtureA->GetBody());
                 if (pTriggerComponent)
                 {
-                    pTriggerComponent->OnActorLeft(pActor);
+                    pTriggerComponent->OnActorLeft(pActor, fixtureType);
                 }
             }
         }

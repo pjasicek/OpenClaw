@@ -50,7 +50,7 @@ bool ControllableComponent::VInit(TiXmlElement* data)
 void ControllableComponent::VPostInit()
 {
     shared_ptr<PhysicsComponent> pPhysicsComponent =
-        MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
     if (pPhysicsComponent)
     {
         pPhysicsComponent->SetControllableComponent(this);
@@ -58,7 +58,7 @@ void ControllableComponent::VPostInit()
 
     if (m_Active)
     {
-        shared_ptr<EventData_Attach_Actor> pEvent(new EventData_Attach_Actor(_owner->GetGUID()));
+        shared_ptr<EventData_Attach_Actor> pEvent(new EventData_Attach_Actor(m_pOwner->GetGUID()));
         IEventMgr::Get()->VTriggerEvent(pEvent);
     }
 }
@@ -106,13 +106,13 @@ void ClawControllableComponent::VPostInit()
 {
     ControllableComponent::VPostInit();
 
-    m_pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name)).get();
-    m_pClawAnimationComponent = MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
-    m_pPositionComponent = MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
-    m_pAmmoComponent = MakeStrongPtr(_owner->GetComponent<AmmoComponent>(AmmoComponent::g_Name)).get();
-    m_pPowerupComponent = MakeStrongPtr(_owner->GetComponent<PowerupComponent>(PowerupComponent::g_Name)).get();
-    m_pHealthComponent = MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name)).get();
-    m_pExclamationMark = MakeStrongPtr(_owner->GetComponent<FollowableComponent>()).get();
+    m_pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name)).get();
+    m_pClawAnimationComponent = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
+    m_pPositionComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+    m_pAmmoComponent = MakeStrongPtr(m_pOwner->GetComponent<AmmoComponent>(AmmoComponent::g_Name)).get();
+    m_pPowerupComponent = MakeStrongPtr(m_pOwner->GetComponent<PowerupComponent>(PowerupComponent::g_Name)).get();
+    m_pHealthComponent = MakeStrongPtr(m_pOwner->GetComponent<HealthComponent>(HealthComponent::g_Name)).get();
+    m_pExclamationMark = MakeStrongPtr(m_pOwner->GetComponent<FollowableComponent>()).get();
     assert(m_pClawAnimationComponent);
     assert(m_pRenderComponent);
     assert(m_pPositionComponent);
@@ -122,10 +122,10 @@ void ClawControllableComponent::VPostInit()
     assert(m_pExclamationMark);
     m_pClawAnimationComponent->AddObserver(this);
 
-    auto pHealthComponent = MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name));
+    auto pHealthComponent = MakeStrongPtr(m_pOwner->GetComponent<HealthComponent>(HealthComponent::g_Name));
     pHealthComponent->AddObserver(this);
 
-    m_pPhysicsComponent = MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
+    m_pPhysicsComponent = MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
 
     // Sounds that play when claw takes some damage
     m_TakeDamageSoundList.push_back(SOUND_CLAW_TAKE_DAMAGE1);
@@ -208,7 +208,7 @@ void ClawControllableComponent::VPostPostInit()
     fixtureDef.collisionFlag = CollisionFlag_RopeSensor;
     fixtureDef.isSensor = true;
 
-    g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(_owner->GetGUID(), &fixtureDef);
+    g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(m_pOwner->GetGUID(), &fixtureDef);
 }
 
 void ClawControllableComponent::VUpdate(uint32 msDiff)
@@ -805,7 +805,7 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
                 m_Direction, 
                 Point(m_pPositionComponent->GetX() + offsetX, 
                 m_pPositionComponent->GetY() + offsetY),
-                _owner->GetGUID(),
+                m_pOwner->GetGUID(),
                 initialImpulse);
 
             int soundPlayChance = 33;
@@ -880,7 +880,7 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
                     ActorPrototype_FireSwordProjectile,
                     position,
                     m_Direction,
-                    _owner->GetGUID());
+                    m_pOwner->GetGUID());
             }
             else if (m_pPowerupComponent->HasPowerup(PowerupType_FrostSword))
             {
@@ -888,7 +888,7 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
                     ActorPrototype_FrostSwordProjectile,
                     position,
                     m_Direction,
-                    _owner->GetGUID());
+                    m_pOwner->GetGUID());
             }
             else if (m_pPowerupComponent->HasPowerup(PowerupType_LightningSword))
             {
@@ -896,7 +896,7 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
                     ActorPrototype_LightningSwordProjectile,
                     position,
                     m_Direction,
-                    _owner->GetGUID());
+                    m_pOwner->GetGUID());
             }
             else
             {
@@ -920,7 +920,7 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
                     "Rectangle",
                     DamageType_MeleeAttack,
                     m_Direction,
-                    _owner->GetGUID());
+                    m_pOwner->GetGUID());
             }
         }
         if (pAnimation->IsAtLastAnimFrame())
@@ -940,11 +940,11 @@ void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
     std::string animName = pAnimation->GetName();
     if (pAnimation->GetName().find("death") != std::string::npos)
     {
-        shared_ptr<LifeComponent> pClawLifeComponent = MakeStrongPtr(_owner->GetComponent<LifeComponent>());
+        shared_ptr<LifeComponent> pClawLifeComponent = MakeStrongPtr(m_pOwner->GetComponent<LifeComponent>());
         assert(pClawLifeComponent != nullptr);
 
         shared_ptr<EventData_Claw_Died> pEvent(new EventData_Claw_Died(
-            _owner->GetGUID(), 
+            m_pOwner->GetGUID(), 
             m_pPositionComponent->GetPosition(), 
             pClawLifeComponent->GetLives() - 1));
         IEventMgr::Get()->VTriggerEvent(pEvent);
@@ -986,7 +986,7 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType, int so
         return;
     }
 
-    IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Claw_Health_Below_Zero(_owner->GetGUID())));
+    IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Claw_Health_Below_Zero(m_pOwner->GetGUID())));
 
     // TODO: Track how exactly claw died
     if (m_pClawAnimationComponent->GetCurrentAnimationName() != "spikedeath")
@@ -1059,7 +1059,7 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
         /*m_pPositionComponent->SetPosition(m_pPositionComponent->GetX() + knockback.x, m_pPositionComponent->GetY() + knockback.y);
 
         shared_ptr<EventData_Teleport_Actor> pEvent(new EventData_Teleport_Actor
-            (_owner->GetGUID(), m_pPositionComponent->GetPosition()));
+            (m_pOwner->GetGUID(), m_pPositionComponent->GetPosition()));
         IEventMgr::Get()->VQueueEvent(pEvent);*/
 
         m_pHealthComponent->SetInvulnerable(true);

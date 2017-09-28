@@ -94,6 +94,7 @@ enum CollisionFlag
 
 enum FixtureType
 {
+    FixtureType_Min = -1,
     FixtureType_None = 0,
     // Tiles
     FixtureType_Solid,
@@ -118,7 +119,9 @@ enum FixtureType
     FixtureType_EnemyAIDuckRangedSensor,
     FixtureType_EnemyAIDiveAreaSensor,
     FixtureType_DamageAura,
-    FixtureType_RopeSensor
+    FixtureType_RopeSensor,
+    FixtureType_Trigger_SpawnArea,
+    FixtureType_Max,
 };
 
 enum PlayerStat
@@ -242,6 +245,25 @@ enum AnimationType
     AnimationType_BlueHitPoint,
     AnimationType_TarSplash
 };
+
+/*enum TriggerType
+{
+    TriggerType_None = -1,
+
+    TriggerType_Undefined = 0,
+    TriggerType_SpawnArea,
+
+    TriggerType_Max,
+};
+
+Begin_Enum_String(TriggerType)
+{
+    Enum_String(TriggerType_None);
+    Enum_String(TriggerType_Undefined);
+    Enum_String(TriggerType_SpawnArea);
+    Enum_String(TriggerType_Max);
+}
+End_Enum_String;*/
 
 enum ActorPrototype
 {
@@ -371,6 +393,9 @@ enum ActorPrototype
     ActorPrototype_BaseFloorSpike,
 
     ActorPrototype_BaseRope,
+    
+    ActorPrototype_BaseActorSpawner,
+
 
     // Level 7
     ActorPrototype_Level7_CrumblingPeg,
@@ -381,6 +406,7 @@ enum ActorPrototype
     ActorPrototype_Level7_BearSailor,
     ActorPrototype_Level7_RedTailPirate,
     ActorPrototype_Level7_HermitCrab,
+    ActorPrototype_Level7_CrabNest,
 
     ActorPrototype_Max
 };
@@ -401,10 +427,10 @@ struct RaycastResult
     float deltaY;
 };
 
+class Point;
 struct ActorBodyDef;
 struct ActorFixtureDef;
 class CameraNode;
-class Point;
 class IGamePhysics
 {
 public:

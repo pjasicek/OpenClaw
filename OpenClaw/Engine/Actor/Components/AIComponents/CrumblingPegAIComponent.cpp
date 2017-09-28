@@ -45,7 +45,7 @@ bool CrumblingPegAIComponent::VInit(TiXmlElement* data)
 void CrumblingPegAIComponent::VPostInit()
 {
     shared_ptr<AnimationComponent> pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
     pAnimationComponent->AddObserver(this);
     pAnimationComponent->SetDelay(m_Properties.crumbleDelay);
@@ -62,13 +62,13 @@ void CrumblingPegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, An
 {
     if (pNewFrame->idx == m_Properties.crumbleFrameIdx)
     {
-        m_pPhysics->VDeactivate(_owner->GetGUID());
+        m_pPhysics->VDeactivate(m_pOwner->GetGUID());
     }
     // TODO: VOnAnimationLooped not working prop
     if (pAnimation->IsAtLastAnimFrame())
     {
         pAnimation->Pause();
-        auto pARC = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+        auto pARC = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
         pARC->SetVisible(false);
     }
 }
@@ -81,7 +81,7 @@ void CrumblingPegAIComponent::VOnAnimationLooped(Animation* pAnimation)
 void CrumblingPegAIComponent::OnContact(b2Body* pBody)
 {
     shared_ptr<AnimationComponent> pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     assert(pAnimationComponent && pAnimationComponent->GetCurrentAnimation());
     pAnimationComponent->ResumeAnimation();
 
@@ -94,14 +94,14 @@ void CrumblingPegAIComponent::OnContact(b2Body* pBody)
 void CrumblingPegAIComponent::ClawDiedDelegate(IEventDataPtr pEventData)
 {
     shared_ptr<AnimationComponent> pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     pAnimationComponent->GetCurrentAnimation()->Reset();
     pAnimationComponent->GetCurrentAnimation()->Pause();
     pAnimationComponent->SetDelay(m_Properties.crumbleDelay);
 
-    auto pARC = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+    auto pARC = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
     pARC->SetVisible(true);
     pARC->SetImage(pAnimationComponent->GetCurrentAnimation()->GetCurrentAnimationFrame()->imageName);
 
-    m_pPhysics->VActivate(_owner->GetGUID());
+    m_pPhysics->VActivate(m_pOwner->GetGUID());
 }

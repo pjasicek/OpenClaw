@@ -34,7 +34,7 @@ bool SteppingGroundComponent::VInit(TiXmlElement* pData)
 
 void SteppingGroundComponent::VPostInit()
 {
-    m_pAnimationComponent = MakeStrongPtr(_owner->GetComponent<AnimationComponent>()).get();
+    m_pAnimationComponent = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>()).get();
     assert(m_pAnimationComponent != NULL);
 
     m_pAnimationComponent->SetReverseAnimation(true);
@@ -48,7 +48,7 @@ void SteppingGroundComponent::VOnAnimationFrameChanged(Animation* pAnimation, An
     {
         if (pNewFrame->idx == m_Properties.toggleFrameIdx)
         {
-            m_pPhysics->VDeactivate(_owner->GetGUID());
+            m_pPhysics->VDeactivate(m_pOwner->GetGUID());
         }
         if (pAnimation->IsAtLastAnimFrame())
         {
@@ -60,7 +60,7 @@ void SteppingGroundComponent::VOnAnimationFrameChanged(Animation* pAnimation, An
         if (pNewFrame->idx == pAnimation->GetAnimFramesSize() - 2)
         {
             SoundInfo sound(m_Properties.toggleSound);
-            sound.soundSourcePosition = _owner->GetPositionComponent()->GetPosition();
+            sound.soundSourcePosition = m_pOwner->GetPositionComponent()->GetPosition();
             sound.setDistanceEffect = true;
             sound.soundVolume = 50;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(sound)));
@@ -68,7 +68,7 @@ void SteppingGroundComponent::VOnAnimationFrameChanged(Animation* pAnimation, An
 
         if (pAnimation->IsAtFirstAnimFrame())
         {
-            m_pPhysics->VActivate(_owner->GetGUID());
+            m_pPhysics->VActivate(m_pOwner->GetGUID());
             m_pAnimationComponent->PauseAnimation();
             m_bIsSteppedOn = false;
         }

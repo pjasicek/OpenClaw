@@ -37,7 +37,7 @@ bool SoundTriggerComponent::VInit(TiXmlElement* pData)
 void SoundTriggerComponent::VPostInit()
 {
     shared_ptr<TriggerComponent> pTriggerComponent =
-        MakeStrongPtr(_owner->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
     assert(pTriggerComponent);
 
     pTriggerComponent->AddObserver(this);
@@ -49,7 +49,7 @@ TiXmlElement* SoundTriggerComponent::VGenerateXml()
     return NULL;
 }
 
-void SoundTriggerComponent::VOnActorEnteredTrigger(Actor* pActorWhoPickedThis)
+void SoundTriggerComponent::VOnActorEnteredTrigger(Actor* pActorWhoPickedThis, FixtureType triggerType)
 {
     shared_ptr<ClawControllableComponent> pClaw =
         MakeStrongPtr(pActorWhoPickedThis->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
@@ -64,7 +64,7 @@ void SoundTriggerComponent::VOnActorEnteredTrigger(Actor* pActorWhoPickedThis)
         m_EnterCount--;
         if (m_EnterCount == 0)
         {
-            shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+            shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
             IEventMgr::Get()->VQueueEvent(pEvent);
         }
     }

@@ -22,8 +22,8 @@ public:
 
     virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return NULL; }
 
-    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered) override;
-    virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft) override;
+    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType) override;
+    virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType) override;
 
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
 

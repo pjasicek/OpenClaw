@@ -18,6 +18,7 @@
 
 const char* BaseEnemyAIStateComponent::g_Name = "BaseEnemyAIStateComponent";
 const char* TakeDamageAIStateComponent::g_Name = "TakeDamageAIStateComponent";
+const char* FallAIStateComponent::g_Name = "FallAIStateComponent";
 const char* PatrolEnemyAIStateComponent::g_Name = "PatrolEnemyAIStateComponent";
 const char* ParryEnemyAIStateComponent::g_Name = "ParryEnemyAIStateComponent";
 const char* BaseAttackAIStateComponent::g_Name = "BaseAttackAIStateComponent";
@@ -116,15 +117,15 @@ bool BaseEnemyAIStateComponent::VInit(TiXmlElement* pData)
 void BaseEnemyAIStateComponent::VPostInit()
 {
     m_pAnimationComponent = 
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
     m_pPhysicsComponent =
-        MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
+        MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
     m_pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
     m_pEnemyAIComponent = 
-        MakeStrongPtr(_owner->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name)).get();
+        MakeStrongPtr(m_pOwner->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name)).get();
     m_pRenderComponent =
-        MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name)).get();
+        MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name)).get();
 
     assert(m_pAnimationComponent);
     assert(m_pPhysicsComponent);
@@ -173,7 +174,7 @@ void TakeDamageAIStateComponent::VUpdate(uint32 msDiff)
 
 }
 
-void TakeDamageAIStateComponent::VOnStateEnter()
+void TakeDamageAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState)
 {
     int randomAnimIdx = Util::GetRandomNumber(0, m_TakeDamageAnimations.size() - 1);
     std::string takeDamageAnim = m_TakeDamageAnimations[randomAnimIdx];
@@ -185,7 +186,7 @@ void TakeDamageAIStateComponent::VOnStateEnter()
     m_IsActive = true;
 }
 
-void TakeDamageAIStateComponent::VOnStateLeave()
+void TakeDamageAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
 {
     m_IsActive = false;
     m_StatePriority = MIN_STATE_PRIORITY;
@@ -202,6 +203,68 @@ void TakeDamageAIStateComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
     m_StatePriority = MIN_STATE_PRIORITY;
 
     m_pEnemyAIComponent->EnterBestState(true);
+}
+
+//=====================================================================================================================
+// FallAIStateComponent
+//=====================================================================================================================
+
+FallAIStateComponent::FallAIStateComponent()
+    : 
+    m_bAlreadyFell(false),
+    BaseEnemyAIStateComponent("FallState")
+{
+
+}
+
+bool FallAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    assert(ParseValueFromXmlElem(&m_FallAnimation, pData->FirstChildElement("FallAnimation")));
+
+    return true;
+}
+
+void FallAIStateComponent::VUpdate(uint32 msDiff)
+{
+    // This is not sticking to original design, but there is no easy way around it
+    // I need to constantly check if this unit is in air to be able to force
+    // state transition as soon as it is in air
+
+    bool bInAir = fabs(m_pPhysicsComponent->GetVelocity().y) > DBL_EPSILON;
+    if (!m_IsActive && bInAir)
+    {
+        m_pEnemyAIComponent->EnterBestState(true);
+    }
+
+    if (!m_IsActive)
+    {
+        return;
+    }
+
+    if (!bInAir)
+    {
+        m_bAlreadyFell = true;
+        m_pEnemyAIComponent->EnterBestState(true);
+    }
+}
+
+bool FallAIStateComponent::VCanEnter()
+{
+    bool bInAir = fabs(m_pPhysicsComponent->GetVelocity().y) > DBL_EPSILON;
+
+    return bInAir;
+}
+
+void FallAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState)
+{
+    m_pAnimationComponent->SetAnimation(m_FallAnimation);
+
+    m_IsActive = true;
+}
+
+void FallAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
+{
+    m_IsActive = false;
 }
 
 //=====================================================================================================================
@@ -335,7 +398,7 @@ void PatrolEnemyAIStateComponent::VPostInit()
     m_pAnimationComponent->AddObserver(this);
 
     Point noSpeed(0, 0);
-    m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), noSpeed);
+    m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), noSpeed);
 }
 
 void PatrolEnemyAIStateComponent::VPostPostInit()
@@ -369,7 +432,7 @@ void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
     // Only makes sense to check for stuff when walking
     if (m_pWalkAction->isActive)
     {
-        if (fabs(m_pPhysics->VGetVelocity(_owner->GetGUID()).x) < 0.1)
+        if (fabs(m_pPhysics->VGetVelocity(m_pOwner->GetGUID()).x) < 0.1)
         {
             CommenceIdleBehaviour();
         }
@@ -381,19 +444,22 @@ void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
     }
 }
 
-void PatrolEnemyAIStateComponent::VOnStateEnter()
+void PatrolEnemyAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState)
 {
     m_IsActive = true;
     //CommenceIdleBehaviour();
     ChangeDirection(m_Direction);
 }
 
-void PatrolEnemyAIStateComponent::VOnStateLeave()
+void PatrolEnemyAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
 {
     m_IsActive = false;
 
     // Since this state set speed to this actor, we need to stop it moving
-    m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), Point(0.0, 0.0));
+    if (pNextState && pNextState->VGetStateType() != EnemyAIState_Falling)
+    {
+        m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), Point(0.0, 0.0));
+    }
 }
 
 void PatrolEnemyAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
@@ -445,7 +511,7 @@ double PatrolEnemyAIStateComponent::FindClosestHole(Point center, int height, fl
 
 void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
 {
-    SDL_Rect aabb = m_pPhysics->VGetAABB(_owner->GetGUID(), true);
+    SDL_Rect aabb = m_pPhysics->VGetAABB(m_pOwner->GetGUID(), true);
 
     Point center = m_pPositionComponent->GetPosition();
 
@@ -457,15 +523,15 @@ void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
 
     if (!raycastResultLeft.foundIntersection)
     {
-        LOG_WARNING("Did not find raycastResultLeft intersection for actor: " + _owner->GetName() +
-            " with position: " + _owner->GetPositionComponent()->GetPosition().ToString());
+        LOG_WARNING("Did not find raycastResultLeft intersection for actor: " + m_pOwner->GetName() +
+            " with position: " + m_pOwner->GetPositionComponent()->GetPosition().ToString());
         // Dummy large value, should be sufficient
         raycastResultLeft.deltaX = center.x - 10000;
     }
     if (!raycastResultRight.foundIntersection)
     {
-        LOG_WARNING("Did not find raycastResultRight intersection for actor: " + _owner->GetName() +
-            " with position: " + _owner->GetPositionComponent()->GetPosition().ToString());
+        LOG_WARNING("Did not find raycastResultRight intersection for actor: " + m_pOwner->GetName() +
+            " with position: " + m_pOwner->GetPositionComponent()->GetPosition().ToString());
         // Dummy large value, should be sufficient
         raycastResultRight.deltaX = center.x + 10000;
     }
@@ -522,10 +588,10 @@ void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
     // Move them into the middle of their patrol path at the beginning
     // Doing not so caused some bugs with level resets
     /*Point spawnPosition((m_LeftPatrolBorder + m_RightPatrolBorder) / 2, m_pPositionComponent->GetY());
-    m_pPhysics->VSetPosition(_owner->GetGUID(), spawnPosition);
+    m_pPhysics->VSetPosition(m_pOwner->GetGUID(), spawnPosition);
     m_pPositionComponent->SetPosition(spawnPosition);*/
 
-    /*shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(_owner->GetGUID(), spawnPosition));
+    /*shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(m_pOwner->GetGUID(), spawnPosition));
     IEventMgr::Get()->VQueueEvent(pEvent);*/
 
     assert(m_LeftPatrolBorder > 0);
@@ -550,11 +616,11 @@ void PatrolEnemyAIStateComponent::ChangeDirection(Direction newDirection)
 
     if (m_Direction == Direction_Left)
     {
-        m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), Point(-1.0 * m_PatrolSpeed, 0.0));
+        m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), Point(-1.0 * m_PatrolSpeed, 0.0));
     }
     else
     {
-        m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), Point(m_PatrolSpeed, 0.0));
+        m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), Point(m_PatrolSpeed, 0.0));
     }
 }
 
@@ -567,7 +633,7 @@ void PatrolEnemyAIStateComponent::CommenceIdleBehaviour()
         m_pIdleAction->activeAnimIdx = 0;
         m_pAnimationComponent->SetAnimation(m_pIdleAction->animations[0]);
         m_pAnimationComponent->GetCurrentAnimation()->SetDelay(m_pIdleAction->animDelay);
-        m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), Point(0.0, 0.0));
+        m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), Point(0.0, 0.0));
         
         // TODO: Try to play idle sound
 
@@ -575,7 +641,7 @@ void PatrolEnemyAIStateComponent::CommenceIdleBehaviour()
         StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor();
         assert(pClaw);
 
-        if ((_owner->GetPositionComponent()->GetPosition() - pClaw->GetPositionComponent()->GetPosition()).Length() < m_IdleSpeechSoundMaxDistance)
+        if ((m_pOwner->GetPositionComponent()->GetPosition() - pClaw->GetPositionComponent()->GetPosition()).Length() < m_IdleSpeechSoundMaxDistance)
         {
             m_pEnemyAIComponent->TryPlaySpeechSound(m_IdleSpeechSoundPlayChance, m_IdleSoundList);
         }
@@ -654,7 +720,7 @@ void ParryEnemyAIStateComponent::VPostInit()
     m_pAnimationComponent->AddObserver(this);
 }
 
-void ParryEnemyAIStateComponent::VOnStateEnter()
+void ParryEnemyAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState)
 {
     m_pAnimationComponent->ResetAnimation();
     m_pAnimationComponent->SetAnimation(m_ParryAnimation);
@@ -667,7 +733,7 @@ void ParryEnemyAIStateComponent::VOnStateEnter()
     m_IsActive = true;
 }
 
-void ParryEnemyAIStateComponent::VOnStateLeave()
+void ParryEnemyAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
 {
     m_IsActive = false;
     m_StatePriority = MIN_STATE_PRIORITY;
@@ -797,18 +863,18 @@ void BaseAttackAIStateComponent::VPostPostInit()
     for (shared_ptr<EnemyAttackAction> pAttackAction : m_AttackActions)
     {
         g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(
-            _owner->GetGUID(),
+            m_pOwner->GetGUID(),
             &pAttackAction->agroSensorFixture);
     }
 }
 
-void BaseAttackAIStateComponent::VOnStateEnter()
+void BaseAttackAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState)
 {
     m_IsActive = true;
     VExecuteAttack();
 }
 
-void BaseAttackAIStateComponent::VOnStateLeave()
+void BaseAttackAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
 {
     m_IsActive = false;
 }
@@ -971,7 +1037,7 @@ bool BaseAttackAIStateComponent::VCanEnter()
     // Since the first found actor is picked
 
     // Check if enemy is within line of sight
-    Point fromPoint = _owner->GetPositionComponent()->GetPosition();
+    Point fromPoint = m_pOwner->GetPositionComponent()->GetPosition();
     Point toPoint = m_EnemyAgroList[0]->GetPositionComponent()->GetPosition();
 
     RaycastResult raycastResultDown = g_pApp->GetGameLogic()->VGetGamePhysics()->VRayCast(
@@ -1031,7 +1097,7 @@ void MeleeAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackActi
         "Rectangle",
         DamageType_MeleeAttack,
         dir,
-        _owner->GetGUID());
+        m_pOwner->GetGUID());
 
     // Play melee attack sound
     Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetMeleeAttackSounds());
@@ -1075,7 +1141,7 @@ void DuckMeleeAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttack
         "Rectangle",
         DamageType_MeleeAttack,
         dir,
-        _owner->GetGUID());
+        m_pOwner->GetGUID());
 
     // Play melee attack sound
     Util::PlayRandomSoundFromList(m_pEnemyAIComponent->GetMeleeAttackSounds());
@@ -1121,7 +1187,7 @@ void RangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAct
             m_pPositionComponent->GetPosition() + offset,
             CollisionFlag_EnemyAIProjectile,
             (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController),
-            _owner->GetGUID());
+            m_pOwner->GetGUID());
     }
     else
     {
@@ -1129,7 +1195,7 @@ void RangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttackAct
             pAttack->projectileProto,
             m_pPositionComponent->GetPosition() + offset,
             dir,
-            _owner->GetGUID());
+            m_pOwner->GetGUID());
     }
 
     // Play ranged attack sound
@@ -1176,7 +1242,7 @@ void DuckRangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttac
             m_pPositionComponent->GetPosition() + offset,
             CollisionFlag_EnemyAIProjectile,
             (CollisionFlag_Controller | CollisionFlag_Solid | CollisionFlag_InvisibleController),
-            _owner->GetGUID());
+            m_pOwner->GetGUID());
     }
     else
     {
@@ -1184,7 +1250,7 @@ void DuckRangedAttackAIStateComponent::VOnAttackFrame(std::shared_ptr<EnemyAttac
             pAttack->projectileProto,
             m_pPositionComponent->GetPosition() + offset,
             dir,
-            _owner->GetGUID());
+            m_pOwner->GetGUID());
     }
 
     // Play ranged attack sound
@@ -1266,11 +1332,11 @@ void DiveAttackAIStateComponent::VPostPostInit()
     for (const ActorFixtureDef& diveFixture : m_DiveAreaSensorFixtureList)
     {
         g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(
-            _owner->GetGUID(),
+            m_pOwner->GetGUID(),
             &diveFixture);
     }
 
-    m_InitialPosition = _owner->GetPositionComponent()->GetPosition();
+    m_InitialPosition = m_pOwner->GetPositionComponent()->GetPosition();
 }
 
 void DiveAttackAIStateComponent::VUpdate(uint32 msDiff)
@@ -1282,12 +1348,12 @@ void DiveAttackAIStateComponent::VUpdate(uint32 msDiff)
 
     assert(m_DiveState != DiveState_None);
 
-    Point currentPosition = _owner->GetPositionComponent()->GetPosition();
+    Point currentPosition = m_pOwner->GetPositionComponent()->GetPosition();
     if (m_DiveState == DiveState_DivingIn)
     {
         if ((currentPosition.y > m_Destination.y) || fabs(m_pPhysicsComponent->GetVelocity().y) < DBL_EPSILON)
         {
-            g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(_owner->GetGUID(), Point(0, -1.0f * m_DiveSpeed));
+            g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(m_pOwner->GetGUID(), Point(0, -1.0f * m_DiveSpeed));
             m_pAnimationComponent->SetAnimation(m_DiveOutAnimation);
             m_DiveState = DiveState_DivingOut;
         }
@@ -1297,21 +1363,21 @@ void DiveAttackAIStateComponent::VUpdate(uint32 msDiff)
         // On its way up - if already surpassed initial position, leave state
         if (currentPosition.y < m_InitialPosition.y)
         {
-            g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(_owner->GetGUID(), Point(0, 0));
+            g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(m_pOwner->GetGUID(), Point(0, 0));
             m_EnemyAgroList.clear();
             m_pEnemyAIComponent->EnterBestState(true);
         }
     }
 }
 
-void DiveAttackAIStateComponent::VOnStateEnter()
+void DiveAttackAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState)
 {
     assert(!m_EnemyAgroList.empty());
 
     m_DiveState = DiveState_DivingIn;
     m_Destination = m_EnemyAgroList[0]->GetPositionComponent()->GetPosition();
 
-    Point currentPosition = _owner->GetPositionComponent()->GetPosition();
+    Point currentPosition = m_pOwner->GetPositionComponent()->GetPosition();
     Point positionDiff = currentPosition - m_Destination;
     positionDiff.Set(abs(positionDiff.x), abs(positionDiff.y));
 
@@ -1330,7 +1396,7 @@ void DiveAttackAIStateComponent::VOnStateEnter()
         xSpeed *= -1.0f;
     }
 
-    g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(_owner->GetGUID(), Point(xSpeed, m_DiveSpeed));
+    g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(m_pOwner->GetGUID(), Point(xSpeed, m_DiveSpeed));
 
     m_pAnimationComponent->SetAnimation(m_DiveInAnimation);
 
@@ -1341,7 +1407,7 @@ void DiveAttackAIStateComponent::VOnStateEnter()
     m_IsActive = true;
 }
 
-void DiveAttackAIStateComponent::VOnStateLeave()
+void DiveAttackAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
 {
     m_IsActive = false;
     m_DiveState = DiveState_None;
@@ -1351,7 +1417,7 @@ bool DiveAttackAIStateComponent::VCanEnter()
 {
     if (m_EnemyAgroList.size() > 0)
     {
-        Point currentPosition = _owner->GetPositionComponent()->GetPosition();
+        Point currentPosition = m_pOwner->GetPositionComponent()->GetPosition();
         Point destPosition = m_EnemyAgroList[0]->GetPositionComponent()->GetPosition();
 
         // Can attack only in the direction where the enemy is looking
@@ -1422,7 +1488,7 @@ void BaseBossAIStateComponennt::VPostInit()
 {
     BaseEnemyAIStateComponent::VPostInit();
 
-    auto pHC = MakeStrongPtr(_owner->GetComponent<HealthComponent>());
+    auto pHC = MakeStrongPtr(m_pOwner->GetComponent<HealthComponent>());
     assert(pHC != nullptr);
 
     m_pHealthComponent = pHC.get();
@@ -1475,7 +1541,7 @@ void BaseBossAIStateComponennt::BossFightEndedDelegate(IEventDataPtr pEvent)
     {
         m_pEnemyAIComponent->EnterBestState(true);
         m_pHealthComponent->SetMaxHealth();
-        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(_owner->GetGUID(), m_DefaultPosition)));
+        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(m_pOwner->GetGUID(), m_DefaultPosition)));
 
         m_pAnimationComponent->SetAnimation(m_BossDialogAnimation);
 
@@ -1520,12 +1586,12 @@ void LaRauxBossAIStateComponent::VUpdate(uint32 msDiff)
 
 }
 
-void LaRauxBossAIStateComponent::VOnStateEnter()
+void LaRauxBossAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState)
 {
 
 }
 
-void LaRauxBossAIStateComponent::VOnStateLeave()
+void LaRauxBossAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
 {
 
 }
@@ -1582,12 +1648,12 @@ void KatherineBossAIStateComponent::VUpdate(uint32 msDiff)
 
 }
 
-void KatherineBossAIStateComponent::VOnStateEnter()
+void KatherineBossAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState)
 {
 
 }
 
-void KatherineBossAIStateComponent::VOnStateLeave()
+void KatherineBossAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
 {
 
 }
@@ -1638,7 +1704,7 @@ bool WolvingtonBossAIStateComponent::VDelegateInit(TiXmlElement* pData)
 void WolvingtonBossAIStateComponent::VOnBossFightStarted()
 {
     // To refresh contact list after Claw's death
-    g_pApp->GetGameLogic()->VGetGamePhysics()->VActivate(_owner->GetGUID());
+    g_pApp->GetGameLogic()->VGetGamePhysics()->VActivate(m_pOwner->GetGUID());
 
     m_pEnemyAIComponent->EnterBestState(true);
 }
@@ -1654,6 +1720,6 @@ void WolvingtonBossAIStateComponent::VOnBossFightEnded(bool isBossDead)
     else
     {
         // To refresh contact list after Claw's death
-        g_pApp->GetGameLogic()->VGetGamePhysics()->VDeactivate(_owner->GetGUID());
+        g_pApp->GetGameLogic()->VGetGamePhysics()->VDeactivate(m_pOwner->GetGUID());
     }
 }

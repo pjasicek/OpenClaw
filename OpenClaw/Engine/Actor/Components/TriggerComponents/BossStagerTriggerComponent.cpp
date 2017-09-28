@@ -68,7 +68,7 @@ bool BossStagerTriggerComponent::VInit(TiXmlElement* pData)
 void BossStagerTriggerComponent::VPostInit()
 {
     shared_ptr<TriggerComponent> pTriggerComponent =
-        MakeStrongPtr(_owner->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
     assert(pTriggerComponent);
 
     pTriggerComponent->AddObserver(this);
@@ -221,7 +221,7 @@ void BossStagerTriggerComponent::VUpdate(uint32 msDiff)
     }
 }
 
-void BossStagerTriggerComponent::VOnActorEnteredTrigger(Actor* pActorWhoPickedThis)
+void BossStagerTriggerComponent::VOnActorEnteredTrigger(Actor* pActorWhoPickedThis, FixtureType triggerType)
 {
     // Boss staging already commenced
     if (m_bActivated)
@@ -250,7 +250,7 @@ void BossStagerTriggerComponent::VOnActorEnteredTrigger(Actor* pActorWhoPickedTh
     m_pOverlappingActor = pActorWhoPickedThis;
 }
 
-void BossStagerTriggerComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft)
+void BossStagerTriggerComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
 {
     shared_ptr<ClawControllableComponent> pClaw =
         MakeStrongPtr(pActorWhoLeft->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
@@ -272,7 +272,7 @@ void BossStagerTriggerComponent::BossFightEndedDelegate(IEventDataPtr pEvent)
     }
     else
     {
-        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Destroy_Actor(_owner->GetGUID())));
+        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Destroy_Actor(m_pOwner->GetGUID())));
     }
 }
 
@@ -292,6 +292,6 @@ void BossStagerTriggerComponent::ClawRespawnedDelegate(IEventDataPtr pEvent)
             MakeStrongPtr(pClawActor->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
         assert(pClaw != nullptr && "Not Claw ?!");
 
-        VOnActorEnteredTrigger(pClawActor.get());
+        VOnActorEnteredTrigger(pClawActor.get(), FixtureType_Trigger);
     }
 }

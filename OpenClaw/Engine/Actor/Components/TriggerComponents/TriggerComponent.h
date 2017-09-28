@@ -10,17 +10,18 @@ class TriggerObserver;
 class TriggerSubject : public Subject<TriggerObserver>
 {
 public:
-    void NotifyEnterTrigger(Actor* pActorWhoEntered);
-    void NotifyLeaveTrigger(Actor* pActorWhoLeft);
+    void NotifyEnterTrigger(Actor* pActorWhoEntered, FixtureType triggerType);
+    void NotifyLeaveTrigger(Actor* pActorWhoLeft, FixtureType triggerType);
 };
 
 class TriggerObserver
 {
 public:
-    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered) { }
-    virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft) { }
+    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType) { }
+    virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType) { }
 };
 
+typedef std::map<FixtureType, std::string> TriggerToSoundMap;
 class TriggerComponent : public ActorComponent, public TriggerSubject
 {
 public:
@@ -42,12 +43,16 @@ public:
     // over observers and call the appropriate ones
     //void AddTriggerArea(SDL_Rect triggerArea, TriggerObserver* pObserver)
 
-    void Deactivate() { m_pPhysics->VDeactivate(_owner->GetGUID()); }
-    void Activate() { m_pPhysics->VActivate(_owner->GetGUID()); }
-    void Destroy() { m_pPhysics->VRemoveActor(_owner->GetGUID()); }
+    void Deactivate() { m_pPhysics->VDeactivate(m_pOwner->GetGUID()); }
+    void Activate() { m_pPhysics->VActivate(m_pOwner->GetGUID()); }
+    void Destroy() { m_pPhysics->VRemoveActor(m_pOwner->GetGUID()); }
 
-    void OnActorEntered(Actor* pActor);
-    void OnActorLeft(Actor* pActor);
+    // Has to be reversed since default value in map for bool value is false
+    void Deactivate(FixtureType triggerType) { m_DeactivatedTriggerTypesMap[triggerType] = true; }
+    void Activate(FixtureType triggerType) { m_DeactivatedTriggerTypesMap[triggerType] = false; }
+
+    void OnActorEntered(Actor* pActor, FixtureType triggerType);
+    void OnActorLeft(Actor* pActor, FixtureType triggerType);
 
 private:
     bool HasOverlappingActor(Actor* pActor);
@@ -59,6 +64,11 @@ private:
     int m_TriggerRemaining;
     Point m_Size;
     bool m_IsStatic;
+    
+    TriggerToSoundMap m_TriggerEnterSoundMap;
+    TriggerToSoundMap m_TriggerLeaveSoundMap;
+
+    std::map<FixtureType, bool> m_DeactivatedTriggerTypesMap;
 
     std::vector<Actor*> m_ActorsInsideList;
 

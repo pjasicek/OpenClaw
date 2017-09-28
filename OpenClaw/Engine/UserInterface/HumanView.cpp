@@ -588,6 +588,12 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
     if (pCastEventData)
     {
         const SoundInfo* pSoundInfo = pCastEventData->GetSoundInfo();
+
+        if ((pSoundInfo->soundToPlay == "") || (pSoundInfo->soundToPlay == "/GAME/SOUNDS/NULL.WAV"))
+        {
+            return;
+        }
+
         if (pSoundInfo->isMusic) // Background music - instrumental
         {
             shared_ptr<MidiFile> pMidiFile = MidiResourceLoader::LoadAndReturnMidiFile(pSoundInfo->soundToPlay.c_str());
@@ -706,7 +712,7 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         m_pHUD.reset(new ScreenElementHUD());
         m_pScene->SetCamera(m_pCamera);
 
-        // Level 6 is currently the last level
+        // Go to menu after finishing last implemented level
         if (levelNumber > g_pApp->GetDebugOptions()->lastImplementedLevel)
         {
             IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Enter_Menu()));

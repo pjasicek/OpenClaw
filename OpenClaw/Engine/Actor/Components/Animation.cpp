@@ -14,7 +14,7 @@ Animation::Animation() :
     _paused(false),
     _reversed(false),
     _isBeingReversed(false),
-    _owner(NULL)
+    m_pOwner(NULL)
 { }
 
 Animation::~Animation()
@@ -61,7 +61,7 @@ Animation* Animation::CreateAnimation(int numAnimFrames, int animFrameTime, cons
 bool Animation::Initialize(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner)
 {
     _name = animationName;
-    _owner = owner;
+    m_pOwner = owner;
 
     // Load animation frame from WapAni
     uint32 numAnimFrames = wapAni->animationFramesCount;
@@ -145,7 +145,7 @@ bool Animation::Initialize(std::vector<AnimationFrame> animFrames, const char* a
     }
 
     _name = animationName;
-    _owner = owner;
+    m_pOwner = owner;
     _animationFrames = animFrames;
 
     _currentAnimationFrame = _animationFrames[0];
@@ -168,7 +168,7 @@ bool Animation::Initialize(int numAnimFrames, int animFrameTime, const char* ani
         _animationFrames.push_back(animFrame);
     }
     _name = animName;
-    _owner = owner;
+    m_pOwner = owner;
 
     if (_animationFrames.empty())
     {
@@ -204,9 +204,9 @@ void Animation::Update(uint32 msDiff)
     {
         _currentTime = _currentTime - currentFrameDuration;
 
-        if (_owner)
+        if (m_pOwner)
         {
-            _owner->OnAnimationFrameFinished(&_currentAnimationFrame);
+            m_pOwner->OnAnimationFrameFinished(&_currentAnimationFrame);
         }
 
         SetNextFrame();
@@ -248,7 +248,7 @@ void Animation::SetNextFrame()
         // If next frame will be last
         else if (_currentAnimationFrame.idx + 2 == _animationFrames.size())
         {
-            _owner->OnAnimationAtLastFrame();
+            m_pOwner->OnAnimationAtLastFrame();
         }
     }
 
@@ -258,12 +258,12 @@ void Animation::SetNextFrame()
     AnimationFrame* lastAnimFrame = &_animationFrames[_currentAnimationFrame.idx];
     _currentAnimationFrame = _animationFrames[(_currentAnimationFrame.idx + delta) % countAnimationFrames];    
 
-    _owner->OnAnimationFrameStarted(&_currentAnimationFrame);
+    m_pOwner->OnAnimationFrameStarted(&_currentAnimationFrame);
 
-    _owner->OnAnimationFrameChanged(lastAnimFrame, &_currentAnimationFrame);
+    m_pOwner->OnAnimationFrameChanged(lastAnimFrame, &_currentAnimationFrame);
     if (looped)
     {
-        _owner->OnAnimationLooped();
+        m_pOwner->OnAnimationLooped();
     }
 
     if (_currentAnimationFrame.idx != 0 && _currentAnimationFrame.hasEvent)
@@ -274,13 +274,13 @@ void Animation::SetNextFrame()
 
 void Animation::PlayFrameSound(const std::string& sound)
 {
-    assert(_owner && _owner->_owner && _owner->_owner->GetPositionComponent());
+    assert(m_pOwner && m_pOwner->m_pOwner && m_pOwner->m_pOwner->GetPositionComponent());
 
-    //LOG("Sound: " + sound + ", Owner: " + _owner->_owner->GetName());
+    //LOG("Sound: " + sound + ", Owner: " + m_pOwner->m_pOwner->GetName());
 
     SoundInfo soundInfo(sound);
     soundInfo.setDistanceEffect = true;
-    soundInfo.soundSourcePosition = _owner->_owner->GetPositionComponent()->GetPosition();
+    soundInfo.soundSourcePosition = m_pOwner->m_pOwner->GetPositionComponent()->GetPosition();
     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
         new EventData_Request_Play_Sound(soundInfo)));
 }

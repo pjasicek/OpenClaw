@@ -149,11 +149,11 @@ void BaseRenderComponent::VPostInit()
     shared_ptr<SceneNode> pNode = GetSceneNode();
     if (pNode)
     {
-        shared_ptr<EventData_New_Render_Component> pEvent(new EventData_New_Render_Component(_owner->GetGUID(), pNode));
+        shared_ptr<EventData_New_Render_Component> pEvent(new EventData_New_Render_Component(m_pOwner->GetGUID(), pNode));
         IEventMgr::Get()->VTriggerEvent(pEvent);
     }
 
-    m_pPositionComponent = _owner->GetPositionComponent().get();
+    m_pPositionComponent = m_pOwner->GetPositionComponent().get();
     assert(m_pPositionComponent != NULL);
 }
 
@@ -320,7 +320,7 @@ SDL_Rect ActorRenderComponent::VGetPositionRect() const
 shared_ptr<SceneNode> ActorRenderComponent::VCreateSceneNode()
 {
     shared_ptr<PositionComponent> pPositionComponent = 
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     if (!pPositionComponent)
     {
         // can't render without a transform
@@ -328,7 +328,7 @@ shared_ptr<SceneNode> ActorRenderComponent::VCreateSceneNode()
     }
 
     Point pos(pPositionComponent->GetX(), pPositionComponent->GetY());
-    shared_ptr<SceneNode> pActorNode(new SDL2ActorSceneNode(_owner->GetGUID(), this, RenderPass_Actor, pos, m_ZCoord));
+    shared_ptr<SceneNode> pActorNode(new SDL2ActorSceneNode(m_pOwner->GetGUID(), this, RenderPass_Actor, pos, m_ZCoord));
 
     return pActorNode;
 }
@@ -341,19 +341,19 @@ void ActorRenderComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElemen
 void ActorRenderComponent::SetImage(std::string imageName)
 {
     // Hack.. only 2, 3, 4
-    /*if (_owner->GetName() == "LEVEL_TORCH2")
+    /*if (m_pOwner->GetName() == "LEVEL_TORCH2")
     {
         imageName = imageName.substr(7);
         int num = std::stoi(imageName) + 1;
         imageName = ToStr(num);
     }
-    else if (_owner->GetName() == "Level4_SpringBoard")
+    else if (m_pOwner->GetName() == "Level4_SpringBoard")
     {
         imageName = imageName.substr(5);
     }*/
 
     // Hacks
-    /*if (_owner->GetName() == "StaticImage")
+    /*if (m_pOwner->GetName() == "StaticImage")
     {
         LOG("Map:");
         for (auto& it : m_ImageMap)
@@ -361,7 +361,7 @@ void ActorRenderComponent::SetImage(std::string imageName)
             LOG("Image: " + it.first);
         }
     }
-    else */if (_owner->GetName() == "Level6_GroundBlower")
+    else */if (m_pOwner->GetName() == "Level6_GroundBlower")
     {
         SetAlpha(255);
     }
@@ -377,14 +377,14 @@ void ActorRenderComponent::SetImage(std::string imageName)
         {
             return;
         }
-        else if (_owner->GetName() == "Level6_GroundBlower")
+        else if (m_pOwner->GetName() == "Level6_GroundBlower")
         {
             // This actor is missing a frame with empty image
             SetAlpha(0);
             return;
         }
 
-        LOG("Actor: " + _owner->GetName() + " ImageName: " + imageName);
+        LOG("Actor: " + m_pOwner->GetName() + " ImageName: " + imageName);
         return;
         assert(false);
 
@@ -407,7 +407,7 @@ void ActorRenderComponent::SetImage(std::string imageName)
 
         LOG("NewImageName: " + newImageName);
         LOG_ERROR("Trying to set nonexistant image: " + imageName + " to render component of actor: " +
-            _owner->GetName());
+            m_pOwner->GetName());
 
         /*LOG("Actor has following images: ");
         for (auto iter : m_ImageMap)
@@ -687,7 +687,7 @@ SDL_Rect TilePlaneRenderComponent::VGetPositionRect() const
 shared_ptr<SceneNode> TilePlaneRenderComponent::VCreateSceneNode()
 {
     shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     if (!pPositionComponent)
     {
         // can't render without a transform
@@ -714,7 +714,7 @@ shared_ptr<SceneNode> TilePlaneRenderComponent::VCreateSceneNode()
     }
 
     Point pos(pPositionComponent->GetX(), pPositionComponent->GetY());
-    shared_ptr<SceneNode> pTilePlaneNode(new SDL2TilePlaneSceneNode(_owner->GetGUID(), this, renderPass, pos));
+    shared_ptr<SceneNode> pTilePlaneNode(new SDL2TilePlaneSceneNode(m_pOwner->GetGUID(), this, renderPass, pos));
 
     return pTilePlaneNode;
 }
@@ -769,7 +769,7 @@ SDL_Rect HUDRenderComponent::VGetPositionRect() const
 shared_ptr<SceneNode> HUDRenderComponent::VCreateSceneNode()
 {
     shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     if (!pPositionComponent)
     {
         // can't render without a transform
@@ -777,9 +777,9 @@ shared_ptr<SceneNode> HUDRenderComponent::VCreateSceneNode()
     }
 
     Point pos(pPositionComponent->GetX(), pPositionComponent->GetY());
-    shared_ptr<SDL2HUDSceneNode> pHUDNode(new SDL2HUDSceneNode(_owner->GetGUID(), this, RenderPass_HUD, pos, IsVisible()));
+    shared_ptr<SDL2HUDSceneNode> pHUDNode(new SDL2HUDSceneNode(m_pOwner->GetGUID(), this, RenderPass_HUD, pos, IsVisible()));
 
-    shared_ptr<EventData_New_HUD_Element> pEvent(new EventData_New_HUD_Element(_owner->GetGUID(), m_HUDElementKey, pHUDNode));
+    shared_ptr<EventData_New_HUD_Element> pEvent(new EventData_New_HUD_Element(m_pOwner->GetGUID(), m_HUDElementKey, pHUDNode));
     IEventMgr::Get()->VTriggerEvent(pEvent);
 
     return pHUDNode;

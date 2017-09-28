@@ -88,13 +88,13 @@ bool EnemyAIComponent::VInit(TiXmlElement* pData)
 
 void EnemyAIComponent::VPostInit()
 {
-    m_pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-    m_pPositionComponent = MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    m_pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+    m_pPositionComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     assert(m_pRenderComponent);
     assert(m_pPositionComponent);
 
     shared_ptr<HealthComponent> pHealthComp = 
-        MakeStrongPtr(_owner->GetComponent<HealthComponent>(HealthComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<HealthComponent>(HealthComponent::g_Name));
     assert(pHealthComp);
 
     pHealthComp->AddObserver(this);
@@ -120,7 +120,7 @@ void EnemyAIComponent::VUpdate(uint32 msDiff)
             shared_ptr<CameraNode> pCamera = pHumanView->GetCamera();
             if (pCamera)
             {
-                shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(_owner->GetGUID(), m_pPositionComponent->GetPosition()));
+                shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(m_pOwner->GetGUID(), m_pPositionComponent->GetPosition()));
                 IEventMgr::Get()->VTriggerEvent(pEvent);
 
                 SDL_Rect dummy;
@@ -128,7 +128,7 @@ void EnemyAIComponent::VUpdate(uint32 msDiff)
                 SDL_Rect cameraRect = pCamera->GetCameraRect();
                 if (!SDL_IntersectRect(&renderRect, &cameraRect, &dummy))
                 {
-                    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+                    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
                     IEventMgr::Get()->VQueueEvent(pEvent);
 
                     // This is really weird... but it is in original game exactly like this
@@ -145,7 +145,7 @@ void EnemyAIComponent::VUpdate(uint32 msDiff)
 
         if (!m_DeathAnimation.empty())
         {
-            auto pAnimComp = MakeStrongPtr(_owner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
+            auto pAnimComp = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
             assert(pAnimComp);
 
             pAnimComp->SetAnimation(m_DeathAnimation);
@@ -162,14 +162,17 @@ void EnemyAIComponent::VOnHealthBelowZero(DamageType damageType, int sourceActor
     m_bDead = true;
     for (auto stateComponentIter : m_StateMap)
     {
-        stateComponentIter.second->VOnStateLeave();
+        if (stateComponentIter.second->IsActive())
+        {
+            stateComponentIter.second->VOnStateLeave(NULL);
+        }
     }
 
     // Play deaht sound
     Util::PlayRandomSoundFromList(m_DeathSounds);
 
     shared_ptr<PhysicsComponent> pPhysicsComponent =
-        MakeStrongPtr(_owner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
     assert(pPhysicsComponent);
 
     pPhysicsComponent->Destroy();
@@ -182,7 +185,7 @@ void EnemyAIComponent::VOnHealthBelowZero(DamageType damageType, int sourceActor
         shared_ptr<ClawControllableComponent> pClaw = MakeStrongPtr(pKiller->GetComponent<ClawControllableComponent>());
         if (pClaw)
         {
-            pClaw->OnClawKilledEnemy(damageType, _owner.get());
+            pClaw->OnClawKilledEnemy(damageType, m_pOwner.get());
         }
     }
 }
@@ -209,7 +212,7 @@ void EnemyAIComponent::VOnResistDamage(DamageType damageType, Point impactPoint)
 {
     if (HasState(EnemyAIState_Parry))
     {
-        AcquireStateLock();
+        AcquireStateLock(GetState(EnemyAIState_Parry));
         EnterState(EnemyAIState_Parry);
     }
 }
@@ -219,7 +222,7 @@ bool EnemyAIComponent::VCanResistDamage(DamageType damageType, Point impactPoint
     if (HasState(EnemyAIState_Parry))
     {
         shared_ptr<ParryEnemyAIStateComponent> pParryStateComponent =
-            MakeStrongPtr(_owner->GetComponent<ParryEnemyAIStateComponent>());
+            MakeStrongPtr(m_pOwner->GetComponent<ParryEnemyAIStateComponent>());
         assert(pParryStateComponent);
 
         return pParryStateComponent->CanParry(damageType, GetCurrentState()->VGetStateType());
@@ -228,33 +231,38 @@ bool EnemyAIComponent::VCanResistDamage(DamageType damageType, Point impactPoint
     return false;
 }
 
-void EnemyAIComponent::LeaveAllStates()
+void EnemyAIComponent::LeaveAllStates(BaseEnemyAIStateComponent* pNextState)
 {
-    for (auto stateIter : m_StateMap)
+    for (const auto& stateIter : m_StateMap)
     {
-        stateIter.second->VOnStateLeave();
+        if (stateIter.second->IsActive())
+        {
+            stateIter.second->VOnStateLeave(pNextState);
+        }
     }
 }
 
 void EnemyAIComponent::EnterState(std::string stateName)
 {
-    LeaveAllStates();
+    BaseEnemyAIStateComponent* pCurrentState = GetCurrentState();
 
     auto findIt = m_StateMap.find(stateName);
     assert(findIt != m_StateMap.end());
 
-    findIt->second->VOnStateEnter();
+    LeaveAllStates(findIt->second);
+    findIt->second->VOnStateEnter(pCurrentState);
 }
 
 void EnemyAIComponent::EnterState(EnemyAIState state)
 {
-    LeaveAllStates();
+    BaseEnemyAIStateComponent* pCurrentState = GetCurrentState();
 
     for (auto stateIter : m_StateMap)
     {
         if (stateIter.second->VGetStateType() == state)
         {
-            stateIter.second->VOnStateEnter();
+            LeaveAllStates(stateIter.second);
+            stateIter.second->VOnStateEnter(pCurrentState);
             return;
         }
     }
@@ -265,14 +273,15 @@ void EnemyAIComponent::EnterState(EnemyAIState state)
 void EnemyAIComponent::EnterState(BaseEnemyAIStateComponent* pState)
 {
     assert(pState != NULL);
+    BaseEnemyAIStateComponent* pCurrentState = GetCurrentState();
 
-    LeaveAllStates();
-    pState->VOnStateEnter();
+    LeaveAllStates(pState);
+    pState->VOnStateEnter(pCurrentState);
 }
 
-void EnemyAIComponent::AcquireStateLock()
+void EnemyAIComponent::AcquireStateLock(BaseEnemyAIStateComponent* pNewState)
 {
-    LeaveAllStates();
+    LeaveAllStates(pNewState);
     m_bHasStateLock = true;
 }
 
@@ -316,7 +325,7 @@ bool EnemyAIComponent::EnterBestState(bool canForceEnter)
         !pCurrentState->VCanEnter() ||
         (pCurrentState->VGetPriority() < bestStatePrio))
     {
-        AcquireStateLock();
+        AcquireStateLock(pBestState);
         // If best prio has some positive values, then we can only force switch it
         if (bestStatePrio > 0)
         {
@@ -385,7 +394,7 @@ bool EnemyAIComponent::TryPlaySpeechSound(int chance, const SoundList& speechSou
 
         // Exclamation mark
         shared_ptr<FollowableComponent> pExclamationMark = 
-            MakeStrongPtr(_owner->GetComponent<FollowableComponent>());
+            MakeStrongPtr(m_pOwner->GetComponent<FollowableComponent>());
         assert(pExclamationMark != nullptr);
 
         pExclamationMark->Activate(Util::GetSoundDurationMs(playedSound));

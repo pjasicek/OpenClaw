@@ -48,7 +48,7 @@ bool FollowableComponent::VInit(TiXmlElement* pData)
 void FollowableComponent::VPostInit()
 {
     m_pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
 
     Point ownerPos = m_pPositionComponent->GetPosition();
     m_pFollowingActor = ActorTemplates::CreateRenderedActor(

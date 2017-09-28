@@ -169,7 +169,7 @@ bool RopeComponent::VInit(TiXmlElement* data)
 void RopeComponent::VPostInit()
 {
     shared_ptr<AnimationComponent>pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>());
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>());
     assert(pAnimationComponent);
 
     pAnimationComponent->AddObserver(this);
@@ -178,7 +178,7 @@ void RopeComponent::VPostInit()
 void RopeComponent::VPostPostInit()
 {
     shared_ptr<AnimationComponent>pAnimationComponent =
-        MakeStrongPtr(_owner->GetComponent<AnimationComponent>());
+        MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>());
     //pAnimationComponent->SetDelay(1000000);
 
     ActorBodyDef triggerDef;
@@ -192,7 +192,7 @@ void RopeComponent::VPostPostInit()
 
     m_pRopeEndTriggerActor = ActorTemplates::CreateActor_Trigger(
         triggerDef, 
-        _owner->GetPositionComponent()->GetPosition()).get();
+        m_pOwner->GetPositionComponent()->GetPosition()).get();
     assert(m_pRopeEndTriggerActor != NULL);
 
     shared_ptr<TriggerComponent> pTrigger = MakeStrongPtr(m_pRopeEndTriggerActor->GetComponent<TriggerComponent>());
@@ -208,7 +208,7 @@ void RopeComponent::VUpdate(uint32 msDiff)
 
 void RopeComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
 {
-    Point newPosition = GetRopeEndFramePosition(_owner->GetPositionComponent()->GetPosition(), pNewFrame->idx);
+    Point newPosition = GetRopeEndFramePosition(m_pOwner->GetPositionComponent()->GetPosition(), pNewFrame->idx);
     if (pNewFrame->idx > 60)
     {
         IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(
@@ -252,7 +252,7 @@ void RopeComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFra
     }
 }
 
-void RopeComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
+void RopeComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType)
 {
     if (m_TimeStanceAttach < 250)
     {
@@ -277,7 +277,7 @@ void RopeComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
     UpdateAttachedActorPosition(m_pRopeEndTriggerActor->GetPositionComponent()->GetPosition());
 }
 
-void RopeComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft)
+void RopeComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
 {
     // Claw has to detach himself on his own so it is very probably that this will be NULL
     if (m_pAttachedActor == NULL)

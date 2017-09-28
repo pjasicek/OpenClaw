@@ -56,7 +56,7 @@ bool KinematicComponent::VInit(TiXmlElement* pData)
 void KinematicComponent::VPostInit()
 {
     shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     assert(pPositionComponent);
 
     m_pPositionComponent = pPositionComponent.get();
@@ -146,7 +146,7 @@ void KinematicComponent::VUpdate(uint32 msDiff)
     {
         m_bIsDone = true;
         Point zeroSpeed(0, 0);
-        m_pPhysics->VSetLinearSpeedEx(_owner->GetGUID(), zeroSpeed);
+        m_pPhysics->VSetLinearSpeedEx(m_pOwner->GetGUID(), zeroSpeed);
         return;
     }
 
@@ -181,7 +181,7 @@ void KinematicComponent::VUpdate(uint32 msDiff)
         //LOG("Speed: " + m_CurrentSpeed.ToString());
     }
 
-    m_pPhysics->VSetLinearSpeedEx(_owner->GetGUID(), m_CurrentSpeed);
+    m_pPhysics->VSetLinearSpeedEx(m_pOwner->GetGUID(), m_CurrentSpeed);
 }
 
 void KinematicComponent::RemoveCarriedBody(b2Body* pBody)
@@ -313,7 +313,7 @@ void KinematicComponent::ClawDiedDelegate(IEventDataPtr pEventData)
     m_bCheckCarriedBodies = false;
 
     m_bIsDone = false;
-    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Teleport_Actor(_owner->GetGUID(), m_InitialPosition)));
+    IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Teleport_Actor(m_pOwner->GetGUID(), m_InitialPosition)));
     /*m_pPositionComponent->SetPosition(m_InitialPosition);
-    m_pPhysics->VSetPosition(_owner->GetGUID(), m_InitialPosition);*/
+    m_pPhysics->VSetPosition(m_pOwner->GetGUID(), m_InitialPosition);*/
 }

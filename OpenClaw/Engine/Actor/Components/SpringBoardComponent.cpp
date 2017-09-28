@@ -33,7 +33,7 @@ bool SpringBoardComponent::VInit(TiXmlElement* pData)
 
 void SpringBoardComponent::VPostInit()
 {
-    m_pAnimationComponent = MakeStrongPtr(_owner->GetComponent<AnimationComponent>()).get();
+    m_pAnimationComponent = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>()).get();
     assert(m_pAnimationComponent != NULL);
 
     if (m_Properties.idleAnimName == "NONE")
@@ -46,7 +46,7 @@ void SpringBoardComponent::VPostInit()
     m_pAnimationComponent->AddObserver(this);
     m_pAnimationComponent->SetAnimation(m_Properties.idleAnimName);
 
-    if (auto pTriggerComp = MakeStrongPtr(_owner->GetComponent<TriggerComponent>()))
+    if (auto pTriggerComp = MakeStrongPtr(m_pOwner->GetComponent<TriggerComponent>()))
     {
         pTriggerComp->AddObserver(this);
     }
@@ -81,12 +81,12 @@ void SpringBoardComponent::VOnAnimationFrameChanged(Animation* pAnimation, Anima
     }
 }
 
-void SpringBoardComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
+void SpringBoardComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType)
 {
     OnActorBeginContact(pActorWhoEntered);
 }
 
-void SpringBoardComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft)
+void SpringBoardComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
 {
     OnActorEndContact(pActorWhoLeft);
 }

@@ -23,7 +23,7 @@ public:
 
     virtual void VUpdate(uint32 msDiff) override;
 
-    void Destroy() { m_pPhysics->VRemoveActor(_owner->GetGUID()); }
+    void Destroy() { m_pPhysics->VRemoveActor(m_pOwner->GetGUID()); }
 
     void SetControllableComponent(ControllableComponent* pComp);
 
@@ -39,9 +39,9 @@ public:
     int32 GetMaxJumpHeight() const { return m_MaxJumpHeight; }
     void SetMaxJumpHeight(int32 maxJumpHeight);
 
-    void SetGravityScale(float gravityScale) { m_pPhysics->VSetGravityScale(_owner->GetGUID(), gravityScale); }
+    void SetGravityScale(float gravityScale) { m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), gravityScale); }
     float GetGravityScale() { return m_GravityScale; }
-    void RestoreGravityScale() { m_pPhysics->VSetGravityScale(_owner->GetGUID(), m_GravityScale); }
+    void RestoreGravityScale() { m_pPhysics->VSetGravityScale(m_pOwner->GetGUID(), m_GravityScale); }
     float GetFriction() { return m_Friction; }
     float GetDensity() { return m_Density; }
 
@@ -94,13 +94,13 @@ public:
     void SetMovingPlatformContact(b2Contact* pContact) { m_pMovingPlatformContact = pContact; }
 
     // Communication with IGamePhysics
-    Point GetVelocity() { return m_pPhysics->VGetVelocity(_owner->GetGUID()); }
-    void SetVelocity(Point velocity) { m_pPhysics->VSetLinearSpeed(_owner->GetGUID(), velocity); }
+    Point GetVelocity() { return m_pPhysics->VGetVelocity(m_pOwner->GetGUID()); }
+    void SetVelocity(Point velocity) { m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), velocity); }
     
-    void ApplyLinearImpulse(Point impulse) { m_pPhysics->VApplyLinearImpulse(_owner->GetGUID(), impulse); }
-    void ApplyForce(Point force) { m_pPhysics->VApplyForce(_owner->GetGUID(), force); }
+    void ApplyLinearImpulse(Point impulse) { m_pPhysics->VApplyLinearImpulse(m_pOwner->GetGUID(), impulse); }
+    void ApplyForce(Point force) { m_pPhysics->VApplyForce(m_pOwner->GetGUID(), force); }
 
-    bool IsAwake() { return m_pPhysics->VIsAwake(_owner->GetGUID()); }
+    bool IsAwake() { return m_pPhysics->VIsAwake(m_pOwner->GetGUID()); }
 
     void SetIsForcedUp(bool isForcedUp, int forcedUpHeight);
     bool GetIsForcedUp() { return m_bIsForcedUp; }

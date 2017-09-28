@@ -1,0 +1,38 @@
+<Actor Type="Base_ActorSpawner" ActorPrototypeName="ActorPrototype_BaseActorSpawner">
+	<PositionComponent>
+		<!-- DEFINED IN CODE -->
+		<Position x="-1" y="-1" /> 
+	</PositionComponent>
+	<ActorRenderComponent>
+		<Visible>true</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>0</ZCoord>
+		<ImagePath>NONE</ImagePath>
+	</ActorRenderComponent>
+    <TriggerComponent>
+    </TriggerComponent>
+	<ActorSpawnerComponent>
+	</ActorSpawnerComponent>
+	<PhysicsComponent>
+        <BodyType>Static</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>true</HasSensorBehaviour>
+        <FixtureType>Trigger_SpawnArea</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="0" height="0" /> <!-- SET ACCORDING TO IMAGE IN PHYSICS COMPONENT -->
+        <GravityScale>0.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>16384</CollisionFlag>
+        <CollisionMask>1048578</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+    </PhysicsComponent>
+</Actor>

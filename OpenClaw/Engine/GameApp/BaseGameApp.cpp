@@ -158,14 +158,14 @@ bool BaseGameApp::VPerformStartupTests()
 
     // Files located in my custom ASSETS.ZIP
     STARTUP_TEST_FILE_PRESENCE_IN_RESCACHE(
-        "/ActorPrototypes/LEVEL1/LEVEL1_SOLDIER.XML", 
+        "/ACTOR_PROTOTYPES/LEVEL1/LEVEL1_SOLDIER.XML", 
         CUSTOM_RESOURCE, 
-        "/ActorPrototypes/LEVEL1/LEVEL1_SOLDIER.XML not found in: " + std::string(CUSTOM_RESOURCE));
+        "/ACTOR_PROTOTYPES/LEVEL1/LEVEL1_SOLDIER.XML not found in: " + std::string(CUSTOM_RESOURCE));
 
     STARTUP_TEST_FILE_PRESENCE_IN_RESCACHE(
-        "/ActorPrototypes/LEVEL1/LEVEL1_OFFICER.XML",
+        "/ACTOR_PROTOTYPES/LEVEL1/LEVEL1_OFFICER.XML",
         CUSTOM_RESOURCE,
-        "/ActorPrototypes/LEVEL1/LEVEL1_OFFICER.XML not found in: " + std::string(CUSTOM_RESOURCE));
+        "/ACTOR_PROTOTYPES/LEVEL1/LEVEL1_OFFICER.XML not found in: " + std::string(CUSTOM_RESOURCE));
 
     return bTestsOk;
 }
@@ -794,8 +794,8 @@ bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
 {
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, ">>>>> Loading actor prototypes...");
 
-    std::vector<std::string> xmlActorPrototypeFiles = m_pResourceMgr->VMatch("/ActorPrototypes/*.XML");
-    for (std::string protoFile : xmlActorPrototypeFiles)
+    std::vector<std::string> xmlActorPrototypeFiles = m_pResourceMgr->VMatch("/ACTOR_PROTOTYPES/*.XML");
+    for (const std::string& protoFile : xmlActorPrototypeFiles)
     {
         //LOG("Actor proto: " + protoFile);
 

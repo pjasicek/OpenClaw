@@ -438,7 +438,7 @@ void ClawGameLogic::ClawDiedDelegate(IEventDataPtr pEventData)
     RaycastResult raycastDown = m_pPhysics->VRayCast(spawnPoint, toPoint, (CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_All));
     if (!raycastDown.foundIntersection)
     {
-        LOG_ERROR("Failed to get raycast result down from position: " + spawnPoint.ToString());
+        LOG_WARNING("Failed to clamp Claw down from position: " + spawnPoint.ToString());
     }
     else
     {

@@ -65,7 +65,7 @@ bool PickupComponent::VInit(TiXmlElement* data)
 void PickupComponent::VPostInit()
 {
     shared_ptr<TriggerComponent> pTriggerComponent =
-        MakeStrongPtr(_owner->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
+        MakeStrongPtr(m_pOwner->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
     assert(pTriggerComponent);
 
     pTriggerComponent->AddObserver(this);
@@ -77,7 +77,7 @@ TiXmlElement* PickupComponent::VGenerateXml()
     return NULL;
 }
 
-void PickupComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
+void PickupComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType)
 {
     // Check if pickup was really "picked up"
     // Note: Actor is not destroyed here. subclasses need to handle it.
@@ -90,7 +90,7 @@ void PickupComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered)
 
         // TODO: Is this necessary ?
         shared_ptr<TriggerComponent> pTriggerComponent =
-            MakeStrongPtr(_owner->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<TriggerComponent>(TriggerComponent::g_Name));
         if (pTriggerComponent)
         {
             //pTriggerComponent->Deactivate();
@@ -142,8 +142,8 @@ void TreasurePickupComponent::VPostInit()
 {
     PickupComponent::VPostInit();
 
-    m_pRenderComponent = MakeStrongPtr(_owner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-    m_pPositionComponent = MakeStrongPtr(_owner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    m_pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
+    m_pPositionComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
     assert(m_pRenderComponent);
     assert(m_pPositionComponent);
 }
@@ -165,7 +165,7 @@ bool TreasurePickupComponent::VOnApply(Actor* pActorWhoPickedThis)
 
         // Destroy glitter if possible
         shared_ptr<GlitterComponent> pGlitterComponent =
-            MakeStrongPtr(_owner->GetComponent<GlitterComponent>(GlitterComponent::g_Name));
+            MakeStrongPtr(m_pOwner->GetComponent<GlitterComponent>(GlitterComponent::g_Name));
         if (pGlitterComponent)
         {
             pGlitterComponent->Deactivate();
@@ -193,7 +193,7 @@ void TreasurePickupComponent::VUpdate(uint32 msDiff)
             shared_ptr<CameraNode> pCamera = pHumanView->GetCamera();
             if (pCamera)
             {
-                shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(_owner->GetGUID(), m_pPositionComponent->GetPosition()));
+                shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(m_pOwner->GetGUID(), m_pPositionComponent->GetPosition()));
                 IEventMgr::Get()->VTriggerEvent(pEvent);
 
                 SDL_Rect dummy;
@@ -201,7 +201,7 @@ void TreasurePickupComponent::VUpdate(uint32 msDiff)
                 SDL_Rect cameraRect = pCamera->GetCameraRect();
                 if (!SDL_IntersectRect(&renderRect, &cameraRect, &dummy))
                 {
-                    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+                    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
                     IEventMgr::Get()->VQueueEvent(pEvent);
                 }
             }
@@ -249,7 +249,7 @@ bool LifePickupComponent::VOnApply(Actor* pActorWhoPickedThis)
     {
         pLifeComponent->AddLives(m_NumLives);
 
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
 
 
@@ -299,9 +299,9 @@ bool HealthPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
             return false;
         }
 
-        pHealthComponent->AddHealth(m_NumRestoredHealth, DamageType_None, Point(0, 0), _owner->GetGUID());
+        pHealthComponent->AddHealth(m_NumRestoredHealth, DamageType_None, Point(0, 0), m_pOwner->GetGUID());
 
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
 
         return true;
@@ -373,7 +373,7 @@ bool TeleportPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
         IEventMgr::Get()->VTriggerEvent(pEvent);
     }
 
-    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+    shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
     IEventMgr::Get()->VQueueEvent(pEvent);
 
     /*SoundInfo soundInfo(SOUND_GAME_ENTER_WARP);
@@ -444,7 +444,7 @@ bool PowerupPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
     {
         pPowerupComponent->ApplyPowerup(m_PowerupType, m_PowerupDuration);
 
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
 
         return true;
@@ -509,7 +509,7 @@ bool AmmoPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
             pAmmoComponent->AddAmmo(ammoPair.first, ammoPair.second);
         }
 
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(_owner->GetGUID()));
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
 
         return true;
