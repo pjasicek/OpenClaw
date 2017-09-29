@@ -58,6 +58,8 @@ public:
     bool IsAtFirstAnimFrame() const { return _currentAnimationFrame.idx == 0; }
     bool IsPaused() const { return _paused; }
 
+    const AnimationComponent* GetOwnerComponent() const { return m_pOwner; }
+
 private:
     void AddAnimationFrame(AnimationFrame& animFrame) { _animationFrames.push_back(animFrame); }
     void SetName(const char* name) { _name = name; }

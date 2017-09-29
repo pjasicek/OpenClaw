@@ -717,7 +717,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             loot, 
             wwdObject->minX, 
             wwdObject->maxX,
-            wwdObject->userValue1);
+            wwdObject->userValue1,
+            wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR);
     }
     else if (logic.find("Rat") != std::string::npos)
     {

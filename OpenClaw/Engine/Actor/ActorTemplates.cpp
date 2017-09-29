@@ -1780,7 +1780,7 @@ namespace ActorTemplates
         return pActorElem;
     }
 
-    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle)
+    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle, bool isMirrored)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(enemyType);
         assert(pActorElem != NULL);
@@ -1788,6 +1788,9 @@ namespace ActorTemplates
         //----------- Position
         assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
+
+        // ----------- RenderComponent - Mirrored ?
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.Mirrored", isMirrored));
 
         //----------- Loot
         TiXmlElement* pLootComponentElem = GetTiXmlElementFromPath(pActorElem, "Actor.LootComponent");

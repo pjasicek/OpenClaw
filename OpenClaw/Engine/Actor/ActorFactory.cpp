@@ -52,6 +52,7 @@
 #include "Components/SteppingGroundComponent.h"
 #include "Components/SpringBoardComponent.h"
 #include "Components/ActorSpawnerComponent.h"
+#include "Components/EnemyAI/PunkRatAIStateComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -118,6 +119,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<WolvingtonBossAIStateComponent>(WolvingtonBossAIStateComponent::GetIdFromName(WolvingtonBossAIStateComponent::g_Name));
     _componentFactory.Register<FallAIStateComponent>(FallAIStateComponent::GetIdFromName(FallAIStateComponent::g_Name));
     _componentFactory.Register<ActorSpawnerComponent>(ActorSpawnerComponent::GetIdFromName(ActorSpawnerComponent::g_Name));
+    _componentFactory.Register<PunkRatAIStateComponent>(PunkRatAIStateComponent::GetIdFromName(PunkRatAIStateComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

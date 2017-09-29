@@ -128,6 +128,9 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_BaseRope, "ActorPrototype_BaseRope" },
         { ActorPrototype_BaseActorSpawner, "ActorPrototype_BaseActorSpawner" },
 
+        // Level 2
+        { ActorPrototype_Level2_PunkRatCannon, "ActorPrototype_Level2_PunkRatCannon" },
+        
         // Level 7
         { ActorPrototype_Level7_CrumblingPeg, "ActorPrototype_Level7_CrumblingPeg" },
         { ActorPrototype_Level7_Seagull, "ActorPrototype_Level7_Seagull" },
@@ -279,6 +282,9 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         // Rope
         { "ActorPrototype_BaseRope", ActorPrototype_BaseRope },
         { "ActorPrototype_BaseActorSpawner", ActorPrototype_BaseActorSpawner },
+
+        // Level 2
+        { "ActorPrototype_Level2_PunkRatCannon", ActorPrototype_Level2_PunkRatCannon },
 
         // Level 7
         { "ActorPrototype_Level7_CrumblingPeg", ActorPrototype_Level7_CrumblingPeg },

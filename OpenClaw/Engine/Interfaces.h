@@ -396,6 +396,8 @@ enum ActorPrototype
     
     ActorPrototype_BaseActorSpawner,
 
+    // Level 2
+    ActorPrototype_Level2_PunkRatCannon,
 
     // Level 7
     ActorPrototype_Level7_CrumblingPeg,

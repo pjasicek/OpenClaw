@@ -22,7 +22,8 @@ enum EnemyAIState
     EnemyAIState_Falling,
     EnemyAIState_BrainLaRaux,
     EnemyAIState_BrainKatherine,
-    EnemyAIState_BrainWolvington
+    EnemyAIState_BrainWolvington,
+    EnemyAIState_PunkRat,
 };
 
 struct EnemyAIAction
