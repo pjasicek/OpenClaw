@@ -1,0 +1,39 @@
+<Actor Type="Level8_PunkRatCannon" ActorPrototypeName="ActorPrototype_Level8_PunkRatCannon">
+    <PositionComponent>
+        <Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
+    </PositionComponent>
+    <ActorRenderComponent>
+        <Visible>true</Visible>
+        <Mirrored>false</Mirrored>
+        <Inverted>false</Inverted>
+        <ZCoord>-10</ZCoord>
+        <ImagePath>/LEVEL8/IMAGES/CANNON/*.PID</ImagePath>
+        <Palette>/LEVEL8/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL8/ANIS/CANNON/*.ANI</AnimationPath>
+        <PauseOnStart>true</PauseOnStart>
+    </AnimationComponent>
+    <PhysicsComponent>
+        <BodyType>Static</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>Ground</FixtureType>
+        <PositionOffset x="0" y="-20" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="100" height="40" />
+        <GravityScale>1.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>1</CollisionFlag>
+        <CollisionMask>4294967293</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+        <ClampToGround>true</ClampToGround>
+    </PhysicsComponent>
+</Actor>

@@ -435,7 +435,7 @@ void TilePlaneRenderComponent::ProcessMainPlaneTiles(const TileList& tileList)
         assert(continuousTiles.size() >= 1);
 
         // Discard all empty tiles
-        if (continuousTiles[0] != -1)
+        if (continuousTiles[0] > -1)
         {
             int tileWidth = m_PlaneProperties.tilePixelWidth;
             TileInfo firstTileInfo = GetTileInfo(tileList, currentTileIdx);
@@ -642,6 +642,10 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
         else if (m_PlaneProperties.name == "Front") // Empty image on front plane most likely. First occurance on level 7
         {
             m_TileImageList.push_back(NULL);
+        }
+        else if (m_PlaneProperties.name == "Action") // Fill image ?. First occurance on level 8
+        {
+            m_TileImageList.push_back(m_pFillImage.get());
         }
         else
         {

@@ -594,9 +594,20 @@ void PatrolEnemyAIStateComponent::CalculatePatrolBorders()
     /*shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(m_pOwner->GetGUID(), spawnPosition));
     IEventMgr::Get()->VQueueEvent(pEvent);*/
 
-    assert(m_LeftPatrolBorder > 0);
-    assert(m_RightPatrolBorder > 0);
-    //assert(m_RightPatrolBorder > m_LeftPatrolBorder);
+    if (m_LeftPatrolBorder <= 0)
+    {
+        LOG_ERROR("Invalid left patrol border for actor: " + m_pOwner->GetName() + ". Setting to AlwaysIdle.");
+        m_IsAlwaysIdle = true;
+        m_bRetainDirection = true;
+        //assert(m_LeftPatrolBorder > 0);
+    }
+    if (m_RightPatrolBorder <= 0)
+    {
+        LOG_ERROR("Invalid right patrol border for actor: " + m_pOwner->GetName() + ". Setting to AlwaysIdle.");
+        m_IsAlwaysIdle = true;
+        m_bRetainDirection = true;
+        //assert(m_RightPatrolBorder > 0);
+    }
 }
 
 void PatrolEnemyAIStateComponent::ChangeDirection(Direction newDirection)

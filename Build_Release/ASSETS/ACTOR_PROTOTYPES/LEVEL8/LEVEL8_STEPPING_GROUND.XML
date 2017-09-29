@@ -1,0 +1,11 @@
+<Actor Type="Level8_SteppingGround" Parent="ActorPrototype_BaseSteppingGround" ActorPrototypeName="ActorPrototype_Level8_SteppingGround">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL8/IMAGES/SINKBOEY/*</ImagePath>
+	</ActorRenderComponent>
+	<SteppingGroundComponent>
+		<ToggleFrameIdx>1</ToggleFrameIdx>
+        <TimeOn>150</TimeOn>
+        <TimeOff>500</TimeOff>
+        <ToggleSound>/LEVEL8/SOUNDS/BOUYRISE.WAV</ToggleSound>
+    </SteppingGroundComponent>
+</Actor>

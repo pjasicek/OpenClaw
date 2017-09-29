@@ -1,0 +1,6 @@
+<Actor Type="Level8_Seagull" Parent="ActorPrototype_Level5_Seagull" ActorPrototypeName="ActorPrototype_Level8_Seagull">
+    <ActorRenderComponent>
+        <ImagePath>/LEVEL8/IMAGES/SEAGULL/*</ImagePath>
+        <Palette>/LEVEL8/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+</Actor>

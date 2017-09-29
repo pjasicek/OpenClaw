@@ -1,0 +1,14 @@
+<Actor Type="Level8_PunkRat" Parent="ActorPrototype_Level2_PunkRat" ActorPrototypeName="ActorPrototype_Level8_PunkRat">
+    <ActorRenderComponent>
+        <ImagePath>/LEVEL8/IMAGES/PUNKRAT/*</ImagePath>
+        <Palette>/LEVEL8/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL8/ANIS/PUNKRAT/*</AnimationPath>
+    </AnimationComponent>
+    <PunkRatAIStateComponent>
+        <CannonActorPrototype>ActorPrototype_Level8_PunkRatCannon</CannonActorPrototype>
+        <ProjectileActorPrototype>ActorPrototype_Level8_CannonBall</ProjectileActorPrototype>
+        <ProjectileSpawnOffset x="45" y="-40" />
+    </PunkRatAIStateComponent>
+</Actor>

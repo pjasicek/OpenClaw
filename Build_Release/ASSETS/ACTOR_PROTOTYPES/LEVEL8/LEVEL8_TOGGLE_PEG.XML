@@ -1,0 +1,14 @@
+<Actor Type="Level8_TogglePeg" Parent="ActorPrototype_BaseTogglePeg" ActorPrototypeName="ActorPrototype_Level8_TogglePeg">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL8/IMAGES/CANNON2/*</ImagePath>
+		<Palette>/LEVEL8/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<TogglePegAIComponent>
+		<ToggleFrameIdx>2</ToggleFrameIdx>
+		<ToggleSound>/LEVEL8/SOUNDS/PEGSLIDE.WAV</ToggleSound>
+	</TogglePegAIComponent>
+	<PhysicsComponent>
+        <CollisionSize width="46" height="30" />
+		<PositionOffset x="10" y="10" />
+    </PhysicsComponent>
+</Actor>

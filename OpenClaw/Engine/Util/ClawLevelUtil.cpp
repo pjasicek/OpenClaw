@@ -110,7 +110,7 @@ namespace ClawLevelUtil
             { { 7, "CrabNest" }, ActorPrototype_Level7_CrabNest },
 
             // Level 8
-            /*{ { 8, "BearSailor" }, ActorPrototype_Level8_BearSailor },
+            { { 8, "BearSailor" }, ActorPrototype_Level8_BearSailor },
             { { 8, "BossStager" }, ActorPrototype_Level8_BossStager },
             { { 8, "Elevator" }, ActorPrototype_BaseElevator },
             { { 8, "OneWayTriggerElevator" }, ActorPrototype_BaseElevator },
@@ -121,7 +121,7 @@ namespace ClawLevelUtil
             { { 8, "TogglePeg" }, ActorPrototype_Level8_TogglePeg },
             { { 8, "TogglePeg2" }, ActorPrototype_Level8_TogglePeg },
             { { 8, "TogglePeg3" }, ActorPrototype_Level8_TogglePeg },
-            { { 8, "TogglePeg4" }, ActorPrototype_Level8_TogglePeg },*/
+            { { 8, "TogglePeg4" }, ActorPrototype_Level8_TogglePeg },
         };
 
         auto key = std::make_pair(levelNumber, logic);
@@ -219,7 +219,7 @@ namespace ClawLevelUtil
 
     shared_ptr<LevelData> GetDebugLoadLevelData()
     {
-        int debugLevelNumber = 2;
+        int debugLevelNumber = 8;
 
         shared_ptr<LevelData> pLevelData(new LevelData(debugLevelNumber, false, 0));
         return pLevelData;

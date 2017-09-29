@@ -1,0 +1,11 @@
+<Actor Type="Level8_BearSailor" Parent="ActorPrototype_Level7_BearSailor" ActorPrototypeName="ActorPrototype_Level8_BearSailor">
+    <ActorRenderComponent>
+        <ZCoord>0</ZCoord>
+        <ImagePath>/LEVEL8/IMAGES/BEARSAILOR/*</ImagePath>
+        <Palette>/LEVEL8/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL8/ANIS/BEARSAILOR/*.ANI</AnimationPath>
+        <PauseOnStart>false</PauseOnStart>
+    </AnimationComponent>
+</Actor>

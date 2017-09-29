@@ -410,6 +410,18 @@ enum ActorPrototype
     ActorPrototype_Level7_HermitCrab,
     ActorPrototype_Level7_CrabNest,
 
+    // Level 8
+    ActorPrototype_Level8_Seagull,
+    ActorPrototype_Level8_BossStager,
+    ActorPrototype_Level8_SteppingGround,
+    ActorPrototype_Level8_BearSailor,
+    ActorPrototype_Level8_RedTailPirate,
+    ActorPrototype_Level8_PunkRat,
+    ActorPrototype_Level8_TogglePeg,
+    ActorPrototype_Level8_TogglePeg_2,
+    ActorPrototype_Level8_CannonBall,
+    ActorPrototype_Level8_PunkRatCannon,
+
     ActorPrototype_Max
 };
 

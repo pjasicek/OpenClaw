@@ -1,0 +1,10 @@
+<Actor Type="Level8_TogglePeg_2" Parent="ActorPrototype_BaseTogglePeg" ActorPrototypeName="ActorPrototype_Level8_TogglePeg_2">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL8/IMAGES/PEG/*</ImagePath>
+		<Palette>/LEVEL8/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<TogglePegAIComponent>
+		<ToggleFrameIdx>4</ToggleFrameIdx>
+		<ToggleSound>/LEVEL8/SOUNDS/PEGSLIDE.WAV</ToggleSound>
+	</TogglePegAIComponent>
+</Actor>

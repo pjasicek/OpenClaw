@@ -536,6 +536,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
+            LOG("Not found ?");
             return NULL;
         }
 
@@ -600,23 +601,22 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             togglePegDef.timeOff = timeOff;
         }
 
-        Point position(wwdObject->x, wwdObject->y);
-
-        ActorPrototype proto = ActorPrototype_None;
-        if (levelNumber == 1) proto = ActorPrototype_Level1_TogglePeg;
-        else if (levelNumber == 2) proto = ActorPrototype_Level2_TogglePeg;
-        else if (levelNumber == 5) proto = ActorPrototype_Level5_TogglePeg;
-
-        if (proto == ActorPrototype_None)
+        // 2 different TogglePegs 
+        if (levelNumber == 8)
         {
-            return NULL;
+            if (imageSet == "LEVEL_PEG")
+            {
+                actorProto = ActorPrototype_Level8_TogglePeg_2;
+            }
+            else
+            {
+                actorProto = ActorPrototype_Level8_TogglePeg;
+            }
         }
 
-        // assert(proto != ActorPrototype_Start);
-
         return ActorTemplates::CreateXmlData_TogglePegActor(
-            proto,
-            position,
+            actorProto,
+            actorPosition,
             togglePegDef);
     }
     else if (logic.find("Checkpoint") != std::string::npos)

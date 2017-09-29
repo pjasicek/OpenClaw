@@ -1,0 +1,8 @@
+<Actor Type="Level8_BossStager" Parent="ActorPrototype_BaseBossStager" ActorPrototypeName="ActorPrototype_Level8_BossStager">
+    <BossStagerTriggerComponent>
+        <ClawDialogSound>/LEVEL8/SOUNDS/STAGING/CLAW.WAV</ClawDialogSound>
+        <BossDialogSound>/LEVEL8/SOUNDS/STAGING/ENEMY.WAV</BossDialogSound>
+        <PopupTitleImageSet>/LEVEL8/IMAGES/BOSSNAME/*</PopupTitleImageSet>
+        <PopupTitleSound>/LEVEL8/SOUNDS/DEFEAT.WAV</PopupTitleSound>
+    </BossStagerTriggerComponent>
+</Actor>
