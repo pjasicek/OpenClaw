@@ -360,7 +360,7 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
 
         if (!success)
         {
-            LOG_ERROR("Could not load resource from raw data");
+            LOG_ERROR("Could not load resource: " + r->GetName() + " from raw data");
             return nullptr;
         }
     }
