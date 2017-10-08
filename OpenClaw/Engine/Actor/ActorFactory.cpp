@@ -53,6 +53,7 @@
 #include "Components/SpringBoardComponent.h"
 #include "Components/ActorSpawnerComponent.h"
 #include "Components/EnemyAI/PunkRatAIStateComponent.h"
+#include "Components/EnemyAI/Gabriel/GabrielEncounter.h"
 
 ActorFactory::ActorFactory()
 {
@@ -120,6 +121,9 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<FallAIStateComponent>(FallAIStateComponent::GetIdFromName(FallAIStateComponent::g_Name));
     _componentFactory.Register<ActorSpawnerComponent>(ActorSpawnerComponent::GetIdFromName(ActorSpawnerComponent::g_Name));
     _componentFactory.Register<PunkRatAIStateComponent>(PunkRatAIStateComponent::GetIdFromName(PunkRatAIStateComponent::g_Name));
+    _componentFactory.Register<GabrielAIStateComponent>(GabrielAIStateComponent::GetIdFromName(GabrielAIStateComponent::g_Name));
+    _componentFactory.Register<GabrielCannonButtonComponent>(GabrielCannonButtonComponent::GetIdFromName(GabrielCannonButtonComponent::g_Name));
+    _componentFactory.Register<GabrielCannonComponent>(GabrielCannonComponent::GetIdFromName(GabrielCannonComponent::g_Name));
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

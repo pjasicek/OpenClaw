@@ -61,6 +61,7 @@ const EventType EventData_IngameMenu_Resume_Game::sk_EventType(0x44abc8af);
 const EventType EventData_IngameMenu_End_Life::sk_EventType(0x455bc8af);
 const EventType EventData_IngameMenu_End_Game::sk_EventType(0x455bcfff);
 const EventType EventData_Actor_Fire_Ended::sk_EventType(0x666bcfff);
+const EventType EventData_World_Finished_Loading::sk_EventType(0x776bcfff);
 
 /*bool EventData_PlaySound::VBuildEventFromScript(void)
 {

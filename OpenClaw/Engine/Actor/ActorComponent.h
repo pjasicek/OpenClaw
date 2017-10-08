@@ -38,6 +38,8 @@ public:
         return HashName(componentName);
     }
 
+    virtual void VOnWorldFinishedLoading() { }
+
 protected:
     StrongActorPtr m_pOwner;
 

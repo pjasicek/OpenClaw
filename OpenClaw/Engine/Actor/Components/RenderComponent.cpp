@@ -385,6 +385,11 @@ void ActorRenderComponent::SetImage(std::string imageName)
         }
 
         LOG("Actor: " + m_pOwner->GetName() + " ImageName: " + imageName);
+        /*LOG("Images: ");
+        for (auto im : m_ImageMap)
+        {
+            LOG("Image: " + im.first);
+        }*/
         return;
         assert(false);
 

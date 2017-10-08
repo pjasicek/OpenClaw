@@ -225,6 +225,8 @@ bool EnemyAIComponent::VCanResistDamage(DamageType damageType, Point impactPoint
             MakeStrongPtr(m_pOwner->GetComponent<ParryEnemyAIStateComponent>());
         assert(pParryStateComponent);
 
+        assert(GetCurrentState() != NULL);
+
         return pParryStateComponent->CanParry(damageType, GetCurrentState()->VGetStateType());
     }
 
@@ -332,6 +334,10 @@ bool EnemyAIComponent::EnterBestState(bool canForceEnter)
             m_bHasStateLock = false;
         }
         EnterState(pBestState);
+        if (pBestState->VGetStateType() == EnemyAIState_BrainGabriel)
+        {
+            LOG_TRACE("Entered Gabriel's state !");
+        }
         return true;
     }
 

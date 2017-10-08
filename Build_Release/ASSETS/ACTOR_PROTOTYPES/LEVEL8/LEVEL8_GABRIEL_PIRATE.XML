@@ -1,0 +1,9 @@
+<Actor Type="Level8_GabrielPirate" Parent="ActorPrototype_Level8_RedTailPirate" ActorPrototypeName="ActorPrototype_Level8_GabrielPirate">
+    <ActorRenderComponent>
+        <Mirrored>true</Mirrored>
+    </ActorRenderComponent>
+    <PatrolEnemyAIStateComponent>
+        <LeftPatrolBorder>42550</LeftPatrolBorder>
+        <RightPatrolBorder>43200</RightPatrolBorder>
+    </PatrolEnemyAIStateComponent>
+</Actor>

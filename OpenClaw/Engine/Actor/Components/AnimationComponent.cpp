@@ -268,10 +268,11 @@ bool AnimationComponent::SetAnimation(std::string animationName)
 
     //LOG("Setting anim: " + animationName);
 
-    Animation* animation = findIt->second;
+    Animation* pOldAnimation = _currentAnimation;
+    Animation* pNewAnimation = findIt->second;
 
-    animation->Reset();
-    _currentAnimation = animation;
+    pNewAnimation->Reset();
+    _currentAnimation = pNewAnimation;
     OnAnimationFrameStarted(_currentAnimation->GetCurrentAnimationFrame());
 
     // If animation has only 1 anim lasting 0 ms, then it is just a placeholder for the image
@@ -280,6 +281,11 @@ bool AnimationComponent::SetAnimation(std::string animationName)
         _currentAnimation->GetCurrentAnimationFrame()->duration == 0)
     {
         //_currentAnimation->Pause();
+    }
+
+    if (pOldAnimation && pNewAnimation)
+    {
+        NotifyAnimationChanged(pOldAnimation, pNewAnimation);
     }
 
     return true;
@@ -439,6 +445,14 @@ void AnimationSubject::NotifyAnimationAtLastFrame(Animation* pAnimation)
     for (AnimationObserver* pSubject : m_AnimationObservers)
     {
         pSubject->VOnAnimationAtLastFrame(pAnimation);
+    }
+}
+
+void AnimationSubject::NotifyAnimationChanged(Animation* pOldAnimation, Animation* pNewAnimation)
+{
+    for (AnimationObserver* pSubject : m_AnimationObservers)
+    {
+        pSubject->VOnAnimationChanged(pOldAnimation, pNewAnimation);
     }
 }
 

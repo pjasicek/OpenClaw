@@ -9,3 +9,5 @@ target_sources(openclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/PunkRatAIStateComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PunkRatAIStateComponent.h
 )
+
+add_subdirectory(Gabriel)

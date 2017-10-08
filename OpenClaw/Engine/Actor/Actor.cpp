@@ -83,3 +83,11 @@ void Actor::AddComponent(StrongActorComponentPtr component)
 
     assert(success.second);
 }
+
+void Actor::OnWorldFinishedLoading()
+{
+    for (const auto& componentPair : _components)
+    {
+        componentPair.second->VOnWorldFinishedLoading();
+    }
+}

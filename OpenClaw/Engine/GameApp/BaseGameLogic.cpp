@@ -443,6 +443,8 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
         m_pCurrentLevel->m_TotalPickupsMap[PickupType_Treasure_Rings_Green];
     LOG("Rings count: " + ToStr(Rings));*/
 
+    pEventMgr->VTriggerEvent(IEventDataPtr(new EventData_World_Finished_Loading()));
+
     SAFE_DELETE(pXmlLevelRoot);
 
     return true;
@@ -1157,6 +1159,14 @@ void BaseGameLogic::IngameMenuEndLifeDelegate(IEventDataPtr pEventData)
     pClawHealthComponent->SetCurrentHealth(-1);
 }
 
+void BaseGameLogic::WorldFinishedLoadingDelegate(IEventDataPtr pEventData)
+{
+    for (const auto& actorPair : m_ActorMap)
+    {
+        actorPair.second->OnWorldFinishedLoading();
+    }
+}
+
 StrongActorPtr BaseGameLogic::GetClawActor()
 {
     for (auto actorIter : m_ActorMap)
@@ -1168,6 +1178,24 @@ StrongActorPtr BaseGameLogic::GetClawActor()
     }
 
     return nullptr;
+}
+
+StrongActorPtr BaseGameLogic::FindActorByName(const std::string& name, bool bIsUnique)
+{
+    StrongActorPtr pFoundActor = nullptr;
+    for (auto actorIter : m_ActorMap)
+    {
+        if (actorIter.second->GetName() == name)
+        {
+            if (pFoundActor != nullptr && bIsUnique)
+            {
+                LOG_ASSERT("Actor with name: \"" + name + "\" was marked as unique but occured more than once !");
+            }
+            pFoundActor = actorIter.second;
+        }
+    }
+
+    return pFoundActor;
 }
 
 void BaseGameLogic::UnloadLevel()
@@ -1237,6 +1265,7 @@ void BaseGameLogic::RegisterAllDelegates()
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::IngameMenuEndLifeDelegate), EventData_IngameMenu_End_Life::sk_EventType);
+    IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseGameLogic::WorldFinishedLoadingDelegate), EventData_World_Finished_Loading::sk_EventType);
 }
 
 void BaseGameLogic::RemoveAllDelegates()
@@ -1250,6 +1279,7 @@ void BaseGameLogic::RemoveAllDelegates()
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::ActorEnteredBossAreaDelegate), EventData_Entered_Boss_Area::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
     IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::IngameMenuEndLifeDelegate), EventData_IngameMenu_End_Life::sk_EventType);
+    IEventMgr::Get()->VRemoveListener(MakeDelegate(this, &BaseGameLogic::WorldFinishedLoadingDelegate), EventData_World_Finished_Loading::sk_EventType);
 }
 
 void BaseGameLogic::ExecuteStartupCommands(const std::string& startupCommandsFile)

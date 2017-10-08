@@ -121,6 +121,7 @@ enum FixtureType
     FixtureType_DamageAura,
     FixtureType_RopeSensor,
     FixtureType_Trigger_SpawnArea,
+    FixtureType_Trigger_GabrielButton,
     FixtureType_Max,
 };
 
@@ -235,6 +236,7 @@ enum DamageType
     DamageType_FrostSword,
     DamageType_DeathTile,
     DamageType_EnemyAura,
+    DamageType_GabrielCannonBall,
     DamageType_Max
 };
 
@@ -421,6 +423,10 @@ enum ActorPrototype
     ActorPrototype_Level8_TogglePeg_2,
     ActorPrototype_Level8_CannonBall,
     ActorPrototype_Level8_PunkRatCannon,
+    ActorPrototype_Level8_GabrielButton,
+    ActorPrototype_Level8_GabrielCannon,
+    ActorPrototype_Level8_Gabriel,
+    ActorPrototype_Level8_GabrielPirate,
 
     ActorPrototype_Max
 };

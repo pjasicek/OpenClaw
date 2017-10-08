@@ -22,7 +22,18 @@ do \
     Logger::GetOutputString(out, "", s, __FUNCTION__, NULL, __LINE__); \
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", out.c_str()); \
 } \
-while (0);\
+while (0); \
+
+#define LOG_ASSERT(str) \
+do \
+{ \
+    std::string s((str)); \
+    std::string out; \
+    Logger::GetOutputString(out, "", s, __FUNCTION__, NULL, __LINE__); \
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", out.c_str()); \
+    assert(false); \
+} \
+while (0); \
 
 // Warnings are recoverable.  They are just logs with the "WARNING" tag that displays calling information.  The flags
 // are initially set to WARNINGFLAG_DEFAULT (defined in debugger.cpp), but they can be overridden normally.
@@ -55,5 +66,15 @@ do \
     SDL_Log("%s", out.c_str()); \
 } \
 while (0);\
+
+#define LOG_TRACE(str) \
+do \
+{ \
+    std::string s((str)); \
+    std::string out; \
+    Logger::GetOutputString(out, "", s, __FUNCTION__, NULL, __LINE__); \
+    SDL_Log("%s", out.c_str()); \
+} \
+while (0); \
 
 #endif

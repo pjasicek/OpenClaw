@@ -153,6 +153,10 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level8_TogglePeg_2, "ActorPrototype_Level8_TogglePeg_2" },
         { ActorPrototype_Level8_CannonBall, "ActorPrototype_Level8_CannonBall" },
         { ActorPrototype_Level8_PunkRatCannon, "ActorPrototype_Level8_PunkRatCannon" },
+        { ActorPrototype_Level8_GabrielButton, "ActorPrototype_Level8_GabrielButton" },
+        { ActorPrototype_Level8_GabrielCannon, "ActorPrototype_Level8_GabrielCannon" },
+        { ActorPrototype_Level8_Gabriel, "ActorPrototype_Level8_Gabriel" },
+        { ActorPrototype_Level8_GabrielPirate, "ActorPrototype_Level8_GabrielPirate" },
 
         //=======================================
         // Menu
@@ -320,6 +324,10 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level8_TogglePeg_2", ActorPrototype_Level8_TogglePeg_2 },
         { "ActorPrototype_Level8_CannonBall", ActorPrototype_Level8_CannonBall },
         { "ActorPrototype_Level8_PunkRatCannon", ActorPrototype_Level8_PunkRatCannon },
+        { "ActorPrototype_Level8_GabrielButton", ActorPrototype_Level8_GabrielButton },
+        { "ActorPrototype_Level8_GabrielCannon", ActorPrototype_Level8_GabrielCannon },
+        { "ActorPrototype_Level8_Gabriel", ActorPrototype_Level8_Gabriel },
+        { "ActorPrototype_Level8_GabrielPirate", ActorPrototype_Level8_GabrielPirate },
 
         //=======================================
         // Menu
@@ -367,6 +375,7 @@ FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
     else if (fixtureTypeStr == "EnemyAIDiveAreaSensor") { fixtureType = FixtureType_EnemyAIDiveAreaSensor; }
     else if (fixtureTypeStr == "DamageAura") { fixtureType = FixtureType_DamageAura; }
     else if (fixtureTypeStr == "Trigger_SpawnArea") { fixtureType = FixtureType_Trigger_SpawnArea; }
+    else if (fixtureTypeStr == "Trigger_GabrielButton") { fixtureType = FixtureType_Trigger_GabrielButton; }
     else
     {
         assert(false && "Unknown body type");
@@ -390,7 +399,8 @@ DamageType StringToDamageTypeEnum(const std::string& str)
         { "DamageType_Explosion", DamageType_Explosion },
         { "DamageType_FireSword", DamageType_FireSword },
         { "DamageType_LightningSword", DamageType_LightningSword },
-        { "DamageType_FrostSword", DamageType_FrostSword }
+        { "DamageType_FrostSword", DamageType_FrostSword },
+        { "DamageType_GabrielCannonBall", DamageType_GabrielCannonBall }
     };
 
     auto findIt = s_StringToDamageTypeEnumMap.find(str);

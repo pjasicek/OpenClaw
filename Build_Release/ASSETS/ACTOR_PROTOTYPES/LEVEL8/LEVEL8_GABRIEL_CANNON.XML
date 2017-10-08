@@ -1,0 +1,50 @@
+<Actor Type="Level8_GabrielCannon" ActorPrototypeName="ActorPrototype_Level8_GabrielCannon">
+    <PositionComponent>
+        <Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
+    </PositionComponent>
+    <ActorRenderComponent>
+        <Visible>true</Visible>
+        <Mirrored>true</Mirrored>
+        <Inverted>false</Inverted>
+        <ZCoord>1000</ZCoord>
+        <ImagePath>/LEVEL8/IMAGES/GABRIELCANNON/*.PID</ImagePath>
+        <Palette>/LEVEL8/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL8/ANIS/GABRIELCANNON/*.ANI</AnimationPath>
+        <PauseOnStart>true</PauseOnStart>
+    </AnimationComponent>
+    <GabrielCannonComponent>
+        <HorizontalFireAnim>horzfire</HorizontalFireAnim>
+        <VerticalFireAnim>vertifire</VerticalFireAnim>
+        <ToVerticalAnim>rise</ToVerticalAnim>
+        <ToHorizontalAnim>rest</ToHorizontalAnim>
+        <IdleAnim>home</IdleAnim>
+        <CannonRiseSound>/LEVEL8/SOUNDS/GABRIELCANNON/CANNONRISE.WAV</CannonRiseSound>
+        <CannonDropSound>/LEVEL8/SOUNDS/GABRIELCANNON/CANNONDROP.WAV</CannonDropSound>
+        <HorizontalFireAnimIdx>0</HorizontalFireAnimIdx>
+        <VerticalFireAnimIdx>0</VerticalFireAnimIdx>
+    </GabrielCannonComponent>
+    <PhysicsComponent>
+        <BodyType>Static</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>Ground</FixtureType>
+        <PositionOffset x="0" y="-20" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="100" height="40" />
+        <GravityScale>1.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>1</CollisionFlag>
+        <CollisionMask>4294967293</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+        <ClampToGround>true</ClampToGround>
+    </PhysicsComponent>
+</Actor>

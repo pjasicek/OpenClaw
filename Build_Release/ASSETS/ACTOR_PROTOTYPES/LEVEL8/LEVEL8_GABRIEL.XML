@@ -1,0 +1,134 @@
+<Actor Type="Level8_Gabriel" ActorPrototypeName="ActorPrototype_Level8_Gabriel">
+    <PositionComponent>
+        <Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
+    </PositionComponent>
+    <ActorRenderComponent>
+        <Visible>true</Visible>
+        <Mirrored>false</Mirrored>
+        <Inverted>false</Inverted>
+        <ZCoord>2000</ZCoord>
+        <ImagePath>/LEVEL8/IMAGES/GABRIEL/*.PID</ImagePath>
+        <Palette>/LEVEL8/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL8/ANIS/GABRIEL/*.ANI</AnimationPath>
+    </AnimationComponent>
+    <TriggerComponent>
+        <TriggerFinitedTimes>1000</TriggerFinitedTimes>
+    </TriggerComponent>
+    <HealthComponent>
+        <Health>150</Health>
+        <MaxHealth>150</MaxHealth>
+    </HealthComponent>
+    <LootComponent>
+        <LootSoundChance>100</LootSoundChance>
+    </LootComponent>
+    <EnemyAIComponent>
+        <DeathAnimation>killfall1</DeathAnimation>
+        <Sounds>
+            <Sound SoundType="TakeDamage" SoundName="/LEVEL8/SOUNDS/GABRIEL/00400023.WAV" />
+            <Sound SoundType="Death" SoundName="/LEVEL8/SOUNDS/GABRIEL/00400009.WAV" />
+        </Sounds>
+    </EnemyAIComponent>
+    <GabrielAIStateComponent>
+        <StatePriority>50</StatePriority>
+        <BossDialogAnimation>idle2</BossDialogAnimation>
+        <IdleAnim>idle1</IdleAnim>
+        <ThrowBombAnim>strike7</ThrowBombAnim>
+        <FireCannonAnim>strike3</FireCannonAnim>
+        <SpawnPirateAnim>strike2</SpawnPirateAnim>
+        <ThrowBombAnimFrameIdx>0</ThrowBombAnimFrameIdx>
+        <FireCannonAnimFrameIdx>0</FireCannonAnimFrameIdx>
+        <NumThrownBombs>0</NumThrownBombs>
+        <NumSpawnedPirates>0</NumSpawnedPirates>
+        <BombDamage>0</BombDamage>
+        <ActionMinInterval>2500</ActionMinInterval>
+        <ActionMaxInterval>5500</ActionMaxInterval>
+        <ThrowBombSound>/LEVEL8/SOUNDS/GABRIEL/00400028.WAV</ThrowBombSound>
+        <ThrowBombSound>/LEVEL8/SOUNDS/GABRIEL/00400029.WAV</ThrowBombSound>
+        <SummonPirateSound>/LEVEL8/SOUNDS/GABRIEL/00400022.WAV</SummonPirateSound>
+        <SummonPirateSound>/LEVEL8/SOUNDS/GABRIEL/00400012.WAV</SummonPirateSound>
+        <SummonPirateSound>/LEVEL8/SOUNDS/GABRIEL/00400011.WAV</SummonPirateSound>
+        <FireCannonSound>/LEVEL8/SOUNDS/GABRIEL/00400014.WAV</FireCannonSound>
+        <FireCannonSound>/LEVEL8/SOUNDS/GABRIEL/00400015.WAV</FireCannonSound>
+    </GabrielAIStateComponent>
+    <TakeDamageAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <TakeDamageAnimation>hitlow</TakeDamageAnimation>
+        <InvulnerabilityTime>0</InvulnerabilityTime>
+    </TakeDamageAIStateComponent>
+    <ParryEnemyAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <ParryChances>
+            <ParryChance DamageType="DamageType_Bullet" Chance="100" />
+            <ParryChance DamageType="DamageType_Magic" Chance="100" />
+            <ParryChance DamageType="DamageType_Explosion" Chance="100" />
+            <ParryChance DamageType="DamageType_MeleeAttack" Chance="100" />
+        </ParryChances>
+        <ParrySounds>
+            <ParrySound>/LEVEL8/SOUNDS/GABRIEL/00400030.WAV</ParrySound>
+        </ParrySounds>
+        <ParryAnimFrameIdx>0</ParryAnimFrameIdx>
+        <ParryAnimation>blocked</ParryAnimation>
+    </ParryEnemyAIStateComponent>
+    <FollowableComponent>
+        <Offset x="-5" y="-92" />
+        <ImageSet>/GAME/IMAGES/EXCLAMATION/*</ImageSet>
+        <AnimationPath></AnimationPath>
+    </FollowableComponent>
+    <PhysicsComponent>
+        <BodyType>Dynamic</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>true</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>EnemyAI</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="50" height="100" />
+        <GravityScale>1.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>4</CollisionFlag>
+        <CollisionMask>1793</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+        <ClampToGround>true</ClampToGround>
+        <ActorFixture>
+            <FixtureType>EnemyAI</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>true</IsSensor>
+            <!-- OVERRIDEN IN PROTOTYPE -->
+            <Size width="0" height="0" />
+            <Offset x="0" y="0" />
+            <CollisionFlag>4</CollisionFlag>
+            <CollisionMask>66618</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>0.000000</Restitution>
+        </ActorFixture>
+    </PhysicsComponent>
+    <DamageAuraComponent>
+        <IsPulsating>true</IsPulsating>
+        <IsGroupPulse>false</IsGroupPulse>
+        <ApplyAuraOnEnter>true</ApplyAuraOnEnter>
+        <RemoveActorAfterPulse>false</RemoveActorAfterPulse>
+        <PulseInterval>2000</PulseInterval>
+        <ActorFixture>
+            <FixtureType>DamageAura</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>true</IsSensor>
+            <Size width="40" height="50" />
+            <Offset x="0" y="0" />
+            <CollisionFlag>262144</CollisionFlag>
+            <CollisionMask>1048578</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>0.000000</Restitution>
+        </ActorFixture>
+        <Damage>10</Damage>
+    </DamageAuraComponent>
+</Actor>

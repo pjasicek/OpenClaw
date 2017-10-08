@@ -720,6 +720,18 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             wwdObject->userValue1,
             wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR);
     }
+    else if (logic.find("CannonButton") != std::string::npos)
+    {
+        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level8_GabrielButton, actorPosition);
+    }
+    else if (logic.find("GabrielCannon") != std::string::npos)
+    {
+        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level8_GabrielCannon, actorPosition);
+    }
+    else if (logic.find("Gabriel") != std::string::npos)
+    {
+        return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level8_Gabriel, actorPosition);
+    }
     else if (logic.find("Rat") != std::string::npos)
     {
         //pActorElem->LinkEndChild(RatToXml(wwdObject));

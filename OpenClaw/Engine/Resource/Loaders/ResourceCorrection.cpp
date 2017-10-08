@@ -54,6 +54,7 @@ void OnPidLoaded(const char* resource, WapPid* pPid)
     {
         pPid->offsetY = 0;
     }
+    
 }
 
 void OnAniLoaded(const char* resource, WapAni* pAni)
@@ -79,5 +80,17 @@ void OnAniLoaded(const char* resource, WapAni* pAni)
     {
         pAni->animationFrames[1].duration = 100;
         pAni->animationFrames[2].duration = 200;
+    }
+    else if (resourceName.find("/level8/anis/gabrielcannon") != std::string::npos)
+    {
+        int factor = 4;
+        if (resourceName == "/level8/anis/gabrielcannon/horzifire.ani")
+        {
+            factor = 8;
+        }
+        for (int idx = 0; idx < pAni->animationFramesCount; idx++)
+        {
+            pAni->animationFrames[idx].duration *= factor;
+        }
     }
 }

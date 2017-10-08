@@ -1,0 +1,45 @@
+<Actor Type="Level8_GabrielButton" ActorPrototypeName="ActorPrototype_Level8_GabrielButton">
+    <PositionComponent>
+        <Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
+    </PositionComponent>
+    <ActorRenderComponent>
+        <Visible>true</Visible>
+        <Mirrored>true</Mirrored>
+        <Inverted>false</Inverted>
+        <ZCoord>1000</ZCoord>
+        <ImagePath>/LEVEL8/IMAGES/CANNONBUTTON/*.PID</ImagePath>
+        <Palette>/LEVEL8/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL8/ANIS/CANNONBUTTON/*.ANI</AnimationPath>
+    </AnimationComponent>
+    <TriggerComponent>
+    </TriggerComponent>
+    <GabrielCannonButtonComponent>
+        <BlinkingAnim>idle</BlinkingAnim>
+        <PressedImageName>frame002</PressedImageName>
+        <ButtonPressSound>/LEVEL8/SOUNDS/GABRIELCANNON/BUTTON1.WAV</ButtonPressSound>
+    </GabrielCannonButtonComponent>
+    <PhysicsComponent>
+        <BodyType>Static</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>true</HasSensorBehaviour>
+        <FixtureType>Trigger_GabrielButton</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="0" height="0" />
+        <GravityScale>1.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>4</CollisionFlag>
+        <CollisionMask>65536</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+        <ClampToGround>true</ClampToGround>
+    </PhysicsComponent>
+</Actor>

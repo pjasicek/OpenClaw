@@ -90,6 +90,8 @@ public:
 
     StrongActorPtr GetClawActor();
 
+    StrongActorPtr FindActorByName(const std::string& name, bool bIsUnique);
+
 protected:
     virtual ActorFactory* VCreateActorFactory();
 
@@ -105,6 +107,7 @@ protected:
     void ActorEnteredBossAreaDelegate(IEventDataPtr pEventData);
     void BossFightStartedDelegate(IEventDataPtr pEventData);
     void IngameMenuEndLifeDelegate(IEventDataPtr pEventData);
+    void WorldFinishedLoadingDelegate(IEventDataPtr pEventData);
 
     uint32 m_Lifetime;
     ProcessMgr* m_pProcessMgr;

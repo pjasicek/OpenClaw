@@ -2683,4 +2683,23 @@ public:
     virtual const char* GetName(void) const { return "EventData_IngameMenu_End_Game"; }
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+// EventData_World_Finished_Loading
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_World_Finished_Loading : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_World_Finished_Loading() { }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_World_Finished_Loading());
+    }
+
+    virtual const char* GetName(void) const { return "EventData_World_Finished_Loading"; }
+};
+
 #endif

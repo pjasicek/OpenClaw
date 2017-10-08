@@ -84,9 +84,31 @@ public:
         }
     }
 
+    template <class ComponentType>
+    ComponentType* GetRawComponent(bool bAssertNotNull = false)
+    {
+        uint32 id = ActorComponent::GetIdFromName(ComponentType::g_Name);
+        ActorComponentsMap::iterator findIter = _components.find(id);
+        if (findIter != _components.end())
+        {
+            StrongActorComponentPtr base(findIter->second);
+            shared_ptr<ComponentType> sub(static_pointer_cast<ComponentType>(base));  // cast to subclass version of the pointer
+            return sub.get();
+        }
+        
+        if (bAssertNotNull)
+        {
+            LOG_ASSERT("Failed to get component from actor: " + GetName());
+        }
+
+        return NULL;
+    }
+
     const ActorComponentsMap* GetComponents() { return &_components; }
 
     void AddComponent(StrongActorComponentPtr pComponent);
+
+    void OnWorldFinishedLoading();
 
     //=========================================================================
     // Some components are accessed REALLY often so it makes sense to just

@@ -46,6 +46,7 @@ public:
     void Update(uint32 msDiff);
     void Reset();
     void SetNextFrame();
+    void SetAnimationFrame(int idx) { assert(idx < (int)_animationFrames.size()); _currentAnimationFrame = _animationFrames[idx]; }
 
     void Pause() { _paused = true; }
     void Resume() { _paused = false; }
