@@ -2,7 +2,7 @@
 #include "MainLoop.h"
 #include <fstream>
 
-#if defined __LINUX__ && __LINUX__ == 1
+#if !(defined(__ANDROID__) || defined(__WINDOWS__))
 #include <pwd.h>
 #include <unistd.h>
 #endif
@@ -16,9 +16,11 @@ int RunGameEngine(int argc, char** argv)
 
     std::string userDirectory = "";
 
-#if defined __ANDROID__ && __ANDROID__ == 1
+#if defined(__ANDROID__)
     userDirectory = "/sdcard/claw/";
-#elif defined __LINUX__ && __LINUX__ == 1
+#elif defined(__WINDOWS__)
+    userDirectory = "";
+#else
     const char* homedir;
 
     if ((homedir = getenv("HOME")) == NULL) 
@@ -29,8 +31,6 @@ int RunGameEngine(int argc, char** argv)
 
     userDirectory = std::string(homedir) + "/.config/openclaw/";
 
-#elif defined __WINDOWS__ && _WINDOWS__ == 1
-    configDir = "";
 #endif
 
     LOG("Looking for: " + userDirectory + "config.xml");
