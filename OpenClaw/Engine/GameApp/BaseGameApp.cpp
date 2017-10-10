@@ -622,9 +622,9 @@ bool BaseGameApp::InitializeDisplay(GameOptions& gameOptions)
 {
     LOG(">>>>> Initializing display...");
 
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+    if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO) != 0)
     {
-        LOG_ERROR("Failed to initialize SDL2 library");
+        LOG_ERROR("Failed to initialize SDL2 library. Error: %s" + std::string(SDL_GetError()));
         return false;
     }
 
