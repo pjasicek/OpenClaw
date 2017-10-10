@@ -376,6 +376,7 @@ FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
     else if (fixtureTypeStr == "DamageAura") { fixtureType = FixtureType_DamageAura; }
     else if (fixtureTypeStr == "Trigger_SpawnArea") { fixtureType = FixtureType_Trigger_SpawnArea; }
     else if (fixtureTypeStr == "Trigger_GabrielButton") { fixtureType = FixtureType_Trigger_GabrielButton; }
+    else if (fixtureTypeStr == "Trigger_ChaseEnemyAreaSensor") { fixtureType = FixtureType_Trigger_ChaseEnemyAreaSensor; }
     else
     {
         assert(false && "Unknown body type");

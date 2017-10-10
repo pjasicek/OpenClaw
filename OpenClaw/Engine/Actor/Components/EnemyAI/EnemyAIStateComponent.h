@@ -5,6 +5,7 @@
 #include "../../ActorComponent.h"
 #include "../AnimationComponent.h"
 #include "../ControllerComponents/HealthComponent.h"
+#include "../TriggerComponents/TriggerComponent.h"
 
 enum EnemyAIState
 {
@@ -91,6 +92,8 @@ public:
     virtual int VGetPriority() { return m_StatePriority; }
 
 protected:
+    bool IsActorWithinLOS(Actor* pActor);
+
     bool m_IsActive;
     int m_StatePriority;
 
@@ -167,7 +170,7 @@ private:
 // PatrolEnemyAIStateComponent
 //=====================================================================================================================
 typedef std::map<std::string, EnemyAIAction> EnemyActionMap;
-class PatrolEnemyAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver
+class PatrolEnemyAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver, public TriggerObserver
 {
 public:
     PatrolEnemyAIStateComponent();
@@ -191,15 +194,24 @@ public:
     // AnimationObserver API
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
 
+    // TriggerObserver API
+    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType) override;
+    virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType) override;
+
 private:
     void CalculatePatrolBorders();
     double FindClosestHole(Point center, int height, float maxSearchDistance);
     void ChangeDirection(Direction newDirection);
     void CommenceIdleBehaviour();
+    bool TryChaseEnemy();
 
     bool m_bInitialized;
     bool m_bRetainDirection;
     bool m_bRecalculatePatrolBorders;
+
+    bool m_bChaseEnemy;
+    ActorFixtureDef m_ChaseEnemySensorFixtureDef;
+    ActorList m_ChasedActorsList;
 
     int m_LeftPatrolBorder;
     int m_RightPatrolBorder;

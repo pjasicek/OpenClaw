@@ -5,5 +5,22 @@
     <PatrolEnemyAIStateComponent>
         <LeftPatrolBorder>42550</LeftPatrolBorder>
         <RightPatrolBorder>43200</RightPatrolBorder>
+        <ChaseEnemyBehaviour>true</ChaseEnemyBehaviour>
+        <ChaseEnemySensorFixture>
+            <FixtureType>Trigger_ChaseEnemyAreaSensor</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>true</IsSensor>
+            <Size width="1800" height="50" />
+            <Offset x="0" y="0" />
+            <CollisionFlag>4</CollisionFlag>
+            <CollisionMask>2</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>-1.#QNAN0</Restitution>
+        </ChaseEnemySensorFixture>
     </PatrolEnemyAIStateComponent>
+    <FallAIStateComponent>
+        <StatePriority>100</StatePriority>
+        <FallAnimation>home</FallAnimation>
+    </FallAIStateComponent>
 </Actor>

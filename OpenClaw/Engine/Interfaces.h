@@ -122,6 +122,7 @@ enum FixtureType
     FixtureType_RopeSensor,
     FixtureType_Trigger_SpawnArea,
     FixtureType_Trigger_GabrielButton,
+    FixtureType_Trigger_ChaseEnemyAreaSensor,
     FixtureType_Max,
 };
 

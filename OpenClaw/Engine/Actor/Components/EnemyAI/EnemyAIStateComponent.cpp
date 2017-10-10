@@ -138,6 +138,31 @@ void BaseEnemyAIStateComponent::VPostInit()
     m_pEnemyAIComponent->RegisterState(m_StateName, this);
 }
 
+bool BaseEnemyAIStateComponent::IsActorWithinLOS(Actor* pActor)
+{
+    static const double thresholdY = 50.0;
+
+    Point fromPoint = m_pOwner->GetPositionComponent()->GetPosition();
+    Point toPoint = pActor->GetPositionComponent()->GetPosition();
+
+    if (abs(fromPoint.y - toPoint.y) > thresholdY)
+    {
+        return false;
+    }
+
+    RaycastResult raycastResult = g_pApp->GetGameLogic()->VGetGamePhysics()->VRayCast(
+        fromPoint,
+        toPoint,
+        CollisionFlag_Solid);
+    if (raycastResult.foundIntersection)
+    {
+        // Vision is obstructed
+        return false;
+    }
+
+    return true;
+}
+
 //=====================================================================================================================
 // TakingDamageAIStateComponent
 //=====================================================================================================================
@@ -230,6 +255,11 @@ void FallAIStateComponent::VUpdate(uint32 msDiff)
     // I need to constantly check if this unit is in air to be able to force
     // state transition as soon as it is in air
 
+    if (m_bAlreadyFell)
+    {
+        return;
+    }
+
     bool bInAir = fabs(m_pPhysicsComponent->GetVelocity().y) > DBL_EPSILON;
     if (!m_IsActive && bInAir)
     {
@@ -295,7 +325,8 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     m_IsAlwaysIdle(false),
     m_IdleSpeechSoundMaxDistance(0),
     m_IdleSpeechSoundPlayChance(0),
-    m_bRecalculatePatrolBorders(true)
+    m_bRecalculatePatrolBorders(true),
+    m_bChaseEnemy(false)
 {
 
 }
@@ -359,6 +390,11 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     ParseValueFromXmlElem(&m_IsAlwaysIdle, pData->FirstChildElement("IsAlwaysIdle"));
     ParseValueFromXmlElem(&m_bRecalculatePatrolBorders, pData->FirstChildElement("RecalculatePatrolBorders"));
 
+    if (ParseValueFromXmlElem(&m_bChaseEnemy, pData->FirstChildElement("ChaseEnemyBehaviour")))
+    {
+        m_ChaseEnemySensorFixtureDef = ActorTemplates::XmlToActorFixtureDef(pData->FirstChildElement("ChaseEnemySensorFixture"));
+    }
+
     if (TiXmlElement* pElem = pData->FirstChildElement("IdleSpeech"))
     {
         for (TiXmlElement* pSoundElem = pElem->FirstChildElement("IdleSpeechSound");
@@ -408,6 +444,12 @@ void PatrolEnemyAIStateComponent::VPostPostInit()
         CalculatePatrolBorders();
     }
 
+    if (m_bChaseEnemy)
+    {
+        m_pPhysics->VAddActorFixtureToBody(m_pOwner->GetGUID(), &m_ChaseEnemySensorFixtureDef);
+        m_pOwner->GetRawComponent<TriggerComponent>(true)->AddObserver(this);
+    }
+
     m_bInitialized = true;
 }
 
@@ -429,6 +471,11 @@ void PatrolEnemyAIStateComponent::VUpdate(uint32 msDiff)
         return;
     }
 
+    if (m_bChaseEnemy && !m_ChasedActorsList.empty())
+    {
+        TryChaseEnemy();
+    }
+
     // Only makes sense to check for stuff when walking
     if (m_pWalkAction->isActive)
     {
@@ -448,6 +495,7 @@ void PatrolEnemyAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPrev
 {
     m_IsActive = true;
     //CommenceIdleBehaviour();
+    TryChaseEnemy();
     ChangeDirection(m_Direction);
 }
 
@@ -660,6 +708,66 @@ void PatrolEnemyAIStateComponent::CommenceIdleBehaviour()
     else
     {
         ChangeDirection(ToOppositeDirection(m_Direction));
+    }
+}
+
+bool PatrolEnemyAIStateComponent::TryChaseEnemy()
+{
+    if (!m_IsActive || !m_bChaseEnemy || m_ChasedActorsList.empty())
+    {
+        return false;
+    }
+
+    // Just pick the first one, it can only be Claw
+    Actor* pChasedActor = m_ChasedActorsList[0];
+    
+
+    if (IsActorWithinLOS(pChasedActor))
+    {
+        double diffX = m_pPositionComponent->GetX() - pChasedActor->GetPositionComponent()->GetX();
+        Direction chaseDirection = Direction_Right;
+        if (diffX > DBL_EPSILON)
+        {
+            chaseDirection = Direction_Left;
+        }
+
+        ChangeDirection(chaseDirection);
+
+        return true;
+    }
+
+    return false;
+}
+
+void PatrolEnemyAIStateComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType)
+{
+    if (triggerType != FixtureType_Trigger_ChaseEnemyAreaSensor || pActorWhoEntered->GetName() != "Claw")
+    {
+        return;
+    }
+
+    m_ChasedActorsList.push_back(pActorWhoEntered);
+    
+    if (m_ChasedActorsList.size() == 1 && m_IsActive)
+    {
+        TryChaseEnemy();
+    }
+}
+
+void PatrolEnemyAIStateComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
+{
+    if (triggerType != FixtureType_Trigger_ChaseEnemyAreaSensor || pActorWhoLeft->GetName() != "Claw")
+    {
+        return; 
+    }
+
+    for (auto iter = m_ChasedActorsList.begin(); iter != m_ChasedActorsList.end(); ++iter)
+    {
+        if ((*iter) == pActorWhoLeft)
+        {
+            m_ChasedActorsList.erase(iter);
+            return;
+        }
     }
 }
 
