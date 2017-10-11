@@ -306,6 +306,14 @@ namespace ClawLevelUtil
             { { 7, 394 }, Point(0, 8) },
 
             // Level 8
+            { { 8, 62 }, Point(0, 0) },
+            { { 8, 534 }, Point(0, -30) },
+            { { 8, 535 }, Point(0, 0) },
+            { { 8, 536 }, Point(0, 44) },
+            { { 8, 540 }, Point(0, 20) },
+            { { 8, 543 }, Point(0, 0) },
+            { { 8, 548 }, Point(0, 39) },
+            { { 8, 583 }, Point(0, 0) },
         };
 
         auto key = std::make_pair(levelNumber, tileId);
