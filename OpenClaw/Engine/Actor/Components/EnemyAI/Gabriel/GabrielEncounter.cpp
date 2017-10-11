@@ -210,19 +210,15 @@ void GabrielAIStateComponent::VUpdate(uint32 msDiff)
             {
                 m_pAnimationComponent->SetAnimation(m_ThrowBombAnim);
                 playedSound = Util::PlayRandomSoundFromList(m_ThrowBombSoundList);
-
-                LOG("Should Throw Bomb(s)");
                 break;
             }
 
             case GabrielActionType_SummonPirate:
                 m_pAnimationComponent->SetAnimation(m_SpawnPirateAnim);
                 playedSound = Util::PlayRandomSoundFromList(m_SpawnPirateSoundList);
-
                 
                 ActorTemplates::CreateActor(ActorPrototype_Level8_GabrielPirate, pirateSpawnPos);
 
-                LOG("Should Summon Pirate(s)");
                 break;
 
             case GabrielActionType_FireCannon:
@@ -233,7 +229,6 @@ void GabrielAIStateComponent::VUpdate(uint32 msDiff)
 
                 m_pAnimationComponent->SetAnimation(m_FireCannonAnim);
                 playedSound = Util::PlayRandomSoundFromList(m_FireCannonSoundList);
-                LOG("Should Fire Cannon");
                 break;
 
             default:
@@ -271,6 +266,13 @@ void GabrielAIStateComponent::VOnBossFightEnded(bool isBossDead)
         SoundInfo soundInfo(SOUND_GAME_AMULET_RISE);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
+
+        StrongActorPtr pGem = ActorTemplates::CreateActor(
+            ActorPrototype_Level8_BossGem,
+            m_pOwner->GetPositionComponent()->GetPosition());
+
+        Point gemForce(-3.5, -7);
+        g_pApp->GetGameLogic()->VGetGamePhysics()->VApplyLinearImpulse(pGem->GetGUID(), gemForce);
     }
     else
     {
@@ -516,7 +518,7 @@ void GabrielCannonComponent::Fire()
         m_pCannonButton->Reset();
 
         int currHealth = m_pGabrielHealthComponent->GetCurrentHealth();
-        m_pGabrielHealthComponent->SetCurrentHealth(currHealth - 30);
+        m_pGabrielHealthComponent->SetCurrentHealth(currHealth - 25);
 
         Util::PlaySimpleSound("/LEVEL8/SOUNDS/GABRIELCANNON/CANNON.WAV");
     }

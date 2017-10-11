@@ -17,8 +17,8 @@
         <TriggerFinitedTimes>1000</TriggerFinitedTimes>
     </TriggerComponent>
     <HealthComponent>
-        <Health>150</Health>
-        <MaxHealth>150</MaxHealth>
+        <Health>100</Health>
+        <MaxHealth>100</MaxHealth>
     </HealthComponent>
     <LootComponent>
         <LootSoundChance>100</LootSoundChance>
@@ -42,8 +42,8 @@
         <NumThrownBombs>3</NumThrownBombs>
         <NumSpawnedPirates>1</NumSpawnedPirates>
         <BombDamage>0</BombDamage>
-        <ActionMinInterval>2500</ActionMinInterval>
-        <ActionMaxInterval>5500</ActionMaxInterval>
+        <ActionMinInterval>2000</ActionMinInterval>
+        <ActionMaxInterval>3500</ActionMaxInterval>
         <ThrowBombSound>/LEVEL8/SOUNDS/GABRIEL/00400028.WAV</ThrowBombSound>
         <ThrowBombSound>/LEVEL8/SOUNDS/GABRIEL/00400029.WAV</ThrowBombSound>
         <SummonPirateSound>/LEVEL8/SOUNDS/GABRIEL/00400022.WAV</SummonPirateSound>

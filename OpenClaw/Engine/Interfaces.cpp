@@ -158,6 +158,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level8_Gabriel, "ActorPrototype_Level8_Gabriel" },
         { ActorPrototype_Level8_GabrielPirate, "ActorPrototype_Level8_GabrielPirate" },
         { ActorPrototype_Level8_GabrielBomb, "ActorPrototype_Level8_GabrielBomb" },
+        { ActorPrototype_Level8_BossGem, "ActorPrototype_Level8_BossGem" },
 
         //=======================================
         // Menu
@@ -330,6 +331,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level8_Gabriel", ActorPrototype_Level8_Gabriel },
         { "ActorPrototype_Level8_GabrielPirate", ActorPrototype_Level8_GabrielPirate },
         { "ActorPrototype_Level8_GabrielBomb", ActorPrototype_Level8_GabrielBomb },
+        { "ActorPrototype_Level8_BossGem", ActorPrototype_Level8_BossGem },
         
         //=======================================
         // Menu

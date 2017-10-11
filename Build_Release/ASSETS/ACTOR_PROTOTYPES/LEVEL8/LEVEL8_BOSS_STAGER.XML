@@ -4,5 +4,6 @@
         <BossDialogSound>/LEVEL8/SOUNDS/STAGING/ENEMY.WAV</BossDialogSound>
         <PopupTitleImageSet>/LEVEL8/IMAGES/BOSSNAME/*</PopupTitleImageSet>
         <PopupTitleSound>/LEVEL8/SOUNDS/DEFEAT.WAV</PopupTitleSound>
+        <BossDistance>180</BossDistance>
     </BossStagerTriggerComponent>
 </Actor>

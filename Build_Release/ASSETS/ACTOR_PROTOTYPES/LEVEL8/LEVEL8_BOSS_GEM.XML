@@ -1,0 +1,57 @@
+<Actor Type="Level8_BossGem" ActorPrototypeName="ActorPrototype_Level8_BossGem">
+    <PositionComponent>
+        <Position x="-1" y="-1" />
+    </PositionComponent>
+    <ActorRenderComponent>
+        <Visible>true</Visible>
+        <Mirrored>false</Mirrored>
+        <Inverted>false</Inverted>
+        <ZCoord>2000</ZCoord>
+        <ImagePath>/LEVEL8/IMAGES/GEM/*.PID</ImagePath>
+    </ActorRenderComponent>
+    <TriggerComponent>
+        <TriggerFinitedTimes>1</TriggerFinitedTimes>
+    </TriggerComponent>
+    <PhysicsComponent>
+        <BodyType>Dynamic</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>Pickup</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="0" height="0" />
+        <GravityScale>0.800000</GravityScale>
+        <HasInitialSpeed>true</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="-1" y="-2" />
+        <CollisionFlag>16384</CollisionFlag>
+        <CollisionMask>1792</CollisionMask>
+        <Friction>0.180000</Friction>
+        <Density>10.000000</Density>
+        <Restitution>0.500000</Restitution>
+        <PrefabType></PrefabType>
+        <ActorFixture>
+            <FixtureType>Trigger</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>true</IsSensor>
+            <Size width="0" height="0" />
+            <Offset x="0" y="0" />
+            <CollisionFlag>16384</CollisionFlag>
+            <CollisionMask>1048578</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>0.000000</Restitution>
+        </ActorFixture>
+    </PhysicsComponent>
+    <GlitterComponent>
+        <GlitterType>Glitter_Yellow</GlitterType>
+        <SpawnImmediate>false</SpawnImmediate>
+        <FollowOwner>true</FollowOwner>
+    </GlitterComponent>
+    <EndLevelPickupComponent>
+        <PickupType>31</PickupType>
+        <PickupSound>/GAME/SOUNDS/MAPPIECE.WAV</PickupSound>
+    </EndLevelPickupComponent>
+</Actor>
