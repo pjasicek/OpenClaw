@@ -315,7 +315,7 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     :
     m_LeftPatrolBorder(0),
     m_RightPatrolBorder(0),
-    m_Direction(Direction_Left),
+    m_Direction(Direction_Right),
     //m_pCurrentAction(NULL),
     BaseEnemyAIStateComponent("PatrolState"),
     m_bIsFlying(false),

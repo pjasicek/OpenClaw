@@ -105,6 +105,8 @@ private:
 
     int m_TimeSinceLastAction;
     int m_CurrActionDelay;
+
+    bool m_bShouldThrowBombs;
 };
 
 class GabrielCannonButtonComponent : public ActorComponent, public TriggerObserver
@@ -181,6 +183,7 @@ private:
 
     //-----------
     GabrielCannonButtonComponent* m_pCannonButton;
+    HealthComponent* m_pGabrielHealthComponent;
     AnimationComponent* m_pAnimationComponent;
     bool m_bQueuedRise;
     bool m_bActive;

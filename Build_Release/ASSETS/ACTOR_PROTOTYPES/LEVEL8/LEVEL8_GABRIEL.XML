@@ -37,10 +37,10 @@
         <ThrowBombAnim>strike7</ThrowBombAnim>
         <FireCannonAnim>strike3</FireCannonAnim>
         <SpawnPirateAnim>strike2</SpawnPirateAnim>
-        <ThrowBombAnimFrameIdx>0</ThrowBombAnimFrameIdx>
+        <ThrowBombAnimFrameIdx>2</ThrowBombAnimFrameIdx>
         <FireCannonAnimFrameIdx>0</FireCannonAnimFrameIdx>
-        <NumThrownBombs>0</NumThrownBombs>
-        <NumSpawnedPirates>0</NumSpawnedPirates>
+        <NumThrownBombs>3</NumThrownBombs>
+        <NumSpawnedPirates>1</NumSpawnedPirates>
         <BombDamage>0</BombDamage>
         <ActionMinInterval>2500</ActionMinInterval>
         <ActionMaxInterval>5500</ActionMaxInterval>

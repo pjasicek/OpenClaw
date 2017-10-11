@@ -30,7 +30,8 @@ GabrielAIStateComponent::GabrielAIStateComponent()
     m_ThrowBombAnimFrameIdx(0),
     m_FireCannonAnimFrameIdx(0),
     m_TimeSinceLastAction(0),
-    m_CurrActionDelay(0)
+    m_CurrActionDelay(0),
+    m_bShouldThrowBombs(false)
 {
 
 }
@@ -147,6 +148,36 @@ void GabrielAIStateComponent::VOnAnimationFrameChanged(Animation* pAnimation, An
     {
         return;
     }
+
+    if (pAnimation->GetName() == m_ThrowBombAnim && pNewFrame->idx == m_ThrowBombAnimFrameIdx)
+    {
+        static const SoundList s_BombFallSoundList =
+        {
+            "/LEVEL8/SOUNDS/GABRIELBOMB/BOMBWHISTLE1.WAV",
+            "/LEVEL8/SOUNDS/GABRIELBOMB/BOMBWHISTLE2.WAV",
+            "/LEVEL8/SOUNDS/GABRIELBOMB/BOMBWHISTLE3.WAV"
+        };
+
+        Util::PlayRandomSoundFromList(s_BombFallSoundList);
+
+        for (int i = 0; i < m_NumThrownBombs; i++)
+        {
+            StrongActorPtr pBomb = ActorTemplates::CreateActor_Projectile(
+            ActorPrototype_Level8_GabrielBomb,
+            m_pPositionComponent->GetPosition() + Point(-40, -40),
+            Direction_Left,
+            m_pOwner->GetGUID());
+
+            Point bombVelocity(-3 - (double)i*2, -7);
+            Point zeroSpeed(0, 0);
+            g_pApp->GetGameLogic()->VGetGamePhysics()->VSetLinearSpeed(pBomb->GetGUID(), zeroSpeed);
+            g_pApp->GetGameLogic()->VGetGamePhysics()->VApplyLinearImpulse(pBomb->GetGUID(), bombVelocity);
+        }
+    }
+    else if (pAnimation->GetName() == m_FireCannonAnim && pNewFrame->idx == m_FireCannonAnimFrameIdx)
+    {
+        m_pGabrielCannonComponent->Fire();
+    }
 }
 
 void GabrielAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
@@ -161,7 +192,7 @@ void GabrielAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
 
 void GabrielAIStateComponent::VUpdate(uint32 msDiff)
 {
-    static const Point pirateSpawnPos(42666, 5130);
+    static const Point pirateSpawnPos(42666, 5150);
 
     if (!m_IsActive || !m_bBossFightStarted)
     {
@@ -176,10 +207,13 @@ void GabrielAIStateComponent::VUpdate(uint32 msDiff)
         switch (action.actionType)
         {
             case GabrielActionType_ThrowBombs:
+            {
                 m_pAnimationComponent->SetAnimation(m_ThrowBombAnim);
                 playedSound = Util::PlayRandomSoundFromList(m_ThrowBombSoundList);
+
                 LOG("Should Throw Bomb(s)");
                 break;
+            }
 
             case GabrielActionType_SummonPirate:
                 m_pAnimationComponent->SetAnimation(m_SpawnPirateAnim);
@@ -192,17 +226,14 @@ void GabrielAIStateComponent::VUpdate(uint32 msDiff)
                 break;
 
             case GabrielActionType_FireCannon:
-                // !!!! Recursion !!! - alternative was goto
                 if (!m_pGabrielCannonComponent->IsReadyToFire())
                 {
-                    VUpdate(0);
-                }
+                    return;
+                };
 
                 m_pAnimationComponent->SetAnimation(m_FireCannonAnim);
                 playedSound = Util::PlayRandomSoundFromList(m_FireCannonSoundList);
                 LOG("Should Fire Cannon");
-
-                m_pGabrielCannonComponent->Fire();
                 break;
 
             default:
@@ -398,19 +429,22 @@ void GabrielCannonComponent::VOnWorldFinishedLoading()
     assert(pGabrielCannonButtonActor != nullptr);
 
     m_pCannonButton = pGabrielCannonButtonActor->GetRawComponent<GabrielCannonButtonComponent>(true);
+
+    StrongActorPtr pGabrielActor = g_pApp->GetGameLogic()->FindActorByName("Level8_Gabriel", true);
+    assert(pGabrielCannonButtonActor != nullptr);
+
+    m_pGabrielHealthComponent = pGabrielActor->GetRawComponent<HealthComponent>(true);
 }
 
 void GabrielCannonComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
 {
     if (pAnimation->GetName() == m_VerticalFireAnim && pNewFrame->idx == m_VerticalFireAnimIdx)
     {
-        m_pCannonButton->Reset();
-        LOG("Fire Vertical !")
+        
     }
     else if (pAnimation->GetName() == m_HorizontalFireAnim && pNewFrame->idx == m_HorizontalFireAnimIdx)
     {
-        m_pCannonButton->Reset();
-        LOG("Fire Horizontal !")
+        
     }
 }
 
@@ -466,10 +500,25 @@ void GabrielCannonComponent::Fire()
     if (currAnimName == m_IdleAnim)
     {
         m_pAnimationComponent->SetAnimation(m_HorizontalFireAnim);
+
+        m_pCannonButton->Reset();
+        ActorTemplates::CreateActor_Projectile(
+            ActorPrototype_Level8_CannonBall,
+            m_pOwner->GetPositionComponent()->GetPosition() + Point(-35, -12),
+            Direction_Left,
+            m_pOwner->GetGUID());
+
+        Util::PlaySimpleSound("/LEVEL8/SOUNDS/GABRIELCANNON/CANNON.WAV");
     }
     else if (currAnimName == m_ToVerticalAnim)
     {
         m_pAnimationComponent->SetAnimation(m_VerticalFireAnim);
+        m_pCannonButton->Reset();
+
+        int currHealth = m_pGabrielHealthComponent->GetCurrentHealth();
+        m_pGabrielHealthComponent->SetCurrentHealth(currHealth - 30);
+
+        Util::PlaySimpleSound("/LEVEL8/SOUNDS/GABRIELCANNON/CANNON.WAV");
     }
 }
 
