@@ -19,7 +19,7 @@ struct ConsoleConfig
 {
     ConsoleConfig()
     {
-        backgroundImagePath = "";
+        backgroundImagePath = "console02.tga";
         stretchBackgroundImage = true;
         widthRatio = 1.0;
         heightRatio = 0.5;
@@ -27,8 +27,8 @@ struct ConsoleConfig
         commandPromptOffsetY = 10;
         consoleAnimationSpeed = 0.65;
         fontColor = COLOR_WHITE;
-        fontPath = "";
-        fontHeight = 14;
+        fontPath = "clacon.ttf";
+        fontHeight = 20;
         leftOffset = 5;
         commandPrompt = "> ";
     }

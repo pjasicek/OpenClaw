@@ -24,6 +24,7 @@ ClawLauncher/bin/
 ClawLauncher/obj/
 Build_Release/OpenClaw_obj/
 OpenClaw/Debug/
+OpenClaw/config.h
 OpenClaw.opensdf
 OpenClaw.sdf
 Build_Release/vim.exe.stackdump
