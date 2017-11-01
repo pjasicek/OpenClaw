@@ -239,6 +239,12 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         tmpImageSet += ToStr(wwdObject->i) + ".PID";
     }
 
+    // SHOOTERS_PUFFDARTLEFT is screwed
+    if (levelNumber == 9)
+    {
+        std::replace(tmpImageSet.begin(), tmpImageSet.end(), '_', '/');
+    }
+
     XML_ADD_TEXT_ELEMENT("ImagePath", tmpImageSet.c_str(), actorRenderComponent);
 
     std::string aniPath;

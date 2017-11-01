@@ -218,7 +218,7 @@ void AnimationComponent::VPostInit()
 
     if (_animationMap.empty())
     {
-        LOG_ERROR("No animations in animation component. Offending actor: " + m_pOwner->GetName());
+        //LOG_ERROR("No animations in animation component. Offending actor: " + m_pOwner->GetName());
         //assert(false && "No animations in AnimationComponent at all !");
     }
 
