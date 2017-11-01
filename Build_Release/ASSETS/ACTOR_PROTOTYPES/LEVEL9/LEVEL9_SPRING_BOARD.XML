@@ -1,0 +1,19 @@
+<Actor Type="Level9_SpringBoard" Parent="ActorPrototype_BaseSpringBoard" ActorPrototypeName="ActorPrototype_Level9_SpringBoard">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL9/IMAGES/SPRINGBOX1/*.PID</ImagePath>
+	</ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL9/ANIS/SPRINGBOX/*.ANI</AnimationPath>
+	</AnimationComponent>
+	<SpringBoardComponent>
+        <SpringFrameIdx>1</SpringFrameIdx>
+        <SpringDelay>500</SpringDelay>
+        <IdleAnimName>idle</IdleAnimName>
+        <SpringAnimName>spring</SpringAnimName>
+        <SpringSound>/LEVEL9/SOUNDS/SPRINGBOX.WAV</SpringSound>
+	</SpringBoardComponent>
+    <PhysicsComponent>
+        <PositionOffset x="0" y="15" />
+        <CollisionSize width="65" height="70" />
+    </PhysicsComponent>
+</Actor>

@@ -177,11 +177,13 @@ struct DebugOptions
         bSkipBossFightIntro = false;
         bSkipMenu = false;
         lastImplementedLevel = 7;
+        skipMenuToLevel = 9;
     }
 
     int cpuDelayMs;
     bool bSkipMenu;
     int lastImplementedLevel;
+    int skipMenuToLevel;
     bool bSkipBossFightIntro;
 };
 

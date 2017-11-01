@@ -1,4 +1,5 @@
 #include "ClawLevelUtil.h"
+#include "../GameApp/BaseGameApp.h"
 #include "../GameApp/BaseGameLogic.h"
 
 namespace ClawLevelUtil
@@ -122,6 +123,14 @@ namespace ClawLevelUtil
             { { 8, "TogglePeg2" }, ActorPrototype_Level8_TogglePeg },
             { { 8, "TogglePeg3" }, ActorPrototype_Level8_TogglePeg },
             { { 8, "TogglePeg4" }, ActorPrototype_Level8_TogglePeg },
+
+            // Level 9
+            { { 9, "Elevator" }, ActorPrototype_BaseElevator },
+            { { 9, "OneWayTriggerElevator" }, ActorPrototype_BaseElevator },
+            { { 9, "OneWayStartElevator" }, ActorPrototype_BaseElevator },
+            { { 9, "PathElevator" }, ActorPrototype_BasePathElevator },
+            { { 9, "Seagull" }, ActorPrototype_Level9_Seagull },
+            { { 9, "SpringBoard" }, ActorPrototype_Level9_SpringBoard },
         };
 
         auto key = std::make_pair(levelNumber, logic);
@@ -219,7 +228,7 @@ namespace ClawLevelUtil
 
     shared_ptr<LevelData> GetDebugLoadLevelData()
     {
-        int debugLevelNumber = 8;
+        int debugLevelNumber = g_pApp->GetDebugOptions()->skipMenuToLevel;
 
         shared_ptr<LevelData> pLevelData(new LevelData(debugLevelNumber, false, 0));
         return pLevelData;

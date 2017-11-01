@@ -15,7 +15,7 @@ public:
     virtual bool VInit(TiXmlElement* pData) override;
     virtual void VPostInit() override;
 
-    virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return NULL; }
+    virtual void VUpdate(uint32 msDiff) override;
 
     void AddCarriedBody(b2Body* pBody);
     void RemoveCarriedBody(b2Body* pBody);

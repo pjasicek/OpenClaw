@@ -865,7 +865,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             pathElevatorDef.speed = 125;
         }
 
-        assert(pathElevatorDef.elevatorPath.size() > 2);
+        assert(pathElevatorDef.elevatorPath.size() >= 2);
 
         Point position(wwdObject->x, wwdObject->y);
 

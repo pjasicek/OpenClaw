@@ -431,6 +431,10 @@ enum ActorPrototype
     ActorPrototype_Level8_GabrielBomb,
     ActorPrototype_Level8_BossGem,
 
+    // Level 9
+    ActorPrototype_Level9_Seagull,
+    ActorPrototype_Level9_SpringBoard,
+
     ActorPrototype_Max
 };
 

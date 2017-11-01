@@ -571,6 +571,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pDebugOptionsRootElem->FirstChildElement("CpuDelay"));
         ParseValueFromXmlElem(&m_DebugOptions.lastImplementedLevel,
             pDebugOptionsRootElem->FirstChildElement("LastImplementedLevel"));
+        ParseValueFromXmlElem(&m_DebugOptions.skipMenuToLevel,
+            pDebugOptionsRootElem->FirstChildElement("SkipMenuToLevel"));
     }
 
     return true;

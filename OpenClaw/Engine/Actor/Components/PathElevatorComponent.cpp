@@ -28,7 +28,7 @@ bool PathElevatorComponent::VInit(TiXmlElement* pData)
     m_Properties.LoadFromXml(pData, true);
     
     assert(m_Properties.speed > DBL_EPSILON);
-    assert(m_Properties.elevatorPath.size() > 2);
+    assert(m_Properties.elevatorPath.size() >= 2);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     assert(m_pPhysics != nullptr);
@@ -61,14 +61,16 @@ void PathElevatorComponent::VPostInit()
     Point previousStepPosition = pPC->GetPosition();
     for (ElevatorStepDef& elevatorStep : m_Properties.elevatorPath)
     {
-        assert(elevatorStep.direction != Direction_None && "PathElevator waiting not supported at the moment");
+        //assert(elevatorStep.direction != Direction_None && "PathElevator waiting not supported at the moment");
+        if (elevatorStep.direction != Direction_None)
+        {
+            Point dirSpeed = CalculateSpeed(1.0, elevatorStep.direction);
+            Point deltaStep(dirSpeed.x * elevatorStep.stepDeltaDistance, dirSpeed.y * elevatorStep.stepDeltaDistance);
 
-        Point dirSpeed = CalculateSpeed(1.0, elevatorStep.direction);
-        Point deltaStep(dirSpeed.x * elevatorStep.stepDeltaDistance, dirSpeed.y * elevatorStep.stepDeltaDistance);
+            elevatorStep.destinationPosition = previousStepPosition + deltaStep;
 
-        elevatorStep.destinationPosition = previousStepPosition + deltaStep;
-
-        previousStepPosition = elevatorStep.destinationPosition;
+            previousStepPosition = elevatorStep.destinationPosition;
+        }
     }
 
     m_CurrentStepDef = m_Properties.elevatorPath[m_CurrentStepDefIdx];
@@ -78,6 +80,18 @@ void PathElevatorComponent::VPostInit()
 
     m_CurrentSpeed = CalculateSpeed(m_Properties.speed, m_CurrentStepDef.direction);
     m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), m_CurrentSpeed);
+}
+
+void PathElevatorComponent::VUpdate(uint32 msDiff)
+{
+    if (m_CurrentStepDef.isWaiting)
+    {
+        m_StepTime += msDiff;
+        if (m_StepTime >= m_CurrentStepDef.waitMsTime)
+        {
+            ChangeToNextStep();
+        }
+    }
 }
 
 Point PathElevatorComponent::CalculateSpeed(double speed, Direction dir)
@@ -94,10 +108,14 @@ Point PathElevatorComponent::CalculateSpeed(double speed, Direction dir)
         case Direction_Down_Left: calculatedSpeed.Set(-1.0 * speed, speed); break;
         case Direction_Left: calculatedSpeed.Set(-1.0 * speed, 0); break;
         case Direction_Up_Left: calculatedSpeed.Set(-1.0 * speed, -1.0 * speed); break;
+        case Direction_None: calculatedSpeed.Set(0.0, 0.0); break;
         default: assert(false);
     }
 
-    assert(!calculatedSpeed.IsZeroXY());
+    if (dir != Direction_None)
+    {
+        assert(!calculatedSpeed.IsZeroXY());
+    }
 
     return calculatedSpeed;
 }
@@ -114,8 +132,19 @@ void PathElevatorComponent::ChangeToNextStep()
     }
 
     m_CurrentStepDef = m_Properties.elevatorPath[m_CurrentStepDefIdx];
-    m_CurrentSpeed = CalculateSpeed(m_Properties.speed, m_CurrentStepDef.direction);
-    m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), m_CurrentSpeed);
+
+    if (m_CurrentStepDef.direction == Direction_None)
+    {
+        m_CurrentSpeed.Set(0.0, 0.0);
+        m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), m_CurrentSpeed);
+    }
+    else
+    {
+        m_CurrentSpeed = CalculateSpeed(m_Properties.speed, m_CurrentStepDef.direction);
+        m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), m_CurrentSpeed);
+    }
+
+    m_StepTime = 0;
     m_StepElapsedDistance = 0;
 }
 

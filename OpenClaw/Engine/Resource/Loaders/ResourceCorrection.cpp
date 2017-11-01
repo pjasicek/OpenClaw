@@ -81,6 +81,13 @@ void OnAniLoaded(const char* resource, WapAni* pAni)
         pAni->animationFrames[1].duration = 100;
         pAni->animationFrames[2].duration = 200;
     }
+    else if (resourceName == "/level9/anis/springbox/spring.ani")
+    {
+        pAni->animationFrames[0].imageFileId = 1;
+        pAni->animationFrames[1].duration = 100;
+        pAni->animationFrames[2].duration = 100;
+        pAni->animationFrames[3].duration = 100;
+    }
     else if (resourceName.find("/level8/anis/gabrielcannon") != std::string::npos)
     {
         int factor = 4;
