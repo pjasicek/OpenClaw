@@ -1780,6 +1780,19 @@ namespace ActorTemplates
         return pActorElem;
     }
 
+    TiXmlElement* CreateXmlData_Actor(ActorPrototype actorProto, std::vector<XmlNodeOverride>& overrides)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(actorProto);
+        assert(pActorElem != NULL);
+
+        for (XmlNodeOverride& xmlOverride : overrides)
+        {
+            xmlOverride.Apply(pActorElem);
+        }
+
+        return pActorElem;
+    }
+
     TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle, bool isMirrored)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(enemyType);
@@ -1926,6 +1939,22 @@ namespace ActorTemplates
 
             pActorSpawnerComponent->LinkEndChild(pActorSpawnInfoElem);
         }
+
+        return pActorElem;
+    }
+
+    TiXmlElement* CreateXmlData_ProjectileSpawner(ActorPrototype proto, const Point& position, Direction shootDir)
+    {
+        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
+        assert(pActorElem != NULL);
+
+        //----------- Position
+        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+            "x", (int)position.x, "y", (int)position.y));
+
+        //----------- ProjectileSpawnerComponent
+        assert(SetTiXmlNodeValue(pActorElem, "Actor.ProjectileSpawnerComponent.ProjectileDirection",
+            EnumToString_Direction(shootDir)));
 
         return pActorElem;
     }

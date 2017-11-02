@@ -131,6 +131,7 @@ namespace ClawLevelUtil
             { { 9, "PathElevator" }, ActorPrototype_BasePathElevator },
             { { 9, "Seagull" }, ActorPrototype_Level9_Seagull },
             { { 9, "SpringBoard" }, ActorPrototype_Level9_SpringBoard },
+            { { 9, "TProjectile" }, ActorPrototype_Level9_PuffDartSpawner },
         };
 
         auto key = std::make_pair(levelNumber, logic);

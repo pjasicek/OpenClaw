@@ -11,6 +11,7 @@
 Animation::Animation() :
     _name("Unknown"),
     _currentTime(0),
+    _delay(0),
     _paused(false),
     _reversed(false),
     _isBeingReversed(false),
@@ -197,6 +198,21 @@ void Animation::Update(uint32 msDiff)
         }
     }
 
+    if (_delay > 0)
+    {
+        _delay -= msDiff;
+        if (_delay > 0)
+        {
+            return;
+        }
+        else
+        {
+            m_pOwner->NotifyAnimationEndedDelay(this);
+            msDiff = abs(_delay);
+            _delay = 0;
+        }
+    }
+
     _currentTime += msDiff;
 
     int32 currentFrameDuration = _currentAnimationFrame.duration;
@@ -216,6 +232,7 @@ void Animation::Update(uint32 msDiff)
 void Animation::Reset()
 {
     _currentAnimationFrame = _animationFrames[0];
+    _delay = 0;
     _currentTime = 0;
     _paused = false;
 }

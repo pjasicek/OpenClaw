@@ -1,0 +1,24 @@
+<Actor Type="Level9_PuffDartSpawner" Parent="ActorPrototype_BaseProjectileSpawner" ActorPrototypeName="ActorPrototype_Level9_PuffDartSpawner">
+	<ActorRenderComponent>
+		<ImagePath>OVERRIDEN_IN_CODE</ImagePath>
+		<Palette>/LEVEL9/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<AnimationComponent>
+        <AnimationPath>/LEVEL9/ANIS/SHOOTERS/*.ANI</AnimationPath>
+    </AnimationComponent>
+	<ProjectileSpawnerComponent>
+        <IdleAnim>INVISIBLE</IdleAnim>
+        <FireAnim>OVERRIDEN_IN_CODE</FireAnim>
+        <IsAlwaysOn>false</IsAlwaysOn>
+        <StartSpawnDelay>0</StartSpawnDelay>
+        <MinSpawnDelay>1000</MinSpawnDelay>
+        <MaxSpawnDelay>1000</MaxSpawnDelay>
+        <TriggerAreaSize width="OVERRIDEN_IN_CODE" height="OVERRIDEN_IN_CODE" />
+        <TriggerAreaOffset x="OVERRIDEN_IN_CODE" y="OVERRIDEN_IN_CODE" />
+        <TriggerCollisionMask>2</TriggerCollisionMask>
+        <ProjectileSpawnAnimFrameIdx>1</ProjectileSpawnAnimFrameIdx>
+        <ProjectilePrototype>ActorPrototype_Level9_DartProjectile</ProjectilePrototype>
+        <ProjectileDirection>OVERRIDEN_IN_CODE</ProjectileDirection>
+        <ProjectileSpawnOffset x="-20" y="10" />
+    </ProjectileSpawnerComponent>
+</Actor>

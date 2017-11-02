@@ -6,6 +6,7 @@
 #include "TriggerComponents/TriggerComponent.h"
 #include "AnimationComponent.h"
 
+class ActorRenderComponent;
 class ProjectileSpawnerComponent : public ActorComponent, public TriggerObserver, public AnimationObserver
 {
 public:
@@ -28,15 +29,17 @@ public:
 
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
+    virtual void VOnAnimationEndedDelay(Animation* pAnimation) override;
 
 private:
     bool TryToFire();
-    bool IsFiring() { return m_pAnimationComponent->GetCurrentAnimationName() == m_Properties.fireAnim; }
+    bool IsFiring();
         
     ProjectileSpawnerDef m_Properties;
 
     int m_ActorsInTriggerArea;
     AnimationComponent* m_pAnimationComponent;
+    ActorRenderComponent* m_pARC;
 
     bool m_bReady;
     int m_StartDelayLeft;

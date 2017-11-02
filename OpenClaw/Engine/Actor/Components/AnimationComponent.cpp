@@ -456,6 +456,14 @@ void AnimationSubject::NotifyAnimationChanged(Animation* pOldAnimation, Animatio
     }
 }
 
+void AnimationSubject::NotifyAnimationEndedDelay(Animation* pOldAnimation)
+{
+    for (AnimationObserver* pSubject : m_AnimationObservers)
+    {
+        pSubject->VOnAnimationEndedDelay(pOldAnimation);
+    }
+}
+
 void AnimationSubject::AddObserver(AnimationObserver* pObserver)
 {
     m_AnimationObservers.push_back(pObserver);

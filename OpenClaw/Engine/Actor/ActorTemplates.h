@@ -36,10 +36,95 @@ struct DamageAuraComponentDef
 
 typedef std::map<std::string, std::string> ParamMap;
 
+class XmlNodeOverride
+{
+public:
+    XmlNodeOverride(const std::string& xmlNodePath)
+        :
+        m_XmlNodePath(xmlNodePath)
+    {
+
+    }
+
+    //
+    // Most commonly used
+    //
+
+    template <typename T>
+    XmlNodeOverride(const std::string& xmlNodePath, const T& nodeValue)
+        :
+        m_XmlNodePath(xmlNodePath)
+    {
+        m_NodeText = ToStr(nodeValue);
+    }
+
+    template <typename T>
+    XmlNodeOverride(const std::string& xmlNodePath, 
+        const std::string& key, const T& value)
+        :
+        m_XmlNodePath(xmlNodePath)
+    {
+        std::string valStr = ToStr(value);
+
+        m_ValueKeyToValueMap.insert(std::make_pair(key, valStr));
+    }
+
+    template <typename T>
+    XmlNodeOverride(const std::string& xmlNodePath, 
+        const std::string& key1, const T& value1,
+        const std::string& key2, const T& value2)
+        :
+        m_XmlNodePath(xmlNodePath)
+    {
+        std::string valStr1 = ToStr(value1);
+        std::string valStr2 = ToStr(value2);
+
+        m_ValueKeyToValueMap.insert(std::make_pair(key1, valStr1));
+        m_ValueKeyToValueMap.insert(std::make_pair(key2, valStr2));
+    }
+
+    template <typename T>
+    inline void SetNodeText(const T& nodeValue) { m_NodeText = ToStr(nodeValue); }
+
+    template <typename T>
+    inline void AddValue(const std::string& valueKey, const T& value)
+    {
+        std::string valStr = ToStr(value);
+
+        m_ValueKeyToValueMap.insert(std::make_pair(valueKey, valStr));
+    }
+
+    bool Apply(TiXmlElement* pRootElem)
+    {
+        bool bIsApplied = false;
+        if (!m_NodeText.empty())
+        {
+            assert(SetTiXmlNodeValue(pRootElem, m_XmlNodePath, m_NodeText));
+            bIsApplied = true;
+        }
+
+        for (const auto& keyValuePair : m_ValueKeyToValueMap)
+        {
+            assert(SetTiXmlNode1Attribute(pRootElem, m_XmlNodePath, keyValuePair.first, keyValuePair.second));
+            bIsApplied = true;
+        }
+
+        return bIsApplied;
+    }
+
+private:
+    XmlNodeOverride() { }
+
+    std::string m_XmlNodePath;
+    std::string m_NodeText;
+    std::map<std::string, std::string> m_ValueKeyToValueMap;
+};
+
 namespace ActorTemplates
 {
     // Actor prototypes
     TiXmlElement* CreateXmlData_Actor(ActorPrototype actorProto, Point position);
+    TiXmlElement* CreateXmlData_Actor(ActorPrototype actorProto, std::vector<XmlNodeOverride>& overrides);
     TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle, bool isMirrored);
     TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, Point position, const std::string& imagePath, const ElevatorDef& elevatorDef);
     TiXmlElement* CreateXmlData_TogglePegActor(ActorPrototype togglePegProto, Point position, const TogglePegDef& togglePegDef);
@@ -54,6 +139,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_CrumblingPeg(ActorPrototype proto, const Point& position, const std::string& imagePath, int crumbleDelay);
     TiXmlElement* CreateXmlData_LootContainer(ActorPrototype proto, const Point& position, const std::vector<PickupType>& loot, int zCoord);
     TiXmlElement* CreateXmlData_ActorSpawner(ActorPrototype proto, const Point& position, const Point& spawnOffset, const Point& spawnSize, const std::vector<ActorSpawnInfo>& spawnedActorList);
+    TiXmlElement* CreateXmlData_ProjectileSpawner(ActorPrototype proto, const Point& position, Direction shootDir);
 
     StrongActorPtr CreateActor(ActorPrototype proto, Point position);
     StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir, int sourceActorId);

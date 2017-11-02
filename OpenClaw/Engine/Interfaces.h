@@ -434,6 +434,8 @@ enum ActorPrototype
     // Level 9
     ActorPrototype_Level9_Seagull,
     ActorPrototype_Level9_SpringBoard,
+    ActorPrototype_Level9_PuffDartSpawner,
+    ActorPrototype_Level9_DartProjectile,
 
     ActorPrototype_Max
 };

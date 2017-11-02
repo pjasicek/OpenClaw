@@ -163,6 +163,8 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         // Level 9
         { ActorPrototype_Level9_Seagull, "ActorPrototype_Level9_Seagull" },
         { ActorPrototype_Level9_SpringBoard, "ActorPrototype_Level9_SpringBoard" },
+        { ActorPrototype_Level9_DartProjectile, "ActorPrototype_Level9_DartProjectile" },
+        { ActorPrototype_Level9_PuffDartSpawner, "ActorPrototype_Level9_PuffDartSpawner" },
 
         //=======================================
         // Menu
@@ -340,6 +342,8 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         // Level 9
         { "ActorPrototype_Level9_Seagull", ActorPrototype_Level9_Seagull },
         { "ActorPrototype_Level9_SpringBoard", ActorPrototype_Level9_SpringBoard },
+        { "ActorPrototype_Level9_DartProjectile", ActorPrototype_Level9_DartProjectile },
+        { "ActorPrototype_Level9_PuffDartSpawner", ActorPrototype_Level9_PuffDartSpawner },
         
         //=======================================
         // Menu

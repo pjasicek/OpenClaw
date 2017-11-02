@@ -19,6 +19,7 @@ public:
     void NotifyAnimationResumed(Animation* pAnimation);
     void NotifyAnimationAtLastFrame(Animation* pAnimation);
     void NotifyAnimationChanged(Animation* pOldAnimation, Animation* pNewAnimation);
+    void NotifyAnimationEndedDelay(Animation* pAnimation);
     void AddObserver(AnimationObserver* pObserver);
     void RemoveObserver(AnimationObserver* pObserver);
 
@@ -36,6 +37,7 @@ public:
     virtual void VOnAnimationResumed(Animation* pAnimation) { }
     virtual void VOnAnimationAtLastFrame(Animation* pAnimation) { }
     virtual void VOnAnimationChanged(Animation* pOldAnimation, Animation* pNewAnimation) { }
+    virtual void VOnAnimationEndedDelay(Animation* pAnimation) { }
 };
 
 struct SpecialAnimation

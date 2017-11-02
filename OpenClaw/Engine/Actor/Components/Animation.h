@@ -50,7 +50,7 @@ public:
 
     void Pause() { _paused = true; }
     void Resume() { _paused = false; }
-    void SetDelay(uint32 delay) { _currentTime -= delay; }
+    void SetDelay(uint32 delay) { _delay = delay; }
 
     void SetReverseAnim(bool reverse) { _reversed = reverse; }
 
@@ -75,6 +75,7 @@ private:
     std::string _name;
     AnimationFrame _currentAnimationFrame;
     int32 _currentTime;
+    int32 _delay;
     bool _paused;
     bool _reversed;
     bool _isBeingReversed;

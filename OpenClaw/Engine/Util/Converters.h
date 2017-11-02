@@ -239,7 +239,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         tmpImageSet += ToStr(wwdObject->i) + ".PID";
     }
 
-    // SHOOTERS_PUFFDARTLEFT is screwed
+    // Level 9 SHOOTERS_PUFFDARTLEFT is screwed
     if (levelNumber == 9)
     {
         std::replace(tmpImageSet.begin(), tmpImageSet.end(), '_', '/');
@@ -261,6 +261,16 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
     ActorPrototype actorProto = ClawLevelUtil::ActorLogicToActorPrototype(levelNumber, logic);
     const Point actorPosition = Point(wwdObject->x, wwdObject->y);
+
+    std::vector<XmlNodeOverride> xmlOverrideList;
+
+    // Defaults
+    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.ImagePath", tmpImageSet));
+    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.Visible", !(wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_NO_DRAW)));
+    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.Mirrored", wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR));
+    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.Inverted", wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_INVERT));
+    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.ZCoord", wwdObject->z));
+    xmlOverrideList.push_back(XmlNodeOverride("Actor.PositionComponent.Position", "x", actorPosition.x, "y", actorPosition.y));
 
     //LOG("Logic: " + logic);
     if (logic.find("AmbientSound") != std::string::npos)
@@ -806,6 +816,52 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         Point position(wwdObject->x, wwdObject->y);
         return ActorTemplates::CreateXmlData_Actor(actorProto, position);
+    }
+    else if (logic == "TProjectile")
+    {
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        Direction shootDir = Direction_None;
+        std::string shootAnim;
+        if (imageSet.find("UP") != std::string::npos)
+        {
+            shootDir = Direction_Up;
+            shootAnim = "puffdartup";
+        }
+        else if (imageSet.find("DOWN") != std::string::npos)
+        {
+            shootDir = Direction_Down;
+            shootAnim = "puffdartdown";
+        }
+        else if (imageSet.find("RIGHT") != std::string::npos)
+        {
+            shootDir = Direction_Right;
+            shootAnim = "puffdartright";
+        }
+        else if (imageSet.find("LEFT") != std::string::npos)
+        {
+            shootDir = Direction_Left;
+            shootAnim = "puffdartleft";
+        }
+
+        assert(shootDir != Direction_None);
+        assert(!shootAnim.empty());
+
+        Point triggerSize(wwdObject->maxX - wwdObject->minX, wwdObject->maxY - wwdObject->minY);
+        Point triggerAreaOffset(
+            ((wwdObject->maxX + wwdObject->minX) / 2) - actorPosition.x, 
+            ((wwdObject->maxY + wwdObject->minY) / 2) - actorPosition.y);
+
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.FireAnim", shootAnim));
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectileDirection", EnumToString_Direction(shootDir)));
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.TriggerAreaSize", "width", triggerSize.x, "height", triggerSize.y));
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.TriggerAreaOffset", "x", triggerAreaOffset.x, "y", triggerAreaOffset.y));
+        
+        return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
     }
     else if (logic == "BossStager")
     {

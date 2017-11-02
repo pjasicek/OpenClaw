@@ -3,6 +3,7 @@
 #include "../../GameApp/BaseGameLogic.h"
 #include "PositionComponent.h"
 #include "../../UserInterface/HumanView.h"
+#include "RenderComponent.h"
 
 const char* ProjectileSpawnerComponent::g_Name = "ProjectileSpawnerComponent";
 
@@ -40,9 +41,18 @@ void ProjectileSpawnerComponent::VPostInit()
 {
     m_pAnimationComponent = 
         MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>()).get();
+    m_pARC = m_pOwner->GetRawComponent<ActorRenderComponent>(true);
     assert(m_pAnimationComponent != NULL);
 
-    m_pAnimationComponent->SetAnimation(m_Properties.idleAnim);
+    if (m_Properties.idleAnim == "INVISIBLE")
+    {
+        m_pARC->SetVisible(false);
+        m_pAnimationComponent->PauseAnimation();
+    }
+    else
+    {
+        m_pAnimationComponent->SetAnimation(m_Properties.idleAnim);
+    }
 
     shared_ptr<TriggerComponent> pTriggerComponent = 
         MakeStrongPtr(m_pOwner->GetComponent<TriggerComponent>());
@@ -85,20 +95,33 @@ void ProjectileSpawnerComponent::VUpdate(uint32 msDiff)
 
 void ProjectileSpawnerComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType)
 {
-    TryToFire();
     m_ActorsInTriggerArea++;
+    m_pARC->SetVisible(true);
+    TryToFire();
     assert(m_ActorsInTriggerArea >= 0);
+
+    LOG("Entered");
 }
 
 void ProjectileSpawnerComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
 {
     m_ActorsInTriggerArea--;
     assert(m_ActorsInTriggerArea >= 0);
+
+    LOG("Left");
 }
 
 void ProjectileSpawnerComponent::VOnAnimationLooped(Animation* pAnimation)
 {
-    m_pAnimationComponent->SetAnimation(m_Properties.idleAnim);
+    if (m_Properties.idleAnim == "INVISIBLE")
+    {
+        m_pARC->SetVisible(false);
+        m_pAnimationComponent->PauseAnimation();
+    }
+    else
+    {
+        m_pAnimationComponent->SetAnimation(m_Properties.idleAnim);
+    }
     TryToFire();
 }
 
@@ -107,6 +130,11 @@ void ProjectileSpawnerComponent::VOnAnimationFrameChanged(
     AnimationFrame* pLastFrame, 
     AnimationFrame* pNewFrame)
 {
+    if (m_Properties.idleAnim == "INVISIBLE" && !m_pARC->IsVisible())
+    {
+        return;
+    }
+
     if (m_Properties.projectileSpawnAnimFrameIdx == pNewFrame->idx)
     {
         assert(m_Properties.projectileSpawnAnimFrameIdx != 0);
@@ -128,12 +156,26 @@ void ProjectileSpawnerComponent::VOnAnimationFrameChanged(
     }
 }
 
+void ProjectileSpawnerComponent::VOnAnimationEndedDelay(Animation* pAnimation)
+{
+    LOG_TRACE("a");
+    if (m_Properties.idleAnim == "INVISIBLE")
+    {
+        m_pARC->SetVisible(true);
+    }
+}
+
 bool ProjectileSpawnerComponent::TryToFire()
 {
     if (!m_bReady)
     {
         return false;
     }
+
+    /*if (m_Properties.idleAnim == "INVISIBLE" && (m_Properties.isAlwaysOn || m_ActorsInTriggerArea > 0))
+    {
+        m_pARC->SetVisible(true);
+    }*/
 
     // If it is already firing, dont do anything
     if (IsFiring())
@@ -144,15 +186,35 @@ bool ProjectileSpawnerComponent::TryToFire()
     // If we can fire, do just that
     if ((m_Properties.isAlwaysOn || m_ActorsInTriggerArea > 0))
     {
+        if (m_Properties.idleAnim == "INVISIBLE")
+        {
+            m_pARC->SetVisible(false);
+        }
+
         m_pAnimationComponent->SetAnimation(m_Properties.fireAnim);
+        m_pAnimationComponent->ResumeAnimation();
         int randDelay = Util::GetRandomNumber(m_Properties.minSpawnDelay, m_Properties.maxSpawnDelay);
         m_pAnimationComponent->SetDelay(randDelay);
         return true;
     }
     else
     {
-        m_pAnimationComponent->SetAnimation(m_Properties.idleAnim);
+        if (m_Properties.idleAnim == "INVISIBLE")
+        {
+            m_pARC->SetVisible(false);
+            m_pAnimationComponent->PauseAnimation();
+        }
+        else
+        {
+            m_pAnimationComponent->SetAnimation(m_Properties.idleAnim);
+        }
     }
 
     return false;
+}
+
+bool ProjectileSpawnerComponent::IsFiring()
+{ 
+    return (m_pAnimationComponent->GetCurrentAnimationName() == m_Properties.fireAnim) &&
+        !m_pAnimationComponent->GetCurrentAnimation()->IsPaused();
 }

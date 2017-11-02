@@ -58,6 +58,7 @@ bool BaseRenderComponent::VInit(TiXmlElement* pXmlData)
         // Compute everything in lowercase to assure compatibility with everything in the engine
         std::string imageDirLowercase(imagesPath);
         std::transform(imageDirLowercase.begin(), imageDirLowercase.end(), imageDirLowercase.begin(), (int(*)(int)) std::tolower);
+        //LOG("ImageDir: " + imageDir);
         for (auto iter = matchingPathNames.begin(); iter != matchingPathNames.end(); /*++iter*/)
         {
             if (!WildcardMatch(imageDirLowercase.c_str(), (*iter).c_str()))
