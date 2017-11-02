@@ -188,16 +188,7 @@ void Animation::Update(uint32 msDiff)
     {
         return;
     }
-
-    // Hack for now
-    if (_currentAnimationFrame.hasEvent)
-    {
-        if (_currentAnimationFrame.idx == 0 && _currentTime == 0)
-        {
-            PlayFrameSound(_currentAnimationFrame.eventName);
-        }
-    }
-
+    
     if (_delay > 0)
     {
         _delay -= msDiff;
@@ -210,6 +201,15 @@ void Animation::Update(uint32 msDiff)
             m_pOwner->NotifyAnimationEndedDelay(this);
             msDiff = abs(_delay);
             _delay = 0;
+        }
+    }
+
+    // Hack for now
+    if (_currentAnimationFrame.hasEvent)
+    {
+        if (_currentAnimationFrame.idx == 0 && _currentTime == 0)
+        {
+            PlayFrameSound(_currentAnimationFrame.eventName);
         }
     }
 

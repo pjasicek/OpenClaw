@@ -1,0 +1,18 @@
+<Actor Type="Level9_DartProjectile_Up" Parent="ActorPrototype_BaseProjectile" ActorPrototypeName="ActorPrototype_Level9_DartProjectile_Up">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL9/IMAGES/PROJECTILES/ARROWUP004.PID</ImagePath>
+		<Palette>/LEVEL9/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<ProjectileAIComponent>
+		<Damage>5</Damage>
+		<ProjectileType>DamageType_Bullet</ProjectileType>
+		<!-- CAN BE MODIFIED IN CODE -->
+		<ProjectileSpeed x="0.00000" y="-6.500000" /> 
+	</ProjectileAIComponent>
+	<PhysicsComponent>
+        <CollisionFlag>262144</CollisionFlag>
+        <CollisionMask>1048834</CollisionMask>
+		<CollisionSize width="8" height="30" />
+		<PositionOffset x="0" y="-45" />
+    </PhysicsComponent>
+</Actor>

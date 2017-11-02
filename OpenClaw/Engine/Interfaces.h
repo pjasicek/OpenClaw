@@ -435,7 +435,10 @@ enum ActorPrototype
     ActorPrototype_Level9_Seagull,
     ActorPrototype_Level9_SpringBoard,
     ActorPrototype_Level9_PuffDartSpawner,
-    ActorPrototype_Level9_DartProjectile,
+    ActorPrototype_Level9_DartProjectile_Up,
+    ActorPrototype_Level9_DartProjectile_Down,
+    ActorPrototype_Level9_DartProjectile_Right,
+    ActorPrototype_Level9_DartProjectile_Left,
 
     ActorPrototype_Max
 };

@@ -34,6 +34,7 @@ public:
 private:
     bool TryToFire();
     bool IsFiring();
+    void SpawnProjectile();
         
     ProjectileSpawnerDef m_Properties;
 

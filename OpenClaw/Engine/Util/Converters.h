@@ -826,30 +826,42 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         }
 
         Direction shootDir = Direction_None;
+        ActorPrototype projectileProto = ActorPrototype_None;
         std::string shootAnim;
+        Point projectileSpawnOffset;
+
         if (imageSet.find("UP") != std::string::npos)
         {
-            shootDir = Direction_Up;
+            shootDir = Direction_Right;
             shootAnim = "puffdartup";
+            projectileProto = ActorPrototype_Level9_DartProjectile_Up;
+            projectileSpawnOffset.Set(0, 60);
         }
         else if (imageSet.find("DOWN") != std::string::npos)
         {
-            shootDir = Direction_Down;
+            shootDir = Direction_Right;
             shootAnim = "puffdartdown";
+            projectileProto = ActorPrototype_Level9_DartProjectile_Down;
+            projectileSpawnOffset.Set(0, -60);
         }
         else if (imageSet.find("RIGHT") != std::string::npos)
         {
             shootDir = Direction_Right;
             shootAnim = "puffdartright";
+            projectileProto = ActorPrototype_Level9_DartProjectile_Right;
+            projectileSpawnOffset.Set(-60, 0); 
         }
         else if (imageSet.find("LEFT") != std::string::npos)
         {
-            shootDir = Direction_Left;
+            shootDir = Direction_Right;
             shootAnim = "puffdartleft";
+            projectileProto = ActorPrototype_Level9_DartProjectile_Left;
+            projectileSpawnOffset.Set(60, 0);
         }
 
         assert(shootDir != Direction_None);
         assert(!shootAnim.empty());
+        assert(projectileProto != ActorPrototype_None);
 
         Point triggerSize(wwdObject->maxX - wwdObject->minX, wwdObject->maxY - wwdObject->minY);
         Point triggerAreaOffset(
@@ -858,6 +870,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.FireAnim", shootAnim));
         xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectileDirection", EnumToString_Direction(shootDir)));
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectilePrototype", EnumToString_ActorPrototype(projectileProto)));
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectileSpawnOffset", "x", projectileSpawnOffset.x, "y", projectileSpawnOffset.y));
         xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.TriggerAreaSize", "width", triggerSize.x, "height", triggerSize.y));
         xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.TriggerAreaOffset", "x", triggerAreaOffset.x, "y", triggerAreaOffset.y));
         

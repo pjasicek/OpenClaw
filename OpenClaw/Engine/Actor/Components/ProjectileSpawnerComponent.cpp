@@ -99,20 +99,21 @@ void ProjectileSpawnerComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered,
     m_pARC->SetVisible(true);
     TryToFire();
     assert(m_ActorsInTriggerArea >= 0);
-
-    LOG("Entered");
 }
 
 void ProjectileSpawnerComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
 {
     m_ActorsInTriggerArea--;
     assert(m_ActorsInTriggerArea >= 0);
-
-    LOG("Left");
 }
 
 void ProjectileSpawnerComponent::VOnAnimationLooped(Animation* pAnimation)
 {
+    if (pAnimation->GetName() == m_Properties.fireAnim && m_Properties.projectileSpawnAnimFrameIdx == 0)
+    {
+        SpawnProjectile();
+    }
+
     if (m_Properties.idleAnim == "INVISIBLE")
     {
         m_pARC->SetVisible(false);
@@ -122,7 +123,27 @@ void ProjectileSpawnerComponent::VOnAnimationLooped(Animation* pAnimation)
     {
         m_pAnimationComponent->SetAnimation(m_Properties.idleAnim);
     }
+
     TryToFire();
+}
+
+void ProjectileSpawnerComponent::SpawnProjectile()
+{
+    assert(g_pApp->GetHumanView() && g_pApp->GetHumanView()->GetCamera());
+
+    // Check if the spawned projectile is within some bounds of Claw's Human View display
+    // If not, then we can't either hear it nor do we care that there is some projectile
+    Point projectilePos = m_pOwner->GetPositionComponent()->GetPosition();
+    if (g_pApp->GetHumanView()->GetCamera()->IntersectsWithPoint(projectilePos, 1.25f))
+    {
+        // Spawn the projectile
+        Point projectilePosition = m_pOwner->GetPositionComponent()->GetPosition() + m_Properties.projectileSpawnOffset;
+        ActorTemplates::CreateActor_Projectile(
+            m_Properties.projectileProto,
+            projectilePosition,
+            m_Properties.projectileDirection,
+            m_pOwner->GetGUID());
+    }
 }
 
 void ProjectileSpawnerComponent::VOnAnimationFrameChanged(
@@ -137,28 +158,18 @@ void ProjectileSpawnerComponent::VOnAnimationFrameChanged(
 
     if (m_Properties.projectileSpawnAnimFrameIdx == pNewFrame->idx)
     {
-        assert(m_Properties.projectileSpawnAnimFrameIdx != 0);
-        assert(g_pApp->GetHumanView() && g_pApp->GetHumanView()->GetCamera());
-
-        // Check if the spawned projectile is within some bounds of Claw's Human View display
-        // If not, then we can't either hear it nor do we care that there is some projectile
-        Point projectilePos = m_pOwner->GetPositionComponent()->GetPosition();
-        if (g_pApp->GetHumanView()->GetCamera()->IntersectsWithPoint(projectilePos, 1.25f))
+        //assert(m_Properties.projectileSpawnAnimFrameIdx != 0);
+        if (m_Properties.projectileSpawnAnimFrameIdx == 0)
         {
-            // Spawn the projectile
-            Point projectilePosition = m_pOwner->GetPositionComponent()->GetPosition() + m_Properties.projectileSpawnOffset;
-            ActorTemplates::CreateActor_Projectile(
-                m_Properties.projectileProto,
-                projectilePosition,
-                m_Properties.projectileDirection,
-                m_pOwner->GetGUID());
+            return;
         }
+        
+        SpawnProjectile();
     }
 }
 
 void ProjectileSpawnerComponent::VOnAnimationEndedDelay(Animation* pAnimation)
 {
-    LOG_TRACE("a");
     if (m_Properties.idleAnim == "INVISIBLE")
     {
         m_pARC->SetVisible(true);

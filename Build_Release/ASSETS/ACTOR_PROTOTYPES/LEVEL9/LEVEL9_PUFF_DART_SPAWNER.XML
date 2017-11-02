@@ -11,14 +11,14 @@
         <FireAnim>OVERRIDEN_IN_CODE</FireAnim>
         <IsAlwaysOn>false</IsAlwaysOn>
         <StartSpawnDelay>0</StartSpawnDelay>
-        <MinSpawnDelay>1000</MinSpawnDelay>
-        <MaxSpawnDelay>1000</MaxSpawnDelay>
+        <MinSpawnDelay>650</MinSpawnDelay>
+        <MaxSpawnDelay>650</MaxSpawnDelay>
         <TriggerAreaSize width="OVERRIDEN_IN_CODE" height="OVERRIDEN_IN_CODE" />
         <TriggerAreaOffset x="OVERRIDEN_IN_CODE" y="OVERRIDEN_IN_CODE" />
         <TriggerCollisionMask>2</TriggerCollisionMask>
-        <ProjectileSpawnAnimFrameIdx>1</ProjectileSpawnAnimFrameIdx>
-        <ProjectilePrototype>ActorPrototype_Level9_DartProjectile</ProjectilePrototype>
+        <ProjectileSpawnAnimFrameIdx>0</ProjectileSpawnAnimFrameIdx>
+        <ProjectilePrototype>OVERRIDEN_IN_CODE</ProjectilePrototype>
         <ProjectileDirection>OVERRIDEN_IN_CODE</ProjectileDirection>
-        <ProjectileSpawnOffset x="-20" y="10" />
+        <ProjectileSpawnOffset x="0" y="0" />
     </ProjectileSpawnerComponent>
 </Actor>
