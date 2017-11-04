@@ -168,6 +168,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level9_DartProjectile_Down, "ActorPrototype_Level9_DartProjectile_Down" },
         { ActorPrototype_Level9_DartProjectile_Right, "ActorPrototype_Level9_DartProjectile_Right" },
         { ActorPrototype_Level9_DartProjectile_Left, "ActorPrototype_Level9_DartProjectile_Left" },
+        { ActorPrototype_Level9_SawBlade, "ActorPrototype_Level9_SawBlade" },
 
         //=======================================
         // Menu
@@ -350,6 +351,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level9_DartProjectile_Down", ActorPrototype_Level9_DartProjectile_Down },
         { "ActorPrototype_Level9_DartProjectile_Right", ActorPrototype_Level9_DartProjectile_Right },
         { "ActorPrototype_Level9_DartProjectile_Left", ActorPrototype_Level9_DartProjectile_Left },
+        { "ActorPrototype_Level9_SawBlade", ActorPrototype_Level9_SawBlade },
         
         //=======================================
         // Menu

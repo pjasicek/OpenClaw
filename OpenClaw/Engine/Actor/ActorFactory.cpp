@@ -54,6 +54,7 @@
 #include "Components/ActorSpawnerComponent.h"
 #include "Components/EnemyAI/PunkRatAIStateComponent.h"
 #include "Components/EnemyAI/Gabriel/GabrielEncounter.h"
+#include "Components/SawBladeComponent.h"
 
 ActorFactory::ActorFactory()
 {
@@ -124,6 +125,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<GabrielAIStateComponent>(GabrielAIStateComponent::GetIdFromName(GabrielAIStateComponent::g_Name));
     _componentFactory.Register<GabrielCannonButtonComponent>(GabrielCannonButtonComponent::GetIdFromName(GabrielCannonButtonComponent::g_Name));
     _componentFactory.Register<GabrielCannonComponent>(GabrielCannonComponent::GetIdFromName(GabrielCannonComponent::g_Name));
+    _componentFactory.Register<SawBladeComponent>();
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

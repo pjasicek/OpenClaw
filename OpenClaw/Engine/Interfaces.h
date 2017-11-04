@@ -439,6 +439,7 @@ enum ActorPrototype
     ActorPrototype_Level9_DartProjectile_Down,
     ActorPrototype_Level9_DartProjectile_Right,
     ActorPrototype_Level9_DartProjectile_Left,
+    ActorPrototype_Level9_SawBlade,
 
     ActorPrototype_Max
 };
@@ -629,6 +630,21 @@ public:
     template <class SubClass>
     bool Register(IdType id)
     {
+        auto findIter = _creationFunctions.find(id);
+        if (findIter == _creationFunctions.end())
+        {
+            _creationFunctions[id] = &GenericObjectCreationFunction < BaseClass, SubClass >;
+            return true;
+        }
+
+        return false;
+    }
+
+    template <class SubClass>
+    bool Register()
+    {
+        IdType id = SubClass::GetIdFromName(SubClass::g_Name);
+
         auto findIter = _creationFunctions.find(id);
         if (findIter == _creationFunctions.end())
         {

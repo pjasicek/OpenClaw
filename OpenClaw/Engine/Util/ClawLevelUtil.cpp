@@ -132,6 +132,10 @@ namespace ClawLevelUtil
             { { 9, "Seagull" }, ActorPrototype_Level9_Seagull },
             { { 9, "SpringBoard" }, ActorPrototype_Level9_SpringBoard },
             { { 9, "TProjectile" }, ActorPrototype_Level9_PuffDartSpawner },
+            { { 9, "SawBlade" }, ActorPrototype_Level9_SawBlade },
+            { { 9, "SawBlade2" }, ActorPrototype_Level9_SawBlade },
+            { { 9, "SawBlade3" }, ActorPrototype_Level9_SawBlade },
+            { { 9, "SawBlade4" }, ActorPrototype_Level9_SawBlade },
         };
 
         auto key = std::make_pair(levelNumber, logic);

@@ -552,7 +552,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            LOG("Not found ?");
             return NULL;
         }
 
@@ -825,41 +824,35 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             return NULL;
         }
 
-        Direction shootDir = Direction_None;
         ActorPrototype projectileProto = ActorPrototype_None;
         std::string shootAnim;
         Point projectileSpawnOffset;
 
         if (imageSet.find("UP") != std::string::npos)
         {
-            shootDir = Direction_Right;
             shootAnim = "puffdartup";
             projectileProto = ActorPrototype_Level9_DartProjectile_Up;
             projectileSpawnOffset.Set(0, 60);
         }
         else if (imageSet.find("DOWN") != std::string::npos)
         {
-            shootDir = Direction_Right;
             shootAnim = "puffdartdown";
             projectileProto = ActorPrototype_Level9_DartProjectile_Down;
             projectileSpawnOffset.Set(0, -60);
         }
         else if (imageSet.find("RIGHT") != std::string::npos)
         {
-            shootDir = Direction_Right;
             shootAnim = "puffdartright";
             projectileProto = ActorPrototype_Level9_DartProjectile_Right;
             projectileSpawnOffset.Set(-60, 0); 
         }
         else if (imageSet.find("LEFT") != std::string::npos)
         {
-            shootDir = Direction_Right;
             shootAnim = "puffdartleft";
             projectileProto = ActorPrototype_Level9_DartProjectile_Left;
             projectileSpawnOffset.Set(60, 0);
         }
 
-        assert(shootDir != Direction_None);
         assert(!shootAnim.empty());
         assert(projectileProto != ActorPrototype_None);
 
@@ -869,7 +862,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             ((wwdObject->maxY + wwdObject->minY) / 2) - actorPosition.y);
 
         xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.FireAnim", shootAnim));
-        xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectileDirection", EnumToString_Direction(shootDir)));
         xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectilePrototype", EnumToString_ActorPrototype(projectileProto)));
         xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectileSpawnOffset", "x", projectileSpawnOffset.x, "y", projectileSpawnOffset.y));
         xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.TriggerAreaSize", "width", triggerSize.x, "height", triggerSize.y));
@@ -955,6 +947,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic.find("FloorSpike") != std::string::npos)
     {
+        // This should be moved to separate actor protos....
         int delay = 0;
         if (logic == "FloorSpike")
         {
@@ -995,6 +988,11 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             def.activateSound = "/LEVEL4/SOUNDS/FLOORSPIKEUP.WAV";
             def.deactivateSound = "/LEVEL4/SOUNDS/FLOORSPIKEDOWN.WAV";
         }
+        else if (levelNumber == 9)
+        {
+
+        }
+
         def.startDelay = delay;
         def.damage = 5;
         def.cycleDuration = 75;
@@ -1007,6 +1005,41 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             position,
             tmpImageSet,
             def);
+    }
+    else if (logic.find("SawBlade") != std::string::npos)
+    {
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        int delay = 0;
+        if (logic == "SawBlade")
+        {
+            delay = 0;
+        }
+        else if (logic == "SawBlade2")
+        {
+            delay = 750;
+        }
+        else if (logic == "SawBlade3")
+        {
+            delay = 1500;
+        }
+        else if (logic == "SawBlade4")
+        {
+            delay = 2250;
+        }
+        else
+        {
+            LOG("Offending SawBlade: " + logic);
+            assert(false && "Unknown floor SawBlade");
+        }
+
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.SawBladeComponent.StartDelay", delay));
+
+        return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
     }
     else if (logic == "GooVent")
     {

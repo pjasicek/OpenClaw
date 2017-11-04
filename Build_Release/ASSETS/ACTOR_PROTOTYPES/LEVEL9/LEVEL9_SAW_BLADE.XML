@@ -1,0 +1,25 @@
+<Actor Type="Level9_SawBlade" Parent="ActorPrototype_BaseFloorSpike" ActorPrototypeName="ActorPrototype_Level9_SawBlade">
+    <ActorRenderComponent>
+		<ImagePath>/LEVEL9/IMAGES/FLOORSAW/*.PID</ImagePath>
+		<Palette>/LEVEL9/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+    <AnimationComponent>
+		<AnimationPath>/LEVEL9/ANIS/SAWBLADE/*.ANI</AnimationPath>
+	</AnimationComponent>
+	<SawBladeComponent>
+		<UpAnimName>up</UpAnimName>
+		<DownAnimName>down</DownAnimName>
+		<SpinAnimName>spin</SpinAnimName>
+		<ActiveFrameIdx>9</ActiveFrameIdx>
+        <DeactivateFrameIdx>0</DeactivateFrameIdx>
+        <TimeOff>500</TimeOff>
+		<StartDelay>0</StartDelay>
+	</SawBladeComponent>
+	<DamageAuraComponent>
+		<ActorFixture>
+            <Size width="70" height="40" />
+            <Offset x="0" y="-5" />
+        </ActorFixture>
+        <Damage>5</Damage>
+    </DamageAuraComponent>
+</Actor>

@@ -206,7 +206,7 @@ class BaseGameApp
 public:
     BaseGameApp();
 
-    // Muset be defined in inherited class
+    // Must be defined in inherited class
     virtual const char* VGetGameTitle() = 0;
     virtual const char* VGetGameAppDirectory() = 0;
     virtual BaseGameLogic* VCreateGameAndView() = 0;

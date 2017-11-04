@@ -99,13 +99,19 @@ public:
         bool bIsApplied = false;
         if (!m_NodeText.empty())
         {
-            assert(SetTiXmlNodeValue(pRootElem, m_XmlNodePath, m_NodeText));
+            if (!SetTiXmlNodeValue(pRootElem, m_XmlNodePath, m_NodeText))
+            {
+                LOG_ASSERT("Could not set: " + m_XmlNodePath + " to value: [" + m_NodeText + "]");
+            }
             bIsApplied = true;
         }
 
         for (const auto& keyValuePair : m_ValueKeyToValueMap)
         {
-            assert(SetTiXmlNode1Attribute(pRootElem, m_XmlNodePath, keyValuePair.first, keyValuePair.second));
+            if (!SetTiXmlNode1Attribute(pRootElem, m_XmlNodePath, keyValuePair.first, keyValuePair.second))
+            {
+                LOG_ASSERT("Could not set: " + m_XmlNodePath + " to keypair: [" + keyValuePair.first + "," + keyValuePair.second + "]");
+            }
             bIsApplied = true;
         }
 

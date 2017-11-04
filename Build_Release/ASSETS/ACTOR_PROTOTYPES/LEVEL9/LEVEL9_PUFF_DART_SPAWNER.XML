@@ -18,7 +18,7 @@
         <TriggerCollisionMask>2</TriggerCollisionMask>
         <ProjectileSpawnAnimFrameIdx>0</ProjectileSpawnAnimFrameIdx>
         <ProjectilePrototype>OVERRIDEN_IN_CODE</ProjectilePrototype>
-        <ProjectileDirection>OVERRIDEN_IN_CODE</ProjectileDirection>
+        <ProjectileDirection>Direction_Right</ProjectileDirection>
         <ProjectileSpawnOffset x="0" y="0" />
     </ProjectileSpawnerComponent>
 </Actor>

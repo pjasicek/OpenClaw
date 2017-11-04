@@ -104,4 +104,12 @@ void OnAniLoaded(const char* resource, WapAni* pAni)
             pAni->animationFrames[idx].duration *= factor;
         }
     }
+    else if (resourceName.find("/level9/anis/sawblade") != std::string::npos)
+    {
+        int factor = 2;
+        for (int idx = 0; idx < pAni->animationFramesCount; idx++)
+        {
+            pAni->animationFrames[idx].duration *= factor;
+        }
+    }
 }
