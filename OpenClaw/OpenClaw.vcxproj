@@ -102,6 +102,7 @@
     <ClCompile Include="Engine\Actor\Components\LocalAmbientSoundComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\PathElevatorComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\RopeComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\SawBladeComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\SpringBoardComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\SteppingGroundComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\TriggerComponents\BossStagerTriggerComponent.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="Engine\Actor\Components\GlitterComponent.h" />
     <ClInclude Include="Engine\Actor\Components\ProjectileSpawnerComponent.h" />
     <ClInclude Include="Engine\Actor\Components\RopeComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\SawBladeComponent.h" />
     <ClInclude Include="Engine\Actor\Components\SingleAnimationComponent.h" />
     <ClInclude Include="Engine\Actor\Components\SpringBoardComponent.h" />
     <ClInclude Include="Engine\Actor\Components\SteppingGroundComponent.h" />
