@@ -442,6 +442,7 @@ enum ActorPrototype
     ActorPrototype_Level9_SawBlade,
     ActorPrototype_Level9_SkullCannon,
     ActorPrototype_Level9_CannonBall,
+    ActorPrototype_Level9_CrazyHook,
 
     ActorPrototype_Max
 };

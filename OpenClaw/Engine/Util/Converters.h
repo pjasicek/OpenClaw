@@ -715,7 +715,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "HermitCrab" ||
              logic == "Raux" ||
              logic == "Katherine" ||
-             logic == "Wolvington")
+             logic == "Wolvington" ||
+             logic == "CrazyHook")
     {
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
