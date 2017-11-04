@@ -1,0 +1,6 @@
+<Actor Type="Level9_CannonBall" Parent="ActorPrototype_Level2_CannonBall" ActorPrototypeName="ActorPrototype_Level9_CannonBall">
+    <ActorRenderComponent>
+		<ImagePath>/LEVEL9/IMAGES/CANNONBALL/*</ImagePath>
+		<Palette>/LEVEL9/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+</Actor>

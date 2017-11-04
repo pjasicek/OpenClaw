@@ -64,7 +64,7 @@ void ProjectileSpawnerComponent::VPostInit()
 
 void ProjectileSpawnerComponent::VPostPostInit()
 {
-    if (!m_Properties.triggerAreaSize.IsZeroXY())
+    if (!m_Properties.triggerAreaSize.IsZeroXY() && !m_Properties.isAlwaysOn)
     {
         ActorFixtureDef fixtureDef;
         fixtureDef.collisionShape = "Rectangle";

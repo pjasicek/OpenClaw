@@ -1,0 +1,24 @@
+<Actor Type="Level9_SkullCannon" Parent="ActorPrototype_BaseProjectileSpawner" ActorPrototypeName="ActorPrototype_Level9_SkullCannon">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL9/IMAGES/SKULLCANNON/*</ImagePath>
+		<Palette>/LEVEL9/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<AnimationComponent>
+        <AnimationPath>/LEVEL9/ANIS/SKULLCANNON/*</AnimationPath>
+    </AnimationComponent>
+	<ProjectileSpawnerComponent>
+        <IdleAnim>home</IdleAnim>
+        <FireAnim>firing</FireAnim>
+        <IsAlwaysOn>true</IsAlwaysOn>
+        <StartSpawnDelay>0</StartSpawnDelay>
+        <MinSpawnDelay>500</MinSpawnDelay>
+        <MaxSpawnDelay>1500</MaxSpawnDelay>
+        <TriggerAreaSize width="0" height="0" />
+        <TriggerAreaOffset x="0" y="0" />
+        <TriggerCollisionMask>2</TriggerCollisionMask>
+        <ProjectileSpawnAnimFrameIdx>1</ProjectileSpawnAnimFrameIdx>
+        <ProjectilePrototype>ActorPrototype_Level9_CannonBall</ProjectilePrototype>
+        <ProjectileDirection>Direction_Right</ProjectileDirection>
+        <ProjectileSpawnOffset x="30" y="10" />
+    </ProjectileSpawnerComponent>
+</Actor>

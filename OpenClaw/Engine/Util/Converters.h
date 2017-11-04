@@ -173,6 +173,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     std::string logic = wwdObject->logic;
     std::string imageSet = wwdObject->imageSet;
 
+    bool bIsMirrored = wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR;
+    bool bIsInverted = wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_INVERT;
+    bool bIsVisible = !(wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_NO_DRAW);
+
     // Common components for all actors
 
     // Position component
@@ -266,9 +270,9 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
     // Defaults
     xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.ImagePath", tmpImageSet));
-    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.Visible", !(wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_NO_DRAW)));
-    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.Mirrored", wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR));
-    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.Inverted", wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_INVERT));
+    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.Visible", bIsVisible));
+    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.Mirrored", bIsMirrored));
+    xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.Inverted", bIsInverted));
     xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.ZCoord", wwdObject->z));
     xmlOverrideList.push_back(XmlNodeOverride("Actor.PositionComponent.Position", "x", actorPosition.x, "y", actorPosition.y));
 
@@ -1038,6 +1042,29 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         }
 
         xmlOverrideList.push_back(XmlNodeOverride("Actor.SawBladeComponent.StartDelay", delay));
+
+        return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
+    }
+    else if (logic == "SkullCannon")
+    {
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+
+        int projectileSpawnOffsetX = 32;
+        if (bIsMirrored)
+        {
+            xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectileSpawnOffset", "x", projectileSpawnOffsetX * -1, "y", 10));
+            xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectileDirection", EnumToString_Direction(Direction_Left)));
+        }
+        else
+        {
+            xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectileSpawnOffset", "x", projectileSpawnOffsetX, "y", 10));
+            xmlOverrideList.push_back(XmlNodeOverride("Actor.ProjectileSpawnerComponent.ProjectileDirection", EnumToString_Direction(Direction_Right)));
+        }
 
         return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
     }
