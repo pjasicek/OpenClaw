@@ -126,6 +126,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<GabrielCannonButtonComponent>(GabrielCannonButtonComponent::GetIdFromName(GabrielCannonButtonComponent::g_Name));
     _componentFactory.Register<GabrielCannonComponent>(GabrielCannonComponent::GetIdFromName(GabrielCannonComponent::g_Name));
     _componentFactory.Register<SawBladeComponent>();
+    _componentFactory.Register<RollEnemyAIStateComponent>();
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

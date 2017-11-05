@@ -470,7 +470,7 @@ void ClawGameLogic::UpdatedPowerupStatusDelegate(IEventDataPtr pEventData)
     if (pPhysicsComponent)
     {
         // Clear Catnip
-        pPhysicsComponent->SetMaxJumpHeight(g_pApp->GetGlobalOptions()->maxJumpHeight);
+        pPhysicsComponent->SetMaxJumpHeight((int)g_pApp->GetGlobalOptions()->maxJumpHeight);
     }
     if (pARC)
     {
@@ -495,7 +495,7 @@ void ClawGameLogic::UpdatedPowerupStatusDelegate(IEventDataPtr pEventData)
 
         if (!pCastEventData->IsPowerupFinished())
         {
-            pPhysicsComponent->SetMaxJumpHeight(g_pApp->GetGlobalOptions()->powerupMaxJumpHeight);
+            pPhysicsComponent->SetMaxJumpHeight((int)g_pApp->GetGlobalOptions()->powerupMaxJumpHeight);
         }
     }
     else if (pCastEventData->GetPowerupType() == PowerupType_Invisibility)

@@ -31,6 +31,7 @@ const char* BaseBossAIStateComponennt::g_Name = "BaseBossAIStateComponennt";
 const char* LaRauxBossAIStateComponent::g_Name = "LaRauxBossAIStateComponent";
 const char* KatherineBossAIStateComponent::g_Name = "KatherineBossAIStateComponent";
 const char* WolvingtonBossAIStateComponent::g_Name = "WolvingtonBossAIStateComponent";
+const char* RollEnemyAIStateComponent::g_Name = "RollEnemyAIStateComponent";
 
 #define MAX_STATE_PRIORITY INT32_MAX
 #define MIN_STATE_PRIORITY INT32_MIN
@@ -918,6 +919,7 @@ BaseAttackAIStateComponent::BaseAttackAIStateComponent(std::string stateName)
     :
     m_AttackDelay(0),
     m_AttackSpeechSoundPlayChance(0),
+    m_CurrentAttackActionIdx(0),
     BaseEnemyAIStateComponent(stateName)
 {
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BaseAttackAIStateComponent::ClawHealthBelowZeroDelegate), EventData_Claw_Health_Below_Zero::sk_EventType);
@@ -965,7 +967,7 @@ bool BaseAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
     }
 
     assert(!m_AttackActions.empty());
-    assert(m_AttackActions.size() == 1 && "Only supporting one attack action per state component");
+    //assert(m_AttackActions.size() == 1 && "Only supporting one attack action per state component");
 
     return true;
 }
@@ -984,18 +986,24 @@ void BaseAttackAIStateComponent::VPostPostInit()
         g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(
             m_pOwner->GetGUID(),
             &pAttackAction->agroSensorFixture);
+
+        // Hack
+        break;
     }
 }
 
 void BaseAttackAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState)
 {
     m_IsActive = true;
+
+    m_CurrentAttackActionIdx = 0;
     VExecuteAttack();
 }
 
 void BaseAttackAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
 {
     m_IsActive = false;
+    m_CurrentAttackActionIdx = 0;
 }
 
 void BaseAttackAIStateComponent::VExecuteAttack()
@@ -1020,8 +1028,7 @@ void BaseAttackAIStateComponent::VExecuteAttack()
 
     // TODO: Pick randomly melee action ?
 
-    m_pAnimationComponent->SetAnimation(m_AttackActions[0]->animation);
-    m_pAnimationComponent->SetDelay(m_AttackDelay);
+    m_pAnimationComponent->SetAnimation(m_AttackActions[m_CurrentAttackActionIdx]->animation);
 }
 
 void BaseAttackAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
@@ -1031,9 +1038,23 @@ void BaseAttackAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
         return;
     }
 
-    // TODO: Support melee actions consiting of multiple animations ?
-    m_pEnemyAIComponent->EnterBestState(true);
-    VExecuteAttack();
+    // This was the last attack action
+    if (m_CurrentAttackActionIdx > (m_AttackActions.size() - 1))
+    {
+        m_CurrentAttackActionIdx = 0;
+        m_pEnemyAIComponent->EnterBestState(true);
+        LOG("Transitioning");
+        if (m_IsActive)
+        {
+            LOG("Back to attack");
+            VExecuteAttack();
+            m_pAnimationComponent->SetDelay(m_AttackDelay);
+        }
+    }
+    else
+    {
+        VExecuteAttack();
+    }
 }
 
 void BaseAttackAIStateComponent::VOnAnimationFrameChanged(
@@ -1052,9 +1073,14 @@ void BaseAttackAIStateComponent::VOnAnimationFrameChanged(
         return;
     }
 
-    if (m_AttackActions[0]->attackAnimFrameIdx == pNewFrame->idx)
+    if (m_CurrentAttackActionIdx > (m_AttackActions.size() - 1))
     {
-        std::shared_ptr<EnemyAttackAction> pAttack = m_AttackActions[0];
+        return;
+    }
+
+    if (m_AttackActions[m_CurrentAttackActionIdx]->attackAnimFrameIdx == pNewFrame->idx)
+    {
+        std::shared_ptr<EnemyAttackAction> pAttack = m_AttackActions[m_CurrentAttackActionIdx];
 
         Direction dir = Direction_Left;
         Point offset = pAttack->attackSpawnPositionOffset;
@@ -1065,6 +1091,8 @@ void BaseAttackAIStateComponent::VOnAnimationFrameChanged(
         }
 
         VOnAttackFrame(pAttack, dir, offset);
+
+        m_CurrentAttackActionIdx++;
     }
 }
 
@@ -1841,4 +1869,192 @@ void WolvingtonBossAIStateComponent::VOnBossFightEnded(bool isBossDead)
         // To refresh contact list after Claw's death
         g_pApp->GetGameLogic()->VGetGamePhysics()->VDeactivate(m_pOwner->GetGUID());
     }
+}
+
+//=====================================================================================================================
+// RollEnemyAIStateComponent
+//=====================================================================================================================
+
+RollEnemyAIStateComponent::RollEnemyAIStateComponent()
+:
+m_RollSpeed(0.0),
+m_ReuseTimeLeft(0),
+m_pPatrolStateComponent(nullptr),
+BaseEnemyAIStateComponent("RollState")
+{
+
+}
+
+bool RollEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
+{
+    m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
+    assert(m_pPhysics);
+
+    assert(ParseValueFromXmlElem(&m_RollSpeed, pData->FirstChildElement("RollSpeed")));
+    assert(ParseValueFromXmlElem(&m_ForwardRollAnimation, pData->FirstChildElement("ForwardRollAnimation")));
+    assert(ParseValueFromXmlElem(&m_BackwardRollAnimation, pData->FirstChildElement("BackwardRollAnimation")));
+    m_RollSensorFixtureDef = ActorTemplates::XmlToActorFixtureDef(pData->FirstChildElement("RollSensorFixtureDef"));
+
+    return true;
+}
+
+void RollEnemyAIStateComponent::VPostInit()
+{
+    BaseEnemyAIStateComponent::VPostInit();
+
+    m_pOwner->GetRawComponent<AnimationComponent>(true)->AddObserver(this);
+    m_pOwner->GetRawComponent<TriggerComponent>(true)->AddObserver(this);
+    m_pOwner->GetRawComponent<HealthComponent>(true)->AddObserver(this);
+
+    m_pPatrolStateComponent = m_pOwner->GetRawComponent<PatrolEnemyAIStateComponent>(true);
+}
+
+void RollEnemyAIStateComponent::VPostPostInit()
+{
+    BaseEnemyAIStateComponent::VPostPostInit();
+
+    m_pPhysics->VAddActorFixtureToBody(m_pOwner->GetGUID(), &m_RollSensorFixtureDef);
+}
+
+void RollEnemyAIStateComponent::VUpdate(uint32 msDiff)
+{
+    m_ReuseTimeLeft -= msDiff;
+
+    if (m_IsActive)
+    {
+        if ((m_pPositionComponent->GetX() > m_pPatrolStateComponent->GetRightPatrolBorder() &&
+             m_pPhysics->VGetVelocity(m_pOwner->GetGUID()).x > DBL_EPSILON) ||
+            (m_pPositionComponent->GetX() < m_pPatrolStateComponent->GetLeftPatrolBorder() &&
+             m_pPhysics->VGetVelocity(m_pOwner->GetGUID()).x < -1.0 * DBL_EPSILON))
+        {
+            Point zeroSpeed(0, 0);
+            m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), zeroSpeed);
+        }
+    }
+}
+
+bool RollEnemyAIStateComponent::VCanEnter()
+{
+    bool bCanEnter = (!m_ActorsInLosList.empty() && m_ReuseTimeLeft <= 0);
+    if (!m_ActorsInLosList.empty())
+    {
+        LOG("Actors: " + ToStr(m_ActorsInLosList.size()));
+        LOG("ReuseTimeLeft: " + ToStr(m_ReuseTimeLeft));
+        LOG("Can enter ? " + ToStr(bCanEnter));
+    }
+
+    return bCanEnter;
+}
+
+void RollEnemyAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState)
+{
+    m_IsActive = true;
+
+    assert(!m_ActorsInLosList.empty());
+
+   
+    Direction rollDirection = DetermineRollDirection();
+
+    Point speed(m_RollSpeed, 0);
+    if (rollDirection == Direction_Left)
+    {
+        speed.x *= -1.0;
+        m_pAnimationComponent->SetAnimation(m_BackwardRollAnimation);
+    }
+    else
+    {
+        m_pAnimationComponent->SetAnimation(m_ForwardRollAnimation);
+    }
+
+    m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), speed);
+}
+
+void RollEnemyAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
+{
+    m_IsActive = false;
+
+    Point zeroSpeed(0, 0);
+    m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), zeroSpeed);
+}
+
+void RollEnemyAIStateComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType)
+{
+    if (triggerType != FixtureType_Trigger_RollAreaSensor || pActorWhoEntered->GetName() != "Claw")
+    {
+        return;
+    }
+
+    m_ActorsInLosList.push_back(pActorWhoEntered);
+    m_pEnemyAIComponent->EnterBestState(false);
+}
+
+void RollEnemyAIStateComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
+{
+    if (triggerType != FixtureType_Trigger_RollAreaSensor || pActorWhoLeft->GetName() != "Claw")
+    {
+        return;
+    }
+
+    for (auto iter = m_ActorsInLosList.begin(); iter != m_ActorsInLosList.end(); ++iter)
+    {
+        if ((*iter) == pActorWhoLeft)
+        {
+            m_ActorsInLosList.erase(iter);
+            return;
+        }
+    }
+}
+
+bool RollEnemyAIStateComponent::VCanResistDamage(DamageType damageType, Point impactPoint)
+{
+    return m_IsActive;
+}
+
+void RollEnemyAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
+{
+    if (!m_IsActive)
+    {
+        return;
+    }
+
+    m_ReuseTimeLeft = 650;
+
+    m_pEnemyAIComponent->EnterBestState(true);
+}
+
+Direction RollEnemyAIStateComponent::DetermineRollDirection()
+{
+    static const int BORDER_DISTANCE_THRESHOLD = 75;
+    Direction rollDirection = Direction_Right;
+
+    int leftPatrolBorder = m_pPatrolStateComponent->GetLeftPatrolBorder();
+    int rightPatrolBorder = m_pPatrolStateComponent->GetRightPatrolBorder();
+
+    // Determine to where to roll - if he is further from left patrol border, roll to that direction
+    // and vice versa
+
+    int leftDelta = abs((int)m_pPositionComponent->GetX() - leftPatrolBorder);
+    int rightDelta = abs((int)m_pPositionComponent->GetX() - rightPatrolBorder);
+
+    if (leftDelta < BORDER_DISTANCE_THRESHOLD)
+    {
+        rollDirection = Direction_Right;
+    }
+    else if (rightDelta < BORDER_DISTANCE_THRESHOLD)
+    {
+        rollDirection = Direction_Left;
+    }
+    else
+    {
+        if (Util::GetRandomNumber(0, 1) == 0)
+        {
+            rollDirection = Direction_Right;
+        }
+        else
+        {
+            rollDirection = Direction_Left;
+        }
+    }
+
+    return rollDirection;
 }

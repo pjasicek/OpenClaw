@@ -172,6 +172,8 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level9_SkullCannon, "ActorPrototype_Level9_SkullCannon" },
         { ActorPrototype_Level9_CannonBall, "ActorPrototype_Level9_CannonBall" },
         { ActorPrototype_Level9_CrazyHook, "ActorPrototype_Level9_CrazyHook" },
+        { ActorPrototype_Level9_PegLeg, "ActorPrototype_Level9_PegLeg" },
+        { ActorPrototype_Level9_BulletProjectile, "ActorPrototype_Level9_BulletProjectile" },
 
         //=======================================
         // Menu
@@ -358,6 +360,8 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level9_SkullCannon", ActorPrototype_Level9_SkullCannon },
         { "ActorPrototype_Level9_CannonBall", ActorPrototype_Level9_CannonBall },
         { "ActorPrototype_Level9_CrazyHook", ActorPrototype_Level9_CrazyHook },
+        { "ActorPrototype_Level9_PegLeg", ActorPrototype_Level9_PegLeg },
+        { "ActorPrototype_Level9_BulletProjectile", ActorPrototype_Level9_BulletProjectile },
         
         //=======================================
         // Menu
@@ -407,6 +411,7 @@ FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
     else if (fixtureTypeStr == "Trigger_SpawnArea") { fixtureType = FixtureType_Trigger_SpawnArea; }
     else if (fixtureTypeStr == "Trigger_GabrielButton") { fixtureType = FixtureType_Trigger_GabrielButton; }
     else if (fixtureTypeStr == "Trigger_ChaseEnemyAreaSensor") { fixtureType = FixtureType_Trigger_ChaseEnemyAreaSensor; }
+    else if (fixtureTypeStr == "Trigger_RollAreaSensor") { fixtureType = FixtureType_Trigger_RollAreaSensor; }
     else
     {
         assert(false && "Unknown body type");

@@ -123,6 +123,7 @@ enum FixtureType
     FixtureType_Trigger_SpawnArea,
     FixtureType_Trigger_GabrielButton,
     FixtureType_Trigger_ChaseEnemyAreaSensor,
+    FixtureType_Trigger_RollAreaSensor,
     FixtureType_Max,
 };
 
@@ -443,6 +444,8 @@ enum ActorPrototype
     ActorPrototype_Level9_SkullCannon,
     ActorPrototype_Level9_CannonBall,
     ActorPrototype_Level9_CrazyHook,
+    ActorPrototype_Level9_PegLeg,
+    ActorPrototype_Level9_BulletProjectile,
 
     ActorPrototype_Max
 };

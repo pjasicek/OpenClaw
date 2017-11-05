@@ -13,7 +13,7 @@ ClawHumanView::ClawHumanView(SDL_Renderer* renderer)
 {
     RegisterAllDelegates();
 
-    m_pCamera->SetSize(g_pApp->GetWindowSize().x, g_pApp->GetWindowSize().y);
+    m_pCamera->SetSize((uint32)g_pApp->GetWindowSize().x, (uint32)g_pApp->GetWindowSize().y);
 
     Point startingPos = Point(400, 4500);
     m_pCamera->VSetPosition(startingPos);

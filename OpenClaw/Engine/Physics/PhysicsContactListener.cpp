@@ -96,7 +96,8 @@ static bool IsTriggerFixture(FixtureType fixtureType)
         fixtureType == FixtureType_Trigger ||
         fixtureType == FixtureType_Trigger_SpawnArea ||
         fixtureType == FixtureType_Trigger_GabrielButton ||
-        fixtureType == FixtureType_Trigger_ChaseEnemyAreaSensor);
+        fixtureType == FixtureType_Trigger_ChaseEnemyAreaSensor ||
+        fixtureType == FixtureType_Trigger_RollAreaSensor);
 }
 
 //=====================================================================================================================
@@ -390,6 +391,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
         SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger_SpawnArea);
         SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger_GabrielButton);
         SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger_ChaseEnemyAreaSensor);
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger_RollAreaSensor);
         FixtureType fixtureType = FixtureType(reinterpret_cast<std::intptr_t>(pFixtureA->GetUserData()));
         if (IsTriggerFixture(fixtureType))
         {
@@ -665,6 +667,7 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
         SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger_SpawnArea);
         SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger_GabrielButton);
         SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger_ChaseEnemyAreaSensor);
+        SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, FixtureType_Trigger_RollAreaSensor);
         FixtureType fixtureType = FixtureType(reinterpret_cast<std::intptr_t>(pFixtureA->GetUserData()));
         if (IsTriggerFixture(fixtureType))
         {

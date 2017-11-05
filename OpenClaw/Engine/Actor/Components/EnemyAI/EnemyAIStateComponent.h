@@ -21,6 +21,7 @@ enum EnemyAIState
     EnemyAIState_Fleeing,
     EnemyAIState_Dying,
     EnemyAIState_Falling,
+    EnemyAIState_Rolling,
     EnemyAIState_BrainLaRaux,
     EnemyAIState_BrainKatherine,
     EnemyAIState_BrainWolvington,
@@ -72,8 +73,6 @@ public:
     virtual bool VDelegateInit(TiXmlElement* pData) = 0;
     virtual void VPostInit() override;
 
-    virtual TiXmlElement* VGenerateXml() override { return NULL; }
-
     bool IsActive() { return m_IsActive; }
 
     // EnemyAIStateComponent API
@@ -123,7 +122,7 @@ public:
     virtual bool VDelegateInit(TiXmlElement* pData) override;
 
     // This state is entered manually
-    virtual bool VCanEnter() { return false; }
+    virtual bool VCanEnter() override { return false; }
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override;
@@ -183,7 +182,7 @@ public:
     virtual void VPostInit() override;
     virtual void VPostPostInit() override;
 
-    virtual bool VCanEnter() { return true; }
+    virtual bool VCanEnter() override { return true; }
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override;
@@ -197,6 +196,9 @@ public:
     // TriggerObserver API
     virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType) override;
     virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType) override;
+
+    int GetLeftPatrolBorder() { return m_LeftPatrolBorder; }
+    int GetRightPatrolBorder() { return m_RightPatrolBorder; }
 
 private:
     void CalculatePatrolBorders();
@@ -234,6 +236,57 @@ private:
 };
 
 //=====================================================================================================================
+// RollEnemyAIStateComponent
+//=====================================================================================================================
+
+class RollEnemyAIStateComponent : public BaseEnemyAIStateComponent, public AnimationObserver, public TriggerObserver, public HealthObserver
+{
+public:
+    RollEnemyAIStateComponent();
+
+    static const char* g_Name;
+    virtual const char* VGetName() const override { return g_Name; }
+
+    virtual bool VDelegateInit(TiXmlElement* pData) override;
+    virtual void VPostInit() override;
+    virtual void VPostPostInit() override;
+    virtual void VUpdate(uint32 msDiff) override;
+
+    virtual bool VCanEnter() override;
+
+    // EnemyAIStateComponent API
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override;
+    virtual EnemyAIState VGetStateType() const override { return EnemyAIState_Rolling; }
+
+    // AnimationObserver
+    virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType) override;
+    virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType) override;
+
+    // TriggerObserver
+    virtual bool VCanResistDamage(DamageType damageType, Point impactPoint) override;
+
+
+    virtual void VOnAnimationLooped(Animation* pAnimation) override;
+
+private:
+    // XML Data
+    double m_RollSpeed;
+    std::string m_ForwardRollAnimation;
+    std::string m_BackwardRollAnimation;
+    ActorFixtureDef m_RollSensorFixtureDef;
+
+    // Internal
+    Direction DetermineRollDirection();
+
+    Direction m_LastRollDirection;
+    ActorList m_ActorsInLosList;
+    int m_ReuseTimeLeft;
+    PatrolEnemyAIStateComponent* m_pPatrolStateComponent;
+    shared_ptr<IGamePhysics> m_pPhysics;
+};
+
+//=====================================================================================================================
 // ParryEnemyAIStateComponent
 //=====================================================================================================================
 
@@ -262,7 +315,7 @@ public:
     virtual void VPostInit() override;
 
     // Only on-demand
-    virtual bool VCanEnter() { return false; }
+    virtual bool VCanEnter() override { return false; }
 
     // EnemyAIStateComponent API
     virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
@@ -305,7 +358,7 @@ public:
     virtual void VUpdate(uint32 msDiff) override { };
     virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override;
     virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override;
-    virtual EnemyAIState VGetStateType() const = 0;
+    virtual EnemyAIState VGetStateType() const override = 0;
     virtual bool VCanEnter() override;
 
     virtual void VOnAnimationLooped(Animation* pAnimation) override;
@@ -328,6 +381,8 @@ private:
 
     SoundList m_AttackSpeechSoundList;
     int m_AttackSpeechSoundPlayChance;
+
+    int m_CurrentAttackActionIdx;
 
 protected:
     AttackActionList m_AttackActions;
@@ -486,9 +541,9 @@ public:
 
     // EnemyAIStateComponent API
     virtual void VUpdate(uint32 msDiff) override = 0;
-    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) = 0;
-    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) = 0;
-    virtual EnemyAIState VGetStateType() const = 0;
+    virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) override = 0;
+    virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) override = 0;
+    virtual EnemyAIState VGetStateType() const override = 0;
 
     // Can enemy enter this state ?
     virtual bool VCanEnter() = 0;
