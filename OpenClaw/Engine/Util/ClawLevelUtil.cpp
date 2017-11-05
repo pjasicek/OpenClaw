@@ -140,6 +140,21 @@ namespace ClawLevelUtil
             { { 9, "CrazyHook" }, ActorPrototype_Level9_CrazyHook },
             { { 9, "PegLeg" }, ActorPrototype_Level9_PegLeg },
             { { 9, "ConveyorBelt" }, ActorPrototype_Level9_ConveyorBelt },
+
+            // Level 10
+            { { 10, "Elevator" }, ActorPrototype_BaseElevator },
+            { { 10, "OneWayTriggerElevator" }, ActorPrototype_BaseElevator },
+            { { 10, "TriggerElevator" }, ActorPrototype_BaseElevator },
+            { { 10, "Seagull" }, ActorPrototype_Level10_Seagull },
+            { { 10, "TProjectile" }, ActorPrototype_Level10_PuffDartSpawner },
+            { { 10, "CrazyHook" }, ActorPrototype_Level10_CrazyHook },
+            { { 10, "PegLeg" }, ActorPrototype_Level10_PegLeg },
+            { { 10, "CrumblingPeg" }, ActorPrototype_Level10_CrumblingPeg },
+            { { 10, "TogglePeg" }, ActorPrototype_Level10_TogglePeg },
+            { { 10, "TogglePeg2" }, ActorPrototype_Level10_TogglePeg },
+            { { 10, "TogglePeg3" }, ActorPrototype_Level10_TogglePeg },
+            { { 10, "TogglePeg4" }, ActorPrototype_Level10_TogglePeg },
+            { { 10, "BossStager" }, ActorPrototype_Level10_BossStager },
         };
 
         auto key = std::make_pair(levelNumber, logic);

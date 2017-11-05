@@ -1,0 +1,7 @@
+<Actor Type="Level10_CrazyHook" Parent="ActorPrototype_Level9_CrazyHook" ActorPrototypeName="ActorPrototype_Level10_CrazyHook">
+    <ActorRenderComponent>
+        <ZCoord>30</ZCoord>
+        <ImagePath>/LEVEL10/IMAGES/CRAZYHOOK/*</ImagePath>
+        <Palette>/LEVEL10/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+</Actor>

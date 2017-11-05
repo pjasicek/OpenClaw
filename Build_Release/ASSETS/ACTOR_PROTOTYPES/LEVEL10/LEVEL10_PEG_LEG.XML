@@ -1,0 +1,6 @@
+<Actor Type="Level10_PegLeg" Parent="ActorPrototype_Level9_PegLeg" ActorPrototypeName="ActorPrototype_Level10_PegLeg">
+    <ActorRenderComponent>
+        <ImagePath>/LEVEL10/IMAGES/PEGLEG/*</ImagePath>
+        <Palette>/LEVEL10/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+</Actor>

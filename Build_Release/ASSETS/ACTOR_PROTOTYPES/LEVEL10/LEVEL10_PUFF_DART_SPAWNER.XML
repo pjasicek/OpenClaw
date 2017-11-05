@@ -1,0 +1,6 @@
+<Actor Type="Level10_PuffDartSpawner" Parent="ActorPrototype_Level9_PuffDartSpawner" ActorPrototypeName="ActorPrototype_Level10_PuffDartSpawner">
+	<ActorRenderComponent>
+		<ImagePath>OVERRIDEN_IN_CODE</ImagePath>
+		<Palette>/LEVEL10/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+</Actor>

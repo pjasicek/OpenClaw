@@ -448,6 +448,19 @@ enum ActorPrototype
     ActorPrototype_Level9_BulletProjectile,
     ActorPrototype_Level9_ConveyorBelt,
 
+    // Level 9
+    ActorPrototype_Level10_Seagull,
+    ActorPrototype_Level10_PuffDartSpawner,
+    ActorPrototype_Level10_DartProjectile_Up,
+    ActorPrototype_Level10_DartProjectile_Down,
+    ActorPrototype_Level10_DartProjectile_Right,
+    ActorPrototype_Level10_DartProjectile_Left,
+    ActorPrototype_Level10_CrazyHook,
+    ActorPrototype_Level10_PegLeg,
+    ActorPrototype_Level10_CrumblingPeg,
+    ActorPrototype_Level10_TogglePeg,
+    ActorPrototype_Level10_BossStager,
+
     ActorPrototype_Max
 };
 

@@ -1,0 +1,6 @@
+<Actor Type="Level10_DartProjectile_Left" Parent="ActorPrototype_Level9_DartProjectile_Left" ActorPrototypeName="ActorPrototype_Level10_DartProjectile_Left">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL10/IMAGES/PROJECTILES/ARROWLEFT002.PID</ImagePath>
+		<Palette>/LEVEL10/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+</Actor>

@@ -1,0 +1,6 @@
+<Actor Type="Level10_DartProjectile_Up" Parent="ActorPrototype_Level9_DartProjectile_Up" ActorPrototypeName="ActorPrototype_Level10_DartProjectile_Up">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL10/IMAGES/PROJECTILES/ARROWUP004.PID</ImagePath>
+		<Palette>/LEVEL10/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+</Actor>
