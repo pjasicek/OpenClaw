@@ -1,0 +1,43 @@
+<Actor Type="Level9_ConveyorBelt" ActorPrototypeName="ActorPrototype_Level9_ConveyorBelt">
+	<PositionComponent>
+		<Position x="-1" y="-1" /> 
+	</PositionComponent>
+	<ActorRenderComponent>
+		<Visible>true</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>0</ZCoord>
+		<ImagePath>OVERRIDEN_IN_CODE</ImagePath>
+	</ActorRenderComponent>
+    <AnimationComponent>
+		<SpecialAnimation>
+			<Type>cycle</Type>
+			<FrameDuration>75</FrameDuration>
+			<HasPositionDelay>false</HasPositionDelay>
+		</SpecialAnimation>
+	</AnimationComponent>
+	<ConveyorBeltComponent>
+        <Speed>OVERRIDEN_IN_CODE</Speed>
+	</ConveyorBeltComponent>
+    <PhysicsComponent>
+        <BodyType>Static</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>Ground</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="0" height="0" /> <!-- SET ACCORDING TO IMAGE IN PHYSICS COMPONENT -->
+        <GravityScale>0.000000</GravityScale>
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>1</CollisionFlag>
+        <CollisionMask>4294967295</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+    </PhysicsComponent>
+</Actor>

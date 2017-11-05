@@ -83,6 +83,7 @@
     <ClCompile Include="Engine\Actor\ActorTemplates.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\CheckpointComponent.cpp" />
+    <ClCompile Include="Engine\Actor\Components\ConveyorBeltComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\DestroyableComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\ProjectileAIComponent.cpp" />
     <ClCompile Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Engine\Actor\ActorTemplates.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\CrumblingPegAIComponent.h" />
     <ClInclude Include="Engine\Actor\Components\CheckpointComponent.h" />
+    <ClInclude Include="Engine\Actor\Components\ConveyorBeltComponent.h" />
     <ClInclude Include="Engine\Actor\Components\DestroyableComponent.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\ProjectileAIComponent.h" />
     <ClInclude Include="Engine\Actor\Components\AIComponents\TogglePegAIComponent.h" />

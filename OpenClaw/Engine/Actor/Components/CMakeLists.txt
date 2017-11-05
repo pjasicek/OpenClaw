@@ -63,6 +63,8 @@ target_sources(openclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/ActorSpawnerComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/SawBladeComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SawBladeComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ConveyorBeltComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ConveyorBeltComponent.h
 )
 
 add_subdirectory(AIComponents)

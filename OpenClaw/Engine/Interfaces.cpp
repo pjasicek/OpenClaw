@@ -174,6 +174,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level9_CrazyHook, "ActorPrototype_Level9_CrazyHook" },
         { ActorPrototype_Level9_PegLeg, "ActorPrototype_Level9_PegLeg" },
         { ActorPrototype_Level9_BulletProjectile, "ActorPrototype_Level9_BulletProjectile" },
+        { ActorPrototype_Level9_ConveyorBelt, "ActorPrototype_Level9_ConveyorBelt" },
 
         //=======================================
         // Menu
@@ -362,6 +363,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level9_CrazyHook", ActorPrototype_Level9_CrazyHook },
         { "ActorPrototype_Level9_PegLeg", ActorPrototype_Level9_PegLeg },
         { "ActorPrototype_Level9_BulletProjectile", ActorPrototype_Level9_BulletProjectile },
+        { "ActorPrototype_Level9_ConveyorBelt", ActorPrototype_Level9_ConveyorBelt },
         
         //=======================================
         // Menu

@@ -1936,13 +1936,6 @@ void RollEnemyAIStateComponent::VUpdate(uint32 msDiff)
 bool RollEnemyAIStateComponent::VCanEnter()
 {
     bool bCanEnter = (!m_ActorsInLosList.empty() && m_ReuseTimeLeft <= 0);
-    if (!m_ActorsInLosList.empty())
-    {
-        LOG("Actors: " + ToStr(m_ActorsInLosList.size()));
-        LOG("ReuseTimeLeft: " + ToStr(m_ReuseTimeLeft));
-        LOG("Can enter ? " + ToStr(bCanEnter));
-    }
-
     return bCanEnter;
 }
 

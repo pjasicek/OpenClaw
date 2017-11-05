@@ -15,6 +15,7 @@
 #include "../Actor/Components/PathElevatorComponent.h"
 #include "../Actor/Components/SteppingGroundComponent.h"
 #include "../Actor/Components/SpringBoardComponent.h"
+#include "../Actor/Components/ConveyorBeltComponent.h"
 #include "../Actor/Components/AuraComponents/AuraComponent.h"
 
 int numFootContacts = 0;
@@ -376,6 +377,14 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
                         Actor* pOtherActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                         pSpringBoardComponent->OnActorBeginContact(pOtherActor);
                     }
+
+                    shared_ptr<ConveyorBeltComponent> pConveyorBeltComponent =
+                        MakeStrongPtr(pActor->GetComponent<ConveyorBeltComponent>());
+                    if (pConveyorBeltComponent && bIsClaw)
+                    {
+                        Actor* pOtherActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                        pConveyorBeltComponent->OnActorBeginContact(pOtherActor);
+                    }
                 }
 
                 /*if (pActor->GetName() == "Claw")
@@ -641,6 +650,14 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                         {
                             Actor* pOtherActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                             pSpringBoardComponent->OnActorEndContact(pOtherActor);
+                        }
+
+                        shared_ptr<ConveyorBeltComponent> pConveyorBeltComponent =
+                            MakeStrongPtr(pGroundActor->GetComponent<ConveyorBeltComponent>());
+                        if (pConveyorBeltComponent)
+                        {
+                            Actor* pOtherActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
+                            pConveyorBeltComponent->OnActorEndContact(pOtherActor);
                         }
                     }
 

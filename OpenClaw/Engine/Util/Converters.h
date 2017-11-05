@@ -1047,6 +1047,20 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
     }
+    else if (logic == "ConveyorBelt")
+    {
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        double speed = (double)wwdObject->speed * g_pApp->GetGlobalOptions()->platformSpeedModifier;
+
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.ConveyorBeltComponent.Speed", speed));
+
+        return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
+    }
     else if (logic == "SkullCannon")
     {
         SAFE_DELETE(pActorElem);

@@ -117,6 +117,8 @@ public:
     void SetTopLadderContact(b2Contact* pContact) { m_pTopLadderContact = pContact; }
     b2Contact* GetTopLadderContact() { return m_pTopLadderContact; }
 
+    void SetExternalConveyorBeltSpeed(const Point& extSpeed) { m_ExternalConveyorBeltSpeed = extSpeed; }
+
 private:
     // Configurable data read from XML
     bool m_CanClimb;
@@ -146,6 +148,7 @@ private:
 
     Point m_CurrentSpeed;
     Point m_ExternalSourceSpeed;
+    Point m_ExternalConveyorBeltSpeed;
 
     Point m_ClimbingSpeed;
 

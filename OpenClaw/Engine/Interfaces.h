@@ -446,6 +446,7 @@ enum ActorPrototype
     ActorPrototype_Level9_CrazyHook,
     ActorPrototype_Level9_PegLeg,
     ActorPrototype_Level9_BulletProjectile,
+    ActorPrototype_Level9_ConveyorBelt,
 
     ActorPrototype_Max
 };

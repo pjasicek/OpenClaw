@@ -654,6 +654,11 @@ set_velocity:
             velocity.Set((velocity.x * 2) / 3, velocity.y);
             SetVelocity(velocity);
         }
+        else if (fabs(m_ExternalConveyorBeltSpeed.x) > DBL_EPSILON)
+        {
+            m_pPhysics->VAddLinearSpeed(m_pOwner->GetGUID(), m_ExternalConveyorBeltSpeed);
+            m_ExternalConveyorBeltSpeed.Set(0.0, 0.0);
+        }
 
         bool applyForce = true;
         // TODO: Add config to choose between fixed physics timestep and variable
