@@ -208,7 +208,7 @@ class Audio;
 typedef std::map<std::string, std::string> LocalizedStringsMap;
 typedef std::map<std::string, TTF_Font*> FontMap;
 typedef std::map<ActorPrototype, const TiXmlElement*> ActorXmlPrototypeMap;
-typedef std::map<int, LevelMetadata> LevelMetadataMap;
+typedef std::map<int, shared_ptr<LevelMetadata>> LevelMetadataMap;
 
 class BaseGameApp
 {
@@ -279,7 +279,7 @@ public:
 
     TiXmlElement* GetActorPrototypeElem(ActorPrototype proto);
 
-    const LevelMetadata* GetLevelMetadata(int levelNumber) const;
+    const shared_ptr<LevelMetadata> GetLevelMetadata(int levelNumber) const;
 
 protected:
     virtual void VRegisterGameEvents() { }

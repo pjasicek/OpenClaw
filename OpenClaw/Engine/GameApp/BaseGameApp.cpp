@@ -880,17 +880,17 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
             return false;
         }
 
-        LevelMetadata levelMetadata;
+        shared_ptr<LevelMetadata> pLevelMetadata = shared_ptr<LevelMetadata>(new LevelMetadata);
 
         // LevelMetadata.LevelNumber
-        if (!ParseValueFromXmlElem(&levelMetadata.levelNumber, pRootElem->FirstChildElement("LevelNumber")))
+        if (!ParseValueFromXmlElem(&pLevelMetadata->levelNumber, pRootElem->FirstChildElement("LevelNumber")))
         {
             LOG_ERROR("Missing \"LevelNumber\" element in metadata file: " + metadataFile);
             return false;
         }
 
         // LevelMetadata.LevelName
-        if (!ParseValueFromXmlElem(&levelMetadata.levelName, pRootElem->FirstChildElement("LevelName")))
+        if (!ParseValueFromXmlElem(&pLevelMetadata->levelName, pRootElem->FirstChildElement("LevelName")))
         {
             LOG_ERROR("Missing \"LevelName\" element in metadata file: " + metadataFile);
             return false;
@@ -923,7 +923,7 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
             }
 
             ActorPrototype proto = StringToEnum_ActorPrototype(protoStr);
-            levelMetadata.logicToActorPrototypeMap.insert(std::make_pair(logic, proto));
+            pLevelMetadata->logicToActorPrototypeMap.insert(std::make_pair(logic, proto));
         }
 
         // LevelMetadata.ClawSpawnPositions.*
@@ -957,7 +957,7 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
                 return false;
             }
 
-            levelMetadata.checkpointNumberToSpawnPositionMap.insert(std::make_pair(spawnNumber, spawnPosition));
+            pLevelMetadata->checkpointNumberToSpawnPositionMap.insert(std::make_pair(spawnNumber, spawnPosition));
         }
 
         // LevelMetadata.TopLadderEnds.*
@@ -991,7 +991,7 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
                 return false;
             }
 
-            levelMetadata.tileIdToTopLadderEndMap.insert(std::make_pair(tileId, offset));
+            pLevelMetadata->tileIdToTopLadderEndMap.insert(std::make_pair(tileId, offset));
         }
 
         // LevelMetadata.TileDeathEffect
@@ -1002,23 +1002,23 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
             return false;
         }
 
-        if (!ParseAttributeFromXmlElem(&levelMetadata.tileDeathEffectType, "type", pTileDeathEffectElem))
+        if (!ParseAttributeFromXmlElem(&pLevelMetadata->tileDeathEffectType, "type", pTileDeathEffectElem))
         {
             LOG_ERROR("Missing \"type\" in TileDeathEffect element in metadata file: " + metadataFile);
             return false;
         }
         
-        if (levelMetadata.tileDeathEffectType != "NONE")
+        if (pLevelMetadata->tileDeathEffectType != "NONE")
         {
-            if (!ParseValueFromXmlElem(&levelMetadata.tileDeathEffectOffset, pTileDeathEffectElem, "offsetX", "offsetY"))
+            if (!ParseValueFromXmlElem(&pLevelMetadata->tileDeathEffectOffset, pTileDeathEffectElem, "offsetX", "offsetY"))
             {
                 LOG_ERROR("Missing death effect positon x and y in TileDeathEffect element in metadata file: "
-                    + metadataFile + " for type: " + levelMetadata.tileDeathEffectType);
+                    + metadataFile + " for type: " + pLevelMetadata->tileDeathEffectType);
                 return false;
             }
         }
 
-        m_LevelMetadataMap.insert(std::make_pair(levelMetadata.levelNumber, levelMetadata));
+        m_LevelMetadataMap.insert(std::make_pair(pLevelMetadata->levelNumber, pLevelMetadata));
 
         LOG("\"" + metadataFile + "\": level metadata file successfully loaded.");
     }
@@ -1032,7 +1032,7 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
     return true;
 }
 
-const LevelMetadata* BaseGameApp::GetLevelMetadata(int levelNumber) const
+const shared_ptr<LevelMetadata> BaseGameApp::GetLevelMetadata(int levelNumber) const
 {
     auto& findIt = m_LevelMetadataMap.find(levelNumber);
     if (findIt == m_LevelMetadataMap.end())
@@ -1041,7 +1041,7 @@ const LevelMetadata* BaseGameApp::GetLevelMetadata(int levelNumber) const
         return NULL;
     }
 
-    return &findIt->second;
+    return findIt->second;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

@@ -1043,10 +1043,8 @@ void BaseAttackAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
     {
         m_CurrentAttackActionIdx = 0;
         m_pEnemyAIComponent->EnterBestState(true);
-        LOG("Transitioning");
         if (m_IsActive)
         {
-            LOG("Back to attack");
             VExecuteAttack();
             m_pAnimationComponent->SetDelay(m_AttackDelay);
         }
