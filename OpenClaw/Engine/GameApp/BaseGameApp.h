@@ -187,6 +187,17 @@ struct DebugOptions
     bool bSkipBossFightIntro;
 };
 
+struct LevelMetadata
+{
+    int levelNumber;
+    std::string levelName;
+    std::map<std::string, ActorPrototype> logicToActorPrototypeMap;
+    std::map<int, Point> checkpointNumberToSpawnPositionMap;
+    std::map<int, Point> tileIdToTopLadderEndMap;
+    std::string tileDeathEffectType;
+    Point tileDeathEffectOffset;
+};
+
 class EventMgr;
 class BaseGameLogic;
 class HumanView;
@@ -197,6 +208,7 @@ class Audio;
 typedef std::map<std::string, std::string> LocalizedStringsMap;
 typedef std::map<std::string, TTF_Font*> FontMap;
 typedef std::map<ActorPrototype, const TiXmlElement*> ActorXmlPrototypeMap;
+typedef std::map<int, LevelMetadata> LevelMetadataMap;
 
 class BaseGameApp
 {
@@ -267,6 +279,8 @@ public:
 
     TiXmlElement* GetActorPrototypeElem(ActorPrototype proto);
 
+    const LevelMetadata* GetLevelMetadata(int levelNumber) const { return &GetValueFromMap(levelNumber, m_LevelMetadataMap); }
+
 protected:
     virtual void VRegisterGameEvents() { }
     virtual bool VPerformStartupTests();
@@ -294,6 +308,7 @@ private:
     bool InitializeEventMgr();
     bool ReadConsoleConfig();
     bool ReadActorXmlPrototypes(GameOptions& gameOptions);
+    bool ReadLevelMetadata(GameOptions& gameOptions);
 
     void RegisterEngineEvents();
 
@@ -320,6 +335,7 @@ private:
     DebugOptions m_DebugOptions;
 
     ActorXmlPrototypeMap m_ActorXmlPrototypeMap;
+    LevelMetadataMap m_LevelMetadataMap;
 };
 
 extern BaseGameApp* g_pApp;

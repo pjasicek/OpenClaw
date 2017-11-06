@@ -1,0 +1,28 @@
+<LevelMetadata>
+    <LevelNumber>10</LevelNumber>
+    <LevelName>Cliffs</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="OneWayTriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="Seagull" actorPrototype="ActorPrototype_Level10_Seagull" />
+        <LogicToActorPrototype logic="TProjectile" actorPrototype="ActorPrototype_Level10_PuffDartSpawner" />
+        <LogicToActorPrototype logic="CrazyHook" actorPrototype="ActorPrototype_Level10_CrazyHook" />
+        <LogicToActorPrototype logic="PegLeg" actorPrototype="ActorPrototype_Level10_PegLeg" />
+        <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level10_CrumblingPeg" />
+        <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level10_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level10_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level10_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level10_TogglePeg" />
+        <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Level10_BossStager" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="740" y="7744" />
+        <ClawSpawnPosition spawnNumber="1" x="8721" y="7759" />
+        <ClawSpawnPosition spawnNumber="2" x="14289" y="7756" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="0" offsetX="0" offsetY="0" />
+    </TopLadderEnds>
+    <TileDeathEffect type="NONE" offsetX="0" offsetY="0" />
+</LevelMetadata>

@@ -4,6 +4,8 @@
 
 namespace ClawLevelUtil
 {
+    
+
     // Every logic in CaptainClaw is determined by its ID (logic string, e.g. "Soldier") and level number (e.g. 2)
     // This way same logics for different levels can be used, e.g. Soldier in level 1 and Soldier in level 2
     // - they differ by various things, most commonly image sets and health

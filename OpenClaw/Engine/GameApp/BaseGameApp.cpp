@@ -62,6 +62,7 @@ bool BaseGameApp::Initialize(int argc, char** argv)
     if (!InitializeResources(m_GameOptions)) return false;
     if (!InitializeLocalization(m_GameOptions)) return false;
     if (!ReadActorXmlPrototypes(m_GameOptions)) return false;
+    if (!ReadLevelMetadata(m_GameOptions)) return false;
 
     RegisterAllDelegates();
 
@@ -849,6 +850,172 @@ bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
     }
 
     return loadedAllRequired;
+}
+
+bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
+{
+    static const std::string LEVEL_METADATA_ARCHIVE_FOLDER = "/LEVEL_METADATA";
+    int numLoaded = 0;
+
+    std::vector<std::string> xmlLevelMetadataFiles = m_pResourceMgr->VMatch(LEVEL_METADATA_ARCHIVE_FOLDER + "/*.XML");
+    for (const std::string& metadataFile : xmlLevelMetadataFiles)
+    {
+        TiXmlElement* pRootElem = XmlResourceLoader::LoadAndReturnRootXmlElement(metadataFile.c_str());
+        if (pRootElem == NULL)
+        {
+            LOG_ERROR("Failed to parse level metadata file: " + metadataFile);
+            return false;
+        }
+
+        LevelMetadata levelMetadata;
+
+        // LevelMetadata.LevelNumber
+        if (!ParseValueFromXmlElem(&levelMetadata.levelNumber, pRootElem->FirstChildElement("LevelNumber")))
+        {
+            LOG_ERROR("Missing \"LevelNumber\" element in metadata file: " + metadataFile);
+            return false;
+        }
+
+        // LevelMetadata.LevelName
+        if (!ParseValueFromXmlElem(&levelMetadata.levelName, pRootElem->FirstChildElement("LevelName")))
+        {
+            LOG_ERROR("Missing \"LevelName\" element in metadata file: " + metadataFile);
+            return false;
+        }
+
+        // LevelMetadata.LogicsToActorPrototypes.*
+        TiXmlElement* pLogicToProtoRootElem = pRootElem->FirstChildElement("LogicsToActorPrototypes");
+        if (pLogicToProtoRootElem == NULL)
+        {
+            LOG_ERROR("Missing \"LogicsToActorPrototypes\" element in metadata file: " + metadataFile);
+            return false;
+        }
+
+        for (TiXmlElement* pLogicToProtoElem = pLogicToProtoRootElem->FirstChildElement("LogicToActorPrototype");
+            pLogicToProtoElem != NULL;
+            pLogicToProtoElem = pLogicToProtoElem->NextSiblingElement("LogicToActorPrototype"))
+        {
+            std::string logic;
+            std::string protoStr;
+
+            if (!ParseAttributeFromXmlElem(&logic, "logic", pLogicToProtoElem))
+            {
+                LOG_ERROR("Missing \"logic\" in LogicToActorPrototype element in metadata file: " + metadataFile);
+                return false;
+            }
+            if (!ParseAttributeFromXmlElem(&protoStr, "actorPrototype", pLogicToProtoElem))
+            {
+                LOG_ERROR("Missing \"actorPrototype\" in LogicToActorPrototype element in metadata file: " + metadataFile);
+                return false;
+            }
+
+            ActorPrototype proto = StringToEnum_ActorPrototype(protoStr);
+            levelMetadata.logicToActorPrototypeMap.insert(std::make_pair(logic, proto));
+        }
+
+        // LevelMetadata.ClawSpawnPositions.*
+        TiXmlElement* pSpawnPositionsRootElem = pRootElem->FirstChildElement("ClawSpawnPositions");
+        if (pSpawnPositionsRootElem == NULL)
+        {
+            LOG_ERROR("Missing \"ClawSpawnPositions\" element in metadata file: " + metadataFile);
+            return false;
+        }
+
+        for (TiXmlElement* pSpawnPositionElem = pSpawnPositionsRootElem->FirstChildElement("ClawSpawnPosition");
+            pSpawnPositionElem != NULL;
+            pSpawnPositionElem = pSpawnPositionElem->NextSiblingElement("ClawSpawnPosition"))
+        {
+            std::string spawnNumberStr;
+            int spawnNumber;
+            Point spawnPosition;
+
+            if (!ParseAttributeFromXmlElem(&spawnNumberStr, "spawnNumber", pSpawnPositionElem))
+            {
+                LOG_ERROR("Missing \"spawnNumber\" in ClawSpawnPosition element in metadata file: " + metadataFile);
+                return false;
+            }
+
+            spawnNumber = std::stoi(spawnNumberStr);
+
+            if (!ParseValueFromXmlElem(&spawnPosition, pSpawnPositionElem, "x", "y"))
+            {
+                LOG_ERROR("Missing spawn positon x and y in ClawSpawnPosition element in metadata file: "
+                    + metadataFile + " for spawnNumber: " + ToStr(spawnNumber));
+                return false;
+            }
+
+            levelMetadata.checkpointNumberToSpawnPositionMap.insert(std::make_pair(spawnNumber, spawnPosition));
+        }
+
+        // LevelMetadata.TopLadderEnds.*
+        TiXmlElement* pTopLadderEndsRootElem = pRootElem->FirstChildElement("TopLadderEnds");
+        if (pTopLadderEndsRootElem == NULL)
+        {
+            LOG_ERROR("Missing \"TopLadderEnds\" element in metadata file: " + metadataFile);
+            return false;
+        }
+
+        for (TiXmlElement* pTopLadderEndElem = pTopLadderEndsRootElem->FirstChildElement("TopLadderEnd");
+            pTopLadderEndElem != NULL;
+            pTopLadderEndElem = pTopLadderEndElem->NextSiblingElement("TopLadderEnd"))
+        {
+            std::string tileIdStr;
+            int tileId;
+            Point offset;
+
+            if (!ParseAttributeFromXmlElem(&tileIdStr, "tileId", pTopLadderEndElem))
+            {
+                LOG_ERROR("Missing \"tileId\" in TopLadderEnd element in metadata file: " + metadataFile);
+                return false;
+            }
+
+            tileId = std::stoi(tileIdStr);
+
+            if (!ParseValueFromXmlElem(&offset, pTopLadderEndElem, "x", "y"))
+            {
+                LOG_ERROR("Missing ladder positon x and y in TopLadderEnd element in metadata file: "
+                    + metadataFile + " for tileId: " + ToStr(tileId));
+                return false;
+            }
+
+            levelMetadata.tileIdToTopLadderEndMap.insert(std::make_pair(tileId, offset));
+        }
+
+        // LevelMetadata.TileDeathEffect
+        TiXmlElement* pTileDeathEffectElem = pRootElem->FirstChildElement("TileDeathEffect");
+        if (pTileDeathEffectElem == NULL)
+        {
+            LOG_ERROR("Missing \"TileDeathEffect\" element in metadata file: " + metadataFile);
+            return false;
+        }
+
+        if (!ParseAttributeFromXmlElem(&levelMetadata.tileDeathEffectType, "type", pTileDeathEffectElem))
+        {
+            LOG_ERROR("Missing \"type\" in TileDeathEffect element in metadata file: " + metadataFile);
+            return false;
+        }
+        
+        if (levelMetadata.tileDeathEffectType != "NONE")
+        {
+            if (!ParseValueFromXmlElem(&levelMetadata.tileDeathEffectOffset, pTileDeathEffectElem, "offsetX", "offsetY"))
+            {
+                LOG_ERROR("Missing death effect positon x and y in TileDeathEffect element in metadata file: "
+                    + metadataFile + " for type: " + levelMetadata.tileDeathEffectType);
+                return false;
+            }
+        }
+
+        LOG("\"" + metadataFile + "\": level metadata file successfully loaded.");
+        numLoaded++;
+    }
+
+    if (numLoaded == 0)
+    {
+        LOG_ERROR("Failed to load any level metadatas from \"" + LEVEL_METADATA_ARCHIVE_FOLDER + "\" archive folder !");
+        return false;
+    }
+
+    return true;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
