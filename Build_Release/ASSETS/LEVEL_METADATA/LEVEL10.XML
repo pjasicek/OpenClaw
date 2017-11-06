@@ -22,7 +22,8 @@
         <ClawSpawnPosition spawnNumber="2" x="14289" y="7756" />
     </ClawSpawnPositions>
     <TopLadderEnds>
-        <TopLadderEnd tileId="0" offsetX="0" offsetY="0" />
+        <TopLadderEnd tileId="153" offsetX="0" offsetY="0" />
+        <TopLadderEnd tileId="156" offsetX="0" offsetY="0" />
     </TopLadderEnds>
     <TileDeathEffect type="NONE" offsetX="0" offsetY="0" />
 </LevelMetadata>
