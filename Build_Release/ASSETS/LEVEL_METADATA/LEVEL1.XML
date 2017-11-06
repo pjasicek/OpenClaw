@@ -1,0 +1,26 @@
+<LevelMetadata>
+    <LevelNumber>1</LevelNumber>
+    <LevelName>La Roca</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="Soldier" actorPrototype="ActorPrototype_Level1_Soldier" />
+        <LogicToActorPrototype logic="Officer" actorPrototype="ActorPrototype_Level1_Officer" />
+        <LogicToActorPrototype logic="Rat" actorPrototype="ActorPrototype_Level1_Rat" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="StartElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level1_CrumblingPeg" />
+        <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level1_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level1_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level1_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level1_TogglePeg" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="689" y="4723" />
+        <ClawSpawnPosition spawnNumber="1" x="6873" y="4970" />
+        <ClawSpawnPosition spawnNumber="2" x="14227" y="2281" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="310" offsetX="0" offsetY="0" />
+    </TopLadderEnds>
+    <TileDeathEffect type="NONE" offsetX="0" offsetY="0" />
+</LevelMetadata>

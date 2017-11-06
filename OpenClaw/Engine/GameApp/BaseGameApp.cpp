@@ -862,7 +862,6 @@ bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
 bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
 {
     static const std::string LEVEL_METADATA_ARCHIVE_FOLDER = "/LEVEL_METADATA";
-    int numLoaded = 0;
 
     // In case of reload
     if (!m_LevelMetadataMap.empty())
@@ -1019,17 +1018,30 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
             }
         }
 
+        m_LevelMetadataMap.insert(std::make_pair(levelMetadata.levelNumber, levelMetadata));
+
         LOG("\"" + metadataFile + "\": level metadata file successfully loaded.");
-        numLoaded++;
     }
 
-    if (numLoaded == 0)
+    if (m_LevelMetadataMap.empty())
     {
         LOG_ERROR("Failed to load any level metadatas from \"" + LEVEL_METADATA_ARCHIVE_FOLDER + "\" archive folder !");
         return false;
     }
 
     return true;
+}
+
+const LevelMetadata* BaseGameApp::GetLevelMetadata(int levelNumber) const
+{
+    auto& findIt = m_LevelMetadataMap.find(levelNumber);
+    if (findIt == m_LevelMetadataMap.end())
+    {
+        LOG_ASSERT("LevelMetadata not found for level: " + ToStr(levelNumber));
+        return NULL;
+    }
+
+    return &findIt->second;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

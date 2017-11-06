@@ -1,0 +1,29 @@
+<LevelMetadata>
+    <LevelNumber>5</LevelNumber>
+    <LevelName>Township</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level5_CrumblingPeg" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="BehindStatue" actorPrototype="ActorPrototype_Level5_LootStatue" />
+        <LogicToActorPrototype logic="FrontStatue" actorPrototype="ActorPrototype_Level5_LootStatue" />
+        <LogicToActorPrototype logic="Seagull" actorPrototype="ActorPrototype_Level5_Seagull" />
+        <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level5_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level5_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level5_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level5_TogglePeg" />
+        <LogicToActorPrototype logic="TownGuard1" actorPrototype="ActorPrototype_Level5_TownGuard1" />
+        <LogicToActorPrototype logic="TownGuard2" actorPrototype="ActorPrototype_Level5_TownGuard2" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="1895" y="2775" />
+        <ClawSpawnPosition spawnNumber="1" x="14022" y="3915" />
+        <ClawSpawnPosition spawnNumber="2" x="23430" y="5513" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="215" offsetX="0" offsetY="-14" />
+        <TopLadderEnd tileId="221" offsetX="0" offsetY="-14" />
+        <TopLadderEnd tileId="516" offsetX="0" offsetY="0" />
+    </TopLadderEnds>
+    <TileDeathEffect type="NONE" offsetX="0" offsetY="0" />
+</LevelMetadata>

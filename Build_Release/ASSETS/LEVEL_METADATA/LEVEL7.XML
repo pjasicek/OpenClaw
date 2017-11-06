@@ -1,0 +1,29 @@
+<LevelMetadata>
+    <LevelNumber>7</LevelNumber>
+    <LevelName>Docks</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="BearSailor" actorPrototype="ActorPrototype_Level7_BearSailor" />
+        <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level7_CrumblingPeg" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="PathElevator" actorPrototype="ActorPrototype_Level7_PathElevator" />
+        <LogicToActorPrototype logic="RedTailPirate" actorPrototype="ActorPrototype_Level7_RedTailPirate" />
+        <LogicToActorPrototype logic="Seagull" actorPrototype="ActorPrototype_Level7_Seagull" />
+        <LogicToActorPrototype logic="SpringBoard" actorPrototype="ActorPrototype_Level7_SpringBoard" />
+        <LogicToActorPrototype logic="StartSteppingStone" actorPrototype="ActorPrototype_Level7_SteppingGround" />
+        <LogicToActorPrototype logic="SteppingStone" actorPrototype="ActorPrototype_Level7_SteppingGround" />
+        <LogicToActorPrototype logic="HermitCrab" actorPrototype="ActorPrototype_Level7_HermitCrab" />
+        <LogicToActorPrototype logic="CrabNest" actorPrototype="ActorPrototype_Level7_CrabNest" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="1665" y="7200" />
+        <ClawSpawnPosition spawnNumber="1" x="9360" y="7370" />
+        <ClawSpawnPosition spawnNumber="2" x="25210" y="7180" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="110" offsetX="0" offsetY="24" />
+        <TopLadderEnd tileId="113" offsetX="0" offsetY="8" />
+        <TopLadderEnd tileId="119" offsetX="0" offsetY="8" />
+        <TopLadderEnd tileId="394" offsetX="0" offsetY="8" />
+    </TopLadderEnds>
+    <TileDeathEffect type="LiquidSplash" offsetX="0" offsetY="-20" />
+</LevelMetadata>

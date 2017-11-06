@@ -1,0 +1,24 @@
+<LevelMetadata>
+    <LevelNumber>3</LevelNumber>
+    <LevelName>Footpath</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="CutThroat" actorPrototype="ActorPrototype_Level3_CutThroat" />
+        <LogicToActorPrototype logic="RobberThief" actorPrototype="ActorPrototype_Level3_RobberThief" />
+        <LogicToActorPrototype logic="Rat" actorPrototype="ActorPrototype_Level3_Rat" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="OneWayTriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="PathElevator" actorPrototype="ActorPrototype_BasePathElevator" />
+        <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level3_CrumblingPeg" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="4600" y="6270" />
+        <ClawSpawnPosition spawnNumber="1" x="15358" y="6868" />
+        <ClawSpawnPosition spawnNumber="2" x="21712" y="3464" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="667" offsetX="0" offsetY="0" />
+        <TopLadderEnd tileId="668" offsetX="0" offsetY="5" />
+    </TopLadderEnds>
+    <TileDeathEffect type="NONE" offsetX="0" offsetY="0" />
+</LevelMetadata>

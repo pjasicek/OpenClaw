@@ -12,7 +12,18 @@ namespace ClawLevelUtil
     // This is a convinience function just to have it all at one place
     ActorPrototype ActorLogicToActorPrototype(int levelNumber, const std::string& logic)
     {
-        static std::map<std::pair<int, std::string>, ActorPrototype> s_LevelLogicToActorProtoMap =
+        const LevelMetadata* pLevelMetadata = g_pApp->GetLevelMetadata(levelNumber);
+        assert(pLevelMetadata != nullptr);
+
+        auto& findIt = pLevelMetadata->logicToActorPrototypeMap.find(logic);
+        if (findIt == pLevelMetadata->logicToActorPrototypeMap.end())
+        {
+            return ActorPrototype_None;
+        }
+
+        return findIt->second;
+
+        /*static std::map<std::pair<int, std::string>, ActorPrototype> s_LevelLogicToActorProtoMap =
         {
             // Level 1
             { { 1, "Soldier" }, ActorPrototype_Level1_Soldier },
@@ -166,12 +177,17 @@ namespace ClawLevelUtil
             return ActorPrototype_None;
         }
 
-        return findIt->second;
+        return findIt->second;*/
     }
 
     Point GetClawSpawnLocation(int checkpointNumber, int levelNumber)
     {
-        switch (levelNumber)
+        const LevelMetadata* pLevelMetadata = g_pApp->GetLevelMetadata(levelNumber);
+        assert(pLevelMetadata != nullptr);
+
+        return GetValueFromMap(checkpointNumber, pLevelMetadata->checkpointNumberToSpawnPositionMap);
+
+        /*switch (levelNumber)
         {
             case 1:
                 if (checkpointNumber == 0) { return Point(689, 4723); }
@@ -249,7 +265,7 @@ namespace ClawLevelUtil
 
         LOG_ERROR("Conflicting LevelNumber: " + ToStr(levelNumber) + ", conflicting CheckpointNumber: " + ToStr(checkpointNumber));
         assert(false && "Unknown level / checkpoint number.");
-        return Point();
+        return Point();*/
     }
 
     shared_ptr<LevelData> GetDebugLoadLevelData()
@@ -262,7 +278,19 @@ namespace ClawLevelUtil
 
     StrongActorPtr CreateSpecialDeathEffect(const Point& location, int levelNumber)
     {
-        // Any special effect linked to the death and level
+        const LevelMetadata* pLevelMetadata = g_pApp->GetLevelMetadata(levelNumber);
+        assert(pLevelMetadata != nullptr);
+
+        if (pLevelMetadata->tileDeathEffectType == "LiquidSplash")
+        {
+            return ActorTemplates::CreateSingleAnimation(
+                location + pLevelMetadata->tileDeathEffectOffset, 
+                AnimationType_TarSplash);
+        }
+
+        return nullptr;
+
+        /*// Any special effect linked to the death and level
         switch (levelNumber)
         {
             // Liquid
@@ -305,12 +333,24 @@ namespace ClawLevelUtil
             default: return nullptr;
         }
 
-        return nullptr;
+        return nullptr;*/
     }
 
     bool TryGetTopLadderInfo(int levelNumber, int tileId, Point& fixtureOffset)
     {
-        static std::map<std::pair<int, int>, Point> s_EndLadderInfoMap =
+        const LevelMetadata* pLevelMetadata = g_pApp->GetLevelMetadata(levelNumber);
+        assert(pLevelMetadata != nullptr);
+
+        auto findIt = pLevelMetadata->tileIdToTopLadderEndMap.find(tileId);
+        if (findIt != pLevelMetadata->tileIdToTopLadderEndMap.end())
+        {
+            fixtureOffset = findIt->second;
+            return true;
+        }
+
+        return false;
+
+        /*static std::map<std::pair<int, int>, Point> s_EndLadderInfoMap =
         {
             // Level 1
             { { 1, 310 }, Point(0, 0) },
@@ -359,6 +399,6 @@ namespace ClawLevelUtil
         }
 
         fixtureOffset = findIt->second;
-        return true;
+        return true;*/
     }
 }

@@ -1,0 +1,28 @@
+<LevelMetadata>
+    <LevelNumber>4</LevelNumber>
+    <LevelName>Dark Woods</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="CutThroat" actorPrototype="ActorPrototype_Level4_CutThroat" />
+        <LogicToActorPrototype logic="RobberThief" actorPrototype="ActorPrototype_Level4_RobberThief" />
+        <LogicToActorPrototype logic="Rat" actorPrototype="ActorPrototype_Level4_Rat" />
+        <LogicToActorPrototype logic="Katherine" actorPrototype="ActorPrototype_Level4_Katherine" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level4_CrumblingPeg" />
+        <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Level4_BossStager" />
+        <LogicToActorPrototype logic="SpringBoard" actorPrototype="ActorPrototype_Level4_SpringBoard" />
+        <LogicToActorPrototype logic="StartSteppingStone" actorPrototype="ActorPrototype_Level4_SteppingGround" />
+        <LogicToActorPrototype logic="SteppingStone" actorPrototype="ActorPrototype_Level4_SteppingGround" />
+        <LogicToActorPrototype logic="SteppingStone2" actorPrototype="ActorPrototype_Level4_SteppingGround" />
+        <LogicToActorPrototype logic="SteppingStone3" actorPrototype="ActorPrototype_Level4_SteppingGround" />
+        <LogicToActorPrototype logic="SteppingStone4" actorPrototype="ActorPrototype_Level4_SteppingGround" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="1439" y="4760" />
+        <ClawSpawnPosition spawnNumber="1" x="9300" y="4248" />
+        <ClawSpawnPosition spawnNumber="2" x="7081" y="5254" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="181" offsetX="0" offsetY="7" />
+    </TopLadderEnds>
+    <TileDeathEffect type="LiquidSplash" offsetX="0" offsetY="-30" />
+</LevelMetadata>

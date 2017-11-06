@@ -1,0 +1,34 @@
+<LevelMetadata>
+    <LevelNumber>8</LevelNumber>
+    <LevelName>Shipyards</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="BearSailor" actorPrototype="ActorPrototype_Level8_BearSailor" />
+        <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Level8_BossStager" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="OneWayTriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="PunkRat" actorPrototype="ActorPrototype_Level8_PunkRat" />
+        <LogicToActorPrototype logic="RedTailPirate" actorPrototype="ActorPrototype_Level8_RedTailPirate" />
+        <LogicToActorPrototype logic="Seagull" actorPrototype="ActorPrototype_Level8_Seagull" />
+        <LogicToActorPrototype logic="StartSteppingStone" actorPrototype="ActorPrototype_Level8_SteppingGround" />
+        <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level8_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level8_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level8_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level8_TogglePeg" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="1046" y="5520" />
+        <ClawSpawnPosition spawnNumber="1" x="12121" y="4995" />
+        <ClawSpawnPosition spawnNumber="2" x="22557" y="4996" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="62" offsetX="0" offsetY="0" />
+        <TopLadderEnd tileId="534" offsetX="0" offsetY="-30" />
+        <TopLadderEnd tileId="535" offsetX="0" offsetY="0" />
+        <TopLadderEnd tileId="536" offsetX="0" offsetY="44" />
+        <TopLadderEnd tileId="540" offsetX="0" offsetY="20" />
+        <TopLadderEnd tileId="543" offsetX="0" offsetY="0" />
+        <TopLadderEnd tileId="548" offsetX="0" offsetY="39" />
+        <TopLadderEnd tileId="583" offsetX="0" offsetY="0" />
+    </TopLadderEnds>
+    <TileDeathEffect type="LiquidSplash" offsetX="0" offsetY="-20" />
+</LevelMetadata>

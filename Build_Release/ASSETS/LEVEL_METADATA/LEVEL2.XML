@@ -1,0 +1,30 @@
+<LevelMetadata>
+    <LevelNumber>2</LevelNumber>
+    <LevelName>Battlements</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="Soldier" actorPrototype="ActorPrototype_Level2_Soldier" />
+        <LogicToActorPrototype logic="Officer" actorPrototype="ActorPrototype_Level2_Officer" />
+        <LogicToActorPrototype logic="PunkRat" actorPrototype="ActorPrototype_Level2_PunkRat" />
+        <LogicToActorPrototype logic="Raux" actorPrototype="ActorPrototype_Level2_LaRaux" />
+        <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Level2_BossStager" />
+        <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level2_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level2_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level2_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level2_TogglePeg" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="OneWayTriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="OneWayStartElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TowerCannonLeft" actorPrototype="ActorPrototype_Level2_TowerCannonLeft" />
+        <LogicToActorPrototype logic="TowerCannonRight" actorPrototype="ActorPrototype_Level2_TowerCannonRight" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="420" y="4789" />
+        <ClawSpawnPosition spawnNumber="1" x="8235" y="4848" />
+        <ClawSpawnPosition spawnNumber="2" x="15657" y="4650" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="16" offsetX="0" offsetY="50" />
+    </TopLadderEnds>
+    <TileDeathEffect type="LiqudSplash" offsetX="0" offsetY="-42" />
+</LevelMetadata>

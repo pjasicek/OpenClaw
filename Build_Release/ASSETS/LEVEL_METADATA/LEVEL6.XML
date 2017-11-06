@@ -1,0 +1,30 @@
+<LevelMetadata>
+    <LevelNumber>6</LevelNumber>
+    <LevelName>Puerto Lobos</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Level6_BossStager" />
+        <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level6_CrumblingPeg" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="OneWayTriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="OneWayStartElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="GooVent" actorPrototype="ActorPrototype_Level6_GooVent" />
+        <LogicToActorPrototype logic="GroundBlower" actorPrototype="ActorPrototype_Level6_GroundBlower" />
+        <LogicToActorPrototype logic="Rat" actorPrototype="ActorPrototype_Level6_Rat" />
+        <LogicToActorPrototype logic="Seagull" actorPrototype="ActorPrototype_Level6_Seagull" />
+        <LogicToActorPrototype logic="StartSteppingStone" actorPrototype="ActorPrototype_Level6_SteppingGround" />
+        <LogicToActorPrototype logic="TownGuard1" actorPrototype="ActorPrototype_Level6_TownGuard1" />
+        <LogicToActorPrototype logic="TownGuard2" actorPrototype="ActorPrototype_Level6_TownGuard2" />
+        <LogicToActorPrototype logic="Wolvington" actorPrototype="ActorPrototype_Level6_Wolvington" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="425" y="4749" />
+        <ClawSpawnPosition spawnNumber="1" x="9165" y="4710" />
+        <ClawSpawnPosition spawnNumber="2" x="19831" y="5999" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="16" offsetX="0" offsetY="0" />
+        <TopLadderEnd tileId="139" offsetX="0" offsetY="0" />
+    </TopLadderEnds>
+    <TileDeathEffect type="LiquidSplash" offsetX="0" offsetY="-8" />
+</LevelMetadata>

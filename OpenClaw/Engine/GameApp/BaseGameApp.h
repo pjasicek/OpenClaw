@@ -279,7 +279,7 @@ public:
 
     TiXmlElement* GetActorPrototypeElem(ActorPrototype proto);
 
-    const LevelMetadata* GetLevelMetadata(int levelNumber) const { return &GetValueFromMap(levelNumber, m_LevelMetadataMap); }
+    const LevelMetadata* GetLevelMetadata(int levelNumber) const;
 
 protected:
     virtual void VRegisterGameEvents() { }
