@@ -797,6 +797,13 @@ bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
 {
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, ">>>>> Loading actor prototypes...");
 
+    // In case of reload
+    if (!m_ActorXmlPrototypeMap.empty())
+    {
+        LOG_TRACE("Detected reload of actor prototypes !");
+        m_ActorXmlPrototypeMap.clear();
+    }
+
     std::vector<std::string> xmlActorPrototypeFiles = m_pResourceMgr->VMatch("/ACTOR_PROTOTYPES/*.XML");
     for (const std::string& protoFile : xmlActorPrototypeFiles)
     {
@@ -856,6 +863,13 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
 {
     static const std::string LEVEL_METADATA_ARCHIVE_FOLDER = "/LEVEL_METADATA";
     int numLoaded = 0;
+
+    // In case of reload
+    if (!m_LevelMetadataMap.empty())
+    {
+        LOG_TRACE("Detected reload of level metadata !");
+        m_LevelMetadataMap.clear();
+    }
 
     std::vector<std::string> xmlLevelMetadataFiles = m_pResourceMgr->VMatch(LEVEL_METADATA_ARCHIVE_FOLDER + "/*.XML");
     for (const std::string& metadataFile : xmlLevelMetadataFiles)
