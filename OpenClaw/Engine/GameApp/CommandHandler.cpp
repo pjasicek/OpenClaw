@@ -106,7 +106,7 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
         AddPowerup(PowerupType_Invulnerability, 30000, wasCommandExecuted, commandStr, pConsole);
     }
 
-    if (commandStr == "reset level")
+    if (commandStr == "reset level" || commandStr == "rl")
     {
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Reset_Level));
         pConsole->AddLine("Requested level reset.", COLOR_GREEN);
@@ -118,7 +118,7 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
         if (StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor())
         {
             ActorTemplates::CreateActorPickup(
-                PickupType_Treasure_Coins, 
+                PickupType_Treasure_Coins,
                 pClaw->GetPositionComponent()->GetPosition() + Point(100, 0));
         }
         else
@@ -172,6 +172,23 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
     if (commandStr.find("cpudelay ") != std::string::npos && commandArgs.size() == 2)
     {
         g_pApp->m_DebugOptions.cpuDelayMs = std::stoi(commandArgs[1]);
+        wasCommandExecuted = true;
+    }
+
+    if (commandStr == "reload levelmetadata")
+    {
+        g_pApp->ReadLevelMetadata(g_pApp->m_GameOptions);
+        wasCommandExecuted = true;
+    }
+    else if (commandStr == "reload actorprototypes" || commandStr == "reload actorproto")
+    {
+        g_pApp->ReadActorXmlPrototypes(g_pApp->m_GameOptions);
+        wasCommandExecuted = true;
+    }
+    else if (commandStr == "reload all" || commandStr == "ra")
+    {
+        g_pApp->ReadLevelMetadata(g_pApp->m_GameOptions);
+        g_pApp->ReadActorXmlPrototypes(g_pApp->m_GameOptions);
         wasCommandExecuted = true;
     }
 
