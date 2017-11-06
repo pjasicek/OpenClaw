@@ -984,7 +984,7 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
 
             tileId = std::stoi(tileIdStr);
 
-            if (!ParseValueFromXmlElem(&offset, pTopLadderEndElem, "x", "y"))
+            if (!ParseValueFromXmlElem(&offset, pTopLadderEndElem, "offsetX", "offsetY"))
             {
                 LOG_ERROR("Missing ladder positon x and y in TopLadderEnd element in metadata file: "
                     + metadataFile + " for tileId: " + ToStr(tileId));
