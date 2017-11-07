@@ -15,7 +15,7 @@ namespace ClawLevelUtil
         const shared_ptr<LevelMetadata> pLevelMetadata = g_pApp->GetLevelMetadata(levelNumber);
         assert(pLevelMetadata != nullptr);
 
-        auto& findIt = pLevelMetadata->logicToActorPrototypeMap.find(logic);
+        auto findIt = pLevelMetadata->logicToActorPrototypeMap.find(logic);
         if (findIt == pLevelMetadata->logicToActorPrototypeMap.end())
         {
             return ActorPrototype_None;
