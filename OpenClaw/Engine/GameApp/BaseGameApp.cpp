@@ -1034,7 +1034,7 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
 
 const shared_ptr<LevelMetadata> BaseGameApp::GetLevelMetadata(int levelNumber) const
 {
-    auto& findIt = m_LevelMetadataMap.find(levelNumber);
+    auto findIt = m_LevelMetadataMap.find(levelNumber);
     if (findIt == m_LevelMetadataMap.end())
     {
         LOG_ASSERT("LevelMetadata not found for level: " + ToStr(levelNumber));
