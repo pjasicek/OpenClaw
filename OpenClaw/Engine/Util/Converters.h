@@ -717,7 +717,9 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "Katherine" ||
              logic == "Wolvington" ||
              logic == "CrazyHook" ||
-             logic == "PegLeg")
+             logic == "PegLeg" ||
+             logic == "Marrow" ||
+             logic == "Parrot")
     {
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
@@ -740,6 +742,13 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             wwdObject->maxX,
             wwdObject->userValue1,
             wwdObject->drawFlags & WAP_OBJECT_DRAW_FLAG_MIRROR);
+    }
+    else if (logic == "MarrowFloor")
+    {
+        double floorSpeed = wwdObject->speedX;
+        Direction floorActiveDirection = wwdObject->direction == 0 ? Direction_Left : Direction_Right;
+
+        // TODO
     }
     else if (logic.find("CannonButton") != std::string::npos)
     {

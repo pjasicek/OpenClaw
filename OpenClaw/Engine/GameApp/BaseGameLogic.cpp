@@ -1198,6 +1198,21 @@ StrongActorPtr BaseGameLogic::FindActorByName(const std::string& name, bool bIsU
     return pFoundActor;
 }
 
+ActorList BaseGameLogic::FindActorByName(const std::string& name)
+{
+    ActorList actorList;
+
+    for (auto actorIter : m_ActorMap)
+    {
+        if (actorIter.second->GetName() == name)
+        {
+            actorList.push_back(actorIter.second.get());
+        }
+    }
+
+    return actorList;
+}
+
 void BaseGameLogic::UnloadLevel()
 {
     // We cannot do this inside event update loop

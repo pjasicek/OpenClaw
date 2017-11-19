@@ -56,6 +56,7 @@
 #include "Components/EnemyAI/Gabriel/GabrielEncounter.h"
 #include "Components/SawBladeComponent.h"
 #include "Components/ConveyorBeltComponent.h"
+#include "Components/EnemyAI/Marrow/MarrowEncounter.h"
 
 ActorFactory::ActorFactory()
 {
@@ -129,6 +130,9 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<SawBladeComponent>();
     _componentFactory.Register<RollEnemyAIStateComponent>();
     _componentFactory.Register<ConveyorBeltComponent>();
+    _componentFactory.Register<MarrowAIStateComponent>();
+    _componentFactory.Register<MarrowParrotAIStateComponent>();
+    _componentFactory.Register<MarrowFloorComponent>();
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

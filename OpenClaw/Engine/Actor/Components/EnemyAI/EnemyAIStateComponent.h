@@ -27,6 +27,8 @@ enum EnemyAIState
     EnemyAIState_BrainWolvington,
     EnemyAIState_PunkRat,
     EnemyAIState_BrainGabriel,
+    EnemyAIState_BrainMarrow,
+    EnemyAIState_BrainMarrowParrot,
 };
 
 struct EnemyAIAction
@@ -50,6 +52,28 @@ struct EnemyAIAction
     bool retainDirection;
     uint32 activeAnimIdx;
     std::vector<std::string> animations;
+};
+
+template <typename T>
+struct BossAction
+{
+    BossAction()
+    {
+        actionType = T(0);
+        probability = 0;
+        reuseTime = 0;
+        timeSinceLastUse = 0;
+    }
+
+    bool CanBeUsed()
+    {
+        return reuseTime < timeSinceLastUse;
+    }
+
+    T actionType;
+    int probability;
+    int reuseTime;
+    int timeSinceLastUse;
 };
 
 class PhysicsComponent;

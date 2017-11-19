@@ -91,6 +91,7 @@ public:
     StrongActorPtr GetClawActor();
 
     StrongActorPtr FindActorByName(const std::string& name, bool bIsUnique);
+    ActorList FindActorByName(const std::string& name);
 
 protected:
     virtual ActorFactory* VCreateActorFactory();
