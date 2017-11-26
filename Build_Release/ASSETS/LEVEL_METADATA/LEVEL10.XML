@@ -15,6 +15,9 @@
         <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level10_TogglePeg" />
         <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level10_TogglePeg" />
         <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Level10_BossStager" />
+        <LogicToActorPrototype logic="Parrot" actorPrototype="ActorPrototype_Level10_MarrowParrot" />
+        <LogicToActorPrototype logic="MarrowFloor" actorPrototype="ActorPrototype_Level10_MarrowFloor" />
+        <LogicToActorPrototype logic="Marrow" actorPrototype="ActorPrototype_Level10_Marrow" />
     </LogicsToActorPrototypes>
     <ClawSpawnPositions>
         <ClawSpawnPosition spawnNumber="0" x="740" y="7744" />

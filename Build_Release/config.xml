@@ -67,8 +67,8 @@
   </GlobalOptions>
   <DebugOptions>
     <SkipMenu>false</SkipMenu>
-    <SkipMenuToLevel>9</SkipMenuToLevel>
-    <LastImplementedLevel>14</LastImplementedLevel>
+    <SkipMenuToLevel>10</SkipMenuToLevel>
+    <LastImplementedLevel>10</LastImplementedLevel>
     <SkipBossFightIntro>false</SkipBossFightIntro>
     <CpuDelay>0</CpuDelay>
   </DebugOptions>

@@ -334,10 +334,6 @@ bool EnemyAIComponent::EnterBestState(bool canForceEnter)
             m_bHasStateLock = false;
         }
         EnterState(pBestState);
-        if (pBestState->VGetStateType() == EnemyAIState_BrainGabriel)
-        {
-            LOG_TRACE("Entered Gabriel's state !");
-        }
         return true;
     }
 

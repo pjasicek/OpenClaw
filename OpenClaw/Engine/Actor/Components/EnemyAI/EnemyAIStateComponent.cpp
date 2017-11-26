@@ -1185,11 +1185,11 @@ bool BaseAttackAIStateComponent::VCanEnter()
     Point fromPoint = m_pOwner->GetPositionComponent()->GetPosition();
     Point toPoint = m_EnemyAgroList[0]->GetPositionComponent()->GetPosition();
 
-    RaycastResult raycastResultDown = g_pApp->GetGameLogic()->VGetGamePhysics()->VRayCast(
+    RaycastResult raycastResult = g_pApp->GetGameLogic()->VGetGamePhysics()->VRayCast(
         fromPoint, 
         toPoint, 
         CollisionFlag_Solid);
-    if (raycastResultDown.foundIntersection)
+    if (raycastResult.foundIntersection)
     {
         // Vision is obstructed
         return false;

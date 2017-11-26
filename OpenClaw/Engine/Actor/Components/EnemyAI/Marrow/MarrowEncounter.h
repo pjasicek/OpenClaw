@@ -131,6 +131,7 @@ private:
     void OnGotHit(DamageType damageType);
 
     MarrowAIStateComponent* m_pMarrow;
+    AnimationComponent* m_pAnimationComponent;
 };
 
 class MarrowFloorComponent : public ActorComponent

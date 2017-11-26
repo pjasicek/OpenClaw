@@ -188,6 +188,10 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level10_CrumblingPeg, "ActorPrototype_Level10_CrumblingPeg" },
         { ActorPrototype_Level10_TogglePeg, "ActorPrototype_Level10_TogglePeg" },
         { ActorPrototype_Level10_BossStager, "ActorPrototype_Level10_BossStager" },
+        { ActorPrototype_Level10_Marrow, "ActorPrototype_Level10_Marrow" },
+        { ActorPrototype_Level10_MarrowFloor, "ActorPrototype_Level10_MarrowFloor" },
+        { ActorPrototype_Level10_MarrowParrot, "ActorPrototype_Level10_MarrowParrot" },
+        { ActorPrototype_Level10_BossGem, "ActorPrototype_Level10_BossGem" },
 
         //=======================================
         // Menu
@@ -390,6 +394,10 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level10_CrumblingPeg", ActorPrototype_Level10_CrumblingPeg },
         { "ActorPrototype_Level10_TogglePeg", ActorPrototype_Level10_TogglePeg },
         { "ActorPrototype_Level10_BossStager", ActorPrototype_Level10_BossStager },
+        { "ActorPrototype_Level10_Marrow", ActorPrototype_Level10_Marrow },
+        { "ActorPrototype_Level10_MarrowFloor", ActorPrototype_Level10_MarrowFloor },
+        { "ActorPrototype_Level10_MarrowParrot", ActorPrototype_Level10_MarrowParrot },
+        { "ActorPrototype_Level10_BossGem", ActorPrototype_Level10_BossGem },
         
         //=======================================
         // Menu

@@ -718,8 +718,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "Wolvington" ||
              logic == "CrazyHook" ||
              logic == "PegLeg" ||
-             logic == "Marrow" ||
-             logic == "Parrot")
+             logic == "Marrow")
     {
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
@@ -748,7 +747,24 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         double floorSpeed = wwdObject->speedX;
         Direction floorActiveDirection = wwdObject->direction == 0 ? Direction_Left : Direction_Right;
 
-        // TODO
+        // todo
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
+    }
+    else if (logic == "Parrot")
+    {
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
     }
     else if (logic.find("CannonButton") != std::string::npos)
     {

@@ -1,0 +1,147 @@
+<FinishedLevelScreen Level="10">
+	<BackgroundSound>
+		<SoundPath>/STATES/BOOTY/SOUNDS/AMULET.WAV</SoundPath>
+		<Volume>50</Volume>
+		<IsMusic>false</IsMusic>
+		<IsLooping>false</IsLooping>
+	</BackgroundSound>
+	<InitialBackgroundScreen>/STATES/BOOTY/SCREENS/023AMULET.PCX</InitialBackgroundScreen>
+	<ScoreBackgroundScreen>/STATES/BOOTY/SCREENS/020AMULET.PCX</ScoreBackgroundScreen>
+	<ClawCommentSound>
+		<SoundPath>/STATES/BOOTY/SOUNDS/CLAW/1110027.WAV</SoundPath>
+		<Delay>3000</Delay>
+	</ClawCommentSound>
+
+	<NextLevelNumber>0</NextLevelNumber>
+	<ScorePointsOnLevelStart>0</ScorePointsOnLevelStart>
+	<ScorePointsCollectedInLevel>0</ScorePointsCollectedInLevel>
+
+	<ScoreRow Treasure="Skull">
+		<ScoreItemImagePath>/STATES/BOOTY/IMAGES/TREASURE/JEWELEDSKULL/BLUE/*.PID</ScoreItemImagePath>
+		<ScoreItemPickupSound>/STATES/BOOTY/SOUNDS/SCEPTER.WAV</ScoreItemPickupSound>
+		<RowStartPosition x="159" y="46" />
+		<ScoreItemPointsWorth>25000</ScoreItemPointsWorth>
+		<CountOfPickedUpScoreItems>20</CountOfPickedUpScoreItems>
+		<CountOfTotalScoreItemsInLevel>50</CountOfTotalScoreItemsInLevel>
+		<CollectedScoreItemSpawnPosition x="-50" y="-20" />
+		<AlternativeImages>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/JEWELEDSKULL/BLUE/SKULL2.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/JEWELEDSKULL/GREEN/SKULL3.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/JEWELEDSKULL/PURPLE/SKULL4.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/JEWELEDSKULL/RED/SKULL1.PID</AlternativeImage>
+		</AlternativeImages>
+	</ScoreRow>
+	<ScoreRow Treasure="Crown">
+		<ScoreItemImagePath>/STATES/BOOTY/IMAGES/TREASURE/CROWNS/GREEN/*.PID</ScoreItemImagePath>
+		<ScoreItemPickupSound>/STATES/BOOTY/SOUNDS/SCEPTER.WAV</ScoreItemPickupSound>
+		<RowStartPosition x="159" y="89" />
+		<ScoreItemPointsWorth>15000</ScoreItemPointsWorth>
+		<CountOfPickedUpScoreItems>15</CountOfPickedUpScoreItems>
+		<CountOfTotalScoreItemsInLevel>50</CountOfTotalScoreItemsInLevel>
+		<CollectedScoreItemSpawnPosition x="-50" y="-20" />
+		<AlternativeImages>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CROWNS/BLUE/CROWN2.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CROWNS/GREEN/CROWN3.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CROWNS/PURPLE/CROWN4.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CROWNS/RED/CROWN1.PID</AlternativeImage>
+		</AlternativeImages>
+	</ScoreRow>
+	<ScoreRow Treasure="Gecko">
+		<ScoreItemImagePath>/STATES/BOOTY/IMAGES/TREASURE/GECKOS/RED/*.PID</ScoreItemImagePath>
+		<ScoreItemPickupSound>/STATES/BOOTY/SOUNDS/SCEPTER.WAV</ScoreItemPickupSound>
+		<RowStartPosition x="159" y="132" />
+		<ScoreItemPointsWorth>10000</ScoreItemPointsWorth>
+		<CountOfPickedUpScoreItems>0</CountOfPickedUpScoreItems>
+		<CountOfTotalScoreItemsInLevel>50</CountOfTotalScoreItemsInLevel>
+		<CollectedScoreItemSpawnPosition x="-50" y="-20" />
+		<AlternativeImages>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/GECKOS/BLUE/GECKO2.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/GECKOS/GREEN/GECKO3.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/GECKOS/PURPLE/GECKO4.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/GECKOS/RED/GECKO1.PID</AlternativeImage>
+		</AlternativeImages>
+	</ScoreRow>
+	<ScoreRow Treasure="Scepter">
+		<ScoreItemImagePath>/STATES/BOOTY/IMAGES/TREASURE/SCEPTERS/PURPLE/*.PID</ScoreItemImagePath>
+		<ScoreItemPickupSound>/STATES/BOOTY/SOUNDS/SCEPTER.WAV</ScoreItemPickupSound>
+		<RowStartPosition x="159" y="175" />
+		<ScoreItemPointsWorth>7500</ScoreItemPointsWorth>
+		<CountOfPickedUpScoreItems>0</CountOfPickedUpScoreItems>
+		<CountOfTotalScoreItemsInLevel>50</CountOfTotalScoreItemsInLevel>
+		<CollectedScoreItemSpawnPosition x="-50" y="-20" />
+		<AlternativeImages>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/SCEPTERS/BLUE/SCEPTR2.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/SCEPTERS/GREEN/SCEPTR3.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/SCEPTERS/PURPLE/SCEPTR4.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/SCEPTERS/RED/SCEPTR1.PID</AlternativeImage>
+		</AlternativeImages>
+	</ScoreRow>
+	<ScoreRow Treasure="Cross">
+		<ScoreItemImagePath>/STATES/BOOTY/IMAGES/TREASURE/CROSSES/BLUE/*.PID</ScoreItemImagePath>
+		<ScoreItemPickupSound>/STATES/BOOTY/SOUNDS/CROSS.WAV</ScoreItemPickupSound>
+		<RowStartPosition x="159" y="218" />
+		<ScoreItemPointsWorth>5000</ScoreItemPointsWorth>
+		<CountOfPickedUpScoreItems>0</CountOfPickedUpScoreItems>
+		<CountOfTotalScoreItemsInLevel>50</CountOfTotalScoreItemsInLevel>
+		<CollectedScoreItemSpawnPosition x="-50" y="-20" />
+		<AlternativeImages>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CROSSES/BLUE/CROSS2.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CROSSES/GREEN/CROSS3.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CROSSES/PURPLE/CROSS4.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CROSSES/RED/CROSS1.PID</AlternativeImage>
+		</AlternativeImages>
+	</ScoreRow>
+	<ScoreRow Treasure="Chalice">
+		<ScoreItemImagePath>/STATES/BOOTY/IMAGES/TREASURE/CHALICES/GREEN/*.PID</ScoreItemImagePath>
+		<ScoreItemPickupSound>/STATES/BOOTY/SOUNDS/PICKUP2.WAV</ScoreItemPickupSound>
+		<RowStartPosition x="159" y="261" />
+		<ScoreItemPointsWorth>2500</ScoreItemPointsWorth>
+		<CountOfPickedUpScoreItems>0</CountOfPickedUpScoreItems>
+		<CountOfTotalScoreItemsInLevel>50</CountOfTotalScoreItemsInLevel>
+		<CollectedScoreItemSpawnPosition x="-50" y="-20" />
+		<AlternativeImages>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CHALICES/BLUE/CHALICE2.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CHALICES/GREEN/CHALICE3.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CHALICES/PURPLE/CHALICE4.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/CHALICES/RED/CHALICE1.PID</AlternativeImage>
+		</AlternativeImages>
+	</ScoreRow>
+	<ScoreRow Treasure="Ring">
+		<ScoreItemImagePath>/STATES/BOOTY/IMAGES/TREASURE/RINGS/RED/*.PID</ScoreItemImagePath>
+		<ScoreItemPickupSound>/STATES/BOOTY/SOUNDS/RINGS.WAV</ScoreItemPickupSound>
+		<RowStartPosition x="159" y="304" />
+		<ScoreItemPointsWorth>1500</ScoreItemPointsWorth>
+		<CountOfPickedUpScoreItems>0</CountOfPickedUpScoreItems>
+		<CountOfTotalScoreItemsInLevel>50</CountOfTotalScoreItemsInLevel>
+		<CollectedScoreItemSpawnPosition x="-50" y="-20" />
+		<AlternativeImages>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/RINGS/BLUE/RING2.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/RINGS/GREEN/RING3.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/RINGS/PURPLE/RING4.PID</AlternativeImage>
+			<AlternativeImage>/STATES/BOOTY/IMAGES/TREASURE/RINGS/RED/RING1.PID</AlternativeImage>
+		</AlternativeImages>
+	</ScoreRow>
+	<ScoreRow Treasure="Goldbar">
+		<ScoreItemImagePath>/STATES/BOOTY/IMAGES/TREASURE/GOLDBARS/*.PID</ScoreItemImagePath>
+		<ScoreItemPickupSound>/STATES/BOOTY/SOUNDS/PICKUP1.WAV</ScoreItemPickupSound>
+		<RowStartPosition x="159" y="347" />
+		<ScoreItemPointsWorth>500</ScoreItemPointsWorth>
+		<CountOfPickedUpScoreItems>0</CountOfPickedUpScoreItems>
+		<CountOfTotalScoreItemsInLevel>50</CountOfTotalScoreItemsInLevel>
+		<CollectedScoreItemSpawnPosition x="-50" y="-20" />
+	</ScoreRow>
+	<ScoreRow Treasure="Coin">
+		<ScoreItemImagePath>/STATES/BOOTY/IMAGES/TREASURE/COINS/*.PID</ScoreItemImagePath>
+		<ScoreItemAnimation>
+			<HasAnimation>true</HasAnimation>
+			<IsCycleAnimation>true</IsCycleAnimation>
+			<CycleDuration>75</CycleDuration>
+		</ScoreItemAnimation>
+		<ScoreItemPickupSound>/STATES/BOOTY/SOUNDS/COIN.WAV</ScoreItemPickupSound>
+		<RowStartPosition x="159" y="390" />
+		<ScoreItemPointsWorth>100</ScoreItemPointsWorth>
+		<CountOfPickedUpScoreItems>0</CountOfPickedUpScoreItems>
+		<CountOfTotalScoreItemsInLevel>50</CountOfTotalScoreItemsInLevel>
+		<CollectedScoreItemSpawnPosition x="-50" y="-20" />
+	</ScoreRow>
+</FinishedLevelScreen>

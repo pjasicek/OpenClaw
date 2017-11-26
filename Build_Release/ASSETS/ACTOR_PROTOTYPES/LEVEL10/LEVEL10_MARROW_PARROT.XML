@@ -1,0 +1,37 @@
+<Actor Type="Level10_MarrowParrot" Parent="ActorPrototype_BaseEnemy" ActorPrototypeName="ActorPrototype_Level10_MarrowParrot">
+    <ActorRenderComponent>
+        <ZCoord>1020</ZCoord>
+        <ImagePath>/LEVEL10/IMAGES/PARROT/*</ImagePath>
+        <Palette>/LEVEL10/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL10/ANIS/PARROT/*.ANI</AnimationPath>
+        <PauseOnStart>false</PauseOnStart>
+    </AnimationComponent>
+    <HealthComponent>
+        <Health>5000</Health>
+        <MaxHealth>5000</MaxHealth>
+    </HealthComponent>
+    <EnemyAIComponent>
+        <DeathAnimation>killfall</DeathAnimation>
+        <Sounds>
+            <Sound SoundType="Death" SoundName="/LEVEL10/SOUNDS/PARROT/PARROTHIT.WAV" />
+            <Sound SoundType="TakeDamage" SoundName="/LEVEL10/SOUNDS/PARROT/PARROTHIT.WAV" />
+        </Sounds>
+    </EnemyAIComponent>
+    <MarrowParrotAIStateComponent>
+        <StatePriority>100</StatePriority>
+        <IdleAnim>idle</IdleAnim>
+    </MarrowParrotAIStateComponent>
+    <PhysicsComponent>
+        <HasCapsuleShape>false</HasCapsuleShape>
+        <CollisionSize width="60" height="45" />
+        <GravityScale>0.000000</GravityScale>
+        <ClampToGround>false</ClampToGround>
+    </PhysicsComponent>
+    <DamageAuraComponent>
+        <ActorFixture>
+            <Size width="40" height="40" />
+        </ActorFixture>
+    </DamageAuraComponent>
+</Actor>

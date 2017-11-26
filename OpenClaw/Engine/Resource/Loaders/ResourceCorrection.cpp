@@ -112,4 +112,12 @@ void OnAniLoaded(const char* resource, WapAni* pAni)
             pAni->animationFrames[idx].duration *= factor;
         }
     }
+    else if (resourceName.find("/level10/anis/parrot/idle") != std::string::npos)
+    {
+        int factor = 3;
+        for (int idx = 0; idx < pAni->animationFramesCount; idx++)
+        {
+            pAni->animationFrames[idx].duration *= factor;
+        }
+    }
 }
