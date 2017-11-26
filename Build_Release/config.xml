@@ -22,13 +22,11 @@
     <ConsoleFont font="clacon.ttf" size="20" />
   </Font>
   <Assets>
-    <AssetsFolder>
-    </AssetsFolder>
+    <AssetsFolder></AssetsFolder>
     <RezArchive>CLAW.REZ</RezArchive>
     <CustomArchive>ASSETS.ZIP</CustomArchive>
     <ResourceCacheSize>150</ResourceCacheSize>
-    <TempDir>
-    </TempDir>
+    <TempDir></TempDir>
     <SavesFile>SAVES.XML</SavesFile>
   </Assets>
   <Console>
