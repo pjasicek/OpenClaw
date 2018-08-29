@@ -136,17 +136,17 @@ bool ActorController::VOnKeyDown(SDL_Keycode key)
     }
     else
     {
-        if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LALT)
+        if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LALT || SDL_GetScancodeFromKey(key) == SDL_SCANCODE_RALT)
         {
             HandleAction(ActionType_Fire);
             return true;
         }
-        else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LCTRL)
+        else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LCTRL || SDL_GetScancodeFromKey(key) == SDL_SCANCODE_RCTRL)
         {
             HandleAction(ActionType_Attack);
             return true;
         }
-        else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LSHIFT)
+        else if (SDL_GetScancodeFromKey(key) == SDL_SCANCODE_LSHIFT || SDL_GetScancodeFromKey(key) == SDL_SCANCODE_RSHIFT)
         {
             HandleAction(ActionType_Change_Ammo_Type);
             return true;
