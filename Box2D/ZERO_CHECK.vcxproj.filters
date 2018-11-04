@@ -1,13 +1,13 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="D:\CaptainClaw_git\CaptainClaw\Box2D\CMakeFiles\991c03b1feb92101b3c1b2b86338f988\generate.stamp.rule">
+    <CustomBuild Include="C:\Users\pjasi\github\OpenClaw\Box2D\CMakeFiles\a530ed11507a730d886953733808a69a\generate.stamp.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{060A6BC7-D416-4DAF-9A01-F6BDED85B92E}</UniqueIdentifier>
+      <UniqueIdentifier>{BA8AA288-0993-3F31-8E04-941DDF899959}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

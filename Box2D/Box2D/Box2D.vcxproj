@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,35 +19,33 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGUID>{1ED35880-218C-4B59-8916-06B94483BB59}</ProjectGUID>
+    <ProjectGuid>{A1BBF35D-C801-38E9-83C5-03FD343D075D}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>Box2D</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -58,26 +56,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Box2D.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Box2D</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Box2D.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Box2D</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\MinSizeRel\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\MinSizeRel\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Box2D.dir\MinSizeRel\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Box2D</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.lib</TargetExt>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\RelWithDebInfo\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Box2D.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Box2D</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -89,25 +87,28 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -124,20 +125,23 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -154,20 +158,23 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
       <CompileAs>CompileAsCpp</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -183,22 +190,25 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <AdditionalIncludeDirectories>C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
       <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:X86</AdditionalOptions>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule D:/CaptainClaw_git/CaptainClaw/Box2D/Box2D/CMakeLists.txt</Message>
+    <CustomBuild Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
-"D:\Program Files (x86)\CMake\bin\cmake.exe" -HD:/CaptainClaw_git/CaptainClaw/Box2D -BD:/CaptainClaw_git/CaptainClaw/Box2D --check-stamp-file D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -HC:/Users/pjasi/github/OpenClaw/Box2D -BC:/Users/pjasi/github/OpenClaw/Box2D --check-stamp-file C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -206,12 +216,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:/CaptainClaw_git/CaptainClaw/Box2D/Box2D/CMakeLists.txt;D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeLists.txt;D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeLists.txt;C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeLists.txt;C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule D:/CaptainClaw_git/CaptainClaw/Box2D/Box2D/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
-"D:\Program Files (x86)\CMake\bin\cmake.exe" -HD:/CaptainClaw_git/CaptainClaw/Box2D -BD:/CaptainClaw_git/CaptainClaw/Box2D --check-stamp-file D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -HC:/Users/pjasi/github/OpenClaw/Box2D -BC:/Users/pjasi/github/OpenClaw/Box2D --check-stamp-file C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -219,12 +229,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:/CaptainClaw_git/CaptainClaw/Box2D/Box2D/CMakeLists.txt;D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeLists.txt;D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeLists.txt;C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeLists.txt;C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule D:/CaptainClaw_git/CaptainClaw/Box2D/Box2D/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
-"D:\Program Files (x86)\CMake\bin\cmake.exe" -HD:/CaptainClaw_git/CaptainClaw/Box2D -BD:/CaptainClaw_git/CaptainClaw/Box2D --check-stamp-file D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -HC:/Users/pjasi/github/OpenClaw/Box2D -BC:/Users/pjasi/github/OpenClaw/Box2D --check-stamp-file C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -232,12 +242,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:/CaptainClaw_git/CaptainClaw/Box2D/Box2D/CMakeLists.txt;D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeLists.txt;D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeLists.txt;C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeLists.txt;C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule D:/CaptainClaw_git/CaptainClaw/Box2D/Box2D/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
-"D:\Program Files (x86)\CMake\bin\cmake.exe" -HD:/CaptainClaw_git/CaptainClaw/Box2D -BD:/CaptainClaw_git/CaptainClaw/Box2D --check-stamp-file D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -HC:/Users/pjasi/github/OpenClaw/Box2D -BC:/Users/pjasi/github/OpenClaw/Box2D --check-stamp-file C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -245,109 +255,110 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:/CaptainClaw_git/CaptainClaw/Box2D/Box2D/CMakeLists.txt;D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeLists.txt;D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:/Users/pjasi/github/OpenClaw/Box2D/Box2D/CMakeLists.txt;C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeLists.txt;C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Box2D.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2DistanceJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2FrictionJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2GearJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2Joint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MotorJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MouseJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PrismaticJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PulleyJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RevoluteJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RopeJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WeldJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WheelJoint.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2CircleContact.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2Contact.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ContactSolver.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonContact.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Body.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2ContactManager.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Fixture.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Island.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2TimeStep.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2World.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2WorldCallbacks.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2BlockAllocator.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Draw.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2GrowableStack.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Math.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Settings.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2StackAllocator.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Timer.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2CircleShape.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2EdgeShape.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2ChainShape.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2PolygonShape.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2Shape.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2BroadPhase.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2Collision.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2Distance.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2DynamicTree.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2TimeOfImpact.h" />
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Rope\b2Rope.h" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2DistanceJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2FrictionJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2GearJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2Joint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MotorJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MouseJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PrismaticJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PulleyJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RopeJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WheelJoint.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2CircleContact.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2Contact.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ContactSolver.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonContact.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Body.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2ContactManager.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Fixture.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Island.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2World.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2WorldCallbacks.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2BlockAllocator.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Draw.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Math.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Settings.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2StackAllocator.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Timer.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2CircleShape.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2EdgeShape.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2ChainShape.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2PolygonShape.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2BroadPhase.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2CollideCircle.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2CollideEdge.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2CollidePolygon.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2Collision.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2Distance.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2DynamicTree.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2TimeOfImpact.cpp" />
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Rope\b2Rope.cpp" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Box2D.h" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2DistanceJoint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2FrictionJoint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2GearJoint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2Joint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2MotorJoint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2MouseJoint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2PrismaticJoint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2PulleyJoint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2RopeJoint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2WheelJoint.cpp" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2DistanceJoint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2FrictionJoint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2GearJoint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2Joint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2MotorJoint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2MouseJoint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2PrismaticJoint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2PulleyJoint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2RevoluteJoint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2RopeJoint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2WeldJoint.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2WheelJoint.h" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2CircleContact.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2Contact.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ContactSolver.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonContact.cpp" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2CircleContact.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2Contact.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ContactSolver.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonContact.h" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Body.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2ContactManager.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Fixture.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Island.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2World.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2WorldCallbacks.cpp" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Body.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2ContactManager.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Fixture.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Island.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2TimeStep.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2World.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2WorldCallbacks.h" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2BlockAllocator.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Draw.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Math.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Settings.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2StackAllocator.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Timer.cpp" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2BlockAllocator.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Draw.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2GrowableStack.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Math.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Settings.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2StackAllocator.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Timer.h" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2CircleShape.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2EdgeShape.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2ChainShape.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2PolygonShape.cpp" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2CircleShape.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2EdgeShape.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2ChainShape.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2PolygonShape.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2Shape.h" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2BroadPhase.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2CollideCircle.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2CollideEdge.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2CollidePolygon.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2Collision.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2Distance.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2DynamicTree.cpp" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2TimeOfImpact.cpp" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2BroadPhase.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2Collision.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2Distance.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2DynamicTree.h" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2TimeOfImpact.h" />
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Rope\b2Rope.cpp" />
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Rope\b2Rope.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="D:/CaptainClaw_git/CaptainClaw/Box2D/ZERO_CHECK.vcxproj">
-      <Project>E4AC28C9-CFE2-40FA-B9D2-02E758B461D0</Project>
+    <ProjectReference Include="C:\Users\pjasi\github\OpenClaw\Box2D\ZERO_CHECK.vcxproj">
+      <Project>{BE1F9C2B-9BC0-39C9-B239-1F9CFD614144}</Project>
+      <Name>ZERO_CHECK</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

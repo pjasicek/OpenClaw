@@ -1,4 +1,4 @@
-# Install script for directory: D:/CaptainClaw_git/CaptainClaw/Box2D/Box2D
+# Install script for directory: C:/Users/pjasi/github/OpenClaw/Box2D/Box2D
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -25,5 +25,10 @@ if(NOT CMAKE_INSTALL_COMPONENT)
   else()
     set(CMAKE_INSTALL_COMPONENT)
   endif()
+endif()
+
+# Is this installation the result of a crosscompile?
+if(NOT DEFINED CMAKE_CROSSCOMPILING)
+  set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 

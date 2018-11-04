@@ -1,315 +1,315 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2DistanceJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2DistanceJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2FrictionJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2FrictionJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2GearJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2GearJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2Joint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2Joint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MotorJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2MotorJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MouseJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2MouseJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PrismaticJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2PrismaticJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PulleyJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2PulleyJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RopeJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2RopeJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WeldJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2WeldJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WheelJoint.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2WheelJoint.cpp">
       <Filter>Dynamics\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2CircleContact.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2CircleContact.cpp">
       <Filter>Dynamics\Contacts</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2Contact.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2Contact.cpp">
       <Filter>Dynamics\Contacts</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ContactSolver.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ContactSolver.cpp">
       <Filter>Dynamics\Contacts</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.cpp">
       <Filter>Dynamics\Contacts</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.cpp">
       <Filter>Dynamics\Contacts</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.cpp">
       <Filter>Dynamics\Contacts</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.cpp">
       <Filter>Dynamics\Contacts</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.cpp">
       <Filter>Dynamics\Contacts</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonContact.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonContact.cpp">
       <Filter>Dynamics\Contacts</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Body.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Body.cpp">
       <Filter>Dynamics</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2ContactManager.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2ContactManager.cpp">
       <Filter>Dynamics</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Fixture.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Fixture.cpp">
       <Filter>Dynamics</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Island.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Island.cpp">
       <Filter>Dynamics</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2World.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2World.cpp">
       <Filter>Dynamics</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2WorldCallbacks.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2WorldCallbacks.cpp">
       <Filter>Dynamics</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2BlockAllocator.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2BlockAllocator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Draw.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Draw.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Math.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Math.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Settings.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Settings.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2StackAllocator.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2StackAllocator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Timer.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Timer.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2CircleShape.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2CircleShape.cpp">
       <Filter>Collision\Shapes</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2EdgeShape.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2EdgeShape.cpp">
       <Filter>Collision\Shapes</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2ChainShape.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2ChainShape.cpp">
       <Filter>Collision\Shapes</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2PolygonShape.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2PolygonShape.cpp">
       <Filter>Collision\Shapes</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2BroadPhase.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2BroadPhase.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2CollideCircle.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2CollideCircle.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2CollideEdge.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2CollideEdge.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2CollidePolygon.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2CollidePolygon.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2Collision.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2Collision.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2Distance.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2Distance.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2DynamicTree.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2DynamicTree.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2TimeOfImpact.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2TimeOfImpact.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
-    <ClCompile Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Rope\b2Rope.cpp">
+    <ClCompile Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Rope\b2Rope.cpp">
       <Filter>Rope</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Box2D.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Box2D.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2DistanceJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2DistanceJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2FrictionJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2FrictionJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2GearJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2GearJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2Joint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2Joint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MotorJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2MotorJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2MouseJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2MouseJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PrismaticJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2PrismaticJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2PulleyJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2PulleyJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RevoluteJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2RevoluteJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2RopeJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2RopeJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WeldJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2WeldJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Joints\b2WheelJoint.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Joints\b2WheelJoint.h">
       <Filter>Dynamics\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2CircleContact.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2CircleContact.h">
       <Filter>Dynamics\Contacts</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2Contact.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2Contact.h">
       <Filter>Dynamics\Contacts</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ContactSolver.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ContactSolver.h">
       <Filter>Dynamics\Contacts</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.h">
       <Filter>Dynamics\Contacts</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.h">
       <Filter>Dynamics\Contacts</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.h">
       <Filter>Dynamics\Contacts</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.h">
       <Filter>Dynamics\Contacts</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.h">
       <Filter>Dynamics\Contacts</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonContact.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\Contacts\b2PolygonContact.h">
       <Filter>Dynamics\Contacts</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Body.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Body.h">
       <Filter>Dynamics</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2ContactManager.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2ContactManager.h">
       <Filter>Dynamics</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Fixture.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Fixture.h">
       <Filter>Dynamics</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2Island.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2Island.h">
       <Filter>Dynamics</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2TimeStep.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2TimeStep.h">
       <Filter>Dynamics</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2World.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2World.h">
       <Filter>Dynamics</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Dynamics\b2WorldCallbacks.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Dynamics\b2WorldCallbacks.h">
       <Filter>Dynamics</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2BlockAllocator.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2BlockAllocator.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Draw.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Draw.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2GrowableStack.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2GrowableStack.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Math.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Math.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Settings.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Settings.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2StackAllocator.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2StackAllocator.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Common\b2Timer.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Common\b2Timer.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2CircleShape.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2CircleShape.h">
       <Filter>Collision\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2EdgeShape.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2EdgeShape.h">
       <Filter>Collision\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2ChainShape.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2ChainShape.h">
       <Filter>Collision\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2PolygonShape.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2PolygonShape.h">
       <Filter>Collision\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\Shapes\b2Shape.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\Shapes\b2Shape.h">
       <Filter>Collision\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2BroadPhase.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2BroadPhase.h">
       <Filter>Collision</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2Collision.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2Collision.h">
       <Filter>Collision</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2Distance.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2Distance.h">
       <Filter>Collision</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2DynamicTree.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2DynamicTree.h">
       <Filter>Collision</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Collision\b2TimeOfImpact.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Collision\b2TimeOfImpact.h">
       <Filter>Collision</Filter>
     </ClInclude>
-    <ClInclude Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\Rope\b2Rope.h">
+    <ClInclude Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\Rope\b2Rope.h">
       <Filter>Rope</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\CaptainClaw_git\CaptainClaw\Box2D\Box2D\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\pjasi\github\OpenClaw\Box2D\Box2D\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Dynamics\Contacts">
-      <UniqueIdentifier>{5BF5F06A-9425-4244-AD25-6477EF719E63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dynamics\Joints">
-      <UniqueIdentifier>{87EBC516-1C12-49DD-940A-92E6CA7D4D9A}</UniqueIdentifier>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{16283E37-8507-3AC9-9604-40FBD728EF5D}</UniqueIdentifier>
     </Filter>
     <Filter Include="Collision\Shapes">
-      <UniqueIdentifier>{53C2281A-D1A4-4104-85E8-CA08AF8A7F56}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Collision">
-      <UniqueIdentifier>{A8926DDB-E716-4CA5-8F1B-2869D83836FA}</UniqueIdentifier>
+      <UniqueIdentifier>{69CEFDCA-6900-317F-A645-01D164C424AA}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common">
-      <UniqueIdentifier>{9A05D338-CCFE-43BF-9C53-71FA622C8984}</UniqueIdentifier>
+      <UniqueIdentifier>{CC5539E1-5603-32CF-8F18-ABCDDFD3CA12}</UniqueIdentifier>
     </Filter>
     <Filter Include="Dynamics">
-      <UniqueIdentifier>{2585D985-EEF7-4775-B987-43D804C5E9B4}</UniqueIdentifier>
+      <UniqueIdentifier>{75FD1E8F-0344-3928-936B-D6C0AF64F52D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dynamics\Contacts">
+      <UniqueIdentifier>{DEB17136-2632-3344-B4E5-769852C90C1F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dynamics\Joints">
+      <UniqueIdentifier>{30199F1E-C198-3214-A2D4-EF2AA7F6A743}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include">
-      <UniqueIdentifier>{8BF6296E-5747-437A-A472-260872F595D5}</UniqueIdentifier>
+      <UniqueIdentifier>{F0112C4E-5A9A-360E-9801-06533D9FDE2A}</UniqueIdentifier>
     </Filter>
     <Filter Include="Rope">
-      <UniqueIdentifier>{C40CD2D6-112D-4FEC-806D-999129B71729}</UniqueIdentifier>
+      <UniqueIdentifier>{9394620C-2620-3623-8690-210F11AB49C3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
