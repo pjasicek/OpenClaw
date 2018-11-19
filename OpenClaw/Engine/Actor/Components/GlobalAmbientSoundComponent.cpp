@@ -78,7 +78,7 @@ bool GlobalAmbientSoundComponent::VInit(TiXmlElement* pData)
 TiXmlElement* GlobalAmbientSoundComponent::VGenerateXml()
 {
     // TODO: Implement
-    return NULL;
+    return nullptr;
 }
 
 void GlobalAmbientSoundComponent::VUpdate(uint32 msDiff)

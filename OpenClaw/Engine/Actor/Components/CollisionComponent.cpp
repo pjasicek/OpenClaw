@@ -4,10 +4,10 @@ const char* CollisionComponent::g_Name = "CollisionComponent";
 
 bool CollisionComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     TiXmlElement* collisionSizeElement = data->FirstChildElement("CollisionSize");
-    if (collisionSizeElement != NULL)
+    if (collisionSizeElement != nullptr)
     {
         collisionSizeElement->Attribute("width", &_collisionWidth);
         collisionSizeElement->Attribute("height", &_collisionHeight);

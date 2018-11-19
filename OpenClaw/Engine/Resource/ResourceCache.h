@@ -49,7 +49,7 @@ public:
         if (!extraData)
         {
             LOG_ERROR("Could not cast type to: " + VToString() + ". Check if proper resource loader is registered.");
-            return NULL;
+            return nullptr;
         }
 
         return extraData->GetExtraData();
@@ -111,7 +111,7 @@ private:
 class ResourceZipArchive : public IResourceFile
 {
 public:
-    ResourceZipArchive(const std::string resFileName) { m_pZipFile = NULL; m_FileName = resFileName; }
+    ResourceZipArchive(const std::string resFileName) { m_pZipFile = nullptr; m_FileName = resFileName; }
     virtual ~ResourceZipArchive();
 
     virtual bool VOpen();
@@ -179,7 +179,7 @@ public:
 
     void Flush();
 
-    bool IsUsingDevelopmentDirectories() { assert(_resourceFile != NULL); return _resourceFile->VIsUsingDevelopmentDIrectories(); }
+    bool IsUsingDevelopmentDirectories() { assert(_resourceFile != nullptr); return _resourceFile->VIsUsingDevelopmentDIrectories(); }
 
     void MemoryHasBeenFreed(uint32 size);
 

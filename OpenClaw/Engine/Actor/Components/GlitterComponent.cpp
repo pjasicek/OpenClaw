@@ -63,7 +63,7 @@ void GlitterComponent::VPostInit()
 
 TiXmlElement* GlitterComponent::VGenerateXml()
 {
-    return NULL;
+    return nullptr;
 
     TiXmlElement* baseElement = new TiXmlElement(VGetName());
 

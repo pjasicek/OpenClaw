@@ -143,11 +143,11 @@ StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement*
     if (!actor->Init(pActorRoot))
     {
         LOG_ERROR("Failed to initialize actor.");
-        return NULL;
+        return nullptr;
     }
 
     // Loop through each child element and load the component
-    for (TiXmlElement* node = pActorRoot->FirstChildElement(); node != NULL; node = node->NextSiblingElement())
+    for (TiXmlElement* node = pActorRoot->FirstChildElement(); node != nullptr; node = node->NextSiblingElement())
     {
         StrongActorComponentPtr component = VCreateComponent(node);
         if (component)
@@ -181,7 +181,7 @@ StrongActorPtr ActorFactory::CreateActor(const char* actorResource, TiXmlElement
     // Grab the root XML node
 
     TiXmlElement* root = XmlResourceLoader::LoadAndReturnRootXmlElement(actorResource, true);
-    if (root == NULL)
+    if (root == nullptr)
     {
         LOG_ERROR("Could not load XML root node");
         return nullptr;
@@ -192,7 +192,7 @@ StrongActorPtr ActorFactory::CreateActor(const char* actorResource, TiXmlElement
 
 void ActorFactory::ModifyActor(StrongActorPtr actor, TiXmlElement* overrides)
 {
-    for (TiXmlElement* node = overrides->FirstChildElement(); node != NULL; node = node->NextSiblingElement())
+    for (TiXmlElement* node = overrides->FirstChildElement(); node != nullptr; node = node->NextSiblingElement())
     {
         uint32 componentId = ActorComponent::GetIdFromName(node->Value());
         StrongActorComponentPtr component = MakeStrongPtr(actor->GetComponent<ActorComponent>(componentId));
@@ -232,7 +232,7 @@ StrongActorComponentPtr ActorFactory::VCreateComponent(TiXmlElement* data)
     else
     {
         LOG_ERROR("Could not find ActorComponent named: " + std::string(name));
-        return NULL;
+        return nullptr;
     }
 
     return component;

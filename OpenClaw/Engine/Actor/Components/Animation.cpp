@@ -15,7 +15,7 @@ Animation::Animation() :
     _paused(false),
     _reversed(false),
     _isBeingReversed(false),
-    m_pOwner(NULL)
+    m_pOwner(nullptr)
 { }
 
 Animation::~Animation()
@@ -29,7 +29,7 @@ Animation* Animation::CreateAnimation(WapAni* wapAni, const char* animationName,
     if (!animation->Initialize(wapAni, animationName, resourcePath, owner))
     {
         delete animation;
-        return NULL;
+        return nullptr;
     }
 
     return animation;
@@ -41,7 +41,7 @@ Animation* Animation::CreateAnimation(std::vector<AnimationFrame> animFrames, co
     if (!animation->Initialize(animFrames, animName, owner))
     {
         delete animation;
-        return NULL;
+        return nullptr;
     }
 
     return animation;
@@ -53,7 +53,7 @@ Animation* Animation::CreateAnimation(int numAnimFrames, int animFrameTime, cons
     if (!animation->Initialize(numAnimFrames, animFrameTime, animName, owner))
     {
         delete animation;
-        return NULL;
+        return nullptr;
     }
 
     return animation;
@@ -76,7 +76,7 @@ bool Animation::Initialize(WapAni* wapAni, const char* animationName, const char
         animFrame.duration = aniAnimFrames[frameIdx].duration;
          
         // if pWapAni->unk0 == 1, then skip all sounds in this animation
-        if (aniAnimFrames[frameIdx].eventFilePath != NULL &&
+        if (aniAnimFrames[frameIdx].eventFilePath != nullptr &&
             wapAni->unk0 != 1)
         {
             std::string resourcePathStr(resourcePath);

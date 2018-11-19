@@ -101,10 +101,10 @@ public:
 
     // EnemyAIStateComponent API
 
-    // @pPreviousState can be NULL !
+    // @pPreviousState can be nullptr !
     virtual void VOnStateEnter(BaseEnemyAIStateComponent* pPreviousState) = 0;
 
-    // @pNextState can be NULL !
+    // @pNextState can be nullptr !
     virtual void VOnStateLeave(BaseEnemyAIStateComponent* pNextState) = 0;
     virtual EnemyAIState VGetStateType() const = 0;
 

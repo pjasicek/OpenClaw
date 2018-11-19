@@ -46,7 +46,7 @@ void SoundTriggerComponent::VPostInit()
 TiXmlElement* SoundTriggerComponent::VGenerateXml()
 {
     // TODO: Implement
-    return NULL;
+    return nullptr;
 }
 
 void SoundTriggerComponent::VOnActorEnteredTrigger(Actor* pActorWhoPickedThis, FixtureType triggerType)

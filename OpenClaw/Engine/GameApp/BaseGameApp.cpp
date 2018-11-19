@@ -30,20 +30,20 @@ TiXmlElement* CreateDefaultFontConfig();
 TiXmlElement* CreateDefaultAssetsConfig();
 TiXmlDocument CreateDefaultConfig();
 
-BaseGameApp* g_pApp = NULL;
+BaseGameApp* g_pApp = nullptr;
 
 BaseGameApp::BaseGameApp()
 {
     g_pApp = this;
 
-    m_pGame = NULL;
-    m_pResourceCache = NULL;
-    m_pEventMgr = NULL;
-    m_pWindow = NULL;
-    m_pRenderer = NULL;
-    m_pPalette = NULL;
-    m_pAudio = NULL;
-    m_pConsoleFont = NULL;
+    m_pGame = nullptr;
+    m_pResourceCache = nullptr;
+    m_pEventMgr = nullptr;
+    m_pWindow = nullptr;
+    m_pRenderer = nullptr;
+    m_pPalette = nullptr;
+    m_pAudio = nullptr;
+    m_pConsoleFont = nullptr;
     m_IsRunning = false;
     m_QuitRequested = false;
     m_IsQuitting = false;
@@ -73,11 +73,11 @@ bool BaseGameApp::Initialize(int argc, char** argv)
         return false;
     }
 
-    m_pResourceCache->Preload("/CLAW/*", NULL);
-    m_pResourceCache->Preload("/GAME/*", NULL);
-    m_pResourceCache->Preload("/STATES/*", NULL);
+    m_pResourceCache->Preload("/CLAW/*", nullptr);
+    m_pResourceCache->Preload("/GAME/*", nullptr);
+    m_pResourceCache->Preload("/STATES/*", nullptr);
 
-    m_pResourceMgr->VPreload("*", NULL, CUSTOM_RESOURCE);
+    m_pResourceMgr->VPreload("*", nullptr, CUSTOM_RESOURCE);
 
     if (!VPerformStartupTests())
     {
@@ -138,20 +138,20 @@ bool BaseGameApp::VPerformStartupTests()
     STARTUP_TEST(SDL_WasInit(SDL_INIT_VIDEO), "SDL Video subsystem is unitialized");
     STARTUP_TEST(SDL_WasInit(SDL_INIT_AUDIO), "SDL Audio subsystem is unitialized");
     STARTUP_TEST(SDL_WasInit(SDL_INIT_EVENTS), "SDL Event subsystem is unitialized");
-    STARTUP_TEST(m_pWindow != NULL, "SDL Window is NULL");
-    STARTUP_TEST(m_pRenderer != NULL, "SDL Renderer is NULL");
+    STARTUP_TEST(m_pWindow != nullptr, "SDL Window is nullptr");
+    STARTUP_TEST(m_pRenderer != nullptr, "SDL Renderer is nullptr");
     
     // Game logic
-    STARTUP_TEST(m_pGame != NULL, "Game Logic is NULL");
+    STARTUP_TEST(m_pGame != nullptr, "Game Logic is nullptr");
 
     // Game view
-    STARTUP_TEST(GetHumanView() != NULL, "Human View is NULL");
+    STARTUP_TEST(GetHumanView() != nullptr, "Human View is nullptr");
 
     // Event manager
-    STARTUP_TEST(IEventMgr::Get() != NULL, "Event manager is unitialized");
+    STARTUP_TEST(IEventMgr::Get() != nullptr, "Event manager is unitialized");
 
     // Audio manager
-    STARTUP_TEST(m_pAudio != NULL, "Audio manager is unitialized");
+    STARTUP_TEST(m_pAudio != nullptr, "Audio manager is unitialized");
 
     // Resources
     STARTUP_TEST(m_pResourceMgr->VHasResourceCache(ORIGINAL_RESOURCE), std::string(ORIGINAL_RESOURCE) + " is not part of ResourceMgr");
@@ -337,7 +337,7 @@ std::string BaseGameApp::GetString(std::string stringId)
 
 HumanView* BaseGameApp::GetHumanView() const
 {
-    HumanView *pView = NULL;
+    HumanView *pView = nullptr;
     for (GameViewList::iterator i = m_pGame->m_GameViews.begin(); i != m_pGame->m_GameViews.end(); ++i)
     {
         if ((*i)->VGetType() == GameView_Human)
@@ -361,7 +361,7 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     }
 
     TiXmlElement* configRoot = m_XmlConfiguration.RootElement();
-    if (configRoot == NULL)
+    if (configRoot == nullptr)
     {
         LOG_ERROR("Could not load root element for config file");
         return false;
@@ -443,7 +443,7 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     if (fontRootElem)
     {
         for (TiXmlElement* fontElem = fontRootElem->FirstChildElement("Font");
-            fontElem != NULL;
+            fontElem != nullptr;
             fontElem = fontElem->NextSiblingElement("Font"))
         {
             if (fontElem->GetText())
@@ -633,7 +633,7 @@ bool BaseGameApp::InitializeDisplay(GameOptions& gameOptions)
 
     m_pWindow = SDL_CreateWindow(VGetGameTitle(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         gameOptions.windowWidth, gameOptions.windowHeight, SDL_WINDOW_SHOWN);
-    if (m_pWindow == NULL)
+    if (m_pWindow == nullptr)
     {
         LOG_ERROR("Failed to create main window");
         return false;
@@ -659,7 +659,7 @@ bool BaseGameApp::InitializeDisplay(GameOptions& gameOptions)
     }
 
     m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, rendererFlags);
-    if (m_pRenderer == NULL)
+    if (m_pRenderer == nullptr)
     {
         LOG_ERROR("Failed to create SDL2 Renderer. Error: %s" + std::string(SDL_GetError()));
         return false;
@@ -768,7 +768,7 @@ bool BaseGameApp::InitializeFont(GameOptions& gameOptions)
     }
 
     m_pConsoleFont = TTF_OpenFont(gameOptions.consoleFontName.c_str(), gameOptions.consoleFontSize);
-    if (m_pConsoleFont == NULL)
+    if (m_pConsoleFont == nullptr)
     {
         LOG_ERROR("Failed to load TTF font");
         return false;
@@ -874,7 +874,7 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
     for (const std::string& metadataFile : xmlLevelMetadataFiles)
     {
         TiXmlElement* pRootElem = XmlResourceLoader::LoadAndReturnRootXmlElement(metadataFile.c_str());
-        if (pRootElem == NULL)
+        if (pRootElem == nullptr)
         {
             LOG_ERROR("Failed to parse level metadata file: " + metadataFile);
             return false;
@@ -898,14 +898,14 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
 
         // LevelMetadata.LogicsToActorPrototypes.*
         TiXmlElement* pLogicToProtoRootElem = pRootElem->FirstChildElement("LogicsToActorPrototypes");
-        if (pLogicToProtoRootElem == NULL)
+        if (pLogicToProtoRootElem == nullptr)
         {
             LOG_ERROR("Missing \"LogicsToActorPrototypes\" element in metadata file: " + metadataFile);
             return false;
         }
 
         for (TiXmlElement* pLogicToProtoElem = pLogicToProtoRootElem->FirstChildElement("LogicToActorPrototype");
-            pLogicToProtoElem != NULL;
+            pLogicToProtoElem != nullptr;
             pLogicToProtoElem = pLogicToProtoElem->NextSiblingElement("LogicToActorPrototype"))
         {
             std::string logic;
@@ -928,14 +928,14 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
 
         // LevelMetadata.ClawSpawnPositions.*
         TiXmlElement* pSpawnPositionsRootElem = pRootElem->FirstChildElement("ClawSpawnPositions");
-        if (pSpawnPositionsRootElem == NULL)
+        if (pSpawnPositionsRootElem == nullptr)
         {
             LOG_ERROR("Missing \"ClawSpawnPositions\" element in metadata file: " + metadataFile);
             return false;
         }
 
         for (TiXmlElement* pSpawnPositionElem = pSpawnPositionsRootElem->FirstChildElement("ClawSpawnPosition");
-            pSpawnPositionElem != NULL;
+            pSpawnPositionElem != nullptr;
             pSpawnPositionElem = pSpawnPositionElem->NextSiblingElement("ClawSpawnPosition"))
         {
             std::string spawnNumberStr;
@@ -962,14 +962,14 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
 
         // LevelMetadata.TopLadderEnds.*
         TiXmlElement* pTopLadderEndsRootElem = pRootElem->FirstChildElement("TopLadderEnds");
-        if (pTopLadderEndsRootElem == NULL)
+        if (pTopLadderEndsRootElem == nullptr)
         {
             LOG_ERROR("Missing \"TopLadderEnds\" element in metadata file: " + metadataFile);
             return false;
         }
 
         for (TiXmlElement* pTopLadderEndElem = pTopLadderEndsRootElem->FirstChildElement("TopLadderEnd");
-            pTopLadderEndElem != NULL;
+            pTopLadderEndElem != nullptr;
             pTopLadderEndElem = pTopLadderEndElem->NextSiblingElement("TopLadderEnd"))
         {
             std::string tileIdStr;
@@ -996,7 +996,7 @@ bool BaseGameApp::ReadLevelMetadata(GameOptions& gameOptions)
 
         // LevelMetadata.TileDeathEffect
         TiXmlElement* pTileDeathEffectElem = pRootElem->FirstChildElement("TileDeathEffect");
-        if (pTileDeathEffectElem == NULL)
+        if (pTileDeathEffectElem == nullptr)
         {
             LOG_ERROR("Missing \"TileDeathEffect\" element in metadata file: " + metadataFile);
             return false;
@@ -1038,7 +1038,7 @@ const shared_ptr<LevelMetadata> BaseGameApp::GetLevelMetadata(int levelNumber) c
     if (findIt == m_LevelMetadataMap.end())
     {
         LOG_ASSERT("LevelMetadata not found for level: " + ToStr(levelNumber));
-        return NULL;
+        return nullptr;
     }
 
     return findIt->second;
@@ -1097,7 +1097,7 @@ public:
     {
         std::string elemPath = GeTiXmlElementElementPath(&elem);
         /*LOG("Visiting element: " + std::string(elem.Value()) + " with path: " + elemPath);
-        if (pAttribute != NULL)
+        if (pAttribute != nullptr)
         {
             LOG("Attribute value: " + std::string(pAttribute->Name()));
         }*/
@@ -1115,7 +1115,7 @@ public:
             // First get parented node to which we will add the new one
             elemPath = elemPath.substr(0, elemPath.find_last_of("."));
             TiXmlElement* pParentElemToWhichAdd = GetTiXmlElementFromPath(m_pParentRootElem, elemPath);
-            assert(pParentElemToWhichAdd != NULL);
+            assert(pParentElemToWhichAdd != nullptr);
 
             // Clone and add
             TiXmlElement* pChildElemCopy = elem.Clone()->ToElement();
@@ -1130,7 +1130,7 @@ public:
 
     virtual bool VisitExit(const TiXmlElement& elem) override
     {
-        /*if (elem.Parent() == NULL)
+        /*if (elem.Parent() == nullptr)
         {
             m_pParentRootElem->Print(stdout, -1);
             LOG("Visiting DONE");
@@ -1142,7 +1142,7 @@ public:
 private:
     std::string GeTiXmlElementElementPath(const TiXmlElement* pElem)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
         std::string path = pElem->Value();
 
         while (pElem->Parent() && pElem->Parent()->ToElement())
@@ -1158,7 +1158,7 @@ private:
     {
         int numModifiedAttributes = 0;
         for (const TiXmlAttribute* pNewAttr = withThis->FirstAttribute();
-            pNewAttr != NULL;
+            pNewAttr != nullptr;
             pNewAttr = pNewAttr->Next())
         {
             updateThis->SetAttribute(pNewAttr->Name(), pNewAttr->Value());
@@ -1171,7 +1171,7 @@ private:
 
     bool UpdateTiXmlElementText(TiXmlElement* updateThis, const TiXmlElement* withThis)
     {
-        if (withThis->GetText() == NULL)
+        if (withThis->GetText() == nullptr)
         {
             return false;
         }
@@ -1193,17 +1193,17 @@ TiXmlElement* BaseGameApp::GetActorPrototypeElem(ActorPrototype proto)
     assert(findIt != m_ActorXmlPrototypeMap.end());
 
     TiXmlNode* pCopy = findIt->second->Clone()->ToElement();
-    assert(pCopy != NULL);
+    assert(pCopy != nullptr);
 
     TiXmlElement* pRootElem = pCopy->ToElement();
-    assert(pRootElem != NULL);
+    assert(pRootElem != nullptr);
 
     // If this is derived XML, load its parent and apply its changes
-    if (pRootElem->Attribute("Parent") != NULL)
+    if (pRootElem->Attribute("Parent") != nullptr)
     {
         ActorPrototype parentProto = StringToEnum_ActorPrototype(pRootElem->Attribute("Parent"));
         TiXmlElement* pParentRootElem = GetActorPrototypeElem(parentProto);
-        assert(pParentRootElem != NULL);
+        assert(pParentRootElem != nullptr);
 
         // Merge changes from child to parent (child contains only delta changes)
         // IE. Child applies changes to Parent

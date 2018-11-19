@@ -27,7 +27,7 @@ TiXmlElement* XmlResourceExtraData::GetRoot()
 
 bool XmlResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle)
 {
-    if (rawSize <= 0 || rawBuffer == NULL)
+    if (rawSize <= 0 || rawBuffer == nullptr)
     {
         LOG_ERROR("Received invalid rawBuffer or its size");
         return false;
@@ -51,7 +51,7 @@ TiXmlElement* XmlResourceLoader::LoadAndReturnRootXmlElement(const char* resourc
         if (doc->Error())
         {
             LOG_ERROR("Could not load XML document: " + std::string(resourceString) + ". Error: " + doc->ErrorDesc());
-            return NULL;
+            return nullptr;
         }
         
         return doc->RootElement();
@@ -67,7 +67,7 @@ TiXmlElement* XmlResourceLoader::LoadAndReturnRootXmlElement(const char* resourc
         if (!extraData)
         {
             LOG_ERROR("Could not cast type to WwdResourceExtraData. Check if WwdResourceLoader is registered.");
-            return NULL;
+            return nullptr;
         }
 
         return extraData->GetRoot();

@@ -10,7 +10,7 @@
 
 PalResourceExtraData::~PalResourceExtraData()
 {
-    if (_palette != NULL)
+    if (_palette != nullptr)
     {
         WAP_PalDestroy(_palette);
     }
@@ -29,7 +29,7 @@ void PalResourceExtraData::LoadPal(char* rawBuffer, uint32 size)
 
 bool PalResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle)
 {
-    if (rawSize <= 0 || rawBuffer == NULL)
+    if (rawSize <= 0 || rawBuffer == nullptr)
     {
         LOG_ERROR("Received invalid rawBuffer or its size");
         return false;
@@ -53,7 +53,7 @@ WapPal* PalResourceLoader::LoadAndReturnPal(const char* resourceString)
     if (!extraData)
     {
         LOG_ERROR("Could not cast type to PalResourceExtraData. Check if PalResourceLoader is registered.");
-        return NULL;
+        return nullptr;
     }
 
     return extraData->GetPalette();

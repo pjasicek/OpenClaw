@@ -321,7 +321,7 @@ int ZipFile::GetFileLen(int i) const
 // --------------------------------------------------------------------------
 bool ZipFile::ReadFile(int i, void *pBuf)
 {
-    if (pBuf == NULL || i < 0 || i >= m_nEntries)
+    if (pBuf == nullptr || i < 0 || i >= m_nEntries)
         return false;
 
     // Quick'n dirty read, the whole file at once.
@@ -369,8 +369,8 @@ bool ZipFile::ReadFile(int i, void *pBuf)
     stream.avail_in = (uInt)h.cSize;
     stream.next_out = (Bytef*)pBuf;
     stream.avail_out = h.ucSize;
-    stream.zalloc = (alloc_func)0;
-    stream.zfree = (free_func)0;
+    stream.zalloc = (alloc_func)nullptr;
+    stream.zfree = (free_func)nullptr;
 
     // Perform inflation. wbits < 0 indicates no zlib header inside the data.
     err = inflateInit2(&stream, -MAX_WBITS);
@@ -398,7 +398,7 @@ bool ZipFile::ReadFile(int i, void *pBuf)
 // --------------------------------------------------------------------------
 bool ZipFile::ReadLargeFile(int i, void *pBuf, void(*progressCallback)(int, bool &))
 {
-    if (pBuf == NULL || i < 0 || i >= m_nEntries)
+    if (pBuf == nullptr || i < 0 || i >= m_nEntries)
         return false;
 
     // Quick'n dirty read, the whole file at once.
@@ -446,8 +446,8 @@ bool ZipFile::ReadLargeFile(int i, void *pBuf, void(*progressCallback)(int, bool
     stream.avail_in = (uInt)h.cSize;
     stream.next_out = (Bytef*)pBuf;
     stream.avail_out = (128 * 1024); //  read 128k at a time h.ucSize;
-    stream.zalloc = (alloc_func)0;
-    stream.zfree = (free_func)0;
+    stream.zalloc = (alloc_func)nullptr;
+    stream.zfree = (free_func)nullptr;
 
     // Perform inflation. wbits < 0 indicates no zlib header inside the data.
     err = inflateInit2(&stream, -MAX_WBITS);

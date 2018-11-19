@@ -29,7 +29,7 @@ typedef std::map<std::string, FileList> DirToFileListMap;
 class ZipFile
 {
 public:
-    ZipFile() { m_nEntries = 0; m_pFile = NULL; m_pDirData = NULL; }
+    ZipFile() { m_nEntries = 0; m_pFile = nullptr; m_pDirData = nullptr; }
     virtual ~ZipFile() { End(); fclose(m_pFile); }
 
     bool Init(const std::string &resFileName);

@@ -67,6 +67,6 @@ void SDL2ActorSceneNode::VRender(Scene* pScene)
     SDL_SetTextureColorMod(actorImage->GetTexture(), colorMod.r, colorMod.g, colorMod.b);
 
     SDL_Renderer* renderer = pScene->GetRenderer();
-    SDL_RenderCopyEx(renderer, actorImage->GetTexture(), NULL, &renderRect, 0, NULL, 
+    SDL_RenderCopyEx(renderer, actorImage->GetTexture(), nullptr, &renderRect, 0, nullptr, 
         arc->IsMirrored() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }

@@ -21,7 +21,7 @@ FloorSpikeComponent::FloorSpikeComponent()
 
 bool FloorSpikeComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     assert(ParseValueFromXmlElem(&m_ActiveFrameIdx, pData->FirstChildElement("ActiveFrameIdx")));
     assert(ParseValueFromXmlElem(&m_StartDelay, pData->FirstChildElement("StartDelay")));
@@ -37,7 +37,7 @@ void FloorSpikeComponent::VPostInit()
     m_pDamageAuraComponent = MakeStrongPtr(m_pOwner->GetComponent<DamageAuraComponent>()).get();
     shared_ptr<AnimationComponent> pAnimComponent = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>());
 
-    assert(m_pDamageAuraComponent != NULL);
+    assert(m_pDamageAuraComponent != nullptr);
     assert(pAnimComponent != nullptr);
 
     pAnimComponent->AddObserver(this);

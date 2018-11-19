@@ -27,7 +27,7 @@ DestroyableComponent::~DestroyableComponent()
 
 bool DestroyableComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     if (!m_pPhysics)
@@ -77,7 +77,7 @@ void DestroyableComponent::VPostInit()
     }
 
     m_pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>()).get();
-    assert(m_pRenderComponent != NULL);
+    assert(m_pRenderComponent != nullptr);
 }
 
 TiXmlElement* DestroyableComponent::VGenerateXml()

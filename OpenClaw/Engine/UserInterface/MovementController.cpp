@@ -5,7 +5,7 @@ MovementController::MovementController(shared_ptr<SceneNode> controlledObject, f
 {
     m_pControlledObject = controlledObject;
     m_Speed = speed;
-    m_pKeyStates = NULL;
+    m_pKeyStates = nullptr;
     m_MouseLeftButtonDown = m_MouseRightButtonDown = false;
 }
 

@@ -9,7 +9,7 @@ ActorController::ActorController(shared_ptr<SceneNode> controlledObject, float s
 {
     m_pControlledObject = controlledObject;
     m_Speed = speed;
-    m_pKeyStates = NULL;
+    m_pKeyStates = nullptr;
     m_MouseLeftButtonDown = m_MouseRightButtonDown = false;
 }
 

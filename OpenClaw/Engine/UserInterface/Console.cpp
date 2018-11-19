@@ -26,7 +26,7 @@ static SDL_Texture* GetTextureFromTtfText(TTF_Font* font, SDL_Color textColor, S
 SDL_Rect GetRenderRectFromTexture(SDL_Texture* texture, int16_t x, int16_t y)
 {
     int w, h;
-    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+    SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
     return{ x, y, w, h };
 }
@@ -35,7 +35,7 @@ void RenderText(SDL_Renderer* renderer, std::string text, TTF_Font* font, SDL_Co
 {
     SDL_Texture* texture = GetTextureFromTtfText(font, color, renderer, text);
     SDL_Rect rect = GetRenderRectFromTexture(texture, x, y);
-    SDL_RenderCopy(renderer, texture, NULL, &rect);
+    SDL_RenderCopy(renderer, texture, nullptr, &rect);
     SDL_DestroyTexture(texture);
 }
 
@@ -117,22 +117,22 @@ private:
 
 ConsoleText::ConsoleText(TTF_Font* font, std::string text, SDL_Color color, int16_t x, int16_t y)
 {
-    assert(font != NULL);
+    assert(font != nullptr);
 
     _text = text;
     _color = color;
     _font = font;
-    _texture = NULL;
+    _texture = nullptr;
     _x = x;
     _y = y;
 }
 
 ConsoleText::~ConsoleText()
 {
-    if (_texture != NULL)
+    if (_texture != nullptr)
     {
         SDL_DestroyTexture(_texture);
-        _texture = NULL;
+        _texture = nullptr;
     }
 }
 
@@ -144,7 +144,7 @@ void ConsoleText::Init(SDL_Renderer* renderer)
 
 void ConsoleText::Render(SDL_Renderer* renderer, int16_t startX, int16_t startY)
 {
-    if (_texture == NULL)
+    if (_texture == nullptr)
     {
         Init(renderer);
     }
@@ -153,7 +153,7 @@ void ConsoleText::Render(SDL_Renderer* renderer, int16_t startX, int16_t startY)
 
     SDL_Rect screenRect = { _renderRect.x - startX, _renderRect.y - startY, _renderRect.w, _renderRect.h };
     //PrintRect(screenRect, "ScreenRect");
-    SDL_RenderCopy(renderer, _texture, NULL, &screenRect);
+    SDL_RenderCopy(renderer, _texture, nullptr, &screenRect);
 }
 
 //#####################################################################
@@ -187,7 +187,7 @@ private:
 
 ConsoleLine::ConsoleLine(TTF_Font* font, uint16_t lineNumber, int16_t leftOffset)
 {
-    assert(font != NULL);
+    assert(font != nullptr);
 
     _font = font;
     _lineNumber = lineNumber;
@@ -272,7 +272,7 @@ void ConsoleLine::Commit()
 
 Console::Console(uint16_t width, uint16_t height, TTF_Font* font, SDL_Renderer* renderer, const char* backgroundResource)
 {
-    assert(font != NULL);
+    assert(font != nullptr);
 
     _width = width;
     _height = height;
@@ -298,8 +298,8 @@ Console::Console(uint16_t width, uint16_t height, TTF_Font* font, SDL_Renderer* 
 
     _backgroundTexture = IMG_LoadTexture(renderer, backgroundResource);
 
-    _handler = NULL;
-    _handlerUserData = NULL;
+    _handler = nullptr;
+    _handlerUserData = nullptr;
 
     _autocompleted = false;
 
@@ -320,8 +320,8 @@ Console::Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRende
     _y = 0;
     _isActive = false;
     _autocompleted = false;
-    _handler = NULL;
-    _handlerUserData = NULL;
+    _handler = nullptr;
+    _handlerUserData = nullptr;
 
     m_pRenderer = pRenderer;
     m_pWindow = pWindow;
@@ -345,7 +345,7 @@ Console::Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRende
     m_ConsosleToggleSpeed = pConsoleConfig->consoleAnimationSpeed;
 
     _font = TTF_OpenFont(pConsoleConfig->fontPath.c_str(), pConsoleConfig->fontHeight);
-    assert(_font != NULL);
+    assert(_font != nullptr);
 
     _backgroundTexture = IMG_LoadTexture(pRenderer, pConsoleConfig->backgroundImagePath.c_str());
 
@@ -361,10 +361,10 @@ Console::Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRende
 Console::~Console()
 {
     _consoleTextLines.clear();
-    if (_backgroundTexture != NULL)
+    if (_backgroundTexture != nullptr)
     {
         SDL_DestroyTexture(_backgroundTexture);
-        _backgroundTexture = NULL;
+        _backgroundTexture = nullptr;
     }
 }
 
@@ -544,7 +544,7 @@ void Console::RenderBackground(SDL_Renderer* renderer)
     int consoleHeight = _height + m_CommandPromptOffsetY;
 
     // No background texture is set - render default as black color
-    if (_backgroundTexture == NULL)
+    if (_backgroundTexture == nullptr)
     {
         SDL_Rect backgroundRect = { 0, 0, consoleWidth, consoleHeight - (int16_t)_animationOffsetY };
         RenderRectangle(renderer, backgroundRect, COLOR_BLACK_LIGHTER);
@@ -552,7 +552,7 @@ void Console::RenderBackground(SDL_Renderer* renderer)
     // Render background with given texture
     else
     {
-        SDL_QueryTexture(_backgroundTexture, NULL, NULL, &imgWidth, &imgHeight);
+        SDL_QueryTexture(_backgroundTexture, nullptr, nullptr, &imgWidth, &imgHeight);
 
         int repeatX = consoleWidth / imgWidth;
         if ((consoleWidth % imgWidth) > 0)

@@ -23,7 +23,7 @@ PathElevatorComponent::PathElevatorComponent()
 
 bool PathElevatorComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     m_Properties.LoadFromXml(pData, true);
     

@@ -11,10 +11,10 @@ SoundComponent::~SoundComponent()
 
 bool SoundComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     for (TiXmlElement* animPathElem = data->FirstChildElement("SoundPath");
-        animPathElem != NULL; animPathElem = animPathElem->NextSiblingElement("SoundPath"))
+        animPathElem != nullptr; animPathElem = animPathElem->NextSiblingElement("SoundPath"))
     {
         const char* soundsPath = animPathElem->GetText();
 

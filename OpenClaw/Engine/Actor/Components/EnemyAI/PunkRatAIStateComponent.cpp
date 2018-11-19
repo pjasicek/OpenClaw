@@ -11,9 +11,9 @@ const char* PunkRatAIStateComponent::g_Name = "PunkRatAIStateComponent";
 
 PunkRatAIStateComponent::PunkRatAIStateComponent()
     :
-    m_pAnimationComponent(NULL),
-    m_pCannonActor(NULL),
-    m_pCannonAnimationComponent(NULL),
+    m_pAnimationComponent(nullptr),
+    m_pCannonActor(nullptr),
+    m_pCannonAnimationComponent(nullptr),
     m_RatFireAnimFrameIdx(-1),
     m_CannonFireAnimFrameIdx(-1),
     m_bIsMirrored(false),

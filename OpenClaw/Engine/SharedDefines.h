@@ -40,11 +40,11 @@ typedef int16_t int16;
 typedef int8_t int8;
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(ptr)       { if (ptr) { delete (ptr);     (ptr)=NULL; } }
+#define SAFE_DELETE(ptr)       { if (ptr) { delete (ptr);     (ptr)=nullptr; } }
 #endif
 
 #ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(ptr) { if (ptr) { delete[] (ptr);   (ptr)=NULL; } }
+#define SAFE_DELETE_ARRAY(ptr) { if (ptr) { delete[] (ptr);   (ptr)=nullptr; } }
 #endif
 
 #ifndef PROFILE_CPU

@@ -12,7 +12,7 @@
 
 PidResourceExtraData::~PidResourceExtraData()
 {
-    if (_pid != NULL)
+    if (_pid != nullptr)
     {
         WAP_PidDestroy(_pid);
     }
@@ -20,7 +20,7 @@ PidResourceExtraData::~PidResourceExtraData()
 
 void PidResourceExtraData::LoadPid(char* rawBuffer, uint32 size, WapPal* palette, const char* resourceString)
 {
-    if (_pid == NULL)
+    if (_pid == nullptr)
     {
         _pid = WAP_PidLoadFromData(rawBuffer, size, palette);
         OnPidLoaded(resourceString, _pid);
@@ -29,15 +29,15 @@ void PidResourceExtraData::LoadPid(char* rawBuffer, uint32 size, WapPal* palette
 
 void PidResourceExtraData::LoadImage(char* rawBuffer, uint32 size, WapPal* palette, const char* resourceString)
 {
-    if (_pid == NULL)
+    if (_pid == nullptr)
     {
         LoadPid(rawBuffer, size, palette, resourceString);
     }
-    if (_image == NULL)
+    if (_image == nullptr)
     {
         SDL_Renderer* renderer = g_pApp->GetRenderer();
         _image = shared_ptr<Image>(Image::CreateImage(_pid, renderer));
-        WAP_PidDestroy(_pid); _pid = NULL;
+        WAP_PidDestroy(_pid); _pid = nullptr;
         //SAFE_DELETE_ARRAY(rawBuffer);
     }
 }
@@ -60,10 +60,10 @@ WapPid* PidResourceLoader::LoadAndReturnPid(const char* resourceString, WapPal* 
         extraData = shared_ptr<PidResourceExtraData>(new PidResourceExtraData());
         extraData->LoadPid(handle->GetDataBuffer(), handle->GetSize(), palette, resourceString);
 
-        if (extraData->GetPid() == NULL)
+        if (extraData->GetPid() == nullptr)
         {
-            LOG_ERROR(extraData->VToString() + ": GetPid() returned NULL. Check if PidResourceLoader is registered.");
-            return NULL;
+            LOG_ERROR(extraData->VToString() + ": GetPid() returned nullptr. Check if PidResourceLoader is registered.");
+            return nullptr;
         }
 
         handle->SetExtraData(extraData);
@@ -87,7 +87,7 @@ shared_ptr<Image> PidResourceLoader::LoadAndReturnImage(const char* resourceStri
         if (!extraData->GetImage())
         {
             LOG_ERROR(extraData->VToString() + ": GetImage() returned nullptr. Check if PidResourceLoader is registered.");
-            return NULL;
+            return nullptr;
         }
 
         handle->SetExtraData(extraData);
@@ -100,7 +100,7 @@ shared_ptr<Image> PidResourceLoader::LoadAndReturnImage(const char* resourceStri
         if (!extraData->GetImage())
         {
             LOG_ERROR(extraData->VToString() + ": GetImage() returned nullptr. Check if PidResourceLoader is registered.");
-            return NULL;
+            return nullptr;
         }
     }
 

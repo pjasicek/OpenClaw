@@ -370,7 +370,7 @@ void ScreenElementScoreScreen::VOnRender(uint32 msDiff)
     assert(m_pBackground != nullptr);
 
     SDL_Rect backgroundRect = GetScreenRect();
-    SDL_RenderCopy(m_pRenderer, m_pBackground->GetTexture(), &backgroundRect, NULL);
+    SDL_RenderCopy(m_pRenderer, m_pBackground->GetTexture(), &backgroundRect, nullptr);
     //LOG("Rendered. Image width: " + ToStr(m_pBackground->GetWidth()));
 
     Scene::OnRender();
@@ -622,7 +622,7 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
 
     // Set correct palette
     WapPal* pScoreScreenPalette = WAP_PalLoadFromData((char*)g_ScoreScreenPalette, 768);
-    assert(pScoreScreenPalette != NULL);
+    assert(pScoreScreenPalette != nullptr);
     g_pApp->SetCurrentPalette(pScoreScreenPalette);
 
     // Setup background sound
@@ -723,7 +723,7 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
 
     // Load score rows
     for (TiXmlElement* pScoreRowElem = pScoreScreenRootElem->FirstChildElement("ScoreRow");
-        pScoreRowElem != NULL;
+        pScoreRowElem != nullptr;
         pScoreRowElem = pScoreRowElem->NextSiblingElement("ScoreRow"))
     {
         ScoreRowDef scoreRowDef;
@@ -759,7 +759,7 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
         if (TiXmlElement* pAlternativeImagesElem = pScoreRowElem->FirstChildElement("AlternativeImages"))
         {
             for (TiXmlElement* pAltImageElem = pAlternativeImagesElem->FirstChildElement("AlternativeImage");
-                pAltImageElem != NULL;
+                pAltImageElem != nullptr;
                 pAltImageElem = pAltImageElem->NextSiblingElement("AlternativeImage"))
             {
                 std::string alternativeImage;

@@ -118,7 +118,7 @@ b2AABB GetBodyAABB(b2Body* pBody, bool discardSensors)
     aabb.lowerBound = b2Vec2(FLT_MAX, FLT_MAX);
     aabb.upperBound = b2Vec2(-FLT_MAX, -FLT_MAX);
     b2Fixture* fixture = pBody->GetFixtureList();
-    while (fixture != NULL)
+    while (fixture != nullptr)
     {
         if (discardSensors && fixture->IsSensor())
         {
@@ -134,12 +134,12 @@ b2AABB GetBodyAABB(b2Body* pBody, bool discardSensors)
 
 b2Fixture* GetLowermostFixture(b2Body* pBody, bool discardSensors)
 {
-    b2Fixture* pLowermostFixture = NULL;
+    b2Fixture* pLowermostFixture = nullptr;
     b2AABB aabb;
     aabb.lowerBound = b2Vec2(FLT_MAX, FLT_MAX);
     aabb.upperBound = b2Vec2(-FLT_MAX, -FLT_MAX);
     b2Fixture* fixture = pBody->GetFixtureList();
-    while (fixture != NULL)
+    while (fixture != nullptr)
     {
         if (fixture->IsSensor())
         {
@@ -147,7 +147,7 @@ b2Fixture* GetLowermostFixture(b2Body* pBody, bool discardSensors)
             continue;
         }
 
-        if (pLowermostFixture == NULL)
+        if (pLowermostFixture == nullptr)
         {
             pLowermostFixture = fixture;
         }
@@ -160,7 +160,7 @@ b2Fixture* GetLowermostFixture(b2Body* pBody, bool discardSensors)
     }
 
 
-    assert(pLowermostFixture != NULL);
+    assert(pLowermostFixture != nullptr);
     return pLowermostFixture;
 }
 
@@ -404,7 +404,7 @@ void ClawPhysics::VOnUpdate(const uint32 msDiff)
             assert(m_pWorld->IsLocked() == false);
 
             pBody->SetActive(false);
-            pBody->SetUserData(NULL);
+            pBody->SetUserData(nullptr);
             m_pWorld->DestroyBody(pBody);
             m_ActorToBodyMap.erase(actorId);
             m_BodyToActorMap.erase(pBody);
@@ -718,7 +718,7 @@ void ClawPhysics::VAddActorBody(const ActorBodyDef* actorBodyDef)
     bodyDef.position.Set(b2Position.x, b2Position.y);
     bodyDef.fixedRotation = true;
     b2Body* pBody = m_pWorld->CreateBody(&bodyDef);
-    assert(pBody != NULL && "Failed to create Box2D body.  Is the world currently stepping ?");
+    assert(pBody != nullptr && "Failed to create Box2D body.  Is the world currently stepping ?");
     pBody->SetUserData(pStrongActor.get());
     pBody->SetBullet(actorBodyDef->makeBullet);
     pBody->SetGravityScale(actorBodyDef->gravityScale);
@@ -893,7 +893,7 @@ void ClawPhysics::VRemoveActor(uint32_t actorId)
     // Clear any user data
     if (b2Body* pBody = FindBox2DBody(actorId))
     {
-        pBody->SetUserData(NULL);
+        pBody->SetUserData(nullptr);
     }
 
     ScheduleActorForRemoval(actorId);
@@ -1195,7 +1195,7 @@ void ClawPhysics::VChangeCollisionFlag(uint32_t actorId, uint32 fromFlag, uint32
     if (b2Body* pBody = FindBox2DBody(actorId))
     {
         b2Fixture* pFixture = pBody->GetFixtureList();
-        while (pFixture != NULL)
+        while (pFixture != nullptr)
         {
             b2Filter filter = pFixture->GetFilterData();
             if (filter.categoryBits & fromFlag)
@@ -1218,7 +1218,7 @@ SDL_Rect ClawPhysics::VGetAABB(uint32_t actorId, bool discardSensors)
         /*aabb.lowerBound = b2Vec2(FLT_MAX, FLT_MAX);
         aabb.upperBound = b2Vec2(-FLT_MAX, -FLT_MAX);
         b2Fixture* pFixture = pBody->GetFixtureList();
-        while (pFixture != NULL)
+        while (pFixture != nullptr)
         {
             aabb.Combine(aabb, pFixture->GetAABB(0));
             pFixture = pFixture->GetNext();
@@ -1355,11 +1355,11 @@ void ClawPhysics::VScaleActor(uint32_t actorId, double scale)
     {
         if (scale < 1.0)
         {
-            b2Fixture* pBodyRectangleFixture = NULL;
-            b2Fixture* pHeadCircleFixture = NULL;
+            b2Fixture* pBodyRectangleFixture = nullptr;
+            b2Fixture* pHeadCircleFixture = nullptr;
 
             b2Fixture* fixture = pBody->GetFixtureList();
-            while (fixture != NULL)
+            while (fixture != nullptr)
             {
                 if (fixture->IsSensor())
                 {
@@ -1368,7 +1368,7 @@ void ClawPhysics::VScaleActor(uint32_t actorId, double scale)
                 }
                 if (fixture->GetShape()->GetType() == b2Shape::e_circle)
                 {
-                    if (pHeadCircleFixture == NULL)
+                    if (pHeadCircleFixture == nullptr)
                     {
                         pHeadCircleFixture = fixture;
                     }
@@ -1382,7 +1382,7 @@ void ClawPhysics::VScaleActor(uint32_t actorId, double scale)
                 }
                 else if (fixture->GetShape()->GetType() == b2Shape::e_polygon)
                 {
-                    if (pBodyRectangleFixture == NULL)
+                    if (pBodyRectangleFixture == nullptr)
                     {
                         pBodyRectangleFixture = fixture;
                     }
@@ -1409,7 +1409,7 @@ void ClawPhysics::VScaleActor(uint32_t actorId, double scale)
         else
         {
             b2Fixture* fixture = pBody->GetFixtureList();
-            while (fixture != NULL)
+            while (fixture != nullptr)
             {
                 if (fixture->IsSensor())
                 {
@@ -1437,7 +1437,7 @@ b2Body* ClawPhysics::FindBox2DBody(uint32 actorId)
     if (found != m_ActorToBodyMap.end())
         return found->second;
 
-    return NULL;
+    return nullptr;
 }
 
 uint32 ClawPhysics::FindActorId(b2Body* pBody)

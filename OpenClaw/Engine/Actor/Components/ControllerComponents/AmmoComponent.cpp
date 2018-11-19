@@ -40,7 +40,7 @@ void AmmoComponent::VPostInit()
 TiXmlElement* AmmoComponent::VGenerateXml()
 {
     // TODO:
-    return NULL;
+    return nullptr;
 }
 
 void AmmoComponent::AddAmmo(AmmoType ammoType, int32 ammoCount)

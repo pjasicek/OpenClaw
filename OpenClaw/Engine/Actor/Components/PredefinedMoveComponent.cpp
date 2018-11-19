@@ -10,13 +10,13 @@ const char* PredefinedMoveComponent::g_Name = "PredefinedMoveComponent";
 
 bool PredefinedMoveComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     m_CurrMoveIdx = 0;
     m_CurrMoveTime = 0;
 
     for (TiXmlElement* pPredefinedMoveElem = data->FirstChildElement("PredefinedMove");
-        pPredefinedMoveElem != NULL; pPredefinedMoveElem = pPredefinedMoveElem->NextSiblingElement("PredefinedMove"))
+        pPredefinedMoveElem != nullptr; pPredefinedMoveElem = pPredefinedMoveElem->NextSiblingElement("PredefinedMove"))
     {
         PredefinedMove move;
         if (TiXmlElement* pElem = pPredefinedMoveElem->FirstChildElement("DurationMiliseconds"))
@@ -48,7 +48,7 @@ bool PredefinedMoveComponent::VInit(TiXmlElement* data)
 
 TiXmlElement* PredefinedMoveComponent::VGenerateXml()
 {
-    return NULL;
+    return nullptr;
 }
 
 void PredefinedMoveComponent::VPostInit()

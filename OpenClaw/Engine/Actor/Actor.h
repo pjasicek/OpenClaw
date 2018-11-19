@@ -31,7 +31,7 @@ public:
     inline uint32_t GetGUID() const { return _GUID; }
     inline std::string GetName() const { return _name; }
 
-    // Retrieves component from given ID or NULL if component not found
+    // Retrieves component from given ID or nullptr if component not found
     template <class ComponentType>
     weak_ptr<ComponentType> GetComponent(uint32 id)
     {
@@ -47,7 +47,7 @@ public:
         return weak_ptr<ComponentType>();
     }
 
-    // Retrieves component from given name or NULL if component not found
+    // Retrieves component from given name or nullptr if component not found
     template <class ComponentType>
     weak_ptr<ComponentType> GetComponent(const char *name)
     {
@@ -101,7 +101,7 @@ public:
             LOG_ASSERT("Failed to get component from actor: " + GetName());
         }
 
-        return NULL;
+        return nullptr;
     }
 
     const ActorComponentsMap* GetComponents() { return &_components; }

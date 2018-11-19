@@ -14,14 +14,14 @@ const char* SpringBoardComponent::g_Name = "SpringBoardComponent";
 SpringBoardComponent::SpringBoardComponent()
     :
     m_bIsSteppedOn(false),
-    m_pAnimationComponent(NULL)
+    m_pAnimationComponent(nullptr)
 {
 
 }
 
 bool SpringBoardComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     assert(m_pPhysics != nullptr);
@@ -34,7 +34,7 @@ bool SpringBoardComponent::VInit(TiXmlElement* pData)
 void SpringBoardComponent::VPostInit()
 {
     m_pAnimationComponent = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>()).get();
-    assert(m_pAnimationComponent != NULL);
+    assert(m_pAnimationComponent != nullptr);
 
     if (m_Properties.idleAnimName == "NONE")
     {

@@ -34,7 +34,7 @@ const char* EndLevelPickupComponent::g_Name = "EndLevelPickupComponent";
 
 bool PickupComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     ParseValueFromXmlElem(&m_PickupSound, data->FirstChildElement("PickupSound"));
 
@@ -74,7 +74,7 @@ void PickupComponent::VPostInit()
 TiXmlElement* PickupComponent::VGenerateXml()
 {
     // TODO: Implement
-    return NULL;
+    return nullptr;
 }
 
 void PickupComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType)
@@ -467,7 +467,7 @@ bool AmmoPickupComponent::VDelegateInit(TiXmlElement* data)
     assert(data);
 
     for (TiXmlElement* pElem = data->FirstChildElement("Ammo");
-        pElem != NULL; pElem = pElem->NextSiblingElement("Ammo"))
+        pElem != nullptr; pElem = pElem->NextSiblingElement("Ammo"))
     {
         std::string ammoTypeStr = pElem->Attribute("ammoType");
         int ammoCount = std::stoi(pElem->Attribute("ammoCount"));

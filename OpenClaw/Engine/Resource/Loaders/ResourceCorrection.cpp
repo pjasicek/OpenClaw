@@ -67,7 +67,7 @@ void OnAniLoaded(const char* resource, WapAni* pAni)
 
     /*for (int animFrameIdx = 0; animFrameIdx < pAni->animationFramesCount; ++animFrameIdx)
     {
-        if (pAni->animationFrames[animFrameIdx].eventFilePath != NULL)
+        if (pAni->animationFrames[animFrameIdx].eventFilePath != nullptr)
         {
             std::string soundPath(pAni->animationFrames[animFrameIdx].eventFilePath);
             LOG("Resource: " + resourceName + " - Sound: " + soundPath);

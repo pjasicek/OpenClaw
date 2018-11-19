@@ -122,7 +122,7 @@ inline TiXmlElement* EyeCandyToXml(WwdObject* pWwdObject)
         return animElem;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // @moveType: Left/Right/LeftTop/... or stop for a certain time only 1-9 are valid
@@ -449,7 +449,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         std::vector<PickupType> loot;
@@ -483,7 +483,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         return ActorTemplates::CreateXmlData_CrumblingPeg(actorProto, actorPosition, tmpImageSet, 0);
@@ -494,7 +494,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         std::string logic = wwdObject->logic;
@@ -556,7 +556,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         std::string logic = wwdObject->logic;
@@ -673,7 +673,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
         
         Point spawnAreaPosition((wwdObject->minX + wwdObject->maxX) / 2, (wwdObject->minY + wwdObject->maxY) / 2);
@@ -723,7 +723,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         std::vector<PickupType> loot;
@@ -751,7 +751,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
@@ -761,7 +761,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
@@ -830,7 +830,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         Point position(wwdObject->x, wwdObject->y);
@@ -841,7 +841,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         Point position(wwdObject->x, wwdObject->y);
@@ -852,7 +852,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         ActorPrototype projectileProto = ActorPrototype_None;
@@ -905,7 +905,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         Point position(wwdObject->x, wwdObject->y);
@@ -916,7 +916,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         PathElevatorDef pathElevatorDef;
@@ -1042,7 +1042,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         int delay = 0;
@@ -1077,7 +1077,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         double speed = (double)wwdObject->speed * g_pApp->GetGlobalOptions()->platformSpeedModifier;
@@ -1091,7 +1091,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
 
@@ -1114,7 +1114,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         Point position(wwdObject->x, wwdObject->y);
@@ -1151,7 +1151,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         Point position(wwdObject->x, wwdObject->y);
@@ -1172,7 +1172,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
         {
-            return NULL;
+            return nullptr;
         }
 
         Point position(wwdObject->x, wwdObject->y);
@@ -1218,7 +1218,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     if (actorProto != ActorPrototype_None)
     {
         SAFE_DELETE(pActorElem);
-        return NULL;
+        return nullptr;
     }
 
     return pActorElem;

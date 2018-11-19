@@ -38,8 +38,8 @@ PhysicsComponent::PhysicsComponent() :
     m_HeightInAir(20),
     m_pControllableComponent(nullptr),
     m_pPhysics(nullptr),
-    m_pTopLadderContact(NULL),
-    m_pMovingPlatformContact(NULL),
+    m_pTopLadderContact(nullptr),
+    m_pMovingPlatformContact(nullptr),
     m_bClampToGround(false),
     m_DoNothingTimeout(0),
     m_bIsForcedUp(false),
@@ -54,7 +54,7 @@ PhysicsComponent::~PhysicsComponent()
 
 bool PhysicsComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     if (!m_pPhysics)
@@ -175,7 +175,7 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
     }
 
     for (TiXmlElement* pFixtureElem = data->FirstChildElement("ActorFixture");
-        pFixtureElem != NULL; pFixtureElem = pFixtureElem->NextSiblingElement("ActorFixture"))
+        pFixtureElem != nullptr; pFixtureElem = pFixtureElem->NextSiblingElement("ActorFixture"))
     {
         ActorFixtureDef fixtureDef = ActorTemplates::XmlToActorFixtureDef(pFixtureElem);
 
@@ -493,7 +493,7 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
             else
             {
                 // If on top of the ladder climb through the artificial ground patch
-                if (m_pTopLadderContact != NULL)
+                if (m_pTopLadderContact != nullptr)
                 {
                     m_pTopLadderContact->SetEnabled(false);
                 }
@@ -981,7 +981,7 @@ bool PhysicsComponent::AttachToLadder()
     // is not the top-side ladder ground patch
     if (m_ClimbingSpeed.y > DBL_EPSILON)
     {
-        if (m_pTopLadderContact == NULL && m_NumFootContacts > 0)
+        if (m_pTopLadderContact == nullptr && m_NumFootContacts > 0)
         {
             return false;
         }

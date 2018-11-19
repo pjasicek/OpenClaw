@@ -28,9 +28,9 @@
 ScreenElementHUD::ScreenElementHUD()
     :
     m_IsVisible(true),
-    m_pFPSTexture(NULL),
-    m_pPositionTexture(NULL),
-    m_pBossBarTexture(NULL)
+    m_pFPSTexture(nullptr),
+    m_pPositionTexture(nullptr),
+    m_pBossBarTexture(nullptr)
 {
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &ScreenElementHUD::BossHealthChangedDelegate), EventData_Boss_Health_Changed::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &ScreenElementHUD::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
@@ -99,7 +99,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
         for (int i = 0; i < SCORE_NUMBERS_COUNT; i++)
         {
             SDL_Rect renderRect = { 40 + i * 13, 5, m_ScoreNumbers[i]->GetWidth(), m_ScoreNumbers[i]->GetHeight() };
-            SDL_RenderCopy(m_pRenderer, m_ScoreNumbers[i]->GetTexture(), NULL, &renderRect);
+            SDL_RenderCopy(m_pRenderer, m_ScoreNumbers[i]->GetTexture(), nullptr, &renderRect);
         }
     }
 
@@ -113,7 +113,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
                 2 + m_HealthNumbers[i]->GetOffsetY(),
                 m_HealthNumbers[i]->GetWidth(), 
                 m_HealthNumbers[i]->GetHeight() };
-            SDL_RenderCopy(m_pRenderer, m_HealthNumbers[i]->GetTexture(), NULL, &renderRect);
+            SDL_RenderCopy(m_pRenderer, m_HealthNumbers[i]->GetTexture(), nullptr, &renderRect);
         }
     }
 
@@ -127,7 +127,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
                 43 + m_AmmoNumbers[i]->GetOffsetY(), 
                 m_AmmoNumbers[i]->GetWidth(), 
                 m_AmmoNumbers[i]->GetHeight() };
-            SDL_RenderCopy(m_pRenderer, m_AmmoNumbers[i]->GetTexture(), NULL, &renderRect);
+            SDL_RenderCopy(m_pRenderer, m_AmmoNumbers[i]->GetTexture(), nullptr, &renderRect);
         }
     }
 
@@ -141,7 +141,7 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
                 71 + m_LivesNumbers[i]->GetOffsetY(),
                 m_LivesNumbers[i]->GetWidth(), 
                 m_LivesNumbers[i]->GetHeight() };
-            SDL_RenderCopy(m_pRenderer, m_LivesNumbers[i]->GetTexture(), NULL, &renderRect);
+            SDL_RenderCopy(m_pRenderer, m_LivesNumbers[i]->GetTexture(), nullptr, &renderRect);
         }
     }
 
@@ -151,26 +151,26 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
         for (int i = 0; i < STOPWATCH_NUMBERS_COUNT; i++)
         {
             SDL_Rect renderRect = { 40 + i * 13, 45, m_StopwatchNumbers[i]->GetWidth(), m_StopwatchNumbers[i]->GetHeight() };
-            SDL_RenderCopy(m_pRenderer, m_StopwatchNumbers[i]->GetTexture(), NULL, &renderRect);
+            SDL_RenderCopy(m_pRenderer, m_StopwatchNumbers[i]->GetTexture(), nullptr, &renderRect);
         }
     }
 
     if (m_pFPSTexture)
     {
         SDL_Rect renderRect;
-        SDL_QueryTexture(m_pFPSTexture, NULL, NULL, &renderRect.w, &renderRect.h);
+        SDL_QueryTexture(m_pFPSTexture, nullptr, nullptr, &renderRect.w, &renderRect.h);
         renderRect.x = (int)((m_pCamera->GetWidth() / 2) / scale.x - 20);
         renderRect.y = (int)(15 / scale.y);
-        SDL_RenderCopy(m_pRenderer, m_pFPSTexture, NULL, &renderRect);
+        SDL_RenderCopy(m_pRenderer, m_pFPSTexture, nullptr, &renderRect);
     }
 
     if (m_pPositionTexture)
     {
         SDL_Rect renderRect;
-        SDL_QueryTexture(m_pPositionTexture, NULL, NULL, &renderRect.w, &renderRect.h);
+        SDL_QueryTexture(m_pPositionTexture, nullptr, nullptr, &renderRect.w, &renderRect.h);
         renderRect.x = (int)(m_pCamera->GetWidth() / scale.x - renderRect.w - 1);
         renderRect.y = (int)(m_pCamera->GetHeight() / scale.y - renderRect.h - 1);
-        SDL_RenderCopy(m_pRenderer, m_pPositionTexture, NULL, &renderRect);
+        SDL_RenderCopy(m_pRenderer, m_pPositionTexture, nullptr, &renderRect);
     }
 
     if (m_pBossBarTexture)
@@ -184,10 +184,10 @@ void ScreenElementHUD::VOnRender(uint32 msDiff)
             ((windowSize.y * 0.8) / windowScale.y) - 3);
 
         SDL_Rect renderRect;
-        SDL_QueryTexture(m_pBossBarTexture, NULL, NULL, &renderRect.w, &renderRect.h);
+        SDL_QueryTexture(m_pBossBarTexture, nullptr, nullptr, &renderRect.w, &renderRect.h);
         renderRect.x = pos.x;
         renderRect.y = pos.y;
-        SDL_RenderCopy(m_pRenderer, m_pBossBarTexture, NULL, &renderRect);
+        SDL_RenderCopy(m_pRenderer, m_pBossBarTexture, nullptr, &renderRect);
     }
 }
 
@@ -283,7 +283,7 @@ void ScreenElementHUD::UpdateFPS(uint32 newFPS)
     if (m_pFPSTexture)
     {
         SDL_DestroyTexture(m_pFPSTexture);
-        m_pFPSTexture = NULL;
+        m_pFPSTexture = nullptr;
     }
 
     if (!g_pApp->GetGlobalOptions()->showFps)
@@ -302,7 +302,7 @@ void ScreenElementHUD::UpdateCameraPosition()
     if (m_pPositionTexture)
     {
         SDL_DestroyTexture(m_pPositionTexture);
-        m_pPositionTexture = NULL;
+        m_pPositionTexture = nullptr;
     }
 
     if (!g_pApp->GetGlobalOptions()->showPosition)
@@ -340,7 +340,7 @@ bool ScreenElementHUD::IsElementVisible(std::string element)
     auto iter = m_HUDElementsMap.find(element);
     if (iter != m_HUDElementsMap.end())
     {
-        return iter->second->IsVisible(NULL);
+        return iter->second->IsVisible(nullptr);
     }
 
     return false;
@@ -375,6 +375,6 @@ void ScreenElementHUD::BossFightEndedDelegate(IEventDataPtr pEvent)
     if (m_pBossBarTexture)
     {
         SDL_DestroyTexture(m_pBossBarTexture);
-        m_pBossBarTexture = NULL;
+        m_pBossBarTexture = nullptr;
     }
 }

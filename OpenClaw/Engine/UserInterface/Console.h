@@ -52,7 +52,7 @@ class ConsoleLine;
 class Console
 {
 public:
-    Console(uint16_t width, uint16_t height, TTF_Font* font, SDL_Renderer* renderer, const char* backgroundResource = NULL);
+    Console(uint16_t width, uint16_t height, TTF_Font* font, SDL_Renderer* renderer, const char* backgroundResource = nullptr);
     Console(const ConsoleConfig* const pConsoleConfig, SDL_Renderer* pRenderer, SDL_Window* pWindow);
     ~Console();
 

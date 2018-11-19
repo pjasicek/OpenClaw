@@ -73,7 +73,7 @@ void PowerupComponent::VPostInit()
 TiXmlElement* PowerupComponent::VGenerateXml()
 {
     // TODO:
-    return NULL;
+    return nullptr;
 }
 
 void PowerupComponent::VUpdate(uint32 msDiff)

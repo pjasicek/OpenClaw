@@ -28,21 +28,21 @@ const char* HUDRenderComponent::g_Name = "HUDRenderComponent";
 
 bool BaseRenderComponent::VInit(TiXmlElement* pXmlData)
 {
-    assert(pXmlData != NULL);
+    assert(pXmlData != nullptr);
 
     WapPal* palette = g_pApp->GetCurrentPalette();
 
     for (TiXmlElement* pImagePathElem = pXmlData->FirstChildElement("ImagePath");
         pImagePathElem; pImagePathElem = pImagePathElem->NextSiblingElement("ImagePath"))
     {
-        if (palette == NULL)
+        if (palette == nullptr)
         {
             LOG_ERROR("Attempting to create BaseRenderComponent without existing palette");
             return false;
         }
 
         const char* imagesPath = pImagePathElem->GetText();
-        assert(imagesPath != NULL);
+        assert(imagesPath != nullptr);
 
         // Get all files residing in given directory
         // !!! THIS ASSUMES THAT WE ONLY WANT IMAGES FROM THIS DIRECTORY. IT IGNORES ALL NESTED DIRECTORIES !!!
@@ -142,7 +142,7 @@ bool BaseRenderComponent::VInit(TiXmlElement* pXmlData)
 
 TiXmlElement* BaseRenderComponent::VGenerateXml()
 {
-    return NULL;
+    return nullptr;
 }
 
 void BaseRenderComponent::VPostInit()
@@ -155,7 +155,7 @@ void BaseRenderComponent::VPostInit()
     }
 
     m_pPositionComponent = m_pOwner->GetPositionComponent().get();
-    assert(m_pPositionComponent != NULL);
+    assert(m_pPositionComponent != nullptr);
 }
 
 void BaseRenderComponent::VOnChanged()
@@ -610,7 +610,7 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
 
     TileList tileList;
     for (TiXmlElement* pTileNode = pTileElements->FirstChildElement(); 
-        pTileNode != NULL; 
+        pTileNode != nullptr; 
         pTileNode = pTileNode->NextSiblingElement())
     {
         std::string tileFileName(pTileNode->GetText());
@@ -637,7 +637,7 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
         }
         else if (tileFileName == "0-1" || tileFileName == "-1")
         {
-            m_TileImageList.push_back(NULL);
+            m_TileImageList.push_back(nullptr);
         }
         else if (m_PlaneProperties.name == "Background") // Use fill color, only aplicable to background
         {
@@ -647,7 +647,7 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
         }
         else if (m_PlaneProperties.name == "Front") // Empty image on front plane most likely. First occurance on level 7
         {
-            m_TileImageList.push_back(NULL);
+            m_TileImageList.push_back(nullptr);
         }
         else if (m_PlaneProperties.name == "Action") // Fill image ?. First occurance on level 8
         {

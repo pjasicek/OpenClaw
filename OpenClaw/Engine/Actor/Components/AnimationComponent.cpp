@@ -11,7 +11,7 @@ const char* AnimationComponent::g_Name = "AnimationComponent";
 
 AnimationComponent::AnimationComponent()
     :
-    _currentAnimation(NULL),
+    _currentAnimation(nullptr),
     m_PauseOnStart(false),
     m_PauseOnEnd(false)
 { }
@@ -23,11 +23,11 @@ AnimationComponent::~AnimationComponent()
 
 bool AnimationComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     // Loop through all anim paths elements
     for (TiXmlElement* animPathElem = data->FirstChildElement("AnimationPath");
-        animPathElem != NULL; 
+        animPathElem != nullptr; 
         animPathElem = animPathElem->NextSiblingElement("AnimationPath"))
     {
         const char* animationsPath = animPathElem->GetText();
@@ -61,7 +61,7 @@ bool AnimationComponent::VInit(TiXmlElement* data)
     }
 
     for (TiXmlElement* animElem = data->FirstChildElement("Animation");
-        animElem != NULL; 
+        animElem != nullptr; 
         animElem = animElem->NextSiblingElement("Animation"))
     {
         if (!animElem->Attribute("type"))
@@ -76,7 +76,7 @@ bool AnimationComponent::VInit(TiXmlElement* data)
     }
 
     for (TiXmlElement* pSpecialAnimElem = data->FirstChildElement("SpecialAnimation");
-        pSpecialAnimElem != NULL;
+        pSpecialAnimElem != nullptr;
         pSpecialAnimElem = pSpecialAnimElem->NextSiblingElement("SpecialAnimation"))
     {
         SpecialAnimation specialAnim;

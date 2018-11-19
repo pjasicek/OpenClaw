@@ -14,7 +14,7 @@ struct PulseInfo
 {
     PulseInfo()
     {
-        pActor = NULL;
+        pActor = nullptr;
         timeSinceLastPulseMs = 0;
     }
 

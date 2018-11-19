@@ -44,7 +44,7 @@ void HealthComponent::VPostInit()
 TiXmlElement* HealthComponent::VGenerateXml()
 {
     // TODO:
-    return NULL;
+    return nullptr;
 }
 
 void HealthComponent::AddHealth(int32 health, DamageType damageType, Point impactPoint, int sourceActorId)

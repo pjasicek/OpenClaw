@@ -37,7 +37,7 @@ void TryCallActorEnteredOrLeftAgroRange(
     SWAP_IF_FIXTURE_B_EQUALS(pFixtureA, pFixtureB, agroFixtureType);
     if (pFixtureA->GetUserData() == (void*)agroFixtureType)
     {
-        if (pFixtureB->GetBody()->GetUserData() != NULL)
+        if (pFixtureB->GetBody()->GetUserData() != nullptr)
         {
             Actor* pActorwhoEntered = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
             Actor* pActorWithMeleeSensor = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
@@ -404,7 +404,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
         FixtureType fixtureType = FixtureType(reinterpret_cast<std::intptr_t>(pFixtureA->GetUserData()));
         if (IsTriggerFixture(fixtureType))
         {
-            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            if (pFixtureB->GetBody()->GetUserData() != nullptr)
             {
                 Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                 assert(pActor);
@@ -427,7 +427,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
         if (pFixtureA->GetUserData() == (void*)FixtureType_Projectile)
         {
             // Collided with some actor
-            if (pFixtureB->GetBody()->GetUserData() != (void*)NULL)
+            if (pFixtureB->GetBody()->GetUserData() != (void*)nullptr)
             {
                 Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                 assert(pActor);
@@ -491,7 +491,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
 
         if (pFixtureA->GetUserData() == (void*)FixtureType_Death)
         {
-            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            if (pFixtureB->GetBody()->GetUserData() != nullptr)
             {
                 Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                 assert(pActor);
@@ -534,7 +534,7 @@ void PhysicsContactListener::BeginContact(b2Contact* pContact)
 
         if (pFixtureA->GetUserData() == (void*)FixtureType_DamageAura)
         {
-            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            if (pFixtureB->GetBody()->GetUserData() != nullptr)
             {
                 Actor* pActorwhoEntered = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                 Actor* pActorWithDamageAura = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());
@@ -627,7 +627,7 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
                         /*shared_ptr<KinematicComponent> pKinematicComponent = GetKinematicComponentFromB2Body(pFixtureA->GetBody());
                         pKinematicComponent->RemoveCarriedBody(pFixtureB->GetBody());*/
                         pPhysicsComponent->RemoveOverlappingKinematicBody(pFixtureA->GetBody());
-                        pPhysicsComponent->SetMovingPlatformContact(NULL);
+                        pPhysicsComponent->SetMovingPlatformContact(nullptr);
                     }
 
                     /*if (!pFixtureA->IsSensor())
@@ -688,7 +688,7 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
         FixtureType fixtureType = FixtureType(reinterpret_cast<std::intptr_t>(pFixtureA->GetUserData()));
         if (IsTriggerFixture(fixtureType))
         {
-            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            if (pFixtureB->GetBody()->GetUserData() != nullptr)
             {
                 Actor* pActor = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                 assert(pActor);
@@ -730,7 +730,7 @@ void PhysicsContactListener::EndContact(b2Contact* pContact)
 
         if (pFixtureA->GetUserData() == (void*)FixtureType_DamageAura)
         {
-            if (pFixtureB->GetBody()->GetUserData() != NULL)
+            if (pFixtureB->GetBody()->GetUserData() != nullptr)
             {
                 Actor* pActorwhoEntered = static_cast<Actor*>(pFixtureB->GetBody()->GetUserData());
                 Actor* pActorWithDamageAura = static_cast<Actor*>(pFixtureA->GetBody()->GetUserData());

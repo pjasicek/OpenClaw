@@ -107,7 +107,7 @@ SpawnScoreRowProcess::~SpawnScoreRowProcess()
 {
     for (Actor* pActor : m_ChildrenActorList)
     {
-        assert(pActor != NULL);
+        assert(pActor != nullptr);
 
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Destroy_Actor(pActor->GetGUID())));
@@ -115,7 +115,7 @@ SpawnScoreRowProcess::~SpawnScoreRowProcess()
 
     for (Actor* pActor : m_ActorCategoryToActorListMap[ScoreRowActorType_MovingScoreItems])
     {
-        assert(pActor != NULL);
+        assert(pActor != nullptr);
 
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Destroy_Actor(pActor->GetGUID())));
@@ -171,7 +171,7 @@ void SpawnScoreRowProcess::VOnUpdate(uint32 msDiff)
 
         // Only the treasure is present at the moment
         assert(m_ChildrenActorList.size() == 1);
-        assert(m_pInitialScoreItemActor != NULL);
+        assert(m_pInitialScoreItemActor != nullptr);
 
         // Update its position
         Point scoreItemSpeed(m_ScoreItemDefaultSpeed, 0);
@@ -508,7 +508,7 @@ void SpawnScoreRowProcess::UpdateSpawnedScoreItemPositions(uint32 msDiff, const 
     for (auto iter = movingSpawnedScoreItemsList.begin(); iter != movingSpawnedScoreItemsList.end();)
     {
         Actor* pSpawnedElem = (*iter);
-        assert(pSpawnedElem != NULL);
+        assert(pSpawnedElem != nullptr);
 
         Point updatedPos = CalculateUpdatedPosition(
             msDiff,

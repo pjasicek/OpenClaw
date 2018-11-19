@@ -24,13 +24,13 @@ BossStagerTriggerComponent::BossStagerTriggerComponent()
     m_BossDistance(0),
     m_CameraSpeed(0),
     m_PopupTitleSpeed(0),
-    m_pPopupTitleActor(NULL),
+    m_pPopupTitleActor(nullptr),
     m_bActivated(false),
     m_Delay(0),
     m_CurrentDelay(0),
     m_State(BossStagerState_None),
     m_ActorWhoEnteredId(INVALID_ACTOR_ID),
-    m_pOverlappingActor(NULL)
+    m_pOverlappingActor(nullptr)
 { 
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BossStagerTriggerComponent::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &BossStagerTriggerComponent::ClawRespawnedDelegate), EventData_Claw_Respawned::sk_EventType);
@@ -77,7 +77,7 @@ void BossStagerTriggerComponent::VPostInit()
 TiXmlElement* BossStagerTriggerComponent::VGenerateXml()
 {
     // TODO: Implement
-    return NULL;
+    return nullptr;
 }
 
 void BossStagerTriggerComponent::VUpdate(uint32 msDiff)
@@ -256,7 +256,7 @@ void BossStagerTriggerComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, Fixtu
         MakeStrongPtr(pActorWhoLeft->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
     if (pClaw != nullptr)
     {
-        m_pOverlappingActor = NULL;
+        m_pOverlappingActor = nullptr;
     }
 }
 

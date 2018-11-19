@@ -4,10 +4,10 @@ const char* ConcreteComponent::g_Name = "ConcreteComponent";
 
 bool ConcreteComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     TiXmlElement* concreteElement = data->FirstChildElement("Concrete");
-    if (concreteElement != NULL)
+    if (concreteElement != nullptr)
     {
         
     }

@@ -57,12 +57,12 @@
 //    - _className_:        The name of this class.
 //---------------------------------------------------------------------------------------------------------------------
 #define MEMORYPOOL_DEFINITION(_className_) \
-    MemoryPool* _className_::s_pMemoryPool = NULL;\
+    MemoryPool* _className_::s_pMemoryPool = nullptr;\
     void _className_::InitMemoryPool(unsigned int numChunks, const char* debugName) \
         { \
-        if (s_pMemoryPool != NULL) \
+        if (s_pMemoryPool != nullptr) \
                 { \
-            LOG_ERROR("s_pMemoryPool is not NULL.  All data will be destroyed.  (Ignorable)"); \
+            LOG_ERROR("s_pMemoryPool is not nullptr.  All data will be destroyed.  (Ignorable)"); \
             SAFE_DELETE(s_pMemoryPool); \
                 } \
         s_pMemoryPool = new MemoryPool; \
@@ -74,7 +74,7 @@
         } \
     void _className_::DestroyMemoryPool(void) \
         { \
-        assert(s_pMemoryPool != NULL); \
+        assert(s_pMemoryPool != nullptr); \
         SAFE_DELETE(s_pMemoryPool); \
         } \
     void* _className_::operator new(size_t size) \

@@ -447,7 +447,7 @@ namespace Util
     SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer)
     {
         SDL_Surface* pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-        SDL_FillRect(pSurface, NULL, SDL_MapRGB(pSurface->format, color.r, color.g, color.b));
+        SDL_FillRect(pSurface, nullptr, SDL_MapRGB(pSurface->format, color.r, color.g, color.b));
         SDL_Texture* pTextureRect = SDL_CreateTextureFromSurface(pRenderer, pSurface);
 
         SDL_FreeSurface(pSurface);
@@ -470,7 +470,7 @@ namespace Util
         amask = 0xff000000;
 #endif
         SDL_Surface* pSurface = SDL_CreateRGBSurface(0, width, height, 32, rmask, gmask, bmask, amask);
-        SDL_FillRect(pSurface, NULL, SDL_MapRGBA(pSurface->format, color.r, color.g, color.b, alpha));
+        SDL_FillRect(pSurface, nullptr, SDL_MapRGBA(pSurface->format, color.r, color.g, color.b, alpha));
         SDL_Texture* pTextureRect = SDL_CreateTextureFromSurface(pRenderer, pSurface);
 
         SDL_FreeSurface(pSurface);

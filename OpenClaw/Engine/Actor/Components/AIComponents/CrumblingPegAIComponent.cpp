@@ -28,7 +28,7 @@ CrumblingPegAIComponent::~CrumblingPegAIComponent()
 
 bool CrumblingPegAIComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     if (!m_pPhysics)

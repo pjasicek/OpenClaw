@@ -23,7 +23,7 @@ void WavResourceExtraData::LoadWavSound(char* rawBuffer, uint32 size)
 {
     SDL_RWops* soundRwOps = SDL_RWFromMem((void*)rawBuffer, size);
     _sound = shared_ptr<Mix_Chunk>(Mix_LoadWAV_RW(soundRwOps, 1), DeleteMixChunk);
-    if (_sound == NULL)
+    if (_sound == nullptr)
     {
         LOG_ERROR("Failed to load WAV sound");
     }
@@ -38,7 +38,7 @@ void WavResourceExtraData::LoadWavSound(char* rawBuffer, uint32 size)
 
 bool WavResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle)
 {
-    if (rawSize <= 0 || rawBuffer == NULL)
+    if (rawSize <= 0 || rawBuffer == nullptr)
     {
         LOG_ERROR("Received invalid rawBuffer or its size");
         return false;
@@ -47,7 +47,7 @@ bool WavResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::shar
     shared_ptr<WavResourceExtraData> extraData = shared_ptr<WavResourceExtraData>(new WavResourceExtraData());
     extraData->LoadWavSound(rawBuffer, rawSize);
 
-    if (extraData->GetSound() == NULL)
+    if (extraData->GetSound() == nullptr)
     {
         LOG_ERROR("Failed to load sound. Is sound system initialized ?");
     }
@@ -76,7 +76,7 @@ shared_ptr<Mix_Chunk> WavResourceLoader::LoadAndReturnSound(const char* resource
     if (!extraData)
     {
         LOG_ERROR("Could not cast type to WavResourceExtraData. Check if WavResourceLoader is registered.");
-        return NULL;
+        return nullptr;
     }
 
     return extraData->GetSound();

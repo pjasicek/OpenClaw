@@ -27,7 +27,7 @@ TriggerComponent::~TriggerComponent()
 
 bool TriggerComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     if (!m_pPhysics)
@@ -52,7 +52,7 @@ bool TriggerComponent::VInit(TiXmlElement* data)
     //ParseValueFromXmlElem(&m_EnterSound, data->FirstChildElement("EnterSound"));
 
     for (TiXmlElement* pElem = data->FirstChildElement("EnterSound");
-        pElem != NULL;
+        pElem != nullptr;
         pElem = pElem->NextSiblingElement("EnterSound"))
     {
         std::string fixtureTypeStr;
@@ -67,7 +67,7 @@ bool TriggerComponent::VInit(TiXmlElement* data)
     }
 
     for (TiXmlElement* pElem = data->FirstChildElement("LeaveSound");
-        pElem != NULL;
+        pElem != nullptr;
         pElem = pElem->NextSiblingElement("LeaveSound"))
     {
         std::string fixtureTypeStr;
