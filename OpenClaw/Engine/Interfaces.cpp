@@ -193,6 +193,17 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level10_MarrowParrot, "ActorPrototype_Level10_MarrowParrot" },
         { ActorPrototype_Level10_BossGem, "ActorPrototype_Level10_BossGem" },
 
+        // Level 11
+        { ActorPrototype_Level11_Mercat, "ActorPrototype_Level11_Mercat" },
+        { ActorPrototype_Level11_Siren, "ActorPrototype_Level11_Siren" },
+        { ActorPrototype_Level11_Fish, "ActorPrototype_Level11_Fish" },
+        { ActorPrototype_Level11_TogglePeg, "ActorPrototype_Level11_TogglePeg" },
+        { ActorPrototype_Level11_BreakPlank, "ActorPrototype_Level11_BreakPlank" },
+        { ActorPrototype_Level11_ConveyorBelt, "ActorPrototype_Level11_ConveyorBelt" },
+        { ActorPrototype_Level11_Laser, "ActorPrototype_Level11_Laser" },
+        { ActorPrototype_Level11_SirenProjectile, "ActorPrototype_Level11_SirenProjectile" },
+        { ActorPrototype_Level11_TridentProjectile, "ActorPrototype_Level11_TridentProjectile" },
+
         //=======================================
         // Menu
         //=======================================
@@ -399,6 +410,18 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level10_MarrowParrot", ActorPrototype_Level10_MarrowParrot },
         { "ActorPrototype_Level10_BossGem", ActorPrototype_Level10_BossGem },
         
+        // Level 11
+        { "ActorPrototype_Level11_Mercat", ActorPrototype_Level11_Mercat },
+        { "ActorPrototype_Level11_Siren", ActorPrototype_Level11_Siren },
+        { "ActorPrototype_Level11_Fish", ActorPrototype_Level11_Fish },
+        { "ActorPrototype_Level11_TogglePeg", ActorPrototype_Level11_TogglePeg },
+        { "ActorPrototype_Level11_BreakPlank", ActorPrototype_Level11_BreakPlank },
+        { "ActorPrototype_Level11_ConveyorBelt", ActorPrototype_Level11_ConveyorBelt },
+        { "ActorPrototype_Level11_Laser", ActorPrototype_Level11_Laser },
+        { "ActorPrototype_Level11_SirenProjectile", ActorPrototype_Level11_SirenProjectile },
+        { "ActorPrototype_Level11_TridentProjectile", ActorPrototype_Level11_TridentProjectile },
+    
+
         //=======================================
         // Menu
         //=======================================

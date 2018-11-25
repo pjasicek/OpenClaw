@@ -282,11 +282,12 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
             switch (levelNumber)
             {
                 case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
+                case 11: proto = ActorPrototype_Level11_BreakPlank; break;
                 default: notLoadedActorList.push_back(actorProperties.logic); continue;
             }
 
             // Temporary hack
-            assert(proto == ActorPrototype_Level5_CrumblingPeg);
+            assert(proto == ActorPrototype_Level5_CrumblingPeg || proto == ActorPrototype_Level11_BreakPlank);
 
             int crumbleDelay = wwdObject->counter;
             int width = wwdObject->width;

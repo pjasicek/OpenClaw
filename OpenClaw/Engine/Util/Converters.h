@@ -231,7 +231,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     // DoNothing logic only has one single frame which has to be assigned
     // We cant use general wildcard here
     // Example: We want "/LEVEL1/IMAGES/ARCHESFRONT/*1.PID"
-    if (logic == "DoNothing")
+    if (logic == "DoNothing" || logic == "DoNothingNormal")
     {
         // Unfortunately, this hack IS NOT ENOUGH, index "i" == -1 means "i" should be 1
         // I really have no clue how could Claw's level parsing code should be sane by any
@@ -718,7 +718,10 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "Wolvington" ||
              logic == "CrazyHook" ||
              logic == "PegLeg" ||
-             logic == "Marrow")
+             logic == "Marrow" ||
+             logic == "Mercat" ||
+             logic == "Siren" ||
+             logic == "Fish")
     {
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
