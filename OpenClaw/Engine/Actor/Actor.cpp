@@ -21,7 +21,7 @@ Actor::~Actor()
 
 bool Actor::Init(TiXmlElement* data)
 {
-    if (data->Attribute("Type") != NULL)
+    if (data->Attribute("Type") != nullptr)
     {
         _name = data->Attribute("Type");
     }

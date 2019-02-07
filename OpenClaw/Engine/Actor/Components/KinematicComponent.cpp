@@ -30,7 +30,7 @@ KinematicComponent::~KinematicComponent()
 
 bool KinematicComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     if (!m_pPhysics)

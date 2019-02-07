@@ -153,15 +153,15 @@ static Point GetRopeEndFramePosition(const Point& initialPosition, int frameIdx)
 RopeComponent::RopeComponent()
     :
     m_TimeStanceAttach(0),
-    m_pAttachedActor(NULL),
-    m_pRopeEndTriggerActor(NULL)
+    m_pAttachedActor(nullptr),
+    m_pRopeEndTriggerActor(nullptr)
 {
 
 }
 
 bool RopeComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     return true;
 }
@@ -193,7 +193,7 @@ void RopeComponent::VPostPostInit()
     m_pRopeEndTriggerActor = ActorTemplates::CreateActor_Trigger(
         triggerDef, 
         m_pOwner->GetPositionComponent()->GetPosition()).get();
-    assert(m_pRopeEndTriggerActor != NULL);
+    assert(m_pRopeEndTriggerActor != nullptr);
 
     shared_ptr<TriggerComponent> pTrigger = MakeStrongPtr(m_pRopeEndTriggerActor->GetComponent<TriggerComponent>());
     assert(pTrigger != nullptr);
@@ -222,7 +222,7 @@ void RopeComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFra
             newPosition)));
     }
 
-    if (m_pAttachedActor != NULL)
+    if (m_pAttachedActor != nullptr)
     {
         shared_ptr<ClawControllableComponent> pClawComponent =
             MakeStrongPtr(m_pAttachedActor->GetComponent<ClawControllableComponent>());
@@ -269,7 +269,7 @@ void RopeComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType 
         return;
     }
 
-    assert(m_pAttachedActor == NULL);
+    assert(m_pAttachedActor == nullptr);
     m_pAttachedActor = pActorWhoEntered;
 
     pClawComponent->VOnAttachedToRope();
@@ -279,13 +279,13 @@ void RopeComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType 
 
 void RopeComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
 {
-    // Claw has to detach himself on his own so it is very probably that this will be NULL
-    if (m_pAttachedActor == NULL)
+    // Claw has to detach himself on his own so it is very probably that this will be nullptr
+    if (m_pAttachedActor == nullptr)
     {
         return;
     }
 
-    m_pAttachedActor = NULL;
+    m_pAttachedActor = nullptr;
 
     shared_ptr<ClawControllableComponent> pClawComponent =
         MakeStrongPtr(pActorWhoLeft->GetComponent<ClawControllableComponent>());
@@ -296,7 +296,7 @@ void RopeComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType trigge
 
 void RopeComponent::UpdateAttachedActorPosition(const Point& newPosition)
 {
-    assert(m_pAttachedActor != NULL);
+    assert(m_pAttachedActor != nullptr);
 
     IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Teleport_Actor(
         m_pAttachedActor->GetGUID(),
@@ -306,7 +306,7 @@ void RopeComponent::UpdateAttachedActorPosition(const Point& newPosition)
 void RopeComponent::DetachActor()
 {
     // Sanity check
-    assert(m_pAttachedActor != NULL);
+    assert(m_pAttachedActor != nullptr);
 
-    m_pAttachedActor = NULL;
+    m_pAttachedActor = nullptr;
 }

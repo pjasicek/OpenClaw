@@ -8,14 +8,14 @@ BaseGameLogic* ClawGameApp::VCreateGameAndView()
     if (!m_pGame->Initialize())
     {
         LOG_ERROR("Could not initialize Claw Game Logic.");
-        return NULL;
+        return nullptr;
     }
 
     shared_ptr<HumanView> clawHumanView(new ClawHumanView(GetRenderer()));
     m_pGame->VAddView(clawHumanView);
 
     // Register command handler
-    clawHumanView->RegisterConsoleCommandHandler(CommandHandler::HandleCommand, NULL);
+    clawHumanView->RegisterConsoleCommandHandler(CommandHandler::HandleCommand, nullptr);
 
     return m_pGame;
 }

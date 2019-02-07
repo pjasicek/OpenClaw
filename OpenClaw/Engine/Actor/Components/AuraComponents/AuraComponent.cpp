@@ -60,7 +60,7 @@ void BaseAuraComponent::VPostPostInit()
 TiXmlElement* BaseAuraComponent::VGenerateXml()
 {
     // TODO: Implement
-    return NULL;
+    return nullptr;
 }
 
 void BaseAuraComponent::VUpdate(uint32 msDiff)
@@ -77,7 +77,7 @@ void BaseAuraComponent::VUpdate(uint32 msDiff)
         {
             for (PulseInfo& actorPulse : m_ActivePulseList)
             {
-                if (actorPulse.pActor == NULL)
+                if (actorPulse.pActor == nullptr)
                 {
                     continue;
                 }
@@ -95,7 +95,7 @@ void BaseAuraComponent::VUpdate(uint32 msDiff)
             actorPulse.timeSinceLastPulseMs += msDiff;
             if (actorPulse.timeSinceLastPulseMs >= m_PulseInterval)
             {
-                if (actorPulse.pActor == NULL)
+                if (actorPulse.pActor == nullptr)
                 {
                     continue;
                 }
@@ -156,7 +156,7 @@ void BaseAuraComponent::SetEnabled(bool enabled)
     {
         for (PulseInfo& pulse : m_ActivePulseList)
         {
-            if (pulse.pActor == NULL)
+            if (pulse.pActor == nullptr)
             {
                 continue;
             }
@@ -209,8 +209,8 @@ void DamageAuraComponent::VOnAuraApply(Actor* pActorInAura)
         if (m_bIsEnemyUnit)
         {
             EnemyAIComponent* pEnemyAIComponent = MakeStrongPtr(m_pOwner->GetComponent<EnemyAIComponent>()).get();
-            assert(pEnemyAIComponent != NULL);
-            if (pEnemyAIComponent->GetCurrentState() == NULL ||
+            assert(pEnemyAIComponent != nullptr);
+            if (pEnemyAIComponent->GetCurrentState() == nullptr ||
                 pEnemyAIComponent->GetCurrentState()->VGetStateType() == EnemyAIState_None ||
                 pEnemyAIComponent->GetCurrentState()->VGetStateType() == EnemyAIState_Patrolling)
             {

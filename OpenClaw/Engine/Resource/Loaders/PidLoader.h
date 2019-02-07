@@ -9,7 +9,7 @@ class Image;
 class PidResourceExtraData : public IResourceExtraData
 {
 public:
-    PidResourceExtraData() { _pid = NULL; _image = nullptr; }
+    PidResourceExtraData() { _pid = nullptr; _image = nullptr; }
     virtual ~PidResourceExtraData();
 
     virtual std::string VToString() { return "PidResourceExtraData"; }

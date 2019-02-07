@@ -24,7 +24,7 @@ ExplodeableComponent::~ExplodeableComponent()
 
 bool ExplodeableComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     if (TiXmlElement* pElem = pData->FirstChildElement("ExplosionSize"))
     {

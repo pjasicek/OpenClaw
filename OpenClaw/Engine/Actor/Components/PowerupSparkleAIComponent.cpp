@@ -14,8 +14,8 @@ const char* PowerupSparkleAIComponent::g_Name = "PowerupSparkleAIComponent";
 PowerupSparkleAIComponent::PowerupSparkleAIComponent()
     :
     m_TargetSize(Point(40, 110)),
-    m_pTargetPositionComponent(NULL),
-    m_pPositonComponent(NULL)
+    m_pTargetPositionComponent(nullptr),
+    m_pPositonComponent(nullptr)
 { }
 
 bool PowerupSparkleAIComponent::VInit(TiXmlElement* data)
@@ -51,7 +51,7 @@ void PowerupSparkleAIComponent::VPostPostInit()
 
 TiXmlElement* PowerupSparkleAIComponent::VGenerateXml()
 {
-    return NULL;
+    return nullptr;
 
     TiXmlElement* baseElement = new TiXmlElement(VGetName());
 
@@ -80,7 +80,7 @@ void PowerupSparkleAIComponent::ChooseNewPosition()
     assert(m_pTargetPositionComponent);
 
     Point targetPos = m_pTargetPositionComponent->GetPosition();
-    srand((long)this + (int)m_pPositonComponent->GetX() + (int)m_pPositonComponent->GetY() + time(NULL));
+    srand((long)this + (int)m_pPositonComponent->GetX() + (int)m_pPositonComponent->GetY() + time(nullptr));
     m_pPositonComponent->SetX(targetPos.x - m_TargetSize.x / 2 + rand() % (int)m_TargetSize.x);
     m_pPositonComponent->SetY(targetPos.y - m_TargetSize.y / 2 + rand() % (int)m_TargetSize.y);
 

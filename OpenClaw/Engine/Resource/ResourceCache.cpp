@@ -25,7 +25,7 @@ Resource::Resource(const std::string& name)
 ResourceRezArchive::ResourceRezArchive(const std::string rezArchiveFileName)
 {
     _rezArchiveFileName = rezArchiveFileName;
-    _rezArchive = NULL;
+    _rezArchive = nullptr;
 }
 
 ResourceRezArchive::~ResourceRezArchive()
@@ -40,7 +40,7 @@ ResourceRezArchive::~ResourceRezArchive()
 bool ResourceRezArchive::VOpen()
 {
     _rezArchive = WAP_LoadRezArchive(_rezArchiveFileName.c_str());
-    if (_rezArchive == NULL)
+    if (_rezArchive == nullptr)
     {
         LOG_ERROR("Could not load Rez archive: " + _rezArchiveFileName);
         return false;
@@ -52,7 +52,7 @@ bool ResourceRezArchive::VOpen()
 int32 ResourceRezArchive::VGetRawResourceSize(Resource* r)
 {
     RezFile* rezFile = WAP_GetRezFileFromRezArchive(_rezArchive, r->GetName().c_str());
-    if (rezFile == NULL)
+    if (rezFile == nullptr)
     {
         LOG_ERROR("Could not locate: " + r->GetName() + " in rezArchive: " + _rezArchiveFileName);
         return -1;
@@ -64,10 +64,10 @@ int32 ResourceRezArchive::VGetRawResourceSize(Resource* r)
 // Remark: outBuffer is valid heap pointer
 int32 ResourceRezArchive::VGetRawResource(Resource* r, char* outBuffer)
 {
-    assert(outBuffer != NULL);
+    assert(outBuffer != nullptr);
 
     RezFile* rezFile = WAP_GetRezFileFromRezArchive(_rezArchive, r->GetName().c_str());
-    if (rezFile == NULL)
+    if (rezFile == nullptr)
     {
         LOG_ERROR("Could not locate: " + r->GetName() + " in rezArchive: " + _rezArchiveFileName);
         return -1;
@@ -76,7 +76,7 @@ int32 ResourceRezArchive::VGetRawResource(Resource* r, char* outBuffer)
     // This this buffer is owner by libwap => we need to create our own
     char* data = WAP_GetRezFileData(rezFile);
     //LOG_WARNING("rezFile->fullName = " + std::string(rezFile->fullPathAndName));
-    if (data == NULL)
+    if (data == nullptr)
     {
         LOG_ERROR("Could not load buffer for rez file: " + r->GetName() + " in rezArchive: " + _rezArchiveFileName);
         return -1;
@@ -99,7 +99,7 @@ int32 ResourceRezArchive::VGetNumResources() const
 std::string ResourceRezArchive::VGetResourceName(int32 num) const
 {
     RezFile* rezFile = WAP_GetRezFileFromFileIdx(_rezArchive, num);
-    if (rezFile == NULL)
+    if (rezFile == nullptr)
     {
         return "NOT_FOUND";
     }
@@ -112,7 +112,7 @@ std::vector<std::string> ResourceRezArchive::GetAllFilesInDirectory(const char* 
     std::vector<std::string> filesInDirectory;
 
     RezDirectory* rezDirectory = WAP_GetRezDirectoryFromRezArchive(_rezArchive, directoryPath);
-    if (rezDirectory == NULL || rezDirectory->directoryContents == NULL)
+    if (rezDirectory == nullptr || rezDirectory->directoryContents == nullptr)
     {
         return filesInDirectory;
     }
@@ -176,13 +176,13 @@ int ResourceZipArchive::VGetRawResource(Resource* r, char *buffer)
 
 int ResourceZipArchive::VGetNumResources() const
 {
-    return (m_pZipFile == NULL) ? 0 : m_pZipFile->GetNumFiles();
+    return (m_pZipFile == nullptr) ? 0 : m_pZipFile->GetNumFiles();
 }
 
 std::string ResourceZipArchive::VGetResourceName(int num) const
 {
     std::string resName = "";
-    if (m_pZipFile != NULL && num >= 0 && num < m_pZipFile->GetNumFiles())
+    if (m_pZipFile != nullptr && num >= 0 && num < m_pZipFile->GetNumFiles())
     {
         resName = m_pZipFile->GetFilename(num);
     }
@@ -221,7 +221,7 @@ ResourceHandle::ResourceHandle(Resource& resource, char* buffer, uint32 size, Re
 {
     _buffer = buffer;
     _size = size;
-    _extraData = NULL;
+    _extraData = nullptr;
     _resourceCache = resCache;
 }
 
@@ -315,7 +315,7 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
 
     int32 allocSize = rawSize + ((loader->VAddNullZero()) ? (1) : (0));
     char* rawBuffer = loader->VUseRawFile() ? Allocate(allocSize) : new char[allocSize];
-    if (rawBuffer == NULL)
+    if (rawBuffer == nullptr)
     {
         LOG_ERROR("Could not allocate enough memory for resource: " + r->GetName() + 
             " in resource file: " + _resourceFile->VGetName());
@@ -330,7 +330,7 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
         return nullptr;
     }
 
-    char* buffer = NULL;
+    char* buffer = nullptr;
     uint32 size = 0;
 
     // Just store binary data + size in handle
@@ -343,7 +343,7 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
     {
         size = loader->VGetLoadedResourceSize(rawBuffer, rawSize);
         buffer = Allocate(size);
-        if (buffer == NULL)
+        if (buffer == nullptr)
         {
             LOG_ERROR("Could not allocate enough memory for resource: " + r->GetName() +
                 " in resource file: " + _resourceFile->VGetName());
@@ -394,7 +394,7 @@ char* ResourceCache::Allocate(uint32 size)
     if (!MakeRoom(size))
     {
         LOG_WARNING("Out of memory in resource cache");
-        return NULL;
+        return nullptr;
     }
 
     char* mem = new char[size];
@@ -438,7 +438,7 @@ bool ResourceCache::MakeRoom(uint32 size)
     int64 x = _cacheSize - _allocated;
     //LOG("Room left: " + ToStr(x));
 
-    // Return NULL if there is no possibility to allocate memory
+    // Return nullptr if there is no possibility to allocate memory
     while (size > (_cacheSize - _allocated))
     {
         if (_lruList.empty())
@@ -467,7 +467,7 @@ std::vector<std::string> ResourceCache::Match(const std::string pattern)
 {
     std::vector<std::string> matchingNames;
 
-    if (_resourceFile == NULL)
+    if (_resourceFile == nullptr)
     {
         return matchingNames;
     }
@@ -496,7 +496,7 @@ std::vector<std::string> ResourceCache::Match(const std::string pattern)
 using namespace std;
 int32 ResourceCache::Preload(const std::string pattern, void(*progressCallback)(int32, bool &))
 {
-    if (_resourceFile == NULL)
+    if (_resourceFile == nullptr)
     {
         return 0;
     }
@@ -521,7 +521,7 @@ int32 ResourceCache::Preload(const std::string pattern, void(*progressCallback)(
             ++loaded;
         }
 
-        if (progressCallback != NULL)
+        if (progressCallback != nullptr)
         {
             progressCallback((fileIdx / numFiles) * 100, cancel);
         }

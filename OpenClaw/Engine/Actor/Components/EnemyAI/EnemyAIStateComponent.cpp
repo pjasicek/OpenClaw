@@ -39,7 +39,7 @@ const char* RollEnemyAIStateComponent::g_Name = "RollEnemyAIStateComponent";
 // TODO: Returning pointer like this is inconsistent...
 static shared_ptr<EnemyAttackAction> XmlToEnemyAttackActionPtr(TiXmlElement* pElem)
 {
-    assert(pElem != NULL);
+    assert(pElem != nullptr);
 
     shared_ptr<EnemyAttackAction> pAttackAction(new EnemyAttackAction);
 
@@ -97,11 +97,11 @@ BaseEnemyAIStateComponent::BaseEnemyAIStateComponent(std::string stateName)
     m_IsActive(false),
     m_StatePriority(-1),
     m_StateName(stateName),
-    m_pPhysicsComponent(NULL),
-    m_pPositionComponent(NULL),
-    m_pAnimationComponent(NULL),
-    m_pEnemyAIComponent(NULL),
-    m_pRenderComponent(NULL)
+    m_pPhysicsComponent(nullptr),
+    m_pPositionComponent(nullptr),
+    m_pAnimationComponent(nullptr),
+    m_pEnemyAIComponent(nullptr),
+    m_pRenderComponent(nullptr)
 {
 
 }
@@ -177,7 +177,7 @@ TakeDamageAIStateComponent::TakeDamageAIStateComponent()
 bool TakeDamageAIStateComponent::VDelegateInit(TiXmlElement* pData)
 {
     for (TiXmlElement* pElem = pData->FirstChildElement("TakeDamageAnimation");
-        pElem != NULL; 
+        pElem != nullptr; 
         pElem = pElem->NextSiblingElement("TakeDamageAnimation"))
     {
         m_TakeDamageAnimations.push_back(pElem->GetText());
@@ -317,7 +317,7 @@ PatrolEnemyAIStateComponent::PatrolEnemyAIStateComponent()
     m_LeftPatrolBorder(0),
     m_RightPatrolBorder(0),
     m_Direction(Direction_Right),
-    //m_pCurrentAction(NULL),
+    //m_pCurrentAction(nullptr),
     BaseEnemyAIStateComponent("PatrolState"),
     m_bIsFlying(false),
     m_PatrolSpeed(0.0),
@@ -381,7 +381,7 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
         }
 
         for (TiXmlElement* pAnimElem = pElem->FirstChildElement("Animation");
-            pAnimElem != NULL; pAnimElem = pAnimElem->NextSiblingElement("Animation"))
+            pAnimElem != nullptr; pAnimElem = pAnimElem->NextSiblingElement("Animation"))
         {
             m_pIdleAction->animations.push_back(pAnimElem->GetText());
         }
@@ -399,7 +399,7 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     if (TiXmlElement* pElem = pData->FirstChildElement("IdleSpeech"))
     {
         for (TiXmlElement* pSoundElem = pElem->FirstChildElement("IdleSpeechSound");
-            pSoundElem != NULL;
+            pSoundElem != nullptr;
             pSoundElem = pSoundElem->NextSiblingElement("IdleSpeechSound"))
         {
             m_IdleSoundList.push_back(pSoundElem->GetText());
@@ -788,7 +788,7 @@ bool ParryEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     if (TiXmlElement* pParrySoundsElem = pData->FirstChildElement("ParrySounds"))
     {
         for (TiXmlElement* pElem = pParrySoundsElem->FirstChildElement("ParrySound");
-            pElem != NULL;
+            pElem != nullptr;
             pElem = pElem->NextSiblingElement("ParrySound"))
         {
             m_ParrySoundList.push_back(pElem->GetText());
@@ -796,7 +796,7 @@ bool ParryEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     }
 
     for (TiXmlElement* pElem = pData->FirstChildElement("IgnoreParryInAnim");
-        pElem != NULL;
+        pElem != nullptr;
         pElem = pElem->NextSiblingElement("IgnoreParryInAnim"))
     {
         IgnoreParryInAnim def;
@@ -809,7 +809,7 @@ bool ParryEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     if (TiXmlElement* pParryChancesElem = pData->FirstChildElement("ParryChances"))
     {
         for (TiXmlElement* pElem = pParryChancesElem->FirstChildElement("ParryChance");
-            pElem != NULL;
+            pElem != nullptr;
             pElem = pElem->NextSiblingElement("ParryChance"))
         {
             std::string damageTypeStr;
@@ -937,7 +937,7 @@ bool BaseAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
     if (TiXmlElement* pMeleeAttacksElem = pData->FirstChildElement("Attacks"))
     {
         for (TiXmlElement* pElem = pMeleeAttacksElem->FirstChildElement("AttackAction");
-            pElem != NULL;
+            pElem != nullptr;
             pElem = pElem->NextSiblingElement("AttackAction"))
         {
             shared_ptr<EnemyAttackAction> pAttackAction = XmlToEnemyAttackActionPtr(pElem);
@@ -957,7 +957,7 @@ bool BaseAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
     if (TiXmlElement* pElem = pData->FirstChildElement("AttackSpeech"))
     {
         for (TiXmlElement* pSoundElem = pElem->FirstChildElement("AttackSpeechSound");
-            pSoundElem != NULL;
+            pSoundElem != nullptr;
             pSoundElem = pSoundElem->NextSiblingElement("AttackSpeechSound"))
         {
             m_AttackSpeechSoundList.push_back(pSoundElem->GetText());
@@ -1024,7 +1024,7 @@ void BaseAttackAIStateComponent::VExecuteAttack()
         m_pRenderComponent->SetMirrored(true);
     }
 
-    srand((long)this + time(NULL));
+    srand((long)this + time(nullptr));
 
     // TODO: Pick randomly melee action ?
 
@@ -1098,9 +1098,9 @@ void BaseAttackAIStateComponent::OnEnemyEnterAgroRange(Actor* pEnemy)
 {
     m_EnemyAgroList.push_back(pEnemy);
 
-    bool wasInAttackState = dynamic_cast<BaseAttackAIStateComponent*>(m_pEnemyAIComponent->GetCurrentState()) != NULL;
+    bool wasInAttackState = dynamic_cast<BaseAttackAIStateComponent*>(m_pEnemyAIComponent->GetCurrentState()) != nullptr;
     m_pEnemyAIComponent->EnterBestState(false);
-    bool isInAttackState = dynamic_cast<BaseAttackAIStateComponent*>(m_pEnemyAIComponent->GetCurrentState()) != NULL;
+    bool isInAttackState = dynamic_cast<BaseAttackAIStateComponent*>(m_pEnemyAIComponent->GetCurrentState()) != nullptr;
 
     if (!wasInAttackState && isInAttackState)
     {
@@ -1126,15 +1126,15 @@ Actor* BaseAttackAIStateComponent::FindClosestHostileActor()
 {
     if (m_EnemyAgroList.empty())
     {
-        return NULL;
+        return nullptr;
     }
 
     Point closest(DBL_MAX, DBL_MAX);
-    Actor* pClosestEnemy = NULL;
+    Actor* pClosestEnemy = nullptr;
 
     for (Actor* pHostileActor : m_EnemyAgroList)
     {
-        assert(pHostileActor != NULL);
+        assert(pHostileActor != nullptr);
 
         shared_ptr<PositionComponent> pHostileActorPositionComponent =
             MakeStrongPtr(pHostileActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
@@ -1149,7 +1149,7 @@ Actor* BaseAttackAIStateComponent::FindClosestHostileActor()
     }
 
     assert(std::fabs(closest.x) < DBL_MAX && std::fabs(closest.y) < DBL_MAX);
-    assert(pClosestEnemy != NULL);
+    assert(pClosestEnemy != nullptr);
 
     return pClosestEnemy;
 }
@@ -1159,7 +1159,7 @@ Point BaseAttackAIStateComponent::FindClosestHostileActorOffset()
     Point closest(DBL_MAX, DBL_MAX);
 
     Actor* pClosestEnemy = FindClosestHostileActor();
-    if (pClosestEnemy == NULL)
+    if (pClosestEnemy == nullptr)
     {
         return closest;
     }
@@ -1410,7 +1410,7 @@ bool DuckRangedAttackAIStateComponent::VCanEnter()
     }
 
     Actor* pClosestEnemy = FindClosestHostileActor();
-    if (pClosestEnemy == NULL)
+    if (pClosestEnemy == nullptr)
     {
         return false;
     }
@@ -1461,7 +1461,7 @@ bool DiveAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
     assert(ParseValueFromXmlElem(&m_DiveSpeed, pData->FirstChildElement("DiveSpeed")));
 
     for (TiXmlElement* pElem = pData->FirstChildElement("DiveAreaSensorFixture");
-        pElem != NULL;
+        pElem != nullptr;
         pElem = pElem->NextSiblingElement("DiveAreaSensorFixture"))
     {
         m_DiveAreaSensorFixtureList.push_back(ActorTemplates::XmlToActorFixtureDef(pElem));
@@ -1662,7 +1662,7 @@ void BaseBossAIStateComponennt::VOnHealthBelowZero(DamageType damageType, int so
 
 void BaseBossAIStateComponennt::ActorEnteredBossAreaDelegate(IEventDataPtr pEvent)
 {
-    assert(this && m_pAnimationComponent != NULL);
+    assert(this && m_pAnimationComponent != nullptr);
     m_pAnimationComponent->SetAnimation(m_BossDialogAnimation);
 
     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Boss_Health_Changed(100, m_pHealthComponent->GetHealth())));

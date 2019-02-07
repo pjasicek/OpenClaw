@@ -13,7 +13,7 @@ bool SingleAnimationComponent::VInit(TiXmlElement* data)
 
 TiXmlElement* SingleAnimationComponent::VGenerateXml()
 {
-    return NULL;
+    return nullptr;
 }
 
 void SingleAnimationComponent::VPostInit()
@@ -26,7 +26,7 @@ void SingleAnimationComponent::VPostPostInit()
     shared_ptr<AnimationComponent> pAnimationComponent =
         MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
     assert(pAnimationComponent != nullptr);
-    assert(pAnimationComponent->GetCurrentAnimation() != NULL);
+    assert(pAnimationComponent->GetCurrentAnimation() != nullptr);
     pAnimationComponent->AddObserver(this);
 }
 

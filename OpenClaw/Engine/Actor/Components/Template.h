@@ -18,7 +18,7 @@ public:
 
     virtual void VUpdate(uint32 msDiff) override;
     
-    virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return NULL; }
+    virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return nullptr; }
 
 private:
 

@@ -28,7 +28,7 @@ void LifeComponent::VPostInit()
 TiXmlElement* LifeComponent::VGenerateXml()
 {
     // TODO:
-    return NULL;
+    return nullptr;
 }
 
 void LifeComponent::AddLives(uint32 numLives)

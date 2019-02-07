@@ -17,7 +17,7 @@ LootComponent::LootComponent()
 
 bool LootComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     for (TiXmlElement* pElem = pData->FirstChildElement("Item");
         pElem; pElem = pElem->NextSiblingElement("Item"))

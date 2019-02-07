@@ -47,7 +47,7 @@ bool EnemyAIComponent::VInit(TiXmlElement* pData)
     if (TiXmlElement* pSoundsElem = pData->FirstChildElement("Sounds"))
     {
         for (TiXmlElement* pElem = pSoundsElem->FirstChildElement("Sound");
-            pElem != NULL;
+            pElem != nullptr;
             pElem = pElem->NextSiblingElement())
         {
             std::string soundType = pElem->Attribute("SoundType");
@@ -164,7 +164,7 @@ void EnemyAIComponent::VOnHealthBelowZero(DamageType damageType, int sourceActor
     {
         if (stateComponentIter.second->IsActive())
         {
-            stateComponentIter.second->VOnStateLeave(NULL);
+            stateComponentIter.second->VOnStateLeave(nullptr);
         }
     }
 
@@ -225,7 +225,7 @@ bool EnemyAIComponent::VCanResistDamage(DamageType damageType, Point impactPoint
             MakeStrongPtr(m_pOwner->GetComponent<ParryEnemyAIStateComponent>());
         assert(pParryStateComponent);
 
-        assert(GetCurrentState() != NULL);
+        assert(GetCurrentState() != nullptr);
 
         return pParryStateComponent->CanParry(damageType, GetCurrentState()->VGetStateType());
     }
@@ -274,7 +274,7 @@ void EnemyAIComponent::EnterState(EnemyAIState state)
 
 void EnemyAIComponent::EnterState(BaseEnemyAIStateComponent* pState)
 {
-    assert(pState != NULL);
+    assert(pState != nullptr);
     BaseEnemyAIStateComponent* pCurrentState = GetCurrentState();
 
     LeaveAllStates(pState);
@@ -295,13 +295,13 @@ bool EnemyAIComponent::EnterBestState(bool canForceEnter)
     // If no state is set at the moment, then force it aswell
     // Maybe this can revisited in future
     //LOG("m_bHasStateLock: " + ToStr(m_bHasStateLock) + ", canForceEnter: " + ToStr(canForceEnter));
-    if ((!m_bHasStateLock && !canForceEnter && (pCurrentState != NULL)) /*&&
+    if ((!m_bHasStateLock && !canForceEnter && (pCurrentState != nullptr)) /*&&
         pCurrentState->VCanEnter()*/)
     {
         return false;
     }
 
-    BaseEnemyAIStateComponent* pBestState = NULL;
+    BaseEnemyAIStateComponent* pBestState = nullptr;
     int bestStatePrio = -1;
 
     for (auto stateIter : m_StateMap)
@@ -320,10 +320,10 @@ bool EnemyAIComponent::EnterBestState(bool canForceEnter)
         }
     }
 
-    /*assert(pBestState != NULL);
+    /*assert(pBestState != nullptr);
     assert(bestStatePrio >= 0);*/
 
-    if ((pCurrentState == NULL) ||
+    if ((pCurrentState == nullptr) ||
         !pCurrentState->VCanEnter() ||
         (pCurrentState->VGetPriority() < bestStatePrio))
     {
@@ -352,7 +352,7 @@ BaseEnemyAIStateComponent* EnemyAIComponent::GetCurrentState()
 
     //assert(false && "Could not find any state ?");
 
-    return NULL;
+    return nullptr;
 }
 
 BaseEnemyAIStateComponent* EnemyAIComponent::GetState(EnemyAIState state)
@@ -365,7 +365,7 @@ BaseEnemyAIStateComponent* EnemyAIComponent::GetState(EnemyAIState state)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 bool EnemyAIComponent::HasState(std::string stateName)

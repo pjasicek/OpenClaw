@@ -39,7 +39,7 @@ protected:
     virtual shared_ptr<SceneNode> VCreateSceneNode(void) = 0;  // factory method to create the appropriate scene node
 
     // editor stuff
-    virtual TiXmlElement* VCreateBaseElement(void) { return NULL; /*return new TiXmlElement(VGetName());*/ }
+    virtual TiXmlElement* VCreateBaseElement(void) { return nullptr; /*return new TiXmlElement(VGetName());*/ }
     virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) = 0;
 
     ImageMap m_ImageMap;

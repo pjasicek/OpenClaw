@@ -19,7 +19,7 @@ do \
 { \
     std::string s((str)); \
     std::string out; \
-    Logger::GetOutputString(out, "", s, __FUNCTION__, NULL, __LINE__); \
+    Logger::GetOutputString(out, "", s, __FUNCTION__, nullptr, __LINE__); \
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", out.c_str()); \
 } \
 while (0); \
@@ -29,7 +29,7 @@ do \
 { \
     std::string s((str)); \
     std::string out; \
-    Logger::GetOutputString(out, "", s, __FUNCTION__, NULL, __LINE__); \
+    Logger::GetOutputString(out, "", s, __FUNCTION__, nullptr, __LINE__); \
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", out.c_str()); \
     assert(false); \
 } \
@@ -42,7 +42,7 @@ do \
 { \
     std::string s((str)); \
     std::string out; \
-    Logger::GetOutputString(out, std::string(""), s, __FUNCTION__, NULL, __LINE__); \
+    Logger::GetOutputString(out, std::string(""), s, __FUNCTION__, nullptr, __LINE__); \
     SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "%s", out.c_str()); \
 } \
 while (0);\
@@ -52,7 +52,7 @@ do \
 { \
     std::string s((str)); \
     std::string out; \
-    Logger::GetOutputString(out, tag, s, NULL, NULL, 0); \
+    Logger::GetOutputString(out, tag, s, nullptr, nullptr, 0); \
     SDL_Log("%s", out.c_str()); \
 } \
     while (0);\
@@ -62,7 +62,7 @@ do \
 { \
     std::string s((str)); \
     std::string out; \
-    Logger::GetOutputString(out, "", s, NULL, NULL, 0); \
+    Logger::GetOutputString(out, "", s, nullptr, nullptr, 0); \
     SDL_Log("%s", out.c_str()); \
 } \
 while (0);\
@@ -72,7 +72,7 @@ do \
 { \
     std::string s((str)); \
     std::string out; \
-    Logger::GetOutputString(out, "", s, __FUNCTION__, NULL, __LINE__); \
+    Logger::GetOutputString(out, "", s, __FUNCTION__, nullptr, __LINE__); \
     SDL_Log("%s", out.c_str()); \
 } \
 while (0); \

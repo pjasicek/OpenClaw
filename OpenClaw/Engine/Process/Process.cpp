@@ -23,5 +23,5 @@ StrongProcessPtr Process::RemoveChild()
         return pChild;
     }
 
-    return NULL;
+    return nullptr;
 }

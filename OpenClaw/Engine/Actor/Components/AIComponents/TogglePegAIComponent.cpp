@@ -16,7 +16,7 @@ const char* TogglePegAIComponent::g_Name = "TogglePegAIComponent";
 
 TogglePegAIComponent::TogglePegAIComponent()
     :
-    m_pAnimationComponent(NULL),
+    m_pAnimationComponent(nullptr),
     m_pPhysics(nullptr),
     m_PrevAnimframeIdx(0),
     m_OnDuration(0),
@@ -32,7 +32,7 @@ TogglePegAIComponent::~TogglePegAIComponent()
 
 bool TogglePegAIComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     if (!m_pPhysics)
@@ -64,7 +64,7 @@ void TogglePegAIComponent::VPostInit()
     }
 
     Animation* pCurrentAnimation = m_pAnimationComponent->GetCurrentAnimation();
-    assert(pCurrentAnimation != NULL);
+    assert(pCurrentAnimation != nullptr);
 
     int totalFrames = pCurrentAnimation->GetAnimFramesSize();
     // Assume that toggle pegs have cyclic anim

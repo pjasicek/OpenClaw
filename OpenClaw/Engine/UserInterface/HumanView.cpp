@@ -589,7 +589,7 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
     {
         const SoundInfo* pSoundInfo = pCastEventData->GetSoundInfo();
 
-        if ((pSoundInfo->soundToPlay == "") || (pSoundInfo->soundToPlay == "/GAME/SOUNDS/NULL.WAV"))
+        if ((pSoundInfo->soundToPlay == "") || (pSoundInfo->soundToPlay == "/GAME/SOUNDS/nullptr.WAV"))
         {
             return;
         }
@@ -854,7 +854,7 @@ void HumanView::ClawDiedDelegate(IEventDataPtr pEventData)
     if (pCastEventData->GetRemainingLives() < 0)
     {
         TiXmlElement* pXmlGameOverMenuRoot = XmlResourceLoader::LoadAndReturnRootXmlElement("GAME_OVER_MENU.XML");
-        assert(pXmlGameOverMenuRoot != NULL);
+        assert(pXmlGameOverMenuRoot != nullptr);
 
         shared_ptr<ScreenElementMenu> pGameOverMenu(new ScreenElementMenu(g_pApp->GetRenderer()));
         assert(pGameOverMenu->Initialize(pXmlGameOverMenuRoot));
@@ -1068,23 +1068,23 @@ void DeathFadeInOutProcess::VRender(uint32 msDiff)
     //LOG("Current width: " + ToStr(currentWidth));
     SDL_Rect leftRect = { 0, 0, currentWidth, (int)windowSize.y };
     SDL_Texture* pLeftRectTexture = Util::CreateSDLTextureRect(leftRect.w, leftRect.h, COLOR_BLACK, pRenderer);
-    SDL_RenderCopy(pRenderer, pLeftRectTexture, NULL, &leftRect);
+    SDL_RenderCopy(pRenderer, pLeftRectTexture, nullptr, &leftRect);
 
     // Right -> left rect
     SDL_Rect rightRect = { (int)windowSize.x - currentWidth , 0, currentWidth, (int)windowSize.y };
     SDL_Texture* pRightRectTexture = Util::CreateSDLTextureRect(rightRect.w, rightRect.h, COLOR_BLACK, pRenderer);
-    SDL_RenderCopy(pRenderer, pRightRectTexture, NULL, &rightRect);
+    SDL_RenderCopy(pRenderer, pRightRectTexture, nullptr, &rightRect);
 
     int currentHeight = (int)((double)referenceTime * m_FadeInSpeed.y);
     // Top -> Down
     SDL_Rect topRect = { 0, 0, (int)windowSize.x, currentHeight };
     SDL_Texture* pTopTexture = Util::CreateSDLTextureRect(topRect.w, topRect.h, COLOR_BLACK, pRenderer);
-    SDL_RenderCopy(pRenderer, pTopTexture, NULL, &topRect);
+    SDL_RenderCopy(pRenderer, pTopTexture, nullptr, &topRect);
 
     // Down -> Top
     SDL_Rect bottomRect = { 0, (int)windowSize.y - currentHeight, (int)windowSize.x, currentHeight };
     SDL_Texture* pBottomTexture = Util::CreateSDLTextureRect(bottomRect.w, bottomRect.h, COLOR_BLACK, pRenderer);
-    SDL_RenderCopy(pRenderer, pBottomTexture, NULL, &bottomRect);
+    SDL_RenderCopy(pRenderer, pBottomTexture, nullptr, &bottomRect);
 
     SDL_DestroyTexture(pLeftRectTexture);
     SDL_DestroyTexture(pRightRectTexture);
@@ -1189,8 +1189,8 @@ void FadingLine::Reset(int fadeDelay, bool isFadingIn)
 
 void FadingLine::Render(SDL_Renderer* pRenderer, SDL_Texture* pFragmentTexture, Point& lineOffset, bool asRow)
 {
-    assert(pRenderer != NULL);
-    assert(pFragmentTexture != NULL);
+    assert(pRenderer != nullptr);
+    assert(pFragmentTexture != nullptr);
 
     int fragIdx = 0;
     for (bool shouldRender : m_FadedFragments)
@@ -1220,7 +1220,7 @@ void FadingLine::Render(SDL_Renderer* pRenderer, SDL_Texture* pFragmentTexture, 
             renderRect.y = (int)lineOffset.y + fragIdx * (int)m_FragmentSize.y;
         }
 
-        SDL_RenderCopy(pRenderer, pFragmentTexture, NULL, &renderRect);
+        SDL_RenderCopy(pRenderer, pFragmentTexture, nullptr, &renderRect);
 
         fragIdx++;
     }
@@ -1274,8 +1274,8 @@ void TeleportFadeInOutProcess::VOnInit()
 
     m_pFadingTexture = Util::CreateSDLTextureRect(
         (int)m_FragmentSize.x, (int)m_FragmentSize.y, COLOR_BLACK, g_pApp->GetRenderer());
-    assert(m_pFadingTexture != NULL);
-    if (m_pFadingTexture == NULL)
+    assert(m_pFadingTexture != nullptr);
+    if (m_pFadingTexture == nullptr)
     {
         LOG_ERROR("Could not create fading texture for TeleportFadeInOutProcess");
        Fail();
@@ -1358,12 +1358,12 @@ void TeleportFadeInOutProcess::VRender(uint32 msDiff)
     //LOG("Current width: " + ToStr(currentWidth));
     SDL_Rect leftRect = { 0, 0, currentWidth, (int)windowSize.y };
     SDL_Texture* pLeftRectTexture = Util::CreateSDLTextureRect(leftRect.w, leftRect.h, COLOR_BLACK, pRenderer);
-    SDL_RenderCopy(pRenderer, pLeftRectTexture, NULL, &leftRect);
+    SDL_RenderCopy(pRenderer, pLeftRectTexture, nullptr, &leftRect);
 
     // Right -> left rect
     SDL_Rect rightRect = { (int)windowSize.x - currentWidth, 0, currentWidth, (int)windowSize.y };
     SDL_Texture* pRightRectTexture = Util::CreateSDLTextureRect(rightRect.w, rightRect.h, COLOR_BLACK, pRenderer);
-    SDL_RenderCopy(pRenderer, pRightRectTexture, NULL, &rightRect);
+    SDL_RenderCopy(pRenderer, pRightRectTexture, nullptr, &rightRect);
 
     SDL_DestroyTexture(pLeftRectTexture);
     SDL_DestroyTexture(pRightRectTexture);

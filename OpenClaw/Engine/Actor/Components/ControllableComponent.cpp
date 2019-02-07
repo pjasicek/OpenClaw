@@ -33,7 +33,7 @@ ControllableComponent::ControllableComponent()
 
 bool ControllableComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     if (TiXmlElement* isActiveElement = data->FirstChildElement("IsActive"))
     {
@@ -76,8 +76,8 @@ TiXmlElement* ControllableComponent::VGenerateXml()
 
 ClawControllableComponent::ClawControllableComponent()
 {
-    m_pClawAnimationComponent = NULL;
-    m_pRenderComponent = NULL;
+    m_pClawAnimationComponent = nullptr;
+    m_pRenderComponent = nullptr;
     m_State = ClawState_None;
     m_LastState = ClawState_None;
     m_Direction = Direction_Right;
@@ -1141,7 +1141,7 @@ void ClawControllableComponent::BossFightEndedDelegate(IEventDataPtr pEvent)
 
 void ClawControllableComponent::OnClawKilledEnemy(DamageType killDamageType, Actor* pKilledEnemyActor)
 {
-    assert(pKilledEnemyActor != NULL);
+    assert(pKilledEnemyActor != nullptr);
 
     static std::vector<std::string> s_OnEnemyKillSoundList =
     {

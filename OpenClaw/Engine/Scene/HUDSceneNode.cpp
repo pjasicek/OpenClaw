@@ -69,6 +69,6 @@ void SDL2HUDSceneNode::VRender(Scene* pScene)
     };
 
     SDL_Renderer* renderer = pScene->GetRenderer();
-    SDL_RenderCopyEx(renderer, actorImage->GetTexture(), NULL, &renderRect, 0, NULL,
+    SDL_RenderCopyEx(renderer, actorImage->GetTexture(), nullptr, &renderRect, 0, nullptr,
         hrc->IsMirrored() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }

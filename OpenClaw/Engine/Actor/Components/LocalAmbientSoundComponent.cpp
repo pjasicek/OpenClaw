@@ -11,7 +11,7 @@ const char* LocalAmbientSoundComponent::g_Name = "LocalAmbientSoundComponent";
 LocalAmbientSoundComponent::LocalAmbientSoundComponent()
     :
     m_ActorsInTriggerArea(0),
-    m_pActorInArea(NULL),
+    m_pActorInArea(nullptr),
     m_DiagonalLength(0.0),
     m_SoundChannel(-1)
 {
@@ -20,7 +20,7 @@ LocalAmbientSoundComponent::LocalAmbientSoundComponent()
 
 bool LocalAmbientSoundComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     m_Properties.LoadFromXml(pData, true);
 
@@ -81,7 +81,7 @@ void LocalAmbientSoundComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered,
 void LocalAmbientSoundComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType)
 {
     m_ActorsInTriggerArea--;
-    m_pActorInArea = NULL;
+    m_pActorInArea = nullptr;
     assert(m_ActorsInTriggerArea == 0);
 
     StopAmbientSound();
@@ -90,7 +90,7 @@ void LocalAmbientSoundComponent::VOnActorLeftTrigger(Actor* pActorWhoLeft, Fixtu
 void LocalAmbientSoundComponent::PlayAmbientSound()
 {
     assert(m_SoundChannel == -1);
-    assert(m_pActorInArea != NULL);
+    assert(m_pActorInArea != nullptr);
 
     m_SoundChannel = Mix_GroupAvailable(1);
     assert(m_SoundChannel != -1 && "Could not get a channel from channel group");
@@ -120,7 +120,7 @@ void LocalAmbientSoundComponent::StopAmbientSound()
 void LocalAmbientSoundComponent::UpdateAmbientSound()
 {
     assert(m_SoundChannel != -1);
-    assert(m_pActorInArea != NULL);
+    assert(m_pActorInArea != nullptr);
 
     Point soundDistanceDelta =
         m_pOwner->GetPositionComponent()->GetPosition() - m_pActorInArea->GetPositionComponent()->GetPosition();

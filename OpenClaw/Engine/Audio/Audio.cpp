@@ -31,7 +31,7 @@ Audio::Audio()
     m_bIsClientInitialized(false),
     m_bIsMidiRpcInitialized(false),
     m_bIsAudioInitialized(false),
-    m_RpcBindingString(NULL),
+    m_RpcBindingString(nullptr),
     m_SoundVolume(0),
     m_MusicVolume(0),
     m_bSoundOn(true),
@@ -398,8 +398,8 @@ bool Audio::InitializeMidiRPCServer(const std::string& midiRpcServerPath)
     STARTUPINFO si = { sizeof(si) };
     PROCESS_INFORMATION pi;
 
-    BOOL doneCreateProc = CreateProcess(midiRpcServerPath.c_str(), NULL, NULL, NULL, FALSE,
-                                           0, NULL, NULL, &si, &pi);
+    BOOL doneCreateProc = CreateProcess(midiRpcServerPath.c_str(), nullptr, nullptr, nullptr, FALSE,
+                                           0, nullptr, nullptr, &si, &pi);
     if (doneCreateProc)
     {
         m_bIsServerInitialized = true;
@@ -423,11 +423,11 @@ bool Audio::InitializeMidiRPCClient()
         return false;
     }
 
-    rpcStatus = RpcStringBindingCompose(NULL,
+    rpcStatus = RpcStringBindingCompose(nullptr,
                                        (RPC_CSTR)("ncalrpc"),
-                                       NULL,
+                                       nullptr,
                                        (RPC_CSTR)("2d4dc2f9-ce90-4080-8a00-1cb819086970"),
-                                       NULL,
+                                       nullptr,
                                        &m_RpcBindingString);
 
     if (rpcStatus != 0)

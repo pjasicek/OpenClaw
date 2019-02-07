@@ -126,7 +126,7 @@ inline bool SetTiXmlNode2Attribute(TiXmlElement* pRootElem,
 
 inline void SetBoolIfDefined(bool *dest, TiXmlElement* elem)
 {
-    if (elem && elem->GetText() == NULL)
+    if (elem && elem->GetText() == nullptr)
         return;
 
     std::string opt = elem->GetText();

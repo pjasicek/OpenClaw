@@ -23,7 +23,7 @@ ResourceCache* ResourceMgrImpl::GetResourceCacheFromName(const std::string& resC
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 std::shared_ptr<ResourceHandle> ResourceMgrImpl::VGetHandle(Resource* r, const std::string& resCacheName)
@@ -36,7 +36,7 @@ std::shared_ptr<ResourceHandle> ResourceMgrImpl::VGetHandle(Resource* r, const s
     if (!resCacheName.empty())
     {
         ResourceCache* pResCache = GetResourceCacheFromName(resCacheName);
-        assert(pResCache != NULL);
+        assert(pResCache != nullptr);
 
         return pResCache->GetHandle(r);
     }
@@ -64,7 +64,7 @@ int32 ResourceMgrImpl::VPreload(const std::string pattern, void(*progressCallbac
     if (!resCacheName.empty())
     {
         ResourceCache* pResCache = GetResourceCacheFromName(resCacheName);
-        assert(pResCache != NULL);
+        assert(pResCache != nullptr);
 
         return pResCache->Preload(pattern, progressCallback);
     }
@@ -88,7 +88,7 @@ std::vector<std::string> ResourceMgrImpl::VMatch(const std::string pattern, cons
     if (!resCacheName.empty())
     {
         ResourceCache* pResCache = GetResourceCacheFromName(resCacheName);
-        assert(pResCache != NULL);
+        assert(pResCache != nullptr);
 
         matchedStrings = pResCache->Match(pattern);
     }
@@ -113,7 +113,7 @@ std::vector<std::string> ResourceMgrImpl::VGetAllFilesInDirectory(const char* di
     if (!resCacheName.empty())
     {
         ResourceCache* pResCache = GetResourceCacheFromName(resCacheName);
-        assert(pResCache != NULL);
+        assert(pResCache != nullptr);
 
         allFiles = pResCache->GetAllFilesInDirectory(directoryPath);
     }
@@ -138,7 +138,7 @@ void ResourceMgrImpl::VFlush(const std::string& resCacheName)
     if (!resCacheName.empty())
     {
         ResourceCache* pResCache = GetResourceCacheFromName(resCacheName);
-        assert(pResCache != NULL);
+        assert(pResCache != nullptr);
 
         pResCache->Flush();
     }

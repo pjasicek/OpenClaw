@@ -21,7 +21,7 @@ SceneNodeProperties::SceneNodeProperties()
 
 SceneNode::SceneNode(uint32 actorId, BaseRenderComponent* renderComponent, RenderPass renderPass, Point position, int32 zCoord)
 {
-    m_pParent = NULL;
+    m_pParent = nullptr;
     m_Properties.m_ActorId = actorId;
     m_Properties.m_Orientation = 0;
     m_Properties.m_Name = ""; // TODO
@@ -156,26 +156,26 @@ void SceneNode::SortChildrenByZCoord()
 // RootNode Implementation
 //
 
-RootNode::RootNode() : SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_0, { 0, 0 })
+RootNode::RootNode() : SceneNode(INVALID_ACTOR_ID, nullptr, RenderPass_0, { 0, 0 })
 {
     m_ChildrenList.reserve(RenderPass_Last);
 
-    shared_ptr<SceneNode> backgroundGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_Background, { 0, 0 }));
+    shared_ptr<SceneNode> backgroundGroup(new SceneNode(INVALID_ACTOR_ID, nullptr, RenderPass_Background, { 0, 0 }));
     m_ChildrenList.push_back(backgroundGroup);
 
-    shared_ptr<SceneNode> actionGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_Action, { 0, 0 }));
+    shared_ptr<SceneNode> actionGroup(new SceneNode(INVALID_ACTOR_ID, nullptr, RenderPass_Action, { 0, 0 }));
     m_ChildrenList.push_back(actionGroup);
 
-    shared_ptr<SceneNode> actorGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_Actor, { 0, 0 }));
+    shared_ptr<SceneNode> actorGroup(new SceneNode(INVALID_ACTOR_ID, nullptr, RenderPass_Actor, { 0, 0 }));
     m_ChildrenList.push_back(actorGroup);
 
-    shared_ptr<SceneNode> foregroundGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_Foreground, { 0, 0 }));
+    shared_ptr<SceneNode> foregroundGroup(new SceneNode(INVALID_ACTOR_ID, nullptr, RenderPass_Foreground, { 0, 0 }));
     m_ChildrenList.push_back(foregroundGroup);
 
-    shared_ptr<SceneNode> HUDGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_HUD, { 0, 0 }));
+    shared_ptr<SceneNode> HUDGroup(new SceneNode(INVALID_ACTOR_ID, nullptr, RenderPass_HUD, { 0, 0 }));
     m_ChildrenList.push_back(HUDGroup); 
 
-    shared_ptr<SceneNode> invisibleGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_NotRendered, { 0, 0 }));
+    shared_ptr<SceneNode> invisibleGroup(new SceneNode(INVALID_ACTOR_ID, nullptr, RenderPass_NotRendered, { 0, 0 }));
     m_ChildrenList.push_back(invisibleGroup);
 }
 
@@ -236,7 +236,7 @@ void RootNode::VRenderChildren(Scene* pScene)
 //
 
 CameraNode::CameraNode(Point position, uint32 width, uint32 height)
-    : SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_0, position),
+    : SceneNode(INVALID_ACTOR_ID, nullptr, RenderPass_0, position),
     m_Active(true),
     m_DebugCamera(false)
 {

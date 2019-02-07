@@ -98,7 +98,7 @@ bool ClawHumanView::VLoadGameDelegate(TiXmlElement* pLevelXmlElem, LevelData* pL
     }
 
     TiXmlElement* pXmlIngameMenuRoot = XmlResourceLoader::LoadAndReturnRootXmlElement("INGAME_MENU.XML");
-    assert(pXmlIngameMenuRoot != NULL);
+    assert(pXmlIngameMenuRoot != nullptr);
 
     m_pIngameMenu.reset(new ScreenElementMenu(g_pApp->GetRenderer()));
     if (!m_pIngameMenu->Initialize(pXmlIngameMenuRoot))

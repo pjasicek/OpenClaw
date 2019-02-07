@@ -25,7 +25,7 @@ extern "C" void Java_org_libsdl_app_SDLActivity_nativeInit( \
     int status;
     char *argv[2];
     argv[0] = strdup("SDL_app");
-    argv[1] = NULL;
+    argv[1] = nullptr;
     status = main(1, argv);
 
 /* Do not issue an exit or the whole application will terminate instead of just the SDL thread */

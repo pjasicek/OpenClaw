@@ -12,7 +12,7 @@
 
 AniResourceExtraData::~AniResourceExtraData()
 {
-    if (_ani != NULL)
+    if (_ani != nullptr)
     {
         WAP_AniDestroy(_ani);
     }
@@ -32,7 +32,7 @@ void AniResourceExtraData::LoadAni(char* rawBuffer, uint32 size, const char* res
 
 bool AniResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle)
 {
-    if (rawSize <= 0 || rawBuffer == NULL)
+    if (rawSize <= 0 || rawBuffer == nullptr)
     {
         LOG_ERROR("Received invalid rawBuffer or its size");
         return false;
@@ -56,7 +56,7 @@ WapAni* AniResourceLoader::LoadAndReturnAni(const char* resourceString)
     if (!extraData)
     {
         LOG_ERROR("Could not cast type to AniResourceExtraData. Check if AniResourceLoader is registered. Resource: " + ToStr(resourceString));
-        return NULL;
+        return nullptr;
     }
 
     return extraData->GetAni();

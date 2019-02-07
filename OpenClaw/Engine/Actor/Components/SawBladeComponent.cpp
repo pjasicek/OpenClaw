@@ -11,8 +11,8 @@ SawBladeComponent::SawBladeComponent()
     m_DeactivateFrameIdx(0),
     m_TimeOff(0),
     m_StartDelay(0),
-    m_pAnimationComponent(NULL),
-    m_pDamageAuraComponent(NULL)
+    m_pAnimationComponent(nullptr),
+    m_pDamageAuraComponent(nullptr)
 {
 
 }

@@ -20,7 +20,7 @@ public:
 
     virtual void VUpdate(uint32 msDiff) override;
 
-    virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return NULL; }
+    virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return nullptr; }
 
     virtual void VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType triggerType) override;
     virtual void VOnActorLeftTrigger(Actor* pActorWhoLeft, FixtureType triggerType) override;

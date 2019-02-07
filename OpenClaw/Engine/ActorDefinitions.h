@@ -246,7 +246,7 @@ struct TogglePegDef
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         cond_assert(strict, ParseValueFromXmlElem(&isAlwaysOn, pElem->FirstChildElement("AlwaysOn")));
         cond_assert(strict, ParseValueFromXmlElem(&timeOff, pElem->FirstChildElement("TimeOff")));
@@ -296,7 +296,7 @@ struct CrumblingPegDef
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         cond_assert(strict, ParseValueFromXmlElem(&crumbleDelay, pElem->FirstChildElement("CrumbleDelay")));
         cond_assert(strict, ParseValueFromXmlElem(&crumbleFrameIdx, pElem->FirstChildElement("CrumbleFrameIdx")));
@@ -340,7 +340,7 @@ struct ProjectileDef
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         cond_assert(strict, ParseValueFromXmlElem(&damage, pElem->FirstChildElement("Damage")));
         cond_assert(strict, ParseValueFromXmlElem(&damageTypeStr, pElem->FirstChildElement("ProjectileType")));
@@ -375,12 +375,12 @@ struct ProjectileSpawnerDef
     TiXmlElement* ToXml()
     {
         // TODO:
-        return NULL;
+        return nullptr;
     }
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         cond_assert(strict, ParseValueFromXmlElem(&idleAnim, pElem->FirstChildElement("IdleAnim")));
         cond_assert(strict, ParseValueFromXmlElem(&fireAnim, pElem->FirstChildElement("FireAnim")));
@@ -437,12 +437,12 @@ struct LocalAmbientSoundDef
     TiXmlElement* ToXml()
     {
         // TODO:
-        return NULL;
+        return nullptr;
     }
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         cond_assert(strict, ParseValueFromXmlElem(&sound, pElem->FirstChildElement("Sound")));
         cond_assert(strict, ParseValueFromXmlElem(&volume, pElem->FirstChildElement("Volume")));
@@ -515,7 +515,7 @@ struct ElevatorStepDef
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         std::string directionStr;
         cond_assert(strict, ParseValueFromXmlElem(&directionStr, pElem->FirstChildElement("Direction")));
@@ -572,14 +572,14 @@ struct PathElevatorDef
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         cond_assert(strict, ParseValueFromXmlElem(&speed, pElem->FirstChildElement("Speed")));
 
         TiXmlElement* pElevatorStepsElem = pElem->FirstChildElement("ElevatorSteps");
-        assert(pElevatorStepsElem != NULL);
+        assert(pElevatorStepsElem != nullptr);
         for (TiXmlElement* pStepElem = pElevatorStepsElem->FirstChildElement("ElevatorStep");
-            pStepElem != NULL;
+            pStepElem != nullptr;
             pStepElem = pStepElem->NextSiblingElement("ElevatorStep"))
         {
             ElevatorStepDef def;
@@ -619,12 +619,12 @@ struct FloorSpikeDef
     TiXmlElement* ToXml()
     {
         assert(false);
-        return NULL;
+        return nullptr;
     }
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         cond_assert(strict, ParseValueFromXmlElem(&activeFrameIdx, pElem->FirstChildElement("ActiveFrameIdx")));
         cond_assert(strict, ParseValueFromXmlElem(&damage, pElem->FirstChildElement("Damage")));
@@ -666,12 +666,12 @@ struct RopeDef
     TiXmlElement* ToXml()
     {
         assert(false);
-        return NULL;
+        return nullptr;
     }
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         cond_assert(strict, ParseValueFromXmlElem(&timeToFlayBackAndForth, pElem->FirstChildElement("TimeToFlayBackAndForth")));
     }
@@ -702,12 +702,12 @@ struct SteppingGroundDef
     TiXmlElement* ToXml()
     {
         assert(false);
-        return NULL;
+        return nullptr;
     }
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         cond_assert(strict, ParseValueFromXmlElem(&toggleFrameIdx, pElem->FirstChildElement("ToggleFrameIdx")));
         cond_assert(strict, ParseValueFromXmlElem(&timeOn, pElem->FirstChildElement("TimeOn")));
@@ -732,7 +732,7 @@ struct SpringBoardDef
         springHeight = 0.0;
         springFrameIdx = 0;
         springDelay = 0;
-        springSound = "/GAME/SOUNDS/NULL.WAV";
+        springSound = "/GAME/SOUNDS/nullptr.WAV";
     }
 
     static SpringBoardDef CreateFromXml(TiXmlElement* pElem, bool strict)
@@ -745,12 +745,12 @@ struct SpringBoardDef
     TiXmlElement* ToXml()
     {
         assert(false);
-        return NULL;
+        return nullptr;
     }
 
     void LoadFromXml(TiXmlElement* pElem, bool strict)
     {
-        assert(pElem != NULL);
+        assert(pElem != nullptr);
 
         cond_assert(strict, ParseValueFromXmlElem(&springHeight, pElem->FirstChildElement("SpringHeight")));
         cond_assert(strict, ParseValueFromXmlElem(&springFrameIdx, pElem->FirstChildElement("SpringFrameIdx")));

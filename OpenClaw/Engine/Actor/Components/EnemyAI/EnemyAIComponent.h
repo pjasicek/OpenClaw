@@ -27,7 +27,7 @@ public:
     virtual void VPostPostInit() override;
     virtual void VUpdate(uint32 msDiff) override;
 
-    virtual TiXmlElement* VGenerateXml() override { return NULL; }
+    virtual TiXmlElement* VGenerateXml() override { return nullptr; }
 
     void RegisterState(std::string stateName, BaseEnemyAIStateComponent* pState) { m_StateMap[stateName] = pState; }
 

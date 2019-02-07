@@ -41,13 +41,13 @@
 BaseGameLogic::BaseGameLogic()
 {
     m_Lifetime = 0;
-    m_pProcessMgr = NULL;
+    m_pProcessMgr = nullptr;
     m_LastActorId = 0;
     m_GameState = GameState_Initializing;
     m_HumanPlayersAttached = 0;
     m_AIPlayersAttached = 0;
     m_HumanGamesLoaded = 0;
-    m_pActorFactory = NULL;
+    m_pActorFactory = nullptr;
     m_Proxy = false;
     m_RenderDiagnostics = true;
     m_SelectedLevel = -1;
@@ -120,7 +120,7 @@ std::string BaseGameLogic::GetActorXml(uint32 actorId)
 bool BaseGameLogic::VEnterMenu(const char* xmlMenuResource)
 {
     TiXmlElement* pXmlLevelRoot = XmlResourceLoader::LoadAndReturnRootXmlElement(xmlMenuResource);
-    if (pXmlLevelRoot == NULL)
+    if (pXmlLevelRoot == nullptr)
     {
         LOG_ERROR("Could not load menu resource file: " + std::string(xmlMenuResource));
         return false;
@@ -153,7 +153,7 @@ void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Po
     SDL_Renderer* pRenderer = g_pApp->GetRenderer();
     SDL_RenderClear(pRenderer);
 
-    SDL_RenderCopy(pRenderer, pBackground->GetTexture(), &renderRect, NULL);
+    SDL_RenderCopy(pRenderer, pBackground->GetTexture(), &renderRect, nullptr);
 
     // Progress bar
     int progressFullLength = renderRect.w / 2;
@@ -167,8 +167,8 @@ void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Po
     SDL_Texture* pRemainingProgressBar = Util::CreateSDLTextureRect(
         remainingProgressBarRect.w, remainingProgressBarRect.h, COLOR_RED, pRenderer);
 
-    SDL_RenderCopy(pRenderer, pTotalProgressBar, NULL, &totalProgressBarRect);
-    SDL_RenderCopy(pRenderer, pRemainingProgressBar, NULL, &remainingProgressBarRect);
+    SDL_RenderCopy(pRenderer, pTotalProgressBar, nullptr, &totalProgressBarRect);
+    SDL_RenderCopy(pRenderer, pRemainingProgressBar, nullptr, &remainingProgressBarRect);
 
     SDL_RenderPresent(pRenderer);
 
@@ -191,7 +191,7 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
 
     // Preload level resources
     std::string levelPath = "/LEVEL" + ToStr(m_pCurrentLevel->GetLevelNumber()) + "/*";
-    g_pApp->GetResourceCache()->Preload(levelPath, NULL);
+    g_pApp->GetResourceCache()->Preload(levelPath, nullptr);
 
     // ============== LOADING SCREEN RENDERING ==============
 
@@ -205,17 +205,17 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     std::string backgroundPath = "/LEVEL" + ToStr(m_pCurrentLevel->m_LeveNumber) + "/SCREENS/LOADING.PCX";
     shared_ptr<Image> pBackgroundImage = PcxResourceLoader::LoadAndReturnImage(backgroundPath.c_str());
     assert(pBackgroundImage != nullptr);
-    assert(pBackgroundImage->GetTexture() != NULL);
+    assert(pBackgroundImage->GetTexture() != nullptr);
 
     RenderLoadingScreen(pBackgroundImage, backgroundRect, scale, loadingProgress);
 
     // ============== LEVEL LOADING ==============
 
     WapWwd* pWwd = WwdResourceLoader::LoadAndReturnWwd(xmlLevelResource);
-    assert(pWwd != NULL);
+    assert(pWwd != nullptr);
 
     TiXmlElement* pXmlLevelRoot = WwdToXml(pWwd, m_pCurrentLevel->GetLevelNumber());
-    if (pXmlLevelRoot == NULL)
+    if (pXmlLevelRoot == nullptr)
     {
         LOG_ERROR("Could not load level resource file: " + std::string(xmlLevelResource));
         return false;
@@ -302,7 +302,7 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     // Get number of actors to estimate loading progress
     int numActors = 0;
     for (TiXmlElement* pActorElem = pXmlLevelRoot->FirstChildElement("Actor");
-        pActorElem != NULL;
+        pActorElem != nullptr;
         pActorElem = pActorElem->NextSiblingElement("Actor"), numActors++);
 
     // Leave 90% for actor's processing
@@ -314,12 +314,12 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
 
     uint32 clawId = -1;
     for (TiXmlElement* pActorElem = pXmlLevelRoot->FirstChildElement("Actor"); 
-        pActorElem != NULL;
+        pActorElem != nullptr;
         pActorElem = pActorElem->NextSiblingElement("Actor"))
     {
         //LOG("Creating actor: " + std::string(pActorElem->Attribute("Type")));
         //if (std::string(pActorElem->Attribute("Type")) != "Plane") break;
-        StrongActorPtr pActor = VCreateActor(pActorElem, NULL);
+        StrongActorPtr pActor = VCreateActor(pActorElem, nullptr);
         if (pActor)
         {
             shared_ptr<EventData_New_Actor> pNewActorEvent(new EventData_New_Actor(pActor->GetGUID()));
@@ -348,7 +348,7 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     // Load game save data
     const CheckpointSave* pCheckpointSave = m_pGameSaveMgr->GetCheckpointSave(
         m_pCurrentLevel->m_LeveNumber, m_pCurrentLevel->m_LoadedCheckpoint);
-    assert(pCheckpointSave != NULL);
+    assert(pCheckpointSave != nullptr);
 
     loadingProgress = 95.0f;
     RenderLoadingScreen(pBackgroundImage, backgroundRect, scale, loadingProgress);
@@ -453,7 +453,7 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
 bool BaseGameLogic::VLoadScoreScreen(const char* xmlScoreScreenResource)
 {
     TiXmlElement* pScoreScreenRootElem = XmlResourceLoader::LoadAndReturnRootXmlElement(xmlScoreScreenResource);
-    if (pScoreScreenRootElem == NULL)
+    if (pScoreScreenRootElem == nullptr)
     {
         LOG_ERROR("Failed to load score screen XML resource: " + std::string(xmlScoreScreenResource));
         return false;
@@ -508,7 +508,7 @@ bool BaseGameLogic::VLoadScoreScreen(const char* xmlScoreScreenResource)
 
     // Gather information about collected treasure items
     for (TiXmlElement* pScoreRowElem = pScoreScreenRootElem->FirstChildElement("ScoreRow");
-        pScoreRowElem != NULL;
+        pScoreRowElem != nullptr;
         pScoreRowElem = pScoreRowElem->NextSiblingElement("ScoreRow"))
     {
         std::string treasureTypeStr;
@@ -631,7 +631,7 @@ bool BaseGameLogic::VLoadScoreScreen(const char* xmlScoreScreenResource)
     }
 
     const CheckpointSave* pStartLevelSave = m_pGameSaveMgr->GetCheckpointSave(finishedLevelNumber, 0);
-    assert(pStartLevelSave != NULL);
+    assert(pStartLevelSave != nullptr);
 
     int startLevelScore = pStartLevelSave->score;
     int levelScoreCollected = nextLevelCheckpoint.score - startLevelScore;

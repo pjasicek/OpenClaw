@@ -1,7 +1,7 @@
 #include "EventMgr.h"
 #include "../SharedDefines.h"
 
-static IEventMgr* g_pEventMgr = NULL;
+static IEventMgr* g_pEventMgr = nullptr;
 GenericObjectFactory<IEventData, EventType> g_EventFactory;
 
 IEventMgr* IEventMgr::Get()

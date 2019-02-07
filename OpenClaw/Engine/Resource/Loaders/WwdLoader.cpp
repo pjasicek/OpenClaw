@@ -13,7 +13,7 @@
 
 WwdResourceExtraData::~WwdResourceExtraData()
 {
-    if (_wapWorldLevel != NULL)
+    if (_wapWorldLevel != nullptr)
     {
         WAP_WwdDestroy(_wapWorldLevel);
     }
@@ -33,7 +33,7 @@ void WwdResourceExtraData::LoadWwd(char* rawBuffer, uint32 size)
 
 bool WwdResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle)
 {
-    if (rawSize <= 0 || rawBuffer == NULL)
+    if (rawSize <= 0 || rawBuffer == nullptr)
     {
         LOG_ERROR("Received invalid rawBuffer or its size");
         return false;
@@ -57,7 +57,7 @@ WapWwd* WwdResourceLoader::LoadAndReturnWwd(const char* resourceString)
     if (!extraData)
     {
         LOG_ERROR("Could not cast type to WwdResourceExtraData. Check if WwdResourceLoader is registered.");
-        return NULL;
+        return nullptr;
     }
 
     return extraData->GetWwd();

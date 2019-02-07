@@ -23,11 +23,11 @@ int RunGameEngine(int argc, char** argv)
 #else
     const char* homedir;
 
-    if ((homedir = getenv("HOME")) == NULL) 
+    if ((homedir = getenv("HOME")) == nullptr) 
     {
         homedir = getpwuid(getuid())->pw_dir;
     }
-    assert(homedir != NULL);
+    assert(homedir != nullptr);
 
     userDirectory = std::string(homedir) + "/.config/openclaw/";
 

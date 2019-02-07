@@ -761,7 +761,7 @@ public:
         m_ViewId = INVALID_GAME_VIEW_ID;
     }
 
-    explicit EventData_Request_New_Actor(const std::string &actorResource, const Point *pInitialPosition = NULL, const uint32_t actorId = INVALID_ACTOR_ID, const uint32_t viewId = INVALID_GAME_VIEW_ID)
+    explicit EventData_Request_New_Actor(const std::string &actorResource, const Point *pInitialPosition = nullptr, const uint32_t actorId = INVALID_ACTOR_ID, const uint32_t viewId = INVALID_GAME_VIEW_ID)
     {
         m_ActorResource = actorResource;
         if (pInitialPosition)
@@ -796,7 +796,7 @@ public:
 
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Request_New_Actor(m_ActorResource, (m_HasInitialPosition) ? &m_InitialPosition : NULL, m_ServerActorId, m_ViewId));
+        return IEventDataPtr(new EventData_Request_New_Actor(m_ActorResource, (m_HasInitialPosition) ? &m_InitialPosition : nullptr, m_ServerActorId, m_ViewId));
     }
 
     virtual void VSerialize(std::ostringstream & out) const
@@ -815,7 +815,7 @@ public:
     virtual const char* GetName(void) const { return "EventData_Request_New_Actor"; }
 
     const std::string &GetActorResource(void) const { return m_ActorResource; }
-    const Point *GetInitialTransform(void) const { return (m_HasInitialPosition) ? &m_InitialPosition : NULL; }
+    const Point *GetInitialTransform(void) const { return (m_HasInitialPosition) ? &m_InitialPosition : nullptr; }
     const uint32_t GetServerActorId(void) const     { return m_ServerActorId; }
     uint32_t GetViewId(void) const { return m_ViewId; }
 

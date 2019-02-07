@@ -23,7 +23,7 @@ ProjectileSpawnerComponent::~ProjectileSpawnerComponent()
 
 bool ProjectileSpawnerComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     m_Properties.LoadFromXml(pData, true);
 
@@ -42,7 +42,7 @@ void ProjectileSpawnerComponent::VPostInit()
     m_pAnimationComponent = 
         MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>()).get();
     m_pARC = m_pOwner->GetRawComponent<ActorRenderComponent>(true);
-    assert(m_pAnimationComponent != NULL);
+    assert(m_pAnimationComponent != nullptr);
 
     if (m_Properties.idleAnim == "INVISIBLE")
     {

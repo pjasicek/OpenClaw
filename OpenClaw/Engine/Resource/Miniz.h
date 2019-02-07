@@ -68,11 +68,11 @@ extern "C" {
     void mz_free(void *p);
 
 #define MZ_ADLER32_INIT (1)
-    // mz_adler32() returns the initial adler-32 value to use when called with ptr==NULL.
+    // mz_adler32() returns the initial adler-32 value to use when called with ptr==nullptr.
     mz_ulong mz_adler32(mz_ulong adler, const unsigned char *ptr, size_t buf_len);
 
 #define MZ_CRC32_INIT (0)
-    // mz_crc32() returns the initial CRC-32 value to use when called with ptr==NULL.
+    // mz_crc32() returns the initial CRC-32 value to use when called with ptr==nullptr.
     mz_ulong mz_crc32(mz_ulong crc, const unsigned char *ptr, size_t buf_len);
 
     // Compression strategies.
@@ -220,7 +220,7 @@ extern "C" {
     // Returns MZ_OK on success, or one of the error codes from mz_inflate() on failure.
     int mz_uncompress(unsigned char *pDest, mz_ulong *pDest_len, const unsigned char *pSource, mz_ulong source_len);
 
-    // Returns a string description of the specified error code, or NULL if the error code is invalid.
+    // Returns a string description of the specified error code, or nullptr if the error code is invalid.
     const char *mz_error(int err);
 
     // Redefine zlib-compatible names to miniz equivalents, so miniz.c can be used as a drop-in replacement for the subset of zlib that miniz.c supports.
@@ -469,7 +469,7 @@ extern "C" {
     // Converts a ZIP archive reader object into a writer object, to allow efficient in-place file appends to occur on an existing archive.
     // For archives opened using mz_zip_reader_init_file, pFilename must be the archive's filename so it can be reopened for writing. If the file can't be reopened, mz_zip_reader_end() will be called.
     // For archives opened using mz_zip_reader_init_mem, the memory block must be growable using the realloc callback (which defaults to realloc unless you've overridden it).
-    // Finally, for archives opened using mz_zip_reader_init, the mz_zip_archive's user provided m_pWrite function cannot be NULL.
+    // Finally, for archives opened using mz_zip_reader_init, the mz_zip_archive's user provided m_pWrite function cannot be nullptr.
     // Note: In-place archive modification is not recommended unless you know what you're doing, because if execution stops or something goes wrong before
     // the archive is finalized the file's central directory will be hosed.
     mz_bool mz_zip_writer_init_from_reader(mz_zip_archive *pZip, const char *pFilename);
@@ -507,7 +507,7 @@ extern "C" {
     mz_bool mz_zip_add_mem_to_archive_file_in_place(const char *pZip_filename, const char *pArchive_name, const void *pBuf, size_t buf_size, const void *pComment, mz_uint16 comment_size, mz_uint level_and_flags);
 
     // Reads a single file from an archive into a heap block.
-    // Returns NULL on failure.
+    // Returns nullptr on failure.
     void *mz_zip_extract_archive_file_to_heap(const char *pZip_filename, const char *pArchive_name, size_t *pSize, mz_uint zip_flags);
 
 #endif // #ifndef MINIZ_NO_ARCHIVE_WRITING_APIS
@@ -534,7 +534,7 @@ extern "C" {
     // On entry:
     //  pSrc_buf, src_buf_len: Pointer and size of the Deflate or zlib source data to decompress.
     // On return:
-    //  Function returns a pointer to the decompressed data, or NULL on failure.
+    //  Function returns a pointer to the decompressed data, or nullptr on failure.
     //  *pOut_len will be set to the decompressed data's size, which could be larger than src_buf_len on uncompressible data.
     //  The caller must call mz_free() on the returned block when it's no longer needed.
     void *tinfl_decompress_mem_to_heap(const void *pSrc_buf, size_t src_buf_len, size_t *pOut_len, int flags);
@@ -645,7 +645,7 @@ extern "C" {
     //  pSrc_buf, src_buf_len: Pointer and size of source block to compress.
     //  flags: The max match finder probes (default is 128) logically OR'd against the above flags. Higher probes are slower but improve compression.
     // On return:
-    //  Function returns a pointer to the compressed data, or NULL on failure.
+    //  Function returns a pointer to the compressed data, or nullptr on failure.
     //  *pOut_len will be set to the compressed data's size, which could be larger than src_buf_len on uncompressible data.
     //  The caller must free() the returned block when it's no longer needed.
     void *tdefl_compress_mem_to_heap(const void *pSrc_buf, size_t src_buf_len, size_t *pOut_len, int flags);
@@ -659,7 +659,7 @@ extern "C" {
     //  pImage, w, h, and num_chans describe the image to compress. num_chans may be 1, 2, 3, or 4. 
     //  The image pitch in bytes per scanline will be w*num_chans. The leftmost pixel on the top scanline is stored first in memory.
     // On return:
-    //  Function returns a pointer to the compressed data, or NULL on failure.
+    //  Function returns a pointer to the compressed data, or nullptr on failure.
     //  *pLen_out will be set to the size of the PNG image file.
     //  The caller must mz_free() the returned heap block (which will typically be larger than *pLen_out) when it's no longer needed.
     void *tdefl_write_image_to_png_file_in_memory(const void *pImage, int w, int h, int num_chans, size_t *pLen_out);
@@ -727,15 +727,15 @@ extern "C" {
 
     // Initializes the compressor.
     // There is no corresponding deinit() function because the tdefl API's do not dynamically allocate memory.
-    // pBut_buf_func: If NULL, output data will be supplied to the specified callback. In this case, the user should call the tdefl_compress_buffer() API for compression.
-    // If pBut_buf_func is NULL the user should always call the tdefl_compress() API.
+    // pBut_buf_func: If nullptr, output data will be supplied to the specified callback. In this case, the user should call the tdefl_compress_buffer() API for compression.
+    // If pBut_buf_func is nullptr the user should always call the tdefl_compress() API.
     // flags: See the above enums (TDEFL_HUFFMAN_ONLY, TDEFL_WRITE_ZLIB_HEADER, etc.)
     tdefl_status tdefl_init(tdefl_compressor *d, tdefl_put_buf_func_ptr pPut_buf_func, void *pPut_buf_user, int flags);
 
     // Compresses a block of data, consuming as much of the specified input buffer as possible, and writing as much compressed data to the specified output buffer as possible.
     tdefl_status tdefl_compress(tdefl_compressor *d, const void *pIn_buf, size_t *pIn_buf_size, void *pOut_buf, size_t *pOut_buf_size, tdefl_flush flush);
 
-    // tdefl_compress_buffer() is only usable when the tdefl_init() is called with a non-NULL tdefl_put_buf_func_ptr.
+    // tdefl_compress_buffer() is only usable when the tdefl_init() is called with a non-nullptr tdefl_put_buf_func_ptr.
     // tdefl_compress_buffer() always consumes the entire input buffer.
     tdefl_status tdefl_compress_buffer(tdefl_compressor *d, const void *pIn_buf, size_t in_buf_size, tdefl_flush flush);
 

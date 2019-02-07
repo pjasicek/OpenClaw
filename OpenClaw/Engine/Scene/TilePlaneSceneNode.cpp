@@ -88,14 +88,14 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
             int32_t y = (row - startRow - numTilesPadding) * tilePixelHeight;
             Image* image = (*pImageList)[(row % pProperties->tilesOnAxisY) * pProperties->tilesOnAxisX + (col % pProperties->tilesOnAxisX)];
 
-            if (image && image->GetTexture() != NULL)
+            if (image && image->GetTexture() != nullptr)
             {
                 SDL_Rect tileRect = { x - (parallaxCameraPosX % tilePixelWidth),
                     y - (parallaxCameraPosY % tilePixelHeight),
                     tilePixelWidth,
                     tilePixelHeight };
 
-                SDL_RenderCopy(renderer, image->GetTexture(), NULL, &tileRect);
+                SDL_RenderCopy(renderer, image->GetTexture(), nullptr, &tileRect);
             }
         }
     }

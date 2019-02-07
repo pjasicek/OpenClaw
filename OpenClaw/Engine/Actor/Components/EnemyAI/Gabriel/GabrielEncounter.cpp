@@ -64,21 +64,21 @@ bool GabrielAIStateComponent::VDelegateInit(TiXmlElement* pData)
     assert(ParseValueFromXmlElem(&m_ActionMaxInterval, pData->FirstChildElement("ActionMaxInterval")));
 
     for (TiXmlElement* pSoundElem = pData->FirstChildElement("ThrowBombSound");
-        pSoundElem != NULL;
+        pSoundElem != nullptr;
         pSoundElem = pSoundElem->NextSiblingElement("ThrowBombSound"))
     {
         m_ThrowBombSoundList.push_back(pSoundElem->GetText());
     }
 
     for (TiXmlElement* pSoundElem = pData->FirstChildElement("SummonPirateSound");
-        pSoundElem != NULL;
+        pSoundElem != nullptr;
         pSoundElem = pSoundElem->NextSiblingElement("SummonPirateSound"))
     {
         m_SpawnPirateSoundList.push_back(pSoundElem->GetText());
     }
 
     for (TiXmlElement* pSoundElem = pData->FirstChildElement("FireCannonSound");
-        pSoundElem != NULL;
+        pSoundElem != nullptr;
         pSoundElem = pSoundElem->NextSiblingElement("FireCannonSound"))
     {
         m_FireCannonSoundList.push_back(pSoundElem->GetText());

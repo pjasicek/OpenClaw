@@ -23,7 +23,7 @@ void MidiResourceExtraData::LoadMidiFile(char* rawBuffer, uint32 size)
 {
     MidiFile* pMidiFile = WAP_XmiToMidiFromData(rawBuffer, size);
     // TODO: After testing comment this assert
-    assert(pMidiFile != NULL && "Failed to load MidiFile");
+    assert(pMidiFile != nullptr && "Failed to load MidiFile");
 
     m_pMidiFile = shared_ptr<MidiFile>(pMidiFile, DeleteMidiFile);
     if (m_pMidiFile == nullptr)
@@ -40,7 +40,7 @@ void MidiResourceExtraData::LoadMidiFile(char* rawBuffer, uint32 size)
 
 bool MidiResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle)
 {
-    if (rawSize <= 0 || rawBuffer == NULL)
+    if (rawSize <= 0 || rawBuffer == nullptr)
     {
         LOG_ERROR("Received invalid rawBuffer or its size");
         return false;
@@ -49,7 +49,7 @@ bool MidiResourceLoader::VLoadResource(char* rawBuffer, uint32 rawSize, std::sha
     shared_ptr<MidiResourceExtraData> extraData = shared_ptr<MidiResourceExtraData>(new MidiResourceExtraData());
     extraData->LoadMidiFile(rawBuffer, rawSize);
 
-    if (extraData->GetMidiFile() == NULL)
+    if (extraData->GetMidiFile() == nullptr)
     {
         LOG_ERROR("Failed to load MidiFile.");
     }
@@ -75,7 +75,7 @@ shared_ptr<MidiFile> MidiResourceLoader::LoadAndReturnMidiFile(const char* resou
     if (!extraData)
     {
         LOG_ERROR("Could not cast type to MidiResourceExtraData. Check if MidiResourceLoader is registered.");
-        return NULL;
+        return nullptr;
     }
 
     return extraData->GetMidiFile();

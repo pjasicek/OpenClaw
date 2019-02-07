@@ -103,7 +103,7 @@ string ToStr(bool val)
 
 string ToStr(char* val)
 {
-    if (val == NULL)
+    if (val == nullptr)
     {
         return "";
     }
@@ -113,7 +113,7 @@ string ToStr(char* val)
 
 string ToStr(const char* val)
 {
-    if (val == NULL)
+    if (val == nullptr)
     {
         return "";
     }
@@ -177,7 +177,7 @@ unsigned long HashName(char const * pIdentStr)
 #define DO8(buf,i)  DO4(buf,i); DO4(buf,i+4);
 #define DO16(buf)   DO8(buf,0); DO8(buf,8);
 
-    if (pIdentStr == NULL)
+    if (pIdentStr == nullptr)
         return 0;
 
     unsigned long s1 = 0;

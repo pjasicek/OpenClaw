@@ -29,7 +29,7 @@ void ScoreComponent::VPostInit()
 TiXmlElement* ScoreComponent::VGenerateXml()
 {
     // TODO:
-    return NULL;
+    return nullptr;
 }
 
 void ScoreComponent::AddScorePoints(uint32 points)

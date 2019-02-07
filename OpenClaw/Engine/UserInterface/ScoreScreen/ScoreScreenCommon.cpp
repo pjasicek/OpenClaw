@@ -29,7 +29,7 @@ StrongActorPtr SpawnImageActor(const std::string& imagePath, Point position, con
 
 void SetActorImage(Actor* pActor, const std::string image)
 {
-    assert(pActor != NULL);
+    assert(pActor != nullptr);
     assert(!image.empty());
 
     shared_ptr<ActorRenderComponent> pARC = MakeStrongPtr(pActor->GetComponent<ActorRenderComponent>());

@@ -16,7 +16,7 @@ public:
     virtual bool VInit(TiXmlElement* pData) override;
     virtual void VPostInit() override;
 
-    virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return NULL; }
+    virtual TiXmlElement* VGenerateXml() override { assert(false && "Unimplemented"); return nullptr; }
 
     void OnActorContact(Actor* pActor);
 

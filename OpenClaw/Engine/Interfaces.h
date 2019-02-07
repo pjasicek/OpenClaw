@@ -688,7 +688,7 @@ public:
             return func();
         }
 
-        return NULL;
+        return nullptr;
     }
 
 private:

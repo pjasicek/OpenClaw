@@ -14,14 +14,14 @@ SteppingGroundComponent::SteppingGroundComponent()
     m_bIsSteppedOn(false),
     m_TimeBeforeToggleLeft(0),
     m_TimeOffLeft(0),
-    m_pAnimationComponent(NULL)
+    m_pAnimationComponent(nullptr)
 {
 
 }
 
 bool SteppingGroundComponent::VInit(TiXmlElement* pData)
 {
-    assert(pData != NULL);
+    assert(pData != nullptr);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     assert(m_pPhysics != nullptr);
@@ -35,7 +35,7 @@ bool SteppingGroundComponent::VInit(TiXmlElement* pData)
 void SteppingGroundComponent::VPostInit()
 {
     m_pAnimationComponent = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>()).get();
-    assert(m_pAnimationComponent != NULL);
+    assert(m_pAnimationComponent != nullptr);
 
     m_pAnimationComponent->SetReverseAnimation(true);
     m_pAnimationComponent->PauseAnimation();

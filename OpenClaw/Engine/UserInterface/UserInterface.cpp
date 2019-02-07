@@ -118,7 +118,7 @@ static SDL_Rect GetScreenRect()
 
 static shared_ptr<Image> TryLoadPcxImageFromXmlElement(TiXmlElement* pElem)
 {
-    if (pElem == NULL)
+    if (pElem == nullptr)
     {
         return nullptr;
     }
@@ -132,7 +132,7 @@ static shared_ptr<Image> TryLoadPcxImageFromXmlElement(TiXmlElement* pElem)
 
 static shared_ptr<Image> LoadImageFromXmlElement(TiXmlElement* pElem)
 {
-    if (pElem == NULL)
+    if (pElem == nullptr)
     {
         return nullptr;
     }
@@ -255,7 +255,7 @@ static MenuItemType StringToMenuItemType(const std::string& str)
 
 static IEventDataPtr XmlElemToGeneratedEvent(TiXmlElement* pElem)
 {
-    if (pElem == NULL)
+    if (pElem == nullptr)
     {
         return nullptr;
     }
@@ -430,10 +430,10 @@ void ScreenElementMenu::VOnRender(uint32 msDiff)
     SDL_RenderSetScale(m_pRenderer, 1.0f, 1.0f);
 
     assert(m_pBackground != nullptr);
-    assert(m_pBackground->GetTexture() != NULL);
+    assert(m_pBackground->GetTexture() != nullptr);
 
     SDL_Rect backgroundRect = GetScreenRect();
-    SDL_RenderCopy(m_pRenderer, m_pBackground->GetTexture(), &backgroundRect, NULL);
+    SDL_RenderCopy(m_pRenderer, m_pBackground->GetTexture(), &backgroundRect, nullptr);
 
     assert(m_pActiveMenuPage);
     m_pActiveMenuPage->VOnRender(msDiff);
@@ -487,7 +487,7 @@ void ScreenElementMenu::VSetVisible(bool visible)
 
 bool ScreenElementMenu::Initialize(TiXmlElement* pElem)
 {
-    assert(m_pRenderer != NULL);
+    assert(m_pRenderer != nullptr);
 
     std::string menuTypeStr;
     assert(ParseValueFromXmlElem(&menuTypeStr, pElem->FirstChildElement("MenuType")));
@@ -555,7 +555,7 @@ bool ScreenElementMenu::Initialize(TiXmlElement* pElem)
 
     // Load all menu pages
     for (TiXmlElement* pMenuPageElem = pElem->FirstChildElement("MenuPage");
-        pMenuPageElem != NULL;
+        pMenuPageElem != nullptr;
         pMenuPageElem = pMenuPageElem->NextSiblingElement("MenuPage"))
     {
         std::string pageName;
@@ -662,7 +662,7 @@ void ScreenElementMenu::IngameMenuEndGameDelegate(IEventDataPtr pEventData)
 
 ScreenElementMenuPage::ScreenElementMenuPage(SDL_Renderer* pRenderer)
     :
-    m_pBackground(NULL),
+    m_pBackground(nullptr),
     m_pRenderer(pRenderer)
 {
 
@@ -685,10 +685,10 @@ void ScreenElementMenuPage::VOnRender(uint32 msDiff)
 {
     if (m_pBackground)
     {
-        assert(m_pBackground->GetTexture() != NULL);
+        assert(m_pBackground->GetTexture() != nullptr);
 
         SDL_Rect backgroundRect = GetScreenRect();
-        SDL_RenderCopy(m_pRenderer, m_pBackground->GetTexture(), &backgroundRect, NULL);
+        SDL_RenderCopy(m_pRenderer, m_pBackground->GetTexture(), &backgroundRect, nullptr);
     }
 
     for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
@@ -809,7 +809,7 @@ bool ScreenElementMenuPage::Initialize(TiXmlElement* pElem)
 
     // Load all menu items
     for (TiXmlElement* pMenuItemElem = pElem->FirstChildElement("MenuItem");
-        pMenuItemElem != NULL;
+        pMenuItemElem != nullptr;
         pMenuItemElem = pMenuItemElem->NextSiblingElement("MenuItem"))
     {
         shared_ptr<ScreenElementMenuItem> pItem(new ScreenElementMenuItem(m_pRenderer));
@@ -824,7 +824,7 @@ bool ScreenElementMenuPage::Initialize(TiXmlElement* pElem)
 
     // Load all key events
     for (TiXmlElement* pKeyboardEvent = pElem->FirstChildElement("KeyboardEvent");
-        pKeyboardEvent != NULL;
+        pKeyboardEvent != nullptr;
         pKeyboardEvent = pKeyboardEvent->NextSiblingElement("KeyboardEvent"))
     {
         std::string keyStr;
@@ -1008,7 +1008,7 @@ void ScreenElementMenuItem::VOnRender(uint32 msDiff)
     renderRect.w = (int)(pCurrImage->GetWidth() * g_MenuScale.x);
     renderRect.h = (int)(pCurrImage->GetHeight() * g_MenuScale.y);
 
-    SDL_RenderCopy(m_pRenderer, pCurrImage->GetTexture(), NULL, &renderRect);
+    SDL_RenderCopy(m_pRenderer, pCurrImage->GetTexture(), nullptr, &renderRect);
 }
 
 bool ScreenElementMenuItem::VOnEvent(SDL_Event& evt)
@@ -1151,7 +1151,7 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
     }
 
     /*for (TiXmlElement* pMenuItemImageElem = pElem->FirstChildElement("MenuItemImage");
-        pMenuItemImageElem != NULL;
+        pMenuItemImageElem != nullptr;
         pMenuItemImageElem = pMenuItemImageElem->NextSiblingElement("MenuItemImage"))
     {
         shared_ptr<MenuItemImage> pMenuItemImage(new MenuItemImage);
@@ -1177,7 +1177,7 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
     }
 
     for (TiXmlElement* pGeneratedEventElem = pElem->FirstChildElement("GeneratedEvent");
-         pGeneratedEventElem != NULL;
+         pGeneratedEventElem != nullptr;
          pGeneratedEventElem = pGeneratedEventElem->NextSiblingElement("GeneratedEvent"))
     {
         IEventDataPtr pEvent = XmlElemToGeneratedEvent(pGeneratedEventElem);
@@ -1192,7 +1192,7 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
     if (TiXmlElement* pStateEnterEventsElem = pElem->FirstChildElement("StateEnterEvents"))
     {
         for (TiXmlElement* pEventElem = pStateEnterEventsElem->FirstChildElement("Event");
-            pEventElem != NULL;
+            pEventElem != nullptr;
             pEventElem = pEventElem->NextSiblingElement("Event"))
         {
             std::string forStateStr;
@@ -1217,7 +1217,7 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
     if (TiXmlElement* pStateEnterEventsElem = pElem->FirstChildElement("StateLeaveEvents"))
     {
         for (TiXmlElement* pEventElem = pStateEnterEventsElem->FirstChildElement("Event");
-            pEventElem != NULL;
+            pEventElem != nullptr;
             pEventElem = pEventElem->NextSiblingElement("Event"))
         {
             std::string forStateStr;
@@ -1242,7 +1242,7 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
     if (TiXmlElement* pKeyAllKeyEventsElem = pElem->FirstChildElement("KeyEvents"))
     {
         for (TiXmlElement* pKeyEventElem = pKeyAllKeyEventsElem->FirstChildElement("KeyEvent");
-            pKeyEventElem != NULL;
+            pKeyEventElem != nullptr;
             pKeyEventElem = pKeyEventElem->NextSiblingElement("KeyEvent"))
         {
             std::string keyStr;
@@ -1254,7 +1254,7 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
             SDL_Scancode keyCode = StringToSDLKeycode(keyStr);
 
             for (TiXmlElement* pEventElem = pKeyEventElem->FirstChildElement("Event");
-                pEventElem != NULL;
+                pEventElem != nullptr;
                 pEventElem = pEventElem->NextSiblingElement("Event"))
             {
                 IEventDataPtr pEvent = XmlElemToGeneratedEvent(pEventElem);
@@ -1372,7 +1372,7 @@ void ScreenElementMenuItem::OnStateChanged(MenuItemState newState, MenuItemState
 SDL_Rect ScreenElementMenuItem::GetMenuItemRect()
 {
     int itemWidth, itemHeight;
-    SDL_QueryTexture(m_Images[m_State]->GetTexture(), NULL, NULL, &itemWidth, &itemHeight);
+    SDL_QueryTexture(m_Images[m_State]->GetTexture(), nullptr, nullptr, &itemWidth, &itemHeight);
 
     SDL_Rect itemRect;
     itemRect.x = (int)m_Position.x;

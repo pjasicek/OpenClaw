@@ -22,7 +22,7 @@ bool ActorSpawnerComponent::VInit(TiXmlElement* pData)
     assert(pData);
 
     for (TiXmlElement* pActorSpawnInfoElem = pData->FirstChildElement("ActorSpawnInfo");
-        pActorSpawnInfoElem != NULL;
+        pActorSpawnInfoElem != nullptr;
         pActorSpawnInfoElem = pActorSpawnInfoElem->NextSiblingElement("ActorSpawnInfo"))
     {
         ActorSpawnInfo spawnInfo;

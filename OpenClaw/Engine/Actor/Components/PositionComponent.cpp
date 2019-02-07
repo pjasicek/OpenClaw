@@ -4,10 +4,10 @@ const char* PositionComponent::g_Name = "PositionComponent";
 
 bool PositionComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     TiXmlElement* positionElement = data->FirstChildElement("Position");
-    if (positionElement != NULL)
+    if (positionElement != nullptr)
     {
         positionElement->Attribute("x", &m_Position.x);
         positionElement->Attribute("y", &m_Position.y);

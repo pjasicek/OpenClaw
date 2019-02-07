@@ -17,7 +17,7 @@ bool SetPointIfDefined(Point* pDest, TiXmlElement* pElem, const char* elemAttrNa
 // pathToNode in format: elem1.elem2.elem3
 TiXmlElement* GetTiXmlElementFromPath(TiXmlElement* pRootElem, const std::string& pathToNode)
 {
-    assert(pRootElem != NULL);
+    assert(pRootElem != nullptr);
 
     std::vector<std::string> nodes;
     std::string tmpPath = pathToNode;
@@ -27,13 +27,13 @@ TiXmlElement* GetTiXmlElementFromPath(TiXmlElement* pRootElem, const std::string
 
     if (nodes.empty())
     {
-        return NULL;
+        return nullptr;
     }
 
     // Check for root element here
     if (std::string(pRootElem->Value()) != nodes[0])
     {
-        return NULL;
+        return nullptr;
     }
     else
     {
