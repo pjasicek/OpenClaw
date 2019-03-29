@@ -12,6 +12,8 @@ class AnimationObserver;
 class AnimationSubject
 {
 public:
+    ~AnimationSubject();
+
     void NotifyAnimationLooped(Animation* pAnimation);
     void NotifyAnimationStarted(Animation* pAnimation);
     void NotifyAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame);

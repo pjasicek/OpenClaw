@@ -11,7 +11,7 @@ const char* AnimationComponent::g_Name = "AnimationComponent";
 
 AnimationComponent::AnimationComponent()
     :
-    _currentAnimation(NULL),
+    _currentAnimation(nullptr),
     m_PauseOnStart(false),
     m_PauseOnEnd(false)
 { }
@@ -23,11 +23,11 @@ AnimationComponent::~AnimationComponent()
 
 bool AnimationComponent::VInit(TiXmlElement* data)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
 
     // Loop through all anim paths elements
     for (TiXmlElement* animPathElem = data->FirstChildElement("AnimationPath");
-        animPathElem != NULL; 
+        animPathElem != nullptr; 
         animPathElem = animPathElem->NextSiblingElement("AnimationPath"))
     {
         const char* animationsPath = animPathElem->GetText();
@@ -61,7 +61,7 @@ bool AnimationComponent::VInit(TiXmlElement* data)
     }
 
     for (TiXmlElement* animElem = data->FirstChildElement("Animation");
-        animElem != NULL; 
+        animElem != nullptr; 
         animElem = animElem->NextSiblingElement("Animation"))
     {
         if (!animElem->Attribute("type"))
@@ -76,7 +76,7 @@ bool AnimationComponent::VInit(TiXmlElement* data)
     }
 
     for (TiXmlElement* pSpecialAnimElem = data->FirstChildElement("SpecialAnimation");
-        pSpecialAnimElem != NULL;
+        pSpecialAnimElem != nullptr;
         pSpecialAnimElem = pSpecialAnimElem->NextSiblingElement("SpecialAnimation"))
     {
         SpecialAnimation specialAnim;
@@ -400,11 +400,19 @@ bool AnimationComponent::AddAnimation(std::string animName, Animation* pAnim)
 // AnimationSubject implementation
 //=====================================================================================================================
 
+AnimationSubject::~AnimationSubject()
+{
+    m_AnimationObservers.clear();
+}
+
 void AnimationSubject::NotifyAnimationLooped(Animation* pAnimation)
 {
     for (AnimationObserver* pSubject : m_AnimationObservers)
     {
-        pSubject->VOnAnimationLooped(pAnimation);
+        if (pSubject)
+        {
+            pSubject->VOnAnimationLooped(pAnimation);
+        }
     }
 }
 
@@ -412,7 +420,10 @@ void AnimationSubject::NotifyAnimationStarted(Animation* pAnimation)
 {
     for (AnimationObserver* pSubject : m_AnimationObservers)
     {
-        pSubject->VOnAnimationStarted(pAnimation);
+        if (pSubject)
+        {
+            pSubject->VOnAnimationStarted(pAnimation);
+        }
     }
 }
 
@@ -420,7 +431,10 @@ void AnimationSubject::NotifyAnimationFrameChanged(Animation* pAnimation, Animat
 {
     for (AnimationObserver* pSubject : m_AnimationObservers)
     {
-        pSubject->VOnAnimationFrameChanged(pAnimation, pLastFrame, pNewFrame);
+        if (pSubject)
+        {
+            pSubject->VOnAnimationFrameChanged(pAnimation, pLastFrame, pNewFrame);
+        }
     }
 }
 
@@ -428,7 +442,10 @@ void AnimationSubject::NotifyAnimationPaused(Animation* pAnimation)
 {
     for (AnimationObserver* pSubject : m_AnimationObservers)
     {
-        pSubject->VOnAnimationPaused(pAnimation);
+        if (pSubject)
+        {
+            pSubject->VOnAnimationPaused(pAnimation);
+        }
     }
 }
 
@@ -436,7 +453,10 @@ void AnimationSubject::NotifyAnimationResumed(Animation* pAnimation)
 {
     for (AnimationObserver* pSubject : m_AnimationObservers)
     {
-        pSubject->VOnAnimationResumed(pAnimation);
+        if (pSubject)
+        {
+            pSubject->VOnAnimationResumed(pAnimation);
+        }
     }
 }
 
@@ -444,7 +464,10 @@ void AnimationSubject::NotifyAnimationAtLastFrame(Animation* pAnimation)
 {
     for (AnimationObserver* pSubject : m_AnimationObservers)
     {
-        pSubject->VOnAnimationAtLastFrame(pAnimation);
+        if (pSubject)
+        {
+            pSubject->VOnAnimationAtLastFrame(pAnimation);
+        }
     }
 }
 
@@ -452,7 +475,10 @@ void AnimationSubject::NotifyAnimationChanged(Animation* pOldAnimation, Animatio
 {
     for (AnimationObserver* pSubject : m_AnimationObservers)
     {
-        pSubject->VOnAnimationChanged(pOldAnimation, pNewAnimation);
+        if (pSubject)
+        {
+            pSubject->VOnAnimationChanged(pOldAnimation, pNewAnimation);
+        }
     }
 }
 
@@ -460,7 +486,10 @@ void AnimationSubject::NotifyAnimationEndedDelay(Animation* pOldAnimation)
 {
     for (AnimationObserver* pSubject : m_AnimationObservers)
     {
-        pSubject->VOnAnimationEndedDelay(pOldAnimation);
+        if (pSubject)
+        {
+            pSubject->VOnAnimationEndedDelay(pOldAnimation);
+        }
     }
 }
 
