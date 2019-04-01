@@ -44,7 +44,7 @@ For all platforms you will need original CLAW.REZ game archive from original gam
   - `git clone https://github.com/pjasicek/OpenClaw.git`
   - `cd OpenClaw/Build_Release`
   - CLAW.REZ iz required from original game in the OpenClaw/Build_Release folder
-  - `make` (it's going to use all CPU cores to compile, edit Makefile in Build_Release folder to whatever number of simultaneous threads you want it on your machine to run)
+  - `make` (it's going to use all threads to compile, edit Makefile in Build_Release folder to whatever number of simultaneous threads you want it on your machine to run)
 
  **Remarks:**
 
