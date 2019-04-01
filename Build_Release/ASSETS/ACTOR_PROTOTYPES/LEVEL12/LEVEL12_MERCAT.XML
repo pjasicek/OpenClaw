@@ -1,0 +1,10 @@
+<Actor Type="Level12_Mercat" Parent="ActorPrototype_Level11_Mercat" ActorPrototypeName="ActorPrototype_Level12_Mercat">
+    <ActorRenderComponent>
+        <ImagePath>/LEVEL12/IMAGES/MERCAT/*</ImagePath>
+        <Palette>/LEVEL12/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL12/ANIS/MERCAT/*.ANI</AnimationPath>
+        <PauseOnStart>false</PauseOnStart>
+    </AnimationComponent>
+</Actor>

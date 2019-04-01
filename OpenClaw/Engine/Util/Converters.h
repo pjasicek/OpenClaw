@@ -231,7 +231,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     // DoNothing logic only has one single frame which has to be assigned
     // We cant use general wildcard here
     // Example: We want "/LEVEL1/IMAGES/ARCHESFRONT/*1.PID"
-    if (logic == "DoNothing")
+    if (logic == "DoNothing" || logic == "DoNothingNormal")
     {
         // Unfortunately, this hack IS NOT ENOUGH, index "i" == -1 means "i" should be 1
         // I really have no clue how could Claw's level parsing code should be sane by any
@@ -416,6 +416,17 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             if ((levelNumber == 3) && (sound == "LEVEL_TRIGGER_1013"))
             {
                 sound = "/LEVEL10/SOUNDS/TRIGGER/1013.WAV";
+            }
+            if ((levelNumber == 12))
+            {
+                if (sound == "LEVEL_TRIGGER_1044")
+                {
+                    sound = "/LEVEL11/SOUNDS/TRIGGER/1044.WAV";
+                } 
+                else if (sound == "LEVEL_TRIGGER_1005")
+                {
+                    sound = "/LEVEL11/SOUNDS/TRIGGER/1005.WAV";
+                }
             }
 
             SAFE_DELETE(pActorElem);
@@ -718,7 +729,11 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "Wolvington" ||
              logic == "CrazyHook" ||
              logic == "PegLeg" ||
-             logic == "Marrow")
+             logic == "Marrow" ||
+             logic == "Mercat" ||
+             logic == "Siren" ||
+             logic == "Fish" ||
+             logic == "Aquatis")
     {
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
@@ -774,9 +789,17 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     {
         return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level8_GabrielCannon, actorPosition);
     }
+    else if (logic.find("Laser") != std::string::npos)
+    {
+        return NULL; // TODO
+    }
     else if (logic.find("Gabriel") != std::string::npos)
     {
         return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level8_Gabriel, actorPosition);
+    }
+    else if (logic.find("AquatisCrack") != std::string::npos)
+    {
+        return NULL; // TODO
     }
     else if (logic.find("Rat") != std::string::npos)
     {
@@ -1179,7 +1202,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         SpringBoardDef def;
         def.springHeight = wwdObject->maxY;
-        //LOG("Position: " + position.ToString() + ", SpringHeight: " + ToStr(def.springHeight));
+        LOG("Position: " + position.ToString() + ", SpringHeight: " + ToStr(def.springHeight));
         if (def.springHeight == 0)
         {
             def.springHeight = 450;

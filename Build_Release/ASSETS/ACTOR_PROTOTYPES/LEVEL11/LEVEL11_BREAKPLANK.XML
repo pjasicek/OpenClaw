@@ -1,0 +1,18 @@
+<Actor Type="Level11_BreakPlank" Parent="ActorPrototype_BaseCrumblingPeg" ActorPrototypeName="ActorPrototype_Level11_BreakPlank">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL11/IMAGES/BREAKPLANK/*</ImagePath>
+		<Palette>/LEVEL11/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL11/ANIS/BREAKPLANK/*.ANI</AnimationPath>
+    </AnimationComponent>
+	<CrumblingPegAIComponent>
+		<CrumbleDelay>0</CrumbleDelay> <!-- DEFINED IN CODE -->
+		<CrumbleFrameIdx>2</CrumbleFrameIdx> <!-- DEFINED IN CODE -->
+		<CrumbleSound>/LEVEL11/SOUNDS/CRUMBLEBRIDGE4.WAV</CrumbleSound> <!-- DEFINED IN CODE -->
+	</CrumblingPegAIComponent>
+	<PhysicsComponent>
+        <PositionOffset x="0" y="-20" />
+        <CollisionSize width="64" height="40" />
+    </PhysicsComponent>
+</Actor>

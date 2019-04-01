@@ -1,0 +1,9 @@
+<Actor Type="Level12_Fish" Parent="ActorPrototype_Level11_Fish" ActorPrototypeName="ActorPrototype_Level12_Fish">
+    <ActorRenderComponent>
+        <ImagePath>/LEVEL12/IMAGES/FISH/*</ImagePath>
+        <Palette>/LEVEL12/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL12/ANIS/FISH/*.ANI</AnimationPath>
+    </AnimationComponent>
+</Actor>

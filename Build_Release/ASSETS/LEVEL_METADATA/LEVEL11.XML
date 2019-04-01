@@ -1,0 +1,29 @@
+<LevelMetadata>
+    <LevelNumber>11</LevelNumber>
+    <LevelName>Caverns</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="BreakPlank" actorPrototype="ActorPrototype_Level11_BreakPlank" />
+        <LogicToActorPrototype logic="Mercat" actorPrototype="ActorPrototype_Level11_Mercat" />
+        <LogicToActorPrototype logic="Siren" actorPrototype="ActorPrototype_Level11_Siren" />
+        <LogicToActorPrototype logic="Fish" actorPrototype="ActorPrototype_Level11_Fish" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="OneWayStartElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="ConveyorBelt" actorPrototype="ActorPrototype_Level11_ConveyorBelt" />
+        <LogicToActorPrototype logic="Laser" actorPrototype="ActorPrototype_Level11_Laser" />
+        <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level11_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level11_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level11_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level11_TogglePeg" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="3393" y="1088" />
+        <ClawSpawnPosition spawnNumber="1" x="17168" y="1417" />
+        <ClawSpawnPosition spawnNumber="2" x="10897" y="3912" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="153" offsetX="0" offsetY="0" />
+        <TopLadderEnd tileId="156" offsetX="0" offsetY="0" />
+    </TopLadderEnds>
+    <TileDeathEffect type="NONE" offsetX="0" offsetY="0" />
+</LevelMetadata>
