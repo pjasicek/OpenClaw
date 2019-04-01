@@ -41,15 +41,10 @@ For all platforms you will need original CLAW.REZ game archive from original gam
   `sudo apt install libsdl2-dev  libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev libtinyxml-dev` 
   
   **Compilation:**
-  
-  - git clone https://github.com/pjasicek/OpenClaw.git
-  - cd OpenClaw
-  - mkdir build
-  - cd build
-  - cmake ..
-  - make -j4 (for best performance, replace "4" with whatever number of simultaneous threads your machine can run)
-  - cd ../Build_Release
-  - ./openclaw (Considering you have CLAW.REZ from original game in the same folder)
+  - `git clone https://github.com/pjasicek/OpenClaw.git`
+  - `cd OpenClaw/Build_Release`
+  - CLAW.REZ iz required from original game in the OpenClaw/Build_Release folder
+  - `make` (it's going to use all threads to compile, edit Makefile in Build_Release folder to whatever number of simultaneous threads you want it on your machine to run)
 
  **Remarks:**
 
