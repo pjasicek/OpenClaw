@@ -1,0 +1,35 @@
+<LevelMetadata>
+    <LevelNumber>12</LevelNumber>
+    <LevelName>Undersea Caves</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="BreakPlank" actorPrototype="ActorPrototype_Level12_CrumblingPeg" />
+        <LogicToActorPrototype logic="Mercat" actorPrototype="ActorPrototype_Level12_Mercat" />
+        <LogicToActorPrototype logic="Siren" actorPrototype="ActorPrototype_Level12_Siren" />
+        <LogicToActorPrototype logic="Fish" actorPrototype="ActorPrototype_Level12_Fish" />
+
+        <LogicToActorPrototype logic="SpringBoard" actorPrototype="ActorPrototype_Level12_RockSpring" />
+        <LogicToActorPrototype logic="PathElevator" actorPrototype="ActorPrototype_Level12_PathElevator" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        
+        <LogicToActorPrototype logic="Aquatis" actorPrototype="ActorPrototype_Level12_Mercat" />
+        <LogicToActorPrototype logic="AquatisCrack" actorPrototype="ActorPrototype_BaseEnemy" />
+        <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Level12_Mercat" />
+
+        <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level12_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level12_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level12_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level12_TogglePeg" />
+        <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level12_CrumblingPeg" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="1715" y="2200" />
+        <ClawSpawnPosition spawnNumber="1" x="11519" y="3144" />
+        <ClawSpawnPosition spawnNumber="2" x="31537" y="3596" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+        <TopLadderEnd tileId="153" offsetX="0" offsetY="0" />
+        <TopLadderEnd tileId="156" offsetX="0" offsetY="0" />
+    </TopLadderEnds>
+    <TileDeathEffect type="NONE" offsetX="0" offsetY="0" />
+</LevelMetadata>

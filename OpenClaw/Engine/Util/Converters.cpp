@@ -283,11 +283,16 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
             {
                 case 5: proto = ActorPrototype_Level5_CrumblingPeg; break;
                 case 11: proto = ActorPrototype_Level11_BreakPlank; break;
+                case 12: proto = ActorPrototype_Level12_CrumblingPeg; break;
                 default: notLoadedActorList.push_back(actorProperties.logic); continue;
             }
 
             // Temporary hack
-            assert(proto == ActorPrototype_Level5_CrumblingPeg || proto == ActorPrototype_Level11_BreakPlank);
+            assert(
+                proto == ActorPrototype_Level5_CrumblingPeg 
+                || proto == ActorPrototype_Level11_BreakPlank
+                || proto == ActorPrototype_Level12_CrumblingPeg
+            );
 
             int crumbleDelay = wwdObject->counter;
             int width = wwdObject->width;
@@ -299,6 +304,16 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
 
                 position.x += 64;
             }
+        }
+        else if (logic == "Laser")
+        {
+            // TODO: missing logic
+            continue;
+        }
+        else if (logic == "AquatisCrack")
+        {
+            // TODO: missing logic
+            continue;
         }
         else
         {

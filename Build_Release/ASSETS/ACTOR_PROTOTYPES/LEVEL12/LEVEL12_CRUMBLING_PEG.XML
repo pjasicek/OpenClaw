@@ -1,0 +1,11 @@
+<Actor Type="Level12_CrumblingPeg" Parent="ActorPrototype_BaseCrumblingPeg" ActorPrototypeName="ActorPrototype_Level12_CrumblingPeg">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL12/IMAGES/CRUMBLINPEG/*</ImagePath>
+		<Palette>/LEVEL12/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<CrumblingPegAIComponent>
+		<CrumbleDelay>0</CrumbleDelay> <!-- DEFINED IN CODE -->
+		<CrumbleFrameIdx>9</CrumbleFrameIdx> <!-- DEFINED IN CODE -->
+		<CrumbleSound>/LEVEL12/SOUNDS/PEGCRUMBLE.WAV</CrumbleSound> <!-- DEFINED IN CODE -->
+	</CrumblingPegAIComponent>
+</Actor>

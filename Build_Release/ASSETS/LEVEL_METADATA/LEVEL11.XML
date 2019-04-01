@@ -10,7 +10,7 @@
         <LogicToActorPrototype logic="OneWayStartElevator" actorPrototype="ActorPrototype_BaseElevator" />
         <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
         <LogicToActorPrototype logic="ConveyorBelt" actorPrototype="ActorPrototype_Level11_ConveyorBelt" />
-        <!--LogicToActorPrototype logic="Laser" actorPrototype="ActorPrototype_Level11_Laser" /-->
+        <LogicToActorPrototype logic="Laser" actorPrototype="ActorPrototype_Level11_Laser" />
         <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level11_TogglePeg" />
         <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level11_TogglePeg" />
         <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level11_TogglePeg" />

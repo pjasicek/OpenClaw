@@ -1,0 +1,10 @@
+<Actor Type="Level12_Siren" Parent="ActorPrototype_Level11_Siren" ActorPrototypeName="ActorPrototype_Level12_Siren">
+    <ActorRenderComponent>
+        <ImagePath>/LEVEL12/IMAGES/SIREN/*</ImagePath>
+        <Palette>/LEVEL12/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL12/ANIS/SIREN/*.ANI</AnimationPath>
+        <PauseOnStart>false</PauseOnStart>
+    </AnimationComponent>
+</Actor>

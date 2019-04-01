@@ -204,6 +204,16 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level11_SirenProjectile, "ActorPrototype_Level11_SirenProjectile" },
         { ActorPrototype_Level11_TridentProjectile, "ActorPrototype_Level11_TridentProjectile" },
 
+        // Level 12
+        { ActorPrototype_Level12_Mercat, "ActorPrototype_Level12_Mercat" },
+        { ActorPrototype_Level12_CrumblingPeg, "ActorPrototype_Level12_CrumblingPeg" },
+        { ActorPrototype_Level12_Siren, "ActorPrototype_Level12_Siren" },
+        { ActorPrototype_Level12_Fish, "ActorPrototype_Level12_Fish" },
+        { ActorPrototype_Level12_TogglePeg, "ActorPrototype_Level12_TogglePeg" },
+        { ActorPrototype_Level12_Aquatis, "ActorPrototype_Level12_Aquatis" },
+        { ActorPrototype_Level12_RockSpring, "ActorPrototype_Level12_RockSpring" },
+        { ActorPrototype_Level12_PathElevator, "ActorPrototype_Level12_PathElevator" },
+
         //=======================================
         // Menu
         //=======================================
@@ -420,7 +430,16 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level11_Laser", ActorPrototype_Level11_Laser },
         { "ActorPrototype_Level11_SirenProjectile", ActorPrototype_Level11_SirenProjectile },
         { "ActorPrototype_Level11_TridentProjectile", ActorPrototype_Level11_TridentProjectile },
-    
+
+        // Level 12
+        { "ActorPrototype_Level12_Mercat", ActorPrototype_Level12_Mercat },
+        { "ActorPrototype_Level12_CrumblingPeg", ActorPrototype_Level12_CrumblingPeg },
+        { "ActorPrototype_Level12_Siren", ActorPrototype_Level12_Siren },
+        { "ActorPrototype_Level12_Fish", ActorPrototype_Level12_Fish },
+        { "ActorPrototype_Level12_TogglePeg", ActorPrototype_Level12_TogglePeg },
+        { "ActorPrototype_Level12_Aquatis", ActorPrototype_Level12_Aquatis },
+        { "ActorPrototype_Level12_RockSpring", ActorPrototype_Level12_RockSpring },
+        { "ActorPrototype_Level12_PathElevator", ActorPrototype_Level12_PathElevator },
 
         //=======================================
         // Menu

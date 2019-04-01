@@ -1,0 +1,19 @@
+<Actor Type="Level12_RockSpring" Parent="ActorPrototype_BaseSpringBoard" ActorPrototypeName="ActorPrototype_Level12_RockSpring">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL12/IMAGES/WATERROCK/*</ImagePath>
+	</ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL12/ANIS/ROCKSPRING/*.ANI</AnimationPath>
+	</AnimationComponent>
+	<SpringBoardComponent>
+        <SpringFrameIdx>1</SpringFrameIdx>
+        <SpringDelay>500</SpringDelay>
+        <IdleAnimName>idle</IdleAnimName>
+        <SpringAnimName>spring</SpringAnimName>
+        <SpringSound>/LEVEL12/SOUNDS/GEYSER2.WAV</SpringSound>
+	</SpringBoardComponent>
+    <PhysicsComponent>
+        <PositionOffset x="0" y="50" />
+        <CollisionSize width="60" height="35" />
+    </PhysicsComponent>
+</Actor>

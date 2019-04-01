@@ -417,6 +417,17 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             {
                 sound = "/LEVEL10/SOUNDS/TRIGGER/1013.WAV";
             }
+            if ((levelNumber == 12))
+            {
+                if (sound == "LEVEL_TRIGGER_1044")
+                {
+                    sound = "/LEVEL11/SOUNDS/TRIGGER/1044.WAV";
+                } 
+                else if (sound == "LEVEL_TRIGGER_1005")
+                {
+                    sound = "/LEVEL11/SOUNDS/TRIGGER/1005.WAV";
+                }
+            }
 
             SAFE_DELETE(pActorElem);
             return ActorTemplates::CreateXmlData_SoundTriggerActor(sound, logic, Point(wwdObject->x, wwdObject->y), predefinedPosition, enterCount);
@@ -721,7 +732,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "Marrow" ||
              logic == "Mercat" ||
              logic == "Siren" ||
-             logic == "Fish")
+             logic == "Fish" ||
+             logic == "Aquatis")
     {
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)
@@ -777,9 +789,17 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     {
         return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level8_GabrielCannon, actorPosition);
     }
+    else if (logic.find("Laser") != std::string::npos)
+    {
+        return NULL; // TODO
+    }
     else if (logic.find("Gabriel") != std::string::npos)
     {
         return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level8_Gabriel, actorPosition);
+    }
+    else if (logic.find("AquatisCrack") != std::string::npos)
+    {
+        return NULL; // TODO
     }
     else if (logic.find("Rat") != std::string::npos)
     {
@@ -1182,7 +1202,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         SpringBoardDef def;
         def.springHeight = wwdObject->maxY;
-        //LOG("Position: " + position.ToString() + ", SpringHeight: " + ToStr(def.springHeight));
+        LOG("Position: " + position.ToString() + ", SpringHeight: " + ToStr(def.springHeight));
         if (def.springHeight == 0)
         {
             def.springHeight = 450;
