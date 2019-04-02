@@ -268,6 +268,15 @@ void RopeComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureType 
     {
         return;
     }
+    
+    shared_ptr<HealthComponent> pHealthComponent =
+        MakeStrongPtr(pActorWhoEntered->GetComponent<HealthComponent>(HealthComponent::g_Name));
+     
+    if ((int)pHealthComponent->GetCurrentHealth() <= 0)
+    {
+        return;
+    }
+
 
     assert(m_pAttachedActor == NULL);
     m_pAttachedActor = pActorWhoEntered;
