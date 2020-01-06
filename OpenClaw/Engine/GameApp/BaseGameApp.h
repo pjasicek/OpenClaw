@@ -237,6 +237,7 @@ public:
 
     // Main loop
     int32 Run();
+    void StepLoop();
 
     // This is provided to be used the engine
     bool LoadStrings(std::string language);

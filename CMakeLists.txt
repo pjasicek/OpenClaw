@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.2)
 
+# Build options
 option(Android "Android" OFF)
+
+option(Emscripten "Build as WASM" OFF)
+set(EMSCRIPTEN_PATH "CHANGE ME PLEASE!!!/emsdk")
 
 project(OpenClaw)
 
@@ -8,30 +12,42 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -g")
 
+# CMake compiled directories with dependencies
 add_subdirectory(Box2D)
 add_subdirectory(libwap)
+add_subdirectory(./ThirdParty/Tinyxml)
+if (WIN32)
+    add_subdirectory(MidiProc)
+endif (WIN32)
 
 #if(Android)
-#    add_subdirectory(./ThirdParty/Tinyxml)
 #    add_subdirectory(./ThirdParty/SDL2-2.0.5)
 #    include_directories(./ThirdParty/SDL2-2.0.5/include/)
 #    link_directories(./ThirdParty/SDL2-2.0.5/libs/armeabi/)
 #    add_subdirectory(./ThirdParty/SDL2_gfx-1.0.1)
 #endif(Android)
 
+# Directories with headers
 include_directories(./Box2D/)
 include_directories(./libwap/)
 include_directories(./ThirdParty/)
+include_directories(./ThirdParty/Tinyxml/)
+if (Emscripten)
+    include_directories("${EMSCRIPTEN_PATH}/upstream/emscripten/system/include/emscripten/")
+endif (Emscripten)
 
-# for android
-#include_directories(./ThirdParty/Tinyxml/)
-
+# Directories with libs
 link_directories(./libwap)
 link_directories(./Box2D)
+if (WIN32)
+    link_directories(./ThirdParty/SDL2/lib/x86)
+    link_directories(./Build_Release)
+endif (WIN32)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../Build_Release)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../android/libs/armeabi-v7a)
 
+# Cmake target definitions
 if(Android)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANDROID")
     add_library(openclaw SHARED "")
@@ -41,27 +57,42 @@ endif(Android)
 
 add_subdirectory(OpenClaw)
 
+# Linker settings
 list(APPEND TARGET_LIBS
     libwap
     tinyxml
     Box2D
-    SDL2
-    SDL2_mixer
-    SDL2_ttf
-    SDL2_image
-    SDL2_gfx
-    stdc++
-    m
 )
-
-if(Android)
+if (Emscripten)
+    set_target_properties(openclaw PROPERTIES LINK_FLAGS "-s WASM=1 -s BINARYEN_METHOD='native-wasm' -s EXPORTED_FUNCTIONS='[_main]' -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='[\"pcx\",\"png\",\"tga\"]' -s USE_SDL_TTF=2 -s USE_SDL_GFX=2 -s ASYNCIFY=1 -s TOTAL_MEMORY=268435456 --preload-file config.xml --preload-file CLAW.REZ --preload-file ASSETS.ZIP --preload-file SAVES.XML --preload-file console02.tga --preload-file clacon.ttf")
+else (Emscripten)
     list(APPEND TARGET_LIBS
-        GLESv2
-        GLESv1_CM
-        dl
-        log
-        android
-    )
-endif(Android)
+            SDL2
+            SDL2_mixer
+            SDL2_ttf
+            SDL2_image
+            SDL2_gfx
+            )
+    if (WIN32)
+        list(APPEND TARGET_LIBS
+                Rpcrt4
+                )
+    else (WIN32)
+        # TODO: Is it really important???
+        list(APPEND TARGET_LIBS
+                stdc++
+                m
+                )
+    endif (WIN32)
+    if (Android)
+        list(APPEND TARGET_LIBS
+                GLESv2
+                GLESv1_CM
+                dl
+                log
+                android
+                )
+    endif (Android)
+endif (Emscripten)
 
 target_link_libraries(openclaw ${TARGET_LIBS})

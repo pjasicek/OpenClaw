@@ -4,6 +4,12 @@
 #include "../SharedDefines.h"
 #include "BaseGameApp.h"
 
+#ifdef __EMSCRIPTEN__
+#define IS_SAVE_SUPPORTED false
+#else
+#define IS_SAVE_SUPPORTED true
+#endif
+
 // This can be refactored into classes, but this is not a pressing concern for me right now
 // as it works as intended
 
@@ -193,7 +199,7 @@ class GameSaveMgr
 public:
     bool Initialize(TiXmlElement* pGameSaveData)
     {
-        if (g_pApp->GetGlobalOptions()->loadAllLevelSaves)
+        if (g_pApp->GetGlobalOptions()->loadAllLevelSaves || !IS_SAVE_SUPPORTED)
         {
             InitializeWithAllLevels();
             return true;

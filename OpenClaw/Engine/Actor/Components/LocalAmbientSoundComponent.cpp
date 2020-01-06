@@ -92,18 +92,27 @@ void LocalAmbientSoundComponent::PlayAmbientSound()
     assert(m_SoundChannel == -1);
     assert(m_pActorInArea != NULL);
 
+#ifndef __EMSCRIPTEN__
     m_SoundChannel = Mix_GroupAvailable(1);
     assert(m_SoundChannel != -1 && "Could not get a channel from channel group");
+#else
+    // TODO: [EMSCRIPTEN] Try to implement Mix_Group* functions
+    m_SoundChannel = -1;
+#endif
 
     shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(m_Properties.sound.c_str());
     assert(pSound != nullptr);
 
+#ifndef __EMSCRIPTEN__
     int globalVolume = (int)((((float)g_pApp->GetAudio()->GetSoundVolume()) / 100.0f) * (float)MIX_MAX_VOLUME);
     int chunkVolume = (int)((((float)m_Properties.volume) / 100.0f) * (float)globalVolume);
 
     Mix_VolumeChunk(pSound.get(), chunkVolume);
+#else
+    // TODO: [EMSCRIPTEN] Try to implement Mix_VolumeChunk
+#endif
 
-    Mix_PlayChannel(m_SoundChannel, pSound.get(), -1);
+    m_SoundChannel = Mix_PlayChannel(m_SoundChannel, pSound.get(), -1);
 
     // Set positional properties
     UpdateAmbientSound();
@@ -119,6 +128,10 @@ void LocalAmbientSoundComponent::StopAmbientSound()
 
 void LocalAmbientSoundComponent::UpdateAmbientSound()
 {
+#ifdef __EMSCRIPTEN__
+    // TODO: [EMSCRIPTEN] Try to implement Mix_SetDistance
+    return;
+#endif
     assert(m_SoundChannel != -1);
     assert(m_pActorInArea != NULL);
 

@@ -596,6 +596,11 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
 
         if (pSoundInfo->isMusic) // Background music - instrumental
         {
+#ifdef __EMSCRIPTEN__
+            // TODO: [EMSCRIPTEN] Disable midi sounds for now.
+            // All midi must be converted to MP3 or another web browser compatible formats
+            return;
+#endif
             shared_ptr<MidiFile> pMidiFile = MidiResourceLoader::LoadAndReturnMidiFile(pSoundInfo->soundToPlay.c_str());
             assert(pMidiFile != nullptr);
 

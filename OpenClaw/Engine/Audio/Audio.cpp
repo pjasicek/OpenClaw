@@ -63,6 +63,7 @@ bool Audio::Initialize(const GameOptions& config)
     Mix_AllocateChannels(config.mixingChannels);
 
     int reservedChannels = Mix_ReserveChannels(16);
+#ifndef __EMSCRIPTEN__
     if (reservedChannels != 16)
     {
         LOG_ERROR(std::string(Mix_GetError()));
@@ -70,6 +71,15 @@ bool Audio::Initialize(const GameOptions& config)
     }
 
     Mix_GroupChannels(0, 15, 1);
+#else
+    // Mix_ReserveChannels returns nothing.
+    if (reservedChannels != 0)
+    {
+        LOG_ERROR(std::string(Mix_GetError()));
+        return false;
+    }
+    // TODO: [EMSCRIPTEN] Try to implement Mix_Group* functions
+#endif
 
     m_SoundVolume = config.soundVolume;
     m_MusicVolume = config.musicVolume;
@@ -268,21 +278,37 @@ bool Audio::PlaySound(const char* soundData, size_t soundSize, const SoundProper
 
 bool Audio::PlaySound(Mix_Chunk* sound, const SoundProperties& soundProperties)
 {
+#ifndef __EMSCRIPTEN__
     int chunkVolume = (int)((((float)soundProperties.volume) / 100.0f) * (float)m_SoundVolume);
 
     Mix_VolumeChunk(sound, chunkVolume);
-    int channel = Mix_PlayChannel(-1, sound, soundProperties.loops);
+
+    int loops = soundProperties.loops;
+#else
+    // TODO: [EMSCRIPTEN] Try to implement Mix_VolumeChunk
+
+    int loops = soundProperties.loops;
+    // Emscripten SDL port supports infinite loops only
+    if (loops != -1) {
+        loops = 0;
+    }
+#endif
+    int channel = Mix_PlayChannel(-1, sound, loops);
     if (channel == -1)
     {
         LOG_ERROR("Failed to play chunk: " + std::string(Mix_GetError()));
         return false;
     }
 
+#ifndef __EMSCRIPTEN__
     if (!Mix_SetPosition(channel, soundProperties.angle, soundProperties.distance))
     {
         LOG_ERROR("Mix_SetPosition: " + std::string(Mix_GetError()));
         return false;
     }
+#else
+    // TODO: [EMSCRIPTEN] Try to implement Mix_SetPosition
+#endif
 
     if (!m_bSoundOn)
     {
