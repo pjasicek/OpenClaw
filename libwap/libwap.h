@@ -7,7 +7,9 @@
 extern "C" {
 #endif
 
-#ifdef _WIN32
+// change this condition if you want to use an external dll file in runtime
+//#ifdef _WIN32
+#if 0
 #ifdef LIBWAP_EXPORTS
 #define LIBWAP_API __declspec(dllexport)
 #else
@@ -651,7 +653,7 @@ LIBWAP_API WapPal* WAP_PalLoadFromFile(const char* palFilePath);
 LIBWAP_API WapPal* WAP_PalLoadFromRezFile(RezFile* rezFile);
 
 /**
- * @brief Loads PAL color palette from given pointer to ÀezArchive and path to PAL file from root
+ * @brief Loads PAL color palette from given pointer to RezArchive and path to PAL file from root
  *
  * @param Pointer to REZ file description structure
  * @param palRezPath Path to PAL file from within given RezArchive root directory
@@ -729,7 +731,7 @@ LIBWAP_API WapPid* WAP_PidLoadFromFile(const char* pidFilePath, WapPal* palette)
 LIBWAP_API WapPid* WAP_PidLoadFromRezFile(RezFile* rezFile, WapPal* palette);
 
 /**
- * @brief Loads PID file (= 2D image format) from given pointer to ÀezArchive and path to PID file from root
+ * @brief Loads PID file (= 2D image format) from given pointer to RezArchive and path to PID file from root
  * @note If PID has embedded palette, embedded palette always takes preference
  *
  * @param Pointer to REZ file description structure

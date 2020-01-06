@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 
+target_compile_definitions(openclaw PRIVATE SDL_MAIN_HANDLED)
+
 target_sources(openclaw
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/ActorController.h

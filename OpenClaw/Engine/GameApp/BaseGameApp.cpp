@@ -24,6 +24,10 @@
 
 #include <cctype>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 TiXmlElement* CreateDefaultDisplayConfig();
 TiXmlElement* CreateDefaultAudioConfig();
 TiXmlElement* CreateDefaultFontConfig();
@@ -171,19 +175,12 @@ bool BaseGameApp::VPerformStartupTests()
     return bTestsOk;
 }
 
-//=====================================================================================================================
-// BaseGameApp::Run - Main game loop
-//
-//    Handle events -> update game -> render views
-//=====================================================================================================================
-
-int32 BaseGameApp::Run()
-{
+void BaseGameApp::StepLoop() {
     static uint32 lastTime = SDL_GetTicks();
     SDL_Event event;
-    int consecutiveLagSpikes = 0;
+    static int consecutiveLagSpikes = 0;
 
-    while (m_IsRunning)
+    if (m_IsRunning)
     {
         //PROFILE_CPU("MAINLOOP");
 
@@ -200,7 +197,7 @@ int32 BaseGameApp::Run()
             {
                 LOG_ERROR("Experiencing lag spikes, " + ToStr(consecutiveLagSpikes) + "high latency frames in a row");
             }
-            continue;
+            return;
         }
         consecutiveLagSpikes = 0;
 
@@ -231,10 +228,38 @@ int32 BaseGameApp::Run()
 
         // Artificially decrease fps. Configurable from console
         SDL_Delay(m_DebugOptions.cpuDelayMs);
+    } else {
+        Terminate();
+#ifdef __EMSCRIPTEN__
+        emscripten_cancel_main_loop();
+#else
+        exit(0);
+#endif
     }
+}
 
-    Terminate();
+void loop(void *param) {
+    BaseGameApp *self = (BaseGameApp *) param;
+    self->StepLoop();
+}
 
+//=====================================================================================================================
+// BaseGameApp::Run - Main game loop
+//
+//    Handle events -> update game -> render views
+//=====================================================================================================================
+
+int32 BaseGameApp::Run()
+{
+    // Some systems (like web browsers) does not support infinite loops.
+    // We need to return control after each loop steps.
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop_arg(loop, this, 0, 0);
+#else
+    while (true) {
+        loop(this);
+    }
+#endif
     return 0;
 }
 

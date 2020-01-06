@@ -206,7 +206,11 @@ bool ZipFile::Init(const std::string &resFileName)
             auto pos = dirName.rfind("/");
             if (pos != std::string::npos)
             {
-                dirName.erase(pos);
+                if (pos == 0) {
+                    dirName = "/";
+                } else {
+                    dirName.erase(pos);
+                }
             }
             if (dirName.back() != '/')
             {

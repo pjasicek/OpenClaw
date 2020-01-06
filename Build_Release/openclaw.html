@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+<head></head>
+<body>
+<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+
+
+<script type='text/javascript'>
+    var Module = {
+        preRun: [],
+        postRun: [],
+        canvas: (function () {
+            var canvas = document.getElementById('canvas');
+
+            // As a default initial behavior, pop up an alert when webgl context is lost. To make your
+            // application robust, you may want to override this behavior before shipping!
+            // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
+            canvas.addEventListener("webglcontextlost", function (e) {
+                alert('WebGL context lost. You will need to reload the page.');
+                e.preventDefault();
+            }, false);
+
+            return canvas;
+        })(),
+    };
+</script>
+<script>
+    !function (e, t) {
+        console.info("Loading client...");
+        var o = t.createElement("script");
+        o.async = !0;
+        o.type = "text/javascript";
+        o.src = "openclaw.js";
+        o.onerror = function (t) {
+            console.error("Script Error");
+            console.error(t);
+        };
+        var r = t.getElementsByTagName("script")[0];
+        r.parentNode.insertBefore(o, r)
+    }(window, document);
+</script>
+</body>
+</html>
