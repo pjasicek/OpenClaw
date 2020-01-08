@@ -26,7 +26,10 @@ PunkRatAIStateComponent::PunkRatAIStateComponent()
 
 PunkRatAIStateComponent::~PunkRatAIStateComponent()
 {
-
+    if (m_pCannonAnimationComponent) {
+        m_pCannonAnimationComponent->RemoveObserver(this);
+        m_pCannonAnimationComponent->SetAnimation(m_CannonIdleAnim);
+    }
 }
 
 bool PunkRatAIStateComponent::VDelegateInit(TiXmlElement* pData)
