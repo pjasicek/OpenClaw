@@ -29,7 +29,10 @@
   - Tinyxml library for data-driven approach
 
 # Building and running
-For all platforms you will need original CLAW.REZ game archive from original game
+For all platforms you will need original `CLAW.REZ` game archive in `Build_Release` directory from original game
+
+Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
+
 ### Windows
   - Project contains VS2017 solution with all libraries and include directories preset
   - Project also contains CMake files if you want to use other IDEs.
@@ -62,7 +65,7 @@ For all platforms you will need original CLAW.REZ game archive from original gam
   
   **Compilation:**
   - Install [Emscripten SDK](https://emscripten.org/docs/getting_started/downloads.html) from official website. I'm not sure that compilation will be successful on a Windows platform. If you use Windows then don't show off, enable Windows Subsystem for Linux (WSL), download Linux-like system (for example, Ubuntu) from Windows Store and install Emscripten SDK. It should be something like:
-    ```
+    ```shell script
     git clone https://github.com/emscripten-core/emsdk.git
     cd emsdk
     ./emsdk install latest
@@ -72,23 +75,21 @@ For all platforms you will need original CLAW.REZ game archive from original gam
     # If it doesn't work the project was successfully compiled on 1.39.5 version.
     ```
   - Make sure you have *python* and *cmake* packages. Ubuntu: `sudo apt install python cmake`.
-  - Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
-  - Create build directory in project root directory as `mkdir build`.
-  - Copy `ASSETS.ZIP`, `clacon.ttf`, `CLAW.REZ`, `config.xml`, `console02.tga`, `SAVES.XML` files from `Build_Release` directory to `build` directory.
-  - Open `CMakeLists.txt` in project root directory, set `EMSCRIPTEN_PATH` variable and change `Emscripten` option to `ON`.
+  - Make sure you have fresh `ASSETS.ZIP` and `CLAW.REZ` files in `Build_Release` directory.
   - Compile:
-    ```
+    ```shell script
+    mkdir build
     cd build
-    sudo YOUR_SDK_PATH/emsdk/upstream/emscripten/emconfigure cmake ..
-    sudo make
+    emconfigure cmake -DEmscripten=1 ..
+    make
     ```
   
   **Run:**
   
   You will need web server to run compiled project. There are 2 options:
-  - You can upload `openclaw.html`, `openclaw.js` and `openclaw.data` files from `Build_Release` directory to any web server.
+  - You can upload `openclaw.html`, `openclaw.js`, `openclaw.wasm` and `openclaw.data` files from `Build_Release` directory to any web server.
   - Or run Python server:
-    ```
+    ```shell script
     cd Build_Release
     python -m SimpleHTTPServer 8080
     # Go to http://localhost:8080/openclaw.html
