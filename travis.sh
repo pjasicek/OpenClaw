@@ -49,7 +49,16 @@ build() {
     git tag -a -m "Travis build" init
 
     mkdir build; cd build; $CMAKE_EXECUTOR cmake $CMAKE_ARGS ..
-    make -j8
+
+    case "$PLATFORM" in
+        windows)
+            # TODO: MSBuild.exe command not found. Why???
+            "/C/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin/MSBuild.exe" OpenClaw.sln //p:Configuration=Debug //p:Platform="Win32"
+            ;;
+        *)
+            make -j8
+            ;;
+    esac
 }
 
 case "$TRAVIS_EVENT_TYPE" in
