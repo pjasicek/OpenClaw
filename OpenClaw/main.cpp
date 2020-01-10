@@ -10,6 +10,8 @@
 
 ClawGameApp testApp;
 
+int main(int argc, char* argv[]);
+
 #ifdef ANDROID
 extern "C" void SDL_Android_Init(JNIEnv* env, jclass cls);
 

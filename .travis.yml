@@ -1,5 +1,5 @@
 sudo: required
-dist: trusty
+dist: xenial
 
 language: cpp
 
@@ -31,6 +31,9 @@ matrix:
     - os: osx
       compiler: clang
       env: PLATFORM=osx
+    - os: linux
+      compiler: clang
+      env: PLATFORM=emscripten CMAKE_ARGS="-DEmscripten=1" CMAKE_EXECUTOR=emconfigure
 
 script:
     "./travis.sh"
