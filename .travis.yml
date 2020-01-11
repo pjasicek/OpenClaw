@@ -1,5 +1,4 @@
 sudo: required
-dist: trusty
 
 language: cpp
 
@@ -20,17 +19,32 @@ env:
 matrix:
   include:
     - os: linux
+      dist: trusty
+      name: "Linux clang"
       compiler: clang
       env: PLATFORM=linux
     - os: linux
+      dist: trusty
+      name: "Linux gcc"
       compiler: gcc
       env: PLATFORM=linux
     - os: linux
+      dist: trusty
+      name: "Android"
       compiler: gcc
       env: PLATFORM=android CMAKE_ARGS="-DAndroid=1 -DCMAKE_TOOLCHAIN_FILE=../Android.cmake -Dtools=$HOME/android-toolchain/"
     - os: osx
       compiler: clang
+      name: "macOS"
       env: PLATFORM=osx
+    - os: windows
+      name: "Windows"
+      env: PLATFORM=windows
+    - os: linux
+      dist: xenial
+      name: "Emscripten"
+      compiler: clang
+      env: PLATFORM=emscripten CMAKE_ARGS="-DEmscripten=1" CMAKE_EXECUTOR=emconfigure
 
 script:
     "./travis.sh"
