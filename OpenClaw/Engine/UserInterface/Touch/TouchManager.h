@@ -27,13 +27,12 @@ public:
 private:
     void OnFingerUpOrMotion(const SDL_TouchFingerEvent &evt, bool isUp);
     void QueueEvent(const Touch_Event &evt);
-    void DetachAllExcept(SDL_FingerID fingerId, const std::shared_ptr<AbstractRecognizer> &except);
+    void DetachAllExcept(SDL_FingerID fingerId, AbstractRecognizer *except);
 
     std::queue<Touch_Event> m_Events;
 
-    // TODO: replace to raw pointers???
     std::vector<std::shared_ptr<AbstractRecognizer>> m_Recognizers;
-    std::map<SDL_FingerID, std::vector<std::shared_ptr<AbstractRecognizer>>> m_AttachedRecognizers;
+    std::map<SDL_FingerID, std::vector<AbstractRecognizer*>> m_AttachedRecognizers;
 };
 
 #endif

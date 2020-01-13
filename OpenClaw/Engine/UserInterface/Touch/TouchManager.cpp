@@ -8,7 +8,7 @@ void TouchManager::Update() {
 
     for (auto attach = m_AttachedRecognizers.begin(); attach != m_AttachedRecognizers.end();) {
         const SDL_FingerID &fingerId = attach->first;
-        std::vector<std::shared_ptr<AbstractRecognizer>> &recognizers = attach->second;
+        std::vector<AbstractRecognizer*> &recognizers = attach->second;
 
         if (recognizers.empty()) {
             attach = m_AttachedRecognizers.erase(attach);
@@ -20,7 +20,7 @@ void TouchManager::Update() {
 
         // recognizers are ordered by zIndex. If first is ready then take it
         for (auto it = recognizers.begin(); !stop && it != recognizers.end();) {
-            std::shared_ptr<AbstractRecognizer> recognizer = *it;
+            AbstractRecognizer *recognizer = *it;
             if (recognizer) {
                 RecognizerState state = recognizer->VGetState(fingerId);
                 if (state == RecognizerState::EventReady && isFirst) {
@@ -88,12 +88,12 @@ bool TouchManager::PollEvent(Touch_Event *evt) {
     return true;
 }
 
-void TouchManager::DetachAllExcept(SDL_FingerID fingerId, const std::shared_ptr<AbstractRecognizer> &except) {
+void TouchManager::DetachAllExcept(SDL_FingerID fingerId, AbstractRecognizer *except) {
     auto it = m_AttachedRecognizers.find(fingerId);
     if (it != m_AttachedRecognizers.end()) {
-        std::vector<std::shared_ptr<AbstractRecognizer>> &recognizers = it->second;
+        std::vector<AbstractRecognizer*> &recognizers = it->second;
 
-        for (std::shared_ptr<AbstractRecognizer> &recognizer : recognizers) {
+        for (AbstractRecognizer *recognizer : recognizers) {
             if (recognizer && recognizer != except) {
                 recognizer->VFingerDetached(fingerId);
             }
@@ -111,7 +111,7 @@ void TouchManager::QueueEvent(const Touch_Event &evt) {
 }
 
 void TouchManager::OnFingerDown(const SDL_TouchFingerEvent &evt) {
-    std::vector<std::shared_ptr<AbstractRecognizer>> attached;
+    std::vector<AbstractRecognizer*> attached;
     bool stop = false;
     for (auto &recognizer : m_Recognizers) {
         auto state = recognizer->OnFingerDown(evt);
@@ -120,12 +120,12 @@ void TouchManager::OnFingerDown(const SDL_TouchFingerEvent &evt) {
             case RecognizerState::Failed:
                 break;
             case RecognizerState::Recognizing:
-                attached.push_back(recognizer);
+                attached.push_back(recognizer.get());
                 break;
             case RecognizerState::EventReady:
             case RecognizerState::Hold:
             case RecognizerState::Done:
-                attached.push_back(recognizer);
+                attached.push_back(recognizer.get());
                 stop = true;
                 break;
             default:
@@ -152,12 +152,12 @@ void TouchManager::OnFingerMotion(const SDL_TouchFingerEvent &evt) {
 void TouchManager::OnFingerUpOrMotion(const SDL_TouchFingerEvent &evt, bool isUp) {
     auto it = m_AttachedRecognizers.find(evt.fingerId);
     if (it != m_AttachedRecognizers.end()) {
-        std::vector<std::shared_ptr<AbstractRecognizer>> &attached = it->second;
+        std::vector<AbstractRecognizer*> &attached = it->second;
 
         bool isFirst = true;
         bool stop = false;
         for (auto recognizerIt = attached.begin(); !stop && recognizerIt != attached.end();) {
-            std::shared_ptr<AbstractRecognizer> recognizer = *recognizerIt;
+            AbstractRecognizer *recognizer = *recognizerIt;
             assert(recognizer);
 
             auto state = isUp ? recognizer->OnFingerUp(evt) : recognizer->OnFingerMotion(evt);
@@ -204,11 +204,30 @@ void TouchManager::AddRecognizers(const std::vector<std::shared_ptr<AbstractReco
 }
 
 void TouchManager::RemoveRecognizer(int id) {
-    auto end = std::remove_if(m_Recognizers.begin(), m_Recognizers.end(),
-                              [id](const std::shared_ptr<AbstractRecognizer> &recognizer) {
-                                  return recognizer->GetId() == id;
-                              });
-    m_Recognizers.erase(end, m_Recognizers.end());
+    auto item = std::find_if(m_Recognizers.begin(), m_Recognizers.end(),
+                 [id](const std::shared_ptr<AbstractRecognizer> &recognizer) {
+                     return recognizer->GetId() == id;
+                 });
+    if (item != m_Recognizers.end()) {
+        // Remove recognizer pointers in m_AttachedRecognizers
+        for (auto attachedRecognizersIt = m_AttachedRecognizers.begin(); attachedRecognizersIt != m_AttachedRecognizers.end();) {
+            std::vector<AbstractRecognizer*> &recognizers = attachedRecognizersIt->second;
+            for (auto pRecognizerIt = recognizers.begin(); pRecognizerIt != recognizers.end();) {
+                if (item->get() == *pRecognizerIt) {
+                    pRecognizerIt = recognizers.erase(pRecognizerIt);
+                } else {
+                    ++pRecognizerIt;
+                }
+            }
+            if (recognizers.empty()) {
+                attachedRecognizersIt = m_AttachedRecognizers.erase(attachedRecognizersIt);
+            } else {
+                ++attachedRecognizersIt;
+            }
+        }
+
+        m_Recognizers.erase(item);
+    }
 }
 
 void TouchManager::RemoveAllRecognizers() {

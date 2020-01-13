@@ -17,6 +17,7 @@ protected:
     RecognizerState VOnFingerMotion(const SDL_TouchFingerEvent &evt) override;
     RecognizerState VOnFingerUp(const SDL_TouchFingerEvent &evt) override;
 
+    // First fingers SDL events and is it up.
     std::map<SDL_FingerID, std::pair<SDL_TouchFingerEvent, bool>> m_Events;
 };
 
