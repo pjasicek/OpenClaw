@@ -1,0 +1,217 @@
+#include <cassert>
+#include "TouchManager.h"
+
+void TouchManager::Update() {
+    for (auto &recognizer : m_Recognizers) {
+        recognizer->VOnUpdate();
+    }
+
+    for (auto attach = m_AttachedRecognizers.begin(); attach != m_AttachedRecognizers.end();) {
+        const SDL_FingerID &fingerId = attach->first;
+        std::vector<std::shared_ptr<AbstractRecognizer>> &recognizers = attach->second;
+
+        if (recognizers.empty()) {
+            attach = m_AttachedRecognizers.erase(attach);
+            continue;
+        }
+
+        bool isFirst = true;
+        bool stop = false;
+
+        // recognizers are ordered by zIndex. If first is ready then take it
+        for (auto it = recognizers.begin(); !stop && it != recognizers.end();) {
+            std::shared_ptr<AbstractRecognizer> recognizer = *it;
+            if (recognizer) {
+                RecognizerState state = recognizer->VGetState(fingerId);
+                if (state == RecognizerState::EventReady && isFirst) {
+                    // The first recognizer is ready. Take events, detach other recognizers.
+                    while (state == RecognizerState::EventReady) {
+                        QueueEvent(recognizer->VGetEvent(fingerId));
+                        state = recognizer->VGetState(fingerId);
+                    }
+                    if (recognizers.size() != 1) {
+                        DetachAllExcept(fingerId, recognizer);
+                    }
+                    stop = true;
+                    break;
+                }
+
+                switch (state) {
+                    case RecognizerState::EventReady:
+                        assert(!isFirst && "Unknown error !");
+                        // It is not the first recognizer.
+                        // Waiting recognizers with greater zIndex
+                        ++it;
+                        break;
+                    case RecognizerState::DoNothing:
+                    case RecognizerState::Failed:
+                    case RecognizerState::Done:
+                        if (state == RecognizerState::Done && isFirst) {
+                            // Event is end. Detach all
+                            DetachAllExcept(fingerId, nullptr);
+                            stop = true;
+                            break;
+                        }
+                        // Detach only this recognizer
+                        recognizer->VFingerDetached(fingerId);
+                        it = recognizers.erase(it);
+                        break;
+                    case RecognizerState::Hold:
+                        // Detach another recognizers
+                        if (recognizers.size() != 1) {
+                            DetachAllExcept(fingerId, recognizer);
+                        }
+                        stop = true;
+                        break;
+                    case RecognizerState::Recognizing:
+                        // Wait for a recognizer.
+                        // Next will not be the first.
+                        isFirst = false;
+                        ++it;
+                        break;
+                    default:
+                        assert(false && "Unknown state !");
+                        break;
+                }
+            }
+        }
+        ++attach;
+    }
+}
+
+bool TouchManager::PollEvent(Touch_Event *evt) {
+    if (m_Events.empty() || !evt) {
+        return false;
+    }
+    *evt = m_Events.front();
+    m_Events.pop();
+    return true;
+}
+
+void TouchManager::DetachAllExcept(SDL_FingerID fingerId, const std::shared_ptr<AbstractRecognizer> &except) {
+    auto it = m_AttachedRecognizers.find(fingerId);
+    if (it != m_AttachedRecognizers.end()) {
+        std::vector<std::shared_ptr<AbstractRecognizer>> &recognizers = it->second;
+
+        for (std::shared_ptr<AbstractRecognizer> &recognizer : recognizers) {
+            if (recognizer && recognizer != except) {
+                recognizer->VFingerDetached(fingerId);
+            }
+        }
+
+        recognizers.clear();
+        if (except) {
+            recognizers.push_back(except);
+        }
+    }
+}
+
+void TouchManager::QueueEvent(const Touch_Event &evt) {
+    m_Events.push(evt);
+}
+
+void TouchManager::OnFingerDown(const SDL_TouchFingerEvent &evt) {
+    std::vector<std::shared_ptr<AbstractRecognizer>> attached;
+    bool stop = false;
+    for (auto &recognizer : m_Recognizers) {
+        auto state = recognizer->OnFingerDown(evt);
+        switch (state) {
+            case RecognizerState::DoNothing:
+            case RecognizerState::Failed:
+                break;
+            case RecognizerState::Recognizing:
+                attached.push_back(recognizer);
+                break;
+            case RecognizerState::EventReady:
+            case RecognizerState::Hold:
+            case RecognizerState::Done:
+                attached.push_back(recognizer);
+                stop = true;
+                break;
+            default:
+                assert(false && "Unknown state !");
+                break;
+        }
+        if (stop)
+            break;
+    }
+    if (!attached.empty()) {
+        m_AttachedRecognizers.insert(std::make_pair(evt.fingerId, std::move(attached)));
+    }
+}
+
+void TouchManager::OnFingerUp(const SDL_TouchFingerEvent &evt) {
+    OnFingerUpOrMotion(evt, true);
+}
+
+void TouchManager::OnFingerMotion(const SDL_TouchFingerEvent &evt) {
+    OnFingerUpOrMotion(evt, false);
+}
+
+
+void TouchManager::OnFingerUpOrMotion(const SDL_TouchFingerEvent &evt, bool isUp) {
+    auto it = m_AttachedRecognizers.find(evt.fingerId);
+    if (it != m_AttachedRecognizers.end()) {
+        std::vector<std::shared_ptr<AbstractRecognizer>> &attached = it->second;
+
+        bool isFirst = true;
+        bool stop = false;
+        for (auto recognizerIt = attached.begin(); !stop && recognizerIt != attached.end();) {
+            std::shared_ptr<AbstractRecognizer> recognizer = *recognizerIt;
+            assert(recognizer);
+
+            auto state = isUp ? recognizer->OnFingerUp(evt) : recognizer->OnFingerMotion(evt);
+            switch (state) {
+                case RecognizerState::DoNothing:
+                case RecognizerState::Failed:
+                    recognizer->VFingerDetached(evt.fingerId);
+                    recognizerIt = attached.erase(recognizerIt);
+                    break;
+                case RecognizerState::Recognizing:
+                    isFirst = false;
+                    ++recognizerIt;
+                    break;
+                case RecognizerState::EventReady:
+                case RecognizerState::Hold:
+                case RecognizerState::Done:
+                    if (isFirst) {
+                        if (attached.size() != 1) {
+                            DetachAllExcept(evt.fingerId, recognizer);
+                        }
+                        stop = true;
+                        break;
+                    }
+                    isFirst = false;
+                    ++recognizerIt;
+                    break;
+                default:
+                    assert(false && "Unknown state !");
+                    break;
+            }
+        }
+    }
+}
+
+void TouchManager::AddRecognizers(const std::vector<std::shared_ptr<AbstractRecognizer>> &recognizer) {
+    if (!recognizer.empty()) {
+        m_Recognizers.reserve(m_Recognizers.size() + recognizer.size());
+        m_Recognizers.insert(m_Recognizers.end(), recognizer.begin(), recognizer.end());
+        std::sort(m_Recognizers.rbegin(), m_Recognizers.rend(),
+                [](const std::shared_ptr<AbstractRecognizer> &l, const std::shared_ptr<AbstractRecognizer> &r) {
+                    return *l < *r;
+        });
+    }
+}
+
+void TouchManager::RemoveRecognizer(int id) {
+    auto end = std::remove_if(m_Recognizers.begin(), m_Recognizers.end(),
+                              [id](const std::shared_ptr<AbstractRecognizer> &recognizer) {
+                                  return recognizer->GetId() == id;
+                              });
+    m_Recognizers.erase(end, m_Recognizers.end());
+}
+
+void TouchManager::RemoveAllRecognizers() {
+    m_Recognizers.clear();
+    m_AttachedRecognizers.clear();
+}

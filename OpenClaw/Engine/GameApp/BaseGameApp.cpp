@@ -48,6 +48,7 @@ BaseGameApp::BaseGameApp()
     m_pPalette = NULL;
     m_pAudio = NULL;
     m_pConsoleFont = NULL;
+    m_pTouchManager = nullptr;
     m_IsRunning = false;
     m_QuitRequested = false;
     m_IsQuitting = false;
@@ -65,6 +66,7 @@ bool BaseGameApp::Initialize(int argc, char** argv)
     if (!InitializeFont(m_GameOptions)) return false;
     if (!InitializeResources(m_GameOptions)) return false;
     if (!InitializeLocalization(m_GameOptions)) return false;
+    if (!InitializeTouchManager(m_GameOptions)) return false;
     if (!ReadActorXmlPrototypes(m_GameOptions)) return false;
     if (!ReadLevelMetadata(m_GameOptions)) return false;
 
@@ -104,6 +106,7 @@ void BaseGameApp::Terminate()
     SDL_DestroyRenderer(m_pRenderer);
     SDL_DestroyWindow(m_pWindow);
     SAFE_DELETE(m_pAudio);
+    SAFE_DELETE(m_pTouchManager);
     // TODO - this causes crashes
     //SAFE_DELETE(m_pEventMgr);
     //SAFE_DELETE(m_pResourceCache);
@@ -178,6 +181,7 @@ bool BaseGameApp::VPerformStartupTests()
 void BaseGameApp::StepLoop() {
     static uint32 lastTime = SDL_GetTicks();
     SDL_Event event;
+    Touch_Event touchEvent;
     static int consecutiveLagSpikes = 0;
 
     if (m_IsRunning)
@@ -205,6 +209,14 @@ void BaseGameApp::StepLoop() {
         while (SDL_PollEvent(&event))
         {
             OnEvent(event);
+        }
+
+        // Handle all touch events
+        if (m_pTouchManager) {
+            m_pTouchManager->Update();
+            while (m_pTouchManager->PollEvent(&touchEvent)) {
+                OnEvent(touchEvent.sdlEvent);
+            }
         }
 
         if (m_pGame)
@@ -318,9 +330,7 @@ void BaseGameApp::OnEvent(SDL_Event& event)
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
         case SDL_MOUSEWHEEL:
-        case SDL_FINGERUP:
-        case SDL_FINGERDOWN:
-        case SDL_FINGERMOTION:
+        case SDL_UserTouchEvent:
         {
             if (m_pGame)
             {
@@ -328,6 +338,25 @@ void BaseGameApp::OnEvent(SDL_Event& event)
                     iter != m_pGame->m_GameViews.rend(); ++iter)
                 {
                     (*iter)->VOnEvent(event);
+                }
+            }
+            break;
+        }
+        case SDL_FINGERUP:
+        case SDL_FINGERDOWN:
+        case SDL_FINGERMOTION:
+        {
+            if (m_pTouchManager) {
+                switch (event.type) {
+                    case SDL_FINGERUP:
+                        m_pTouchManager->OnFingerUp(event.tfinger);
+                        break;
+                    case SDL_FINGERDOWN:
+                        m_pTouchManager->OnFingerDown(event.tfinger);
+                        break;
+                    case SDL_FINGERMOTION:
+                        m_pTouchManager->OnFingerMotion(event.tfinger);
+                        break;
                 }
             }
             break;
@@ -572,8 +601,6 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("SpringBoardSpringHeight"));*/
         ParseValueFromXmlElem(&m_GlobalOptions.springBoardSpringSpeed,
             pGlobalOptionsRootElem->FirstChildElement("SpringBoardSpringSpeed"));
-        ParseValueFromXmlElem(&m_GlobalOptions.useAlternateControls,
-            pGlobalOptionsRootElem->FirstChildElement("UseAlternateControls"));
         ParseValueFromXmlElem(&m_GlobalOptions.clawMinFallHeight,
             pGlobalOptionsRootElem->FirstChildElement("ClawMinFallHeight"));
         ParseValueFromXmlElem(&m_GlobalOptions.loadAllLevelSaves,
@@ -582,6 +609,24 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("ShowFps"));
         ParseValueFromXmlElem(&m_GlobalOptions.showPosition,
             pGlobalOptionsRootElem->FirstChildElement("ShowPosition"));
+    }
+
+    //-------------------------------------------------------------------------
+    // Control options
+    //-------------------------------------------------------------------------
+    if (TiXmlElement* pControlOptionsRootElem = configRoot->FirstChildElement("ControlOptions"))
+    {
+        ParseValueFromXmlElem(&m_ControlOptions.useAlternateControls,
+                              pControlOptionsRootElem->FirstChildElement("UseAlternateControls"));
+        if (TiXmlElement* pTouchScreenOptionsRootElem = pControlOptionsRootElem->FirstChildElement("TouchScreen"))
+        {
+            ParseValueFromXmlElem(&m_ControlOptions.touchScreen.enable,
+                                  pTouchScreenOptionsRootElem->FirstChildElement("Enable"));
+            ParseValueFromXmlElem(&m_ControlOptions.touchScreen.distanceThreshold,
+                                  pTouchScreenOptionsRootElem->FirstChildElement("DistanceThreshold"));
+            ParseValueFromXmlElem(&m_ControlOptions.touchScreen.timeThreshold,
+                                  pTouchScreenOptionsRootElem->FirstChildElement("TimeThreshold"));
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -809,6 +854,20 @@ bool BaseGameApp::InitializeFont(GameOptions& gameOptions)
 //---------------------------------------------------------------------------------------------------------------------
 bool BaseGameApp::InitializeLocalization(GameOptions& gameOptions)
 {
+    return true;
+}
+
+bool BaseGameApp::InitializeTouchManager(GameOptions& gameOptions)
+{
+    auto& touchScreenConfig = GetControlOptions()->touchScreen;
+    if (touchScreenConfig.enable) {
+        SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, ">>>>> Initializing touch resolver...");
+
+        m_pTouchManager = new TouchManager{};
+
+        LOG("Touch resolver successfully initialized...");
+    }
+
     return true;
 }
 
@@ -1383,4 +1442,11 @@ TiXmlDocument BaseGameApp::CreateAndReturnDefaultConfig(const char* inConfigFile
     xmlConfig.SaveFile(inConfigFile);
 
     return xmlConfig;
+}
+
+void BaseGameApp::RegisterTouchRecognizers(ITouchHandler &touchHandler) {
+    if (m_pTouchManager) {
+        m_pTouchManager->RemoveAllRecognizers();
+        m_pTouchManager->AddRecognizers(touchHandler.VRegisterRecognizers());
+    }
 }

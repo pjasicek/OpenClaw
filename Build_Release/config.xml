@@ -57,12 +57,22 @@
     <ClawRunningSpeed>4.5</ClawRunningSpeed>
     <SpringBoardSpringHeight>UNUSED</SpringBoardSpringHeight>
     <SpringBoardSpringSpeed>11</SpringBoardSpringSpeed>
-    <UseAlternateControls>false</UseAlternateControls>
     <ClawMinFallHeight>500</ClawMinFallHeight>
     <LoadAllLevelSaves>true</LoadAllLevelSaves>
     <ShowFps>true</ShowFps>
     <ShowPosition>true</ShowPosition>
   </GlobalOptions>
+  <ControlOptions>
+    <UseAlternateControls>false</UseAlternateControls>
+    <TouchScreen>
+      <Enable>true</Enable>
+      <!-- Distance to make a decision (separate tap/press and move events) -->
+      <!-- Range value 0..1 where 1 is screen width/height -->
+      <DistanceThreshold>0.05</DistanceThreshold>
+      <!-- How long make a decision in ms (separate short tap and long press) -->
+      <TimeThreshold>100</TimeThreshold>
+    </TouchScreen>
+  </ControlOptions>
   <DebugOptions>
     <SkipMenu>false</SkipMenu>
     <SkipMenuToLevel>12</SkipMenuToLevel>

@@ -92,3 +92,11 @@ bool MovementController::VOnPointerButtonUp(SDL_MouseButtonEvent& mouseEvent)
 
     return false;
 }
+
+std::vector<std::shared_ptr<AbstractRecognizer>> MovementController::VRegisterRecognizers() {
+    return std::vector<std::shared_ptr<AbstractRecognizer>>();
+}
+
+bool MovementController::VOnTouch(const Touch_Event &evt) {
+    return false;
+}

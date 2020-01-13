@@ -5,7 +5,7 @@
 #include "../SharedDefines.h"
 
 class SceneNode;
-class MovementController : public IKeyboardHandler, public IPointerHandler
+class MovementController : public IKeyboardHandler, public IPointerHandler, public ITouchHandler
 {
 public:
     MovementController(shared_ptr<SceneNode> controlledObject, float speed = 0.36f);
@@ -20,6 +20,9 @@ public:
     bool VOnPointerMove(SDL_MouseMotionEvent& mouseEvent);
     bool VOnPointerButtonDown(SDL_MouseButtonEvent& mouseEvent);
     bool VOnPointerButtonUp(SDL_MouseButtonEvent& mouseEvent);
+
+    std::vector<std::shared_ptr<AbstractRecognizer>> VRegisterRecognizers() override;
+    bool VOnTouch(const Touch_Event &evt) override;
 
 private:
     shared_ptr<SceneNode> m_pControlledObject;

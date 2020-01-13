@@ -13,6 +13,8 @@
 #include <vector>
 #include <assert.h>
 #include "Util/EnumString.h"
+#include "UserInterface/Touch/TouchEvents.h"
+#include "UserInterface/Touch/TouchRecognizers/AbstractRecognizer.h"
 
 class Actor;
 typedef std::shared_ptr<Actor> StrongActorPtr;
@@ -659,6 +661,12 @@ public:
     virtual bool VOnPointerMove(SDL_MouseMotionEvent& mouseEvent) = 0;
     virtual bool VOnPointerButtonDown(SDL_MouseButtonEvent& mouseEvent) = 0;
     virtual bool VOnPointerButtonUp(SDL_MouseButtonEvent& mouseEvent) = 0;
+};
+
+class ITouchHandler {
+public:
+    virtual std::vector<std::shared_ptr<AbstractRecognizer>> VRegisterRecognizers() = 0;
+    virtual bool VOnTouch(const Touch_Event &evt) = 0;
 };
 
 //-------------------------------------------------------------------------------------------------
