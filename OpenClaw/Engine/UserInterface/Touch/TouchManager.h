@@ -28,6 +28,7 @@ private:
     void OnFingerUpOrMotion(const SDL_TouchFingerEvent &evt, bool isUp);
     void QueueEvent(const Touch_Event &evt);
     void DetachAllExcept(SDL_FingerID fingerId, AbstractRecognizer *except);
+    void ProcessAttachedRecognizers(SDL_FingerID fingerId, std::vector<AbstractRecognizer*> &attachedRecognizers);
 
     std::queue<Touch_Event> m_Events;
 

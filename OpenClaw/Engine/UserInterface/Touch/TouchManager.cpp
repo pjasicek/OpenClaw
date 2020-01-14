@@ -15,68 +15,7 @@ void TouchManager::Update() {
             continue;
         }
 
-        bool isFirst = true;
-        bool stop = false;
-
-        // recognizers are ordered by zIndex. If first is ready then take it
-        for (auto it = recognizers.begin(); !stop && it != recognizers.end();) {
-            AbstractRecognizer *recognizer = *it;
-            if (recognizer) {
-                RecognizerState state = recognizer->VGetState(fingerId);
-                if (state == RecognizerState::EventReady && isFirst) {
-                    // The first recognizer is ready. Take events, detach other recognizers.
-                    while (state == RecognizerState::EventReady) {
-                        QueueEvent(recognizer->VGetEvent(fingerId));
-                        state = recognizer->VGetState(fingerId);
-                    }
-                    if (state == RecognizerState::Failed || state == RecognizerState::Done || state == RecognizerState::DoNothing) {
-                        DetachAllExcept(fingerId, nullptr);
-                    } else if (recognizers.size() != 1) {
-                        DetachAllExcept(fingerId, recognizer);
-                    }
-                    stop = true;
-                    break;
-                }
-
-                switch (state) {
-                    case RecognizerState::EventReady:
-                        assert(!isFirst && "Unknown error !");
-                        // It is not the first recognizer.
-                        // Waiting recognizers with greater zIndex
-                        ++it;
-                        break;
-                    case RecognizerState::DoNothing:
-                    case RecognizerState::Failed:
-                    case RecognizerState::Done:
-                        if (state == RecognizerState::Done && isFirst) {
-                            // Event is end. Detach all
-                            DetachAllExcept(fingerId, nullptr);
-                            stop = true;
-                            break;
-                        }
-                        // Detach only this recognizer
-                        recognizer->VFingerDetached(fingerId);
-                        it = recognizers.erase(it);
-                        break;
-                    case RecognizerState::Hold:
-                        // Detach another recognizers
-                        if (recognizers.size() != 1) {
-                            DetachAllExcept(fingerId, recognizer);
-                        }
-                        stop = true;
-                        break;
-                    case RecognizerState::Recognizing:
-                        // Wait for a recognizer.
-                        // Next will not be the first.
-                        isFirst = false;
-                        ++it;
-                        break;
-                    default:
-                        assert(false && "Unknown state !");
-                        break;
-                }
-            }
-        }
+        ProcessAttachedRecognizers(fingerId, recognizers);
         ++attach;
     }
 }
@@ -191,6 +130,13 @@ void TouchManager::OnFingerUpOrMotion(const SDL_TouchFingerEvent &evt, bool isUp
                     break;
             }
         }
+        // Little hack.
+        // I didn't test Android but Emscripten use finger index as finger id.
+        // Fast double tap may erase events in recognizers because fingers will have the same finger id.
+        // So we has to process attached recognizers before FINGERDOWN event with the same finger id.
+        if (isUp) {
+            ProcessAttachedRecognizers(it->first, it->second);
+        }
     }
 }
 
@@ -235,4 +181,66 @@ void TouchManager::RemoveRecognizer(int id) {
 void TouchManager::RemoveAllRecognizers() {
     m_Recognizers.clear();
     m_AttachedRecognizers.clear();
+}
+
+void TouchManager::ProcessAttachedRecognizers(SDL_FingerID fingerId,
+                                              std::vector<AbstractRecognizer *> &attachedRecognizers) {
+    bool isFirst = true;
+
+    // recognizers are ordered by zIndex. If first is ready then take it
+    for (auto it = attachedRecognizers.begin(); it != attachedRecognizers.end();) {
+        AbstractRecognizer *recognizer = *it;
+        if (recognizer) {
+            RecognizerState state = recognizer->VGetState(fingerId);
+            if (state == RecognizerState::EventReady && isFirst) {
+                // The first recognizer is ready. Take events, detach other recognizers.
+                while (state == RecognizerState::EventReady) {
+                    QueueEvent(recognizer->VGetEvent(fingerId));
+                    state = recognizer->VGetState(fingerId);
+                }
+                if (state == RecognizerState::Failed || state == RecognizerState::Done || state == RecognizerState::DoNothing) {
+                    DetachAllExcept(fingerId, nullptr);
+                } else if (attachedRecognizers.size() != 1) {
+                    DetachAllExcept(fingerId, recognizer);
+                }
+                return;
+            }
+
+            switch (state) {
+                case RecognizerState::EventReady:
+                    assert(!isFirst && "Unknown error !");
+                    // It is not the first recognizer.
+                    // Waiting recognizers with greater zIndex
+                    ++it;
+                    break;
+                case RecognizerState::DoNothing:
+                case RecognizerState::Failed:
+                case RecognizerState::Done:
+                    if (state == RecognizerState::Done && isFirst) {
+                        // Event is end. Detach all
+                        DetachAllExcept(fingerId, nullptr);
+                        return;
+                    }
+                    // Detach only this recognizer
+                    recognizer->VFingerDetached(fingerId);
+                    it = attachedRecognizers.erase(it);
+                    break;
+                case RecognizerState::Hold:
+                    // Detach another recognizers
+                    if (attachedRecognizers.size() != 1) {
+                        DetachAllExcept(fingerId, recognizer);
+                    }
+                    return;
+                case RecognizerState::Recognizing:
+                    // Wait for a recognizer.
+                    // Next will not be the first.
+                    isFirst = false;
+                    ++it;
+                    break;
+                default:
+                    assert(false && "Unknown state !");
+                    break;
+            }
+        }
+    }
 }
