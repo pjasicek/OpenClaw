@@ -73,13 +73,12 @@ struct Touch_SwipeEvent {
 
     Touch_SwipeEvent() = default;
 
-    Touch_SwipeEvent(const SDL_TouchFingerEvent &tfinger) : Touch_SwipeEvent(tfinger, 0, 0) {}
-
-    Touch_SwipeEvent(const SDL_TouchFingerEvent &tfinger, double dx, double dy) : fingerId(tfinger.fingerId),
-                                                                                  x(tfinger.x),
-                                                                                  y(tfinger.y),
-                                                                                  dx(dx),
-                                                                                  dy(dy) {}
+    Touch_SwipeEvent(const SDL_TouchFingerEvent &tfinger,
+                     double dx = 0, double dy = 0) : fingerId(tfinger.fingerId),
+                                                     x(tfinger.x),
+                                                     y(tfinger.y),
+                                                     dx(dx),
+                                                     dy(dy) {}
 };
 
 struct Touch_Event {
@@ -99,10 +98,6 @@ struct Touch_Event {
         sdlEvent.user.data1 = this;
         recognizerId = 0;
     };
-
-    Touch_Event(const Touch_Event &) = default;
-
-    Touch_Event(Touch_Event &) = default;
 
     Touch_Event(int recognizerId, Touch_EventType type, const Touch_TapEvent &tap) : Touch_Event() {
         customData.tap = tap;
