@@ -3,7 +3,7 @@
 
 #include <map>
 #include <vector>
-#include <queue>
+#include <list>
 #include <memory>
 
 #include "TouchEvents.h"
@@ -30,7 +30,7 @@ private:
     void DetachAllExcept(SDL_FingerID fingerId, AbstractRecognizer *except);
     void ProcessAttachedRecognizers(SDL_FingerID fingerId, std::vector<AbstractRecognizer*> &attachedRecognizers);
 
-    std::queue<Touch_Event> m_Events;
+    std::list<Touch_Event> m_EventQueue;
 
     std::vector<std::shared_ptr<AbstractRecognizer>> m_Recognizers;
     std::map<SDL_FingerID, std::vector<AbstractRecognizer*>> m_AttachedRecognizers;

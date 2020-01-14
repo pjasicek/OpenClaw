@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 #include "TouchManager.h"
 
@@ -21,11 +22,11 @@ void TouchManager::Update() {
 }
 
 bool TouchManager::PollEvent(Touch_Event *evt) {
-    if (m_Events.empty() || !evt) {
+    if (m_EventQueue.empty() || !evt) {
         return false;
     }
-    *evt = m_Events.front();
-    m_Events.pop();
+    *evt = m_EventQueue.front();
+    m_EventQueue.pop_front();
     return true;
 }
 
@@ -48,7 +49,7 @@ void TouchManager::DetachAllExcept(SDL_FingerID fingerId, AbstractRecognizer *ex
 }
 
 void TouchManager::QueueEvent(const Touch_Event &evt) {
-    m_Events.push(evt);
+    m_EventQueue.push_back(evt);
 }
 
 void TouchManager::OnFingerDown(const SDL_TouchFingerEvent &evt) {
