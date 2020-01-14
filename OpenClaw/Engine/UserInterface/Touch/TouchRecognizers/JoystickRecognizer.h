@@ -7,9 +7,9 @@
 class JoystickRecognizer : public AbstractRecognizer {
 public:
     JoystickRecognizer(int id, int zIndex,
-                       float thresholdDistance, int thresholdMs) : AbstractRecognizer(id, zIndex),
-                                                                   thresholdDistance(thresholdDistance),
-                                                                   thresholdMs(thresholdMs) {};
+                       float thresholdDistance, int thresholdTime) : AbstractRecognizer(id, zIndex),
+                                                                     m_ThresholdDistance(thresholdDistance),
+                                                                     m_ThresholdTime(thresholdTime) {};
 
     Touch_Event VGetEvent(SDL_FingerID finger) override;
     RecognizerState VGetState(SDL_FingerID finger) override;
@@ -32,13 +32,22 @@ private:
 
     RecognizerState RecognizerStateByEventState(EventState eventState);
 
-    std::map<SDL_FingerID, SDL_TouchFingerEvent> m_FirstTouches;
-    std::map<SDL_FingerID, std::pair<SDL_TouchFingerEvent, EventState>> m_Events;
+    struct EventData {
+        SDL_TouchFingerEvent firstEvent;
+        SDL_TouchFingerEvent lastEvent;
+
+        EventData() = default;
+        EventData(const SDL_TouchFingerEvent &firstEvent,
+                  const SDL_TouchFingerEvent &lastEvent) : firstEvent(firstEvent),
+                                                           lastEvent(lastEvent) {}
+    };
+
+    std::map<SDL_FingerID, std::pair<EventData, EventState>> m_Events;
 
     // Collect new fingers and wait thresholdDistance during thresholdMs
     std::map<SDL_FingerID, SDL_TouchFingerEvent> m_Candidates;
-    float thresholdDistance;
-    int thresholdMs;
+    float m_ThresholdDistance;
+    int m_ThresholdTime;
 };
 
 

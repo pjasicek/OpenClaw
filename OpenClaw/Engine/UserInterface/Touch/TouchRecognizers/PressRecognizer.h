@@ -9,9 +9,9 @@ public:
     PressRecognizer(int id, int zIndex) : PressRecognizer(id, zIndex, 0, 0) {};
 
     PressRecognizer(int id, int zIndex,
-                    float thresholdDistance, int thresholdMs) : AbstractRecognizer(id, zIndex),
-                                                                thresholdDistance(thresholdDistance),
-                                                                thresholdMs(thresholdMs) {};
+                    float thresholdDistance, int thresholdTime) : AbstractRecognizer(id, zIndex),
+                                                                  m_ThresholdDistance(thresholdDistance),
+                                                                  m_ThresholdTime(thresholdTime) {};
 
     Touch_Event VGetEvent(SDL_FingerID finger) override;
 
@@ -36,12 +36,12 @@ private:
 
     RecognizerState RecognizerStateByEventState(EventState eventState);
 
-    std::map<SDL_FingerID, std::pair<SDL_TouchFingerEvent, EventState>> m_Events;
+    std::map<SDL_FingerID, std::pair<Touch_PressEvent, EventState>> m_Events;
 
     // Collect new fingers and expect thresholdDistance won't be reached during thresholdMs
     std::map<SDL_FingerID, SDL_TouchFingerEvent> m_Candidates;
-    float thresholdDistance;
-    int thresholdMs;
+    float m_ThresholdDistance;
+    int m_ThresholdTime;
 };
 
 

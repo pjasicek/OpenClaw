@@ -7,9 +7,9 @@
 class SwipeRecognizer : public AbstractRecognizer {
 public:
     SwipeRecognizer(int id, int zIndex,
-                    float thresholdDistance, int thresholdMs) : AbstractRecognizer(id, zIndex),
-                                                                thresholdDistance(thresholdDistance),
-                                                                thresholdMs(thresholdMs) {};
+                    float thresholdDistance, int thresholdTime) : AbstractRecognizer(id, zIndex),
+                                                                  m_ThresholdDistance(thresholdDistance),
+                                                                  m_ThresholdTime(thresholdTime) {};
 
     Touch_Event VGetEvent(SDL_FingerID finger) override;
 
@@ -38,8 +38,8 @@ private:
 
     // Collect new fingers and wait thresholdDistance during thresholdMs
     std::map<SDL_FingerID, SDL_TouchFingerEvent> m_Candidates;
-    float thresholdDistance;
-    int thresholdMs;
+    float m_ThresholdDistance;
+    int m_ThresholdTime;
 };
 
 

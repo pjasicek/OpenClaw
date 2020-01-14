@@ -29,7 +29,9 @@ void TouchManager::Update() {
                         QueueEvent(recognizer->VGetEvent(fingerId));
                         state = recognizer->VGetState(fingerId);
                     }
-                    if (recognizers.size() != 1) {
+                    if (state == RecognizerState::Failed || state == RecognizerState::Done || state == RecognizerState::DoNothing) {
+                        DetachAllExcept(fingerId, nullptr);
+                    } else if (recognizers.size() != 1) {
                         DetachAllExcept(fingerId, recognizer);
                     }
                     stop = true;

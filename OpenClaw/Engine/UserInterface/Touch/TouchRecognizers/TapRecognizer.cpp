@@ -4,15 +4,14 @@
 Touch_Event TapRecognizer::VGetEvent(SDL_FingerID finger) {
     auto it = m_Events.find(finger);
     assert (it != m_Events.end());
-    Touch_Event evt{GetId(), TAP, Touch_TapEvent{it->second.first}};
-    m_Events.erase(it);
-    return evt;
+    it->second.second = EventState::UP;
+    return Touch_Event{GetId(), TAP, it->second.first};
 }
 
 RecognizerState TapRecognizer::VGetState(SDL_FingerID finger) {
     auto it = m_Events.find(finger);
     if (it != m_Events.end()) {
-        return it->second.second ? RecognizerState::EventReady : RecognizerState::Recognizing;
+        return RecognizerStateByEventState(it->second.second);
     }
     return RecognizerState::Failed;
 }
@@ -22,14 +21,14 @@ void TapRecognizer::VFingerDetached(SDL_FingerID finger) {
 }
 
 RecognizerState TapRecognizer::VOnFingerDown(const SDL_TouchFingerEvent &evt) {
-    m_Events.insert(std::make_pair(evt.fingerId, std::make_pair(evt, false)));
-    return RecognizerState::Recognizing;
+    m_Events[evt.fingerId] = std::make_pair(Touch_TapEvent{evt}, EventState::DOWN);
+    return RecognizerStateByEventState(EventState::DOWN);
 }
 
 RecognizerState TapRecognizer::VOnFingerMotion(const SDL_TouchFingerEvent &evt) {
     auto it = m_Events.find(evt.fingerId);
     if (it != m_Events.end()) {
-        return it->second.second ? RecognizerState::EventReady : RecognizerState::Recognizing;
+        return RecognizerStateByEventState(it->second.second);
     }
     return RecognizerState::Failed;
 }
@@ -37,8 +36,22 @@ RecognizerState TapRecognizer::VOnFingerMotion(const SDL_TouchFingerEvent &evt) 
 RecognizerState TapRecognizer::VOnFingerUp(const SDL_TouchFingerEvent &evt) {
     auto it = m_Events.find(evt.fingerId);
     if (it != m_Events.end()) {
-        it->second.second = true;
-        return RecognizerState::EventReady;
+        it->second.second = EventState::UP_READY;
+        return RecognizerStateByEventState(EventState::UP_READY);
     }
     return RecognizerState::Failed;
+}
+
+RecognizerState TapRecognizer::RecognizerStateByEventState(TapRecognizer::EventState eventState) {
+    switch (eventState) {
+        case EventState::DOWN:
+            return RecognizerState::Recognizing;
+        case EventState::UP_READY:
+            return RecognizerState::EventReady;
+        case EventState::UP:
+            return RecognizerState::Done;
+        default:
+            assert (false && "Unknown state !");
+            return RecognizerState::Failed;
+    }
 }

@@ -9,13 +9,11 @@ Touch_Event SwipeRecognizer::VGetEvent(SDL_FingerID finger) {
     auto state = it->second.second;
     assert (state == EventState::START_READY || state == EventState::END_READY);
     if (state == EventState::START_READY) {
-        Touch_Event evt{GetId(), SWIPE_START, it->second.first};
         it->second.second = EventState::STARTED;
-        return evt;
+        return Touch_Event{GetId(), SWIPE_START, it->second.first};
     } else /*if (state == EventState::END_READY)*/ {
-        Touch_Event evt{GetId(), SWIPE_END, it->second.first};
         it->second.second = EventState::ENDED;
-        return evt;
+        return Touch_Event{GetId(), SWIPE_END, it->second.first};
     }
 }
 
@@ -37,7 +35,7 @@ void SwipeRecognizer::VFingerDetached(SDL_FingerID finger) {
 }
 
 RecognizerState SwipeRecognizer::VOnFingerDown(const SDL_TouchFingerEvent &evt) {
-    m_Candidates.insert(std::make_pair(evt.fingerId, evt));
+    m_Candidates[evt.fingerId] = evt;
     return RecognizerState::Recognizing;
 }
 
@@ -46,15 +44,15 @@ RecognizerState SwipeRecognizer::VOnFingerMotion(const SDL_TouchFingerEvent &evt
         auto it = m_Candidates.find(evt.fingerId);
         if (it != m_Candidates.end()) {
             const auto &firstEvent = it->second;
-            if (evt.timestamp - firstEvent.timestamp > thresholdMs) {
+            if (evt.timestamp - firstEvent.timestamp > m_ThresholdTime) {
                 // time is out
                 m_Candidates.erase(it);
                 return RecognizerState::Failed;
             } else {
                 Point vector{evt.x - firstEvent.x, evt.y - firstEvent.y};
-                if (vector.Length() >= thresholdDistance) {
-                    Touch_SwipeEvent touchEvent{firstEvent, (float) vector.x, (float) vector.y};
-                    m_Events.insert(std::make_pair(evt.fingerId, std::make_pair(touchEvent, EventState::START_READY)));
+                if (vector.Length() >= m_ThresholdDistance) {
+                    m_Events[evt.fingerId] = std::make_pair(
+                            Touch_SwipeEvent{firstEvent, (float) vector.x, (float) vector.y}, EventState::START_READY);
                     m_Candidates.erase(it);
                     return RecognizerStateByEventState(EventState::START_READY);
                 } else {
@@ -100,7 +98,7 @@ RecognizerState SwipeRecognizer::RecognizerStateByEventState(SwipeRecognizer::Ev
 void SwipeRecognizer::VOnUpdate() {
     for (auto it = m_Candidates.begin(); it != m_Candidates.end();) {
         const auto &firstEvent = it->second;
-        if (SDL_GetTicks() - firstEvent.timestamp > thresholdMs) {
+        if (SDL_GetTicks() - firstEvent.timestamp > m_ThresholdTime) {
             // time is out
             it = m_Candidates.erase(it);
         } else {
