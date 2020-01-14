@@ -43,7 +43,10 @@ enum MenuPage
     MenuPage_Options, 
     MenuPage_Credits,                      
     MenuPage_Help,                         
-    MenuPage_QuitGame,                         
+    MenuPage_QuitGame,
+
+    // Pages accessible from MenuPage_Help
+    MenuPage_Help_TouchScreen,
     
     // Pages accessible from MenuPage_SinglePlayer
     MenuPage_SinglePlayer_NewGame,
