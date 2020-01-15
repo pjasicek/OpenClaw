@@ -22,6 +22,7 @@ std::map<std::string, MenuPage> g_StringToMenuPageEnumMap =
     { "MenuPage_Credits",                       MenuPage_Credits },
     { "MenuPage_Help",                          MenuPage_Help },
     { "MenuPage_QuitGame",                      MenuPage_QuitGame },
+    { "MenuPage_Help_TouchScreen",              MenuPage_Help_TouchScreen },
     { "MenuPage_SinglePlayer_NewGame",          MenuPage_SinglePlayer_NewGame },
     { "MenuPage_SinglePlayer_LoadGame",         MenuPage_SinglePlayer_LoadGame },
     { "MenuPage_SinglePlayer_LoadCustomLevel",  MenuPage_SinglePlayer_LoadCustomLevel },

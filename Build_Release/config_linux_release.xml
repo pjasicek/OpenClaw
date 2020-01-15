@@ -57,12 +57,14 @@
     <ClawRunningSpeed>4.5</ClawRunningSpeed>
     <SpringBoardSpringHeight>UNUSED</SpringBoardSpringHeight>
     <SpringBoardSpringSpeed>11</SpringBoardSpringSpeed>
-    <UseAlternateControls>false</UseAlternateControls>
     <ClawMinFallHeight>500</ClawMinFallHeight>
     <LoadAllLevelSaves>false</LoadAllLevelSaves>
     <ShowFps>false</ShowFps>
     <ShowPosition>false</ShowPosition>
   </GlobalOptions>
+  <Control>
+    <UseAlternateControls>false</UseAlternateControls>
+  </Control>
   <DebugOptions>
     <SkipMenu>false</SkipMenu>
     <SkipMenuToLevel>10</SkipMenuToLevel>

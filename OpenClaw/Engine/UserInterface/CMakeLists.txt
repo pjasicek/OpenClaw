@@ -15,3 +15,4 @@ target_sources(openclaw
 )
 
 add_subdirectory(ScoreScreen)
+add_subdirectory(Touch)

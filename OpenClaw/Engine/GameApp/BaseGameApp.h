@@ -8,6 +8,7 @@
 
 #include "../UserInterface/Console.h"
 #include "CommandHandler.h"
+#include "../UserInterface/Touch/TouchManager.h"
 
 const int DEFAULT_SCREEN_WIDTH = 1280;
 const int DEFAULT_SCREEN_HEIGHT = 768;
@@ -140,7 +141,6 @@ struct GlobalOptions
         clawRunningSpeed = 5.0;
         //springBoardSpringHeight = 450;
         springBoardSpringSpeed = 11;
-        useAlternateControls = false;
         clawMinFallHeight = 500.0f;
         loadAllLevelSaves = false;
         showFps = true;
@@ -162,11 +162,26 @@ struct GlobalOptions
     double clawRunningSpeed;
     //int springBoardSpringHeight;
     double springBoardSpringSpeed;
-    bool useAlternateControls;
     float clawMinFallHeight;
     bool loadAllLevelSaves;
     bool showFps;
     bool showPosition;
+};
+
+struct ControlOptions
+{
+    ControlOptions() {
+        useAlternateControls = false;
+        touchScreen.enable = false;
+        touchScreen.distanceThreshold = 0.1;
+        touchScreen.timeThreshold = 100;
+    }
+    bool useAlternateControls;
+    struct {
+        bool enable;
+        float distanceThreshold;
+        unsigned int timeThreshold;
+    } touchScreen;
 };
 
 struct DebugOptions
@@ -276,11 +291,14 @@ public:
     const ConsoleConfig* GetConsoleConfig() const { return &m_GameOptions.consoleConfig; }
     GameOptions* GetGameConfig() { return &m_GameOptions; }
     const GlobalOptions* GetGlobalOptions() const { return &m_GlobalOptions; }
+    const ControlOptions* GetControlOptions() const { return &m_ControlOptions; }
     const DebugOptions* GetDebugOptions() const { return &m_DebugOptions; }
 
     TiXmlElement* GetActorPrototypeElem(ActorPrototype proto);
 
     const shared_ptr<LevelMetadata> GetLevelMetadata(int levelNumber) const;
+
+    void RegisterTouchRecognizers(ITouchHandler &touchHandler);
 
 protected:
     virtual void VRegisterGameEvents() { }
@@ -292,6 +310,7 @@ protected:
     EventMgr* m_pEventMgr;
     TTF_Font* m_pConsoleFont;
     Audio* m_pAudio;
+    TouchManager *m_pTouchManager;
 
     TiXmlDocument m_XmlConfiguration;
 
@@ -306,6 +325,7 @@ private:
     bool InitializeResources(GameOptions& gameOptions);
     bool InitializeFont(GameOptions& gameOptions);
     bool InitializeLocalization(GameOptions& gameOptions);
+    bool InitializeTouchManager(GameOptions& gameOptions);
     bool InitializeEventMgr();
     bool ReadConsoleConfig();
     bool ReadActorXmlPrototypes(GameOptions& gameOptions);
@@ -333,6 +353,7 @@ private:
 
     GameCheats m_GameCheats;
     GlobalOptions m_GlobalOptions;
+    ControlOptions m_ControlOptions;
     DebugOptions m_DebugOptions;
 
     ActorXmlPrototypeMap m_ActorXmlPrototypeMap;

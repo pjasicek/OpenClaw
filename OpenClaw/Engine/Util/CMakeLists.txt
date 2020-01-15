@@ -18,4 +18,6 @@ target_sources(openclaw
     ${CMAKE_CURRENT_SOURCE_DIR}/XmlUtil.h
     ${CMAKE_CURRENT_SOURCE_DIR}/ClawLevelUtil.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ClawLevelUtil.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Point.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Point.cpp
 )

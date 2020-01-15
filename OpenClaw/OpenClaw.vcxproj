@@ -170,6 +170,12 @@
     <ClCompile Include="Engine\Scene\Scene.cpp" />
     <ClCompile Include="Engine\Scene\SceneNodes.cpp" />
     <ClCompile Include="Engine\UserInterface\ScoreScreen\EndLevelScoreScreen.cpp" />
+    <ClCompile Include="Engine\UserInterface\Touch\TouchManager.cpp" />
+    <ClCompile Include="Engine\UserInterface\Touch\TouchRecognizers\AbstractRecognizer.cpp" />
+    <ClCompile Include="Engine\UserInterface\Touch\TouchRecognizers\JoystickRecognizer.cpp" />
+    <ClCompile Include="Engine\UserInterface\Touch\TouchRecognizers\PressRecognizer.cpp" />
+    <ClCompile Include="Engine\UserInterface\Touch\TouchRecognizers\SwipeRecognizer.cpp" />
+    <ClCompile Include="Engine\UserInterface\Touch\TouchRecognizers\TapRecognizer.cpp" />
     <ClCompile Include="Engine\UserInterface\GameHUD.cpp" />
     <ClCompile Include="Engine\UserInterface\HumanView.cpp" />
     <ClCompile Include="Engine\UserInterface\MovementController.cpp" />
@@ -189,6 +195,7 @@
     <ClCompile Include="Engine\Util\Profilers.cpp" />
     <ClCompile Include="Engine\Util\StringUtil.cpp" />
     <ClCompile Include="Engine\Util\Util.cpp" />
+    <ClCompile Include="Engine\Util\Point.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActorController.h" />
@@ -246,6 +253,13 @@
     <ClInclude Include="Engine\UserInterface\ScoreScreen\EndLevelScoreScreen.h" />
     <ClInclude Include="Engine\UserInterface\ScoreScreen\ScoreScreenCommon.h" />
     <ClInclude Include="Engine\UserInterface\ScoreScreen\ScoreScreenProcesses.h" />
+    <ClInclude Include="Engine\UserInterface\Touch\TouchEvents.h" />
+    <ClInclude Include="Engine\UserInterface\Touch\TouchManager.h" />
+    <ClInclude Include="Engine\UserInterface\Touch\TouchRecognizers\AbstractRecognizer.h" />
+    <ClInclude Include="Engine\UserInterface\Touch\TouchRecognizers\JoystickRecognizer.h" />
+    <ClInclude Include="Engine\UserInterface\Touch\TouchRecognizers\PressRecognizer.h" />
+    <ClInclude Include="Engine\UserInterface\Touch\TouchRecognizers\SwipeRecognizer.h" />
+    <ClInclude Include="Engine\UserInterface\Touch\TouchRecognizers\TapRecognizer.h" />
     <ClInclude Include="Engine\Util\ClawLevelUtil.h" />
     <ClInclude Include="Engine\Util\Converters.h" />
     <ClInclude Include="Engine\GameApp\CommandHandler.h" />
@@ -310,6 +324,7 @@
     <ClInclude Include="Engine\Util\StringUtil.h" />
     <ClInclude Include="Engine\Util\Util.h" />
     <ClInclude Include="Engine\Util\XmlUtil.h" />
+    <ClInclude Include="Engine\Util\Point.h" />
     <ClInclude Include="Engine\XmlMacros.h" />
     <ClInclude Include="ClawGameApp.h" />
   </ItemGroup>
