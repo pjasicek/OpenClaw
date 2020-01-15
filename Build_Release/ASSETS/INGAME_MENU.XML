@@ -179,20 +179,49 @@
                 <PageName>MenuPage_Main</PageName>
             </GeneratedEvent>
         </KeyboardEvent>
+        <MenuItem>
+            <Name>TOUCHSCREEN_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/CONTROLS/touchscreen_title.png</InactiveImage>
+            <ActiveImage>/CONTROLS/touchscreen_title.png</ActiveImage>
+            <Position x="325" y="452" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Help_TouchScreen</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+
+    <!-- HELP TOUCHSCREEN PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_Help_TouchScreen</PageName>
         <KeyboardEvent>
-            <KeyType>Space</KeyType>
+            <KeyType>Escape</KeyType>
             <GeneratedEvent>
                 <Type>SwitchPage</Type>
                 <PageName>MenuPage_Main</PageName>
             </GeneratedEvent>
         </KeyboardEvent>
-        <KeyboardEvent>
-            <KeyType>Enter</KeyType>
+        <MenuItem>
+            <Name>CONTROL_IMAGE</Name>
+            <Type>Text</Type>
+            <State>Disabled</State>
+            <DisabledImage>/CONTROLS/touchscreen_img.png</DisabledImage>
+            <Position x="10" y="135" />
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/SAVE/001_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/SAVE/002_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="420" />
             <GeneratedEvent>
                 <Type>SwitchPage</Type>
                 <PageName>MenuPage_Main</PageName>
             </GeneratedEvent>
-        </KeyboardEvent>
+        </MenuItem>
     </MenuPage>
 
     <!-- OPTIONS PAGE -->
