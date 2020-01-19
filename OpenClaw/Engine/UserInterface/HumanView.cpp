@@ -1020,6 +1020,7 @@ void DeathFadeInOutProcess::VRender(uint32 msDiff)
 
     // Render fade in/outs according to current state
     int referenceTime = 0;
+    Point *fadeSpeed = &m_FadeInSpeed;
     if (m_DeathFadeState == DeathFadeState_FadingIn)
     {
         referenceTime = m_CurrentTime;
@@ -1027,10 +1028,11 @@ void DeathFadeInOutProcess::VRender(uint32 msDiff)
     else if (m_DeathFadeState == DeathFadeState_FadingOut)
     {
         referenceTime = m_FadeOutDuration - m_CurrentTime;
+        fadeSpeed = &m_FadeOutSpeed;
     }
 
     // Left -> right rect
-    int currentWidth = (int)((double)referenceTime * m_FadeInSpeed.x);
+    int currentWidth = (int)((double)referenceTime * fadeSpeed->x);
     //LOG("Current width: " + ToStr(currentWidth));
     SDL_Rect leftRect = { 0, 0, currentWidth, (int)windowSize.y };
     SDL_Texture* pLeftRectTexture = Util::CreateSDLTextureRect(leftRect.w, leftRect.h, COLOR_BLACK, pRenderer);
@@ -1041,7 +1043,7 @@ void DeathFadeInOutProcess::VRender(uint32 msDiff)
     SDL_Texture* pRightRectTexture = Util::CreateSDLTextureRect(rightRect.w, rightRect.h, COLOR_BLACK, pRenderer);
     SDL_RenderCopy(pRenderer, pRightRectTexture, NULL, &rightRect);
 
-    int currentHeight = (int)((double)referenceTime * m_FadeInSpeed.y);
+    int currentHeight = (int)((double)referenceTime * fadeSpeed->y);
     // Top -> Down
     SDL_Rect topRect = { 0, 0, (int)windowSize.x, currentHeight };
     SDL_Texture* pTopTexture = Util::CreateSDLTextureRect(topRect.w, topRect.h, COLOR_BLACK, pRenderer);
@@ -1057,7 +1059,7 @@ void DeathFadeInOutProcess::VRender(uint32 msDiff)
     SDL_DestroyTexture(pTopTexture);
     SDL_DestroyTexture(pBottomTexture);
 
-    SDL_RenderPresent(pRenderer);
+    Util::RenderForcePresent(pRenderer);
 }
 
 //=================================================================================================
@@ -1308,6 +1310,7 @@ void TeleportFadeInOutProcess::VRender(uint32 msDiff)
 
     // Render fade in/outs according to current state
     int referenceTime = 0;
+    Point *fadeSpeed = &m_FadeInSpeed;
     if (m_TeleportState == TeleportState_FadingIn)
     {
         referenceTime = m_CurrentTime;
@@ -1315,12 +1318,13 @@ void TeleportFadeInOutProcess::VRender(uint32 msDiff)
     else if (m_TeleportState == TeleportState_FadingOut)
     {
         referenceTime = m_FadeOutDuration - m_CurrentTime;
+        fadeSpeed = &m_FadeOutSpeed;
     }
 
     referenceTime = max(0, referenceTime);
 
     // Left -> right rect
-    int currentWidth = (int)((double)referenceTime * m_FadeInSpeed.x);
+    int currentWidth = (int)((double)referenceTime * fadeSpeed->x);
     //LOG("Current width: " + ToStr(currentWidth));
     SDL_Rect leftRect = { 0, 0, currentWidth, (int)windowSize.y };
     SDL_Texture* pLeftRectTexture = Util::CreateSDLTextureRect(leftRect.w, leftRect.h, COLOR_BLACK, pRenderer);
@@ -1334,5 +1338,5 @@ void TeleportFadeInOutProcess::VRender(uint32 msDiff)
     SDL_DestroyTexture(pLeftRectTexture);
     SDL_DestroyTexture(pRightRectTexture);
 
-    SDL_RenderPresent(pRenderer);
+    Util::RenderForcePresent(pRenderer);
 }

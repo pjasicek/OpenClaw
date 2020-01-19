@@ -239,7 +239,7 @@ void BaseGameApp::StepLoop() {
         }
 
         // Artificially decrease fps. Configurable from console
-        SDL_Delay(m_DebugOptions.cpuDelayMs);
+        Util::Sleep(m_DebugOptions.cpuDelayMs);
     } else {
         Terminate();
 #ifdef __EMSCRIPTEN__

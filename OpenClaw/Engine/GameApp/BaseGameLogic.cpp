@@ -170,7 +170,7 @@ void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Po
     SDL_RenderCopy(pRenderer, pTotalProgressBar, NULL, &totalProgressBarRect);
     SDL_RenderCopy(pRenderer, pRemainingProgressBar, NULL, &remainingProgressBarRect);
 
-    SDL_RenderPresent(pRenderer);
+    Util::RenderForcePresent(pRenderer);
 
     SDL_DestroyTexture(pTotalProgressBar);
     SDL_DestroyTexture(pRemainingProgressBar);
