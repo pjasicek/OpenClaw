@@ -4,47 +4,35 @@ void OnPidLoaded(const char* resource, WapPid* pPid)
 {
     const std::string resourceName(resource);
 
-    if (resourceName == "/level2/images/towercannonleft/frame002.pid")
+    if (resourceName == "/level2/images/towercannonleft/frame002.pid" ||
+        resourceName == "/level2/images/towercannonleft/frame004.pid" ||
+        resourceName == "/level2/images/towercannonleft/frame005.pid")
     {
         pPid->offsetX -= 2;
     }
-    else if (resourceName == "/level2/images/towercannonleft/frame004.pid")
-    {
-        pPid->offsetX -= 2;
-    }
-    else if (resourceName == "/level2/images/towercannonleft/frame005.pid")
-    {
-        pPid->offsetX -= 2;
-    }
-    if (resourceName == "/level2/images/towercannonright/frame002.pid")
+    else if (resourceName == "/level2/images/towercannonright/frame002.pid" ||
+             resourceName == "/level2/images/towercannonright/frame004.pid" ||
+             resourceName == "/level2/images/towercannonright/frame005.pid")
     {
         pPid->offsetX += 2;
     }
-    else if (resourceName == "/level2/images/towercannonright/frame004.pid")
+    else if (resourceName.find("/images/powderkeg/frame") != std::string::npos)
     {
-        pPid->offsetX += 2;
+        pPid->offsetY -= 45;
     }
-    else if (resourceName == "/level2/images/towercannonright/frame005.pid")
+    else if (resourceName.find("/level2/images/cannon/frame") != std::string::npos)
     {
-        pPid->offsetX += 2;
+        pPid->offsetY -= 25;
     }
-    else if (resourceName.find("/level2/images/powderkeg/frame") != std::string::npos)
+    else if (resourceName.find("/level8/images/cannon/frame") != std::string::npos)
     {
-        pPid->offsetY += 20;
+        pPid->offsetY -= 45;
     }
-    else if (resourceName.find("/level9/images/powderkeg/frame") != std::string::npos)
+    else if (resourceName.find("/level8/images/gabrielcannon/frame") != std::string::npos)
     {
-        pPid->offsetY += 24;
+        pPid->offsetY -= 80;
     }
-    else if (resourceName.find("/level3/images/powderkeg/frame") != std::string::npos)
-    {
-        pPid->offsetY -= 24;
-    }
-    else if (resourceName.find("/level6/images/powderkeg/frame") != std::string::npos)
-    {
-        pPid->offsetY += 4;
-    }
-    else if (resourceName.find("/level3/images/ratbomb/") != std::string::npos)
+    else if (resourceName.find("/images/ratbomb/frame") != std::string::npos)
     {
         pPid->offsetY -= 40;
     }
