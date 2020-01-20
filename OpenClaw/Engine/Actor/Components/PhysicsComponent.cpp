@@ -259,7 +259,10 @@ void PhysicsComponent::VPostPostInit()
         double deltaY = raycastDown.deltaY - m_pPhysics->VGetAABB(m_pOwner->GetGUID(), true).h / 2;
 
         pPositionComponent->SetY(pPositionComponent->GetY() + deltaY - 1);
-        m_pPhysics->VSetPosition(m_pOwner->GetGUID(), pPositionComponent->GetPosition());
+        const Point newPos = pPositionComponent->GetPosition();
+        m_pPhysics->VSetPosition(m_pOwner->GetGUID(), newPos);
+        IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
+                new EventData_Move_Actor(m_pOwner->GetGUID(), newPos)));
     }
 }
 

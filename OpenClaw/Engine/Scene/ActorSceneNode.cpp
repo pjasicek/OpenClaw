@@ -61,6 +61,14 @@ void SDL2ActorSceneNode::VRender(Scene* pScene)
         actorImage->GetHeight()
     };
 
+    // Do not render anything which is not seen
+    if (renderRect.x > cameraRect.w ||
+        renderRect.y > cameraRect.h ||
+        renderRect.x + renderRect.w < 0 ||
+        renderRect.y + renderRect.h < 0) {
+        return;
+    }
+
     SDL_SetTextureAlphaMod(actorImage->GetTexture(), arc->GetAlpha());
 
     SDL_Color colorMod = arc->GetColorMod();
