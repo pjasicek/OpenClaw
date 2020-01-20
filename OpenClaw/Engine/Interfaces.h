@@ -335,6 +335,7 @@ enum ActorPrototype
     ActorPrototype_Level2_TowerCannonRight,
 
     // Projectiles
+    ActorPrototype_Level1_RatBomb,
     ActorPrototype_Level2_CannonBall,
     ActorPrototype_Level2_RatProjectile,
     ActorPrototype_Level3_RatBomb,

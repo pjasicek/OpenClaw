@@ -54,11 +54,8 @@
             <AttackAction>
                 <Animation>throweastwest</Animation>
                 <AttackAnimFrameIdx>2</AttackAnimFrameIdx>
-                <AttackType>1</AttackType>
-                <AttackFxImageSet>/LEVEL1/IMAGES/RATBOMB/*</AttackFxImageSet>
-                <AttackSpawnPositionOffset x="-15" y="0" />
-                <AttackAreaSize width="0" height="0" />
-                <Damage>20</Damage>
+                <AttackSpawnPositionOffset x="-10" y="5" />
+                <ProjectilePrototype>ActorPrototype_Level1_RatBomb</ProjectilePrototype>
                 <AgroSensorFixture>
                     <FixtureType>EnemyAIRangedSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>
@@ -69,7 +66,7 @@
                     <CollisionMask>2</CollisionMask>
                     <Friction>0.000000</Friction>
                     <Density>0.000000</Density>
-                    <Restitution>-1.#QNAN0</Restitution>
+                    <Restitution>0.000000</Restitution>
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>
