@@ -770,12 +770,10 @@ bool ScreenElementMenuPage::VOnEvent(SDL_Event& evt)
             clickRect.w = 1;
             clickRect.h = 1;
 
-            SDL_Rect dummy;
-            //
             for (shared_ptr<ScreenElementMenuItem> pMenuItem : m_MenuItems)
             {
                 SDL_Rect itemRect = pMenuItem->GetMenuItemRect();
-                if (SDL_IntersectRect(&clickRect, &itemRect, &dummy))
+                if (SDL_HasIntersection(&clickRect, &itemRect))
                 {
                     if (pMenuItem->CanBeFocused())
                     {

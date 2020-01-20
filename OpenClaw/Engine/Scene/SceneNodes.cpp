@@ -101,16 +101,8 @@ bool SceneNode::VIsVisible(Scene* pScene) const
     }
 
     const SDL_Rect cameraRect = pCamera->GetCameraRect();
-    SDL_Rect actorRect = m_pRenderComponent->VGetPositionRect();
-
-    SDL_Rect result;
-    SDL_Rect position = m_pRenderComponent->VGetPositionRect();
-    if (!SDL_IntersectRect(&cameraRect, &position, &result))
-    {
-        return false;
-    }
-
-    return true;
+    const SDL_Rect position = m_pRenderComponent->VGetPositionRect();
+    return SDL_HasIntersection(&cameraRect, &position);
 }
 
 bool SceneNode::VAddChild(shared_ptr<ISceneNode> ikid)
