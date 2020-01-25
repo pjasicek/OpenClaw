@@ -312,9 +312,9 @@ bool ActorController::OnTap(int id, const Touch_TapEvent &evt) {
             event.type = SDL_KEYDOWN;
             event.key.keysym.sym = key;
             event.key.keysym.scancode = SDL_GetScancodeFromKey(key);
-            g_pApp->OnEvent(event);
+            SDL_PushEvent(&event);
             event.type = SDL_KEYUP;
-            g_pApp->OnEvent(event);
+            SDL_PushEvent(&event);
             return true;
         }
         case WEAPON_TAP_RECOGNIZER:
