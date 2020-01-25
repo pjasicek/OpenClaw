@@ -7,6 +7,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 int RunGameEngine(int argc, char** argv)
 {
     if (SDL_SetThreadPriority(SDL_THREAD_PRIORITY_HIGH) != 0)
@@ -36,11 +40,10 @@ int RunGameEngine(int argc, char** argv)
     LOG("Looking for: " + userDirectory + "config.xml");
 
     // Temporary hack - always prefer config in the same folder as binary to default config
-    std::ifstream f("config.xml");
-    if (f.good())
+    if (TryToFindFile("config.xml"))
     {
+        // File was found in a working directory
         userDirectory = "";
-        f.close();
     }
 
     LOG("Expecting config.xml in path: " + userDirectory + "config.xml");
@@ -66,4 +69,25 @@ int RunGameEngine(int argc, char** argv)
 
     // Run the game
     return g_pApp->Run();
+}
+
+bool TryToFindFile(const char *path) {
+    {
+        std::ifstream f(path);
+        if (f.good()) {
+            return true;
+        }
+    }
+#ifdef __EMSCRIPTEN__
+    // File does not exist. Try to download
+    emscripten_wget(path, path);
+    {
+        // Check is file downloaded
+        std::ifstream f(path);
+        if (f.good()) {
+            return true;
+        }
+    }
+#endif
+    return false;
 }
