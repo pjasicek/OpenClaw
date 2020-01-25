@@ -582,4 +582,21 @@ namespace Util
         crcu32 = ~crcu32; while (dataLen--) { uint8 b = *pData++; crcu32 = (crcu32 >> 4) ^ s_crc32[(crcu32 & 0xF) ^ (b & 0xF)]; crcu32 = (crcu32 >> 4) ^ s_crc32[(crcu32 & 0xF) ^ (b >> 4)]; }
         return ~crcu32;
     }
+
+#ifdef __EMSCRIPTEN__
+    bool GetCanvasSize(SDL_Point &canvasSize) {
+        int width = EM_ASM_INT(
+                {return (Module && Module.canvas) ? Module.canvas.scrollWidth : -1;}
+        );
+        int height = EM_ASM_INT(
+                {return (Module && Module.canvas) ? Module.canvas.scrollHeight : -1;}
+        );
+        if (width >= 640 && height >= 480) {
+            canvasSize.x = width;
+            canvasSize.y = height;
+            return true;
+        }
+        return false;
+    }
+#endif
 };

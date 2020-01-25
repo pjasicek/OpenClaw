@@ -443,6 +443,14 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
         ParseValueFromXmlElem(&m_GameOptions.isFullscreenDesktop,
             displayElem->FirstChildElement("IsFullscreenDesktop"));
     }
+#ifdef __EMSCRIPTEN__
+    SDL_Point canvasSize;
+    if (Util::GetCanvasSize(canvasSize)) {
+        LOG(ToStr("Config window size is replaced by canvas size: ") + ToStr(canvasSize.x) + ToStr("x") + ToStr(canvasSize.y));
+        m_GameOptions.windowWidth = canvasSize.x;
+        m_GameOptions.windowHeight = canvasSize.y;
+    }
+#endif
 
     //-------------------------------------------------------------------------
     // Audio

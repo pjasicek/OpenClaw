@@ -17,7 +17,8 @@
 </head>
 <body>
 <div>
-    <canvas id="canvas" oncontextmenu="e.preventDefault()" tabindex=-1></canvas>
+    <!-- Config's width and height will be used if canvas does not have this attributes -->
+    <canvas id="canvas" width="640" height="480" oncontextmenu="e.preventDefault()" tabindex=-1></canvas>
 </div>
 <div>
     <button onclick="Module.canvas.requestFullscreen()">Enable Fullscreen Mode</button>
@@ -50,8 +51,9 @@
 <script type='text/javascript'>
     // Emscripten structure
     var Module = {
-        preRun: [],
-        postRun: [],
+        preRun: [function () {
+            // Here you can change canvas size dynamically if it's needed
+        }],
         canvas: (function () {
             var canvas = document.getElementById('canvas');
 
@@ -65,6 +67,7 @@
 
             return canvas;
         })(),
+
         // Could be removed. This code for debug build only
         print: Console.printToConsole,
         printErr: Console.printToConsole,
