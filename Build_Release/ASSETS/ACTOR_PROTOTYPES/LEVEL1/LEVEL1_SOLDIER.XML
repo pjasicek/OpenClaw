@@ -117,11 +117,13 @@
         <StatePriority>5</StatePriority>
         <Attacks>
             <AttackAction>
-                <Animation>strike2</Animation>
-                <AttackAnimFrameIdx>3</AttackAnimFrameIdx>
+                <!-- The same as RangedAttackAIStateComponent -->
+                <!-- Level 1 soldiers do not have duck projectile attacks -->
+                <Animation>strike</Animation>
+                <AttackAnimFrameIdx>2</AttackAnimFrameIdx>
                 <AttackType>1</AttackType>
                 <AttackFxImageSet>/LEVEL1/IMAGES/MUSKETBALL/*</AttackFxImageSet>
-                <AttackSpawnPositionOffset x="-42" y="7" />
+                <AttackSpawnPositionOffset x="-42" y="-38" />
                 <AttackAreaSize width="0" height="0" />
                 <Damage>10</Damage>
                 <AgroSensorFixture>
