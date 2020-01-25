@@ -407,7 +407,7 @@ void ClawGameLogic::CheckpointReachedDelegate(IEventDataPtr pEventData)
         m_pGameSaveMgr->AddCheckpointSave(m_pCurrentLevel->GetLevelNumber(), checkpointSave);
 
         // If not in testing mode
-        if (!g_pApp->GetGlobalOptions()->loadAllLevelSaves)
+        if (m_pGameSaveMgr->IsSaveSupported() && !g_pApp->GetGlobalOptions()->loadAllLevelSaves)
         {
             TiXmlDocument saveGamesDoc;
             saveGamesDoc.LinkEndChild(m_pGameSaveMgr->ToXml());

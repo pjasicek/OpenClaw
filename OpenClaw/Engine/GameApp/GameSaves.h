@@ -199,7 +199,7 @@ class GameSaveMgr
 public:
     bool Initialize(TiXmlElement* pGameSaveData)
     {
-        if (g_pApp->GetGlobalOptions()->loadAllLevelSaves || !IS_SAVE_SUPPORTED)
+        if (g_pApp->GetGlobalOptions()->loadAllLevelSaves || !IsSaveSupported())
         {
             InitializeWithAllLevels();
             return true;
@@ -356,6 +356,11 @@ public:
     bool HasCheckpointSave(uint32 levelNumber, uint32 checkpointNumber)
     {
         return (GetCheckpointSave(levelNumber, checkpointNumber) != NULL);
+    }
+
+    bool IsSaveSupported()
+    {
+        return IS_SAVE_SUPPORTED;
     }
 
 private:

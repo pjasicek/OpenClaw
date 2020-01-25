@@ -83,6 +83,10 @@ bool BaseGameLogic::Initialize()
 {
     m_pActorFactory = VCreateActorFactory();
 
+    if (!m_pGameSaveMgr->IsSaveSupported()) {
+        return m_pGameSaveMgr->Initialize(nullptr);
+    }
+
     std::string savesFilePath = g_pApp->GetGameConfig()->userDirectory + g_pApp->GetGameConfig()->savesFile;
 
     TiXmlDocument gameSaves(savesFilePath.c_str());
@@ -494,7 +498,7 @@ bool BaseGameLogic::VLoadScoreScreen(const char* xmlScoreScreenResource)
         m_pGameSaveMgr->AddCheckpointSave(nextLevelNumber, nextLevelCheckpoint);
 
         // If not in testing mode
-        if (!g_pApp->GetGlobalOptions()->loadAllLevelSaves)
+        if (m_pGameSaveMgr->IsSaveSupported() && !g_pApp->GetGlobalOptions()->loadAllLevelSaves)
         {
             TiXmlDocument saveGamesDoc;
             saveGamesDoc.LinkEndChild(m_pGameSaveMgr->ToXml());
