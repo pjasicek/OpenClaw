@@ -125,9 +125,14 @@ class CameraNode : public SceneNode
 public:
     CameraNode(Point position, uint32 width, uint32 height);
 
-    virtual void VRender(Scene* pScene);
-    virtual bool IsVisible(Scene* pScene) const { return m_Active; }
+    void VRender(Scene* pScene) override;
+    bool VIsVisible(Scene* pScene) const override { return m_Active; }
 
+    void VSetPosition(const Point &position) override {
+        SceneNode::VSetPosition(position);
+        CalcCameraRect();
+    }
+    // Overridden but non-virtual. Be careful with it
     Point GetPosition() { return m_Properties.GetPosition() + m_CameraOffset; }
 
     void SetViewPosition(Scene* pScene);
@@ -135,35 +140,32 @@ public:
     shared_ptr<SceneNode> GetTarget() { return m_pTarget; }
     void ClearTarget() { m_pTarget = shared_ptr<SceneNode>(); }
 
-    void SetSize(uint32 width, uint32 height) { m_Width = width; m_Height = height; }
+    void SetSize(uint32 width, uint32 height) { m_Width = width; m_Height = height; CalcCameraRect(); }
 
     uint32 GetWidth() { return m_Width; }
     uint32 GetHeight() { return m_Height; }
 
-    // TODO: Calc this only when changes are performed, do not recalc it every single time
+    // Calc this only when changes are performed, and do not recalc it every single time
     // since this function is called A LOT
     inline SDL_Rect GetCameraRect() const
     {
-        return{ (int)(m_Properties.GetPosition().x + m_CameraOffset.x),
-            (int)(m_Properties.GetPosition().y + m_CameraOffset.y),
-            (int)(m_Width / m_ScaleX),
-            (int)(m_Height / m_ScaleY) };
+        return m_CachedCameraRect;
     }
 
-    inline double GetCameraOffsetX() { return m_CameraOffset.x; }
-    inline double GetCameraOffsetY() { return m_CameraOffset.y; }
+    inline double GetCameraOffsetX() const { return m_CameraOffset.x; }
+    inline double GetCameraOffsetY() const { return m_CameraOffset.y; }
 
-    inline void SetCameraOffsetX(double offX) { m_CameraOffset.x = offX; }
-    inline void SetCameraOffsetY(double offY) { m_CameraOffset.y = offY; }
+    inline void SetCameraOffsetX(double offX) { SetCameraOffset(offX, m_CameraOffset.y); }
+    inline void SetCameraOffsetY(double offY) { SetCameraOffset(m_CameraOffset.x, offY); }
 
-    inline void AddCameraOffsetX(double offset) { m_CameraOffset.x += offset; }
-    inline void AddCameraOffsetY(double offset) { m_CameraOffset.y += offset; }
+    inline void AddCameraOffsetX(double offset) { SetCameraOffset(m_CameraOffset.x + offset, m_CameraOffset.y); }
+    inline void AddCameraOffsetY(double offset) { SetCameraOffset(m_CameraOffset.x, m_CameraOffset.y + offset); }
 
-    inline void SetCameraOffset(double offX, double offY) { m_CameraOffset.Set(offX, offY); }
+    inline void SetCameraOffset(double offX, double offY) { m_CameraOffset.Set(offX, offY); CalcCameraRect(); }
 
-    bool IntersectsWithPoint(const Point& point, float cameraScale = 1.0f);
+    bool IntersectsWithPoint(const Point& point, float cameraScale = 1.0f) const;
 
-    inline Point GetCenterPosition() 
+    inline Point GetCenterPosition() const
     {
         return Point(
             m_Properties.GetPosition().x + m_CameraOffset.x + m_Width / 2, 
@@ -171,6 +173,13 @@ public:
     }
 
 protected:
+    void CalcCameraRect() {
+        m_CachedCameraRect = {(int) (m_Properties.GetPosition().x + m_CameraOffset.x),
+                              (int) (m_Properties.GetPosition().y + m_CameraOffset.y),
+                              (int) (m_Width / m_ScaleX),
+                              (int) (m_Height / m_ScaleY)};
+    }
+
     uint32      m_Width;
     uint32      m_Height;
     Point       m_CameraOffset;
@@ -181,6 +190,7 @@ protected:
     float m_ScaleY;
 
     shared_ptr<SceneNode> m_pTarget;
+    SDL_Rect m_CachedCameraRect;
 };
 
 #endif //__SCENENODE_H__

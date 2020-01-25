@@ -16,7 +16,8 @@ public:
     virtual ~SDL2ActorSceneNode();
 
     // Interface overrides
-    virtual void VRender(Scene* pScene);
+    void VRender(Scene* pScene) override;
+    bool VIsVisible(Scene *pScene) const override;
 
 protected:
 };
