@@ -10,6 +10,9 @@
     <meta property="og:description" content="OpenClaw open source project">
     <!--<meta property="og:image" content="preview.png">-->
 
+    <!-- Change default viewport width here according to canvas width -->
+    <meta name="viewport" content="width=660">
+
     <style>
         #console {
             width: 100%;
@@ -175,8 +178,12 @@
         setStatus: function (text) {
             if (loadingElement) {
                 Module.canvas.style.display = "none";
-                var progress = Module.dataFileDownloads["openclaw.data"].loaded / Module.dataFileDownloads["openclaw.data"].total * 100;
-                loadingElement.innerHTML = "Game resources are downloading... " + (progress | 0) + "%";
+                var progress = (Module.dataFileDownloads["openclaw.data"].loaded / Module.dataFileDownloads["openclaw.data"].total * 100) | 0;
+                if (progress < 100) {
+                    loadingElement.innerHTML = "Game resources are downloading... " + (progress | 0) + "%";
+                } else {
+                    loadingElement.innerHTML = "Game resources have been downloaded. Game is loading...";
+                }
             }
         },
 
