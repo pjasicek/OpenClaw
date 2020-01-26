@@ -27,6 +27,7 @@ void SDL2ActorSceneNode::VRender(Scene* pScene)
     shared_ptr<Image> actorImage = MakeStrongPtr(arc->GetCurrentImage());
     if (!actorImage)
     {
+        LOG_WARNING("Trying to render actor without active image. ActorId: " + ToStr(m_Properties.GetActorId()));
         return;
     }
 
@@ -76,15 +77,4 @@ void SDL2ActorSceneNode::VRender(Scene* pScene)
     SDL_Renderer* renderer = pScene->GetRenderer();
     SDL_RenderCopyEx(renderer, actorImage->GetTexture(), NULL, &renderRect, 0, NULL, 
         arc->IsMirrored() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
-}
-
-bool SDL2ActorSceneNode::VIsVisible(Scene *pScene) const {
-    if (!m_pRenderComponent) {
-        return false;
-    }
-
-    // SDL2ActorSceneNode::VRender should calculate actor position/size once and
-    // check intersection with camera at the same time.
-    // It lets decrease CPU usage every frame.
-    return true;
 }
