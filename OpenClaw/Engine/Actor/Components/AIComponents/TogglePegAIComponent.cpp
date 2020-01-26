@@ -90,36 +90,36 @@ void TogglePegAIComponent::VUpdate(uint32 msDiff)
     
 }
 
-struct DelayEventInfo
-{
-    DelayEventInfo(IEventDataPtr pEvent, uint32 msDelay)
-    {
-        this->pEvent = pEvent;
-        this->msDelay = msDelay;
-    }
-
-    IEventDataPtr pEvent;
-    uint32 msDelay;
-};
-
-static int SetupPlayMusicThread(void* pData)
-{
-    DelayEventInfo* pEventInfo = (DelayEventInfo*)pData;
-
-    SDL_Delay(pEventInfo->msDelay);
-    IEventMgr::Get()->VTriggerEvent(pEventInfo->pEvent);
-
-    return 0;
-}
-
-static void DelayEvent(IEventDataPtr pEvent, uint32 msDelay)
-{
-    DelayEventInfo* pDelayEventInfo = new DelayEventInfo(pEvent, msDelay);
-
-    // Playing music track takes ALOT of time for some reason so play it in another thread
-    SDL_Thread* pThread = SDL_CreateThread(SetupPlayMusicThread, "DelayedEventThread", (void*)pDelayEventInfo);
-    SDL_DetachThread(pThread);
-}
+//struct DelayEventInfo
+//{
+//    DelayEventInfo(IEventDataPtr pEvent, uint32 msDelay)
+//    {
+//        this->pEvent = pEvent;
+//        this->msDelay = msDelay;
+//    }
+//
+//    IEventDataPtr pEvent;
+//    uint32 msDelay;
+//};
+//
+//static int SetupPlayMusicThread(void* pData)
+//{
+//    DelayEventInfo* pEventInfo = (DelayEventInfo*)pData;
+//
+//    SDL_Delay(pEventInfo->msDelay);
+//    IEventMgr::Get()->VTriggerEvent(pEventInfo->pEvent);
+//
+//    return 0;
+//}
+//
+//static void DelayEvent(IEventDataPtr pEvent, uint32 msDelay)
+//{
+//    DelayEventInfo* pDelayEventInfo = new DelayEventInfo(pEvent, msDelay);
+//
+//    // Playing music track takes ALOT of time for some reason so play it in another thread
+//    SDL_Thread* pThread = SDL_CreateThread(SetupPlayMusicThread, "DelayedEventThread", (void*)pDelayEventInfo);
+//    SDL_DetachThread(pThread);
+//}
 
 void TogglePegAIComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
 {

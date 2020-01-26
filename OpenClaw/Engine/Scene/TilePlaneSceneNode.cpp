@@ -33,26 +33,22 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
     int32 tilePixelWidth = pProperties->tilePixelWidth;
     int32 tilePixelHeight = pProperties->tilePixelHeight;
 
-    // TODO: Optimize so that we dont render anything which is not seen
-    // (older commit was better ?)
-    int32_t numTilesPadding = 2;
+    const int32_t numTilesPadding = 0;
 
-    Point scale = g_pApp->GetScale();
+    const SDL_Rect cameraRect = camera->GetCameraRect();
 
     float movementRatioX = pProperties->movementPercentX / 100.0f;
     float movementRatioY = pProperties->movementPercentY / 100.0f;
 
-    int32_t parallaxCameraPosX = (int32_t)(camera->GetPosition().x * movementRatioX);
-    int32_t parallaxCameraPosY = (int32_t)(camera->GetPosition().y * movementRatioY);
+    float parallaxCameraPosX = (float) cameraRect.x * movementRatioX;
+    float parallaxCameraPosY = (float) cameraRect.y * movementRatioY;
 
-    int32_t startCol = (parallaxCameraPosX / tilePixelWidth) - numTilesPadding;
-    int32_t startRow = parallaxCameraPosY / tilePixelHeight - numTilesPadding;
+    int32_t startCol = (int32_t)(parallaxCameraPosX / tilePixelWidth) - numTilesPadding;
+    int32_t startRow = (int32_t)(parallaxCameraPosY / tilePixelHeight) - numTilesPadding;
 
-    int32_t colTilesToRender = (uint32_t)((camera->GetWidth() / tilePixelWidth) / scale.x) +
-        3 * numTilesPadding;
-
-    int32_t rowTilesToRender = (uint32_t)((camera->GetHeight() / tilePixelHeight) / scale.y) +
-        3 * numTilesPadding;
+    // We need to add 2 due to startCol/startRow + colTilesToRender/rowTilesToRender float->int casting
+    int32_t colTilesToRender = (uint32_t)(cameraRect.w / tilePixelWidth) + 2 + numTilesPadding;
+    int32_t rowTilesToRender = (uint32_t)(cameraRect.h / tilePixelHeight) + 2 + numTilesPadding;
 
     // Some planes (Back, Front) repeat themselves, which means they can be rendered
     // even when out of bounds
@@ -73,25 +69,31 @@ void SDL2TilePlaneSceneNode::VRender(Scene* pScene)
     }
 
     int32_t row, col;
-    for (row = startRow; row < (startRow + rowTilesToRender); row++)
+    for (row = startRow; row < (startRow + rowTilesToRender) && row <= maxTileIdxY; row++)
     {
-        for (col = startCol; col < (startCol + colTilesToRender); col++)
+        if (row < minTileIdxY)
+        {
+            continue;
+        }
+        const int rowTileIndex = row % pProperties->tilesOnAxisY;
+
+        for (col = startCol; col < (startCol + colTilesToRender) && col <= maxTileIdxX; col++)
         {
             // Dont render anything out of bounds
-            if ((col < minTileIdxX) || (col > maxTileIdxX) ||
-                (row < minTileIdxY) || (row > maxTileIdxY))
+            if (col < minTileIdxX)
             {
                 continue;
             }
+            const int colTileIndex = col % pProperties->tilesOnAxisX;
 
-            int32_t x = (col - startCol - numTilesPadding) * tilePixelWidth;
-            int32_t y = (row - startRow - numTilesPadding) * tilePixelHeight;
-            Image* image = (*pImageList)[(row % pProperties->tilesOnAxisY) * pProperties->tilesOnAxisX + (col % pProperties->tilesOnAxisX)];
+            Image* image = (*pImageList)[rowTileIndex * pProperties->tilesOnAxisX + colTileIndex];
 
             if (image && image->GetTexture() != NULL)
             {
-                SDL_Rect tileRect = { x - (parallaxCameraPosX % tilePixelWidth),
-                    y - (parallaxCameraPosY % tilePixelHeight),
+                int32_t x = col * tilePixelWidth - parallaxCameraPosX;
+                int32_t y = row * tilePixelHeight - parallaxCameraPosY;
+                SDL_Rect tileRect = { x,
+                    y,
                     tilePixelWidth,
                     tilePixelHeight };
 

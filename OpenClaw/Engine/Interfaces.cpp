@@ -62,6 +62,8 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level2_TowerCannonRight, "ActorPrototype_Level2_TowerCannonRight" },
 
         // Projectiles
+        { ActorPrototype_Level1_RatBomb, "ActorPrototype_Level1_RatBomb" },
+
         { ActorPrototype_Level2_CannonBall, "ActorPrototype_Level2_CannonBall" },
         { ActorPrototype_Level2_RatProjectile, "ActorPrototype_Level2_RatProjectile" },
 
@@ -289,6 +291,8 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
         { "ActorPrototype_Level2_TowerCannonRight", ActorPrototype_Level2_TowerCannonRight },
 
         // Projectiles
+        { "ActorPrototype_Level1_RatBomb", ActorPrototype_Level1_RatBomb },
+
         { "ActorPrototype_Level2_CannonBall", ActorPrototype_Level2_CannonBall },
         { "ActorPrototype_Level2_RatProjectile", ActorPrototype_Level2_RatProjectile },
 

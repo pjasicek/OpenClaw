@@ -498,18 +498,7 @@ namespace Util
     }
 #endif
 
-    SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer)
-    {
-        SDL_Surface* pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-        SDL_FillRect(pSurface, NULL, SDL_MapRGB(pSurface->format, color.r, color.g, color.b));
-        SDL_Texture* pTextureRect = SDL_CreateTextureFromSurface(pRenderer, pSurface);
-
-        SDL_FreeSurface(pSurface);
-        return pTextureRect;
-    }
-
-    SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer, uint8_t alpha)
-    {
+    SDL_Surface* CreateRGBSurface(Uint32 flags, int width, int height, int depth) {
         Uint32 rmask, gmask, bmask, amask;
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -523,13 +512,56 @@ namespace Util
         bmask = 0x00ff0000;
         amask = 0xff000000;
 #endif
-        SDL_Surface* pSurface = SDL_CreateRGBSurface(0, width, height, 32, rmask, gmask, bmask, amask);
+        return SDL_CreateRGBSurface(flags, width, height, depth, rmask, gmask, bmask, amask);
+    }
+
+    SDL_Texture* CreateSDLTextureFromRenderer(int rendererWidth, int rendererHeight, SDL_Renderer* pRenderer)
+    {
+        SDL_Surface* pSurface = CreateRGBSurface(0, rendererWidth, rendererHeight, 32);
+        SDL_RenderReadPixels(pRenderer, NULL, SDL_PIXELFORMAT_ARGB8888, pSurface->pixels, pSurface->pitch);
+        SDL_Texture* pTextureRect = SDL_CreateTextureFromSurface(pRenderer, pSurface);
+
+        SDL_FreeSurface(pSurface);
+        return pTextureRect;
+    }
+
+    SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer)
+    {
+        SDL_Surface* pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+        SDL_FillRect(pSurface, NULL, SDL_MapRGB(pSurface->format, color.r, color.g, color.b));
+        SDL_Texture* pTextureRect = SDL_CreateTextureFromSurface(pRenderer, pSurface);
+
+        SDL_FreeSurface(pSurface);
+        return pTextureRect;
+    }
+
+    SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer, uint8_t alpha)
+    {
+        SDL_Surface* pSurface = CreateRGBSurface(0, width, height, 32);
         SDL_FillRect(pSurface, NULL, SDL_MapRGBA(pSurface->format, color.r, color.g, color.b, alpha));
         SDL_Texture* pTextureRect = SDL_CreateTextureFromSurface(pRenderer, pSurface);
 
         SDL_FreeSurface(pSurface);
 
         return pTextureRect;
+    }
+
+    void RenderForcePresent(SDL_Renderer* pRenderer) {
+        SDL_RenderPresent(pRenderer);
+#ifdef __EMSCRIPTEN__
+        // Update screen manually. SDL_RenderPresent does nothing.
+        emscripten_sleep(0);
+#endif
+    }
+
+    void Sleep(Uint32 ms) {
+        if (ms > 0) {
+#ifndef __EMSCRIPTEN__
+            SDL_Delay(ms);
+#else
+            emscripten_sleep(ms);
+#endif
+        }
     }
 
     void PlayRandomHitSound()
@@ -550,4 +582,21 @@ namespace Util
         crcu32 = ~crcu32; while (dataLen--) { uint8 b = *pData++; crcu32 = (crcu32 >> 4) ^ s_crc32[(crcu32 & 0xF) ^ (b & 0xF)]; crcu32 = (crcu32 >> 4) ^ s_crc32[(crcu32 & 0xF) ^ (b >> 4)]; }
         return ~crcu32;
     }
+
+#ifdef __EMSCRIPTEN__
+    bool GetCanvasSize(SDL_Point &canvasSize) {
+        int width = EM_ASM_INT(
+                {return (Module && Module.canvas) ? Module.canvas.scrollWidth : -1;}
+        );
+        int height = EM_ASM_INT(
+                {return (Module && Module.canvas) ? Module.canvas.scrollHeight : -1;}
+        );
+        if (width >= 640 && height >= 480) {
+            canvasSize.x = width;
+            canvasSize.y = height;
+            return true;
+        }
+        return false;
+    }
+#endif
 };

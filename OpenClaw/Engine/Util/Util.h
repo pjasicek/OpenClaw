@@ -32,8 +32,15 @@ namespace Util
     int GetSoundDurationMs(const std::string& soundPath);
     int GetSoundDurationMs(Mix_Chunk* pSound);
 
+    SDL_Surface* CreateRGBSurface(Uint32 flags, int width, int height, int depth);
+
+    SDL_Texture* CreateSDLTextureFromRenderer(int rendererWidth, int rendererHeight, SDL_Renderer* pRenderer);
     SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer);
     SDL_Texture* CreateSDLTextureRect(int width, int height, SDL_Color color, SDL_Renderer* pRenderer, uint8_t alpha);
+
+    void RenderForcePresent(SDL_Renderer* pRenderer);
+
+    void Sleep(Uint32 ms);
 
     void PlayRandomHitSound();
 
@@ -45,6 +52,10 @@ namespace Util
         int randIdx = GetRandomNumber(0, container.size() - 1);
         return container[randIdx];
     }
+
+#ifdef __EMSCRIPTEN__
+    bool GetCanvasSize(SDL_Point &canvasSize);
+#endif
 }
 
 #endif

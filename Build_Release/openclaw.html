@@ -1,14 +1,160 @@
 <!DOCTYPE HTML>
-<html>
-<head></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>OpenClaw</title>
+    <meta name="description" content="Reimplementation of Captain Claw (1997) platformer">
+
+    <meta property="og:title" content="OpenClaw project">
+    <meta property="og:description" content="OpenClaw open source project">
+    <!--<meta property="og:image" content="preview.png">-->
+
+    <!-- Change default viewport width here according to canvas width -->
+    <meta name="viewport" content="width=660">
+
+    <style>
+        #console {
+            width: 100%;
+            height: 12em;
+            display: block;
+            background-color: black;
+            color: white;
+            font-family: 'Lucida Console', Monaco, monospace;
+            outline: none;
+            border: none;
+            font-size: 0.8em;
+        }
+
+        div {
+            margin: 0.7em 0;
+        }
+
+        button {
+            padding: 0.5em 2em;
+        }
+    </style>
+</head>
 <body>
-<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+<div>
+    <span id="loading"></span>
+    <!-- Config's width and height will be used if canvas does not have this attributes -->
+    <canvas id="canvas" width="640" height="480" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+</div>
+<div>
+    <button onclick="Module.canvas.requestFullscreen()">Enable Fullscreen Mode</button>
+    <button onclick="Console.toggleConsole()">Debug Panel</button>
+</div>
+<div class="debug_panel" style="display:none">
+    <div class="cheats">
+        <div>
+            Cheat codes:
+            <button onclick="CheatCodeManager.infiniteJumps()">Infinite Jumps</button>
+            <button onclick="CheatCodeManager.invincible()">God Mode</button>
+            <button onclick="CheatCodeManager.physicsDebug()">Physics Debug</button>
+            <button onclick="CheatCodeManager.infiniteAmmo()">Infinite Ammo</button>
+        </div>
+        <div>
+            Powerups:
+            <button onclick="CheatCodeManager.write('catnip'.toUpperCase(), Module.canvas)">Catnip</button>
+            <button onclick="CheatCodeManager.write('firesword'.toUpperCase(), Module.canvas)">Fire Sword</button>
+            <button onclick="CheatCodeManager.write('frostsword'.toUpperCase(), Module.canvas)">Frost Sword</button>
+            <button onclick="CheatCodeManager.write('lightningsword'.toUpperCase(), Module.canvas)">Lightning Sword</button>
+            <button onclick="CheatCodeManager.write('invisible'.toUpperCase(), Module.canvas)">Invisible</button>
+            <button onclick="CheatCodeManager.write('invulnerable'.toUpperCase(), Module.canvas)">Invulnerable</button>
+        </div>
+    </div>
+    <button onclick="Console.clear()">Clear Console</button>
+    <textarea id="console" rows="12"></textarea>
+</div>
 
 
 <script type='text/javascript'>
+    var CheatCodeManager = {
+        jumps: false,
+        god: false,
+        physics: false,
+        ammo: false,
+        pushEvent: function (key, event, target) {
+            return target.dispatchEvent(
+                new KeyboardEvent(event, {
+                    'keyCode': key,
+                    'charCode': key,
+                    'view': window,
+                    'bubbles': true,
+                    'cancelable': true
+                }));
+        },
+        click: function (key, target) {
+            if (CheatCodeManager.pushEvent(key, 'keydown', target)) {
+                CheatCodeManager.pushEvent(key, 'keypress', target);
+            }
+            CheatCodeManager.pushEvent(key, 'keyup', target);
+        },
+        openOrCloseConsole: function (target) {
+            CheatCodeManager.click(192, target); // "`"
+            CheatCodeManager.click(8, target); // Backspace
+            CheatCodeManager.click(8, target); // Backspace
+        },
+        write: function (cheat, target) {
+            CheatCodeManager.openOrCloseConsole(target);
+            for (var i = 0; i < cheat.length; i++) {
+                CheatCodeManager.click(cheat.charCodeAt(i), target);
+            }
+            CheatCodeManager.click(13, target); // "Enter"
+            CheatCodeManager.openOrCloseConsole(target);
+        },
+        infiniteJumps: function () {
+            CheatCodeManager.jumps = !CheatCodeManager.jumps;
+            CheatCodeManager.write("INFINITEJUMP " + (CheatCodeManager.jumps ? "ON" : "OFF"), Module.canvas);
+        },
+        invincible: function () {
+            CheatCodeManager.god = !CheatCodeManager.god;
+            CheatCodeManager.write("INVINCIBLE " + (CheatCodeManager.god ? "ON" : "OFF"), Module.canvas);
+        },
+        physicsDebug: function () {
+            CheatCodeManager.physics = !CheatCodeManager.physics;
+            CheatCodeManager.write("PHYSICSDEBUG " + (CheatCodeManager.physics ? "ON" : "OFF"), Module.canvas);
+        },
+        infiniteAmmo: function () {
+            CheatCodeManager.ammo = !CheatCodeManager.ammo;
+            CheatCodeManager.write("INFINITEAMMO " + (CheatCodeManager.ammo ? "ON" : "OFF"), Module.canvas);
+        },
+    };
+</script>
+<script type='text/javascript'>
+    var Console = {
+        elem: document.getElementById('console'),
+        enabled: false,
+        toggleConsole: function () {
+            Console.enabled = !Console.enabled;
+            Console.elem.parentNode.style.display = Console.enabled ? "block" : "none";
+        },
+        printToConsole: function (text) {
+            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            console.log(text);
+            Console.elem.value += text + "\n";
+        },
+        clear: function () {
+            Console.elem.value = '';
+        },
+    };
+</script>
+<script type='text/javascript'>
+    var loadingElement = document.getElementById("loading");
+
+    // Emscripten structure
     var Module = {
-        preRun: [],
-        postRun: [],
+        preRun: [function () {
+            // Here you can change canvas size dynamically if it's needed
+            // var ratio = window.devicePixelRatio || 1;
+            // Module.canvas.width = Math.max(screen.width, screen.height) * ratio;
+            // Module.canvas.height = Math.min(screen.width, screen.height) * ratio;
+
+            loadingElement.remove();
+            loadingElement = null;
+            Module.canvas.style.display = "block";
+        }],
         canvas: (function () {
             var canvas = document.getElementById('canvas');
 
@@ -22,22 +168,44 @@
 
             return canvas;
         })(),
+
+        dataFileDownloads: {
+            "openclaw.data": {
+                total: 0,
+                loaded: 0,
+            }
+        },
+        setStatus: function (text) {
+            if (loadingElement) {
+                Module.canvas.style.display = "none";
+                var progress = (Module.dataFileDownloads["openclaw.data"].loaded / Module.dataFileDownloads["openclaw.data"].total * 100) | 0;
+                if (progress < 100) {
+                    loadingElement.innerHTML = "Game resources are downloading... " + (progress | 0) + "%";
+                } else {
+                    loadingElement.innerHTML = "Game resources have been downloaded. Game is loading...";
+                }
+            }
+        },
+
+        // Could be removed. This code for debug build only
+        print: Console.printToConsole,
+        printErr: Console.printToConsole,
     };
-</script>
-<script>
-    !function (e, t) {
-        console.info("Loading client...");
-        var o = t.createElement("script");
-        o.async = !0;
-        o.type = "text/javascript";
-        o.src = "openclaw.js";
-        o.onerror = function (t) {
+
+    function loadGame() {
+        var script = document.createElement("script");
+        script.async = !0;
+        script.type = "text/javascript";
+        script.src = "openclaw.js";
+        script.onerror = function (t) {
             console.error("Script Error");
             console.error(t);
         };
-        var r = t.getElementsByTagName("script")[0];
-        r.parentNode.insertBefore(o, r)
-    }(window, document);
+        var r = document.getElementsByTagName("script")[0];
+        r.parentNode.insertBefore(script, r);
+    }
+
+    loadGame();
 </script>
 </body>
 </html>

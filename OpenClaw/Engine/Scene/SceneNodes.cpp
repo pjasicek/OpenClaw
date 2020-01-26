@@ -74,6 +74,16 @@ void SceneNode::VRenderChildren(Scene* pScene)
     {
         // TODO: Huge overhead from testing visibility of every single actor each frame
         // Possible solution: Use Box2D Broadphase to retrieve all actors within AABB
+
+        // P.S. I don't think it would work faster.
+        // Actor may not have a PhysicsComponent. And we will have to create fake physics objects
+        // for every actor and update AABB position properties each frame.
+
+        // We can try to represent each actor as a Point from PositionComponent
+        // and use 2D grid to store and query it.
+        // In this case we will render only visible grids and near neighbors.
+        // As I understood b2DynamicTree will be useless
+        // for points (AABB rectangles with 0 width and height)
         if (childNode->VIsVisible(pScene))
         {
             childNode->VPreRender(pScene);
@@ -101,16 +111,8 @@ bool SceneNode::VIsVisible(Scene* pScene) const
     }
 
     const SDL_Rect cameraRect = pCamera->GetCameraRect();
-    SDL_Rect actorRect = m_pRenderComponent->VGetPositionRect();
-
-    SDL_Rect result;
-    SDL_Rect position = m_pRenderComponent->VGetPositionRect();
-    if (!SDL_IntersectRect(&cameraRect, &position, &result))
-    {
-        return false;
-    }
-
-    return true;
+    const SDL_Rect position = m_pRenderComponent->VGetPositionRect();
+    return SDL_HasIntersection(&cameraRect, &position);
 }
 
 bool SceneNode::VAddChild(shared_ptr<ISceneNode> ikid)
@@ -269,7 +271,7 @@ void CameraNode::SetViewPosition(Scene* pScene)
     }
 }
 
-bool CameraNode::IntersectsWithPoint(const Point& point, float cameraScale)
+bool CameraNode::IntersectsWithPoint(const Point& point, float cameraScale) const
 {
     SDL_Rect cameraRect = GetCameraRect();
 

@@ -196,10 +196,9 @@ void TreasurePickupComponent::VUpdate(uint32 msDiff)
                 shared_ptr<EventData_Move_Actor> pEvent(new EventData_Move_Actor(m_pOwner->GetGUID(), m_pPositionComponent->GetPosition()));
                 IEventMgr::Get()->VTriggerEvent(pEvent);
 
-                SDL_Rect dummy;
                 SDL_Rect renderRect = m_pRenderComponent->VGetPositionRect();
                 SDL_Rect cameraRect = pCamera->GetCameraRect();
-                if (!SDL_IntersectRect(&renderRect, &cameraRect, &dummy))
+                if (!SDL_HasIntersection(&renderRect, &cameraRect))
                 {
                     shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
                     IEventMgr::Get()->VQueueEvent(pEvent);

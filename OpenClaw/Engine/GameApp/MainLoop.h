@@ -3,4 +3,6 @@
 
 extern int RunGameEngine(int argc, char** argv);
 
+extern bool TryToFindFile(const char *path);
+
 #endif
