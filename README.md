@@ -94,13 +94,14 @@ Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
     mkdir build
     cd build
     emconfigure cmake -DEmscripten=1 ..
+    # -DExtern_Config=0 parameter includes config.xml file in game resources
     make
     ```
   
   **Run:**
   
   You will need web server to run compiled project. There are 2 options:
-  - You can upload `openclaw.html`, `openclaw.js`, `openclaw.wasm` and `openclaw.data` files from `Build_Release` directory to any web server.
+  - You can upload `openclaw.html`, `openclaw.js`, `openclaw.wasm` and `openclaw.data` (and `config.xml` if you build the project without `-DExtern_Config=0` parameter) files from `Build_Release` directory to any web server.
   - Or run Python server:
     ```shell script
     cd Build_Release
@@ -115,6 +116,11 @@ Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
   - Some web browsers does not support `.wav` file formats. *Microsoft? Again?*
   - All web browsers does not support `.xmi` (MIDI) file formats. This files should be converted to another compatible formats. **All MIDI audio are disabled for now**.
   - Some specific `SDL_Mixer` audio functions aren't implemented (*you can find it by `TODO: [EMSCRIPTEN]` search query*) but the game is playable.
+  - Death and teleport fade in effects are broken. Emscripten erases graphic buffer after each draw call. Do not use buffer from previous calls.
+  - There is a [FireFox bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1292053) with a very long story which doesn't allow to prevent ALT default actions. ALT key presses will open window menu. Workarounds:
+    - Contribute to Mozilla and finally close this bug.
+    - Use fullscreen mode.
+    - Disable default ALT actions in FireFox `about:config` properties.
  
 # In-game images
   -  **TODO** - add screenshots
