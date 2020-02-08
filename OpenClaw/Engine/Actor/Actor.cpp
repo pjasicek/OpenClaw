@@ -58,6 +58,7 @@ void Actor::PostPostInit()
 void Actor::Destroy()
 {
     //LOG("Destroying actor: " + _name);
+    m_pPositionComponent.reset();
     _components.clear();
 }
 

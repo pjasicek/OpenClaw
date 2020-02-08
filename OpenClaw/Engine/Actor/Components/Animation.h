@@ -35,9 +35,9 @@ public:
     Animation();
     ~Animation();
 
-    static Animation* CreateAnimation(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner);
-    static Animation* CreateAnimation(std::vector<AnimationFrame> animFrames, const char* animName, AnimationComponent* owner);
-    static Animation* CreateAnimation(int numAnimFrames, int animFrameTime, const char* animName, AnimationComponent* owner);
+    static std::shared_ptr<Animation> CreateAnimation(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner);
+    static std::shared_ptr<Animation> CreateAnimation(std::vector<AnimationFrame> animFrames, const char* animName, AnimationComponent* owner);
+    static std::shared_ptr<Animation> CreateAnimation(int numAnimFrames, int animFrameTime, const char* animName, AnimationComponent* owner);
 
     inline std::string GetName() const { return _name; }
 

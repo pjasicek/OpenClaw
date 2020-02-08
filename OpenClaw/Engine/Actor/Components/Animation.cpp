@@ -23,37 +23,34 @@ Animation::~Animation()
     _animationFrames.clear();
 }
 
-Animation* Animation::CreateAnimation(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner)
+std::shared_ptr<Animation> Animation::CreateAnimation(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner)
 {
-    Animation* animation = new Animation();
+    std::shared_ptr<Animation> animation {new Animation()};
     if (!animation->Initialize(wapAni, animationName, resourcePath, owner))
     {
-        delete animation;
-        return NULL;
+        return nullptr;
     }
 
     return animation;
 }
 
-Animation* Animation::CreateAnimation(std::vector<AnimationFrame> animFrames, const char* animName, AnimationComponent* owner)
+std::shared_ptr<Animation> Animation::CreateAnimation(std::vector<AnimationFrame> animFrames, const char* animName, AnimationComponent* owner)
 {
-    Animation* animation = new Animation();
+    std::shared_ptr<Animation> animation {new Animation()};
     if (!animation->Initialize(animFrames, animName, owner))
     {
-        delete animation;
-        return NULL;
+        return nullptr;
     }
 
     return animation;
 }
 
-Animation* Animation::CreateAnimation(int numAnimFrames, int animFrameTime, const char* animName, AnimationComponent* owner)
+std::shared_ptr<Animation> Animation::CreateAnimation(int numAnimFrames, int animFrameTime, const char* animName, AnimationComponent* owner)
 {
-    Animation* animation = new Animation();
+    std::shared_ptr<Animation> animation {new Animation()};
     if (!animation->Initialize(numAnimFrames, animFrameTime, animName, owner))
     {
-        delete animation;
-        return NULL;
+        return nullptr;
     }
 
     return animation;

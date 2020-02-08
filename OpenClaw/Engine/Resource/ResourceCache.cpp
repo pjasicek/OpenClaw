@@ -314,7 +314,7 @@ std::shared_ptr<ResourceHandle> ResourceCache::Load(Resource* r)
     }
 
     int32 allocSize = rawSize + ((loader->VAddNullZero()) ? (1) : (0));
-    char* rawBuffer = loader->VUseRawFile() ? Allocate(allocSize) : new char[allocSize];
+    char* rawBuffer = loader->VUseRawFile() ? Allocate(allocSize) : new /*(std::nothrow)*/ char[allocSize];
     if (rawBuffer == NULL)
     {
         LOG_ERROR("Could not allocate enough memory for resource: " + r->GetName() + 
@@ -397,7 +397,7 @@ char* ResourceCache::Allocate(uint32 size)
         return NULL;
     }
 
-    char* mem = new char[size];
+    char* mem = new /*(std::nothrow)*/ char[size];
     if (mem)
     {
         _allocated += size;
@@ -424,7 +424,6 @@ void ResourceCache::Flush()
     {
         std::shared_ptr<ResourceHandle> handle = *(_lruList.begin());
         Free(handle);
-        _lruList.pop_front();
     }
 }
 

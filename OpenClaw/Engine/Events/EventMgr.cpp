@@ -25,8 +25,11 @@ IEventMgr::IEventMgr(const char* pName, bool setAsGlobal)
 
 IEventMgr::~IEventMgr()
 {
-    if (g_pEventMgr)
-    {
-        SAFE_DELETE(g_pEventMgr);
+    if (g_pEventMgr == this) {
+        g_pEventMgr = nullptr;
     }
+//    if (g_pEventMgr)
+//    {
+//        SAFE_DELETE(g_pEventMgr);
+//    }
 }

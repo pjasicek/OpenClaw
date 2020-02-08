@@ -26,8 +26,10 @@ Image::Image(SDL_Texture* pSDLTexture)
 
 Image::~Image()
 {
-    SDL_DestroyTexture(m_pTexture);
-    m_pTexture = NULL;
+    if (m_pTexture) {
+        SDL_DestroyTexture(m_pTexture);
+        m_pTexture = NULL;
+    }
 }
 
 SDL_Rect Image::GetPositonRect(int32_t x, int32_t y)
@@ -124,6 +126,7 @@ Image* Image::CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* rende
     if (pSurface == NULL)
     {
         LOG_ERROR(IMG_GetError());
+        delete pImage;
         return NULL;
     }
 
@@ -138,12 +141,15 @@ Image* Image::CreatePcxImage(char* rawBuffer, uint32_t size, SDL_Renderer* rende
     if (pTexture == NULL)
     {
         LOG_ERROR(IMG_GetError());
+        delete pImage;
         return NULL;
     }
 
     if (!pImage->Initialize(pTexture))
     {
         LOG_ERROR(IMG_GetError());
+        delete pImage;
+        SDL_DestroyTexture(pTexture);
         return NULL;
     }
 
@@ -158,6 +164,7 @@ Image* Image::CreatePngImage(char* rawBuffer, uint32_t size, SDL_Renderer* rende
     if (pSurface == NULL)
     {
         LOG_ERROR(IMG_GetError());
+        delete pImage;
         return NULL;
     }
 

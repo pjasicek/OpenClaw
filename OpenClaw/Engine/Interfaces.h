@@ -699,14 +699,7 @@ public:
     {
         IdType id = SubClass::GetIdFromName(SubClass::g_Name);
 
-        auto findIter = _creationFunctions.find(id);
-        if (findIter == _creationFunctions.end())
-        {
-            _creationFunctions[id] = &GenericObjectCreationFunction < BaseClass, SubClass >;
-            return true;
-        }
-
-        return false;
+        return Register<SubClass>(id);
     }
 
     BaseClass* Create(IdType id)

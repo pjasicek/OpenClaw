@@ -229,6 +229,7 @@ class BaseGameApp
 {
     // Command handler should have unlimited access
     friend class CommandHandler;
+    friend void Loop(void *instance);
 
 public:
     BaseGameApp();
@@ -265,7 +266,8 @@ public:
     // TODO: Memory leak most likely
     inline WapPal* GetCurrentPalette() const { return m_pPalette; }
     void SetCurrentPalette(WapPal* palette) { m_pPalette = palette; }
-    inline ResourceCache* GetResourceCache() const { return m_pResourceCache; }
+    // Deprecated. Use GetResourceMgr()
+    std::shared_ptr<ResourceCache> GetResourceCache() const;
     inline IResourceMgr* GetResourceMgr() const { return m_pResourceMgr; }
 
     BaseGameLogic* GetGameLogic() const { return m_pGame; }
@@ -305,14 +307,11 @@ protected:
     virtual bool VPerformStartupTests();
 
     BaseGameLogic* m_pGame;
-    ResourceCache* m_pResourceCache;
-    IResourceMgr* m_pResourceMgr; // This should replace m_pResourceCache since it wraps it
+    IResourceMgr* m_pResourceMgr;
     EventMgr* m_pEventMgr;
     TTF_Font* m_pConsoleFont;
     Audio* m_pAudio;
     TouchManager *m_pTouchManager;
-
-    TiXmlDocument m_XmlConfiguration;
 
     LocalizedStringsMap m_LocalizedStringsMap;
     FontMap m_FontMap;

@@ -21,6 +21,7 @@
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include <cctype>            // for std::tolower
+#include <memory>
 
 #include "ZipFile.h"
 
@@ -159,7 +160,7 @@ bool ZipFile::Init(const std::string &resFileName)
     fseek(m_pFile, dhOffset - dh.dirSize, SEEK_SET);
 
     // Allocate the data buffer, and read the whole thing.
-    m_pDirData = new char[dh.dirSize + dh.nDirEntries*sizeof(*m_papDir)];
+    m_pDirData = new /*(std::nothrow)*/ char[dh.dirSize + dh.nDirEntries*sizeof(*m_papDir)];
     if (!m_pDirData)
         return false;
     memset(m_pDirData, 0, dh.dirSize + dh.nDirEntries*sizeof(*m_papDir));
@@ -355,12 +356,12 @@ bool ZipFile::ReadFile(int i, void *pBuf)
         return false;
 
     // Alloc compressed data buffer and read the whole stream
-    char *pcData = new char[h.cSize];
+    std::unique_ptr<char[]> pcData = std::unique_ptr<char[]>{ new /*(std::nothrow)*/ char[h.cSize] };
     if (!pcData)
         return false;
 
-    memset(pcData, 0, h.cSize);
-    if (fread(pcData, h.cSize, 1, m_pFile) != 1)
+    memset(pcData.get(), 0, h.cSize);
+    if (fread(pcData.get(), h.cSize, 1, m_pFile) != 1)
         return false;
 
     bool ret = true;
@@ -369,7 +370,7 @@ bool ZipFile::ReadFile(int i, void *pBuf)
     z_stream stream;
     int err;
 
-    stream.next_in = (Bytef*)pcData;
+    stream.next_in = (Bytef*)pcData.get();
     stream.avail_in = (uInt)h.cSize;
     stream.next_out = (Bytef*)pBuf;
     stream.avail_out = h.ucSize;
@@ -389,7 +390,6 @@ bool ZipFile::ReadFile(int i, void *pBuf)
     if (err != Z_OK)
         ret = false;
 
-    delete[] pcData;
     return ret;
 }
 
@@ -432,12 +432,12 @@ bool ZipFile::ReadLargeFile(int i, void *pBuf, void(*progressCallback)(int, bool
         return false;
 
     // Alloc compressed data buffer and read the whole stream
-    char *pcData = new char[h.cSize];
+    std::unique_ptr<char[]> pcData = std::unique_ptr<char[]>{ new /*(std::nothrow)*/ char[h.cSize] };
     if (!pcData)
         return false;
 
-    memset(pcData, 0, h.cSize);
-    if (fread(pcData, h.cSize, 1, m_pFile) != 1)
+    memset(pcData.get(), 0, h.cSize);
+    if (fread(pcData.get(), h.cSize, 1, m_pFile) != 1)
         return false;
 
     bool ret = true;
@@ -446,7 +446,7 @@ bool ZipFile::ReadLargeFile(int i, void *pBuf, void(*progressCallback)(int, bool
     z_stream stream;
     int err;
 
-    stream.next_in = (Bytef*)pcData;
+    stream.next_in = (Bytef*)pcData.get();
     stream.avail_in = (uInt)h.cSize;
     stream.next_out = (Bytef*)pBuf;
     stream.avail_out = (128 * 1024); //  read 128k at a time h.ucSize;
@@ -483,6 +483,5 @@ bool ZipFile::ReadLargeFile(int i, void *pBuf, void(*progressCallback)(int, bool
     if (err != Z_OK)
         ret = false;
 
-    delete[] pcData;
     return ret;
 }
