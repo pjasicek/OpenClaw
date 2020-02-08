@@ -1475,5 +1475,5 @@ void BaseGameApp::RegisterTouchRecognizers(ITouchHandler &touchHandler) {
 }
 
 std::shared_ptr<ResourceCache> BaseGameApp::GetResourceCache() const {
-    return m_pResourceMgr->GetResourceCacheFromName(ORIGINAL_RESOURCE);
+    return m_pResourceMgr->VGetResourceCacheFromName(ORIGINAL_RESOURCE);
 }

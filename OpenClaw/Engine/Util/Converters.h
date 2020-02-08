@@ -19,9 +19,7 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber);
 
 #define INSERT_POSITION_COMPONENT(x, y, rootElem) \
 { \
-   TiXmlElement* elem = new TiXmlElement("PositionComponent"); \
-   rootElem->LinkEndChild(elem); \
-   XML_ADD_2_PARAM_ELEMENT("Position", "x", x, "y", y, elem); \
+   rootElem->LinkEndChild(CreatePositionComponent(x, y)); \
 } \
 
 #define INSERT_COLLISION_COMPONENT(width, height, rootElem) \
@@ -94,7 +92,7 @@ inline TiXmlElement* CreateActorRenderComponent(const char* imagesPath, int32 zC
 
 //=====================================================================================================================
 
-inline TiXmlElement* CreateAnimationComponent(std::string aniPath)
+inline TiXmlElement* CreateAnimationComponent(const std::string &aniPath)
 {
     TiXmlElement* animationComponent = new TiXmlElement("AnimationComponent");
     XML_ADD_TEXT_ELEMENT("AnimationPath", aniPath.c_str(), animationComponent);
@@ -1222,7 +1220,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         static std::vector<std::string> s_ReportedUnknownLogicsList;
 
         bool isAlreadyReported = false;
-        for (std::string unkLogic : s_ReportedUnknownLogicsList)
+        for (std::string &unkLogic : s_ReportedUnknownLogicsList)
         {
             if (unkLogic == logic)
             {
@@ -1276,7 +1274,7 @@ inline TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
     pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, g_pApp->GetGlobalOptions()->maxJumpHeight, 40, 90, 4.0, 0.0, 0.5));
     pClawActor->LinkEndChild(CreateControllableComponent(true));
     pClawActor->LinkEndChild(CreateAnimationComponent("/CLAW/ANIS/*"));
-    pClawActor->LinkEndChild(CreateActorRenderComponent("/CLAW/IMAGES/*", 4000));
+    pClawActor->LinkEndChild(CreateActorRenderComponent("/CLAW/IMAGES/*", (int32) zIndexes::ClawActor));
     pClawActor->LinkEndChild(ActorTemplates::CreateFollowableComponent(Point(-5, -80), "/GAME/IMAGES/EXCLAMATION/*", ""));
 
     TiXmlElement* pScoreComponent = new TiXmlElement("ScoreComponent");
@@ -1308,7 +1306,9 @@ inline TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
 // HUD to Xml
 //=====================================================================================================================
 
-inline TiXmlElement* CreateHUDElement(std::string pathToImages, int animFrameDuration, std::string animPath, Point position, bool anchorRight, bool anchorBottom, std::string key, bool visible = true)
+inline TiXmlElement *CreateHUDElement(const std::string &pathToImages, int animFrameDuration, const std::string &animPath,
+                                      const Point &position, bool anchorRight, bool anchorBottom,
+                                      const std::string &key, bool visible = true)
 {
     TiXmlElement* pHUDElement = new TiXmlElement("Actor");
     pHUDElement->SetAttribute("Type", pathToImages.c_str());

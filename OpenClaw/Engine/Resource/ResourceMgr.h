@@ -12,7 +12,7 @@ public:
     virtual ~IResourceMgr() { }
 
     virtual void VAddResourceCache(std::shared_ptr<ResourceCache> &pCache) = 0;
-    virtual std::shared_ptr<ResourceCache> GetResourceCacheFromName(const std::string& resCacheName) = 0;
+    virtual std::shared_ptr<ResourceCache> VGetResourceCacheFromName(const std::string& resCacheName) = 0;
     virtual std::shared_ptr<ResourceHandle> VGetHandle(Resource* r, const std::string& resCacheName = "") = 0;
     virtual int32 VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), const std::string& resCacheName = "") = 0;
     virtual std::vector<std::string> VMatch(const std::string pattern, const std::string& resCacheName = "") = 0;
@@ -28,7 +28,7 @@ public:
     virtual ~ResourceMgrImpl();
 
     virtual void VAddResourceCache(std::shared_ptr<ResourceCache> &pCache);
-    virtual std::shared_ptr<ResourceCache> GetResourceCacheFromName(const std::string& resCacheName);
+    virtual std::shared_ptr<ResourceCache> VGetResourceCacheFromName(const std::string& resCacheName);
     virtual std::shared_ptr<ResourceHandle> VGetHandle(Resource* r, const std::string& resCacheName = "");
     virtual int32 VPreload(const std::string pattern, void(*progressCallback)(int32, bool &), const std::string& resCacheName = "");
     virtual std::vector<std::string> VMatch(const std::string pattern, const std::string& resCacheName = "");

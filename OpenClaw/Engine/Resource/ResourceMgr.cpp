@@ -11,7 +11,7 @@ void ResourceMgrImpl::VAddResourceCache(std::shared_ptr<ResourceCache> &pCache)
     m_ResourceCacheList.push_back(pCache);
 }
 
-std::shared_ptr<ResourceCache> ResourceMgrImpl::GetResourceCacheFromName(const std::string& resCacheName)
+std::shared_ptr<ResourceCache> ResourceMgrImpl::VGetResourceCacheFromName(const std::string& resCacheName)
 {
     assert(m_ResourceCacheList.size() > 0);
 
@@ -35,7 +35,7 @@ std::shared_ptr<ResourceHandle> ResourceMgrImpl::VGetHandle(Resource* r, const s
     // Find res cache by name
     if (!resCacheName.empty())
     {
-        std::shared_ptr<ResourceCache> pResCache = GetResourceCacheFromName(resCacheName);
+        std::shared_ptr<ResourceCache> pResCache = VGetResourceCacheFromName(resCacheName);
         assert(pResCache != NULL);
 
         return pResCache->GetHandle(r);
@@ -63,7 +63,7 @@ int32 ResourceMgrImpl::VPreload(const std::string pattern, void(*progressCallbac
     // Preload res cache by name
     if (!resCacheName.empty())
     {
-        std::shared_ptr<ResourceCache> pResCache = GetResourceCacheFromName(resCacheName);
+        std::shared_ptr<ResourceCache> pResCache = VGetResourceCacheFromName(resCacheName);
         assert(pResCache != NULL);
 
         return pResCache->Preload(pattern, progressCallback);
@@ -87,7 +87,7 @@ std::vector<std::string> ResourceMgrImpl::VMatch(const std::string pattern, cons
 
     if (!resCacheName.empty())
     {
-        std::shared_ptr<ResourceCache> pResCache = GetResourceCacheFromName(resCacheName);
+        std::shared_ptr<ResourceCache> pResCache = VGetResourceCacheFromName(resCacheName);
         assert(pResCache != NULL);
 
         matchedStrings = pResCache->Match(pattern);
@@ -112,7 +112,7 @@ std::vector<std::string> ResourceMgrImpl::VGetAllFilesInDirectory(const char* di
 
     if (!resCacheName.empty())
     {
-        std::shared_ptr<ResourceCache> pResCache = GetResourceCacheFromName(resCacheName);
+        std::shared_ptr<ResourceCache> pResCache = VGetResourceCacheFromName(resCacheName);
         assert(pResCache != NULL);
 
         allFiles = pResCache->GetAllFilesInDirectory(directoryPath);
@@ -137,7 +137,7 @@ void ResourceMgrImpl::VFlush(const std::string& resCacheName)
 
     if (!resCacheName.empty())
     {
-        std::shared_ptr<ResourceCache> pResCache = GetResourceCacheFromName(resCacheName);
+        std::shared_ptr<ResourceCache> pResCache = VGetResourceCacheFromName(resCacheName);
         assert(pResCache != NULL);
 
         pResCache->Flush();
