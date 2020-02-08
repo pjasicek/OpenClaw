@@ -271,7 +271,7 @@ int32 BaseGameApp::Run()
     // Some systems (like web browsers) does not support infinite loops.
     // We need to return control after each loop steps.
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop_arg(Loop, this, 0, 0);
+    emscripten_set_main_loop_arg(Loop, this, 0, 1);
     // Loop must call emscripten_cancel_main_loop() to exit
 #else
     while (m_IsRunning) {
