@@ -36,7 +36,7 @@ public:
     ~Animation();
 
     static std::shared_ptr<Animation> CreateAnimation(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner);
-    static std::shared_ptr<Animation> CreateAnimation(std::vector<AnimationFrame> animFrames, const char* animName, AnimationComponent* owner);
+    static std::shared_ptr<Animation> CreateAnimation(const std::vector<AnimationFrame> &animFrames, const char* animName, AnimationComponent* owner);
     static std::shared_ptr<Animation> CreateAnimation(int numAnimFrames, int animFrameTime, const char* animName, AnimationComponent* owner);
 
     inline std::string GetName() const { return _name; }
@@ -67,7 +67,7 @@ private:
     void SetOwner(AnimationComponent* owner) { assert(!m_pOwner && owner); m_pOwner = owner; }
 
     bool Initialize(WapAni* wapAni, const char* animationName, const char* resourcePath, AnimationComponent* owner);
-    bool Initialize(std::vector<AnimationFrame> animFrames, const char* animationName, AnimationComponent* owner);
+    bool Initialize(const std::vector<AnimationFrame> &animFrames, const char* animationName, AnimationComponent* owner);
     bool Initialize(int numAnimFrames, int animFrameTime, const char* animName, AnimationComponent* owner);
 
     void PlayFrameSound(const std::string& sound);
