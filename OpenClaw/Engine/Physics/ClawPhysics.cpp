@@ -1348,7 +1348,7 @@ RaycastResult ClawPhysics::VRayCast(const Point& fromPoint, const Point& toPoint
 }
 
 // HACK: THIS WHOLE METHOD IS A HACK AND IT DOES NOT DO WHAT IT SHOULD DO
-// THIS IS TIGHTLY COUPLED TO CL�W'S CROUCHING
+// THIS IS TIGHTLY COUPLED TO CLAW'S CROUCHING
 void ClawPhysics::VScaleActor(uint32_t actorId, double scale)
 {
     if (b2Body* pBody = FindBox2DBody(actorId))
