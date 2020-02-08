@@ -19,13 +19,13 @@ SawBladeComponent::SawBladeComponent()
 
 bool SawBladeComponent::VInit(TiXmlElement* pData)
 {
-    assert(ParseValueFromXmlElem(&m_UpAnimName, pData->FirstChildElement("UpAnimName")));
-    assert(ParseValueFromXmlElem(&m_DownAnimName, pData->FirstChildElement("DownAnimName")));
-    assert(ParseValueFromXmlElem(&m_SpinAnimName, pData->FirstChildElement("SpinAnimName")));
-    assert(ParseValueFromXmlElem(&m_ActiveFrameIdx, pData->FirstChildElement("ActiveFrameIdx")));
-    assert(ParseValueFromXmlElem(&m_DeactivateFrameIdx, pData->FirstChildElement("DeactivateFrameIdx")));
-    assert(ParseValueFromXmlElem(&m_TimeOff, pData->FirstChildElement("TimeOff")));
-    assert(ParseValueFromXmlElem(&m_StartDelay, pData->FirstChildElement("StartDelay")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_UpAnimName, pData->FirstChildElement("UpAnimName")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_DownAnimName, pData->FirstChildElement("DownAnimName")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_SpinAnimName, pData->FirstChildElement("SpinAnimName")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ActiveFrameIdx, pData->FirstChildElement("ActiveFrameIdx")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_DeactivateFrameIdx, pData->FirstChildElement("DeactivateFrameIdx")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_TimeOff, pData->FirstChildElement("TimeOff")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_StartDelay, pData->FirstChildElement("StartDelay")));
 
     return true;
 }

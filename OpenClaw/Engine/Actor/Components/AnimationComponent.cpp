@@ -81,9 +81,9 @@ bool AnimationComponent::VInit(TiXmlElement* data)
     {
         SpecialAnimation specialAnim;
 
-        assert(ParseValueFromXmlElem(&specialAnim.type, pSpecialAnimElem->FirstChildElement("Type")));
-        assert(ParseValueFromXmlElem(&specialAnim.frameDuration, pSpecialAnimElem->FirstChildElement("FrameDuration")));
-        assert(ParseValueFromXmlElem(&specialAnim.setPositionDelay, pSpecialAnimElem->FirstChildElement("HasPositionDelay")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&specialAnim.type, pSpecialAnimElem->FirstChildElement("Type")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&specialAnim.frameDuration, pSpecialAnimElem->FirstChildElement("FrameDuration")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&specialAnim.setPositionDelay, pSpecialAnimElem->FirstChildElement("HasPositionDelay")));
 
         m_SpecialAnimationList.push_back(specialAnim);
     }

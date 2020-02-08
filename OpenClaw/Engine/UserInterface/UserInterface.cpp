@@ -491,7 +491,7 @@ bool ScreenElementMenu::Initialize(TiXmlElement* pElem)
     assert(m_pRenderer != NULL);
 
     std::string menuTypeStr;
-    assert(ParseValueFromXmlElem(&menuTypeStr, pElem->FirstChildElement("MenuType")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&menuTypeStr, pElem->FirstChildElement("MenuType")));
     if (menuTypeStr == "MenuType_MainMenu")
     {
         m_MenuType = MenuType_MainMenu;
@@ -827,7 +827,7 @@ bool ScreenElementMenuPage::Initialize(TiXmlElement* pElem)
         pKeyboardEvent = pKeyboardEvent->NextSiblingElement("KeyboardEvent"))
     {
         std::string keyStr;
-        assert(ParseValueFromXmlElem(&keyStr, pKeyboardEvent->FirstChildElement("KeyType")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&keyStr, pKeyboardEvent->FirstChildElement("KeyType")));
 
         auto findIt = g_StringToSDLKeyCodeMap.find(keyStr);
         if (findIt == g_StringToSDLKeyCodeMap.end())

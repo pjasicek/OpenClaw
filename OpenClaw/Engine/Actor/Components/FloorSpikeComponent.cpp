@@ -23,9 +23,9 @@ bool FloorSpikeComponent::VInit(TiXmlElement* pData)
 {
     assert(pData != NULL);
 
-    assert(ParseValueFromXmlElem(&m_ActiveFrameIdx, pData->FirstChildElement("ActiveFrameIdx")));
-    assert(ParseValueFromXmlElem(&m_StartDelay, pData->FirstChildElement("StartDelay")));
-    assert(ParseValueFromXmlElem(&m_TimeOn, pData->FirstChildElement("TimeOn")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ActiveFrameIdx, pData->FirstChildElement("ActiveFrameIdx")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_StartDelay, pData->FirstChildElement("StartDelay")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_TimeOn, pData->FirstChildElement("TimeOn")));
     ParseValueFromXmlElem(&m_ActivateSound, pData->FirstChildElement("ActivateSound"));
     ParseValueFromXmlElem(&m_DeactivateSound, pData->FirstChildElement("DeactivateSound"));
 

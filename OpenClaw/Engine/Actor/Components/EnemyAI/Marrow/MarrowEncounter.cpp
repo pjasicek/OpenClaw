@@ -168,7 +168,7 @@ MarrowParrotAIStateComponent::~MarrowParrotAIStateComponent()
 
 bool MarrowParrotAIStateComponent::VDelegateInit(TiXmlElement* pData)
 {
-    assert(ParseValueFromXmlElem(&m_IdleAnim, pData->FirstChildElement("IdleAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_IdleAnim, pData->FirstChildElement("IdleAnim")));
 
     return true;
 }

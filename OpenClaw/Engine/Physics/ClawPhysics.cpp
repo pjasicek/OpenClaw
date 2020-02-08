@@ -304,10 +304,10 @@ void ClawPhysics::VSyncVisibleScene()
 
                             float jumpPixelsLeft = pPhysicsComponent->GetMaxJumpHeight() - pPhysicsComponent->GetHeightInAir();
 
-                            if (pGameActor->GetName() == "Claw")
-                            {
+                            //if (pGameActor->GetName() == "Claw")
+                            //{
                                 //LOG("LEFT: " + ToStr(jumpPixelsLeft));
-                            }
+                            //}
 
                             // Jumped past limit
                             if ((!g_pApp->GetGameCheats()->clawInfiniteJump || pPhysicsComponent->GetIsForcedUp()) && jumpPixelsLeft < 0.0f)
@@ -862,7 +862,7 @@ void ClawPhysics::AddActorFixtureToBody(b2Body* pBody, const ActorFixtureDef* pF
     fixture.isSensor = pFixtureDef->isSensor;
     fixture.filter.categoryBits = pFixtureDef->collisionFlag;
     fixture.filter.maskBits = pFixtureDef->collisionMask;
-    assert(pBody->CreateFixture(&fixture));
+    DO_AND_CHECK(pBody->CreateFixture(&fixture));
 }
 
 void ClawPhysics::VAddActorFixtureToBody(uint32_t actorId, const ActorFixtureDef* pFixtureDef)
@@ -1348,7 +1348,7 @@ RaycastResult ClawPhysics::VRayCast(const Point& fromPoint, const Point& toPoint
 }
 
 // HACK: THIS WHOLE METHOD IS A HACK AND IT DOES NOT DO WHAT IT SHOULD DO
-// THIS IS TIGHTLY COUPLED TO CLÄW'S CROUCHING
+// THIS IS TIGHTLY COUPLED TO CLï¿½W'S CROUCHING
 void ClawPhysics::VScaleActor(uint32_t actorId, double scale)
 {
     if (b2Body* pBody = FindBox2DBody(actorId))

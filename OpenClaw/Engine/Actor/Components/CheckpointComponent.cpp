@@ -77,7 +77,7 @@ void CheckpointComponent::VOnAnimationAtLastFrame(Animation* pAnimation)
             MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name));
         assert(pAnimationComponent);
 
-        assert(pAnimationComponent->SetAnimation("wave"));
+        DO_AND_CHECK(pAnimationComponent->SetAnimation("wave"));
 
         /*SoundInfo soundInfo(SOUND_GAME_FLAG_WAVE);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(soundInfo)));*/

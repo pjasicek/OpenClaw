@@ -223,10 +223,10 @@ void PhysicsComponent::VPostInit()
             }
 
             // HACK:
-            if (m_pOwner->GetName() == "/LEVEL1/IMAGES/RATBOMB/*")
-            {
-                pImage->SetOffset(0, 0);
-            }
+//            if (m_pOwner->GetName() == "/LEVEL1/IMAGES/RATBOMB/*")
+//            {
+//                pImage->SetOffset(0, 0);
+//            }
         }
 
         m_ActorBodyDef.position += m_ActorBodyDef.positionOffset;

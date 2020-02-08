@@ -823,7 +823,7 @@ void HumanView::ClawDiedDelegate(IEventDataPtr pEventData)
         assert(pXmlGameOverMenuRoot != NULL);
 
         shared_ptr<ScreenElementMenu> pGameOverMenu(new ScreenElementMenu(g_pApp->GetRenderer()));
-        assert(pGameOverMenu->Initialize(pXmlGameOverMenuRoot));
+        DO_AND_CHECK(pGameOverMenu->Initialize(pXmlGameOverMenuRoot));
 
         m_ScreenElements.push_back(pGameOverMenu);
         pGameOverMenu->VSetVisible(true);

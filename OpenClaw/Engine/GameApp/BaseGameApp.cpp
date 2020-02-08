@@ -486,15 +486,15 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     {
         ParseValueFromXmlElem(&m_GameOptions.assetsFolder,
             assetsElem->FirstChildElement("AssetsFolder"));
-        assert(ParseValueFromXmlElem(&m_GameOptions.rezArchive,
+        DO_AND_CHECK(ParseValueFromXmlElem(&m_GameOptions.rezArchive,
             assetsElem->FirstChildElement("RezArchive")));
-        assert(ParseValueFromXmlElem(&m_GameOptions.customArchive,
+        DO_AND_CHECK(ParseValueFromXmlElem(&m_GameOptions.customArchive,
             assetsElem->FirstChildElement("CustomArchive")));
-        assert(ParseValueFromXmlElem(&m_GameOptions.resourceCacheSize,
+        DO_AND_CHECK(ParseValueFromXmlElem(&m_GameOptions.resourceCacheSize,
             assetsElem->FirstChildElement("ResourceCacheSize")));
         ParseValueFromXmlElem(&m_GameOptions.tempDir,
             assetsElem->FirstChildElement("TempDir"));
-        assert(ParseValueFromXmlElem(&m_GameOptions.savesFile,
+        DO_AND_CHECK(ParseValueFromXmlElem(&m_GameOptions.savesFile,
             assetsElem->FirstChildElement("SavesFile")));
     }
 

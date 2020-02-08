@@ -35,22 +35,22 @@ PunkRatAIStateComponent::~PunkRatAIStateComponent()
 bool PunkRatAIStateComponent::VDelegateInit(TiXmlElement* pData)
 {
     std::string cannonActorProtoStr;
-    assert(ParseValueFromXmlElem(&cannonActorProtoStr, pData->FirstChildElement("CannonActorPrototype")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&cannonActorProtoStr, pData->FirstChildElement("CannonActorPrototype")));
     m_CannonActorProto = StringToEnum_ActorPrototype(cannonActorProtoStr);
 
-    assert(ParseValueFromXmlElem(&m_CannonSpawnOffset, pData->FirstChildElement("CannonSpawnOffset"), "x", "y"));
-    assert(ParseValueFromXmlElem(&m_RatFireAnim, pData->FirstChildElement("RatFireAnim")));
-    assert(ParseValueFromXmlElem(&m_RatRecoilAnim, pData->FirstChildElement("RatRecoilAnim")));
-    assert(ParseValueFromXmlElem(&m_RatFireAnimFrameIdx, pData->FirstChildElement("RatFireAnimFrameIdx")));
-    assert(ParseValueFromXmlElem(&m_CannonFireAnim, pData->FirstChildElement("CannonFireAnim")));
-    assert(ParseValueFromXmlElem(&m_CannonIdleAnim, pData->FirstChildElement("CannonIdleAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_CannonSpawnOffset, pData->FirstChildElement("CannonSpawnOffset"), "x", "y"));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_RatFireAnim, pData->FirstChildElement("RatFireAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_RatRecoilAnim, pData->FirstChildElement("RatRecoilAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_RatFireAnimFrameIdx, pData->FirstChildElement("RatFireAnimFrameIdx")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_CannonFireAnim, pData->FirstChildElement("CannonFireAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_CannonIdleAnim, pData->FirstChildElement("CannonIdleAnim")));
 
     std::string projectileActorProtoStr;
-    assert(ParseValueFromXmlElem(&projectileActorProtoStr, pData->FirstChildElement("ProjectileActorPrototype")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&projectileActorProtoStr, pData->FirstChildElement("ProjectileActorPrototype")));
     m_ProjectileActorPrototype = StringToEnum_ActorPrototype(projectileActorProtoStr);
 
-    assert(ParseValueFromXmlElem(&m_CannonFireAnimFrameIdx, pData->FirstChildElement("CannonFireAnimFrameIdx")));
-    assert(ParseValueFromXmlElem(&m_ProjectileSpawnOffset, pData->FirstChildElement("ProjectileSpawnOffset"), "x", "y"));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_CannonFireAnimFrameIdx, pData->FirstChildElement("CannonFireAnimFrameIdx")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ProjectileSpawnOffset, pData->FirstChildElement("ProjectileSpawnOffset"), "x", "y"));
 
     return true;
 }
