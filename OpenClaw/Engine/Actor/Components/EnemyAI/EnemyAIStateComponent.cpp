@@ -110,7 +110,7 @@ bool BaseEnemyAIStateComponent::VInit(TiXmlElement* pData)
 {
     assert(pData);
 
-    assert(ParseValueFromXmlElem(&m_StatePriority, pData->FirstChildElement("StatePriority")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_StatePriority, pData->FirstChildElement("StatePriority")));
 
     return VDelegateInit(pData);
 }
@@ -245,7 +245,7 @@ FallAIStateComponent::FallAIStateComponent()
 
 bool FallAIStateComponent::VDelegateInit(TiXmlElement* pData)
 {
-    assert(ParseValueFromXmlElem(&m_FallAnimation, pData->FirstChildElement("FallAnimation")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_FallAnimation, pData->FirstChildElement("FallAnimation")));
 
     return true;
 }
@@ -405,8 +405,8 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
             m_IdleSoundList.push_back(pSoundElem->GetText());
         }
 
-        assert(ParseValueFromXmlElem(&m_IdleSpeechSoundMaxDistance, pElem->FirstChildElement("IdleSpeechSoundMaxDistance")));
-        assert(ParseValueFromXmlElem(&m_IdleSpeechSoundPlayChance, pElem->FirstChildElement("IdleSpeechSoundPlayChance")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&m_IdleSpeechSoundMaxDistance, pElem->FirstChildElement("IdleSpeechSoundMaxDistance")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&m_IdleSpeechSoundPlayChance, pElem->FirstChildElement("IdleSpeechSoundPlayChance")));
     }
 
     /*m_LeftPatrolBorder = 6330;
@@ -824,8 +824,8 @@ bool ParryEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
         }
     }
 
-    assert(ParseValueFromXmlElem(&m_ParryAnimFrameIdx, pData->FirstChildElement("ParryAnimFrameIdx")));
-    assert(ParseValueFromXmlElem(&m_ParryAnimation, pData->FirstChildElement("ParryAnimation")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ParryAnimFrameIdx, pData->FirstChildElement("ParryAnimFrameIdx")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ParryAnimation, pData->FirstChildElement("ParryAnimation")));
 
     assert(m_ParrySoundList.size() > 0);
     assert(m_ParryChanceMap.size() > 0);
@@ -963,7 +963,7 @@ bool BaseAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
             m_AttackSpeechSoundList.push_back(pSoundElem->GetText());
         }
 
-        assert(ParseValueFromXmlElem(&m_AttackSpeechSoundPlayChance, pElem->FirstChildElement("AttackSpeechSoundPlayChance")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&m_AttackSpeechSoundPlayChance, pElem->FirstChildElement("AttackSpeechSoundPlayChance")));
     }
 
     assert(!m_AttackActions.empty());
@@ -1455,10 +1455,10 @@ bool DiveAttackAIStateComponent::VDelegateInit(TiXmlElement* pData)
 {
     assert(pData);
 
-    assert(ParseValueFromXmlElem(&m_DiveSound, pData->FirstChildElement("DiveSound")));
-    assert(ParseValueFromXmlElem(&m_DiveInAnimation, pData->FirstChildElement("DiveInAnimation")));
-    assert(ParseValueFromXmlElem(&m_DiveOutAnimation, pData->FirstChildElement("DiveOutAnimation")));
-    assert(ParseValueFromXmlElem(&m_DiveSpeed, pData->FirstChildElement("DiveSpeed")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_DiveSound, pData->FirstChildElement("DiveSound")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_DiveInAnimation, pData->FirstChildElement("DiveInAnimation")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_DiveOutAnimation, pData->FirstChildElement("DiveOutAnimation")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_DiveSpeed, pData->FirstChildElement("DiveSpeed")));
 
     for (TiXmlElement* pElem = pData->FirstChildElement("DiveAreaSensorFixture");
         pElem != NULL;
@@ -1624,7 +1624,7 @@ bool BaseBossAIStateComponennt::VDelegateInit(TiXmlElement* pData)
 {
     assert(pData);
 
-    assert(ParseValueFromXmlElem(&m_BossDialogAnimation, pData->FirstChildElement("BossDialogAnimation")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_BossDialogAnimation, pData->FirstChildElement("BossDialogAnimation")));
 
     return true;
 }
@@ -1888,9 +1888,9 @@ bool RollEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     assert(m_pPhysics);
 
-    assert(ParseValueFromXmlElem(&m_RollSpeed, pData->FirstChildElement("RollSpeed")));
-    assert(ParseValueFromXmlElem(&m_ForwardRollAnimation, pData->FirstChildElement("ForwardRollAnimation")));
-    assert(ParseValueFromXmlElem(&m_BackwardRollAnimation, pData->FirstChildElement("BackwardRollAnimation")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_RollSpeed, pData->FirstChildElement("RollSpeed")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ForwardRollAnimation, pData->FirstChildElement("ForwardRollAnimation")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_BackwardRollAnimation, pData->FirstChildElement("BackwardRollAnimation")));
     m_RollSensorFixtureDef = ActorTemplates::XmlToActorFixtureDef(pData->FirstChildElement("RollSensorFixtureDef"));
 
     return true;

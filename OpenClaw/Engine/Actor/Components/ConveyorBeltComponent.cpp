@@ -13,7 +13,7 @@ ConveyorBeltComponent::ConveyorBeltComponent()
 
 bool ConveyorBeltComponent::VInit(TiXmlElement* pData)
 {
-    assert(ParseValueFromXmlElem(&m_Speed, pData->FirstChildElement("Speed")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_Speed, pData->FirstChildElement("Speed")));
 
     return true;
 }

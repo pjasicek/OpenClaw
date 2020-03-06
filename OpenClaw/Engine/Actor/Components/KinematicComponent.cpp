@@ -39,9 +39,9 @@ bool KinematicComponent::VInit(TiXmlElement* pData)
         return false;
     }
 
-    assert(SetPointIfDefined(&m_Properties.speed, pData->FirstChildElement("Speed"), "x", "y"));
-    assert(SetPointIfDefined(&m_Properties.minPosition, pData->FirstChildElement("MinPosition"), "x", "y"));
-    assert(SetPointIfDefined(&m_Properties.maxPosition, pData->FirstChildElement("MaxPosition"), "x", "y"));
+    DO_AND_CHECK(SetPointIfDefined(&m_Properties.speed, pData->FirstChildElement("Speed"), "x", "y"));
+    DO_AND_CHECK(SetPointIfDefined(&m_Properties.minPosition, pData->FirstChildElement("MinPosition"), "x", "y"));
+    DO_AND_CHECK(SetPointIfDefined(&m_Properties.maxPosition, pData->FirstChildElement("MaxPosition"), "x", "y"));
     ParseValueFromXmlElem(&m_Properties.hasTriggerBehaviour, pData->FirstChildElement("HasTriggerBehaviour"));
     ParseValueFromXmlElem(&m_Properties.hasStartBehaviour, pData->FirstChildElement("HasStartBehaviour"));
     ParseValueFromXmlElem(&m_Properties.hasStopBehaviour, pData->FirstChildElement("HasStopBehaviour"));

@@ -262,6 +262,7 @@
     <ClInclude Include="Engine\UserInterface\Touch\TouchRecognizers\TapRecognizer.h" />
     <ClInclude Include="Engine\Util\ClawLevelUtil.h" />
     <ClInclude Include="Engine\Util\Converters.h" />
+    <ClInclude Include="Engine\Util\CustomAssert.h" />
     <ClInclude Include="Engine\GameApp\CommandHandler.h" />
     <ClInclude Include="Engine\GameApp\GameSaves.h" />
     <ClInclude Include="Engine\Physics\ClawPhysics.h" />

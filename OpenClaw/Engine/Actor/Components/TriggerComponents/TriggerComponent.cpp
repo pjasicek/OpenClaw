@@ -58,8 +58,8 @@ bool TriggerComponent::VInit(TiXmlElement* data)
         std::string fixtureTypeStr;
         std::string sound;
 
-        assert(ParseAttributeFromXmlElem(&fixtureTypeStr, "TriggerFixtureType", pElem));
-        assert(ParseAttributeFromXmlElem(&sound, "Sound", pElem));
+        DO_AND_CHECK(ParseAttributeFromXmlElem(&fixtureTypeStr, "TriggerFixtureType", pElem));
+        DO_AND_CHECK(ParseAttributeFromXmlElem(&sound, "Sound", pElem));
 
         FixtureType fixtureType = FixtureTypeStringToEnum(fixtureTypeStr);
 
@@ -73,8 +73,8 @@ bool TriggerComponent::VInit(TiXmlElement* data)
         std::string fixtureTypeStr;
         std::string sound;
 
-        assert(ParseAttributeFromXmlElem(&fixtureTypeStr, "TriggerFixtureType", pElem));
-        assert(ParseAttributeFromXmlElem(&sound, "Sound", pElem));
+        DO_AND_CHECK(ParseAttributeFromXmlElem(&fixtureTypeStr, "TriggerFixtureType", pElem));
+        DO_AND_CHECK(ParseAttributeFromXmlElem(&sound, "Sound", pElem));
 
         FixtureType fixtureType = FixtureTypeStringToEnum(fixtureTypeStr);
 

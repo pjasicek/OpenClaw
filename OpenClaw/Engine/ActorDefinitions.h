@@ -4,10 +4,6 @@
 #include "Interfaces.h"
 #include "Util/Point.h"
 
-#ifndef cond_assert
-#define cond_assert(enabled, body) { if (enabled) { assert(body); } else { body; } }
-#endif
-
 //-------------------------------------------------------------------------------------------------
 // ActorFixtureDef - Physics
 //-------------------------------------------------------------------------------------------------

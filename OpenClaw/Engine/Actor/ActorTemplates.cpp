@@ -1775,7 +1775,7 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         return pActorElem;
@@ -1800,11 +1800,11 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         // ----------- RenderComponent - Mirrored ?
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.Mirrored", isMirrored));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.Mirrored", isMirrored));
 
         //----------- Loot
         TiXmlElement* pLootComponentElem = GetTiXmlElementFromPath(pActorElem, "Actor.LootComponent");
@@ -1815,9 +1815,9 @@ namespace ActorTemplates
         }
 
         //----------- Patrol borders
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.IsAlwaysIdle", isAlwaysIdle));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.LeftPatrolBorder", minPatrolX));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.RightPatrolBorder", maxPatrolX));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.IsAlwaysIdle", isAlwaysIdle));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.LeftPatrolBorder", minPatrolX));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.PatrolEnemyAIStateComponent.RightPatrolBorder", maxPatrolX));
 
         return pActorElem;
     }
@@ -1828,24 +1828,24 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position", 
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- ActorRenderComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
 
         //----------- Elevator properties
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.KinematicComponent.Speed", 
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.KinematicComponent.Speed",
             "x", (int)elevatorDef.speed.x, "y", (int)elevatorDef.speed.y));
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.KinematicComponent.MinPosition",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.KinematicComponent.MinPosition",
             "x", (int)elevatorDef.minPosition.x, "y", (int)elevatorDef.minPosition.y));
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.KinematicComponent.MaxPosition",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.KinematicComponent.MaxPosition",
             "x", (int)elevatorDef.maxPosition.x, "y", (int)elevatorDef.maxPosition.y));
 
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasTriggerBehaviour", elevatorDef.hasTriggerBehaviour));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasStartBehaviour", elevatorDef.hasStartBehaviour));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasStopBehaviour", elevatorDef.hasStopBehaviour));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasOneWayBehaviour", elevatorDef.hasOneWayBehaviour));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasTriggerBehaviour", elevatorDef.hasTriggerBehaviour));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasStartBehaviour", elevatorDef.hasStartBehaviour));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasStopBehaviour", elevatorDef.hasStopBehaviour));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.KinematicComponent.HasOneWayBehaviour", elevatorDef.hasOneWayBehaviour));
 
         return pActorElem;
     }
@@ -1856,14 +1856,14 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- TogglePeg properties
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.Delay", togglePegDef.delay));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.TimeOn", togglePegDef.timeOn));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.TimeOff", togglePegDef.timeOff));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.AlwaysOn", togglePegDef.isAlwaysOn));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.Delay", togglePegDef.delay));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.TimeOn", togglePegDef.timeOn));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.TimeOff", togglePegDef.timeOff));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.TogglePegAIComponent.AlwaysOn", togglePegDef.isAlwaysOn));
 
         return pActorElem;
     }
@@ -1874,14 +1874,14 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- ActorRenderComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
 
         //----------- TogglePeg properties
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.CrumblingPegAIComponent.CrumbleDelay", crumbleDelay));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.CrumblingPegAIComponent.CrumbleDelay", crumbleDelay));
 
         return pActorElem;
     }
@@ -1892,11 +1892,11 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- Z Coord
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ZCoord", zCoord));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ZCoord", zCoord));
 
         //----------- Loot
         TiXmlElement* pLootComponentElem = GetTiXmlElementFromPath(pActorElem, "Actor.LootComponent");
@@ -1915,13 +1915,13 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- Physics
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PhysicsComponent.PositionOffset",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PhysicsComponent.PositionOffset",
             "x", (int)spawnAreaOffset.x, "y", (int)spawnAreaOffset.y));
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PhysicsComponent.CollisionSize",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PhysicsComponent.CollisionSize",
             "width", (int)spawnAreaSize.x, "height", (int)spawnAreaSize.y));
 
         //----------- SpawnAreaComponent
@@ -1950,11 +1950,11 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- ProjectileSpawnerComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.ProjectileSpawnerComponent.ProjectileDirection",
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ProjectileSpawnerComponent.ProjectileDirection",
             EnumToString_Direction(shootDir)));
 
         return pActorElem;
@@ -1966,7 +1966,7 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         TiXmlElement* pProjectileAIComponent = GetTiXmlElementFromPath(pActorElem, "Actor.ProjectileAIComponent");
@@ -1981,10 +1981,10 @@ namespace ActorTemplates
             assert(pProjectileSpeedElem != NULL);
 
             Point projectileSpeed;
-            assert(ParseValueFromXmlElem(&projectileSpeed, pProjectileSpeedElem, "x", "y"));
+            DO_AND_CHECK(ParseValueFromXmlElem(&projectileSpeed, pProjectileSpeedElem, "x", "y"));
             projectileSpeed.x *= -1.0;
 
-            assert(SetTiXmlNode2Attribute(pActorElem, "Actor.ProjectileAIComponent.ProjectileSpeed",
+            DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.ProjectileAIComponent.ProjectileSpeed",
                 "x", (int)projectileSpeed.x, "y", (int)projectileSpeed.y));
 
             // Mirror render component
@@ -1995,7 +1995,7 @@ namespace ActorTemplates
                 ParseValueFromXmlElem(&isMirroredByDefault, pIsMirroredElem);
             }
 
-            assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.Mirrored", isMirroredByDefault == false));
+            DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.Mirrored", isMirroredByDefault == false));
         }
 
         return pActorElem;
@@ -2007,16 +2007,16 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
 
         if (proto == ActorPrototype_StaticAnimatedImage && aniDef.hasAnimation)
         {
-            assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.Type", "cycle"));
-            assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.FrameDuration", aniDef.cycleAnimationDuration));
-            assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.HasPositionDelay", false));
+            DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.Type", "cycle"));
+            DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.FrameDuration", aniDef.cycleAnimationDuration));
+            DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.HasPositionDelay", false));
 
             //pActorElem->Print(stdout, -1);
         }
@@ -2030,14 +2030,14 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- ActorRenderComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
 
         // ---------- PathElevatorComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.PathElevatorComponent.Speed", def.speed));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.PathElevatorComponent.Speed", def.speed));
 
         TiXmlElement* pPathElevatorStepsElem = GetTiXmlElementFromPath(pActorElem, "Actor.PathElevatorComponent.ElevatorSteps");
         assert(pPathElevatorStepsElem != NULL);
@@ -2056,25 +2056,25 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- ActorRenderComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
 
         //----------- AnimationComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.FrameDuration", def.cycleDuration));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.FrameDuration", def.cycleDuration));
 
         // ---------- DamageAuraComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.DamageAuraComponent.Damage", def.damage));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.DamageAuraComponent.PulseInterval", def.damagePulseInterval));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.DamageAuraComponent.Damage", def.damage));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.DamageAuraComponent.PulseInterval", def.damagePulseInterval));
 
         // ---------- FloorSpikeComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.ActiveFrameIdx", def.activeFrameIdx));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.StartDelay", def.startDelay));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.TimeOn", def.timeOn));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.ActivateSound", def.activateSound));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.DeactivateSound", def.deactivateSound));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.ActiveFrameIdx", def.activeFrameIdx));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.StartDelay", def.startDelay));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.TimeOn", def.timeOn));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.ActivateSound", def.activateSound));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.DeactivateSound", def.deactivateSound));
 
         return pActorElem;
     }
@@ -2085,17 +2085,17 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- ActorRenderComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
 
         //----------- AnimationComponent
 
         // All ropes have 120 animation frames
         int cycleDuration = def.timeToFlayBackAndForth / 120;
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.FrameDuration", cycleDuration));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.FrameDuration", cycleDuration));
 
         return pActorElem;
     }
@@ -2106,12 +2106,12 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- ActorRenderComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.SteppingGroundComponent.TimeOn", def.timeOn));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.SteppingGroundComponent.TimeOff", def.timeOff));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.SteppingGroundComponent.TimeOn", def.timeOn));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.SteppingGroundComponent.TimeOff", def.timeOff));
 
         return pActorElem;
     }
@@ -2122,11 +2122,11 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
         //----------- SpringBoardComponent
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.SpringBoardComponent.SpringHeight", def.springHeight));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.SpringBoardComponent.SpringHeight", def.springHeight));
 
         return pActorElem;
     }
@@ -2152,14 +2152,14 @@ namespace ActorTemplates
         assert(pActorElem != NULL);
 
         //----------- Position
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
             "x", (int)position.x, "y", (int)position.y));
 
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.LocalAmbientSoundComponent.Sound", soundDef.sound));
-        assert(SetTiXmlNodeValue(pActorElem, "Actor.LocalAmbientSoundComponent.Volume", soundDef.volume));
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.LocalAmbientSoundComponent.SoundAreaSize",
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.LocalAmbientSoundComponent.Sound", soundDef.sound));
+        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.LocalAmbientSoundComponent.Volume", soundDef.volume));
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.LocalAmbientSoundComponent.SoundAreaSize",
             "width", (int)soundDef.soundAreaSize.x, "height", (int)soundDef.soundAreaSize.y));
-        assert(SetTiXmlNode2Attribute(pActorElem, "Actor.LocalAmbientSoundComponent.SoundAreaOffset",
+        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.LocalAmbientSoundComponent.SoundAreaOffset",
             "x", (int)soundDef.soundAreaOffset.x, "y", (int)soundDef.soundAreaOffset.y));
 
         return pActorElem;

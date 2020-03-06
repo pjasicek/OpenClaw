@@ -40,7 +40,7 @@ void SpringBoardComponent::VPostInit()
     {
         std::shared_ptr<Animation> pIdleAnim = Animation::CreateAnimation(1, 0, "NONE", m_pAnimationComponent);
         assert(pIdleAnim);
-        assert(m_pAnimationComponent->AddAnimation("NONE", pIdleAnim));
+        DO_AND_CHECK(m_pAnimationComponent->AddAnimation("NONE", pIdleAnim));
     }
 
     m_pAnimationComponent->AddObserver(this);

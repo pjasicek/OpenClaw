@@ -516,7 +516,7 @@ bool BaseGameLogic::VLoadScoreScreen(const char* xmlScoreScreenResource)
         pScoreRowElem = pScoreRowElem->NextSiblingElement("ScoreRow"))
     {
         std::string treasureTypeStr;
-        assert(ParseAttributeFromXmlElem(&treasureTypeStr, "Treasure", pScoreRowElem));
+        DO_AND_CHECK(ParseAttributeFromXmlElem(&treasureTypeStr, "Treasure", pScoreRowElem));
 
         int pickedUpCount = 0;
         int totalCount = 0;
@@ -630,8 +630,8 @@ bool BaseGameLogic::VLoadScoreScreen(const char* xmlScoreScreenResource)
         /*LOG("[TOTAL] " + treasureTypeStr + ": " + ToStr(totalCount));
         LOG("[PICKED UP] " + treasureTypeStr + ": " + ToStr(pickedUpCount));*/
 
-        assert(SetTiXmlNodeValue(pScoreRowElem, "ScoreRow.CountOfPickedUpScoreItems", pickedUpCount));
-        assert(SetTiXmlNodeValue(pScoreRowElem, "ScoreRow.CountOfTotalScoreItemsInLevel", totalCount));
+        DO_AND_CHECK(SetTiXmlNodeValue(pScoreRowElem, "ScoreRow.CountOfPickedUpScoreItems", pickedUpCount));
+        DO_AND_CHECK(SetTiXmlNodeValue(pScoreRowElem, "ScoreRow.CountOfTotalScoreItemsInLevel", totalCount));
     }
 
     const CheckpointSave* pStartLevelSave = m_pGameSaveMgr->GetCheckpointSave(finishedLevelNumber, 0);
@@ -641,9 +641,9 @@ bool BaseGameLogic::VLoadScoreScreen(const char* xmlScoreScreenResource)
     int levelScoreCollected = nextLevelCheckpoint.score - startLevelScore;
 
     //<ScorePointsCollectedInLevel>0<ScorePointsCollectedInLevel>
-    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.NextLevelNumber", nextLevelNumber));
-    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.ScorePointsOnLevelStart", startLevelScore));
-    assert(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.ScorePointsCollectedInLevel", levelScoreCollected));
+    DO_AND_CHECK(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.NextLevelNumber", nextLevelNumber));
+    DO_AND_CHECK(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.ScorePointsOnLevelStart", startLevelScore));
+    DO_AND_CHECK(SetTiXmlNodeValue(pScoreScreenRootElem, "FinishedLevelScreen.ScorePointsCollectedInLevel", levelScoreCollected));
 
     // Load the ScoreScreen
     g_pApp->GetHumanView()->LoadScoreScreen(pScoreScreenRootElem);

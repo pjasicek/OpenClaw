@@ -633,9 +633,9 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
         ParseValueFromXmlElem(&backgroundSound.soundVolume, pBackgroundSoundElem->FirstChildElement("Volume"));
         ParseValueFromXmlElem(&backgroundSound.isMusic, pBackgroundSoundElem->FirstChildElement("IsMusic"));
     }
-    assert(ParseValueFromXmlElem(&backgroundSound.soundToPlay, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.SoundPath"));
-    assert(ParseValueFromXmlElem(&backgroundSound.soundVolume, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.Volume"));
-    assert(ParseValueFromXmlElem(&backgroundSound.isMusic, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.IsMusic"));
+    DO_AND_CHECK(ParseValueFromXmlElem(&backgroundSound.soundToPlay, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.SoundPath"));
+    DO_AND_CHECK(ParseValueFromXmlElem(&backgroundSound.soundVolume, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.Volume"));
+    DO_AND_CHECK(ParseValueFromXmlElem(&backgroundSound.isMusic, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.IsMusic"));
     bool isLooping = true;
     ParseValueFromXmlElem(&isLooping, pScoreScreenRootElem, "FinishedLevelScreen.BackgroundSound.IsLooping");
     backgroundSound.loops = isLooping ? -1 : 0;
@@ -644,12 +644,12 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
 
     // Setup intro background image
     std::string initialBackgroundImagePath;
-    assert(ParseValueFromXmlElem(&initialBackgroundImagePath, pScoreScreenRootElem->FirstChildElement("InitialBackgroundScreen")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&initialBackgroundImagePath, pScoreScreenRootElem->FirstChildElement("InitialBackgroundScreen")));
     m_pBackground = PcxResourceLoader::LoadAndReturnImage(initialBackgroundImagePath.c_str());
 
     // Setup score screen background image
     std::string scoreBackgroundImagePath;
-    assert(ParseValueFromXmlElem(&scoreBackgroundImagePath, pScoreScreenRootElem->FirstChildElement("ScoreBackgroundScreen")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&scoreBackgroundImagePath, pScoreScreenRootElem->FirstChildElement("ScoreBackgroundScreen")));
     m_pScoreBackgroundImage = PcxResourceLoader::LoadAndReturnImage(scoreBackgroundImagePath.c_str());
 
     if (TiXmlElement* pAcquiredPieceElem = pScoreScreenRootElem->FirstChildElement("AcquiredPiece"))
@@ -660,15 +660,15 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
         int delay;
         std::string sound;
 
-        assert(ParseValueFromXmlElem(&acquiredPieceImagePath, pAcquiredPieceElem->FirstChildElement("ImagePath")));
-        assert(ParseValueFromXmlElem(&acquiredPiecePosition, pAcquiredPieceElem->FirstChildElement("Position"), "x", "y"));
-        assert(ParseValueFromXmlElem(&delay, pAcquiredPieceElem->FirstChildElement("Delay")));
-        assert(ParseValueFromXmlElem(&sound, pAcquiredPieceElem->FirstChildElement("SoundPath")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&acquiredPieceImagePath, pAcquiredPieceElem->FirstChildElement("ImagePath")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&acquiredPiecePosition, pAcquiredPieceElem->FirstChildElement("Position"), "x", "y"));
+        DO_AND_CHECK(ParseValueFromXmlElem(&delay, pAcquiredPieceElem->FirstChildElement("Delay")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&sound, pAcquiredPieceElem->FirstChildElement("SoundPath")));
         if (TiXmlElement* pAnimElem = pAcquiredPieceElem->FirstChildElement("AnimationDef"))
         {
-            assert(ParseValueFromXmlElem(&aniDef.hasAnimation, pAnimElem->FirstChildElement("HasAnimation")));
-            assert(ParseValueFromXmlElem(&aniDef.isCycleAnimation, pAnimElem->FirstChildElement("IsCycleAnimation")));
-            assert(ParseValueFromXmlElem(&aniDef.cycleAnimationDuration, pAnimElem->FirstChildElement("CycleDuration")));
+            DO_AND_CHECK(ParseValueFromXmlElem(&aniDef.hasAnimation, pAnimElem->FirstChildElement("HasAnimation")));
+            DO_AND_CHECK(ParseValueFromXmlElem(&aniDef.isCycleAnimation, pAnimElem->FirstChildElement("IsCycleAnimation")));
+            DO_AND_CHECK(ParseValueFromXmlElem(&aniDef.cycleAnimationDuration, pAnimElem->FirstChildElement("CycleDuration")));
         }
 
         StrongProcessPtr pShowAcquiredPieceImageProc(new ImageSpawnProcess(
@@ -693,8 +693,8 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
         int delay;
         std::string sound;
 
-        assert(ParseValueFromXmlElem(&delay, pClawCommentSound->FirstChildElement("Delay")));
-        assert(ParseValueFromXmlElem(&sound, pClawCommentSound->FirstChildElement("SoundPath")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&delay, pClawCommentSound->FirstChildElement("Delay")));
+        DO_AND_CHECK(ParseValueFromXmlElem(&sound, pClawCommentSound->FirstChildElement("SoundPath")));
 
         SoundInfo soundInfo(sound);
         StrongProcessPtr pClawCommentSoundProc(new PlaySoundProcess(soundInfo));
@@ -728,24 +728,24 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
     {
         ScoreRowDef scoreRowDef;
 
-        assert(ParseValueFromXmlElem(&scoreRowDef.scoreItemImagePath, 
+        DO_AND_CHECK(ParseValueFromXmlElem(&scoreRowDef.scoreItemImagePath,
             pScoreRowElem->FirstChildElement("ScoreItemImagePath")));
-        assert(ParseValueFromXmlElem(&scoreRowDef.scoreItemPickupSound, 
+        DO_AND_CHECK(ParseValueFromXmlElem(&scoreRowDef.scoreItemPickupSound,
             pScoreRowElem->FirstChildElement("ScoreItemPickupSound")));
-        assert(ParseValueFromXmlElem(&scoreRowDef.rowStartPosition, 
+        DO_AND_CHECK(ParseValueFromXmlElem(&scoreRowDef.rowStartPosition,
             pScoreRowElem->FirstChildElement("RowStartPosition"), "x", "y"));
-        assert(ParseValueFromXmlElem(&scoreRowDef.scoreItemPointsWorth, 
+        DO_AND_CHECK(ParseValueFromXmlElem(&scoreRowDef.scoreItemPointsWorth,
             pScoreRowElem->FirstChildElement("ScoreItemPointsWorth")));
-        assert(ParseValueFromXmlElem(&scoreRowDef.countOfPickedUpScoreItems, 
+        DO_AND_CHECK(ParseValueFromXmlElem(&scoreRowDef.countOfPickedUpScoreItems,
             pScoreRowElem->FirstChildElement("CountOfPickedUpScoreItems")));
-        assert(ParseValueFromXmlElem(&scoreRowDef.countOfMapScoreItems, 
+        DO_AND_CHECK(ParseValueFromXmlElem(&scoreRowDef.countOfMapScoreItems,
             pScoreRowElem->FirstChildElement("CountOfTotalScoreItemsInLevel")));
-        assert(ParseValueFromXmlElem(&scoreRowDef.collectedScoreItemSpawnPosition, 
+        DO_AND_CHECK(ParseValueFromXmlElem(&scoreRowDef.collectedScoreItemSpawnPosition,
             pScoreRowElem->FirstChildElement("CollectedScoreItemSpawnPosition"), "x", "y"));
 
         if (TiXmlElement* pScoreItemAnimElem = pScoreRowElem->FirstChildElement("ScoreItemAnimation"))
         {
-            assert(ParseValueFromXmlElem(&scoreRowDef.scoreItemAnimationDef.hasAnimation,
+            DO_AND_CHECK(ParseValueFromXmlElem(&scoreRowDef.scoreItemAnimationDef.hasAnimation,
                 pScoreItemAnimElem->FirstChildElement("HasAnimation")));
 
             ParseValueFromXmlElem(&scoreRowDef.scoreItemAnimationDef.isCycleAnimation,
@@ -763,7 +763,7 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
                 pAltImageElem = pAltImageElem->NextSiblingElement("AlternativeImage"))
             {
                 std::string alternativeImage;
-                assert(ParseValueFromXmlElem(&alternativeImage, pAltImageElem));
+                DO_AND_CHECK(ParseValueFromXmlElem(&alternativeImage, pAltImageElem));
 
                 scoreRowDef.alternativeImagesList.push_back(alternativeImage);
             }
@@ -773,11 +773,11 @@ bool ScreenElementScoreScreen::Initialize(TiXmlElement* pScoreScreenRootElem)
     }
 
     // Info about finished level
-    assert(ParseValueFromXmlElem(&m_NextLevelNumber, pScoreScreenRootElem, 
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_NextLevelNumber, pScoreScreenRootElem,
         "FinishedLevelScreen.NextLevelNumber"));
-    assert(ParseValueFromXmlElem(&m_ScorePointsOnLevelStart, pScoreScreenRootElem, 
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ScorePointsOnLevelStart, pScoreScreenRootElem,
         "FinishedLevelScreen.ScorePointsOnLevelStart"));
-    assert(ParseValueFromXmlElem(&m_ScorePointsCollectedInLevel, pScoreScreenRootElem, 
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ScorePointsCollectedInLevel, pScoreScreenRootElem,
         "FinishedLevelScreen.ScorePointsCollectedInLevel"));
 
     return true;

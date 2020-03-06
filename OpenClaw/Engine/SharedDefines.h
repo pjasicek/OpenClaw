@@ -19,7 +19,6 @@
 #include <stdint.h>
 #include <string>
 #include <memory>
-#include <assert.h>
 #include <vector>
 #include <list>
 #include <map>
@@ -32,6 +31,7 @@
 #include "Util/StringUtil.h"
 #include "Util/Util.h"
 #include "Util/Profilers.h"
+#include "Util/CustomAssert.h"
 #include "Interfaces.h"
 #include "Events/EventMgr.h"
 #include "XmlMacros.h"

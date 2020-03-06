@@ -48,20 +48,20 @@ bool GabrielAIStateComponent::VDelegateInit(TiXmlElement* pData)
         return false;
     }
 
-    assert(ParseValueFromXmlElem(&m_IdleAnim, pData->FirstChildElement("IdleAnim")));
-    assert(ParseValueFromXmlElem(&m_ThrowBombAnim, pData->FirstChildElement("ThrowBombAnim")));
-    assert(ParseValueFromXmlElem(&m_FireCannonAnim, pData->FirstChildElement("FireCannonAnim")));
-    assert(ParseValueFromXmlElem(&m_SpawnPirateAnim, pData->FirstChildElement("SpawnPirateAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_IdleAnim, pData->FirstChildElement("IdleAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ThrowBombAnim, pData->FirstChildElement("ThrowBombAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_FireCannonAnim, pData->FirstChildElement("FireCannonAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_SpawnPirateAnim, pData->FirstChildElement("SpawnPirateAnim")));
 
-    assert(ParseValueFromXmlElem(&m_ThrowBombAnimFrameIdx, pData->FirstChildElement("ThrowBombAnimFrameIdx")));
-    assert(ParseValueFromXmlElem(&m_FireCannonAnimFrameIdx, pData->FirstChildElement("FireCannonAnimFrameIdx")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ThrowBombAnimFrameIdx, pData->FirstChildElement("ThrowBombAnimFrameIdx")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_FireCannonAnimFrameIdx, pData->FirstChildElement("FireCannonAnimFrameIdx")));
 
-    assert(ParseValueFromXmlElem(&m_NumThrownBombs, pData->FirstChildElement("NumThrownBombs")));
-    assert(ParseValueFromXmlElem(&m_NumSpawnedPirates, pData->FirstChildElement("NumSpawnedPirates")));
-    assert(ParseValueFromXmlElem(&m_BombDamage, pData->FirstChildElement("BombDamage")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_NumThrownBombs, pData->FirstChildElement("NumThrownBombs")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_NumSpawnedPirates, pData->FirstChildElement("NumSpawnedPirates")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_BombDamage, pData->FirstChildElement("BombDamage")));
 
-    assert(ParseValueFromXmlElem(&m_ActionMinInterval, pData->FirstChildElement("ActionMinInterval")));
-    assert(ParseValueFromXmlElem(&m_ActionMaxInterval, pData->FirstChildElement("ActionMaxInterval")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ActionMinInterval, pData->FirstChildElement("ActionMinInterval")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ActionMaxInterval, pData->FirstChildElement("ActionMaxInterval")));
 
     for (TiXmlElement* pSoundElem = pData->FirstChildElement("ThrowBombSound");
         pSoundElem != NULL;
@@ -305,9 +305,9 @@ GabrielCannonButtonComponent::~GabrielCannonButtonComponent()
 
 bool GabrielCannonButtonComponent::VInit(TiXmlElement* pData)
 {
-    assert(ParseValueFromXmlElem(&m_BlinkingAnim, pData->FirstChildElement("BlinkingAnim")));
-    assert(ParseValueFromXmlElem(&m_PressedImageName, pData->FirstChildElement("PressedImageName")));
-    assert(ParseValueFromXmlElem(&m_ButtonPressSound, pData->FirstChildElement("ButtonPressSound")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_BlinkingAnim, pData->FirstChildElement("BlinkingAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_PressedImageName, pData->FirstChildElement("PressedImageName")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ButtonPressSound, pData->FirstChildElement("ButtonPressSound")));
 
     return true;
 }
@@ -316,7 +316,7 @@ void GabrielCannonButtonComponent::VPostInit()
 {
     m_pRenderComponent = m_pOwner->GetRawComponent<ActorRenderComponent>(true);
     m_pAnimationComponent = m_pOwner->GetRawComponent<AnimationComponent>(true);
-    assert(m_pAnimationComponent->SetAnimation(m_BlinkingAnim));
+    DO_AND_CHECK(m_pAnimationComponent->SetAnimation(m_BlinkingAnim));
 
     m_pOwner->GetRawComponent<TriggerComponent>(true)->AddObserver(this);
 }
@@ -395,17 +395,17 @@ GabrielCannonComponent::~GabrielCannonComponent()
 
 bool GabrielCannonComponent::VInit(TiXmlElement* pData)
 {
-    assert(ParseValueFromXmlElem(&m_HorizontalFireAnim, pData->FirstChildElement("HorizontalFireAnim")));
-    assert(ParseValueFromXmlElem(&m_VerticalFireAnim, pData->FirstChildElement("VerticalFireAnim")));
-    assert(ParseValueFromXmlElem(&m_ToVerticalAnim, pData->FirstChildElement("ToVerticalAnim")));
-    assert(ParseValueFromXmlElem(&m_ToHorizontalAnim, pData->FirstChildElement("ToHorizontalAnim")));
-    assert(ParseValueFromXmlElem(&m_IdleAnim, pData->FirstChildElement("IdleAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_HorizontalFireAnim, pData->FirstChildElement("HorizontalFireAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_VerticalFireAnim, pData->FirstChildElement("VerticalFireAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ToVerticalAnim, pData->FirstChildElement("ToVerticalAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_ToHorizontalAnim, pData->FirstChildElement("ToHorizontalAnim")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_IdleAnim, pData->FirstChildElement("IdleAnim")));
 
-    assert(ParseValueFromXmlElem(&m_CannonRiseSound, pData->FirstChildElement("CannonRiseSound")));
-    assert(ParseValueFromXmlElem(&m_CannonDropSound, pData->FirstChildElement("CannonDropSound")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_CannonRiseSound, pData->FirstChildElement("CannonRiseSound")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_CannonDropSound, pData->FirstChildElement("CannonDropSound")));
 
-    assert(ParseValueFromXmlElem(&m_HorizontalFireAnimIdx, pData->FirstChildElement("HorizontalFireAnimIdx")));
-    assert(ParseValueFromXmlElem(&m_VerticalFireAnimIdx, pData->FirstChildElement("VerticalFireAnimIdx")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_HorizontalFireAnimIdx, pData->FirstChildElement("HorizontalFireAnimIdx")));
+    DO_AND_CHECK(ParseValueFromXmlElem(&m_VerticalFireAnimIdx, pData->FirstChildElement("VerticalFireAnimIdx")));
 
     return true;
 }
