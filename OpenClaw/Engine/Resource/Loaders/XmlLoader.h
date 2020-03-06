@@ -24,6 +24,7 @@ public:
     virtual uint32 VGetLoadedResourceSize(char* rawBuffer, uint32 rawSize) { return rawSize; }
     virtual bool VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle);
 
+    // May produce memory leak!!!
     static TiXmlElement* LoadAndReturnRootXmlElement(const char* resourceString, bool fromLocalFile = false);
     static std::shared_ptr<XmlResourceLoader> Create();
 };

@@ -179,15 +179,16 @@ StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement*
 StrongActorPtr ActorFactory::CreateActor(const char* actorResource, TiXmlElement* overrides)
 {
     // Grab the root XML node
+    auto deleter = [](TiXmlElement *e) { delete e->GetDocument(); };
 
-    TiXmlElement* root = XmlResourceLoader::LoadAndReturnRootXmlElement(actorResource, true);
+    std::unique_ptr<TiXmlElement, decltype(deleter)> root { XmlResourceLoader::LoadAndReturnRootXmlElement(actorResource, true), deleter};
     if (root == NULL)
     {
         LOG_ERROR("Could not load XML root node");
         return nullptr;
     }
 
-    return CreateActor(root, overrides);
+    return CreateActor(root.get(), overrides);
 }
 
 void ActorFactory::ModifyActor(StrongActorPtr actor, TiXmlElement* overrides)

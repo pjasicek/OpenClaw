@@ -676,6 +676,7 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         m_pMenu.reset();
         m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
         m_pHUD.reset(new ScreenElementHUD());
+        m_pScene->AddChild(INVALID_ACTOR_ID, m_pCamera);
         m_pScene->SetCamera(m_pCamera);
 
         // Go to menu after finishing last implemented level

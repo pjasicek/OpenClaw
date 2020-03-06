@@ -366,6 +366,10 @@ Console::~Console()
         SDL_DestroyTexture(_backgroundTexture);
         _backgroundTexture = NULL;
     }
+    if (_font) {
+        TTF_CloseFont(_font);
+        _font = nullptr;
+    }
 }
 
 //################# INTERFACE #####################

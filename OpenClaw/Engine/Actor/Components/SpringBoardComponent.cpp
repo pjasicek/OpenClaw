@@ -34,11 +34,11 @@ bool SpringBoardComponent::VInit(TiXmlElement* pData)
 void SpringBoardComponent::VPostInit()
 {
     m_pAnimationComponent = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>()).get();
-    assert(m_pAnimationComponent != NULL);
+    assert(m_pAnimationComponent != nullptr);
 
     if (m_Properties.idleAnimName == "NONE")
     {
-        Animation* pIdleAnim = Animation::CreateAnimation(1, 0, "NONE", m_pAnimationComponent);
+        std::shared_ptr<Animation> pIdleAnim = Animation::CreateAnimation(1, 0, "NONE", m_pAnimationComponent);
         assert(pIdleAnim);
         assert(m_pAnimationComponent->AddAnimation("NONE", pIdleAnim));
     }

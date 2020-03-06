@@ -58,6 +58,9 @@ void Actor::PostPostInit()
 void Actor::Destroy()
 {
     //LOG("Destroying actor: " + _name);
+    // Remove references (Actor has components and Component has an owner)
+    // This actor and component won't be freed without it!
+    m_pPositionComponent.reset();
     _components.clear();
 }
 

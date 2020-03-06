@@ -63,7 +63,7 @@ void TogglePegAIComponent::VPostInit()
         m_pAnimationComponent->AddObserver(this);
     }
 
-    Animation* pCurrentAnimation = m_pAnimationComponent->GetCurrentAnimation();
+    std::shared_ptr<Animation> pCurrentAnimation = m_pAnimationComponent->GetCurrentAnimation();
     assert(pCurrentAnimation != NULL);
 
     int totalFrames = pCurrentAnimation->GetAnimFramesSize();

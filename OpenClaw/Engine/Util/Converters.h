@@ -19,9 +19,7 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber);
 
 #define INSERT_POSITION_COMPONENT(x, y, rootElem) \
 { \
-   TiXmlElement* elem = new TiXmlElement("PositionComponent"); \
-   rootElem->LinkEndChild(elem); \
-   XML_ADD_2_PARAM_ELEMENT("Position", "x", x, "y", y, elem); \
+   rootElem->LinkEndChild(CreatePositionComponent(x, y)); \
 } \
 
 #define INSERT_COLLISION_COMPONENT(width, height, rootElem) \
@@ -87,13 +85,14 @@ inline TiXmlElement* CreateActorRenderComponent(const char* imagesPath, int32 zC
 
     XML_ADD_TEXT_ELEMENT("ImagePath", imagesPath, elem);
     XML_ADD_TEXT_ELEMENT("ZCoord", ToStr(zCoord).c_str(), elem);
+    XML_ADD_TEXT_ELEMENT("Visible", ToStr(visible).c_str(), elem);
 
     return elem;
 }
 
 //=====================================================================================================================
 
-inline TiXmlElement* CreateAnimationComponent(std::string aniPath)
+inline TiXmlElement* CreateAnimationComponent(const std::string &aniPath)
 {
     TiXmlElement* animationComponent = new TiXmlElement("AnimationComponent");
     XML_ADD_TEXT_ELEMENT("AnimationPath", aniPath.c_str(), animationComponent);
@@ -783,22 +782,27 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic.find("CannonButton") != std::string::npos)
     {
+        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level8_GabrielButton, actorPosition);
     }
     else if (logic.find("GabrielCannon") != std::string::npos)
     {
+        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level8_GabrielCannon, actorPosition);
     }
     else if (logic.find("Laser") != std::string::npos)
     {
+        SAFE_DELETE(pActorElem);
         return NULL; // TODO
     }
     else if (logic.find("Gabriel") != std::string::npos)
     {
+        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_Actor(ActorPrototype_Level8_Gabriel, actorPosition);
     }
     else if (logic.find("AquatisCrack") != std::string::npos)
     {
+        SAFE_DELETE(pActorElem);
         return NULL; // TODO
     }
     else if (logic.find("Rat") != std::string::npos)
@@ -991,8 +995,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         Point position(wwdObject->x, wwdObject->y);
 
-        SAFE_DELETE(pActorElem);
-
         return ActorTemplates::CreateXmlData_PathElevator(
             actorProto,
             position,
@@ -1142,7 +1144,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         Point position(wwdObject->x, wwdObject->y);
 
-        SAFE_DELETE(pActorElem);
         return ActorTemplates::CreateXmlData_Actor(actorProto, position);
     }
     else if (logic == "AniRope")
@@ -1208,8 +1209,6 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             def.springHeight = 450;
         }
 
-        SAFE_DELETE(pActorElem);
-
         // Everything should be in XML here
         return ActorTemplates::CreateXmlData_SpringBoard(
             actorProto,
@@ -1221,7 +1220,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         static std::vector<std::string> s_ReportedUnknownLogicsList;
 
         bool isAlreadyReported = false;
-        for (std::string unkLogic : s_ReportedUnknownLogicsList)
+        for (std::string &unkLogic : s_ReportedUnknownLogicsList)
         {
             if (unkLogic == logic)
             {

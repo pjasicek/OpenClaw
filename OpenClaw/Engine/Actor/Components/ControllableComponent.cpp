@@ -161,7 +161,7 @@ void ClawControllableComponent::VPostInit()
             frame.duration = 55;
             climbAnimFrames.push_back(frame);
         }
-        Animation* pClimbAnim = Animation::CreateAnimation(climbAnimFrames, "topclimb", m_pClawAnimationComponent);
+        std::shared_ptr<Animation> pClimbAnim = Animation::CreateAnimation(climbAnimFrames, "topclimb", m_pClawAnimationComponent);
         assert(pClimbAnim);
         assert(m_pClawAnimationComponent->AddAnimation("topclimb", pClimbAnim));
     }
@@ -177,7 +177,7 @@ void ClawControllableComponent::VPostInit()
             frame.duration = 55;
             climbAnimFrames.push_back(frame);
         }
-        Animation* pClimbAnim = Animation::CreateAnimation(climbAnimFrames, "topclimbdown", m_pClawAnimationComponent);
+        std::shared_ptr<Animation> pClimbAnim = Animation::CreateAnimation(climbAnimFrames, "topclimbdown", m_pClawAnimationComponent);
         assert(pClimbAnim);
         assert(m_pClawAnimationComponent->AddAnimation("topclimbdown", pClimbAnim));
     }
@@ -191,7 +191,7 @@ void ClawControllableComponent::VPostInit()
         frame.duration = 2000;
         highFallAnimFrames.push_back(frame);
 
-        Animation* pHighFallAnim = Animation::CreateAnimation(highFallAnimFrames, "highfall", m_pClawAnimationComponent);
+        std::shared_ptr<Animation> pHighFallAnim = Animation::CreateAnimation(highFallAnimFrames, "highfall", m_pClawAnimationComponent);
         assert(pHighFallAnim);
         assert(m_pClawAnimationComponent->AddAnimation("highfall", pHighFallAnim));
     }

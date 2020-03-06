@@ -48,8 +48,8 @@ bool AnimationComponent::VInit(TiXmlElement* data)
                 LOG_WARNING("Trying to load existing animation: " + animPath);
                 continue;
             }
-            
-            Animation* animation = Animation::CreateAnimation(wapAni, animNameKey.c_str(), animPath.c_str(), this);
+
+            std::shared_ptr<Animation> animation = Animation::CreateAnimation(wapAni, animNameKey.c_str(), animPath.c_str(), this);
             if (!animation)
             {
                 LOG_ERROR("Could not create animation: " + animPath);
@@ -128,7 +128,7 @@ void AnimationComponent::VPostInit()
                 continue;
             }
 
-            Animation* pCycleAnim = Animation::CreateAnimation(pRenderComponent->GetImagesCount(), cycleDuration, animType.c_str(), this);
+            std::shared_ptr<Animation> pCycleAnim = Animation::CreateAnimation(pRenderComponent->GetImagesCount(), cycleDuration, animType.c_str(), this);
             if (!pCycleAnim)
             {
                 LOG_ERROR("Failed to create " + animType + " animation.");
@@ -186,7 +186,7 @@ void AnimationComponent::VPostInit()
                 continue;
             }
 
-            Animation* pCycleAnim = Animation::CreateAnimation(
+            std::shared_ptr<Animation> pCycleAnim = Animation::CreateAnimation(
                 pRenderComponent->GetImagesCount(), 
                 specialAnim.frameDuration, 
                 specialAnim.type.c_str(), 
@@ -250,7 +250,7 @@ void AnimationComponent::VUpdate(uint32 msDiff)
     }
 }
 
-bool AnimationComponent::SetAnimation(std::string animationName)
+bool AnimationComponent::SetAnimation(const std::string& animationName)
 {
     if (animationName == _currentAnimation->GetName())
     {
@@ -268,8 +268,8 @@ bool AnimationComponent::SetAnimation(std::string animationName)
 
     //LOG("Setting anim: " + animationName);
 
-    Animation* pOldAnimation = _currentAnimation;
-    Animation* pNewAnimation = findIt->second;
+    std::shared_ptr<Animation> pOldAnimation = _currentAnimation;
+    std::shared_ptr<Animation> pNewAnimation = findIt->second;
 
     pNewAnimation->Reset();
     _currentAnimation = pNewAnimation;
@@ -285,7 +285,7 @@ bool AnimationComponent::SetAnimation(std::string animationName)
 
     if (pOldAnimation && pNewAnimation)
     {
-        NotifyAnimationChanged(pOldAnimation, pNewAnimation);
+        NotifyAnimationChanged(pOldAnimation.get(), pNewAnimation.get());
     }
 
     return true;
@@ -299,13 +299,13 @@ bool AnimationComponent::HasAnimation(std::string& animName)
 void AnimationComponent::PauseAnimation()
 {
     _currentAnimation->Pause();
-    NotifyAnimationPaused(_currentAnimation);
+    NotifyAnimationPaused(_currentAnimation.get());
 }
 
 void AnimationComponent::ResumeAnimation()
 {
     _currentAnimation->Resume();
-    NotifyAnimationResumed(_currentAnimation);
+    NotifyAnimationResumed(_currentAnimation.get());
 }
 
 void AnimationComponent::ResetAnimation()
@@ -319,18 +319,18 @@ void AnimationComponent::ResetAnimation()
 
 void AnimationComponent::OnAnimationFrameFinished(AnimationFrame* frame)
 {
-    if (!frame->eventName.empty())
-    {
+    //if (!frame->eventName.empty())
+    //{
         // Raise event
-    }
+    //}
 }
 
 void AnimationComponent::OnAnimationFrameStarted(AnimationFrame* frame)
 {
-    if (!frame->eventName.empty())
-    {
+    //if (!frame->eventName.empty())
+    //{
         // Raise event
-    }
+    //}
 
     // Notify render component to change frame image
     shared_ptr<ActorRenderComponent> renderComponent =
@@ -356,17 +356,17 @@ void AnimationComponent::OnAnimationFinished()
 
 void AnimationComponent::OnAnimationFrameChanged(AnimationFrame* pLastFrame, AnimationFrame* pNewFrame)
 {
-    NotifyAnimationFrameChanged(_currentAnimation, pLastFrame, pNewFrame);
+    NotifyAnimationFrameChanged(_currentAnimation.get(), pLastFrame, pNewFrame);
 }
 
 void AnimationComponent::OnAnimationLooped()
 {
-    NotifyAnimationLooped(_currentAnimation);
+    NotifyAnimationLooped(_currentAnimation.get());
 }
 
 void AnimationComponent::OnAnimationAtLastFrame()
 {
-    NotifyAnimationAtLastFrame(_currentAnimation);
+    NotifyAnimationAtLastFrame(_currentAnimation.get());
 
     if (m_PauseOnEnd)
     {
@@ -384,7 +384,7 @@ void AnimationComponent::SetReverseAnimation(bool reverse)
     _currentAnimation->SetReverseAnim(reverse);
 }
 
-bool AnimationComponent::AddAnimation(std::string animName, Animation* pAnim)
+bool AnimationComponent::AddAnimation(const std::string &animName, std::shared_ptr<Animation> &pAnim)
 {
     if (_animationMap.find(animName) != _animationMap.end())
     {

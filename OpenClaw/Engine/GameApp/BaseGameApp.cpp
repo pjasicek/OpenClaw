@@ -41,7 +41,6 @@ BaseGameApp::BaseGameApp()
     g_pApp = this;
 
     m_pGame = NULL;
-    m_pResourceCache = NULL;
     m_pEventMgr = NULL;
     m_pWindow = NULL;
     m_pRenderer = NULL;
@@ -79,9 +78,9 @@ bool BaseGameApp::Initialize(int argc, char** argv)
         return false;
     }
 
-    m_pResourceCache->Preload("/CLAW/*", NULL);
-    m_pResourceCache->Preload("/GAME/*", NULL);
-    m_pResourceCache->Preload("/STATES/*", NULL);
+    m_pResourceMgr->VPreload("/CLAW/*", NULL, ORIGINAL_RESOURCE);
+    m_pResourceMgr->VPreload("/GAME/*", NULL, ORIGINAL_RESOURCE);
+    m_pResourceMgr->VPreload("/STATES/*", NULL, ORIGINAL_RESOURCE);
 
     m_pResourceMgr->VPreload("*", NULL, CUSTOM_RESOURCE);
 
@@ -107,9 +106,17 @@ void BaseGameApp::Terminate()
     SDL_DestroyWindow(m_pWindow);
     SAFE_DELETE(m_pAudio);
     SAFE_DELETE(m_pTouchManager);
-    // TODO - this causes crashes
-    //SAFE_DELETE(m_pEventMgr);
-    //SAFE_DELETE(m_pResourceCache);
+    SAFE_DELETE(m_pEventMgr);
+    SAFE_DELETE(m_pResourceMgr);
+    if (m_pConsoleFont) {
+        TTF_CloseFont(m_pConsoleFont);
+        m_pConsoleFont = nullptr;
+    }
+
+    for (auto &actorProto : m_ActorXmlPrototypeMap) {
+        delete actorProto.second;
+    }
+    m_ActorXmlPrototypeMap.clear();
 
     SaveGameOptions();
 }
@@ -240,19 +247,17 @@ void BaseGameApp::StepLoop() {
 
         // Artificially decrease fps. Configurable from console
         Util::Sleep(m_DebugOptions.cpuDelayMs);
-    } else {
-        Terminate();
-#ifdef __EMSCRIPTEN__
-        emscripten_cancel_main_loop();
-#else
-        exit(0);
-#endif
     }
 }
 
-void loop(void *param) {
-    BaseGameApp *self = (BaseGameApp *) param;
+void Loop(void *instance) {
+    auto self = static_cast<BaseGameApp*>(instance);
     self->StepLoop();
+#ifdef __EMSCRIPTEN__
+    if (!self->m_IsRunning) {
+        emscripten_cancel_main_loop();
+    }
+#endif
 }
 
 //=====================================================================================================================
@@ -266,12 +271,14 @@ int32 BaseGameApp::Run()
     // Some systems (like web browsers) does not support infinite loops.
     // We need to return control after each loop steps.
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop_arg(loop, this, 0, 0);
+    emscripten_set_main_loop_arg(Loop, this, 0, 1);
+    // Loop must call emscripten_cancel_main_loop() to exit
 #else
-    while (true) {
-        loop(this);
+    while (m_IsRunning) {
+        Loop(this);
     }
 #endif
+    Terminate();
     return 0;
 }
 
@@ -407,6 +414,7 @@ HumanView* BaseGameApp::GetHumanView() const
 
 bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
 {
+    TiXmlDocument m_XmlConfiguration;
     if (!m_XmlConfiguration.LoadFile(inConfigFile))
     {
         LOG_WARNING("Configuration file: " + std::string(inConfigFile)
@@ -789,8 +797,7 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
     std::string rezArchivePath = gameOptions.assetsFolder + gameOptions.rezArchive;
 
     IResourceFile* rezArchive = new ResourceRezArchive(rezArchivePath);
-
-    m_pResourceCache = new ResourceCache(gameOptions.resourceCacheSize, rezArchive, ORIGINAL_RESOURCE);
+    std::shared_ptr<ResourceCache> m_pResourceCache { new ResourceCache(gameOptions.resourceCacheSize, rezArchive, ORIGINAL_RESOURCE) };
     if (!m_pResourceCache->Init())
     {
         LOG_ERROR("Failed to initialize resource cachce from resource file: " + std::string(rezArchivePath));
@@ -810,7 +817,7 @@ bool BaseGameApp::InitializeResources(GameOptions& gameOptions)
     std::string customArchivePath = gameOptions.assetsFolder + gameOptions.customArchive;
 
     IResourceFile* pCustomArchive = new ResourceZipArchive(customArchivePath);
-    ResourceCache* pCustomCache = new ResourceCache(50, pCustomArchive, CUSTOM_RESOURCE);
+    std::shared_ptr<ResourceCache> pCustomCache{ new ResourceCache(50, pCustomArchive, CUSTOM_RESOURCE) };
     if (!pCustomCache->Init())
     {
         LOG_ERROR("Failed to initialize resource cachce from resource file: " + customArchivePath);
@@ -918,7 +925,15 @@ bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
             TiXmlElement* pActorProtoElemDuplicate = pDuplicateNode->ToElement();
             assert(pActorProtoElemDuplicate);
 
-            m_ActorXmlPrototypeMap.insert(std::make_pair(actorProto, pActorProtoElemDuplicate));
+            auto iter = m_ActorXmlPrototypeMap.insert(std::make_pair(actorProto, pActorProtoElemDuplicate));
+            if (!iter.second) {
+                LOG_WARNING("Multi " + EnumToString_ActorPrototype(actorProto) + " actor prototype definitions! Fix ASSETS!");
+                std::string typeName;
+                if (ParseAttributeFromXmlElem(&typeName, "Type", pActorProtoElem))
+                {
+                    LOG_WARNING(typeName + " type won't be used!");
+                }
+            }
         }
     }
 
@@ -1284,10 +1299,10 @@ TiXmlElement* BaseGameApp::GetActorPrototypeElem(ActorPrototype proto)
     }
     assert(findIt != m_ActorXmlPrototypeMap.end());
 
-    TiXmlNode* pCopy = findIt->second->Clone()->ToElement();
+    TiXmlElement* pCopy = findIt->second->Clone()->ToElement();
     assert(pCopy != NULL);
 
-    TiXmlElement* pRootElem = pCopy->ToElement();
+    TiXmlElement* pRootElem = pCopy;
     assert(pRootElem != NULL);
 
     // If this is derived XML, load its parent and apply its changes
@@ -1313,7 +1328,7 @@ TiXmlElement* BaseGameApp::GetActorPrototypeElem(ActorPrototype proto)
         return pParentRootElem;
     }
 
-    return pCopy->ToElement();
+    return pCopy;
 }
 
 //=====================================================================================================================
@@ -1457,4 +1472,8 @@ void BaseGameApp::RegisterTouchRecognizers(ITouchHandler &touchHandler) {
         m_pTouchManager->RemoveAllRecognizers();
         m_pTouchManager->AddRecognizers(touchHandler.VRegisterRecognizers());
     }
+}
+
+std::shared_ptr<ResourceCache> BaseGameApp::GetResourceCache() const {
+    return m_pResourceMgr->VGetResourceCacheFromName(ORIGINAL_RESOURCE);
 }
