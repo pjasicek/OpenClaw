@@ -254,7 +254,8 @@ bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
     {
         if (!m_ImageMap.empty())
         {
-            m_CurrentImage = m_ImageMap.begin()->second;
+            m_CachedImage = m_ImageMap.begin()->second;
+            m_IsCachedImageExpired = false;
         }
         else
         {
@@ -269,7 +270,8 @@ bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
             LOG_WARNING("Creating actor render component without valid image.");
             return true;
         }
-        m_CurrentImage = m_ImageMap.begin()->second;
+        m_CachedImage = m_ImageMap.begin()->second;
+        m_IsCachedImageExpired = false;
     }
 
     // Hacky. Rebuild image names which dont have "frame" in it after initialization
@@ -292,7 +294,7 @@ bool ActorRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
     return true;
 }
 
-SDL_Rect ActorRenderComponent::VGetPositionRect() const
+SDL_Rect ActorRenderComponent::VGetPositionRect()
 {
     SDL_Rect positionRect = { 0 };
 
@@ -301,7 +303,8 @@ SDL_Rect ActorRenderComponent::VGetPositionRect() const
         return positionRect;
     }
 
-    if (!m_CurrentImage)
+    shared_ptr<Image> currentImage = GetCurrentImage().lock();
+    if (!currentImage)
     {
         return positionRect;
     }
@@ -309,10 +312,10 @@ SDL_Rect ActorRenderComponent::VGetPositionRect() const
     Point position = m_pPositionComponent->GetPosition();
 
     positionRect = {
-        (int)position.GetX() - m_CurrentImage->GetWidth() / 2 + m_CurrentImage->GetOffsetX(),
-        (int)position.GetY() - m_CurrentImage->GetHeight() / 2 + m_CurrentImage->GetOffsetY(),
-        m_CurrentImage->GetWidth(),
-        m_CurrentImage->GetHeight()
+            (int)position.GetX() - currentImage->GetWidth() / 2 + currentImage->GetOffsetX(),
+            (int)position.GetY() - currentImage->GetHeight() / 2 + currentImage->GetOffsetY(),
+            currentImage->GetWidth(),
+            currentImage->GetHeight()
     };
 
     return positionRect;
@@ -338,8 +341,12 @@ void ActorRenderComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElemen
 
 }
 
-void ActorRenderComponent::SetImage(std::string imageName)
-{
+void ActorRenderComponent::SetImage(std::string imageName) {
+    m_CurrentImageName.assign(std::move(imageName));
+    m_IsCachedImageExpired = true;
+}
+
+void ActorRenderComponent::UpdateCurrentImage() {
     // Hack.. only 2, 3, 4
     /*if (m_pOwner->GetName() == "LEVEL_TORCH2")
     {
@@ -366,14 +373,16 @@ void ActorRenderComponent::SetImage(std::string imageName)
         SetAlpha(255);
     }
 
-    if (m_ImageMap.count(imageName) > 0)
+    m_IsCachedImageExpired = false;
+    const auto image = m_ImageMap.find(m_CurrentImageName);
+    if (m_ImageMap.end() != image)
     {
-        m_CurrentImage = m_ImageMap[imageName];
+        m_CachedImage = image->second;
     }
     else
     {
         // Known... Treasure chest HUD
-        if (imageName == "frame000")
+        if (m_CurrentImageName == "frame000")
         {
             return;
         }
@@ -384,7 +393,7 @@ void ActorRenderComponent::SetImage(std::string imageName)
             return;
         }
 
-        LOG("Actor: " + m_pOwner->GetName() + " ImageName: " + imageName);
+        LOG("Actor: " + m_pOwner->GetName() + " ImageName: " + m_CurrentImageName);
         /*LOG("Images: ");
         for (auto im : m_ImageMap)
         {
@@ -394,24 +403,24 @@ void ActorRenderComponent::SetImage(std::string imageName)
         assert(false);
 
         // Try 01, 02, 03...
-        std::string newImageName = imageName.substr(6);
+        std::string newImageName = m_CurrentImageName.substr(6);
         if (m_ImageMap.count(newImageName) > 0)
         {
             LOG("Setting: " + newImageName);
-            m_CurrentImage = m_ImageMap[newImageName];
+            m_CachedImage = m_ImageMap[newImageName];
             return;
         }
 
-        newImageName = imageName.substr(5);
+        newImageName = m_CurrentImageName.substr(5);
         if (m_ImageMap.count(newImageName) > 0)
         {
             LOG("Setting: " + newImageName);
-            m_CurrentImage = m_ImageMap[newImageName];
+            m_CachedImage = m_ImageMap[newImageName];
             return;
         }
 
         LOG("NewImageName: " + newImageName);
-        LOG_ERROR("Trying to set nonexistant image: " + imageName + " to render component of actor: " +
+        LOG_ERROR("Trying to set nonexistant image: " + m_CurrentImageName + " to render component of actor: " +
             m_pOwner->GetName());
 
         /*LOG("Actor has following images: ");
@@ -420,6 +429,13 @@ void ActorRenderComponent::SetImage(std::string imageName)
             LOG("Image: " + iter.first);
         }*/
     }
+}
+
+weak_ptr<Image> ActorRenderComponent::GetCurrentImage() {
+    if (m_IsCachedImageExpired) {
+        UpdateCurrentImage();
+    }
+    return m_CachedImage;
 }
 
 //=================================================================================================
@@ -688,7 +704,7 @@ bool TilePlaneRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
     return true;
 }
 
-SDL_Rect TilePlaneRenderComponent::VGetPositionRect() const
+SDL_Rect TilePlaneRenderComponent::VGetPositionRect()
 {
     return m_PositionRect;
 }
@@ -768,7 +784,7 @@ bool HUDRenderComponent::VDelegateInit(TiXmlElement* pXmlData)
     return true;
 }
 
-SDL_Rect HUDRenderComponent::VGetPositionRect() const
+SDL_Rect HUDRenderComponent::VGetPositionRect()
 {
     // HACK: Always visible
     return { 0, 0, 1000000, 1000000 };
