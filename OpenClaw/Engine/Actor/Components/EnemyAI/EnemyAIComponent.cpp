@@ -89,7 +89,7 @@ bool EnemyAIComponent::VInit(TiXmlElement* pData)
 void EnemyAIComponent::VPostInit()
 {
     m_pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-    m_pPositionComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    m_pPositionComponent = m_pOwner->GetPositionComponent();
     assert(m_pRenderComponent);
     assert(m_pPositionComponent);
 
@@ -167,11 +167,10 @@ void EnemyAIComponent::VOnHealthBelowZero(DamageType damageType, int sourceActor
         }
     }
 
-    // Play deaht sound
+    // Play death sound
     Util::PlayRandomSoundFromList(m_DeathSounds);
 
-    shared_ptr<PhysicsComponent> pPhysicsComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+    shared_ptr<PhysicsComponent> pPhysicsComponent = m_pOwner->GetPhysicsComponent();
     assert(pPhysicsComponent);
 
     pPhysicsComponent->Destroy();

@@ -53,7 +53,7 @@ TiXmlElement* PredefinedMoveComponent::VGenerateXml()
 
 void PredefinedMoveComponent::VPostInit()
 {
-    m_pPositonComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+    m_pPositonComponent = m_pOwner->GetPositionComponent().get();
     assert(m_pPositonComponent && "Cannot have PredefinedMoveComponent without PositionComponent");
 }
 

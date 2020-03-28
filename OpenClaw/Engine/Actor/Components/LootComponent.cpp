@@ -5,6 +5,7 @@
 
 #include "../../Events/EventMgr.h"
 #include "../../Events/Events.h"
+#include "RenderComponent.h"
 
 const char* LootComponent::g_Name = "LootComponent";
 
@@ -65,8 +66,7 @@ void LootComponent::VOnHealthBelowZero(DamageType damageType, int sourceActorId)
     bool hadRareTreasure = false;
     for (PickupType item : m_Loot)
     {
-        shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
         assert(pPositionComponent);
 
         StrongActorPtr pLoot = ActorTemplates::CreateActorPickup(item, pPositionComponent->GetPosition(), false);

@@ -114,8 +114,7 @@ void TriggerComponent::VPostInit()
             offsetY = pImage->GetOffsetY();
         }
 
-        shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
         assert(pPositionComponent);
 
         Point physPos = Point(pPositionComponent->GetX() + offsetX, pPositionComponent->GetY() + offsetY);
@@ -203,8 +202,7 @@ SDL_Rect TriggerComponent::GetTriggerArea()
 {
     SDL_Rect triggerArea = { 0 };
 
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
     if (!pPositionComponent)
     {
         return triggerArea;

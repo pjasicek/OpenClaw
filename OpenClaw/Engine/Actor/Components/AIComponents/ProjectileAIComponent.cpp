@@ -85,12 +85,10 @@ void ProjectileAIComponent::VPostInit()
         StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor(50);
         assert(pPowerupSparkle);
 
-        shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
         assert(pPositionComponent);
 
-        shared_ptr<PhysicsComponent> pPhysicsComponent =
-            MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+        shared_ptr<PhysicsComponent> pPhysicsComponent = m_pOwner->GetPhysicsComponent();
         assert(pPhysicsComponent);
 
         shared_ptr<PowerupSparkleAIComponent> pPowerupSparkleAIComponent =

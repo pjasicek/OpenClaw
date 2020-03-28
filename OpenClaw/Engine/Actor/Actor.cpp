@@ -2,9 +2,9 @@
 
 #include "../SharedDefines.h"
 #include "Actor.h"
-#include "ActorComponent.h"
 
 #include "Components/PositionComponent.h"
+#include "Components/PhysicsComponent.h"
 
 Actor::Actor(uint32 actorGUID)
 {
@@ -40,8 +40,9 @@ bool Actor::Init(TiXmlElement* data)
 void Actor::PostInit()
 {
     m_pPositionComponent = MakeStrongPtr(GetComponent<PositionComponent>(PositionComponent::g_Name));
+    m_pPhysicsComponent = MakeStrongPtr(GetComponent<PhysicsComponent>());
 
-    for (auto component : _components)
+    for (auto &component : _components)
     {
         component.second->VPostInit();
     }
@@ -49,7 +50,7 @@ void Actor::PostInit()
 
 void Actor::PostPostInit()
 {
-    for (auto component : _components)
+    for (auto &component : _components)
     {
         component.second->VPostPostInit();
     }
@@ -61,12 +62,13 @@ void Actor::Destroy()
     // Remove references (Actor has components and Component has an owner)
     // This actor and component won't be freed without it!
     m_pPositionComponent.reset();
+    m_pPhysicsComponent.reset();
     _components.clear();
 }
 
 void Actor::Update(uint32 msDiff)
 {
-    for (auto component : _components)
+    for (auto &component : _components)
     {
         component.second->VUpdate(msDiff);
     }

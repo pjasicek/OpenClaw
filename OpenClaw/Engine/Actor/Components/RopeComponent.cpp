@@ -237,8 +237,7 @@ void RopeComponent::VOnAnimationFrameChanged(Animation* pAnimation, AnimationFra
 
         UpdateAttachedActorPosition(newPosition);
 
-        shared_ptr<PhysicsComponent> pRopeActorPhysicsComponent =
-            MakeStrongPtr(m_pAttachedActor->GetComponent<PhysicsComponent>());
+        shared_ptr<PhysicsComponent> pRopeActorPhysicsComponent = m_pAttachedActor->GetPhysicsComponent();
         assert(pRopeActorPhysicsComponent != nullptr);
 
         if (pNewFrame->idx > 60)

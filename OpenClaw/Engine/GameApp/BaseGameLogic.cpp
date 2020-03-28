@@ -955,7 +955,7 @@ void BaseGameLogic::MoveActorDelegate(IEventDataPtr pEventData)
     StrongActorPtr pActor = MakeStrongPtr(VGetActor(pCastEventData->GetActorId()));
     if (pActor != nullptr)
     {
-        shared_ptr<PositionComponent> pPositionComponent = MakeStrongPtr(pActor->GetComponent<PositionComponent>());
+        shared_ptr<PositionComponent> pPositionComponent = pActor->GetPositionComponent();
         assert(pPositionComponent != nullptr);
 
         pPositionComponent->SetPosition(pCastEventData->GetMove());

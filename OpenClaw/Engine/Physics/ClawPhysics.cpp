@@ -35,8 +35,7 @@ shared_ptr<PhysicsComponent> GetPhysicsComponentFromB2Body(const b2Body* pBody)
         return nullptr;
     }
 
-    shared_ptr<PhysicsComponent> pPhysicsComponent =
-        MakeStrongPtr(pActor->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+    shared_ptr<PhysicsComponent> pPhysicsComponent = pActor->GetPhysicsComponent();
     assert(pPhysicsComponent);
 
     return pPhysicsComponent;
@@ -234,8 +233,10 @@ void ClawPhysics::VSyncVisibleScene()
 
         uint32 actorId = it.first;
 
-        StrongActorPtr pGameActor = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(actorId));
+        //StrongActorPtr pGameActor = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(actorId));
         //assert(pGameActor);
+        auto pGameActor = static_cast<Actor*>(pActorBody->GetUserData());
+        assert(pGameActor && pGameActor->GetGUID() == actorId);
 
         if (pGameActor && pActorBody)
         {
@@ -565,16 +566,14 @@ void ClawPhysics::VAddDynamicActor(WeakActorPtr pActor)
     
     assert(pStrongActor->GetName() == "Claw");
 
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(pStrongActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pPositionComponent = pStrongActor->GetPositionComponent();
     if (!pPositionComponent)
     {
         return;
     }
     Point position = pPositionComponent->GetPosition();
 
-    shared_ptr<PhysicsComponent> pPhysicsComponent =
-        MakeStrongPtr(pStrongActor->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+    shared_ptr<PhysicsComponent> pPhysicsComponent = pStrongActor->GetPhysicsComponent();
     if (!pPhysicsComponent)
     {
         return;
@@ -648,8 +647,7 @@ void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionT
         return;
     }
 
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(pStrongActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pPositionComponent = pStrongActor->GetPositionComponent();
     if (!pPositionComponent)
     {
         LOG_ERROR("Attempting to create static body without position component");

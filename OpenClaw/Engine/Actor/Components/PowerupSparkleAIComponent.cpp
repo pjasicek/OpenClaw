@@ -40,7 +40,7 @@ void PowerupSparkleAIComponent::VPostInit()
         pAnimationComponent->GetCurrentAnimation()->SetNextFrame();
     }
 
-    m_pPositonComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>()).get();
+    m_pPositonComponent = m_pOwner->GetPositionComponent().get();
     assert(m_pPositonComponent);
 }
 

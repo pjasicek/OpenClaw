@@ -52,7 +52,7 @@ bool PathElevatorComponent::VInit(TiXmlElement* pData)
 
 void PathElevatorComponent::VPostInit()
 {
-    auto pPC = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>());
+    auto pPC = m_pOwner->GetPositionComponent();
     assert(pPC != nullptr);
 
     m_LastPosition = pPC->GetPosition();
@@ -226,8 +226,7 @@ void PathElevatorComponent::OnMoved(Point newPosition)
             Actor* pActor = (Actor*)pCarriedBody->GetUserData();
             assert(pActor);
 
-            shared_ptr<PhysicsComponent> pPhysicsComponent =
-                MakeStrongPtr(pActor->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+            shared_ptr<PhysicsComponent> pPhysicsComponent = pActor->GetPhysicsComponent();
 
             // Provide sanity check
             if (pPhysicsComponent && pPhysicsComponent->GetNumFootContacts() == 0)

@@ -54,8 +54,7 @@ bool CheckpointComponent::VOnApply(Actor* pActorWhoPickedThis)
     pAnimationComponent->ResumeAnimation();
     pAnimationComponent->AddObserver(this);
 
-    shared_ptr<PhysicsComponent> pPhysicsComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+    shared_ptr<PhysicsComponent> pPhysicsComponent = m_pOwner->GetPhysicsComponent();
     assert(pPhysicsComponent);
     pPhysicsComponent->Destroy();
 

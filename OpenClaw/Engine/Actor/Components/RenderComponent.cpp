@@ -320,8 +320,7 @@ SDL_Rect ActorRenderComponent::VGetPositionRect() const
 
 shared_ptr<SceneNode> ActorRenderComponent::VCreateSceneNode()
 {
-    shared_ptr<PositionComponent> pPositionComponent = 
-        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
     if (!pPositionComponent)
     {
         // can't render without a transform
@@ -696,8 +695,7 @@ SDL_Rect TilePlaneRenderComponent::VGetPositionRect() const
 
 shared_ptr<SceneNode> TilePlaneRenderComponent::VCreateSceneNode()
 {
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
     if (!pPositionComponent)
     {
         // can't render without a transform
@@ -778,8 +776,7 @@ SDL_Rect HUDRenderComponent::VGetPositionRect() const
 
 shared_ptr<SceneNode> HUDRenderComponent::VCreateSceneNode()
 {
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
     if (!pPositionComponent)
     {
         // can't render without a transform

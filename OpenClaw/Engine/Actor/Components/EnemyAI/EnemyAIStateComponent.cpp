@@ -119,10 +119,8 @@ void BaseEnemyAIStateComponent::VPostInit()
 {
     m_pAnimationComponent = 
         MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
-    m_pPhysicsComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
-    m_pPositionComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+    m_pPhysicsComponent = m_pOwner->GetPhysicsComponent().get();
+    m_pPositionComponent = m_pOwner->GetPositionComponent().get();
     m_pEnemyAIComponent = 
         MakeStrongPtr(m_pOwner->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name)).get();
     m_pRenderComponent =
@@ -1136,8 +1134,7 @@ Actor* BaseAttackAIStateComponent::FindClosestHostileActor()
     {
         assert(pHostileActor != NULL);
 
-        shared_ptr<PositionComponent> pHostileActorPositionComponent =
-            MakeStrongPtr(pHostileActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        shared_ptr<PositionComponent> pHostileActorPositionComponent = pHostileActor->GetPositionComponent();
         assert(pHostileActorPositionComponent);
 
         Point positionDiff = pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();
@@ -1164,8 +1161,7 @@ Point BaseAttackAIStateComponent::FindClosestHostileActorOffset()
         return closest;
     }
 
-    shared_ptr<PositionComponent> pHostileActorPositionComponent =
-        MakeStrongPtr(pClosestEnemy->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pHostileActorPositionComponent = pClosestEnemy->GetPositionComponent();
     assert(pHostileActorPositionComponent);
 
     return pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();

@@ -47,16 +47,14 @@ bool FollowableComponent::VInit(TiXmlElement* pData)
 
 void FollowableComponent::VPostInit()
 {
-    m_pPositionComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+    m_pPositionComponent = m_pOwner->GetPositionComponent().get();
 
     Point ownerPos = m_pPositionComponent->GetPosition();
     m_pFollowingActor = ActorTemplates::CreateRenderedActor(
         Point(ownerPos.x + m_Offset.x, ownerPos.y + m_Offset.y), m_ImageSet, m_AnimationPath, 1020).get();
     assert(m_pFollowingActor != NULL);
 
-    m_pTargetPositionComponent =
-        MakeStrongPtr(m_pFollowingActor->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+    m_pTargetPositionComponent = m_pFollowingActor->GetPositionComponent().get();
     m_pTargetRenderComponent =
         MakeStrongPtr(m_pFollowingActor->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name)).get();
 

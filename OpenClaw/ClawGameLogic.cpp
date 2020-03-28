@@ -114,8 +114,7 @@ void ClawGameLogic::ControlledActorStartMoveDelegate(IEventDataPtr pEventData)
         return;
     }
 
-    shared_ptr<PhysicsComponent> pPhysicsComponent = 
-        MakeStrongPtr(pActor->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+    shared_ptr<PhysicsComponent> pPhysicsComponent = pActor->GetPhysicsComponent();
     if (!pPhysicsComponent)
     {
         return;
@@ -134,8 +133,7 @@ void ClawGameLogic::ControlledActorStartClimbDelegate(IEventDataPtr pEventData)
         return;
     }
 
-    shared_ptr<PhysicsComponent> pPhysicsComponent =
-        MakeStrongPtr(pActor->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+    shared_ptr<PhysicsComponent> pPhysicsComponent = pActor->GetPhysicsComponent();
     if (!pPhysicsComponent)
     {
         return;
@@ -460,8 +458,7 @@ void ClawGameLogic::UpdatedPowerupStatusDelegate(IEventDataPtr pEventData)
     }
 
     // Clear all existing effects
-    shared_ptr<PhysicsComponent> pPhysicsComponent =
-        MakeStrongPtr(pActor->GetComponent<PhysicsComponent>());
+    shared_ptr<PhysicsComponent> pPhysicsComponent = pActor->GetPhysicsComponent();
     shared_ptr<ActorRenderComponent> pARC =
         MakeStrongPtr(pActor->GetComponent<ActorRenderComponent>());
     shared_ptr<HealthComponent> pHealthComponent =
