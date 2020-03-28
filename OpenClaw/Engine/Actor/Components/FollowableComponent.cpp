@@ -51,7 +51,7 @@ void FollowableComponent::VPostInit()
 
     Point ownerPos = m_pPositionComponent->GetPosition();
     m_pFollowingActor = ActorTemplates::CreateRenderedActor(
-        Point(ownerPos.x + m_Offset.x, ownerPos.y + m_Offset.y), m_ImageSet, m_AnimationPath, 1020).get();
+        Point(ownerPos.x + m_Offset.x, ownerPos.y + m_Offset.y), m_ImageSet, m_AnimationPath, zIndexes::FollowableComponent).get();
     assert(m_pFollowingActor != NULL);
 
     m_pTargetPositionComponent = m_pFollowingActor->GetPositionComponent().get();
