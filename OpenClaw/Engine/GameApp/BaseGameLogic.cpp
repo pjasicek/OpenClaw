@@ -1173,10 +1173,16 @@ void BaseGameLogic::WorldFinishedLoadingDelegate(IEventDataPtr pEventData)
 
 StrongActorPtr BaseGameLogic::GetClawActor()
 {
-    for (auto actorIter : m_ActorMap)
+    StrongActorPtr claw = MakeStrongPtr(m_pClawActor);
+    if (claw) {
+        return claw;
+    }
+
+    for (auto &actorIter : m_ActorMap)
     {
         if (actorIter.second->GetName() == "Claw")
         {
+            m_pClawActor = actorIter.second;
             return actorIter.second;
         }
     }
@@ -1258,6 +1264,7 @@ void BaseGameLogic::VResetLevel()
     }
 
     assert(m_ActorMap.empty());
+    assert(m_pClawActor.expired());
 
     // Process any pending events which could have arose from deleting all actors
     IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
