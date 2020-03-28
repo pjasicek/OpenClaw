@@ -92,8 +92,11 @@ public:
     virtual bool VRemoveChild(uint32 actorId);
     virtual bool VOnLostDevice(Scene* pScene);
 
-    virtual void VSetPosition(const Point& position) { m_Properties.m_Position = position; }
+    void VSetPosition(const Point &position) override;
     Point GetPosition() { return m_Properties.m_Position; }
+
+    void SetParent(SceneNode *node) { m_pParent = node; }
+    SceneNode* GetParent() { return m_pParent; }
 
     int32 GetOrientation() const { return m_Properties.m_Orientation; }
 
@@ -102,6 +105,14 @@ public:
     virtual void SortChildrenByZCoord();
 
 protected:
+    virtual void VOnBeforeChildrenModifyPosition(SceneNode *children, const Point &position) {}
+
+    void RenderNode(Scene* pScene, std::shared_ptr<ISceneNode> &node);
+
+    static bool NodeCompare(const shared_ptr<ISceneNode> &lhs, const shared_ptr<ISceneNode> &rhs) {
+        return lhs->GetZCoord() < rhs->GetZCoord();
+    }
+
     SceneNodeList           m_ChildrenList;
     SceneNode*              m_pParent;
     SceneNodeProperties     m_Properties;
@@ -117,7 +128,32 @@ public:
     virtual bool VAddChild(shared_ptr<ISceneNode> kid);
     virtual void VRenderChildren(Scene* pScene);
     virtual bool VRemoveChild(uint32 actorId);
-    virtual bool VIsVisible(Scene* pScene) { return true; }
+    virtual bool VIsVisible(Scene* pScene) const override { return true; }
+};
+
+class GridNode : public SceneNode
+{
+public:
+    GridNode(RenderPass renderPass);
+    bool VAddChild(shared_ptr<ISceneNode> kid) override;
+    void VRenderChildren(Scene* pScene) override;
+    bool VRemoveChild(uint32 actorId) override;
+    bool VIsVisible(Scene* pScene) const override { return true; }
+
+    void VOnUpdate(Scene* pScene, uint32 msDiff) override;
+
+    void SortChildrenByZCoord() override;
+
+protected:
+    void VOnBeforeChildrenModifyPosition(SceneNode *children, const Point &position) override;
+    SDL_Point WorldToGridPosition(int x, int y) const;
+    SDL_Rect GridIntersection(const SDL_Rect &cameraRect) const;
+    void AddToGrid(int x, int y, shared_ptr<ISceneNode> &kid);
+    shared_ptr<ISceneNode> RemoveFromGrid(int x, int y, uint32 actorId);
+
+    std::vector<std::vector<SceneNodeList>> m_Grid; // m_Grid[x][y]
+    const int m_CellWidth, m_CellHeight;
+    const int m_MaxRowCount, m_MaxColumnCount;
 };
 
 class CameraNode : public SceneNode

@@ -1,3 +1,4 @@
+#include <cmath>
 #include "SceneNodes.h"
 #include "Scene.h"
 #include "../Actor/ActorComponent.h"
@@ -52,17 +53,7 @@ void SceneNode::VOnUpdate(Scene* pScene, uint32 msDiff)
     // This is meant to be called from any class
     // that inherits from SceneNode and overloads
     // VOnUpdate()
-
-    /*SceneNodeList::iterator i = m_ChildrenList.begin();
-    SceneNodeList::iterator end = m_ChildrenList.end();
-
-    while (i != end)
-    {
-    (*i)->VOnUpdate(pScene, msDiff);
-    ++i;
-    }*/
-
-    for (auto child : m_ChildrenList)
+    for (auto &child : m_ChildrenList)
     {
         child->VOnUpdate(pScene, msDiff);
     }
@@ -70,27 +61,19 @@ void SceneNode::VOnUpdate(Scene* pScene, uint32 msDiff)
 
 void SceneNode::VRenderChildren(Scene* pScene)
 {
-    for (auto childNode : m_ChildrenList)
+    for (auto &childNode : m_ChildrenList)
     {
-        // TODO: Huge overhead from testing visibility of every single actor each frame
-        // Possible solution: Use Box2D Broadphase to retrieve all actors within AABB
+        RenderNode(pScene, childNode);
+    }
+}
 
-        // P.S. I don't think it would work faster.
-        // Actor may not have a PhysicsComponent. And we will have to create fake physics objects
-        // for every actor and update AABB position properties each frame.
-
-        // We can try to represent each actor as a Point from PositionComponent
-        // and use 2D grid to store and query it.
-        // In this case we will render only visible grids and near neighbors.
-        // As I understood b2DynamicTree will be useless
-        // for points (AABB rectangles with 0 width and height)
-        if (childNode->VIsVisible(pScene))
-        {
-            childNode->VPreRender(pScene);
-            childNode->VRender(pScene);
-            childNode->VRenderChildren(pScene);
-            childNode->VPostRender(pScene);
-        }
+void SceneNode::RenderNode(Scene *pScene, std::shared_ptr<ISceneNode> &node) {
+    if (node->VIsVisible(pScene))
+    {
+        node->VPreRender(pScene);
+        node->VRender(pScene);
+        node->VRenderChildren(pScene);
+        node->VPostRender(pScene);
     }
 }
 
@@ -120,7 +103,7 @@ bool SceneNode::VAddChild(shared_ptr<ISceneNode> ikid)
     m_ChildrenList.push_back(ikid);
 
     shared_ptr<SceneNode> kid = static_pointer_cast<SceneNode>(ikid);
-    kid->m_pParent = this;
+    kid->SetParent(this);
 
     return true;
 }
@@ -142,16 +125,19 @@ bool SceneNode::VRemoveChild(uint32 actorId)
 
 void SceneNode::SortChildrenByZCoord()
 {
-    for (auto pChildNode : m_ChildrenList)
+    for (auto &pChildNode : m_ChildrenList)
     {
         pChildNode->SortChildrenByZCoord();
     }
 
-    std::sort(m_ChildrenList.begin(), m_ChildrenList.end(), 
-        [](const shared_ptr<ISceneNode>& lhs, const shared_ptr<ISceneNode>& rhs)
-    {
-        return lhs->GetZCoord() < rhs->GetZCoord();
-    });
+    std::sort(m_ChildrenList.begin(), m_ChildrenList.end(), NodeCompare);
+}
+
+void SceneNode::VSetPosition(const Point &position) {
+    if (m_pParent) {
+        m_pParent->VOnBeforeChildrenModifyPosition(this, position);
+    }
+    m_Properties.m_Position = position;
 }
 
 //=================================================================================================
@@ -168,7 +154,8 @@ RootNode::RootNode() : SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_0, { 0, 0 })
     shared_ptr<SceneNode> actionGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_Action, { 0, 0 }));
     m_ChildrenList.push_back(actionGroup);
 
-    shared_ptr<SceneNode> actorGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_Actor, { 0, 0 }));
+//    shared_ptr<SceneNode> actorGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_Actor, { 0, 0 }));
+    shared_ptr<SceneNode> actorGroup(new GridNode(RenderPass_Actor));
     m_ChildrenList.push_back(actorGroup);
 
     shared_ptr<SceneNode> foregroundGroup(new SceneNode(INVALID_ACTOR_ID, NULL, RenderPass_Foreground, { 0, 0 }));
@@ -231,6 +218,182 @@ void RootNode::VRenderChildren(Scene* pScene)
                 break;
         }
     }
+}
+
+//=================================================================================================
+// GridNode Implementation
+// This implementation uses actor positions to store nodes and reduce visibility checks
+// It's useless for UI or another nodes storing without actor position.
+// Each cell stores sorted collection of nodes.
+// VOnUpdate() UPDATES ONLY VISIBLE NODES IN RANDOM ORDER!!! BE CAREFUL
+
+GridNode::GridNode(RenderPass renderPass) : m_CellWidth(1000), // TODO: use config
+                                            m_CellHeight(1000),
+                                            m_MaxRowCount(300),
+                                            m_MaxColumnCount(300),
+                                            SceneNode(INVALID_ACTOR_ID, nullptr, renderPass, {0, 0}) {
+
+}
+
+bool GridNode::VAddChild(shared_ptr<ISceneNode> kid) {
+    const uint32 actorId = kid->VGetProperties()->GetActorId();
+    if (actorId == INVALID_ACTOR_ID) {
+        LOG_WARNING("SceneNode without actor id will be added to GridNode");
+        return SceneNode::VAddChild(kid);
+    }
+    const Point actorPos = kid->VGetProperties()->GetPosition();
+    const SDL_Point cellPos = WorldToGridPosition((int) actorPos.x, (int) actorPos.y);
+    AddToGrid(cellPos.x, cellPos.y, kid);
+    return true;
+}
+
+SDL_Point GridNode::WorldToGridPosition(int x, int y) const {
+    // Max column/row count prevents infinite memory growing if an actor falls out of bound
+    return SDL_Point{
+            std::min(max(x, 0) / m_CellWidth, m_MaxColumnCount),
+            std::min(max(y, 0) / m_CellHeight, m_MaxRowCount)
+    };
+}
+
+void GridNode::AddToGrid(int x, int y, shared_ptr<ISceneNode> &ikid) {
+    if (m_Grid.size() <= x) {
+        m_Grid.resize(x + 1);
+    }
+    auto &col = m_Grid[x];
+    if (col.size() <= y) {
+        col.resize(y + 1);
+    }
+    auto &cell = col[y];
+
+    // Nodes in grid cells are always ordered
+    cell.insert(
+            std::lower_bound(cell.begin(), cell.end(), ikid, NodeCompare),
+            ikid
+    );
+
+    shared_ptr<SceneNode> kid = static_pointer_cast<SceneNode>(ikid);
+    kid->SetParent(this);
+}
+
+bool GridNode::VRemoveChild(uint32 actorId) {
+    // TODO: Expensive
+    for (auto &column : m_Grid) {
+        for (auto &nodes : column) {
+            for (auto it = nodes.begin(); it != nodes.end(); ++it) {
+                if ((*it)->VGetProperties()->GetActorId() == actorId) {
+                    nodes.erase(it);
+                    return true;
+                }
+            }
+        }
+    }
+    return SceneNode::VRemoveChild(actorId);
+}
+
+
+void GridNode::VRenderChildren(Scene* pScene)
+{
+    shared_ptr<CameraNode> pCamera = pScene->GetCamera();
+    if (!pCamera)
+    {
+        LOG_ERROR("Checking visibility without available scene camera");
+        return;
+    }
+
+    // Render grid elements. We need to find visible cells, collect nodes, sort it and render
+    const SDL_Rect intersect = GridIntersection(pCamera->GetCameraRect());
+    std::vector<shared_ptr<ISceneNode>> intersectedNodes;
+    for (int x = intersect.x; x < intersect.x + intersect.w && x < m_Grid.size(); ++x) {
+        auto &column = m_Grid[x];
+        for (int y = intersect.y; y < intersect.y + intersect.h && y < column.size(); ++y) {
+            auto &nodes = column[y];
+            if (!nodes.empty()) {
+                // Insert sorted vector to the end of sorted vector
+                int oldSize = intersectedNodes.size();
+                intersectedNodes.reserve(oldSize + nodes.size());
+                intersectedNodes.insert(intersectedNodes.end(), nodes.begin(), nodes.end());
+                // Sort resulted vector
+                std::inplace_merge(intersectedNodes.begin(), intersectedNodes.begin() + oldSize, intersectedNodes.end(), NodeCompare);
+            }
+        }
+    }
+    for (auto &node : intersectedNodes) {
+        RenderNode(pScene, node);
+    }
+
+    // Render another
+    SceneNode::VRenderChildren(pScene);
+}
+
+SDL_Rect GridNode::GridIntersection(const SDL_Rect &cameraRect) const {
+    const SDL_Point start = WorldToGridPosition(cameraRect.x, cameraRect.y);
+    const SDL_Point end = WorldToGridPosition(cameraRect.x + cameraRect.w, cameraRect.y + cameraRect.h);
+    return SDL_Rect{max(start.x - 1, 0), max(start.y - 1, 0), end.x - start.x + 3, end.y - start.y + 3};
+}
+
+void GridNode::VOnUpdate(Scene *pScene, uint32 msDiff) {
+    shared_ptr<CameraNode> pCamera = pScene->GetCamera();
+    if (!pCamera)
+    {
+        LOG_ERROR("Update node without available scene camera");
+        return;
+    }
+
+    // NOW UPDATE ONLY VISIBLE CELLS IN RANDOM ORDER!!!
+    const SDL_Rect intersect = GridIntersection(pCamera->GetCameraRect());
+    for (int x = intersect.x; x < intersect.x + intersect.w && x < m_Grid.size(); ++x) {
+        auto &column = m_Grid[x];
+        for (int y = intersect.y; y < intersect.y + intersect.h && y < column.size(); ++y) {
+            auto &nodes = column[y];
+            for (auto &node : nodes) {
+                node->VOnUpdate(pScene, msDiff);
+            }
+        }
+    }
+
+    SceneNode::VOnUpdate(pScene, msDiff);
+}
+
+void GridNode::SortChildrenByZCoord() {
+    // Grid is always sorted
+    SceneNode::SortChildrenByZCoord();
+}
+
+// Move node to another cell if it's needed
+void GridNode::VOnBeforeChildrenModifyPosition(SceneNode *children, const Point &position) {
+    uint32 actorId = children->VGetProperties()->GetActorId();
+    if (actorId != INVALID_ACTOR_ID) {
+        const Point oldPos = children->VGetProperties()->GetPosition();
+        const SDL_Point oldGridPos = WorldToGridPosition((int) oldPos.x, (int) oldPos.y);
+
+        const SDL_Point newGridPos = WorldToGridPosition((int) position.x, (int) position.y);
+        if (oldGridPos.x != newGridPos.x || oldGridPos.y != newGridPos.y) {
+            shared_ptr<ISceneNode> node = RemoveFromGrid(oldGridPos.x, oldGridPos.y, actorId);
+            if (node) {
+                AddToGrid(newGridPos.x, newGridPos.y, node);
+            } else {
+                LOG_ERROR("Scene node was not found in GridNode!")
+                SceneNode::VOnBeforeChildrenModifyPosition(children, position);
+            }
+        }
+    }
+}
+
+shared_ptr<ISceneNode> GridNode::RemoveFromGrid(int x, int y, uint32 actorId) {
+    if (m_Grid.size() > x) {
+        auto &col = m_Grid[x];
+        if (col.size() > y) {
+            auto &cell = col[y];
+            for (auto it = cell.begin(); it != cell.end(); ++it) {
+                if ((*it)->VGetProperties()->GetActorId() == actorId) {
+                    shared_ptr<ISceneNode> node = *it;
+                    it = cell.erase(it);
+                    return node;
+                }
+            }
+        }
+    }
+    return shared_ptr<ISceneNode>();
 }
 
 //=================================================================================================
