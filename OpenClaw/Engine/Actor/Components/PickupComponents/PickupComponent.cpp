@@ -503,7 +503,7 @@ bool AmmoPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
         MakeStrongPtr(pActorWhoPickedThis->GetComponent<AmmoComponent>(AmmoComponent::g_Name));
     if (pAmmoComponent)
     {
-        for (auto ammoPair : m_AmmoPickupList)
+        for (const auto &ammoPair : m_AmmoPickupList)
         {
             pAmmoComponent->AddAmmo(ammoPair.first, ammoPair.second);
         }

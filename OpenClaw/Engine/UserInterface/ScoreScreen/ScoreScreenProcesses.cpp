@@ -542,6 +542,7 @@ void SpawnScoreRowProcess::AddNumberImageActors(int numberToDisplay, int futureM
     if (numberStr.length() != maximumNumberStr.length())
     {
         assert(maximumNumberStr.length() > numberStr.length());
+        numberStr.reserve(maximumNumberStr.length());
         int zerosToAdd = maximumNumberStr.length() - numberStr.length();
         for (int i = 0; i < zerosToAdd; i++)
         {
@@ -549,6 +550,7 @@ void SpawnScoreRowProcess::AddNumberImageActors(int numberToDisplay, int futureM
         }
     }
 
+    m_ChildrenActorList.reserve(m_ChildrenActorList.size() + numberStr.length());
     for (char charDigit : numberStr)
     {
         int digit = DigitCharToInt(charDigit);

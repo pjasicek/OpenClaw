@@ -64,6 +64,7 @@ bool Animation::Initialize(WapAni* wapAni, const char* animationName, const char
     // Load animation frame from WapAni
     uint32 numAnimFrames = wapAni->animationFramesCount;
     AniAnimationFrame* aniAnimFrames = wapAni->animationFrames;
+    _animationFrames.reserve(numAnimFrames);
     for (uint32 frameIdx = 0; frameIdx < numAnimFrames; ++frameIdx)
     {
         AnimationFrame animFrame;
@@ -153,6 +154,7 @@ bool Animation::Initialize(const std::vector<AnimationFrame> &animFrames, const 
 
 bool Animation::Initialize(int numAnimFrames, int animFrameTime, const char* animName, AnimationComponent* owner)
 {
+    _animationFrames.reserve(numAnimFrames);
     for (int frameIdx = 0; frameIdx < numAnimFrames; ++frameIdx)
     {
         AnimationFrame animFrame;

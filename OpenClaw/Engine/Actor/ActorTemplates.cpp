@@ -171,7 +171,7 @@ namespace ActorTemplates
 
     std::string EnumToString_PickupTypeToImageSet(PickupType pickupType)
     {
-        std::map<PickupType, std::string> s_PickupTypeToImageSetMap =
+        static const std::map<PickupType, std::string> s_PickupTypeToImageSetMap =
         {
             { PickupType_Default,                   "GAME_TREASURE_COINS" },
             { PickupType_Treasure_Goldbars,         "GAME_TREASURE_GOLDBARS" },
@@ -1148,13 +1148,7 @@ namespace ActorTemplates
     template <typename K, typename V>
     bool IsKeyInMap(const K& key, const std::map<K, V>& m)
     {
-        auto findIt = m.find(key);
-        if (findIt == m.end())
-        {
-            return false;
-        }
-
-        return true;
+        return m.count(key);
     }
 
     template <typename K, typename V>
@@ -2061,7 +2055,7 @@ namespace ActorTemplates
         TiXmlElement* pPathElevatorStepsElem = GetTiXmlElementFromPath(pActorElem, "Actor.PathElevatorComponent.ElevatorSteps");
         assert(pPathElevatorStepsElem != NULL);
 
-        for (ElevatorStepDef stepDef : def.elevatorPath)
+        for (const ElevatorStepDef &stepDef : def.elevatorPath)
         {
             pPathElevatorStepsElem->LinkEndChild(stepDef.ToXml());
         }
@@ -2392,7 +2386,7 @@ namespace ActorTemplates
 
         // Add sounds associated to given enemy
         auto soundTypeAndNamePairs = GetSoundsFromActorLogic(logicName);
-        for (std::pair<std::string, std::string> soundTypeAndNamePair : soundTypeAndNamePairs)
+        for (std::pair<std::string, std::string> &soundTypeAndNamePair : soundTypeAndNamePairs)
         {
             XML_ADD_2_PARAM_ELEMENT("Sound", "SoundType", soundTypeAndNamePair.first.c_str(), 
                 "SoundName", soundTypeAndNamePair.second.c_str(), pEnemyAIElem);

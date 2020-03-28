@@ -449,7 +449,7 @@ struct ElevatorStepDef
         return def;
     }
 
-    TiXmlElement* ToXml()
+    TiXmlElement* ToXml() const
     {
         TiXmlElement* pElevatorStepElem = new TiXmlElement("ElevatorStep");
 

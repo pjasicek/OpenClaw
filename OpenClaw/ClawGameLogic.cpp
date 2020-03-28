@@ -90,9 +90,8 @@ void ClawGameLogic::PlayerActorAssignmentDelegate(IEventDataPtr pEventData)
 {
     shared_ptr<EventData_Attach_Actor> pCastEventData = static_pointer_cast<EventData_Attach_Actor>(pEventData);
 
-    for (auto it = m_GameViews.begin(); it != m_GameViews.end(); ++it)
+    for (const shared_ptr<IGameView>& pView : m_GameViews)
     {
-        shared_ptr<IGameView> pView = *it;
         if (pView->VGetType() == GameView_Human)
         {
             shared_ptr<ClawHumanView> pHumanView = static_pointer_cast<ClawHumanView, IGameView>(pView);

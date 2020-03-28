@@ -28,10 +28,10 @@ public:
     virtual void VAddRect(uint32_t thickness, WeakActorPtr pTargetActor) override;
     virtual void VAddLine(Point from, Point to, uint32_t thickness) override;
 
-    virtual void VAddStaticGeometry(Point position, Point size, CollisionType collisionType, FixtureType fixtureType) override;
+    virtual void VAddStaticGeometry(const Point& position, const Point& size, CollisionType collisionType, FixtureType fixtureType) override;
     virtual void VAddDynamicActor(WeakActorPtr pActor) override;
     virtual void VAddKinematicBody(WeakActorPtr pActor) override;
-    virtual void VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType) override;
+    virtual void VAddStaticBody(WeakActorPtr pActor, const Point& bodySize, CollisionType collisionType) override;
     virtual void VRemoveActor(uint32_t actorId) override;
 
     virtual void VAddActorBody(const ActorBodyDef* actorBodyDef) override;
@@ -164,10 +164,10 @@ public:
     virtual void VAddRect(uint32_t thickness, WeakActorPtr pTargetActor) override { }
     virtual void VAddLine(Point from, Point to, uint32_t thickness) override { }
 
-    virtual void VAddStaticGeometry(Point position, Point size, CollisionType collisionType, FixtureType fixtureType) override { }
+    virtual void VAddStaticGeometry(const Point& position, const Point& size, CollisionType collisionType, FixtureType fixtureType) override { }
     virtual void VAddDynamicActor(WeakActorPtr pActor) override { }
     virtual void VAddKinematicBody(WeakActorPtr pActor) override { }
-    virtual void VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType) override { }
+    virtual void VAddStaticBody(WeakActorPtr pActor, const Point& bodySize, CollisionType collisionType) override { }
     virtual void VRemoveActor(uint32_t actorId) override { }
 
     virtual void VAddActorBody(const ActorBodyDef* actorBodyDef) override { }

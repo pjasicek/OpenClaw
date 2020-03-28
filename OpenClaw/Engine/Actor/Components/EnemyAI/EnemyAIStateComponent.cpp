@@ -92,7 +92,7 @@ static shared_ptr<EnemyAttackAction> XmlToEnemyAttackActionPtr(TiXmlElement* pEl
 // BaseEnemyAIStateComponent
 //=====================================================================================================================
 
-BaseEnemyAIStateComponent::BaseEnemyAIStateComponent(std::string stateName)
+BaseEnemyAIStateComponent::BaseEnemyAIStateComponent(const std::string &stateName)
     :
     m_IsActive(false),
     m_StatePriority(-1),
@@ -531,7 +531,7 @@ void PatrolEnemyAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
     }
 }
 
-double PatrolEnemyAIStateComponent::FindClosestHole(Point center, int height, float maxSearchDistance)
+double PatrolEnemyAIStateComponent::FindClosestHole(const Point &center, int height, float maxSearchDistance)
 {
     double leftDelta = 0.0;
     for (leftDelta = 0.0; leftDelta < fabs(maxSearchDistance); leftDelta += 1.0)
@@ -913,7 +913,7 @@ bool ParryEnemyAIStateComponent::CanParry(DamageType damageType, EnemyAIState cu
 // BaseAttackAIStateComponent
 //=====================================================================================================================
 
-BaseAttackAIStateComponent::BaseAttackAIStateComponent(std::string stateName)
+BaseAttackAIStateComponent::BaseAttackAIStateComponent(const std::string &stateName)
     :
     m_AttackDelay(0),
     m_AttackSpeechSoundPlayChance(0),
@@ -979,7 +979,7 @@ void BaseAttackAIStateComponent::VPostInit()
 
 void BaseAttackAIStateComponent::VPostPostInit()
 {
-    for (shared_ptr<EnemyAttackAction> pAttackAction : m_AttackActions)
+    for (const shared_ptr<EnemyAttackAction> &pAttackAction : m_AttackActions)
     {
         g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(
             m_pOwner->GetGUID(),

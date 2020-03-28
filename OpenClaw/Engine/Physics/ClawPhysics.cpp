@@ -134,9 +134,9 @@ b2AABB GetBodyAABB(b2Body* pBody, bool discardSensors)
 b2Fixture* GetLowermostFixture(b2Body* pBody, bool discardSensors)
 {
     b2Fixture* pLowermostFixture = NULL;
-    b2AABB aabb;
-    aabb.lowerBound = b2Vec2(FLT_MAX, FLT_MAX);
-    aabb.upperBound = b2Vec2(-FLT_MAX, -FLT_MAX);
+//    b2AABB aabb;
+//    aabb.lowerBound = b2Vec2(FLT_MAX, FLT_MAX);
+//    aabb.upperBound = b2Vec2(-FLT_MAX, -FLT_MAX);
     b2Fixture* fixture = pBody->GetFixtureList();
     while (fixture != NULL)
     {
@@ -478,7 +478,7 @@ void ClawPhysics::VAddLine(Point from, Point to, uint32_t thickness)
 //
 //    Adds static geometry to physics world, like ladder or solid wall.
 //
-void ClawPhysics::VAddStaticGeometry(Point position, Point size, CollisionType collisionType, FixtureType fixtureType)
+void ClawPhysics::VAddStaticGeometry(const Point& position, const Point& size, CollisionType collisionType, FixtureType fixtureType)
 {
     if (collisionType == CollisionType_None)
     {
@@ -637,7 +637,7 @@ void ClawPhysics::VAddKinematicBody(WeakActorPtr pActor)
     assert(false && "Deprecated and not used");
 }
 
-void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType)
+void ClawPhysics::VAddStaticBody(WeakActorPtr pActor, const Point& bodySize, CollisionType collisionType)
 {
     //LOG("Creating static actor");
 
@@ -1015,6 +1015,7 @@ void ClawPhysics::VApplyLinearImpulse(uint32_t actorId, const Point& impulse)
 //
 bool ClawPhysics::VKinematicMove(const Point& pos, uint32_t actorId)
 {
+    assert(false && "VKinematicMove: implement me");
     return true;
 }
 
@@ -1025,7 +1026,7 @@ bool ClawPhysics::VKinematicMove(const Point& pos, uint32_t actorId)
 //
 void ClawPhysics::VStopActor(uint32_t actorId)
 {
-
+    assert(false && "VStopActor: implement me");
 }
 
 //-----------------------------------------------------------------------------
@@ -1051,7 +1052,7 @@ Point ClawPhysics::VGetVelocity(uint32_t actorId)
 //
 void ClawPhysics::SetVelocity(uint32_t actorId, const Point& velocity)
 {
-
+    assert(false && "SetVelocity: implement me");
 }
 
 //-----------------------------------------------------------------------------
@@ -1061,7 +1062,7 @@ void ClawPhysics::SetVelocity(uint32_t actorId, const Point& velocity)
 //
 void ClawPhysics::VTranslate(uint32_t actorId, const Point& dir)
 {
-
+    assert(false && "VTranslate: implement me");
 }
 
 //-----------------------------------------------------------------------------
@@ -1149,7 +1150,7 @@ void ClawPhysics::VSetPosition(uint32_t actorId, const Point& position)
 //
 Point ClawPhysics::VGetPosition(uint32_t actorId)
 {
-    // TODO: Implement me
+    assert(false && "VGetPosition: implement me");
     return Point();
 }
 

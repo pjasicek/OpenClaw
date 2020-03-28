@@ -81,7 +81,7 @@ private:
 // Common functions
 //=================================================================================================
 
-StrongActorPtr SpawnImageActor(const std::string& imagePath, Point position, const AnimationDef& aniDef = AnimationDef());
+StrongActorPtr SpawnImageActor(const std::string& imagePath, const Point& position, const AnimationDef& aniDef = AnimationDef());
 void UpdateScoreImageNumbers(int newNumber, ActorList& imageNumberActorList);
 void AddNumberImageActorsToList(int numberToDisplay, int futureMaximumNumber, Point position, ActorList& toList);
 int DigitCharToInt(char c);

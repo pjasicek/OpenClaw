@@ -151,6 +151,7 @@ void ClawControllableComponent::VPostInit()
     // No existing animation for the top-ladder climb...
     {
         std::vector<AnimationFrame> climbAnimFrames;
+        climbAnimFrames.reserve(389 - 383 + 1);
         for (int i = 0, climbImageId = 383; climbImageId <= 389; climbImageId++, i++)
         {
             AnimationFrame frame;
@@ -167,6 +168,7 @@ void ClawControllableComponent::VPostInit()
 
     {
         std::vector<AnimationFrame> climbAnimFrames;
+        climbAnimFrames.reserve(389 - 383 + 1);
         for (int i = 0, climbImageId = 389; climbImageId >= 383; climbImageId--, i++)
         {
             AnimationFrame frame;
@@ -182,13 +184,12 @@ void ClawControllableComponent::VPostInit()
     }
 
     {
-        std::vector<AnimationFrame> highFallAnimFrames;
         AnimationFrame frame;
         frame.idx = 0;
         frame.imageId = 401;
         frame.imageName = "frame401";
         frame.duration = 2000;
-        highFallAnimFrames.push_back(frame);
+        std::vector<AnimationFrame> highFallAnimFrames = {frame};
 
         std::shared_ptr<Animation> pHighFallAnim = Animation::CreateAnimation(highFallAnimFrames, "highfall", m_pClawAnimationComponent);
         assert(pHighFallAnim);

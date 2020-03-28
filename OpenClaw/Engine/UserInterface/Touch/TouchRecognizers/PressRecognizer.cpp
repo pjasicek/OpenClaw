@@ -99,6 +99,9 @@ RecognizerState PressRecognizer::RecognizerStateByEventState(PressRecognizer::Ev
 }
 
 void PressRecognizer::VOnUpdate() {
+    if (m_Candidates.empty()) {
+        return;
+    }
     for (auto it = m_Candidates.begin(); it != m_Candidates.end();) {
         const auto &fingerId = it->first;
         const auto &firstEvent = it->second;

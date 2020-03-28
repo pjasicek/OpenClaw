@@ -530,7 +530,7 @@ void ScreenElementScoreScreen::ScoreScreenFinishedIntroDelegate(IEventDataPtr pE
     m_pBackground = m_pScoreBackgroundImage;
 
     // Destroy any spawned actors
-    for (auto actorIter : m_ActorMap)
+    for (const auto &actorIter : m_ActorMap)
     {
         IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Destroy_Actor(actorIter.first)));
     }

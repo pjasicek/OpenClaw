@@ -53,9 +53,9 @@ public:
 
 private:
     void LeaveAllStates(BaseEnemyAIStateComponent* pNextState);
-    bool HasState(std::string stateName);
+    bool HasState(const std::string &stateName);
     bool HasState(EnemyAIState state);
-    void EnterState(std::string stateName);
+    void EnterState(const std::string &stateName);
     void EnterState(EnemyAIState state);
     void EnterState(BaseEnemyAIStateComponent* pState);
     void AcquireStateLock(BaseEnemyAIStateComponent* pNewState);
