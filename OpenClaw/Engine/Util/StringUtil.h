@@ -35,9 +35,9 @@ void Split(const std::string& str, std::vector<std::string>& vec, char delimiter
 
 unsigned long HashName(char const* identStr);
 
-std::string GetBaseName(std::string& path);
-std::string RemoveExtension(std::string& fileName);
-std::string StripPathAndExtension(std::string& fullFilePath);
+std::string GetBaseName(const std::string& path);
+std::string RemoveExtension(const std::string& fileName);
+std::string StripPathAndExtension(const std::string& fullFilePath);
 
 inline bool StringContains(std::string& str, std::string& what)
 {

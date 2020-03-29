@@ -92,7 +92,7 @@ public:
     virtual bool VRemoveChild(uint32 actorId);
     virtual bool VOnLostDevice(Scene* pScene);
 
-    void VSetPosition(const Point &position) override;
+    void VSetPosition(const Point& position) override;
     Point GetPosition() { return m_Properties.m_Position; }
 
     void SetParent(SceneNode *node) { m_pParent = node; }

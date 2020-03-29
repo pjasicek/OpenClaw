@@ -63,6 +63,7 @@ bool Scene::AddChild(uint32 actorId, shared_ptr<ISceneNode> kid)
         if (!result.second)
         {
             LOG_WARNING("Overwriting existing actor in scene. ActorId: " + ToStr(actorId));
+            m_ActorMap[actorId] = kid;
         }
     }
     

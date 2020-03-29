@@ -41,7 +41,7 @@ TiXmlElement* GetTiXmlElementFromPath(TiXmlElement* pRootElem, const std::string
     }
 
     TiXmlHandle rootHandle(pRootElem);
-    for (std::string node : nodes)
+    for (const std::string& node : nodes)
     {
         rootHandle = rootHandle.FirstChild(node.c_str());
     }

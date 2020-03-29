@@ -21,7 +21,7 @@ bool SoundComponent::VInit(TiXmlElement* data)
         std::vector<std::string> matchingSoundNames =
             g_pApp->GetResourceCache()->Match(soundsPath);
 
-        for (std::string soundPath : matchingSoundNames)
+        for (const std::string& soundPath : matchingSoundNames)
         {
             shared_ptr<Mix_Chunk> sound = WavResourceLoader::LoadAndReturnSound(soundPath.c_str());
             if (sound == nullptr)

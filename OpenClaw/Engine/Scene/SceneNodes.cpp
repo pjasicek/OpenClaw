@@ -227,10 +227,11 @@ void RootNode::VRenderChildren(Scene* pScene)
 // Each cell stores sorted collection of nodes.
 // VOnUpdate() UPDATES ONLY VISIBLE NODES IN RANDOM ORDER!!! BE CAREFUL
 
-GridNode::GridNode(RenderPass renderPass) : m_CellWidth(1000), // TODO: use config
-                                            m_CellHeight(1000),
-                                            m_MaxRowCount(300),
-                                            m_MaxColumnCount(300),
+// I hope map won't be greater than 1000 tiles. So it's about 1000 tiles * 64 px / 640 px ~ 100 cells for the worst cases
+GridNode::GridNode(RenderPass renderPass) : m_CellWidth((int) (g_pApp->GetWindowSizeScaled().x * 1.3)),
+                                            m_CellHeight((int) (g_pApp->GetWindowSizeScaled().y * 1.3)),
+                                            m_MaxRowCount(100),
+                                            m_MaxColumnCount(100),
                                             SceneNode(INVALID_ACTOR_ID, nullptr, renderPass, {0, 0}) {
 
 }
@@ -302,7 +303,17 @@ void GridNode::VRenderChildren(Scene* pScene)
 
     // Render grid elements. We need to find visible cells, collect nodes, sort it and render
     const SDL_Rect intersect = GridIntersection(pCamera->GetCameraRect());
+
+    int nodeCount = 0;
+    for (int x = intersect.x; x < intersect.x + intersect.w && x < m_Grid.size(); ++x) {
+        auto &column = m_Grid[x];
+        for (int y = intersect.y; y < intersect.y + intersect.h && y < column.size(); ++y) {
+            nodeCount += column[y].size();
+        }
+    }
+
     std::vector<shared_ptr<ISceneNode>> intersectedNodes;
+    intersectedNodes.reserve(nodeCount);
     for (int x = intersect.x; x < intersect.x + intersect.w && x < m_Grid.size(); ++x) {
         auto &column = m_Grid[x];
         for (int y = intersect.y; y < intersect.y + intersect.h && y < column.size(); ++y) {
@@ -310,7 +321,6 @@ void GridNode::VRenderChildren(Scene* pScene)
             if (!nodes.empty()) {
                 // Insert sorted vector to the end of sorted vector
                 int oldSize = intersectedNodes.size();
-                intersectedNodes.reserve(oldSize + nodes.size());
                 intersectedNodes.insert(intersectedNodes.end(), nodes.begin(), nodes.end());
                 // Sort resulted vector
                 std::inplace_merge(intersectedNodes.begin(), intersectedNodes.begin() + oldSize, intersectedNodes.end(), NodeCompare);

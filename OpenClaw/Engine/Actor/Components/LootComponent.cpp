@@ -5,7 +5,6 @@
 
 #include "../../Events/EventMgr.h"
 #include "../../Events/Events.h"
-#include "RenderComponent.h"
 
 const char* LootComponent::g_Name = "LootComponent";
 

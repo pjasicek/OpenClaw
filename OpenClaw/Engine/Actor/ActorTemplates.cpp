@@ -1674,7 +1674,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_CrumblingPeg(const std::string& imageSet, const Point& position, int32 zCoord)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
-        pActor->SetAttribute("Type", imageSet);
+        pActor->SetAttribute("Type", imageSet.c_str());
 
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
         pActor->LinkEndChild(CreateActorRenderComponent(imageSet, zCoord));
@@ -1714,7 +1714,7 @@ namespace ActorTemplates
         std::string imageSet = GetImageSetFromGlitterType(glitterType);
 
         TiXmlElement* pActor = new TiXmlElement("Actor");
-        pActor->SetAttribute("Type", imageSet);
+        pActor->SetAttribute("Type", imageSet.c_str());
 
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
         pActor->LinkEndChild(CreateActorRenderComponent(imageSet, (int32) zCoord));
@@ -1729,7 +1729,7 @@ namespace ActorTemplates
         //std::string imageSet = "GAME_POINTS";
 
         TiXmlElement* pActor = new TiXmlElement("Actor");
-        pActor->SetAttribute("Type", imageSet);
+        pActor->SetAttribute("Type", imageSet.c_str());
 
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
         pActor->LinkEndChild(CreateActorRenderComponent(imageSet, (int32) zIndexes::ScorePopup, true, false, false, false));
@@ -1745,7 +1745,7 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_CheckpointActor(const std::string& imageSet, const Point& position, int32 zCoord, const Point& spawnPosition, bool isSaveCheckpoint, uint32 saveCheckpointNumber)
     {
         TiXmlElement* pActor = new TiXmlElement("Actor");
-        pActor->SetAttribute("Type", imageSet);
+        pActor->SetAttribute("Type", imageSet.c_str());
 
         pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
         pActor->LinkEndChild(CreateActorRenderComponent(imageSet, zCoord));
@@ -1774,7 +1774,7 @@ namespace ActorTemplates
             0.0f)); // Restitution - makes object bounce
 
         TiXmlElement* pCheckpointComponent = new TiXmlElement("CheckpointComponent");
-        XML_ADD_2_PARAM_ELEMENT("SpawnPosition", "x", ToStr(spawnPosition.x), "y", ToStr(spawnPosition.y), pCheckpointComponent);
+        XML_ADD_2_PARAM_ELEMENT("SpawnPosition", "x", ToStr(spawnPosition.x).c_str(), "y", ToStr(spawnPosition.y).c_str(), pCheckpointComponent);
         XML_ADD_TEXT_ELEMENT("IsSaveCheckpoint", ToStr(isSaveCheckpoint).c_str(), pCheckpointComponent);
         XML_ADD_TEXT_ELEMENT("SaveCheckpointNumber", ToStr(saveCheckpointNumber).c_str(), pCheckpointComponent);
         pActor->LinkEndChild(pCheckpointComponent);
