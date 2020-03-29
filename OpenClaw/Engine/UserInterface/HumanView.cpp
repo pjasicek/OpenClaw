@@ -443,7 +443,7 @@ void HumanView::AmmoUpdatedDelegate(IEventDataPtr pEventData)
         { 
             m_pHUD->UpdateAmmo(pCastEventData->GetAmmoCount());
         }
-        else
+        else if (pCastEventData->GetAmmoType() <= AmmoType_None || pCastEventData->GetAmmoType() >= AmmoType_Max)
         {
             LOG_ERROR("Unknown ammo type: " + ToStr(pCastEventData->GetAmmoType()));
         }
