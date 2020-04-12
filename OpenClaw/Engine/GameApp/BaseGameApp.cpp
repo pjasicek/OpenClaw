@@ -236,7 +236,7 @@ void BaseGameApp::StepLoop() {
             }
 
             // Render game
-            for (auto pGameView : m_pGame->m_GameViews)
+            for (auto &pGameView : m_pGame->m_GameViews)
             {
                 //PROFILE_CPU("ONLY RENDER");
                 pGameView->VOnRender(elapsedTime);
@@ -399,12 +399,11 @@ std::string BaseGameApp::GetString(std::string stringId)
 HumanView* BaseGameApp::GetHumanView() const
 {
     HumanView *pView = NULL;
-    for (GameViewList::iterator i = m_pGame->m_GameViews.begin(); i != m_pGame->m_GameViews.end(); ++i)
+    for (auto &view : m_pGame->m_GameViews)
     {
-        if ((*i)->VGetType() == GameView_Human)
+        if (view->VGetType() == GameView_Human)
         {
-            shared_ptr<IGameView> pIGameView(*i);
-            pView = static_cast<HumanView *>(&*pIGameView);
+            pView = static_cast<HumanView *>(view.get());
             break;
         }
     }

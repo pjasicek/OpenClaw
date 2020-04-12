@@ -71,7 +71,7 @@ inline bool SetTiXmlElementText(const std::string& text, TiXmlElement* pElem)
 TiXmlElement* GetTiXmlElementFromPath(TiXmlElement* pRootElem, const std::string& pathToNode);
 
 template <typename T>
-inline bool SetTiXmlNodeValue(TiXmlElement* pRootElem, const std::string& pathToNode, T val)
+inline bool SetTiXmlNodeValue(TiXmlElement* pRootElem, const std::string& pathToNode, const T& val)
 {
     if (TiXmlElement* pDestElem = GetTiXmlElementFromPath(pRootElem, pathToNode))
     {
@@ -85,8 +85,8 @@ inline bool SetTiXmlNodeValue(TiXmlElement* pRootElem, const std::string& pathTo
 template <typename T>
 inline bool SetTiXmlNode1Attribute(TiXmlElement* pRootElem,
     const std::string& pathToNode,
-    std::string attr1Name,
-    T attr1Val)
+    const std::string& attr1Name,
+    const T& attr1Val)
 {
     if (TiXmlElement* pDestElem = GetTiXmlElementFromPath(pRootElem, pathToNode))
     {
@@ -102,10 +102,10 @@ inline bool SetTiXmlNode1Attribute(TiXmlElement* pRootElem,
 template <typename T>
 inline bool SetTiXmlNode2Attribute(TiXmlElement* pRootElem,
     const std::string& pathToNode,
-    std::string attr1Name,
-    T attr1Val,
-    std::string attr2Name,
-    T attr2Val)
+    const std::string& attr1Name,
+    const T& attr1Val,
+    const std::string& attr2Name,
+    const T& attr2Val)
 {
     if (TiXmlElement* pDestElem = GetTiXmlElementFromPath(pRootElem, pathToNode))
     {

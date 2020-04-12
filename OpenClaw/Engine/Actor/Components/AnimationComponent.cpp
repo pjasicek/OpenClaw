@@ -101,25 +101,26 @@ bool AnimationComponent::VInit(TiXmlElement* data)
 
 void AnimationComponent::VPostInit()
 {
+    shared_ptr<ActorRenderComponent> pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>());
+    if (!pRenderComponent)
+    {
+        pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<HUDRenderComponent>());
+    }
+    if (!pRenderComponent)
+    {
+        LOG_ERROR("Actor has existing animation component but not render component. Actor: " + m_pOwner->GetName());
+        assert(false && "Actor has to have render component");
+    }
+    m_pActorRenderComponent = pRenderComponent;
+
     // TODO: Get rid of this. Obfuscated, unmaintanable...
-    for (std::string animType : m_SpecialAnimationRequestList)
+    for (const std::string& animType : m_SpecialAnimationRequestList)
     {
         if (animType.find("cycle") != std::string::npos)
         {
             std::string cycleDurationStr = animType;
             cycleDurationStr.erase(0, 5);
             int cycleDuration = std::stoi(cycleDurationStr);
-
-            shared_ptr<ActorRenderComponent> pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-            if (!pRenderComponent)
-            {
-                pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name));
-            }
-            if (!pRenderComponent)
-            {
-                LOG_ERROR("Actor has existing animation component but not render component. Actor: " + m_pOwner->GetName());
-                continue;
-            }
 
             // If there is only 1 or 0 frames, we do not need to animate it
             if (pRenderComponent->GetImagesCount() <= 1)
@@ -136,8 +137,7 @@ void AnimationComponent::VPostInit()
             }
 
             // Set delay according to X coord
-            shared_ptr<PositionComponent> pPositionComponent =
-                MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+            shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
             if (!pPositionComponent)
             {
                 LOG_ERROR("Actor is missing position component. Actor: " + m_pOwner->GetName());
@@ -167,17 +167,6 @@ void AnimationComponent::VPostInit()
 
         if (specialAnim.type == "cycle")
         {
-            shared_ptr<ActorRenderComponent> pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-            if (!pRenderComponent)
-            {
-                pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<HUDRenderComponent>(HUDRenderComponent::g_Name));
-            }
-            if (!pRenderComponent)
-            {
-                LOG_ERROR("Actor has existing animation component but not render component. Actor: " + m_pOwner->GetName());
-                assert(false);
-                continue;
-            }
 
             // If there is only 1 or 0 frames, we do not need to animate it
             if (pRenderComponent->GetImagesCount() <= 1)
@@ -200,8 +189,7 @@ void AnimationComponent::VPostInit()
             if (specialAnim.setPositionDelay)
             {
                 // Set delay according to X coord
-                shared_ptr<PositionComponent> pPositionComponent =
-                    MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+                shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
                 if (!pPositionComponent)
                 {
                     LOG_ERROR("Actor is missing position component. Actor: " + m_pOwner->GetName());
@@ -333,13 +321,8 @@ void AnimationComponent::OnAnimationFrameStarted(AnimationFrame* frame)
     //}
 
     // Notify render component to change frame image
-    shared_ptr<ActorRenderComponent> renderComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>());
+    shared_ptr<ActorRenderComponent> renderComponent = MakeStrongPtr(m_pActorRenderComponent);
     if (renderComponent)
-    {
-        renderComponent->SetImage(frame->imageName);
-    }
-    else if ((renderComponent = MakeStrongPtr(m_pOwner->GetComponent<HUDRenderComponent>())))
     {
         renderComponent->SetImage(frame->imageName);
     }

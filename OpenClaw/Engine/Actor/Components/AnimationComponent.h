@@ -58,6 +58,7 @@ struct SpecialAnimation
 typedef std::map<std::string, std::shared_ptr<Animation>> AnimationMap;
 
 class Image;
+class ActorRenderComponent;
 class AnimationComponent : public ActorComponent, public AnimationSubject
 {
     friend class Animation;
@@ -109,6 +110,8 @@ private:
     std::vector<std::string> m_SpecialAnimationRequestList;
 
     std::vector<SpecialAnimation> m_SpecialAnimationList;
+
+    std::weak_ptr<ActorRenderComponent> m_pActorRenderComponent;
 };
 
 #endif

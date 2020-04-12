@@ -323,7 +323,7 @@ void ScreenElementHUD::UpdateCameraPosition()
     SDL_FreeSurface(pPositionSurface);
 }
 
-bool ScreenElementHUD::SetElementVisible(std::string element, bool visible)
+bool ScreenElementHUD::SetElementVisible(const std::string& element, bool visible)
 {
     auto iter = m_HUDElementsMap.find(element);
     if (iter != m_HUDElementsMap.end())
@@ -335,7 +335,7 @@ bool ScreenElementHUD::SetElementVisible(std::string element, bool visible)
     return false;
 }
 
-bool ScreenElementHUD::IsElementVisible(std::string element)
+bool ScreenElementHUD::IsElementVisible(const std::string& element)
 {
     auto iter = m_HUDElementsMap.find(element);
     if (iter != m_HUDElementsMap.end())

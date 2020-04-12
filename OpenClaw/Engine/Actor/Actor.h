@@ -13,6 +13,7 @@
 typedef std::map<uint32, StrongActorComponentPtr> ActorComponentsMap;
 
 class PositionComponent;
+class PhysicsComponent;
 class TiXmlElement;
 class Actor
 {
@@ -29,7 +30,7 @@ public:
     std::string ToXML();
 
     inline uint32_t GetGUID() const { return _GUID; }
-    inline std::string GetName() const { return _name; }
+    inline const std::string& GetName() const { return _name; }
 
     // Retrieves component from given ID or NULL if component not found
     template <class ComponentType>
@@ -104,6 +105,7 @@ public:
     //=========================================================================
 
     inline shared_ptr<PositionComponent> GetPositionComponent() { return m_pPositionComponent; }
+    inline shared_ptr<PhysicsComponent> GetPhysicsComponent() { return m_pPhysicsComponent; }
 
 private:
     friend class ActorFactory;
@@ -117,6 +119,7 @@ private:
     std::string _resource;
 
     shared_ptr<PositionComponent> m_pPositionComponent;
+    shared_ptr<PhysicsComponent> m_pPhysicsComponent; // Cached because physics objects sync every frame
 };
 
 #endif

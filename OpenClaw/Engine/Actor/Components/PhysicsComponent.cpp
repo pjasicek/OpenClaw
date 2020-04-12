@@ -189,8 +189,7 @@ bool PhysicsComponent::VInit(TiXmlElement* data)
 
 void PhysicsComponent::VPostInit()
 {
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
     assert(pPositionComponent);
 
     if (m_ActorBodyDef.collisionFlag != CollisionFlag_None)
@@ -990,8 +989,7 @@ bool PhysicsComponent::AttachToLadder()
         }
     }
 
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
     assert(pPositionComponent);
 
     Point actorPosition = pPositionComponent->GetPosition();

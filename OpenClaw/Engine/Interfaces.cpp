@@ -234,7 +234,7 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
     return findIt->second;
 }
 
-ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
+ActorPrototype StringToEnum_ActorPrototype(const std::string& actorProtoStr)
 {
     static std::map<std::string, ActorPrototype> actorPrototypeStringToEnumMap =
     {
@@ -467,7 +467,7 @@ ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr)
 // FixtureType
 //=============================================================================
 
-FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr)
+FixtureType FixtureTypeStringToEnum(const std::string& fixtureTypeStr)
 {
     FixtureType fixtureType = FixtureType_None;
 
@@ -535,7 +535,7 @@ DamageType StringToDamageTypeEnum(const std::string& str)
 // b2BodyType
 //=============================================================================
 
-b2BodyType BodyTypeStringToEnum(std::string bodyTypeStr)
+b2BodyType BodyTypeStringToEnum(const std::string& bodyTypeStr)
 {
     b2BodyType bodyType = b2_staticBody;
 
@@ -554,7 +554,7 @@ b2BodyType BodyTypeStringToEnum(std::string bodyTypeStr)
 // Direction
 //=============================================================================
 
-Direction StringToEnum_Direction(std::string dirStr)
+Direction StringToEnum_Direction(const std::string& dirStr)
 {
     static const std::map<std::string, Direction> directionEnumToStringMap =
     {

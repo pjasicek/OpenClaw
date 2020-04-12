@@ -49,8 +49,7 @@ bool ControllableComponent::VInit(TiXmlElement* data)
 
 void ControllableComponent::VPostInit()
 {
-    shared_ptr<PhysicsComponent> pPhysicsComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+    shared_ptr<PhysicsComponent> pPhysicsComponent = m_pOwner->GetPhysicsComponent();
     if (pPhysicsComponent)
     {
         pPhysicsComponent->SetControllableComponent(this);
@@ -108,7 +107,7 @@ void ClawControllableComponent::VPostInit()
 
     m_pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name)).get();
     m_pClawAnimationComponent = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
-    m_pPositionComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+    m_pPositionComponent = m_pOwner->GetPositionComponent().get();
     m_pAmmoComponent = MakeStrongPtr(m_pOwner->GetComponent<AmmoComponent>(AmmoComponent::g_Name)).get();
     m_pPowerupComponent = MakeStrongPtr(m_pOwner->GetComponent<PowerupComponent>(PowerupComponent::g_Name)).get();
     m_pHealthComponent = MakeStrongPtr(m_pOwner->GetComponent<HealthComponent>(HealthComponent::g_Name)).get();
@@ -125,7 +124,7 @@ void ClawControllableComponent::VPostInit()
     auto pHealthComponent = MakeStrongPtr(m_pOwner->GetComponent<HealthComponent>(HealthComponent::g_Name));
     pHealthComponent->AddObserver(this);
 
-    m_pPhysicsComponent = MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
+    m_pPhysicsComponent = m_pOwner->GetPhysicsComponent().get();
 
     // Sounds that play when claw takes some damage
     m_TakeDamageSoundList.push_back(SOUND_CLAW_TAKE_DAMAGE1);
@@ -152,6 +151,7 @@ void ClawControllableComponent::VPostInit()
     // No existing animation for the top-ladder climb...
     {
         std::vector<AnimationFrame> climbAnimFrames;
+        climbAnimFrames.reserve(389 - 383 + 1);
         for (int i = 0, climbImageId = 383; climbImageId <= 389; climbImageId++, i++)
         {
             AnimationFrame frame;
@@ -168,6 +168,7 @@ void ClawControllableComponent::VPostInit()
 
     {
         std::vector<AnimationFrame> climbAnimFrames;
+        climbAnimFrames.reserve(389 - 383 + 1);
         for (int i = 0, climbImageId = 389; climbImageId >= 383; climbImageId--, i++)
         {
             AnimationFrame frame;
@@ -183,13 +184,12 @@ void ClawControllableComponent::VPostInit()
     }
 
     {
-        std::vector<AnimationFrame> highFallAnimFrames;
         AnimationFrame frame;
         frame.idx = 0;
         frame.imageId = 401;
         frame.imageName = "frame401";
         frame.duration = 2000;
-        highFallAnimFrames.push_back(frame);
+        std::vector<AnimationFrame> highFallAnimFrames = {frame};
 
         std::shared_ptr<Animation> pHighFallAnim = Animation::CreateAnimation(highFallAnimFrames, "highfall", m_pClawAnimationComponent);
         assert(pHighFallAnim);

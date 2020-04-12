@@ -126,17 +126,37 @@ private:
     std::map<std::string, std::string> m_ValueKeyToValueMap;
 };
 
+enum class zIndexes : int32 {
+    MinIndex = 0,
+    ScorePopup = 0,
+    SingleAnimation = 0,
+    Glitter = 1010,
+    FollowableComponent = 1020,
+    ClawProjectile = 2000,
+    Treasure = 4000,
+    AmmoPickup = 4000,
+    LifePickup = 4000,
+    HealthPickup = 4000,
+    PowerupPickup = 4000,
+    WarpPickup = 4000,
+    ClawActor = 4000,
+    EndLevelPickup = 5000,
+    Projectile = 5000,
+    PowerupSparkle = 8000,
+    MaxIndex = 9000
+};
+
 namespace ActorTemplates
 {
     // Actor prototypes
-    TiXmlElement* CreateXmlData_Actor(ActorPrototype actorProto, Point position);
+    TiXmlElement* CreateXmlData_Actor(ActorPrototype actorProto, const Point &position);
     TiXmlElement* CreateXmlData_Actor(ActorPrototype actorProto, std::vector<XmlNodeOverride>& overrides);
-    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, Point position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle, bool isMirrored);
-    TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, Point position, const std::string& imagePath, const ElevatorDef& elevatorDef);
-    TiXmlElement* CreateXmlData_TogglePegActor(ActorPrototype togglePegProto, Point position, const TogglePegDef& togglePegDef);
-    TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, Point position, Direction dir, int sourceActorId);
-    TiXmlElement* CreateXmlData_LocalAmbientSound(ActorPrototype proto, Point position, const LocalAmbientSoundDef& soundDef);
-    TiXmlElement* CreateXmlData_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef);
+    TiXmlElement* CreateXmlData_EnemyAIActor(ActorPrototype enemyType, const Point& position, const std::vector<PickupType>& loot, int32 minPatrolX, int32 maxPatrolX, bool isAlwaysIdle, bool isMirrored);
+    TiXmlElement* CreateXmlData_ElevatorActor(ActorPrototype elevatorProto, const Point& position, const std::string& imagePath, const ElevatorDef& elevatorDef);
+    TiXmlElement* CreateXmlData_TogglePegActor(ActorPrototype togglePegProto, const Point& position, const TogglePegDef& togglePegDef);
+    TiXmlElement* CreateXmlData_ProjectileActor(ActorPrototype proto, const Point& position, Direction dir, int sourceActorId);
+    TiXmlElement* CreateXmlData_LocalAmbientSound(ActorPrototype proto, const Point& position, const LocalAmbientSoundDef& soundDef);
+    TiXmlElement* CreateXmlData_StaticImage(ActorPrototype proto, const Point& position, const std::string& imagePath, const AnimationDef& aniDef);
     TiXmlElement* CreateXmlData_PathElevator(ActorPrototype proto, const Point& position, const std::string& imagePath, const PathElevatorDef& def);
     TiXmlElement* CreateXmlData_FloorSpike(ActorPrototype proto, const Point& position, const std::string& imagePath, const FloorSpikeDef& def);
     TiXmlElement* CreateXmlData_Rope(ActorPrototype proto, const Point& position, const std::string& imagePath, const RopeDef& def);
@@ -147,50 +167,50 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_ActorSpawner(ActorPrototype proto, const Point& position, const Point& spawnOffset, const Point& spawnSize, const std::vector<ActorSpawnInfo>& spawnedActorList);
     TiXmlElement* CreateXmlData_ProjectileSpawner(ActorPrototype proto, const Point& position, Direction shootDir);
 
-    StrongActorPtr CreateActor(ActorPrototype proto, Point position);
-    StrongActorPtr CreateActor_Projectile(ActorPrototype proto, Point position, Direction dir, int sourceActorId);
+    StrongActorPtr CreateActor(ActorPrototype proto, const Point& position);
+    StrongActorPtr CreateActor_Projectile(ActorPrototype proto, const Point& position, Direction dir, int sourceActorId);
 
-    StrongActorPtr CreateActor_StaticImage(ActorPrototype proto, Point position, const std::string& imagePath, const AnimationDef& aniDef);
+    StrongActorPtr CreateActor_StaticImage(ActorPrototype proto, const Point& position, const std::string& imagePath, const AnimationDef& aniDef);
     //StrongActorPtr CreateActor_StaticAnimatedImage(ActorPrototype proto, Point position, const std::string& imagePath);
 
     StrongActorPtr CreateActor_Trigger(const ActorBodyDef& triggerBodyDef, const Point& position);
 
     // Exposed Component Xml data generating functions
-    TiXmlElement* CreateXmlData_GlitterComponent(std::string glitterType, bool spawnImmediate, bool followOwner);
+    TiXmlElement* CreateXmlData_GlitterComponent(const std::string &glitterType, bool spawnImmediate, bool followOwner);
     TiXmlElement* CreatePhysicsComponent(const ActorBodyDef* pBodyDef);
     TiXmlElement* CreatePredefinedMoveComponent(std::vector<PredefinedMove>& moves, bool isInfinite);
-    TiXmlElement* CreateFollowableComponent(Point offset, std::string imageSet, std::string animPath);
+    TiXmlElement* CreateFollowableComponent(const Point& offset, const std::string &imageSet, const std::string &animPath);
 
-    TiXmlElement* CreateDamageAuraComponent(DamageAuraComponentDef aurDef);
+    TiXmlElement* CreateDamageAuraComponent(const DamageAuraComponentDef &aurDef);
 
     // Exposed Actor Xml data generating functions.
-    TiXmlElement* CreateXmlData_CrateActor(std::string imageSet, Point position, const std::vector<PickupType>& loot, uint32 health, int32 zCoord);
-    TiXmlElement* CreateXmlData_PowderKegActor(std::string imageSet, Point position, int32 damage, int32 zCoord);
-    TiXmlElement* CreateXmlData_CrumblingPeg(std::string imageSet, Point position, int32 zCoord);
-    TiXmlElement* CreateXmlData_GlitterActor(std::string glitterType, Point position, int32 zCoord);
-    TiXmlElement* CreateXmlData_CheckpointActor(std::string imageSet, Point position, int32 zCoord, Point spawnPosition, bool isSaveCheckpoint, uint32 saveCheckpointNumber);
-    TiXmlElement* CreateXmlData_EnemyAIActor(std::string imageSet, std::string animationSet, Point position, const std::vector<PickupType>& loot, std::string logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX);
+    TiXmlElement* CreateXmlData_CrateActor(const std::string &imageSet, const Point& position, const std::vector<PickupType>& loot, uint32 health, int32 zCoord);
+    TiXmlElement* CreateXmlData_PowderKegActor(const std::string &imageSet, const Point& position, int32 damage, int32 zCoord);
+    TiXmlElement* CreateXmlData_CrumblingPeg(const std::string &imageSet, const Point& position, int32 zCoord);
+    TiXmlElement* CreateXmlData_GlitterActor(const std::string &glitterType, const Point& position, zIndexes zCoord);
+    TiXmlElement* CreateXmlData_CheckpointActor(const std::string &imageSet, const Point& position, int32 zCoord, const Point& spawnPosition, bool isSaveCheckpoint, uint32 saveCheckpointNumber);
+    TiXmlElement* CreateXmlData_EnemyAIActor(const std::string &imageSet, const std::string &animationSet, const Point& position, const std::vector<PickupType>& loot, const std::string &logicName, int32 zCoord, int32 minPatrolX, int32 maxPatrolX);
     
-    TiXmlElement* CreateXmlData_PickupActor(PickupType pickupType, Point position, bool isStatic, const ParamMap& paramMap = ParamMap());
+    TiXmlElement* CreateXmlData_PickupActor(PickupType pickupType, const Point& position, bool isStatic, const ParamMap& paramMap = ParamMap());
 
-    TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, Point position, Point size, int enterCount, bool activateDialog = false);
-    TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, const std::string& logicName, Point position, SDL_Rect presetPosition, int enterCount);
+    TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, const Point& position, const Point& size, int enterCount, bool activateDialog = false);
+    TiXmlElement* CreateXmlData_SoundTriggerActor(const std::string& sound, const std::string& logicName, const Point& position, const SDL_Rect &presetPosition, int enterCount);
 
     TiXmlElement* CreateXmlData_GlobalAmbientSoundActor(const std::string& sound, int soundVolume, int minTimeOff, int maxTimeOff, int minTimeOn, int maxTimeOn, bool isLooping);
 
     // This is used by the game itself
-    StrongActorPtr CreateActorPickup(PickupType pickupType, Point position, bool isStatic = false);
+    StrongActorPtr CreateActorPickup(PickupType pickupType, const Point& position, bool isStatic = false);
     StrongActorPtr CreatePowerupSparkleActor(int cycleDuration);
-    StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, Point position, int sourceActorId, const Point& initialImpulse);
-    StrongActorPtr CreateProjectile(std::string imageSet, uint32 damage, DamageType damageType, Direction direction, Point position, CollisionFlag collisionFlag, uint32 collisionMask, int sourceActorId);
-    StrongActorPtr CreateAreaDamage(Point position, Point size, int32 damage, CollisionFlag collisionFlag, std::string shape, DamageType damageType, Direction hitDirection, int sourceActorId, Point positionOffset = Point(0, 0), std::string imageSet = "", int32 zCoord = 0);
-    StrongActorPtr CreateGlitter(std::string glitterType, Point position, int32 zCoord = 1010);
+    StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, const Point& position, int sourceActorId, const Point& initialImpulse);
+    StrongActorPtr CreateProjectile(const std::string &imageSet, uint32 damage, DamageType damageType, Direction direction, const Point& position, CollisionFlag collisionFlag, uint32 collisionMask, int sourceActorId);
+    StrongActorPtr CreateAreaDamage(const Point& position, const Point& size, int32 damage, CollisionFlag collisionFlag, const std::string& shape, DamageType damageType, Direction hitDirection, int sourceActorId, const Point& positionOffset = Point(0, 0), const std::string& imageSet = "", zIndexes zCoord = zIndexes::MinIndex);
+    StrongActorPtr CreateGlitter(const std::string& glitterType, const Point& position, zIndexes zCoord = zIndexes::Glitter);
     //StrongActorPtr CreatePopupActor(Point position, std::string imageSet, std::vector<PredefinedMove>& moves, int32 zCoord = 0);
-    StrongActorPtr CreateScorePopupActor(Point position, int score);
-    StrongActorPtr CreateRenderedActor(Point position, std::string imageSet, std::string animPath, int zCoord);
+    StrongActorPtr CreateScorePopupActor(const Point& position, int score);
+    StrongActorPtr CreateRenderedActor(const Point& position, const std::string &imageSet, const std::string& animPath, zIndexes zCoord);
 
     // This represents (or atleast should represent) single animation, e.g. explosion
-    StrongActorPtr CreateSingleAnimation(Point position, AnimationType animType);
+    StrongActorPtr CreateSingleAnimation(const Point& position, AnimationType animType);
 
     ActorFixtureDef XmlToActorFixtureDef(TiXmlElement* pActorFixtureDefElem);
     TiXmlElement* ActorFixtureDefToXml(const ActorFixtureDef* pFixtureDef);

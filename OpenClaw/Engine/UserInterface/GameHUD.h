@@ -34,10 +34,10 @@ public:
 
     virtual bool VOnEvent(SDL_Event& evt) override;
 
-    void AddHUDElement(std::string key, shared_ptr<SDL2HUDSceneNode> pHUDSceneNode) { m_HUDElementsMap[key] = pHUDSceneNode; }
+    void AddHUDElement(const std::string& key, const shared_ptr<SDL2HUDSceneNode>& pHUDSceneNode) { m_HUDElementsMap[key] = pHUDSceneNode; }
 
-    bool SetElementVisible(std::string element, bool visible);
-    bool IsElementVisible(std::string element);
+    bool SetElementVisible(const std::string& element, bool visible);
+    bool IsElementVisible(const std::string& element);
 
     void UpdateScore(uint32 newScore);
     void UpdateHealth(uint32 newHealth);

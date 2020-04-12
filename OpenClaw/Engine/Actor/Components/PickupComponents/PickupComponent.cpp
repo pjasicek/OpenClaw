@@ -143,7 +143,7 @@ void TreasurePickupComponent::VPostInit()
     PickupComponent::VPostInit();
 
     m_pRenderComponent = MakeStrongPtr(m_pOwner->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));
-    m_pPositionComponent = MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    m_pPositionComponent = m_pOwner->GetPositionComponent();
     assert(m_pRenderComponent);
     assert(m_pPositionComponent);
 }
@@ -503,7 +503,7 @@ bool AmmoPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
         MakeStrongPtr(pActorWhoPickedThis->GetComponent<AmmoComponent>(AmmoComponent::g_Name));
     if (pAmmoComponent)
     {
-        for (auto ammoPair : m_AmmoPickupList)
+        for (const auto &ammoPair : m_AmmoPickupList)
         {
             pAmmoComponent->AddAmmo(ammoPair.first, ammoPair.second);
         }

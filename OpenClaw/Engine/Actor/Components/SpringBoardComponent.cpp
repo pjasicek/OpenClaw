@@ -62,7 +62,7 @@ void SpringBoardComponent::VOnAnimationFrameChanged(Animation* pAnimation, Anima
             // Only does anything for Claw I assume
             for (Actor* pStandingActor : m_StandingActorsList)
             {
-                auto pPC = MakeStrongPtr(pStandingActor->GetComponent<PhysicsComponent>());
+                auto pPC = pStandingActor->GetPhysicsComponent();
                 if (pPC)
                 {
                     pPC->SetIsForcedUp(true, (int)m_Properties.springHeight);

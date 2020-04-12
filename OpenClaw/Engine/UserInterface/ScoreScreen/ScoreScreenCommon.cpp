@@ -10,7 +10,7 @@ const EventType EventData_Finished_Loading_Row::sk_EventType(0xb71eff1b);
 // Common functions for score screen
 //=================================================================================================
 
-StrongActorPtr SpawnImageActor(const std::string& imagePath, Point position, const AnimationDef& aniDef)
+StrongActorPtr SpawnImageActor(const std::string& imagePath, const Point& position, const AnimationDef& aniDef)
 {
     ActorPrototype proto = ActorPrototype_StaticImage;
     if (aniDef.hasAnimation)
@@ -27,7 +27,7 @@ StrongActorPtr SpawnImageActor(const std::string& imagePath, Point position, con
         aniDef);
 }
 
-void SetActorImage(Actor* pActor, const std::string image)
+void SetActorImage(Actor* pActor, const std::string& image)
 {
     assert(pActor != NULL);
     assert(!image.empty());
@@ -63,6 +63,7 @@ void AddNumberImageActorsToList(int numberToDisplay, int futureMaximumNumber, Po
     if (numberStr.length() != maximumNumberStr.length())
     {
         assert(maximumNumberStr.length() > numberStr.length());
+        numberStr.reserve(maximumNumberStr.length());
         int zerosToAdd = maximumNumberStr.length() - numberStr.length();
         for (int i = 0; i < zerosToAdd; i++)
         {
@@ -70,6 +71,7 @@ void AddNumberImageActorsToList(int numberToDisplay, int futureMaximumNumber, Po
         }
     }
 
+    toList.reserve(toList.size() + numberStr.length());
     for (char charDigit : numberStr)
     {
         int digit = DigitCharToInt(charDigit);

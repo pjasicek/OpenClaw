@@ -35,7 +35,7 @@ ProjectileAIComponent::ProjectileAIComponent()
 
 ProjectileAIComponent::~ProjectileAIComponent()
 {
-    for (auto pSparkle : m_PowerupSparkles)
+    for (const auto &pSparkle : m_PowerupSparkles)
     {
         shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(pSparkle->GetGUID()));
         IEventMgr::Get()->VQueueEvent(pEvent);
@@ -80,17 +80,16 @@ void ProjectileAIComponent::VPostInit()
         m_pPhysics->VSetLinearSpeed(m_pOwner->GetGUID(), m_ProjectileSpeed);
     }
 
+    m_PowerupSparkles.reserve(m_NumSparkles);
     for (int sparkleIdx = 0; sparkleIdx < m_NumSparkles; sparkleIdx++)
     {
         StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor(50);
         assert(pPowerupSparkle);
 
-        shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
         assert(pPositionComponent);
 
-        shared_ptr<PhysicsComponent> pPhysicsComponent =
-            MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+        shared_ptr<PhysicsComponent> pPhysicsComponent = m_pOwner->GetPhysicsComponent();
         assert(pPhysicsComponent);
 
         shared_ptr<PowerupSparkleAIComponent> pPowerupSparkleAIComponent =

@@ -692,6 +692,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
         int numCrabs = wwdObject->userValue1;
         std::vector<ActorSpawnInfo> spawnedActorInfoList;
+        spawnedActorInfoList.reserve(numCrabs);
         for (int i = 0; i < numCrabs; i++)
         {
             ActorSpawnInfo actorSpawnInfo;
@@ -1274,7 +1275,7 @@ inline TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
     pClawActor->LinkEndChild(CreatePhysicsComponent(true, false, true, g_pApp->GetGlobalOptions()->maxJumpHeight, 40, 90, 4.0, 0.0, 0.5));
     pClawActor->LinkEndChild(CreateControllableComponent(true));
     pClawActor->LinkEndChild(CreateAnimationComponent("/CLAW/ANIS/*"));
-    pClawActor->LinkEndChild(CreateActorRenderComponent("/CLAW/IMAGES/*", 4000));
+    pClawActor->LinkEndChild(CreateActorRenderComponent("/CLAW/IMAGES/*", (int32) zIndexes::ClawActor));
     pClawActor->LinkEndChild(ActorTemplates::CreateFollowableComponent(Point(-5, -80), "/GAME/IMAGES/EXCLAMATION/*", ""));
 
     TiXmlElement* pScoreComponent = new TiXmlElement("ScoreComponent");
@@ -1306,7 +1307,9 @@ inline TiXmlElement* CreateClawActor(WapWwd* pWapWwd)
 // HUD to Xml
 //=====================================================================================================================
 
-inline TiXmlElement* CreateHUDElement(std::string pathToImages, int animFrameDuration, std::string animPath, Point position, bool anchorRight, bool anchorBottom, std::string key, bool visible = true)
+inline TiXmlElement* CreateHUDElement(const std::string &pathToImages, int animFrameDuration, const std::string &animPath,
+                 const Point &position, bool anchorRight, bool anchorBottom,
+                 const std::string &key, bool visible = true)
 {
     TiXmlElement* pHUDElement = new TiXmlElement("Actor");
     pHUDElement->SetAttribute("Type", pathToImages.c_str());

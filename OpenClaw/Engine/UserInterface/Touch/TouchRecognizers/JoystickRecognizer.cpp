@@ -90,6 +90,9 @@ RecognizerState JoystickRecognizer::VOnFingerUp(const SDL_TouchFingerEvent &evt)
 }
 
 void JoystickRecognizer::VOnUpdate() {
+    if (m_Candidates.empty()) {
+        return;
+    }
     for (auto it = m_Candidates.begin(); it != m_Candidates.end();) {
         const auto &firstEvent = it->second;
         if (SDL_GetTicks() - firstEvent.timestamp > m_ThresholdTime) {

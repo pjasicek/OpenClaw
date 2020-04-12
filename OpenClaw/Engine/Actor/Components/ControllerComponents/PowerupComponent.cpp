@@ -21,7 +21,7 @@ PowerupComponent::PowerupComponent()
 
 PowerupComponent::~PowerupComponent()
 {
-    for (auto pSparkle : m_PowerupSparkles)
+    for (const auto &pSparkle : m_PowerupSparkles)
     {
         pSparkle->Destroy();
     }
@@ -46,17 +46,16 @@ void PowerupComponent::VPostInit()
     }
 
     // Create powerup sparkles. Is this a good place ?
+    m_PowerupSparkles.reserve(30);
     for (int i = 0; i < 30; i++)
     {
         StrongActorPtr pPowerupSparkle = ActorTemplates::CreatePowerupSparkleActor(75);
         assert(pPowerupSparkle);
 
-        shared_ptr<PositionComponent> pPositionComponent =
-            MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
         assert(pPositionComponent);
 
-        shared_ptr<PhysicsComponent> pPhysicsComponent =
-            MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+        shared_ptr<PhysicsComponent> pPhysicsComponent = m_pOwner->GetPhysicsComponent();
         assert(pPhysicsComponent);
 
         shared_ptr<PowerupSparkleAIComponent> pPowerupSparkleAIComponent =
@@ -125,7 +124,7 @@ void PowerupComponent::ApplyPowerup(PowerupType powerupType, int32 msDuration)
 
 void PowerupComponent::SetPowerupSparklesVisibility(bool visible)
 {
-    for (auto pSparkle : m_PowerupSparkles)
+    for (const auto &pSparkle : m_PowerupSparkles)
     {
         shared_ptr<ActorRenderComponent> pRenderComponent =
             MakeStrongPtr(pSparkle->GetComponent<ActorRenderComponent>(ActorRenderComponent::g_Name));

@@ -526,10 +526,10 @@ public:
     virtual void VAddCircle(float radius, uint32_t thickness, WeakActorPtr pTargetActor) = 0;
     virtual void VAddRect(uint32_t thickness, WeakActorPtr pTargetActor) = 0;
     virtual void VAddLine(Point from, Point to, uint32_t thickness) = 0;
-    virtual void VAddStaticGeometry(Point position, Point size, CollisionType collisionType, FixtureType fixtureType) = 0;
+    virtual void VAddStaticGeometry(const Point& position, const Point& size, CollisionType collisionType, FixtureType fixtureType) = 0;
     virtual void VAddDynamicActor(WeakActorPtr pActor) = 0;
     virtual void VAddKinematicBody(WeakActorPtr pActor) = 0;
-    virtual void VAddStaticBody(WeakActorPtr pActor, Point bodySize, CollisionType collisionType) = 0;
+    virtual void VAddStaticBody(WeakActorPtr pActor, const Point& bodySize, CollisionType collisionType) = 0;
     virtual void VRemoveActor(uint32_t actorId) = 0;
 
     virtual void VAddActorBody(const ActorBodyDef* actorBodyDef) = 0;
@@ -738,16 +738,16 @@ protected:
 // Enum-To-String
 //-------------------------------------------------------------------------------------------------
 
-FixtureType FixtureTypeStringToEnum(std::string fixtureTypeStr);
+FixtureType FixtureTypeStringToEnum(const std::string& fixtureTypeStr);
 
 DamageType StringToDamageTypeEnum(const std::string& str);
 
-b2BodyType BodyTypeStringToEnum(std::string bodyTypeStr);
+b2BodyType BodyTypeStringToEnum(const std::string& bodyTypeStr);
 
-Direction StringToEnum_Direction(std::string dirStr);
+Direction StringToEnum_Direction(const std::string& dirStr);
 std::string EnumToString_Direction(Direction dir);
 
 std::string EnumToString_ActorPrototype(ActorPrototype actorProto);
-ActorPrototype StringToEnum_ActorPrototype(std::string actorProtoStr);
+ActorPrototype StringToEnum_ActorPrototype(const std::string& actorProtoStr);
 
 #endif

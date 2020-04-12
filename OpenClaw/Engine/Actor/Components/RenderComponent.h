@@ -29,7 +29,7 @@ public:
     uint32 GetImagesCount() const { return m_ImageMap.size(); }
 
     // Gets actor's X-Y-W-H
-    virtual SDL_Rect VGetPositionRect() const = 0;
+    virtual SDL_Rect VGetPositionRect() = 0;
 
     shared_ptr<SceneNode> GetScneNodePublicTest() { return GetSceneNode(); }
 
@@ -69,9 +69,12 @@ public:
 
     virtual bool VDelegateInit(TiXmlElement* pXmlData) override;
 
-    virtual SDL_Rect VGetPositionRect() const override;
+    virtual SDL_Rect VGetPositionRect() override;
 
-    weak_ptr<Image> GetCurrentImage() { return m_CurrentImage; }
+    // It was very expensive set of functions. ALL WORLD ACTORS (even invisible) each time
+    // try to find an image in the image map.
+    // Now it is lazy functions. It does not update image until a GetCurrentImage call.
+    weak_ptr<Image> GetCurrentImage();
     void SetImage(std::string imageName);
 
     void SetMirrored(bool mirrored) { m_IsMirrored = mirrored; }
@@ -91,7 +94,11 @@ protected:
     // Editor stuff
     virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement) override;
 
-    shared_ptr<Image> m_CurrentImage;
+    void UpdateCurrentImage();
+
+    shared_ptr<Image> m_CachedImage;
+    std::string m_CurrentImageName;
+    bool m_IsCachedImageExpired;
 
 private:
     bool m_IsVisible;
@@ -162,7 +169,7 @@ public:
 
     virtual bool VDelegateInit(TiXmlElement* pXmlData) override;
 
-    virtual SDL_Rect VGetPositionRect() const override;
+    virtual SDL_Rect VGetPositionRect() override;
 
     const TilePlaneProperties* const GetTilePlaneProperties() const { return &m_PlaneProperties; }
     const TileImageList* const GetTileImageList() const { return &m_TileImageList; }
@@ -210,7 +217,7 @@ public:
     virtual const char* VGetName() const override { return g_Name; }
     virtual bool VDelegateInit(TiXmlElement* pXmlData) override;
 
-    virtual SDL_Rect VGetPositionRect() const override;
+    virtual SDL_Rect VGetPositionRect() override;
 
     bool IsAnchoredRight() { return m_IsAnchoredRight; }
     bool IsAnchoredBottom() { return m_IsAnchoredBottom; }

@@ -67,8 +67,7 @@ TiXmlElement* ExplodeableComponent::VGenerateXml()
 
 void ExplodeableComponent::VOnHealthBelowZero(DamageType damageType, int sourceActorId)
 {
-    shared_ptr<PositionComponent> pPositionComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pPositionComponent = m_pOwner->GetPositionComponent();
     assert(pPositionComponent);
 
     ActorTemplates::CreateAreaDamage(

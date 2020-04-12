@@ -114,11 +114,9 @@ void BaseAuraComponent::VUpdate(uint32 msDiff)
 
 void BaseAuraComponent::OnActorEntered(Actor* pActor)
 {
-    for (ActivePulseList::iterator iter = m_ActivePulseList.begin();
-        iter != m_ActivePulseList.end();
-        ++iter)
+    for (const auto &pulseInfo : m_ActivePulseList)
     {
-        if (iter->pActor == pActor)
+        if (pulseInfo.pActor == pActor)
         {
             return;
         }

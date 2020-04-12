@@ -19,6 +19,8 @@ void PhysicsDebugDrawer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, 
     std::vector<int16> vaX;
     std::vector<int16> vaY;
 
+    vaX.reserve(vertexCount);
+    vaY.reserve(vertexCount);
     for (int32 vertexIdx = 0; vertexIdx < vertexCount; vertexIdx++)
     {
         b2Vec2 worldPos = MetersToPixels(vertices[vertexIdx]);

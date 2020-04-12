@@ -70,7 +70,7 @@ BaseGameLogic::~BaseGameLogic()
     SAFE_DELETE(m_pActorFactory);
 
     // Destroy all actors
-    for (auto actorIter : m_ActorMap)
+    for (auto &actorIter : m_ActorMap)
     {
         actorIter.second->Destroy();
     }
@@ -371,7 +371,7 @@ bool BaseGameLogic::VLoadGame(const char* xmlLevelResource)
     pEventMgr->VTriggerEvent(IEventDataPtr(new EventData_Teleport_Actor(clawId, m_CurrentSpawnPosition)));
 
     // Save possible pickup items
-    for (auto actorIter : m_ActorMap)
+    for (auto &actorIter : m_ActorMap)
     {
         shared_ptr<TreasurePickupComponent> pTreasurePickupComponent =
             MakeStrongPtr(actorIter.second->GetComponent<TreasurePickupComponent>());
@@ -738,7 +738,7 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
     // TODO: This is code duplication, should think of better way
     if (!m_bRunning)
     {
-        for (auto pGameView : m_GameViews)
+        for (auto &pGameView : m_GameViews)
         {
             pGameView->VOnUpdate(msDiff);
         }
@@ -839,7 +839,7 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
     }
 
     // Update all game views
-    for (auto pGameView : m_GameViews)
+    for (auto &pGameView : m_GameViews)
     {
         pGameView->VOnUpdate(msDiff);
     }
@@ -850,7 +850,7 @@ void BaseGameLogic::VOnUpdate(uint32 msDiff)
     if (msAccumulation >= 5)
     {
         // Update all game actors
-        for (auto actorIter : m_ActorMap)
+        for (auto &actorIter : m_ActorMap)
         {
             actorIter.second->Update(msAccumulation);
         }
@@ -955,7 +955,7 @@ void BaseGameLogic::MoveActorDelegate(IEventDataPtr pEventData)
     StrongActorPtr pActor = MakeStrongPtr(VGetActor(pCastEventData->GetActorId()));
     if (pActor != nullptr)
     {
-        shared_ptr<PositionComponent> pPositionComponent = MakeStrongPtr(pActor->GetComponent<PositionComponent>());
+        shared_ptr<PositionComponent> pPositionComponent = pActor->GetPositionComponent();
         assert(pPositionComponent != nullptr);
 
         pPositionComponent->SetPosition(pCastEventData->GetMove());
@@ -987,7 +987,7 @@ static FixtureType CollisonToFixtureType(CollisionType collisionType)
 // Helper function
 void BaseGameLogic::CreateSinglePhysicsTile(int x, int y, const TileCollisionPrototype& proto)
 {
-    for (auto tileCollisionRect : proto.collisionRectangles)
+    for (const auto &tileCollisionRect : proto.collisionRectangles)
     {
         Point position = Point(x + tileCollisionRect.collisionRect.x,
             y + tileCollisionRect.collisionRect.y);
@@ -1173,10 +1173,16 @@ void BaseGameLogic::WorldFinishedLoadingDelegate(IEventDataPtr pEventData)
 
 StrongActorPtr BaseGameLogic::GetClawActor()
 {
-    for (auto actorIter : m_ActorMap)
+    StrongActorPtr claw = MakeStrongPtr(m_pClawActor);
+    if (claw) {
+        return claw;
+    }
+
+    for (auto &actorIter : m_ActorMap)
     {
         if (actorIter.second->GetName() == "Claw")
         {
+            m_pClawActor = actorIter.second;
             return actorIter.second;
         }
     }
@@ -1187,7 +1193,7 @@ StrongActorPtr BaseGameLogic::GetClawActor()
 StrongActorPtr BaseGameLogic::FindActorByName(const std::string& name, bool bIsUnique)
 {
     StrongActorPtr pFoundActor = nullptr;
-    for (auto actorIter : m_ActorMap)
+    for (auto &actorIter : m_ActorMap)
     {
         if (actorIter.second->GetName() == name)
         {
@@ -1206,7 +1212,7 @@ ActorList BaseGameLogic::FindActorByName(const std::string& name)
 {
     ActorList actorList;
 
-    for (auto actorIter : m_ActorMap)
+    for (auto &actorIter : m_ActorMap)
     {
         if (actorIter.second->GetName() == name)
         {
@@ -1229,9 +1235,9 @@ void BaseGameLogic::UnloadLevel()
     // will arise
     ActorMap actorMapCopy = m_ActorMap;
 
-    for (auto actorIter = actorMapCopy.begin(); actorIter != actorMapCopy.end(); ++actorIter)
+    for (const auto &actor : actorMapCopy)
     {
-        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor((*actorIter).second->GetGUID()));
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(actor.second->GetGUID()));
         IEventMgr::Get()->VTriggerEvent(pEvent);
     }
 
@@ -1251,13 +1257,14 @@ void BaseGameLogic::VResetLevel()
     // Handle all pending events before reset
     IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);
 
-    for (auto actorIter : m_ActorMap)
+    for (auto &actorIter : m_ActorMap)
     {
         shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(actorIter.second->GetGUID()));
         IEventMgr::Get()->VTriggerEvent(pEvent);
     }
 
     assert(m_ActorMap.empty());
+    assert(m_pClawActor.expired());
 
     // Process any pending events which could have arose from deleting all actors
     IEventMgr::Get()->VUpdate(IEventMgr::kINFINITE);

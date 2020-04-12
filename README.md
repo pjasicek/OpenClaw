@@ -85,7 +85,7 @@ Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
     ./emsdk activate latest
     source ./emsdk_env.sh
     # Try to use latest version.
-    # If it doesn't work the project was successfully compiled on 1.39.5 version.
+    # If it doesn't work the project was successfully compiled on 1.39.11 version.
     ```
   - Make sure you have *python* and *cmake* packages. Ubuntu: `sudo apt install python cmake`.
   - Make sure you have fresh `ASSETS.ZIP` and `CLAW.REZ` files in `Build_Release` directory.
@@ -93,7 +93,7 @@ Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
     ```shell script
     mkdir build
     cd build
-    emconfigure cmake -DEmscripten=1 ..
+    emcmake cmake -DEmscripten=1 ..
     # -DExtern_Config=0 parameter includes config.xml file in game resources
     make
     ```

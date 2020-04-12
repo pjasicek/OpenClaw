@@ -219,18 +219,18 @@ unsigned long HashName(char const * pIdentStr)
 #undef DO16
 }
 
-std::string GetBaseName(std::string& path)
+std::string GetBaseName(const std::string& path)
 {
     return path.substr(path.find_last_of("/\\") + 1);
 }
 
-std::string RemoveExtension(std::string& fileName)
+std::string RemoveExtension(const std::string& fileName)
 {
     std::string::size_type const p(fileName.find_last_of('.'));
     return fileName.substr(0, p);
 }
 
-std::string StripPathAndExtension(std::string& fullFilePath)
+std::string StripPathAndExtension(const std::string& fullFilePath)
 {
     std::string path = GetBaseName(fullFilePath);
     return RemoveExtension(path);

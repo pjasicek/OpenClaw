@@ -92,7 +92,7 @@ static shared_ptr<EnemyAttackAction> XmlToEnemyAttackActionPtr(TiXmlElement* pEl
 // BaseEnemyAIStateComponent
 //=====================================================================================================================
 
-BaseEnemyAIStateComponent::BaseEnemyAIStateComponent(std::string stateName)
+BaseEnemyAIStateComponent::BaseEnemyAIStateComponent(const std::string &stateName)
     :
     m_IsActive(false),
     m_StatePriority(-1),
@@ -119,10 +119,8 @@ void BaseEnemyAIStateComponent::VPostInit()
 {
     m_pAnimationComponent = 
         MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
-    m_pPhysicsComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name)).get();
-    m_pPositionComponent =
-        MakeStrongPtr(m_pOwner->GetComponent<PositionComponent>(PositionComponent::g_Name)).get();
+    m_pPhysicsComponent = m_pOwner->GetPhysicsComponent().get();
+    m_pPositionComponent = m_pOwner->GetPositionComponent().get();
     m_pEnemyAIComponent = 
         MakeStrongPtr(m_pOwner->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name)).get();
     m_pRenderComponent =
@@ -533,7 +531,7 @@ void PatrolEnemyAIStateComponent::VOnAnimationLooped(Animation* pAnimation)
     }
 }
 
-double PatrolEnemyAIStateComponent::FindClosestHole(Point center, int height, float maxSearchDistance)
+double PatrolEnemyAIStateComponent::FindClosestHole(const Point &center, int height, float maxSearchDistance)
 {
     double leftDelta = 0.0;
     for (leftDelta = 0.0; leftDelta < fabs(maxSearchDistance); leftDelta += 1.0)
@@ -915,7 +913,7 @@ bool ParryEnemyAIStateComponent::CanParry(DamageType damageType, EnemyAIState cu
 // BaseAttackAIStateComponent
 //=====================================================================================================================
 
-BaseAttackAIStateComponent::BaseAttackAIStateComponent(std::string stateName)
+BaseAttackAIStateComponent::BaseAttackAIStateComponent(const std::string &stateName)
     :
     m_AttackDelay(0),
     m_AttackSpeechSoundPlayChance(0),
@@ -981,7 +979,7 @@ void BaseAttackAIStateComponent::VPostInit()
 
 void BaseAttackAIStateComponent::VPostPostInit()
 {
-    for (shared_ptr<EnemyAttackAction> pAttackAction : m_AttackActions)
+    for (const shared_ptr<EnemyAttackAction> &pAttackAction : m_AttackActions)
     {
         g_pApp->GetGameLogic()->VGetGamePhysics()->VAddActorFixtureToBody(
             m_pOwner->GetGUID(),
@@ -1136,8 +1134,7 @@ Actor* BaseAttackAIStateComponent::FindClosestHostileActor()
     {
         assert(pHostileActor != NULL);
 
-        shared_ptr<PositionComponent> pHostileActorPositionComponent =
-            MakeStrongPtr(pHostileActor->GetComponent<PositionComponent>(PositionComponent::g_Name));
+        shared_ptr<PositionComponent> pHostileActorPositionComponent = pHostileActor->GetPositionComponent();
         assert(pHostileActorPositionComponent);
 
         Point positionDiff = pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();
@@ -1164,8 +1161,7 @@ Point BaseAttackAIStateComponent::FindClosestHostileActorOffset()
         return closest;
     }
 
-    shared_ptr<PositionComponent> pHostileActorPositionComponent =
-        MakeStrongPtr(pClosestEnemy->GetComponent<PositionComponent>(PositionComponent::g_Name));
+    shared_ptr<PositionComponent> pHostileActorPositionComponent = pClosestEnemy->GetPositionComponent();
     assert(pHostileActorPositionComponent);
 
     return pHostileActorPositionComponent->GetPosition() - m_pPositionComponent->GetPosition();

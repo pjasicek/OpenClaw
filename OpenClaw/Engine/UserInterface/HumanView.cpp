@@ -88,7 +88,7 @@ void HumanView::VOnRender(uint32 msDiff)
         // Sort screen elements
         m_ScreenElements.sort(SortBy_SharedPtr_Content<IScreenElement>());
 
-        for (shared_ptr<IScreenElement> screenElement : m_ScreenElements)
+        for (shared_ptr<IScreenElement>& screenElement : m_ScreenElements)
         {
             if (screenElement->VIsVisible())
             {
@@ -114,7 +114,7 @@ void HumanView::VOnUpdate(uint32 msDiff)
 
     m_pConsole->OnUpdate(msDiff);
 
-    for (shared_ptr<IScreenElement> element : m_ScreenElements)
+    for (shared_ptr<IScreenElement> &element : m_ScreenElements)
     {
         element->VOnUpdate(msDiff);
     }
@@ -228,6 +228,7 @@ void HumanView::LoadScoreScreen(TiXmlElement* pScoreScreenRootElem)
     m_pScene.reset();
     m_pHUD.reset();
 
+    m_pCamera->SetParent(nullptr);
     Point defaultCameraPos(0, 0);
     m_pCamera->VSetPosition(defaultCameraPos);
     m_pCamera->SetTarget(nullptr);
@@ -442,7 +443,7 @@ void HumanView::AmmoUpdatedDelegate(IEventDataPtr pEventData)
         { 
             m_pHUD->UpdateAmmo(pCastEventData->GetAmmoCount());
         }
-        else
+        else if (pCastEventData->GetAmmoType() <= AmmoType_None || pCastEventData->GetAmmoType() >= AmmoType_Max)
         {
             LOG_ERROR("Unknown ammo type: " + ToStr(pCastEventData->GetAmmoType()));
         }
@@ -550,7 +551,7 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
     {
         const SoundInfo* pSoundInfo = pCastEventData->GetSoundInfo();
 
-        if ((pSoundInfo->soundToPlay == "") || (pSoundInfo->soundToPlay == "/GAME/SOUNDS/NULL.WAV"))
+        if ((pSoundInfo->soundToPlay.empty()) || (pSoundInfo->soundToPlay == "/GAME/SOUNDS/NULL.WAV"))
         {
             return;
         }
@@ -569,9 +570,6 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
         }
         else // Effect / Speech etc. - WAV
         {
-            shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(pSoundInfo->soundToPlay.c_str());
-            assert(pSound != nullptr);
-
             SoundProperties soundProperties;
             soundProperties.volume = pSoundInfo->soundVolume;
             soundProperties.loops = pSoundInfo->loops;
@@ -591,14 +589,14 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
                 int sdlDistance = std::min(distanceRatio * 255, (float)255);
                 LOG("SDL DISTANCE: " + ToStr(sdlDistance));*/
             }
-            
+
+            bool play = true;
             if (!soundSourcePos.IsZeroXY())
             {
                 const float paddingPx = 150.0f;
                 const float paddingRatio = paddingPx / (float)m_pCamera->GetWidth();
                 if (m_pCamera->IntersectsWithPoint(soundSourcePos, 1.0f + paddingRatio))
                 {
-                    bool ok = true;
                     if (pSoundInfo->setDistanceEffect)
                     {
                         Point soundDistanceDelta = m_pCamera->GetCenterPosition() - soundSourcePos;
@@ -627,14 +625,15 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
 
                     /*LOG("CenterPosition: " + m_pCamera->GetCenterPosition().ToString());
                     LOG("SoundSourcePos: " + soundSourcePos.ToString());*/
-                    if (ok)
-                    {
-                        g_pApp->GetAudio()->PlaySound(pSound.get(), soundProperties);
-                    }
+                } else {
+                    play = false;
                 }
             }
-            else
+
+            if (play)
             {
+                shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(pSoundInfo->soundToPlay.c_str());
+                assert(pSound != nullptr);
                 g_pApp->GetAudio()->PlaySound(pSound.get(), soundProperties);
             }
         }
@@ -706,6 +705,7 @@ void HumanView::EnterMenuDelegate(IEventDataPtr pEventData)
     m_pScene.reset(new ScreenElementScene(g_pApp->GetRenderer()));
     m_pHUD.reset();
     m_pIngameMenu.reset();
+    m_pCamera->SetParent(nullptr);
 
     g_pApp->GetAudio()->StopAllSounds();
     //g_pApp->GetGameLogic()->UnloadLevel();

@@ -135,6 +135,8 @@ protected:
 
     Point m_CurrentSpawnPosition;
 
+    WeakActorPtr m_pClawActor;
+
 private:
     void ExecuteStartupCommands(const std::string& startupCommandsFile);
     void CreateSinglePhysicsTile(int x, int y, const TileCollisionPrototype& proto);

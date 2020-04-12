@@ -44,7 +44,7 @@ matrix:
       dist: xenial
       name: "Emscripten"
       compiler: clang
-      env: PLATFORM=emscripten CMAKE_ARGS="-DEmscripten=1" CMAKE_EXECUTOR=emconfigure
+      env: PLATFORM=emscripten CMAKE_ARGS="-DEmscripten=1" CMAKE_EXECUTOR=emcmake
 
 script:
     "./travis.sh"
