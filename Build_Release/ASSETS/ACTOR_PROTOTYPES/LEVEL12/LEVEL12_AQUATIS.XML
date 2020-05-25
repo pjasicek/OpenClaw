@@ -1,72 +1,71 @@
-<Actor Type="Level12_Aquatis" Parent="ActorPrototype_BaseEnemy" ActorPrototypeName="ActorPrototype_Level12_Aquatis">
+<Actor Type="ActorPrototype_Level12_Aquatis" ActorPrototypeName="ActorPrototype_Level12_Aquatis">
+    <PositionComponent>
+        <Position x="-1" y="-1" /> <!-- DEFINED IN CODE -->
+    </PositionComponent>
     <ActorRenderComponent>
-        <ImagePath>/LEVEL10/IMAGES/MARROW/*</ImagePath>
-        <Palette>/LEVEL10/PALETTES/MAIN.PAL</Palette>
+        <Visible>true</Visible>
+        <Mirrored>false</Mirrored>
+        <Inverted>false</Inverted>
+        <ZCoord>2000</ZCoord>
+        <ImagePath>/LEVEL12/IMAGES/KINGAQUATIS/*.PID</ImagePath>
+        <Palette>/LEVEL12/PALETTES/MAIN.PAL</Palette>
     </ActorRenderComponent>
     <AnimationComponent>
-        <AnimationPath>/LEVEL10/ANIS/MARROW/*.ANI</AnimationPath>
+        <AnimationPath>/LEVEL12/ANIS/AQUATIS/*.ANI</AnimationPath>
     </AnimationComponent>
     <HealthComponent>
-        <Health>150</Health>
-        <MaxHealth>150</MaxHealth>
+        <Health>100</Health>
+        <MaxHealth>100</MaxHealth>
     </HealthComponent>
     <LootComponent>
+        <LootSoundChance>100</LootSoundChance>
     </LootComponent>
     <EnemyAIComponent>
         <DeathAnimation>killfall</DeathAnimation>
         <Sounds>
-            <Sound SoundType="Death" SoundName="/LEVEL10/SOUNDS/MARROW/00430003.WAV" />
-            <Sound SoundType="TakeDamage" SoundName="/LEVEL1/SOUNDS/HIT1.WAV" />
-            <Sound SoundType="RangedAttack" SoundName="/LEVEL10/SOUNDS/MARROW/PISTOL.WAV" />
+            <!-- This is when he gets hit by the ceiling icicle which actually hurts him -->
+            <Sound SoundType="TakeDamage" SoundName="/LEVEL12/SOUNDS/AQUATIS/00480015.WAV" />
+            <Sound SoundType="Death" SoundName="/LEVEL12/SOUNDS/AQUATIS/00480006.WAV" />
+            <Sound SoundType="MeleeAttack" SoundName="/LEVEL12/SOUNDS/AQUATIS/00480000.WAV" />
+            <Sound SoundType="MeleeAttack" SoundName="/LEVEL12/SOUNDS/AQUATIS/00480001.WAV" />
         </Sounds>
     </EnemyAIComponent>
+    <AquatisAIStateComponent>
+    	<StatePriority>0</StatePriority>
+    	<BossDialogAnimation>home</BossDialogAnimation>
+    </AquatisAIStateComponent>
     <TakeDamageAIStateComponent>
         <StatePriority>0</StatePriority>
-        <TakeDamageAnimation>hithigh</TakeDamageAnimation>
-        <InvulnerabilityTime>1000</InvulnerabilityTime>
+        <TakeDamageAnimation>hitlow</TakeDamageAnimation>
     </TakeDamageAIStateComponent>
     <PatrolEnemyAIStateComponent>
-        <IsAlwaysIdle>false</IsAlwaysIdle>
+        <IsAlwaysIdle>true</IsAlwaysIdle>
         <StatePriority>0</StatePriority>
-        <PatrolSpeed>1.700000</PatrolSpeed>
+        <PatrolSpeed>0</PatrolSpeed>
         <LeftPatrolBorder>0</LeftPatrolBorder> <!-- DEFINED IN CODE -->
         <RightPatrolBorder>0</RightPatrolBorder> <!-- DEFINED IN CODE -->
         <RetainDirection>false</RetainDirection>
         <WalkAction>
-            <Animation>fastadvance</Animation>
+            <Animation>home</Animation>
         </WalkAction>
     </PatrolEnemyAIStateComponent>
-    <ParryEnemyAIStateComponent>
-        <StatePriority>0</StatePriority>
-        <ParryChances>
-            <ParryChance DamageType="DamageType_MeleeAttack" Chance="40" />
-            <ParryChance DamageType="DamageType_Bullet" Chance="100" />
-            <ParryChance DamageType="DamageType_Magic" Chance="100" />
-            <ParryChance DamageType="DamageType_Explosion" Chance="100" />
-        </ParryChances>
-        <ParrySounds>
-            <ParrySound>/LEVEL10/SOUNDS/MARROW/BLOCK1.WAV</ParrySound>
-            <ParrySound>/LEVEL10/SOUNDS/MARROW/BLOCK2.WAV</ParrySound>
-        </ParrySounds>
-        <ParryAnimFrameIdx>0</ParryAnimFrameIdx>
-        <ParryAnimation>block</ParryAnimation>
-    </ParryEnemyAIStateComponent>
     <MeleeAttackAIStateComponent>
         <StatePriority>20</StatePriority>
+        <AttackDelay>200</AttackDelay>
         <Attacks>
             <AttackAction>
-                <Animation>strike2</Animation>
+                <Animation>strike1</Animation>
                 <AttackAnimFrameIdx>3</AttackAnimFrameIdx>
                 <AttackType>0</AttackType>
                 <AttackFxImageSet>NONE</AttackFxImageSet>
                 <AttackSpawnPositionOffset x="-100" y="0" />
-                <AttackAreaSize width="100" height="50" />
-                <Damage>35</Damage>
+                <AttackAreaSize width="150" height="50" />
+                <Damage>10</Damage>
                 <AgroSensorFixture>
                     <FixtureType>EnemyAIMeleeSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>
                     <IsSensor>true</IsSensor>
-                    <Size width="200" height="50" />
+                    <Size width="300" height="50" />
                     <Offset x="0" y="0" />
                     <CollisionFlag>4</CollisionFlag>
                     <CollisionMask>2</CollisionMask>
@@ -77,34 +76,64 @@
             </AttackAction>
         </Attacks>
     </MeleeAttackAIStateComponent>
-    <RangedAttackAIStateComponent>
-        <StatePriority>10</StatePriority>
-        <AttackDelay>100</AttackDelay>
-        <Attacks>
-            <AttackAction>
-                <Animation>strike1</Animation>
-                <AttackAnimFrameIdx>4</AttackAnimFrameIdx>
-                <ProjectilePrototype>ActorPrototype_Level9_BulletProjectile</ProjectilePrototype>
-                <AttackSpawnPositionOffset x="-62" y="-20" />
-                <AttackAreaSize width="0" height="0" />
-                <Damage>10</Damage>
-                <AgroSensorFixture>
-                    <FixtureType>EnemyAIRangedSensor</FixtureType>
-                    <CollisionShape>Rectangle</CollisionShape>
-                    <IsSensor>true</IsSensor>
-                    <Size width="1300" height="35" />
-                    <Offset x="0" y="-15" />
-                    <CollisionFlag>4</CollisionFlag>
-                    <CollisionMask>2</CollisionMask>
-                    <Friction>0.000000</Friction>
-                    <Density>0.000000</Density>
-                    <Restitution>0.000000</Restitution>
-                </AgroSensorFixture>
-            </AttackAction>
-        </Attacks>
-    </RangedAttackAIStateComponent>
-    <MarrowAIStateComponent>
-        <StatePriority>100</StatePriority>
-        <BossDialogAnimation>home</BossDialogAnimation>
-    </MarrowAIStateComponent>
+    <FollowableComponent>
+        <Offset x="-5" y="-92" />
+        <ImageSet>/GAME/IMAGES/EXCLAMATION/*</ImageSet>
+        <AnimationPath></AnimationPath>
+    </FollowableComponent>
+    <PhysicsComponent>
+        <BodyType>Dynamic</BodyType>
+        <HasFootSensor>false</HasFootSensor>
+        <HasCapsuleShape>true</HasCapsuleShape>
+        <HasBulletBehaviour>false</HasBulletBehaviour>
+        <HasSensorBehaviour>false</HasSensorBehaviour>
+        <FixtureType>EnemyAI</FixtureType>
+        <PositionOffset x="0" y="0" />
+        <CollisionShape>Rectangle</CollisionShape>
+        <CollisionSize width="150" height="100" />
+        <HasInitialSpeed>false</HasInitialSpeed>
+        <HasInitialImpulse>false</HasInitialImpulse>
+        <InitialSpeed x="0" y="0" />
+        <CollisionFlag>4</CollisionFlag>
+        <CollisionMask>1793</CollisionMask>
+        <Friction>0.000000</Friction>
+        <Density>0.000000</Density>
+        <Restitution>0.000000</Restitution>
+        <PrefabType></PrefabType>
+        <GravityScale>0</GravityScale>
+        <ClampToGround>false</ClampToGround>
+        <ActorFixture>
+            <FixtureType>EnemyAI</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>true</IsSensor>
+            <!-- OVERRIDEN IN PROTOTYPE -->
+            <Size width="0" height="0" />
+            <Offset x="0" y="0" />
+            <CollisionFlag>4</CollisionFlag>
+            <CollisionMask>66618</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>0.000000</Restitution>
+        </ActorFixture>
+    </PhysicsComponent>
+    <DamageAuraComponent>
+        <IsPulsating>true</IsPulsating>
+        <IsGroupPulse>false</IsGroupPulse>
+        <ApplyAuraOnEnter>true</ApplyAuraOnEnter>
+        <RemoveActorAfterPulse>false</RemoveActorAfterPulse>
+        <PulseInterval>2000</PulseInterval>
+        <ActorFixture>
+            <FixtureType>DamageAura</FixtureType>
+            <CollisionShape>Rectangle</CollisionShape>
+            <IsSensor>true</IsSensor>
+            <Size width="60" height="60" />
+            <Offset x="0" y="0" />
+            <CollisionFlag>262144</CollisionFlag>
+            <CollisionMask>1048578</CollisionMask>
+            <Friction>0.000000</Friction>
+            <Density>0.000000</Density>
+            <Restitution>0.000000</Restitution>
+        </ActorFixture>
+        <Damage>10</Damage>
+    </DamageAuraComponent>
 </Actor>

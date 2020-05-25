@@ -12,3 +12,4 @@ target_sources(openclaw
 
 add_subdirectory(Gabriel)
 add_subdirectory(Marrow)
+add_subdirectory(Aquatis)

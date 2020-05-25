@@ -124,6 +124,13 @@ void BossStagerTriggerComponent::VUpdate(uint32 msDiff)
             SoundInfo sound(m_ClawDialogSound);
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(sound)));
 
+            // Display Claw's exclamation speech image
+            int clawSpeechDuration = Util::GetSoundDurationMs(m_ClawDialogSound);
+            StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor();
+            assert(pClaw != nullptr);
+            ((FollowableComponent*)pClaw->GetRawComponent<FollowableComponent>())
+                    ->Activate(clawSpeechDuration);
+
             m_State = BossStagerState_PlayingClawDialogSound;
         }
     }

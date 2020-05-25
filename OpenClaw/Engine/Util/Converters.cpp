@@ -324,10 +324,6 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
             // TODO: missing logic
             continue;
         }
-        else if (levelNumber == 12 && (logic == "Aquatis" || logic == "BossStager"))
-        {
-            continue;
-        }
         else
         {
             if (TiXmlElement* pActorElem = WwdObjectToXml(&actorProperties, imagesRootPath, levelNumber))
@@ -390,12 +386,4 @@ void FixupWwdObject(WwdObject* pObj, int levelNumber)
 {
     std::string logic = pObj->logic;
     std::string image = pObj->imageSet;
-
-    if (levelNumber == 11)
-    {
-        if (logic.find("TogglePeg") != std::string::npos)
-        {
-            pObj->z = 5050;
-        }
-    }
 }

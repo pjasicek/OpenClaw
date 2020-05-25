@@ -488,6 +488,8 @@ enum ActorPrototype
     ActorPrototype_Level12_Aquatis,
     ActorPrototype_Level12_RockSpring,
     ActorPrototype_Level12_PathElevator,
+    ActorPrototype_Level12_BossStager,
+    ActorPrototype_Level12_BossGem,
 
     ActorPrototype_Max
 };

@@ -1,0 +1,9 @@
+<Actor Type="Level12_BossStager" Parent="ActorPrototype_BaseBossStager" ActorPrototypeName="ActorPrototype_Level12_BossStager">
+    <BossStagerTriggerComponent>
+        <ClawDialogSound>/LEVEL12/SOUNDS/STAGING/CLAW.WAV</ClawDialogSound>
+        <BossDialogSound>/LEVEL12/SOUNDS/STAGING/ENEMY.WAV</BossDialogSound>
+        <PopupTitleImageSet>/LEVEL12/IMAGES/BOSSNAME/*</PopupTitleImageSet>
+        <PopupTitleSound>/LEVEL12/SOUNDS/DEFEAT.WAV</PopupTitleSound>
+        <BossDistance>550</BossDistance>
+    </BossStagerTriggerComponent>
+</Actor>

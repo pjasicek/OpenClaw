@@ -13,12 +13,13 @@
         <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
         
         <LogicToActorPrototype logic="AquatisCrack" actorPrototype="ActorPrototype_BaseEnemy" />
-
+		<LogicToActorPrototype logic="Aquatis" actorPrototype="ActorPrototype_Level12_Aquatis" />
         <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level12_TogglePeg" />
         <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level12_TogglePeg" />
         <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level12_TogglePeg" />
         <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level12_TogglePeg" />
         <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level12_CrumblingPeg" />
+        <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Level12_BossStager" />
     </LogicsToActorPrototypes>
     <ClawSpawnPositions>
         <ClawSpawnPosition spawnNumber="0" x="1715" y="2200" />

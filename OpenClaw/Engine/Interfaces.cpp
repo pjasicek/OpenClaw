@@ -215,6 +215,8 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level12_Aquatis, "ActorPrototype_Level12_Aquatis" },
         { ActorPrototype_Level12_RockSpring, "ActorPrototype_Level12_RockSpring" },
         { ActorPrototype_Level12_PathElevator, "ActorPrototype_Level12_PathElevator" },
+        { ActorPrototype_Level12_BossStager, "ActorPrototype_Level12_BossStager" },
+        { ActorPrototype_Level12_BossGem, "ActorPrototype_Level12_BossGem" },
 
         //=======================================
         // Menu
@@ -444,6 +446,8 @@ ActorPrototype StringToEnum_ActorPrototype(const std::string& actorProtoStr)
         { "ActorPrototype_Level12_Aquatis", ActorPrototype_Level12_Aquatis },
         { "ActorPrototype_Level12_RockSpring", ActorPrototype_Level12_RockSpring },
         { "ActorPrototype_Level12_PathElevator", ActorPrototype_Level12_PathElevator },
+        { "ActorPrototype_Level12_BossStager", ActorPrototype_Level12_BossStager },
+        { "ActorPrototype_Level12_BossGem", ActorPrototype_Level12_BossGem },
 
         //=======================================
         // Menu
