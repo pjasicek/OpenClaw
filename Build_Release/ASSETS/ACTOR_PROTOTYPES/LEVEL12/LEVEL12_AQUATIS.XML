@@ -31,7 +31,7 @@
         </Sounds>
     </EnemyAIComponent>
     <AquatisAIStateComponent>
-    	<StatePriority>0</StatePriority>
+    	<StatePriority>100</StatePriority>
     	<BossDialogAnimation>home</BossDialogAnimation>
     </AquatisAIStateComponent>
     <TakeDamageAIStateComponent>
@@ -44,8 +44,12 @@
         <PatrolSpeed>0</PatrolSpeed>
         <LeftPatrolBorder>0</LeftPatrolBorder> <!-- DEFINED IN CODE -->
         <RightPatrolBorder>0</RightPatrolBorder> <!-- DEFINED IN CODE -->
-        <RetainDirection>false</RetainDirection>
-        <WalkAction>
+        <RetainDirection>true</RetainDirection>
+        <IdleAction>
+           <AnimationDelay>0</AnimationDelay>
+           <Animation>home</Animation>
+       </IdleAction>
+       <WalkAction>
             <Animation>home</Animation>
         </WalkAction>
     </PatrolEnemyAIStateComponent>

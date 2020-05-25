@@ -28,7 +28,7 @@ public:
     virtual void VUpdate(uint32 msDiff) override;
 
     // Can enemy enter this state ?
-    virtual bool VCanEnter() override { return true; }
+    virtual bool VCanEnter() override { return m_bBossFightStarted == false; }
 
     //virtual int VGetPriority() override;
 

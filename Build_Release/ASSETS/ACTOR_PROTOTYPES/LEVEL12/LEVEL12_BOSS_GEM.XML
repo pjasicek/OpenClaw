@@ -7,7 +7,7 @@
         <Mirrored>false</Mirrored>
         <Inverted>false</Inverted>
         <ZCoord>2000</ZCoord>
-        <ImagePath>/LEVEL10/IMAGES/GEM/*.PID</ImagePath>
+        <ImagePath>/LEVEL12/IMAGES/GEM/*.PID</ImagePath>
     </ActorRenderComponent>
     <TriggerComponent>
         <TriggerFinitedTimes>1</TriggerFinitedTimes>

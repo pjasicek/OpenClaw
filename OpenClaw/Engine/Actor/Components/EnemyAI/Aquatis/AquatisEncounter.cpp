@@ -23,7 +23,7 @@ const char* AquatisAIStateComponent::g_Name = "AquatisAIStateComponent";
 
 AquatisAIStateComponent::AquatisAIStateComponent()
     :
-    BaseBossAIStateComponennt("Aquatis")
+    BaseBossAIStateComponennt("AquatisAIStateComponent")
 {
 
 }
@@ -62,7 +62,7 @@ void AquatisAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPrevious
 {
     //m_pAnimationComponent->SetAnimation(m_IdleAnim);
 
-    m_IsActive = true;
+    //m_IsActive = true;
 }
 
 void AquatisAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)
