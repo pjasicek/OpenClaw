@@ -12,9 +12,7 @@
         <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
         <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
         
-        <LogicToActorPrototype logic="Aquatis" actorPrototype="ActorPrototype_Level12_Mercat" />
         <LogicToActorPrototype logic="AquatisCrack" actorPrototype="ActorPrototype_BaseEnemy" />
-        <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Level12_Mercat" />
 
         <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level12_TogglePeg" />
         <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level12_TogglePeg" />

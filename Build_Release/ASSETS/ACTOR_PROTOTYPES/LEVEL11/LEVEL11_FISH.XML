@@ -34,6 +34,7 @@
         <WalkAction>
             <Animation>swim</Animation>
         </WalkAction>
+        <RecalculatePatrolBorders>false</RecalculatePatrolBorders>
     </PatrolEnemyAIStateComponent>
     <MeleeAttackAIStateComponent>
         <StatePriority>20</StatePriority>
@@ -59,10 +60,12 @@
         </Attacks>
     </MeleeAttackAIStateComponent>
     <PhysicsComponent>
-        <CollisionSize width="40" height="41" />
+        <CollisionSize width="20" height="21" />
         <ActorFixture>
-            <Size width="40" height="40" />
+            <Size width="20" height="20" />
         </ActorFixture>
+        <GravityScale>0</GravityScale>
+        <ClampToGround>false</ClampToGround>
     </PhysicsComponent>
     <DamageAuraComponent>
         <ActorFixture>

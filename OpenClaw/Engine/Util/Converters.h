@@ -1049,6 +1049,12 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
         {
 
         }
+        else if (levelNumber == 12)
+        {
+            def.activeFrameIdx = 4;
+            def.activateSound = "/LEVEL12/SOUNDS/FLOORSPIKEUP.WAV";
+            def.deactivateSound = "/LEVEL12/SOUNDS/FLOORSPIKEDOWN.WAV";
+        }
 
         def.startDelay = delay;
         def.damage = 5;

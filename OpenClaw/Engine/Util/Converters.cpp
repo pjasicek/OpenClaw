@@ -324,6 +324,10 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
             // TODO: missing logic
             continue;
         }
+        else if (levelNumber == 12 && (logic == "Aquatis" || logic == "BossStager"))
+        {
+            continue;
+        }
         else
         {
             if (TiXmlElement* pActorElem = WwdObjectToXml(&actorProperties, imagesRootPath, levelNumber))
