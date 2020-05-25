@@ -8,8 +8,8 @@
         <PauseOnStart>false</PauseOnStart>
     </AnimationComponent>
     <HealthComponent>
-        <Health>20</Health>
-        <MaxHealth>20</MaxHealth>
+        <Health>30</Health>
+        <MaxHealth>30</MaxHealth>
     </HealthComponent>
     <EnemyAIComponent>
         <DeathAnimation>killfall</DeathAnimation>
@@ -18,17 +18,55 @@
             <Sound SoundType="TakeDamage" SoundName="/LEVEL11/SOUNDS/MERCAT/00440013.WAV" />
             <Sound SoundType="Death" SoundName="/LEVEL11/SOUNDS/MERCAT/00440014.WAV" />
             <Sound SoundType="Death" SoundName="/LEVEL11/SOUNDS/MERCAT/00440015.WAV" />
-            <Sound SoundType="RangedAttack" SoundName="/LEVEL11/SOUNDS/MERCAT/STAB.WAV" />
+            <Sound SoundType="MeleeAttack" SoundName="/LEVEL11/SOUNDS/MERCAT/STAB.WAV" />
+			<Sound SoundType="RangedAttack" SoundName="/LEVEL11/SOUNDS/MERCAT/TLIGHTNING.WAV" />
         </Sounds>
         <MinTimeIntervalForSpeechSound>5000</MinTimeIntervalForSpeechSound>
     </EnemyAIComponent>
-    <RangedAttackAIStateComponent>
-        <StatePriority>10</StatePriority>
-        <AttackDelay>100</AttackDelay>
+    <ParryEnemyAIStateComponent>
+        <StatePriority>0</StatePriority>
+        <ParryChances>
+            <ParryChance DamageType="DamageType_Bullet" Chance="35" />
+            <ParryChance DamageType="DamageType_MeleeAttack" Chance="25" />
+        </ParryChances>
+        <ParrySounds>
+            <ParrySound>/LEVEL11/SOUNDS/MERCAT/BLOCK1.WAV</ParrySound>
+            <ParrySound>/LEVEL11/SOUNDS/MERCAT/BLOCK2.WAV</ParrySound>
+        </ParrySounds>
+        <ParryAnimFrameIdx>0</ParryAnimFrameIdx>
+        <ParryAnimation>block</ParryAnimation>
+    </ParryEnemyAIStateComponent>
+    <MeleeAttackAIStateComponent>
+        <StatePriority>20</StatePriority>
+        <AttackDelay>250</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
-                <AttackAnimFrameIdx>6</AttackAnimFrameIdx>
+                <AttackAnimFrameIdx>2</AttackAnimFrameIdx>
+                <AttackType>0</AttackType>
+                <AttackFxImageSet>NONE</AttackFxImageSet>
+                <AttackSpawnPositionOffset x="-42" y="2" />
+                <AttackAreaSize width="130" height="50" />
+                <Damage>10</Damage>
+                <AgroSensorFixture>
+                    <FixtureType>EnemyAIMeleeSensor</FixtureType>
+                    <CollisionShape>Rectangle</CollisionShape>
+                    <IsSensor>true</IsSensor>
+                    <Size width="180" height="50" />
+                    <Offset x="0" y="0" />
+                    <CollisionFlag>4</CollisionFlag>
+                    <CollisionMask>2</CollisionMask>
+                </AgroSensorFixture>
+            </AttackAction>
+        </Attacks>
+    </MeleeAttackAIStateComponent>
+    <RangedAttackAIStateComponent>
+        <StatePriority>10</StatePriority>
+        <AttackDelay>750</AttackDelay>
+        <Attacks>
+            <AttackAction>
+                <Animation>strike1</Animation>
+                <AttackAnimFrameIdx>2</AttackAnimFrameIdx>
                 <ProjectilePrototype>ActorPrototype_Level11_TridentProjectile</ProjectilePrototype>
                 <AttackSpawnPositionOffset x="-42" y="2" />
                 <AttackAreaSize width="0" height="0" />
@@ -73,7 +111,8 @@
             <Animation>fastadvance</Animation>
         </WalkAction>
         <IdleAction>
-            <AnimationDelay>0</AnimationDelay>
+            <AnimationDelay>750</AnimationDelay>
+            <Animation>home</Animation>
             <Animation>idle1</Animation>
             <Animation>idle2</Animation>
             <Animation>idle3</Animation>

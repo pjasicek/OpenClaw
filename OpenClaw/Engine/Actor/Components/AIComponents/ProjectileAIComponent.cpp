@@ -63,6 +63,7 @@ bool ProjectileAIComponent::VInit(TiXmlElement* pData)
     ParseValueFromXmlElem(&m_SourceActorId, pData->FirstChildElement("SourceActorId"));
     ParseValueFromXmlElem(&m_DetonationTime, pData->FirstChildElement("DetonationTime"));
     ParseValueFromXmlElem(&m_NumSparkles, pData->FirstChildElement("NumSparkles"));
+    ParseValueFromXmlElem(&m_bDestroyAfterAnimLoop, pData->FirstChildElement("DestroyAfterAnimLoop"));
 
     m_bHasDetonationTime = m_DetonationTime > 0;
     m_DamageType = StringToDamageTypeEnum(damageTypeStr);
@@ -105,6 +106,14 @@ void ProjectileAIComponent::VPostInit()
         pSparkleRenderComponent->SetVisible(true);
 
         m_PowerupSparkles.push_back(pPowerupSparkle);
+    }
+
+    if (m_bDestroyAfterAnimLoop)
+    {
+        AnimationComponent* pAC = MakeStrongPtr(m_pOwner->GetComponent<AnimationComponent>()).get();
+        assert(pAC != nullptr);
+
+        pAC->AddObserver(this);
     }
 }
 
@@ -212,5 +221,18 @@ void ProjectileAIComponent::OnCollidedWithActor(Actor* pActorWhoWasShot)
               MakeStrongPtr(pActorWhoWasShot->GetComponent<ClawControllableComponent>()) != nullptr)
     {
         OnCollidedWithSolidTile();
+    }
+}
+
+void ProjectileAIComponent::VOnAnimationLooped(Animation* pAnimation)
+{
+    if (m_bDestroyAfterAnimLoop)
+    {
+        m_pPhysics->VRemoveActor(m_pOwner->GetGUID());
+
+        shared_ptr<EventData_Destroy_Actor> pEvent(new EventData_Destroy_Actor(m_pOwner->GetGUID()));
+        IEventMgr::Get()->VQueueEvent(pEvent);
+
+        m_IsActive = false;
     }
 }

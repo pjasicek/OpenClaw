@@ -1,6 +1,8 @@
 #include "Converters.h"
 #include "../Events/Events.h"
 
+void FixupWwdObject(WwdObject* pObj, int levelNumber);
+
 TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
 {
     PROFILE_CPU("WWD->XML");
@@ -54,6 +56,12 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
 
         // This is Monolith's hack which I dont get
         if (levelNumber == 5 && tileDescIdx == 509)
+        {
+            wwdTileDesc.insideAttrib = WAP_TILE_ATTRIBUTE_CLEAR;
+            wwdTileDesc.outsideAttrib = WAP_TILE_ATTRIBUTE_CLEAR;
+        }
+        // ???????????
+        if (levelNumber == 11 && tileDescIdx == 39)
         {
             wwdTileDesc.insideAttrib = WAP_TILE_ATTRIBUTE_CLEAR;
             wwdTileDesc.outsideAttrib = WAP_TILE_ATTRIBUTE_CLEAR;
@@ -192,6 +200,7 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
         WwdObject actorProperties = wwdActors[actorIdx];
 
         WwdObject* wwdObject = &actorProperties;
+        FixupWwdObject(wwdObject, levelNumber);
 
         std::string name = actorProperties.name;
         std::string logic = actorProperties.logic;
@@ -371,4 +380,18 @@ TiXmlElement* WwdToXml(WapWwd* wapWwd, int levelNumber)
 
     //xmlDoc.SaveFile("LEVEL1.xml");
     return root;
+}
+
+void FixupWwdObject(WwdObject* pObj, int levelNumber)
+{
+    std::string logic = pObj->logic;
+    std::string image = pObj->imageSet;
+
+    if (levelNumber == 11)
+    {
+        if (logic.find("TogglePeg") != std::string::npos)
+        {
+            pObj->z = 5050;
+        }
+    }
 }

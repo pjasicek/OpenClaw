@@ -12,13 +12,15 @@
 		</SpecialAnimation>
 	</AnimationComponent>
 	<ProjectileAIComponent>
-		<Damage>10</Damage>
+		<Damage>15</Damage>
 		<ProjectileType>DamageType_Bullet</ProjectileType>
 		<!-- CAN BE MODIFIED IN CODE -->
-		<ProjectileSpeed x="10.00000" y="0.000000" /> 
+		<ProjectileSpeed x="2.50000" y="0.000000" /> 
+		<DestroyAfterAnimLoop>true</DestroyAfterAnimLoop>
 	</ProjectileAIComponent>
 	<PhysicsComponent>
         <CollisionFlag>262144</CollisionFlag>
         <CollisionMask>1048834</CollisionMask>
+        <CollisionSize width="20" height="40" />
     </PhysicsComponent>
 </Actor>

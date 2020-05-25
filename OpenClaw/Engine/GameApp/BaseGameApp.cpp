@@ -903,10 +903,9 @@ bool BaseGameApp::ReadActorXmlPrototypes(GameOptions& gameOptions)
     }
 
     std::vector<std::string> xmlActorPrototypeFiles = m_pResourceMgr->VMatch("/ACTOR_PROTOTYPES/*.XML");
+
     for (const std::string& protoFile : xmlActorPrototypeFiles)
     {
-        //LOG("Actor proto: " + protoFile);
-
         TiXmlElement* pActorProtoElem = XmlResourceLoader::LoadAndReturnRootXmlElement(protoFile.c_str());
         std::string protoName;
         if (!ParseAttributeFromXmlElem(&protoName, "ActorPrototypeName", pActorProtoElem))

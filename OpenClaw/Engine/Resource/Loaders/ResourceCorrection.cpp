@@ -46,7 +46,10 @@ void OnPidLoaded(const char* resource, WapPid* pPid)
     {
         pPid->offsetY = 0;
     }
-    
+    else if (resourceName.find("/images/breakjem/") != std::string::npos)
+    {
+        pPid->offsetY = 0;
+    }
 }
 
 void OnAniLoaded(const char* resource, WapAni* pAni)

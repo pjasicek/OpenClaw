@@ -12,8 +12,10 @@
     </HealthComponent>
     <EnemyAIComponent>
         <DeathAnimation>killfall</DeathAnimation>
-        <Sound SoundType="Death" SoundName="/LEVEL11/SOUNDS/FISH/FISHDEATH.WAV" />
-        <Sound SoundType="MeleeAttack" SoundName="/LEVEL11/SOUNDS/FISH/CHOMP1.WAV" />
+        <Sounds>
+	        <Sound SoundType="Death" SoundName="/LEVEL11/SOUNDS/FISH/FISHDEATH.WAV" />
+	        <Sound SoundType="MeleeAttack" SoundName="/LEVEL11/SOUNDS/FISH/CHOMP1.WAV" />
+        </Sounds>
     </EnemyAIComponent>
     <PatrolEnemyAIStateComponent>
         <IsAlwaysIdle>false</IsAlwaysIdle>
@@ -38,23 +40,20 @@
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
-                <AttackAnimFrameIdx>4</AttackAnimFrameIdx>
+                <AttackAnimFrameIdx>2</AttackAnimFrameIdx>
                 <AttackType>0</AttackType>
                 <AttackFxImageSet>NONE</AttackFxImageSet>
                 <AttackSpawnPositionOffset x="-30" y="0" />
-                <AttackAreaSize width="110" height="40" />
+                <AttackAreaSize width="80" height="40" />
                 <Damage>10</Damage>
                 <AgroSensorFixture>
                     <FixtureType>EnemyAIMeleeSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>
                     <IsSensor>true</IsSensor>
-                    <Size width="160" height="50" />
+                    <Size width="80" height="50" />
                     <Offset x="0" y="0" />
                     <CollisionFlag>4</CollisionFlag>
                     <CollisionMask>2</CollisionMask>
-                    <Friction>0.000000</Friction>
-                    <Density>0.000000</Density>
-                    <Restitution>-1.#QNAN0</Restitution>
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>

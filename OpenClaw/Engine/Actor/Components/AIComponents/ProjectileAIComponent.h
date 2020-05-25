@@ -3,9 +3,11 @@
 
 #include "../../../SharedDefines.h"
 #include "../../ActorComponent.h"
+#include "../Animation.h"
+#include "../AnimationComponent.h"
 
 
-class ProjectileAIComponent : public ActorComponent
+class ProjectileAIComponent : public ActorComponent, public AnimationObserver
 {
 public:
     ProjectileAIComponent();
@@ -23,6 +25,8 @@ public:
     void OnCollidedWithSolidTile();
     void OnCollidedWithActor(Actor* pActorWhoWasShot);
 
+    virtual void VOnAnimationLooped(Animation* pAnimation) override;
+
 private:
     void Detonate();
 
@@ -33,6 +37,7 @@ private:
     int m_SourceActorId;
     int m_DetonationTime;
     int m_NumSparkles;
+    bool m_bDestroyAfterAnimLoop {false};
 
     // Internal state
     shared_ptr<IGamePhysics> m_pPhysics;

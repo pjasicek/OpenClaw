@@ -51,22 +51,19 @@
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
-                <AttackAnimFrameIdx>6</AttackAnimFrameIdx>
+                <AttackAnimFrameIdx>2</AttackAnimFrameIdx>
                 <ProjectilePrototype>ActorPrototype_Level11_SirenProjectile</ProjectilePrototype>
-                <AttackSpawnPositionOffset x="-42" y="2" />
+                <AttackSpawnPositionOffset x="-32" y="2" />
                 <AttackAreaSize width="0" height="0" />
                 <Damage>10</Damage>
                 <AgroSensorFixture>
                     <FixtureType>EnemyAIRangedSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>
                     <IsSensor>true</IsSensor>
-                    <Size width="1000" height="30" />
+                    <Size width="250" height="30" />
                     <Offset x="0" y="-20" />
                     <CollisionFlag>4</CollisionFlag>
                     <CollisionMask>2</CollisionMask>
-                    <Friction>0.000000</Friction>
-                    <Density>0.000000</Density>
-                    <Restitution>0.000000</Restitution>
                 </AgroSensorFixture>
             </AttackAction>
         </Attacks>

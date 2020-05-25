@@ -8,11 +8,11 @@
     </AnimationComponent>
 	<CrumblingPegAIComponent>
 		<CrumbleDelay>0</CrumbleDelay> <!-- DEFINED IN CODE -->
-		<CrumbleFrameIdx>2</CrumbleFrameIdx> <!-- DEFINED IN CODE -->
+		<CrumbleFrameIdx>5</CrumbleFrameIdx> <!-- DEFINED IN CODE -->
 		<CrumbleSound>/LEVEL11/SOUNDS/CRUMBLEBRIDGE4.WAV</CrumbleSound> <!-- DEFINED IN CODE -->
 	</CrumblingPegAIComponent>
 	<PhysicsComponent>
-        <PositionOffset x="0" y="-20" />
+        <PositionOffset x="0" y="-27" />
         <CollisionSize width="64" height="40" />
     </PhysicsComponent>
 </Actor>

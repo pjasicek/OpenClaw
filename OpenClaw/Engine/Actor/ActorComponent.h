@@ -19,6 +19,9 @@ class ActorComponent
 public:
     virtual ~ActorComponent() { m_pOwner.reset(); }
 
+    // TODO: Implement since this should be used throughout the whole codebase lol
+    // void Destroy();
+
     // These functions are meant to be overriden by the implementation classes of the components
     virtual bool VInit(TiXmlElement* data) = 0;
     virtual void VPostInit() { }
