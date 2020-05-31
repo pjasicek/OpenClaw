@@ -1,6 +1,6 @@
 <Actor Type="Level11_TridentProjectile" Parent="ActorPrototype_BaseProjectile" ActorPrototypeName="ActorPrototype_Level11_TridentProjectile">
 	<ActorRenderComponent>
-		<Mirrored>false</Mirrored>
+		<Mirrored>true</Mirrored>
 		<ImagePath>/LEVEL11/IMAGES/TRIDENT/TRIDENTPROJECTILE/*</ImagePath>
 		<Palette>/LEVEL11/PALETTES/MAIN.PAL</Palette>
 	</ActorRenderComponent>
@@ -12,8 +12,9 @@
 		</SpecialAnimation>
 	</AnimationComponent>
 	<ProjectileAIComponent>
-		<Damage>10</Damage>
-		<ProjectileType>DamageType_Bullet</ProjectileType>
+		<Damage>20</Damage>
+		<ProjectileType>DamageType_Trident</ProjectileType>
+		<NumSparkles>30</NumSparkles>
 		<!-- CAN BE MODIFIED IN CODE -->
 		<ProjectileSpeed x="7.00000" y="0.000000" /> 
 	</ProjectileAIComponent>

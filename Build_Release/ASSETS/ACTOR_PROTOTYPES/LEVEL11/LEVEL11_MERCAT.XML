@@ -26,8 +26,8 @@
     <ParryEnemyAIStateComponent>
         <StatePriority>0</StatePriority>
         <ParryChances>
-            <ParryChance DamageType="DamageType_Bullet" Chance="35" />
-            <ParryChance DamageType="DamageType_MeleeAttack" Chance="25" />
+            <ParryChance DamageType="DamageType_Bullet" Chance="15" />
+            <ParryChance DamageType="DamageType_MeleeAttack" Chance="10" />
         </ParryChances>
         <ParrySounds>
             <ParrySound>/LEVEL11/SOUNDS/MERCAT/BLOCK1.WAV</ParrySound>
@@ -38,7 +38,7 @@
     </ParryEnemyAIStateComponent>
     <MeleeAttackAIStateComponent>
         <StatePriority>20</StatePriority>
-        <AttackDelay>250</AttackDelay>
+        <AttackDelay>5000</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
@@ -62,7 +62,7 @@
     </MeleeAttackAIStateComponent>
     <RangedAttackAIStateComponent>
         <StatePriority>10</StatePriority>
-        <AttackDelay>750</AttackDelay>
+        <AttackDelay>3000</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
@@ -70,7 +70,7 @@
                 <ProjectilePrototype>ActorPrototype_Level11_TridentProjectile</ProjectilePrototype>
                 <AttackSpawnPositionOffset x="-42" y="2" />
                 <AttackAreaSize width="0" height="0" />
-                <Damage>10</Damage>
+                <Damage>20</Damage>
                 <AgroSensorFixture>
                     <FixtureType>EnemyAIRangedSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>

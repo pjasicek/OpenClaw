@@ -45,6 +45,7 @@ public:
     virtual bool VIsAttachedToRope() = 0;
 
     virtual bool CanMove() = 0;
+    virtual bool IsActorFrozen() = 0;
     virtual bool IsDucking() = 0;
 
     virtual bool IsDying() = 0;
@@ -60,6 +61,9 @@ public:
     void SetLookingUpTime(int32 msTime) { m_LookingUpTime = msTime; }
     void AddLookingUpTime(int32 msTime) { m_LookingUpTime += msTime; }
 
+    void SetFrozenTime(int32 msTime) { m_FrozenTime = msTime; }
+    void AddFrozenTime(int32 msTime) { m_FrozenTime += msTime; }
+
     void SetDuckingTime(int32 msTime) { m_DuckingTime = msTime; }
     void AddDuckingTime(int32 msTime) { m_DuckingTime += msTime; }
 
@@ -69,6 +73,7 @@ protected:
 
     int m_DuckingTime;
     int m_LookingUpTime;
+    int m_FrozenTime;
 
     int m_MaxJumpHeight;
 };
@@ -91,6 +96,7 @@ enum ClawState
     ClawState_TakingDamage,
     ClawState_Dying,
     ClawState_HoldingRope,
+    ClawState_Frozen,
     ClawState_Idle
 };
 
@@ -138,6 +144,7 @@ public:
     virtual bool VIsAttachedToRope() override { return m_State == ClawState_HoldingRope; }
 
     virtual bool CanMove() override;
+    virtual bool IsActorFrozen() override;
     virtual bool IsDucking() override;
     virtual void OnStand() override;
 

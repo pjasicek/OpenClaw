@@ -136,6 +136,7 @@ struct GlobalOptions
         maxJumpHeight = 150;
         powerupMaxJumpHeight = 200;
         startLookUpOrDownTime = 1500;
+        freezeTime = 2000;
         maxLookUpOrDownDistance = 250;
         lookUpOrDownSpeed = 250;
         clawRunningSpeed = 5.0;
@@ -156,6 +157,7 @@ struct GlobalOptions
     float maxJumpHeight;
     float powerupMaxJumpHeight;
     int startLookUpOrDownTime;
+    int freezeTime;
     int maxLookUpOrDownDistance;
     int lookUpOrDownSpeed; 
     std::string scoreScreenPalPath;

@@ -8,8 +8,8 @@
         <PauseOnStart>false</PauseOnStart>
     </AnimationComponent>
     <HealthComponent>
-        <Health>20</Health>
-        <MaxHealth>20</MaxHealth>
+        <Health>30</Health>
+        <MaxHealth>30</MaxHealth>
     </HealthComponent>
     <EnemyAIComponent>
         <DeathAnimation>killfall</DeathAnimation>
@@ -46,7 +46,7 @@
     </PatrolEnemyAIStateComponent>
     <RangedAttackAIStateComponent>
         <StatePriority>10</StatePriority>
-        <AttackDelay>100</AttackDelay>
+        <AttackDelay>3000</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
@@ -54,7 +54,7 @@
                 <ProjectilePrototype>ActorPrototype_Level11_SirenProjectile</ProjectilePrototype>
                 <AttackSpawnPositionOffset x="-32" y="2" />
                 <AttackAreaSize width="0" height="0" />
-                <Damage>10</Damage>
+                <Damage>0</Damage>
                 <AgroSensorFixture>
                     <FixtureType>EnemyAIRangedSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>

@@ -604,6 +604,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             pGlobalOptionsRootElem->FirstChildElement("PowerupMaxJumpHeight"));
         ParseValueFromXmlElem(&m_GlobalOptions.startLookUpOrDownTime,
             pGlobalOptionsRootElem->FirstChildElement("StartLookUpOrDownTime"));
+        ParseValueFromXmlElem(&m_GlobalOptions.freezeTime,
+            pGlobalOptionsRootElem->FirstChildElement("FreezeTime"));
         ParseValueFromXmlElem(&m_GlobalOptions.maxLookUpOrDownDistance,
             pGlobalOptionsRootElem->FirstChildElement("MaxLookUpOrDownDistance"));
         ParseValueFromXmlElem(&m_GlobalOptions.lookUpOrDownSpeed,

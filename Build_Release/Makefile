@@ -17,6 +17,6 @@ start:
 	./openclaw
 
 build:
-	cd .. && mkdir -p build && cd build && cmake .. && make -j$(NUMPROC)
+	cd .. && mkdir -p build && cd build && cmake .. && make
 
 all: clean assets build start

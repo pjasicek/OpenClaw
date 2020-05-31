@@ -305,6 +305,16 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     
     //LOG("ROPE_1: " + ToStr(m_pControllableComponent->VIsAttachedToRope()));
 
+
+    if (!m_pControllableComponent->CanMove() && m_pControllableComponent->IsActorFrozen())
+    {
+        m_pControllableComponent->AddFrozenTime(msDiff);
+    }
+    else
+    {
+        m_pControllableComponent->SetFrozenTime(0);
+    }
+
     m_DoNothingTimeout -= msDiff;
     if (m_DoNothingTimeout > 0)
     {
