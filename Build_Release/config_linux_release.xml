@@ -52,6 +52,7 @@
     <MaxJumpHeight>155</MaxJumpHeight>
     <PowerupMaxJumpHeight>205</PowerupMaxJumpHeight>
     <StartLookUpOrDownTime>1500</StartLookUpOrDownTime>
+    <FreezeTime>2000</FreezeTime>
     <MaxLookUpOrDownDistance>250</MaxLookUpOrDownDistance>
     <LookUpOrDownSpeed>250</LookUpOrDownSpeed>
     <ClawRunningSpeed>4.5</ClawRunningSpeed>
