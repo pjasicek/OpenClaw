@@ -277,6 +277,8 @@ enum ActorPrototype
 
     ActorPrototype_Start,
 
+    ActorPrototype_Null,
+
     //=======================================
     // Level specific
     //=======================================
@@ -490,6 +492,17 @@ enum ActorPrototype
     ActorPrototype_Level12_PathElevator,
     ActorPrototype_Level12_BossStager,
     ActorPrototype_Level12_BossGem,
+
+    // Level 13
+    ActorPrototype_Level13_BearSailor,
+    ActorPrototype_Level13_RedTailPirate,
+    ActorPrototype_Level13_WaterRock,
+    ActorPrototype_Level13_SpringBoard,
+    ActorPrototype_Level13_PathElevator,
+    ActorPrototype_Level13_TogglePeg,
+    ActorPrototype_Level13_CrumblingPeg,
+    ActorPrototype_Level13_SteppingGround,
+    ActorPrototype_Level13_PuffDartSpawner,
 
     ActorPrototype_Max
 };

@@ -1,0 +1,11 @@
+<Actor Type="Level13_RedTailPirate" Parent="ActorPrototype_Level7_RedTailPirate" ActorPrototypeName="ActorPrototype_Level13_RedTailPirate">
+    <ActorRenderComponent>
+        <ZCoord>30</ZCoord>
+        <ImagePath>/LEVEL13/IMAGES/REDTAILPIRATE/*</ImagePath>
+        <Palette>/LEVEL13/PALETTES/MAIN.PAL</Palette>
+    </ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL13/ANIS/REDTAILPIRATE/*.ANI</AnimationPath>
+        <PauseOnStart>false</PauseOnStart>
+    </AnimationComponent>
+</Actor>

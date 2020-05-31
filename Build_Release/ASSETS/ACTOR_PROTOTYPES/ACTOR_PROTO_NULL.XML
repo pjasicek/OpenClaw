@@ -1,0 +1,13 @@
+<Actor Type="ActorPrototype_Null" ActorPrototypeName="ActorPrototype_Null">
+	<PositionComponent>
+		<!-- DEFINED IN CODE -->
+		<Position x="-1" y="-1" /> 
+	</PositionComponent>
+	<ActorRenderComponent>
+		<Visible>true</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>10000</ZCoord>
+		<ImagePath>/GAME/IMAGES/EXCLAMATION/FRAME0.PID</ImagePath>
+	</ActorRenderComponent>
+</Actor>

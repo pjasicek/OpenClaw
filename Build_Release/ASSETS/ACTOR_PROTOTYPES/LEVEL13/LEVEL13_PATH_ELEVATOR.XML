@@ -1,0 +1,10 @@
+<Actor Type="Level13_PathElevator" Parent="ActorPrototype_BasePathElevator" ActorPrototypeName="ActorPrototype_Level13_PathElevator">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL13/IMAGES/ELEVATOR1/*</ImagePath>
+		<Palette>/LEVEL13/PALETTES/MAIN.PAL</Palette>
+	</ActorRenderComponent>
+	<PhysicsComponent>
+        <CollisionMask>16386</CollisionMask>
+        <PositionOffset x="0" y="-7" />
+    </PhysicsComponent>
+</Actor>

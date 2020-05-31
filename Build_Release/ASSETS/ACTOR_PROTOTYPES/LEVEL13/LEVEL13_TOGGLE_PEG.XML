@@ -1,0 +1,11 @@
+<Actor Type="Level13_TogglePeg" Parent="ActorPrototype_BaseTogglePeg" ActorPrototypeName="ActorPrototype_Level13_TogglePeg">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL13/IMAGES/BOSSPEG/*</ImagePath>
+		<Palette>/LEVEL13/PALETTES/MAIN.PAL</Palette>
+		<ZCoord>3000</ZCoord>
+	</ActorRenderComponent>
+	<TogglePegAIComponent>
+		<ToggleFrameIdx>5</ToggleFrameIdx>
+		<ToggleSound>/LEVEL13/SOUNDS/PEGSLIDE.WAV</ToggleSound>
+	</TogglePegAIComponent>
+</Actor>

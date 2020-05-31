@@ -1,0 +1,23 @@
+<Actor Type="Level13_PuffDartSpawner" Parent="ActorPrototype_BaseProjectileSpawner" ActorPrototypeName="ActorPrototype_Level13_PuffDartSpawner">
+	<ActorRenderComponent>
+		<ImagePath>OVERRIDDEN_IN_CODE</ImagePath>
+	</ActorRenderComponent>
+	<AnimationComponent>
+        <AnimationPath>/LEVEL13/ANIS/SHOOTERS/*.ANI</AnimationPath>
+    </AnimationComponent>
+	<ProjectileSpawnerComponent>
+        <IdleAnim>INVISIBLE</IdleAnim>
+        <FireAnim>OVERRIDEN_IN_CODE</FireAnim>
+        <IsAlwaysOn>false</IsAlwaysOn>
+        <StartSpawnDelay>0</StartSpawnDelay>
+        <MinSpawnDelay>650</MinSpawnDelay>
+        <MaxSpawnDelay>650</MaxSpawnDelay>
+        <TriggerAreaSize width="OVERRIDEN_IN_CODE" height="OVERRIDEN_IN_CODE" />
+        <TriggerAreaOffset x="OVERRIDEN_IN_CODE" y="OVERRIDEN_IN_CODE" />
+        <TriggerCollisionMask>2</TriggerCollisionMask>
+        <ProjectileSpawnAnimFrameIdx>0</ProjectileSpawnAnimFrameIdx>
+        <ProjectilePrototype>OVERRIDEN_IN_CODE</ProjectilePrototype>
+        <ProjectileDirection>Direction_Right</ProjectileDirection>
+        <ProjectileSpawnOffset x="0" y="0" />
+    </ProjectileSpawnerComponent>
+</Actor>

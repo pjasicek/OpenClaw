@@ -243,7 +243,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
 
     // Level 9 and 10 SHOOTERS_PUFFDARTLEFT is screwed
-    if ((levelNumber == 9 || levelNumber == 10) && tmpImageSet.find("SHOOTERS") != std::string::npos)
+    if ((levelNumber == 9 || levelNumber == 10 || levelNumber == 13) &&
+            tmpImageSet.find("SHOOTERS") != std::string::npos)
     {
         std::replace(tmpImageSet.begin(), tmpImageSet.end(), '_', '/');
     }
@@ -275,6 +276,11 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.ZCoord", wwdObject->z));
     xmlOverrideList.push_back(XmlNodeOverride("Actor.PositionComponent.Position", "x", actorPosition.x, "y", actorPosition.y));
 
+    if (actorProto == ActorPrototype_Null)
+    {
+        return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
+    }
+
     //LOG("Logic: " + logic);
     if (logic.find("AmbientSound") != std::string::npos)
     {
@@ -302,6 +308,13 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             if ((levelNumber == 1 || levelNumber == 2 || levelNumber == 3 || levelNumber == 4) && !isLooping)
             {
                 //soundVolume = (int)((float)soundVolume / 1.5f);
+            }
+            if (levelNumber == 13)
+            {
+                if (sound == "LEVEL_TRIGGER_BIRDSCALL5")
+                {
+                    sound = "/LEVEL13/SOUNDS/TRIGGER/BIRDCALL5.WAV";
+                }
             }
 
             SAFE_DELETE(pActorElem);
@@ -1055,6 +1068,12 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             def.activateSound = "/LEVEL12/SOUNDS/FLOORSPIKEUP.WAV";
             def.deactivateSound = "/LEVEL12/SOUNDS/FLOORSPIKEDOWN.WAV";
         }
+        else if (levelNumber == 13)
+        {
+            def.activeFrameIdx = 5;
+            def.activateSound = "/LEVEL13/SOUNDS/FLOORSPIKEUP.WAV";
+            def.deactivateSound = "/LEVEL13/SOUNDS/FLOORSPIKEDOWN.WAV";
+        }
 
         def.startDelay = delay;
         def.damage = 5;
@@ -1198,7 +1217,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             def);
     }
     else if (logic == "SpringBoard" ||
-             logic == "GroundBlower")
+             logic == "GroundBlower" ||
+             logic == "WaterRock")
     {
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)

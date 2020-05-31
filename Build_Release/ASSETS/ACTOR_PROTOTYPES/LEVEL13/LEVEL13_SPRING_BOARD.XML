@@ -1,0 +1,19 @@
+<Actor Type="Level13_SpringBoard" Parent="ActorPrototype_BaseSpringBoard" ActorPrototypeName="ActorPrototype_Level13_SpringBoard">
+	<ActorRenderComponent>
+		<ImagePath>/LEVEL13/IMAGES/SPRINGYFERN/*.PID</ImagePath>
+	</ActorRenderComponent>
+    <AnimationComponent>
+        <AnimationPath>/LEVEL13/ANIS/SPRINGYFERN/*.ANI</AnimationPath>
+	</AnimationComponent>
+	<SpringBoardComponent>
+        <SpringFrameIdx>1</SpringFrameIdx>
+        <SpringDelay>500</SpringDelay>
+        <IdleAnimName>idle</IdleAnimName>
+        <SpringAnimName>spring</SpringAnimName>
+        <SpringSound>/LEVEL13/SOUNDS/SPRINGYFERN/SPRING.WAV</SpringSound>
+	</SpringBoardComponent>
+    <PhysicsComponent>
+        <PositionOffset x="0" y="15" />
+        <CollisionSize width="90" height="40" />
+    </PhysicsComponent>
+</Actor>

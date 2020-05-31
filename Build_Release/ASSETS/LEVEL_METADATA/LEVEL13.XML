@@ -1,0 +1,40 @@
+<LevelMetadata>
+    <LevelNumber>13</LevelNumber>
+    <LevelName>Level - 13 (Tropical Island)</LevelName>
+    <LogicsToActorPrototypes>
+        <LogicToActorPrototype logic="BearSailor" actorPrototype="ActorPrototype_Level13_BearSailor" />
+        <LogicToActorPrototype logic="RedTailPirate" actorPrototype="ActorPrototype_Level13_RedTailPirate" />
+        <LogicToActorPrototype logic="WaterRock" actorPrototype="ActorPrototype_Level13_WaterRock" />
+        <LogicToActorPrototype logic="SpringBoard" actorPrototype="ActorPrototype_Level13_SpringBoard" />
+        <LogicToActorPrototype logic="OneWayTriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="PathElevator" actorPrototype="ActorPrototype_Level13_PathElevator" />
+        <LogicToActorPrototype logic="Elevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
+        <LogicToActorPrototype logic="TogglePeg" actorPrototype="ActorPrototype_Level13_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level13_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level13_TogglePeg" />
+        <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level13_TogglePeg" />
+        <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level13_CrumblingPeg" />
+        <LogicToActorPrototype logic="TProjectile" actorPrototype="ActorPrototype_Level13_PuffDartSpawner" />
+        
+        <LogicToActorPrototype logic="StartSteppingStone" actorPrototype="ActorPrototype_Level13_SteppingGround" />
+        <LogicToActorPrototype logic="SteppingStone" actorPrototype="ActorPrototype_Level13_SteppingGround" />
+        <LogicToActorPrototype logic="SteppingStone2" actorPrototype="ActorPrototype_Level13_SteppingGround" />
+        <LogicToActorPrototype logic="SteppingStone3" actorPrototype="ActorPrototype_Level13_SteppingGround" />
+        <LogicToActorPrototype logic="SteppingStone4" actorPrototype="ActorPrototype_Level13_SteppingGround" />
+        
+        <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Null" />
+        <LogicToActorPrototype logic="RedTail" actorPrototype="ActorPrototype_Null" />
+        <LogicToActorPrototype logic="RedTailWind" actorPrototype="ActorPrototype_Null" />
+        <LogicToActorPrototype logic="RedTailSpikes" actorPrototype="ActorPrototype_Null" />
+        <LogicToActorPrototype logic="Chameleon" actorPrototype="ActorPrototype_Null" />
+    </LogicsToActorPrototypes>
+    <ClawSpawnPositions>
+        <ClawSpawnPosition spawnNumber="0" x="710" y="2360" />
+        <ClawSpawnPosition spawnNumber="1" x="24496" y="1992" />
+        <ClawSpawnPosition spawnNumber="2" x="13428" y="1672" />
+    </ClawSpawnPositions>
+    <TopLadderEnds>
+    </TopLadderEnds>
+    <TileDeathEffect type="LiquidSplash" offsetX="0" offsetY="-20" />
+</LevelMetadata>

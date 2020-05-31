@@ -1,6 +1,6 @@
 <Configuration>
   <Display>
-    <Size width="1280" height="960" />
+    <Size width="1600" height="1200" />
     <Scale>1</Scale>
     <UseVerticalSync>false</UseVerticalSync>
     <IsFullscreen>false</IsFullscreen>
@@ -11,10 +11,10 @@
     <SoundChannels>1</SoundChannels>
     <MixingChannels>64</MixingChannels>
     <ChunkSize>2048</ChunkSize>
-    <SoundVolume>30</SoundVolume>
+    <SoundVolume>10</SoundVolume>
     <MusicVolume>7</MusicVolume>
     <SoundOn>true</SoundOn>
-    <MusicOn>true</MusicOn>
+    <MusicOn>false</MusicOn>
     <MusicRpcServerPath>MidiProc.exe</MusicRpcServerPath>
   </Audio>
   <Font>
@@ -74,9 +74,9 @@
     </TouchScreen>
   </ControlOptions>
   <DebugOptions>
-    <SkipMenu>false</SkipMenu>
-    <SkipMenuToLevel>12</SkipMenuToLevel>
-    <LastImplementedLevel>12</LastImplementedLevel>
+    <SkipMenu>true</SkipMenu>
+    <SkipMenuToLevel>13</SkipMenuToLevel>
+    <LastImplementedLevel>13</LastImplementedLevel>
     <SkipBossFightIntro>false</SkipBossFightIntro>
     <CpuDelay>0</CpuDelay>
   </DebugOptions>
