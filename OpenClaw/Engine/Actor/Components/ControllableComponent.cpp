@@ -1067,7 +1067,7 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
         m_pClawAnimationComponent->SetAnimation("freeze");
         AddFrozenTime(1);
         m_State = ClawState_Frozen;
-
+        // Since this is abit hacky, return as soon as possible into the method
         return;
     }
 
