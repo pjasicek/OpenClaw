@@ -1063,18 +1063,12 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
         return;
     } 
 
-    if (oldHealth == newHealth) {
-        // Must be a Siren Projectile attack
-        if (damageType == DamageType_SirenProjectile) {
-            m_pClawAnimationComponent->SetAnimation("freeze");
-            
-            shared_ptr<ClawControllableComponent> pClawComponent = 
-                MakeStrongPtr(m_pOwner->GetComponent<ClawControllableComponent>());
-            assert(pClawComponent != nullptr);
-            pClawComponent->AddFrozenTime(1);
+    if (damageType == DamageType_SirenProjectile) {
+        m_pClawAnimationComponent->SetAnimation("freeze");
+        AddFrozenTime(1);
+        m_State = ClawState_Frozen;
 
-            m_State = ClawState_Frozen;
-        }
+        return;
     }
 
     // When claw takes damage but does not actually die
