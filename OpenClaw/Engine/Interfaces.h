@@ -241,12 +241,15 @@ enum DamageType
     DamageType_DeathTile,
     DamageType_EnemyAura,
     DamageType_GabrielCannonBall,
+    DamageType_Trident,
+    DamageType_SirenProjectile,
     DamageType_Max
 };
 
 enum AnimationType
 {
     AnimationType_Explosion,
+    AnimationType_TridentExplosion,
     AnimationType_RedHitPoint,
     AnimationType_BlueHitPoint,
     AnimationType_TarSplash

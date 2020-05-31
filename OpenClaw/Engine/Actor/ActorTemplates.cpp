@@ -994,18 +994,23 @@ namespace ActorTemplates
     {
         assert(!attackActions.empty());
 
+        DamageType attackDamageType = attackActions[0].attackDamageType;
         std::string componentName;
-        if (attackActions[0].attackDamageType == DamageType_MeleeAttack)
+
+        switch (attackDamageType)
         {
-            componentName = "MeleeAttackAIStateComponent";
-        }
-        else if (attackActions[0].attackDamageType == DamageType_Bullet)
-        {
-            componentName = "RangedAttackAIStateComponent";
-        }
-        else
-        {
-            assert(false && "Unknown damage type");
+            case DamageType_MeleeAttack:
+                componentName = "MeleeAttackAIStateComponent";
+                break;
+            
+            case DamageType_Bullet:
+            case DamageType_Trident:
+            case DamageType_SirenProjectile:
+                componentName = "RangedAttackAIStateComponent";
+                break;
+
+            default:
+                assert(false && "Unknown damage type");
         }
 
         TiXmlElement* pAttackStateElem = new TiXmlElement(componentName.c_str());
@@ -2457,6 +2462,11 @@ namespace ActorTemplates
 
             case AnimationType_BlueHitPoint:
                 imageSet = "GAME_CLAWHIT";
+                pActorElem->LinkEndChild(CreateCycleAnimationComponent(50));
+                break;
+
+            case AnimationType_TridentExplosion:
+                imageSet = "LEVEL_TRIDENT_TRIDENTEXPLOSION";
                 pActorElem->LinkEndChild(CreateCycleAnimationComponent(50));
                 break;
 

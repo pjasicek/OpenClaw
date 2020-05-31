@@ -27,6 +27,7 @@ ControllableComponent::ControllableComponent()
     m_Active(false),
     m_DuckingTime(0),
     m_LookingUpTime(0),
+    m_FrozenTime(0),
     m_bFrozen(false),
     m_MaxJumpHeight(0)
 { }
@@ -181,6 +182,19 @@ void ClawControllableComponent::VPostInit()
         std::shared_ptr<Animation> pClimbAnim = Animation::CreateAnimation(climbAnimFrames, "topclimbdown", m_pClawAnimationComponent);
         assert(pClimbAnim);
         DO_AND_CHECK(m_pClawAnimationComponent->AddAnimation("topclimbdown", pClimbAnim));
+    }
+
+    {
+        AnimationFrame frame;
+        frame.idx = 0;
+        frame.imageId = 100;
+        frame.imageName = "frame100";
+        frame.duration = 500;
+        std::vector<AnimationFrame> freezeAnimFrames = {frame};
+
+        std::shared_ptr<Animation> pFreezeAnim = Animation::CreateAnimation(freezeAnimFrames, "freeze", m_pClawAnimationComponent);
+        assert(pFreezeAnim);
+        DO_AND_CHECK(m_pClawAnimationComponent->AddAnimation("freeze", pFreezeAnim));
     }
 
     {
@@ -496,6 +510,7 @@ void ClawControllableComponent::OnAttack()
     if (IsAttackingOrShooting() ||
         m_State == ClawState_Climbing ||
         m_State == ClawState_TakingDamage ||
+        m_State == ClawState_Frozen ||
         m_State == ClawState_Dying ||
         m_State == ClawState_HoldingRope ||
         m_bFrozen)
@@ -571,6 +586,7 @@ void ClawControllableComponent::OnFire(bool outOfAmmo)
         m_State == ClawState_Climbing ||
         m_State == ClawState_Dying || 
         m_State == ClawState_TakingDamage ||
+        m_State == ClawState_Frozen ||
         m_State == ClawState_HoldingRope ||
         m_bFrozen)
     {
@@ -715,6 +731,7 @@ bool ClawControllableComponent::CanMove()
         m_State == ClawState_DuckAttacking ||
         m_State == ClawState_DuckShooting ||
         m_State == ClawState_TakingDamage ||
+        m_State == ClawState_Frozen ||
         m_pClawAnimationComponent->GetCurrentAnimationName() == "land" ||
         (m_LookingUpTime > g_pApp->GetGlobalOptions()->startLookUpOrDownTime) ||
         m_bFrozen)
@@ -723,6 +740,21 @@ bool ClawControllableComponent::CanMove()
     }
 
     return true;
+}
+
+bool ClawControllableComponent::IsActorFrozen()
+{
+    if (m_FrozenTime && m_FrozenTime < g_pApp->GetGlobalOptions()->freezeTime)
+    {
+        return true;
+    }
+
+    if (m_State == ClawState_Frozen)
+    {
+        m_State = ClawState_None;
+    }
+
+    return false;
 }
 
 void ClawControllableComponent::SetCurrentPhysicsState()
@@ -1026,8 +1058,21 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType, int so
 
 void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealth, DamageType damageType, Point impactPoint, int sourceActorId)
 {
+    // If claw still has health
+    if (newHealth <= 0) {
+        return;
+    } 
+
+    if (damageType == DamageType_SirenProjectile) {
+        m_pClawAnimationComponent->SetAnimation("freeze");
+        AddFrozenTime(1);
+        m_State = ClawState_Frozen;
+        // Since this is abit hacky, return as soon as possible into the method
+        return;
+    }
+
     // When claw takes damage but does not actually die
-    if (newHealth > 0 && oldHealth > newHealth)
+    if (oldHealth > newHealth)
     {
 
         // When Claw is holding rope his animation does not change
@@ -1041,6 +1086,11 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
             {
                 m_pClawAnimationComponent->SetAnimation("damage2");
             }
+        }
+
+        if (damageType == DamageType_Trident) {
+            Point explosionPoint(m_pPositionComponent->GetX() + 50, m_pPositionComponent->GetY());
+            ActorTemplates::CreateSingleAnimation(explosionPoint, AnimationType_TridentExplosion);
         }
 
         // Play random "take damage" sound

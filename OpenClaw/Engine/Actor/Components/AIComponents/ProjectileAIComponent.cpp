@@ -69,7 +69,7 @@ bool ProjectileAIComponent::VInit(TiXmlElement* pData)
     m_DamageType = StringToDamageTypeEnum(damageTypeStr);
 
     assert(m_DamageType != DamageType_None);
-    assert(m_Damage > 0);
+    assert(m_Damage >= 0);
 
     return true;
 }

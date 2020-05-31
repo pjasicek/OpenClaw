@@ -76,7 +76,8 @@ void HealthComponent::AddHealth(int32 health, DamageType damageType, Point impac
         m_CurrentHealth = m_MaxHealth;
     }
 
-    if (oldHealth != m_CurrentHealth)
+    if (oldHealth != m_CurrentHealth || 
+        damageType == DamageType_SirenProjectile) // TODO: hacky solution and needs to be fixed somehow: Siren Projectile has 0 damage
     {
         BroadcastHealthChanged(oldHealth, m_CurrentHealth, damageType, impactPoint, sourceActorId);
     }
