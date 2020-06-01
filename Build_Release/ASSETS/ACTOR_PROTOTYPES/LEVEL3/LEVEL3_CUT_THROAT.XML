@@ -92,7 +92,7 @@
                     <CollisionShape>Rectangle</CollisionShape>
                     <IsSensor>true</IsSensor>
                     <Size width="800" height="35" />
-                    <Offset x="0" y="-20" />
+                    <Offset x="0" y="-10" />
                     <CollisionFlag>4</CollisionFlag>
                     <CollisionMask>2</CollisionMask>
                     <Friction>0.000000</Friction>
@@ -121,7 +121,7 @@
                     <CollisionShape>Rectangle</CollisionShape>
                     <IsSensor>true</IsSensor>
                     <Size width="775" height="20" />
-                    <Offset x="0" y="25" />
+                    <Offset x="0" y="30" />
                     <CollisionFlag>4</CollisionFlag>
                     <CollisionMask>2</CollisionMask>
                     <Friction>0.000000</Friction>
