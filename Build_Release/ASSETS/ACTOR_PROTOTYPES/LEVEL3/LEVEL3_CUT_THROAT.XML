@@ -91,8 +91,8 @@
                     <FixtureType>EnemyAIRangedSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>
                     <IsSensor>true</IsSensor>
-                    <Size width="1000" height="50" />
-                    <Offset x="0" y="-30" />
+                    <Size width="800" height="35" />
+                    <Offset x="0" y="-20" />
                     <CollisionFlag>4</CollisionFlag>
                     <CollisionMask>2</CollisionMask>
                     <Friction>0.000000</Friction>
@@ -120,7 +120,7 @@
                     <FixtureType>EnemyAIDuckRangedSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>
                     <IsSensor>true</IsSensor>
-                    <Size width="975" height="20" />
+                    <Size width="775" height="20" />
                     <Offset x="0" y="25" />
                     <CollisionFlag>4</CollisionFlag>
                     <CollisionMask>2</CollisionMask>

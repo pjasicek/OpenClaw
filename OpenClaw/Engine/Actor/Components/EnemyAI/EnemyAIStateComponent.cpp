@@ -999,6 +999,7 @@ void BaseAttackAIStateComponent::VOnStateEnter(BaseEnemyAIStateComponent* pPrevi
 
     m_CurrentAttackActionIdx = 0;
     VExecuteAttack();
+    m_pAnimationComponent->SetDelay(m_AttackDelay);
 }
 
 void BaseAttackAIStateComponent::VOnStateLeave(BaseEnemyAIStateComponent* pNextState)

@@ -46,7 +46,7 @@
     </PatrolEnemyAIStateComponent>
     <RangedAttackAIStateComponent>
         <StatePriority>10</StatePriority>
-        <AttackDelay>3000</AttackDelay>
+        <AttackDelay>500</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>

@@ -38,7 +38,7 @@
     </ParryEnemyAIStateComponent>
     <MeleeAttackAIStateComponent>
         <StatePriority>20</StatePriority>
-        <AttackDelay>5000</AttackDelay>
+        <AttackDelay>300</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
@@ -62,7 +62,7 @@
     </MeleeAttackAIStateComponent>
     <RangedAttackAIStateComponent>
         <StatePriority>10</StatePriority>
-        <AttackDelay>3000</AttackDelay>
+        <AttackDelay>500</AttackDelay>
         <Attacks>
             <AttackAction>
                 <Animation>strike1</Animation>
@@ -75,8 +75,8 @@
                     <FixtureType>EnemyAIRangedSensor</FixtureType>
                     <CollisionShape>Rectangle</CollisionShape>
                     <IsSensor>true</IsSensor>
-                    <Size width="1000" height="30" />
-                    <Offset x="0" y="-20" />
+                    <Size width="800" height="40" />
+                    <Offset x="0" y="-10" />
                     <CollisionFlag>4</CollisionFlag>
                     <CollisionMask>2</CollisionMask>
                     <Friction>0.000000</Friction>
