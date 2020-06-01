@@ -28,7 +28,7 @@ bool PathElevatorComponent::VInit(TiXmlElement* pData)
     m_Properties.LoadFromXml(pData, true);
     
     assert(m_Properties.speed > DBL_EPSILON);
-    assert(m_Properties.elevatorPath.size() >= 2);
+    assert(m_Properties.elevatorPath.size() >= 1);
 
     m_pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
     assert(m_pPhysics != nullptr);
@@ -56,6 +56,7 @@ void PathElevatorComponent::VPostInit()
     assert(pPC != nullptr);
 
     m_LastPosition = pPC->GetPosition();
+    m_InitialPosition = pPC->GetPosition();
 
     int i = 0;
     Point previousStepPosition = pPC->GetPosition();
@@ -124,6 +125,13 @@ void PathElevatorComponent::ChangeToNextStep()
 {
     if (m_CurrentStepDefIdx == m_Properties.elevatorPath.size() - 1)
     {
+        if (m_Properties.elevatorPath.size() == 1)
+        {
+            ElevatorStepDef& step = m_Properties.elevatorPath[0];
+            m_pPhysics->VSetPosition(m_pOwner->GetGUID(), m_InitialPosition);
+            m_pOwner->GetPositionComponent()->SetPosition(m_InitialPosition);
+        }
+
         m_CurrentStepDefIdx = 0;
     }
     else

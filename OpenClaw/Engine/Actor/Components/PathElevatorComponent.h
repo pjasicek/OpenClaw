@@ -38,6 +38,7 @@ private:
     double m_StepElapsedDistance;
     Point m_LastPosition;
     Point m_CurrentSpeed;
+    Point m_InitialPosition;
 
     shared_ptr<IGamePhysics> m_pPhysics;
 

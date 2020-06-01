@@ -5,6 +5,6 @@
 	</ActorRenderComponent>
 	<PhysicsComponent>
         <CollisionMask>16386</CollisionMask>
-        <PositionOffset x="0" y="-7" />
+        <PositionOffset x="0" y="0" />
     </PhysicsComponent>
 </Actor>
