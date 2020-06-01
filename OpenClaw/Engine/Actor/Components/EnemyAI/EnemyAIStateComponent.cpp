@@ -410,7 +410,10 @@ bool PatrolEnemyAIStateComponent::VDelegateInit(TiXmlElement* pData)
     /*m_LeftPatrolBorder = 6330;
     m_RightPatrolBorder = 6550;*/
     
-    assert(fabs(m_PatrolSpeed) > DBL_EPSILON);
+    if (!m_IsAlwaysIdle)
+    {
+        assert(fabs(m_PatrolSpeed) > DBL_EPSILON);
+    }
 
     assert(m_pWalkAction != nullptr);
     assert(!m_pWalkAction->animations.empty());

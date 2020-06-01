@@ -41,7 +41,7 @@
     <PatrolEnemyAIStateComponent>
         <IsAlwaysIdle>true</IsAlwaysIdle>
         <StatePriority>0</StatePriority>
-        <PatrolSpeed>0</PatrolSpeed>
+        <PatrolSpeed>1</PatrolSpeed>
         <LeftPatrolBorder>0</LeftPatrolBorder> <!-- DEFINED IN CODE -->
         <RightPatrolBorder>0</RightPatrolBorder> <!-- DEFINED IN CODE -->
         <RetainDirection>true</RetainDirection>
@@ -88,7 +88,7 @@
     <PhysicsComponent>
         <BodyType>Dynamic</BodyType>
         <HasFootSensor>false</HasFootSensor>
-        <HasCapsuleShape>true</HasCapsuleShape>
+        <HasCapsuleShape>false</HasCapsuleShape>
         <HasBulletBehaviour>false</HasBulletBehaviour>
         <HasSensorBehaviour>false</HasSensorBehaviour>
         <FixtureType>EnemyAI</FixtureType>

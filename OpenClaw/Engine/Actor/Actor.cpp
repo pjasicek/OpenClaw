@@ -31,8 +31,8 @@ bool Actor::Init(TiXmlElement* data)
     }
     //_resource = data->Attribute("resource");
 
-    //LOG_TAG("Actor", "Constructor: Initializing actor: " + _name + ", GUID: " + std::to_string(_GUID) + 
-        //" from resource: " + _resource);
+    LOG_TAG("Actor", "Constructor: Initializing actor: " + _name + ", GUID: " + std::to_string(_GUID) +
+        " from resource: " + _resource);
 
     return true;
 }
