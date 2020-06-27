@@ -1,0 +1,7 @@
+<Actor Type="Level3_FloorSpike" Parent="ActorPrototype_BaseFloorSpike" ActorPrototypeName="ActorPrototype_Level3_FloorSpike">
+    <FloorSpikeComponent>
+        <ActiveFrameIdx>5</ActiveFrameIdx>
+        <ActivateSound>/LEVEL3/SOUNDS/FLOORSPIKEUP.WAV</ActivateSound>
+        <DeactivateSound>/LEVEL3/SOUNDS/FLOORSPIKEDOWN.WAV</DeactivateSound>
+    </FloorSpikeComponent>
+</Actor>

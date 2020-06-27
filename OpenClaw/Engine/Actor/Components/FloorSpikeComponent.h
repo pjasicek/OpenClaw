@@ -27,6 +27,7 @@ private:
     int m_ActiveFrameIdx;
     int m_StartDelay;
     int m_TimeOn;
+    int m_TimeOff;
     std::string m_ActivateSound;
     std::string m_DeactivateSound;
 

@@ -13,6 +13,7 @@
 		<ActiveFrameIdx>4</ActiveFrameIdx>
         <StartDelay>0</StartDelay>
         <TimeOn>0</TimeOn>
+        <TimeOff>0</TimeOff>
 	</FloorSpikeComponent>
     <DamageAuraComponent>
         <PulseInterval>750</PulseInterval>

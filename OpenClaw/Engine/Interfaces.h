@@ -361,6 +361,12 @@ enum ActorPrototype
     ActorPrototype_Level4_Katherine,
     ActorPrototype_Level6_Wolvington,
 
+    // Floor spike
+    ActorPrototype_Level3_FloorSpike,
+    ActorPrototype_Level4_FloorSpike,
+    ActorPrototype_Level12_FloorSpike,
+    ActorPrototype_Level13_FloorSpike,
+
     // Stepping stones
     ActorPrototype_Level4_SteppingGround,
     ActorPrototype_Level6_SteppingGround,

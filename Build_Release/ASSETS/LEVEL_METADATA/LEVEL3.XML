@@ -10,6 +10,10 @@
         <LogicToActorPrototype logic="TriggerElevator" actorPrototype="ActorPrototype_BaseElevator" />
         <LogicToActorPrototype logic="PathElevator" actorPrototype="ActorPrototype_BasePathElevator" />
         <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level3_CrumblingPeg" />
+        <LogicToActorPrototype logic="FloorSpike" actorPrototype="ActorPrototype_Level3_FloorSpike" />
+        <LogicToActorPrototype logic="FloorSpike2" actorPrototype="ActorPrototype_Level3_FloorSpike" />
+        <LogicToActorPrototype logic="FloorSpike3" actorPrototype="ActorPrototype_Level3_FloorSpike" />
+        <LogicToActorPrototype logic="FloorSpike4" actorPrototype="ActorPrototype_Level3_FloorSpike" />
     </LogicsToActorPrototypes>
     <ClawSpawnPositions>
         <ClawSpawnPosition spawnNumber="0" x="4600" y="6270" />

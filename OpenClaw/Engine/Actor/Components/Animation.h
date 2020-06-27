@@ -54,6 +54,7 @@ public:
 
     void SetReverseAnim(bool reverse) { _reversed = reverse; }
 
+    const std::vector<AnimationFrame>& GetAnimFrames() const { return _animationFrames; }
     uint32 GetAnimFramesSize() const { return _animationFrames.size(); }
     bool IsAtLastAnimFrame() const { return _currentAnimationFrame.idx + 1 == _animationFrames.size(); }
     bool IsAtFirstAnimFrame() const { return _currentAnimationFrame.idx == 0; }

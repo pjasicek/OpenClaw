@@ -22,6 +22,10 @@
         <LogicToActorPrototype logic="SteppingStone2" actorPrototype="ActorPrototype_Level13_SteppingGround" />
         <LogicToActorPrototype logic="SteppingStone3" actorPrototype="ActorPrototype_Level13_SteppingGround" />
         <LogicToActorPrototype logic="SteppingStone4" actorPrototype="ActorPrototype_Level13_SteppingGround" />
+        <LogicToActorPrototype logic="FloorSpike" actorPrototype="ActorPrototype_Level13_FloorSpike" />
+        <LogicToActorPrototype logic="FloorSpike2" actorPrototype="ActorPrototype_Level13_FloorSpike" />
+        <LogicToActorPrototype logic="FloorSpike3" actorPrototype="ActorPrototype_Level13_FloorSpike" />
+        <LogicToActorPrototype logic="FloorSpike4" actorPrototype="ActorPrototype_Level13_FloorSpike" />
         
         <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Null" />
         <LogicToActorPrototype logic="RedTail" actorPrototype="ActorPrototype_Null" />

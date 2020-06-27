@@ -1,10 +1,44 @@
-<Actor Type="Level9_SawBlade" Parent="ActorPrototype_BaseFloorSpike" ActorPrototypeName="ActorPrototype_Level9_SawBlade">
+<Actor Type="Level9_SawBlade" ActorPrototypeName="ActorPrototype_Level9_SawBlade">
+	<PositionComponent>
+		<!-- DEFINED IN CODE -->
+		<Position x="-1" y="-1" />
+	</PositionComponent>
+	<PhysicsComponent>
+		<BodyType>Static</BodyType>
+		<HasFootSensor>false</HasFootSensor>
+		<HasCapsuleShape>false</HasCapsuleShape>
+		<HasBulletBehaviour>false</HasBulletBehaviour>
+		<HasSensorBehaviour>false</HasSensorBehaviour>
+		<FixtureType>Solid</FixtureType>
+		<PositionOffset x="0" y="0" />
+		<CollisionShape>Rectangle</CollisionShape>
+		<CollisionSize width="0" height="0" /> <!-- SET ACCORDING TO IMAGE IN PHYSICS COMPONENT -->
+		<GravityScale>0.000000</GravityScale>
+		<HasInitialSpeed>false</HasInitialSpeed>
+		<HasInitialImpulse>false</HasInitialImpulse>
+		<InitialSpeed x="0" y="0" />
+		<CollisionFlag>1</CollisionFlag>
+		<CollisionMask>0</CollisionMask>
+		<Friction>0.000000</Friction>
+		<Density>0.000000</Density>
+		<Restitution>0.000000</Restitution>
+		<PrefabType></PrefabType>
+	</PhysicsComponent>
     <ActorRenderComponent>
+		<Visible>true</Visible>
+		<Mirrored>false</Mirrored>
+		<Inverted>false</Inverted>
+		<ZCoord>5000</ZCoord>
 		<ImagePath>/LEVEL9/IMAGES/FLOORSAW/*.PID</ImagePath>
 		<Palette>/LEVEL9/PALETTES/MAIN.PAL</Palette>
 	</ActorRenderComponent>
     <AnimationComponent>
 		<AnimationPath>/LEVEL9/ANIS/SAWBLADE/*.ANI</AnimationPath>
+		<SpecialAnimation>
+			<Type>cycle</Type>
+			<FrameDuration>100</FrameDuration>
+			<HasPositionDelay>false</HasPositionDelay>
+		</SpecialAnimation>
 	</AnimationComponent>
 	<SawBladeComponent>
 		<UpAnimName>up</UpAnimName>
@@ -16,10 +50,23 @@
 		<StartDelay>0</StartDelay>
 	</SawBladeComponent>
 	<DamageAuraComponent>
+		<IsPulsating>true</IsPulsating>
+		<IsGroupPulse>false</IsGroupPulse>
+		<ApplyAuraOnEnter>true</ApplyAuraOnEnter>
+		<RemoveActorAfterPulse>false</RemoveActorAfterPulse>
+		<PulseInterval>1000</PulseInterval>
 		<ActorFixture>
-            <Size width="70" height="40" />
-            <Offset x="0" y="-5" />
-        </ActorFixture>
-        <Damage>5</Damage>
-    </DamageAuraComponent>
+			<FixtureType>DamageAura</FixtureType>
+			<CollisionShape>Rectangle</CollisionShape>
+			<IsSensor>true</IsSensor>
+			<Size width="70" height="40" />
+			<Offset x="0" y="-5" />
+			<CollisionFlag>262144</CollisionFlag>
+			<CollisionMask>1048578</CollisionMask>
+			<Friction>0.000000</Friction>
+			<Density>0.000000</Density>
+			<Restitution>0.000000</Restitution>
+		</ActorFixture>
+		<Damage>5</Damage>
+	</DamageAuraComponent>
 </Actor>
