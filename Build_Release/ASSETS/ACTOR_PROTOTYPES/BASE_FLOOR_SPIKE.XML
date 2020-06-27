@@ -13,14 +13,15 @@
     <AnimationComponent>
 		<SpecialAnimation>
 			<Type>cycle</Type>
-			<FrameDuration>100</FrameDuration>
+			<FrameDuration>75</FrameDuration>
 			<HasPositionDelay>false</HasPositionDelay>
 		</SpecialAnimation>
 	</AnimationComponent>
 	<FloorSpikeComponent>
 		<ActiveFrameIdx>0</ActiveFrameIdx>
         <StartDelay>0</StartDelay>
-        <TimeOn>0</TimeOn>
+        <TimeOn>1500</TimeOn>
+        <TimeOff>1500</TimeOff>
         <ActivateSound>/GAME/SOUNDS/NULL.WAV</ActivateSound>
         <DeactivateSound>/GAME/SOUNDS/NULL.WAV</DeactivateSound>
 	</FloorSpikeComponent>

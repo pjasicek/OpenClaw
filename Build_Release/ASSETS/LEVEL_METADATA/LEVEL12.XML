@@ -18,6 +18,10 @@
         <LogicToActorPrototype logic="TogglePeg2" actorPrototype="ActorPrototype_Level12_TogglePeg" />
         <LogicToActorPrototype logic="TogglePeg3" actorPrototype="ActorPrototype_Level12_TogglePeg" />
         <LogicToActorPrototype logic="TogglePeg4" actorPrototype="ActorPrototype_Level12_TogglePeg" />
+        <LogicToActorPrototype logic="FloorSpike" actorPrototype="ActorPrototype_Level12_FloorSpike" />
+        <LogicToActorPrototype logic="FloorSpike2" actorPrototype="ActorPrototype_Level12_FloorSpike" />
+        <LogicToActorPrototype logic="FloorSpike3" actorPrototype="ActorPrototype_Level12_FloorSpike" />
+        <LogicToActorPrototype logic="FloorSpike4" actorPrototype="ActorPrototype_Level12_FloorSpike" />
         <LogicToActorPrototype logic="CrumblingPeg" actorPrototype="ActorPrototype_Level12_CrumblingPeg" />
         <LogicToActorPrototype logic="BossStager" actorPrototype="ActorPrototype_Level12_BossStager" />
     </LogicsToActorPrototypes>

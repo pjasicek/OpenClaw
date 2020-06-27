@@ -158,7 +158,6 @@ namespace ActorTemplates
     TiXmlElement* CreateXmlData_LocalAmbientSound(ActorPrototype proto, const Point& position, const LocalAmbientSoundDef& soundDef);
     TiXmlElement* CreateXmlData_StaticImage(ActorPrototype proto, const Point& position, const std::string& imagePath, const AnimationDef& aniDef);
     TiXmlElement* CreateXmlData_PathElevator(ActorPrototype proto, const Point& position, const std::string& imagePath, const PathElevatorDef& def);
-    TiXmlElement* CreateXmlData_FloorSpike(ActorPrototype proto, const Point& position, const std::string& imagePath, const FloorSpikeDef& def);
     TiXmlElement* CreateXmlData_Rope(ActorPrototype proto, const Point& position, const std::string& imagePath, const RopeDef& def);
     TiXmlElement* CreateXmlData_SteppingGround(ActorPrototype proto, const Point& position, const SteppingGroundDef& def);
     TiXmlElement* CreateXmlData_SpringBoard(ActorPrototype proto, const Point& position, const SpringBoardDef& def);
@@ -171,7 +170,6 @@ namespace ActorTemplates
     StrongActorPtr CreateActor_Projectile(ActorPrototype proto, const Point& position, Direction dir, int sourceActorId);
 
     StrongActorPtr CreateActor_StaticImage(ActorPrototype proto, const Point& position, const std::string& imagePath, const AnimationDef& aniDef);
-    //StrongActorPtr CreateActor_StaticAnimatedImage(ActorPrototype proto, Point position, const std::string& imagePath);
 
     StrongActorPtr CreateActor_Trigger(const ActorBodyDef& triggerBodyDef, const Point& position);
 

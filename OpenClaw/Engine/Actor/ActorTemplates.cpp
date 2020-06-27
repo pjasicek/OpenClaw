@@ -2068,35 +2068,6 @@ namespace ActorTemplates
         return pActorElem;
     }
 
-    TiXmlElement* CreateXmlData_FloorSpike(ActorPrototype proto, const Point& position, const std::string& imagePath, const FloorSpikeDef& def)
-    {
-        TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);
-        assert(pActorElem != NULL);
-
-        //----------- Position
-        DO_AND_CHECK(SetTiXmlNode2Attribute(pActorElem, "Actor.PositionComponent.Position",
-            "x", (int)position.x, "y", (int)position.y));
-
-        //----------- ActorRenderComponent
-        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.ActorRenderComponent.ImagePath", imagePath));
-
-        //----------- AnimationComponent
-        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.AnimationComponent.SpecialAnimation.FrameDuration", def.cycleDuration));
-
-        // ---------- DamageAuraComponent
-        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.DamageAuraComponent.Damage", def.damage));
-        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.DamageAuraComponent.PulseInterval", def.damagePulseInterval));
-
-        // ---------- FloorSpikeComponent
-        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.ActiveFrameIdx", def.activeFrameIdx));
-        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.StartDelay", def.startDelay));
-        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.TimeOn", def.timeOn));
-        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.ActivateSound", def.activateSound));
-        DO_AND_CHECK(SetTiXmlNodeValue(pActorElem, "Actor.FloorSpikeComponent.DeactivateSound", def.deactivateSound));
-
-        return pActorElem;
-    }
-
     TiXmlElement* CreateXmlData_Rope(ActorPrototype proto, const Point& position, const std::string& imagePath, const RopeDef& def)
     {
         TiXmlElement* pActorElem = g_pApp->GetActorPrototypeElem(proto);

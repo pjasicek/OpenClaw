@@ -1017,23 +1017,28 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
     }
     else if (logic.find("FloorSpike") != std::string::npos)
     {
-        // This should be moved to separate actor protos....
-        int delay = 0;
+        SAFE_DELETE(pActorElem);
+        if (actorProto == ActorPrototype_None)
+        {
+            return NULL;
+        }
+
+        int logicNumber = 0;
         if (logic == "FloorSpike")
         {
-            delay = 0;
+            logicNumber = 0;
         }
         else if (logic == "FloorSpike2")
         {
-            delay = 750;
+            logicNumber = 1;
         }
         else if (logic == "FloorSpike3")
         {
-            delay = 1500;
+            logicNumber = 2;
         }
         else if (logic == "FloorSpike4")
         {
-            delay = 2250;
+            logicNumber = 3;
         }
         else
         {
@@ -1041,52 +1046,18 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
             assert(false && "Unknown floor spike");
         }
 
-        ActorPrototype proto = ActorPrototype_BaseFloorSpike;
-        Point position(wwdObject->x, wwdObject->y);
+        const int defaultFullCycleTime = 3000; // TimeOn + TimeOff from configs
+        const int defaultDelay = defaultFullCycleTime / 4 * logicNumber;
 
-        // TODO: Make specific actor prototypes in next level(s)
-        FloorSpikeDef def;
-        if (levelNumber == 3)
-        {
-            def.activeFrameIdx = 5;
-            def.activateSound = "/LEVEL3/SOUNDS/FLOORSPIKEUP.WAV";
-            def.deactivateSound = "/LEVEL3/SOUNDS/FLOORSPIKEDOWN.WAV";
-        }
-        else if (levelNumber == 4)
-        {
-            def.activeFrameIdx = 4;
-            def.activateSound = "/LEVEL4/SOUNDS/FLOORSPIKEUP.WAV";
-            def.deactivateSound = "/LEVEL4/SOUNDS/FLOORSPIKEDOWN.WAV";
-        }
-        else if (levelNumber == 9)
-        {
+        const int startDelay = wwdObject->speed > 0 ? wwdObject->speed : defaultDelay;
+        const int timeOn = wwdObject->speedX > 0 ? wwdObject->speedX : (defaultFullCycleTime / 2);
+        const int timeOff = wwdObject->speedY > 0 ? wwdObject->speedY : (defaultFullCycleTime / 2);
 
-        }
-        else if (levelNumber == 12)
-        {
-            def.activeFrameIdx = 4;
-            def.activateSound = "/LEVEL12/SOUNDS/FLOORSPIKEUP.WAV";
-            def.deactivateSound = "/LEVEL12/SOUNDS/FLOORSPIKEDOWN.WAV";
-        }
-        else if (levelNumber == 13)
-        {
-            def.activeFrameIdx = 5;
-            def.activateSound = "/LEVEL13/SOUNDS/FLOORSPIKEUP.WAV";
-            def.deactivateSound = "/LEVEL13/SOUNDS/FLOORSPIKEDOWN.WAV";
-        }
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.FloorSpikeComponent.StartDelay", startDelay));
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.FloorSpikeComponent.TimeOn", timeOn));
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.FloorSpikeComponent.TimeOff", timeOff));
 
-        def.startDelay = delay;
-        def.damage = 5;
-        def.cycleDuration = 75;
-        def.damagePulseInterval = 1000;
-        def.timeOn = 1000;
-
-        SAFE_DELETE(pActorElem);
-        return ActorTemplates::CreateXmlData_FloorSpike(
-            proto,
-            position,
-            tmpImageSet,
-            def);
+        return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
     }
     else if (logic.find("SawBlade") != std::string::npos)
     {
