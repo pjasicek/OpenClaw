@@ -252,12 +252,12 @@ std::vector<std::shared_ptr<AbstractRecognizer>> ActorController::VRegisterRecog
 
     // Pause button. Left up screen corner. Maximum priority
     auto pauseRecognizer = std::make_shared<TapRecognizer>(PAUSE_TAP_RECOGNIZER, 100);
-    pauseRecognizer->SetFrame(Rect{0, 0, 0.1, 0.1});
+    pauseRecognizer->SetFrame(Rect{0.0f, 0.0f, 0.1f, 0.1f});
     recognizers.push_back(pauseRecognizer);
 
     // Change weapon button. Right up screen corner. Maximum priority
     auto weaponRecognizer = std::make_shared<TapRecognizer>(WEAPON_TAP_RECOGNIZER, 99);
-    weaponRecognizer->SetFrame(Rect{0.9, 0, 0.1, 0.2});
+    weaponRecognizer->SetFrame(Rect{0.9f, 0.0f, 0.1f, 0.2f});
     recognizers.push_back(weaponRecognizer);
 
     // Attack button. All screen area. Minimum priority
@@ -266,17 +266,17 @@ std::vector<std::shared_ptr<AbstractRecognizer>> ActorController::VRegisterRecog
 
     // Movement controller. Left part of screen. Medium priority
     auto joystick = std::make_shared<JoystickRecognizer>(MOVEMENT_JOYSTICK_RECOGNIZER, 50, thresholdDistance, thresholdMs + 100);
-    joystick->SetFrame(Rect{0, 0, 0.5, 1});
+    joystick->SetFrame(Rect{0.0f, 0.0f, 0.5f, 1.0f});
     recognizers.push_back(joystick);
 
     // Jump button. Right part of screen. Minimum priority but greater that attack button
     auto jumpButton = std::make_shared<PressRecognizer>(JUMP_PRESS_RECOGNIZER, 20, thresholdDistance, thresholdMs);
-    jumpButton->SetFrame(Rect{0.5, 0, 0.5, 1});
+    jumpButton->SetFrame(Rect{0.5f, 0.0f, 0.5f, 1.0f});
     recognizers.push_back(jumpButton);
 
     // Swipe to attack. Right part of screen. Medium priority (greater than jump button)
     auto swipe = std::make_shared<SwipeRecognizer>(PROJECTILE_SWIPE_RECOGNIZER, 51, thresholdDistance, thresholdMs);
-    swipe->SetFrame(Rect{0.5, 0, 0.5, 1});
+    swipe->SetFrame(Rect{0.5f, 0.0f, 0.5f, 1.0f});
     recognizers.push_back(swipe);
 
     return recognizers;
