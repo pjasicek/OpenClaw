@@ -75,7 +75,7 @@
     </TouchScreen>
   </ControlOptions>
   <DebugOptions>
-    <SkipMenu>true</SkipMenu>
+    <SkipMenu>false</SkipMenu>
     <SkipMenuToLevel>13</SkipMenuToLevel>
     <LastImplementedLevel>13</LastImplementedLevel>
     <SkipBossFightIntro>false</SkipBossFightIntro>
