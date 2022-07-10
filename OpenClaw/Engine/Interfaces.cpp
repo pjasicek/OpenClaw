@@ -234,6 +234,9 @@ std::string EnumToString_ActorPrototype(ActorPrototype actorProto)
         { ActorPrototype_Level13_CrumblingPeg, "ActorPrototype_Level13_CrumblingPeg" },
         { ActorPrototype_Level13_SteppingGround, "ActorPrototype_Level13_SteppingGround" },
         { ActorPrototype_Level13_PuffDartSpawner, "ActorPrototype_Level13_PuffDartSpawner" },
+        { ActorPrototype_Level13_RedTail, "ActorPrototype_Level13_RedTail" },
+        { ActorPrototype_Level13_BossGem, "ActorPrototype_Level13_BossGem" },
+        { ActorPrototype_Level13_BossStager, "ActorPrototype_Level13_BossStager" },
 
         //=======================================
         // Menu
@@ -482,6 +485,9 @@ ActorPrototype StringToEnum_ActorPrototype(const std::string& actorProtoStr)
         { "ActorPrototype_Level13_CrumblingPeg", ActorPrototype_Level13_CrumblingPeg },
         { "ActorPrototype_Level13_SteppingGround", ActorPrototype_Level13_SteppingGround },
         { "ActorPrototype_Level13_PuffDartSpawner", ActorPrototype_Level13_PuffDartSpawner },
+        { "ActorPrototype_Level13_RedTail", ActorPrototype_Level13_RedTail },
+        { "ActorPrototype_Level13_BossGem", ActorPrototype_Level13_BossGem },
+        { "ActorPrototype_Level13_BossStager", ActorPrototype_Level13_BossStager },
 
         //=======================================
         // Menu

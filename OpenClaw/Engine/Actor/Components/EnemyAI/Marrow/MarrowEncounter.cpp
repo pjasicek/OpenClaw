@@ -49,6 +49,9 @@ bool MarrowAIStateComponent::VDelegateInit(TiXmlElement* pData)
 void MarrowAIStateComponent::VPostInit()
 {
     BaseBossAIStateComponennt::VPostInit();
+
+    m_pAnimationComponent = m_pOwner->GetRawComponent<AnimationComponent>(true);
+    m_pAnimationComponent->AddObserver(this);
 }
 
 void MarrowAIStateComponent::VOnWorldFinishedLoading()

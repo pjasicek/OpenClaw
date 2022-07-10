@@ -58,6 +58,7 @@
 #include "Components/ConveyorBeltComponent.h"
 #include "Components/EnemyAI/Marrow/MarrowEncounter.h"
 #include "Components/EnemyAI/Aquatis/AquatisEncounter.h"
+#include "Components/EnemyAI/RedTail/RedTailEncounter.h"
 
 ActorFactory::ActorFactory()
 {
@@ -135,6 +136,7 @@ ActorFactory::ActorFactory()
     _componentFactory.Register<MarrowParrotAIStateComponent>();
     _componentFactory.Register<MarrowFloorComponent>();
     _componentFactory.Register<AquatisAIStateComponent>();
+    _componentFactory.Register<RedTailAIStateComponent>();
 }
 
 StrongActorPtr ActorFactory::CreateActor(TiXmlElement* pActorRoot, TiXmlElement* overrides)

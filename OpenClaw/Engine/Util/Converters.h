@@ -278,6 +278,7 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
 
     if (actorProto == ActorPrototype_Null)
     {
+        xmlOverrideList.push_back(XmlNodeOverride("Actor.ActorRenderComponent.Visible", false));
         return ActorTemplates::CreateXmlData_Actor(actorProto, xmlOverrideList);
     }
 
@@ -746,7 +747,8 @@ inline TiXmlElement* WwdObjectToXml(WwdObject* wwdObject, std::string& imagesRoo
              logic == "Mercat" ||
              logic == "Siren" ||
              logic == "Fish" ||
-             logic == "Aquatis")
+             logic == "Aquatis" ||
+             logic == "RedTail")
     {
         SAFE_DELETE(pActorElem);
         if (actorProto == ActorPrototype_None)

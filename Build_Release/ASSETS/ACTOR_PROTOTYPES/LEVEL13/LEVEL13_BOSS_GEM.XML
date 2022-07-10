@@ -1,4 +1,4 @@
-<Actor Type="Level10_BossGem" ActorPrototypeName="ActorPrototype_Level10_BossGem">
+<Actor Type="Level13_BossGem" ActorPrototypeName="ActorPrototype_Level13_BossGem">
     <PositionComponent>
         <Position x="-1" y="-1" />
     </PositionComponent>
@@ -7,7 +7,7 @@
         <Mirrored>false</Mirrored>
         <Inverted>false</Inverted>
         <ZCoord>2000</ZCoord>
-        <ImagePath>/LEVEL10/IMAGES/GEM/*.PID</ImagePath>
+        <ImagePath>/LEVEL13/IMAGES/GEM/*.PID</ImagePath>
     </ActorRenderComponent>
     <TriggerComponent>
         <TriggerFinitedTimes>1</TriggerFinitedTimes>
@@ -25,12 +25,12 @@
         <GravityScale>1.800000</GravityScale>
         <HasInitialSpeed>true</HasInitialSpeed>
         <HasInitialImpulse>false</HasInitialImpulse>
-        <InitialSpeed x="2" y="-2" />
+        <InitialSpeed x="0" y="-7" />
         <CollisionFlag>16384</CollisionFlag>
         <CollisionMask>1792</CollisionMask>
-        <Friction>0.180000</Friction>
-        <Density>10.000000</Density>
-        <Restitution>0.500000</Restitution>
+        <Friction>2.480000</Friction>
+        <Density>100.000000</Density>
+        <Restitution>0</Restitution>
         <PrefabType></PrefabType>
         <ActorFixture>
             <FixtureType>Trigger</FixtureType>
