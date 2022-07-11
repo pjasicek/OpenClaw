@@ -192,6 +192,12 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
         wasCommandExecuted = true;
     }
 
+    if (commandStr.find("winresize ") != std::string::npos && commandArgs.size() == 4)
+    {
+        g_pApp->SetWindowSize(std::stoi(commandArgs[1]), std::stoi(commandArgs[2]), std::stod(commandArgs[3]));
+        wasCommandExecuted = true;
+    }
+
     if (!wasCommandExecuted)
     {
         pConsole->AddLine("Unknown command: \"" + commandStr + "\"", COLOR_RED);

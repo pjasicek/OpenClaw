@@ -230,33 +230,33 @@ public:
 
     void InitializeWithAllLevels()
     {
-        int lastLevel = 14;
+        int lastLevel = 13;
 
         CheckpointSave fullCheckpoint0;
-        fullCheckpoint0.bulletCount = 99;
+        fullCheckpoint0.bulletCount = 15;
         fullCheckpoint0.checkpointIdx = 0;
-        fullCheckpoint0.dynamiteCount = 99;
+        fullCheckpoint0.dynamiteCount = 10;
         fullCheckpoint0.health = 100;
-        fullCheckpoint0.lives = 9;
-        fullCheckpoint0.magicCount = 99;
+        fullCheckpoint0.lives = 3;
+        fullCheckpoint0.magicCount = 5;
         fullCheckpoint0.score = 0;
 
         CheckpointSave fullCheckpoint1;
-        fullCheckpoint1.bulletCount = 99;
+        fullCheckpoint1.bulletCount = 15;
         fullCheckpoint1.checkpointIdx = 1;
-        fullCheckpoint1.dynamiteCount = 99;
+        fullCheckpoint1.dynamiteCount = 10;
         fullCheckpoint1.health = 100;
-        fullCheckpoint1.lives = 9;
-        fullCheckpoint1.magicCount = 99;
+        fullCheckpoint1.lives = 3;
+        fullCheckpoint1.magicCount = 5;
         fullCheckpoint1.score = 0;
 
         CheckpointSave fullCheckpoint2;
-        fullCheckpoint2.bulletCount = 99;
+        fullCheckpoint2.bulletCount = 15;
         fullCheckpoint2.checkpointIdx = 2;
-        fullCheckpoint2.dynamiteCount = 99;
+        fullCheckpoint2.dynamiteCount = 10;
         fullCheckpoint2.health = 100;
-        fullCheckpoint2.lives = 9;
-        fullCheckpoint2.magicCount = 99;
+        fullCheckpoint2.lives = 3;
+        fullCheckpoint2.magicCount = 5;
         fullCheckpoint2.score = 0;
 
         for (int levelIdx = 1; levelIdx <= lastLevel; levelIdx++)
@@ -277,7 +277,6 @@ public:
                 case 11: levelSave.levelName = "Caverns"; break;
                 case 12: levelSave.levelName = "Undersea Caves"; break;
                 case 13: levelSave.levelName = "Tiger Island"; break;
-                case 14: levelSave.levelName = "Temple"; break;
                 default: assert(false); break;
             }
             levelSave.levelNumber = levelIdx;

@@ -83,6 +83,7 @@ bool BaseGameLogic::Initialize()
 {
     m_pActorFactory = VCreateActorFactory();
 
+    // TODO: Add saves to Emscripten indexed DB
     if (!m_pGameSaveMgr->IsSaveSupported()) {
         return m_pGameSaveMgr->Initialize(nullptr);
     }

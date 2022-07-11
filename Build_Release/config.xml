@@ -1,6 +1,6 @@
 <Configuration>
   <Display>
-    <Size width="1600" height="1200" />
+    <Size width="1280" height="960" />
     <Scale>1</Scale>
     <UseVerticalSync>false</UseVerticalSync>
     <IsFullscreen>false</IsFullscreen>
@@ -12,9 +12,9 @@
     <MixingChannels>64</MixingChannels>
     <ChunkSize>2048</ChunkSize>
     <SoundVolume>10</SoundVolume>
-    <MusicVolume>7</MusicVolume>
+    <MusicVolume>1</MusicVolume>
     <SoundOn>true</SoundOn>
-    <MusicOn>false</MusicOn>
+    <MusicOn>true</MusicOn>
     <MusicRpcServerPath>MidiProc.exe</MusicRpcServerPath>
   </Audio>
   <Font>
@@ -59,9 +59,9 @@
     <SpringBoardSpringHeight>UNUSED</SpringBoardSpringHeight>
     <SpringBoardSpringSpeed>11</SpringBoardSpringSpeed>
     <ClawMinFallHeight>500</ClawMinFallHeight>
-    <LoadAllLevelSaves>true</LoadAllLevelSaves>
-    <ShowFps>true</ShowFps>
-    <ShowPosition>true</ShowPosition>
+    <LoadAllLevelSaves>false</LoadAllLevelSaves>
+    <ShowFps>false</ShowFps>
+    <ShowPosition>false</ShowPosition>
   </GlobalOptions>
   <ControlOptions>
     <UseAlternateControls>false</UseAlternateControls>

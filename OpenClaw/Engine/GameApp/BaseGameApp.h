@@ -277,6 +277,7 @@ public:
 
     SDL_Window* GetWindow() const { return m_pWindow; }
     Point GetWindowSize() { return m_WindowSize; }
+    void SetWindowSize(int width, int height, double scale);
     Point GetWindowSizeScaled() { return Point(m_WindowSize.x / GetScale().x, m_WindowSize.y / GetScale().y); }
     void RequestWindowSizeChange(Point newSize, bool fullscreen);
 

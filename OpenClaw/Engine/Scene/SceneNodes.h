@@ -177,6 +177,7 @@ public:
     void ClearTarget() { m_pTarget = shared_ptr<SceneNode>(); }
 
     void SetSize(uint32 width, uint32 height) { m_Width = width; m_Height = height; CalcCameraRect(); }
+    void SetScale(float scaleX, float scaleY) { m_ScaleX = scaleX; m_ScaleY = scaleY; }
 
     uint32 GetWidth() { return m_Width; }
     uint32 GetHeight() { return m_Height; }

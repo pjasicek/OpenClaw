@@ -43,7 +43,24 @@
 </div>
 <div>
     <button onclick="Module.canvas.requestFullscreen()">Enable Fullscreen Mode</button>
-    <button onclick="Console.toggleConsole()">Debug Panel</button>
+<!--    <button onclick="Console.toggleConsole()">Debug Panel</button> -->
+    <label for="res">Resolution:</label>
+	<select name="res" id="res" onchange="CheatCodeManager.winsize = this.value; CheatCodeManager.resize()">
+		<option value="640 480">640x480</option>
+		<option value="800 600">800x600</option>
+		<option value="1024 768">1024x768</option>
+		<option value="1280 960">1280x960</option>
+		<option value="1600 1200">1600x1200</option>
+		<option value="2000 1500">2000x1500</option>
+	</select>
+	<label for="scale">Scale:</label>
+	<select name="scale" id="scale" onchange="CheatCodeManager.scale = this.value; CheatCodeManager.resize()">
+		<option value="-1">Original</option>
+		<option value="1">1</option>
+		<option value="1.25">1.25</option>
+		<option value="1.5">1.5</option>
+		<option value="2">2</option>
+	</select>
 </div>
 <div class="debug_panel" style="display:none">
     <div class="cheats">
@@ -75,6 +92,8 @@
         god: false,
         physics: false,
         ammo: false,
+        winsize: "640 480",
+        scale: -1,
         pushEvent: function (key, event, target) {
             return target.dispatchEvent(
                 new KeyboardEvent(event, {
@@ -99,6 +118,7 @@
         write: function (cheat, target) {
             CheatCodeManager.openOrCloseConsole(target);
             for (var i = 0; i < cheat.length; i++) {
+//            	console.log("Writing: " + cheat.charCodeAt(i));
                 CheatCodeManager.click(cheat.charCodeAt(i), target);
             }
             CheatCodeManager.click(13, target); // "Enter"
@@ -119,6 +139,16 @@
         infiniteAmmo: function () {
             CheatCodeManager.ammo = !CheatCodeManager.ammo;
             CheatCodeManager.write("INFINITEAMMO " + (CheatCodeManager.ammo ? "ON" : "OFF"), Module.canvas);
+        },
+        resize: function () {
+            CheatCodeManager.write("WINRESIZE " + CheatCodeManager.winsize + " " + CheatCodeManager.scale, Module.canvas);
+            
+            var width = parseInt(CheatCodeManager.winsize.split(" ")[0]);
+            var height = parseInt(CheatCodeManager.winsize.split(" ")[1]);
+            var scale = parseFloat(CheatCodeManager.scale);
+            window.localStorage.setItem("width", width);
+            window.localStorage.setItem("height", height);
+            window.localStorage.setItem("scale", scale);
         },
     };
 </script>
@@ -204,7 +234,23 @@
         var r = document.getElementsByTagName("script")[0];
         r.parentNode.insertBefore(script, r);
     }
-
+    
+    if (window.localStorage.width && window.localStorage.height && window.localStorage.scale) {
+        document.getElementById('res').value = window.localStorage.width + " " + window.localStorage.height;
+        document.getElementById('scale').value = window.localStorage.scale;
+        
+        CheatCodeManager.winsize = window.localStorage.width + " " + window.localStorage.height;
+        CheatCodeManager.scale = window.localStorage.scale;
+    }
+    
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        //document.getElementById('viewport').width = "100%"
+//        document.getElementById('canvas').width = "640"
+//        document.getElementById('canvas').height = "480"
+    }
+    
+//    console.log("CW: " + document.getElementById('canvas').width + ", CH: " + document.getElementById('canvas').height);
+	
     loadGame();
 </script>
 </body>

@@ -396,6 +396,32 @@ std::string BaseGameApp::GetString(std::string stringId)
     return "";
 }
 
+void BaseGameApp::SetWindowSize(int width, int height, double scale)
+{
+    Point newScale;
+    if (scale > 0.0)
+    {
+        newScale = Point(scale, scale);
+    }
+    else
+    {
+        newScale = Point(((double)width / 640.0),
+                    (double)height / 480.0);
+    }
+
+    SDL_SetWindowSize(m_pWindow, width, height);
+    m_WindowSize.Set(width, height);
+
+    printf("newscale: %s - %f\n", newScale.ToString().c_str(), scale);
+
+    SetScale(newScale);
+
+    GetHumanView()->GetCamera()->SetSize(width, height);
+
+    //if (scale)
+    GetHumanView()->GetCamera()->SetScale(1, 1);
+}
+
 HumanView* BaseGameApp::GetHumanView() const
 {
     HumanView *pView = NULL;
@@ -450,6 +476,7 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
         ParseValueFromXmlElem(&m_GameOptions.isFullscreenDesktop,
             displayElem->FirstChildElement("IsFullscreenDesktop"));
     }
+
 #ifdef __EMSCRIPTEN__
     SDL_Point canvasSize;
     if (Util::GetCanvasSize(canvasSize)) {
@@ -457,6 +484,41 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
         m_GameOptions.windowWidth = canvasSize.x;
         m_GameOptions.windowHeight = canvasSize.y;
     }
+
+
+    int savedWidth = EM_ASM_INT(if (window && window.localStorage && window.localStorage.width) {
+        return parseInt(window.localStorage.width);
+    } else {
+        return -1;
+    });
+    int savedHeight = EM_ASM_INT(if (window && window.localStorage && window.localStorage.height) {
+        return parseInt(window.localStorage.height);
+    } else {
+        return -1;
+    });
+    float savedScale = EM_ASM_INT(if (window && window.localStorage && window.localStorage.scale) {
+        return parseFloat(window.localStorage.scale);
+    } else {
+        return -1.0;
+    });
+
+    if (savedWidth > 0 && savedHeight > 0)
+    {
+        m_GameOptions.windowWidth = savedWidth;
+        m_GameOptions.windowHeight = savedHeight;
+
+        if (savedScale > 0)
+        {
+            m_GameOptions.scale = savedScale;
+        }
+        else
+        {
+            m_GameOptions.scale = (double)savedWidth / 640.0;
+        }
+    }
+
+    printf("Saved resolution: %d x %d @ %f\n", savedWidth, savedHeight, savedScale);
+
 #endif
 
     //-------------------------------------------------------------------------
