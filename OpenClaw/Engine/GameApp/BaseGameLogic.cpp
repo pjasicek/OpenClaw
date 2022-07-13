@@ -95,8 +95,8 @@ bool BaseGameLogic::Initialize()
     if (gameSaves.Error())
     {
         LOG_ERROR("Error while loading " + savesFilePath
-             + ": " + std::string(gameSaves.ErrorDesc()));
-        return false;
+             + ": " + std::string(gameSaves.ErrorDesc()) + " - not loading saves");
+        gameSaves = DefaultSaves();
     }
 
     if (!m_pGameSaveMgr->Initialize(gameSaves.RootElement()))
@@ -105,6 +105,34 @@ bool BaseGameLogic::Initialize()
     }
 
     return true;
+}
+
+TiXmlDocument BaseGameLogic::DefaultSaves()
+{
+    TiXmlDocument xmlConfig;
+
+    //----- [GameSaves]
+    TiXmlElement* root = new TiXmlElement("GameSaves");
+    xmlConfig.LinkEndChild(root);
+
+    TiXmlElement* level = new TiXmlElement("Level");
+    root->LinkEndChild(level);
+
+    XML_ADD_TEXT_ELEMENT("LevelNumber", "1", level);
+    XML_ADD_TEXT_ELEMENT("LevelName", "La Roca", level);
+
+    TiXmlElement* checkpoint = new TiXmlElement("Checkpoint");
+    level->LinkEndChild(checkpoint);
+
+    XML_ADD_TEXT_ELEMENT("CheckpointNumber", "0", checkpoint);
+    XML_ADD_TEXT_ELEMENT("Score", "0", checkpoint);
+    XML_ADD_TEXT_ELEMENT("Health", "100", checkpoint);
+    XML_ADD_TEXT_ELEMENT("Lives", "3", checkpoint);
+    XML_ADD_TEXT_ELEMENT("BulletCount", "10", checkpoint);
+    XML_ADD_TEXT_ELEMENT("MagicCount", "5", checkpoint);
+    XML_ADD_TEXT_ELEMENT("DynamiteCount", "3", checkpoint);
+
+    return xmlConfig;
 }
 
 std::string BaseGameLogic::GetActorXml(uint32 actorId)

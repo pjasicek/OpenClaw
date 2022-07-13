@@ -5,6 +5,7 @@
 #if !(defined(__ANDROID__) || defined(__WINDOWS__))
 #include <pwd.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #endif
 
 #ifdef __EMSCRIPTEN__
@@ -35,6 +36,7 @@ int RunGameEngine(int argc, char** argv)
 
     userDirectory = std::string(homedir) + "/.config/openclaw/";
 
+    mkdir(userDirectory.c_str(), 0755);
 #endif
 
     LOG("Looking for: " + userDirectory + "config.xml");

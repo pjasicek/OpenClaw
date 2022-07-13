@@ -7,6 +7,9 @@ option(Emscripten "Build as WASM" OFF)
 option(Extern_Config "Do not embed config file" ON)
 set(EMSCRIPTEN_PATH "CHANGE ME PLEASE!!!/emsdk")
 
+set(DEFAULT_ASSETS_FOLDER "/usr/share/openclaw/"
+    CACHE STRING "AssetsFolder for auto-generated ~/.config/openclaw/config.xml")
+
 project(OpenClaw)
 
 #if(NOT CMAKE_BUILD_TYPE)
@@ -42,6 +45,10 @@ if (Emscripten)
 endif (Emscripten)
 
 # Directories with libs
+
+configure_file(config.h.in config.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 link_directories(./libwap)
 link_directories(./Box2D)
 if (WIN32)

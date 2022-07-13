@@ -1,3 +1,4 @@
+#include "config.h"
 #include "../Resource/ResourceCache.h"
 #include "../Audio/Audio.h"
 #include "../Events/EventMgr.h"
@@ -918,7 +919,7 @@ bool BaseGameApp::InitializeFont(GameOptions& gameOptions)
     m_pConsoleFont = TTF_OpenFont(gameOptions.consoleFontName.c_str(), gameOptions.consoleFontSize);
     if (m_pConsoleFont == NULL)
     {
-        LOG_ERROR("Failed to load TTF font");
+        LOG_ERROR("Failed to load TTF font '" + gameOptions.consoleFontName + "'");
         return false;
     }
 
@@ -1462,7 +1463,9 @@ TiXmlElement* CreateDefaultAssetsConfig()
 {
     TiXmlElement* assets = new TiXmlElement("Assets");
 
+    XML_ADD_TEXT_ELEMENT("AssetsFolder", DEFAULT_ASSETS_FOLDER, assets);
     XML_ADD_TEXT_ELEMENT("RezArchive", "CLAW.REZ", assets);
+    XML_ADD_TEXT_ELEMENT("CustomArchive", "ASSETS.ZIP", assets);
     XML_ADD_TEXT_ELEMENT("ResourceCacheSize", "50", assets);
     XML_ADD_TEXT_ELEMENT("TempDir", ".", assets);
     XML_ADD_TEXT_ELEMENT("SavesFile", "SAVES.XML", assets);
