@@ -42,6 +42,7 @@ function prepare() {
     if [ -d $build_dir ]; then
         return 0
     fi
+
     mkdir $build_dir
 
     return $?
@@ -55,6 +56,7 @@ function generateNativeBuildSystem() {
     if [ ! -d $build_dir ]; then
         prepare
     fi
+
     print ${WHITE_C} "Generating the OpenClaw native build system ..."
     cmake -S $project_dir -B $build_dir
 
@@ -69,6 +71,7 @@ function build() {
     if [ ! -d $build_dir ]; then
         generateNativeBuildSystem
     fi
+
     print ${WHITE_C} "Building the binary ..."
     make -j$(nproc) -C "${build_dir}" 
 
@@ -83,12 +86,15 @@ function releaseAssets() {
     if [ ! -d $release_dir ]; then
         build
     fi
+
     print ${WHITE_C} "Recreating ASSETS.ZIP ..."
     rm -v $assets_zip_file
+
     cd ${assets_dir}
-    zip -r $assets_zip_filename .
-    cp $assets_zip_filename ..
-    rm $assets_zip_filename
+    zip -v -r $assets_zip_filename .
+
+    cp -v $assets_zip_filename ..
+    rm -v $assets_zip_filename
 
     return $?
 }
@@ -101,9 +107,11 @@ function createLauncherBinary() {
     if [ ! -f "${release_dir}/${openclaw_binary_file}" ]; then
         build
     fi
+
     print ${WHITE_C} "Creating a compatible binary ..."
-    cp "${release_dir}/${openclaw_binary_file}" "${release_dir}/${compatible_binary_file}"
-    rm "${release_dir}/${openclaw_binary_file}"
+
+    cp -v "${release_dir}/${openclaw_binary_file}" "${release_dir}/${compatible_binary_file}"
+    rm -v "${release_dir}/${openclaw_binary_file}"
 
     return $?
 }
@@ -115,7 +123,9 @@ function runOpenClaw() {
     if [ ! -f "${release_dir}/${compatible_binary_file}" ]; then
         createLauncherBinary
     fi
+
     print ${WHITE_C} "Runing OpenClaw ..."
+    
     # change directory for the engine to load actor prototypes !
     cd $release_dir
     "./${compatible_binary_file}"
