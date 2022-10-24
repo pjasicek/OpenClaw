@@ -33,10 +33,22 @@ function print() {
 }
 
 ##
+# Prepares the SDL-2-dev binaries to enable development of OpenClaw. 
+# return: the result of the apt package manager, [0] for success and [1] for failure.
+##
+function prepareSDL2() {
+    print ${WHITE_C} "Preparing SDL-2-dev dependencies ..."
+    
+    sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev 
+
+    return $?
+}
+
+##
 # Prepares the building process by creating a directory for cmake native build process. 
 # return: the result of [mkdir], [0] for success and [1] for failure.
 ##
-function prepare() {
+function prepareBuildDirectory() {
     print ${WHITE_C} "Preparing the build directory ..."
     
     if [ -d $build_dir ]; then
@@ -125,14 +137,23 @@ function runOpenClaw() {
     fi
 
     print ${WHITE_C} "Runing OpenClaw ..."
-    
+
     # change directory for the engine to load actor prototypes !
     cd $release_dir
     "./${compatible_binary_file}"
 }
 
 # command and execute
-prepare
+prepareSDL2
+
+if [[ $? -ge 1 ]]; then 
+    print ${RED_C} "Preparing SDL-2-dev failed ..."
+    exit $?
+else
+    print ${GREEN_C} "Preparing SDL-2-dev succeeded ..."
+fi
+
+prepareBuildDirectory
 
 if [[ $? -ge 1 ]]; then 
     print ${RED_C} "Preparing build directory failed ..."
