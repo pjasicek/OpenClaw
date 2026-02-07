@@ -50,8 +50,14 @@ static void FileRead(T* dest, std::ifstream* file, int32_t offset)
 
 static char* StdStringToCharArray(std::string source)
 {
-    char* ret = new char[source.length() + 1];
-    strcpy(ret, source.c_str());
+    // Security fix: Use strncpy instead of strcpy to prevent buffer overflow
+    size_t len = source.length();
+    char* ret = new char[len + 1];
+    if (ret != nullptr)
+    {
+        strncpy(ret, source.c_str(), len);
+        ret[len] = '\0';
+    }
     return ret;
 }
 

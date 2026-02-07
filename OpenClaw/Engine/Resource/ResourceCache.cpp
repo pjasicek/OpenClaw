@@ -5,12 +5,20 @@
 
 #include "ResourceCache.h"
 #include "../Util/StringUtil.h"
+#include "../Logger/Logger.h"
 
 //
 // Resource::Resource
 //
 Resource::Resource(const std::string& name)
 {
+    // Security fix: Validate path to prevent directory traversal
+    if (!IsValidResourcePath(name))
+    {
+        _name = "";
+        LOG_ERROR("Invalid resource path detected (directory traversal attempt): " + name);
+        return;
+    }
     _name = name;
     // Transform resource name into lower case characters
     std::transform(_name.begin(), _name.end(), _name.begin(), (int(*)(int)) std::tolower);

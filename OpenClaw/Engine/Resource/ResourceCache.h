@@ -21,6 +21,22 @@ protected:
     std::string _name;
 };
 
+// Security helper: Validates resource path to prevent directory traversal
+inline bool IsValidResourcePath(const std::string& path)
+{
+    // Check for directory traversal attempts
+    if (path.find("..") != std::string::npos)
+    {
+        return false;
+    }
+    // Check for null bytes
+    if (path.find('\0') != std::string::npos)
+    {
+        return false;
+    }
+    return true;
+}
+
 //-------------------------------------------------------------------------------------------------
 // Interfaces
 //-------------------------------------------------------------------------------------------------
