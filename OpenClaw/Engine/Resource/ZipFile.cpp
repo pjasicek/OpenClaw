@@ -190,9 +190,15 @@ bool ZipFile::Init(const std::string &resFileName)
         {
             pfh += sizeof(fh);
 
+            // Security fix: Validate fnameLen to prevent buffer overflow
+            if (fh.fnameLen >= _MAX_PATH)
+            {
+                success = false;
+                break;
+            }
             char fileName[_MAX_PATH];
             memcpy(fileName, pfh, fh.fnameLen);
-            fileName[fh.fnameLen] = 0;
+            fileName[fh.fnameLen] = '\0';
             string_to_lowercase(fileName);
             std::string spath = fileName;
             spath.insert(0, "/");
@@ -292,6 +298,11 @@ std::string ZipFile::GetFilename(int i)  const
     std::string fileName = "";
     if (i >= 0 && i < m_nEntries)
     {
+        // Security fix: Validate fnameLen to prevent buffer overflow
+        if (m_papDir[i]->fnameLen >= _MAX_PATH)
+        {
+            return fileName;
+        }
         char pszDest[_MAX_PATH];
         memcpy(pszDest, m_papDir[i]->GetName(), m_papDir[i]->fnameLen);
         pszDest[m_papDir[i]->fnameLen] = '\0';
