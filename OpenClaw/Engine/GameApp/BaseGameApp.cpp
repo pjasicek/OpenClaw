@@ -555,16 +555,28 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     {
         ParseValueFromXmlElem(&m_GameOptions.assetsFolder,
             assetsElem->FirstChildElement("AssetsFolder"));
-        DO_AND_CHECK(ParseValueFromXmlElem(&m_GameOptions.rezArchive,
-            assetsElem->FirstChildElement("RezArchive")));
-        DO_AND_CHECK(ParseValueFromXmlElem(&m_GameOptions.customArchive,
-            assetsElem->FirstChildElement("CustomArchive")));
-        DO_AND_CHECK(ParseValueFromXmlElem(&m_GameOptions.resourceCacheSize,
-            assetsElem->FirstChildElement("ResourceCacheSize")));
+        if (!ParseValueFromXmlElem(&m_GameOptions.rezArchive,
+            assetsElem->FirstChildElement("RezArchive")))
+        {
+            LOG_WARNING("Configuration is missing Assets.RezArchive. Using default: " + m_GameOptions.rezArchive);
+        }
+        if (!ParseValueFromXmlElem(&m_GameOptions.customArchive,
+            assetsElem->FirstChildElement("CustomArchive")))
+        {
+            LOG_WARNING("Configuration is missing Assets.CustomArchive. Using default: " + m_GameOptions.customArchive);
+        }
+        if (!ParseValueFromXmlElem(&m_GameOptions.resourceCacheSize,
+            assetsElem->FirstChildElement("ResourceCacheSize")))
+        {
+            LOG_WARNING("Configuration is missing Assets.ResourceCacheSize. Using default: " + ToStr(m_GameOptions.resourceCacheSize));
+        }
         ParseValueFromXmlElem(&m_GameOptions.tempDir,
             assetsElem->FirstChildElement("TempDir"));
-        DO_AND_CHECK(ParseValueFromXmlElem(&m_GameOptions.savesFile,
-            assetsElem->FirstChildElement("SavesFile")));
+        if (!ParseValueFromXmlElem(&m_GameOptions.savesFile,
+            assetsElem->FirstChildElement("SavesFile")))
+        {
+            LOG_WARNING("Configuration is missing Assets.SavesFile. Using default: " + m_GameOptions.savesFile);
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -1462,7 +1474,9 @@ TiXmlElement* CreateDefaultAssetsConfig()
 {
     TiXmlElement* assets = new TiXmlElement("Assets");
 
+    XML_ADD_TEXT_ELEMENT("AssetsFolder", "", assets);
     XML_ADD_TEXT_ELEMENT("RezArchive", "CLAW.REZ", assets);
+    XML_ADD_TEXT_ELEMENT("CustomArchive", "ASSETS.ZIP", assets);
     XML_ADD_TEXT_ELEMENT("ResourceCacheSize", "50", assets);
     XML_ADD_TEXT_ELEMENT("TempDir", ".", assets);
     XML_ADD_TEXT_ELEMENT("SavesFile", "SAVES.XML", assets);
