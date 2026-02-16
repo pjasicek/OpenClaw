@@ -4,6 +4,8 @@ target_sources(openclaw
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Audio.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Audio.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/LocalizedAudio.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/LocalizedAudio.cpp
 )
 
 if (WIN32)

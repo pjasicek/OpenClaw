@@ -66,17 +66,31 @@ uint32 WavResourceLoader::VGetLoadedResourceSize(char* rawBuffer, uint32 rawSize
     return pSound->alen;
 }
 
-shared_ptr<Mix_Chunk> WavResourceLoader::LoadAndReturnSound(const char* resourceString)
+shared_ptr<Mix_Chunk> WavResourceLoader::LoadAndReturnSound(const char* resourceString, bool silentFail)
 {
     Resource resource(resourceString);
 
     shared_ptr<ResourceHandle> handle = g_pApp->GetResourceCache()->GetHandle(&resource);
+
+    // If handle is null (resource not found) and silent fail is enabled, return nullptr
+    if (!handle)
+    {
+        if (!silentFail)
+        {
+            LOG_ERROR("Could not load sound resource: " + std::string(resourceString));
+        }
+        return nullptr;
+    }
+
     shared_ptr<WavResourceExtraData> extraData = std::static_pointer_cast<WavResourceExtraData>(handle->GetExtraData());
 
     if (!extraData)
     {
-        LOG_ERROR("Could not cast type to WavResourceExtraData. Check if WavResourceLoader is registered.");
-        return NULL;
+        if (!silentFail)
+        {
+            LOG_ERROR("Could not cast type to WavResourceExtraData. Check if WavResourceLoader is registered.");
+        }
+        return nullptr;
     }
 
     return extraData->GetSound();
