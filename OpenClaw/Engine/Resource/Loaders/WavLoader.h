@@ -28,7 +28,7 @@ public:
     virtual uint32 VGetLoadedResourceSize(char* rawBuffer, uint32 rawSize);
     virtual bool VLoadResource(char* rawBuffer, uint32 rawSize, std::shared_ptr<ResourceHandle> handle);
 
-    static shared_ptr<Mix_Chunk> LoadAndReturnSound(const char* resourceString);
+    static shared_ptr<Mix_Chunk> LoadAndReturnSound(const char* resourceString, bool silentFail = false);
     static std::shared_ptr<WavResourceLoader> Create();
 };
 

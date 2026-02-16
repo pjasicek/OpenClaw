@@ -4,6 +4,7 @@
 #include "../Events/EventMgr.h"
 #include "../Events/Events.h"
 #include "../Audio/Audio.h"
+#include "../Audio/LocalizedAudio.h"
 #include "../Resource/Loaders/MidiLoader.h"
 #include "../Resource/Loaders/WavLoader.h"
 #include "../Resource/Loaders/XmlLoader.h"
@@ -632,7 +633,28 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
 
             if (play)
             {
-                shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(pSoundInfo->soundToPlay.c_str());
+                // Try to load localized audio first, then fall back to original
+                std::string soundPath = pSoundInfo->soundToPlay;
+                std::string language = g_pApp->GetGameConfig()->language;
+
+                if (!language.empty() && language != "en")
+                {
+                    std::string localizedPath = LocalizedAudio::GetLocalizedPath(soundPath, language);
+                    if (localizedPath != soundPath)
+                    {
+                        // Try loading the localized version first
+                        shared_ptr<Mix_Chunk> pLocalizedSound = WavResourceLoader::LoadAndReturnSound(localizedPath.c_str(), true);
+                        if (pLocalizedSound != nullptr)
+                        {
+                            g_pApp->GetAudio()->PlaySound(pLocalizedSound.get(), soundProperties);
+                            return;
+                        }
+                        // Localized version not found, fall back to original
+                    }
+                }
+
+                // Load original sound
+                shared_ptr<Mix_Chunk> pSound = WavResourceLoader::LoadAndReturnSound(soundPath.c_str());
                 assert(pSound != nullptr);
                 g_pApp->GetAudio()->PlaySound(pSound.get(), soundProperties);
             }

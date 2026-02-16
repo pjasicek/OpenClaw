@@ -545,6 +545,8 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             audioElem->FirstChildElement("SoundOn"));
         ParseValueFromXmlElem(&m_GameOptions.musicOn,
             audioElem->FirstChildElement("MusicOn"));
+        ParseValueFromXmlElem(&m_GameOptions.language,
+            audioElem->FirstChildElement("Language"));
     }
 
     //-------------------------------------------------------------------------
@@ -1444,6 +1446,7 @@ TiXmlElement* CreateDefaultAudioConfig()
     XML_ADD_TEXT_ELEMENT("SoundVolume", "50", audio);
     XML_ADD_TEXT_ELEMENT("MusicVolume", "50", audio);
     XML_ADD_TEXT_ELEMENT("MusicRpcServerPath", "MidiProc.exe", audio);
+    XML_ADD_TEXT_ELEMENT("Language", "en", audio);  // Audio language: en, es, de, fr, etc.
 
     return audio;
 }

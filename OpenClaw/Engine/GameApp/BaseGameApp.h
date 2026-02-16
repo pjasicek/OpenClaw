@@ -37,6 +37,7 @@ struct GameOptions
         soundOn = true;
         musicOn = true;
         midiRpcServerPath = "MidiProc.exe";
+        language = "en";  // Default to English
 
         fontNames.push_back("clacon.ttf");
         consoleFontName = "clacon.ttf";
@@ -77,6 +78,7 @@ struct GameOptions
     bool soundOn;
     bool musicOn;
     std::string midiRpcServerPath;
+    std::string language;  // Language code for localized audio (e.g., "en", "es", "de")
 
     // Font
     std::vector<const char*> fontNames;
