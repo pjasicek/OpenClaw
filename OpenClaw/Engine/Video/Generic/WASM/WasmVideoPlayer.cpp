@@ -2,7 +2,6 @@
 #include <iostream>
 
 #ifdef __EMSCRIPTEN__
-#include <emscripten.h>
 
 // Extern functions defined in our JS library/bridge
 extern "C" {
@@ -154,21 +153,22 @@ EM_JS(void, js_PlayVideo, (int id), {
 
     document.addEventListener('keydown', player.keyHandler, true);
 
-    // Attach video to DOM for rendering (hidden, but necessary for some
-    // browsers)
-    player.video.style.position = 'absolute';
-    player.video.style.top = '8px';
-    player.video.style.left = '8px';
-    player.video.style.objectFit = 'contain'; // Maintain aspect ratio
-
-    // Scale video to match canvas/game dimensions
-    var canvas = Module.canvas || document.querySelector('canvas');
-    if (canvas) {
-      player.video.style.width = canvas.width + 'px';
-      player.video.style.height = canvas.height + 'px';
+    // Attach video to gameContainer so it's included in fullscreen context
+    var gameContainer = document.getElementById('gameContainer');
+    if (!gameContainer) {
+      console.error('gameContainer not found, falling back to body');
+      gameContainer = document.body;
     }
 
-    document.body.appendChild(player.video);
+    player.video.style.position = 'absolute';
+    player.video.style.top = '0';
+    player.video.style.left = '0';
+    player.video.style.width = '100%';
+    player.video.style.height = '100%';
+    player.video.style.objectFit = 'contain'; // Maintain aspect ratio
+    player.video.style.zIndex = '10'; // Above canvas
+    player.video.style.backgroundColor = '#000';
+    gameContainer.appendChild(player.video);
 
     // Try to play with sound first, fallback to muted if blocked
     player.video.play().catch(function(err) {
