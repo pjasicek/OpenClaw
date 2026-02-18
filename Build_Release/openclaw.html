@@ -376,9 +376,28 @@
         r.parentNode.insertBefore(script, r);
     }
     
-    // Always use window size as resolution (auto-detect)
-    var detectedWidth = window.innerWidth;
-    var detectedHeight = window.innerHeight;
+    // Choose aspect ratio mode
+    var MAINTAIN_4_3_ASPECT = false; // Set to true for letterbox/pillarbox, false for true widescreen
+
+    var windowWidth = window.innerWidth;
+    var windowHeight = window.innerHeight;
+    var detectedWidth, detectedHeight;
+
+    if (MAINTAIN_4_3_ASPECT) {
+        // Maintain 4:3 aspect ratio (letterbox/pillarbox on widescreen)
+        var targetAspect = 4 / 3;
+        if (windowWidth / windowHeight > targetAspect) {
+            detectedHeight = windowHeight;
+            detectedWidth = Math.round(windowHeight * targetAspect);
+        } else {
+            detectedWidth = windowWidth;
+            detectedHeight = Math.round(windowWidth / targetAspect);
+        }
+    } else {
+        // True widescreen - use full window dimensions
+        detectedWidth = windowWidth;
+        detectedHeight = windowHeight;
+    }
 
     CheatCodeManager.winsize = detectedWidth + " " + detectedHeight;
     CheatCodeManager.scale = -1; // Always use default scale
