@@ -198,7 +198,7 @@
 
     <!-- Bottom controls (just fullscreen) -->
     <div class="bottom-controls">
-        <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+        <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
     </div>
 </div>
 <div class="debug_panel" style="display:none">
@@ -313,6 +313,26 @@
             }
         }
     }
+
+    // Update fullscreen button icon based on state
+    function updateFullscreenButton() {
+        var btn = document.getElementById('fullscreenBtn');
+        if (btn) {
+            if (document.fullscreenElement) {
+                btn.textContent = '✕'; // Exit icon when in fullscreen
+                btn.title = 'Exit Fullscreen (ESC)';
+            } else {
+                btn.textContent = '⛶'; // Fullscreen icon when windowed
+                btn.title = 'Enter Fullscreen';
+            }
+        }
+    }
+
+    // Listen for fullscreen changes to update button
+    document.addEventListener('fullscreenchange', updateFullscreenButton);
+
+    // Initialize button state on load
+    updateFullscreenButton();
 
 </script>
 <script type='text/javascript'>
