@@ -314,37 +314,6 @@
         }
     }
 
-    // Recalculate resolution when entering/exiting fullscreen
-    document.addEventListener('fullscreenchange', function() {
-        // Wait a bit for fullscreen transition to complete
-        setTimeout(function() {
-            var windowWidth = window.innerWidth;
-            var windowHeight = window.innerHeight;
-            var targetAspect = 4 / 3;
-
-            var detectedWidth, detectedHeight;
-
-            if (windowWidth / windowHeight > targetAspect) {
-                detectedHeight = windowHeight;
-                detectedWidth = Math.round(windowHeight * targetAspect);
-            } else {
-                detectedWidth = windowWidth;
-                detectedHeight = Math.round(windowWidth / targetAspect);
-            }
-
-            // Check if resolution changed
-            var currentWidth = parseInt(window.localStorage.getItem("width"));
-            var currentHeight = parseInt(window.localStorage.getItem("height"));
-
-            if (currentWidth !== detectedWidth || currentHeight !== detectedHeight) {
-                // Resolution changed, save and reload
-                window.localStorage.setItem("width", detectedWidth);
-                window.localStorage.setItem("height", detectedHeight);
-                window.localStorage.setItem("scale", -1);
-                window.location.reload();
-            }
-        }, 100);
-    });
 </script>
 <script type='text/javascript'>
     var loadingElement = document.getElementById("loading");
@@ -412,21 +381,29 @@
         r.parentNode.insertBefore(script, r);
     }
     
-    // Maintain 4:3 aspect ratio (letterbox/pillarbox on widescreen)
-    var windowWidth = window.innerWidth;
-    var windowHeight = window.innerHeight;
+    // Use screen dimensions for resolution (works for both windowed and fullscreen)
+    // CSS will scale the canvas to fit the window
+    var screenWidth = screen.width;
+    var screenHeight = screen.height;
     var targetAspect = 4 / 3;
 
     var detectedWidth, detectedHeight;
 
-    if (windowWidth / windowHeight > targetAspect) {
-        // Window is wider than 4:3 - limit by height, add pillarbox
-        detectedHeight = windowHeight;
-        detectedWidth = Math.round(windowHeight * targetAspect);
+    if (screenWidth / screenHeight > targetAspect) {
+        // Screen is wider than 4:3 - limit by height
+        detectedHeight = screenHeight;
+        detectedWidth = Math.round(screenHeight * targetAspect);
     } else {
-        // Window is taller than 4:3 - limit by width, add letterbox
-        detectedWidth = windowWidth;
-        detectedHeight = Math.round(windowWidth / targetAspect);
+        // Screen is taller than 4:3 - limit by width
+        detectedWidth = screenWidth;
+        detectedHeight = Math.round(screenWidth / targetAspect);
+    }
+
+    // Cap at reasonable maximum to avoid performance issues
+    var maxDimension = 1920;
+    if (detectedHeight > maxDimension * (3/4)) {
+        detectedHeight = Math.round(maxDimension * (3/4));
+        detectedWidth = Math.round(detectedHeight * targetAspect);
     }
 
     CheatCodeManager.winsize = detectedWidth + " " + detectedHeight;
