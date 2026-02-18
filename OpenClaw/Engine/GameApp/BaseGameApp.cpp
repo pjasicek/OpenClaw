@@ -503,8 +503,8 @@ void BaseGameApp::SetWindowSize(int width, int height, double scale) {
 
   GetHumanView()->GetCamera()->SetSize(width, height);
 
-  // if (scale)
-  GetHumanView()->GetCamera()->SetScale(1, 1);
+  // Don't reset camera scale - this was causing viewport misalignment when zoom changed
+  // GetHumanView()->GetCamera()->SetScale(1, 1);
 }
 
 HumanView *BaseGameApp::GetHumanView() const {
