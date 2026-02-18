@@ -204,7 +204,7 @@ void RenderLoadingScreen(shared_ptr<Image> pBackground, SDL_Rect& renderRect, Po
     // Progress bar
     int progressFullLength = renderRect.w / 2;
     int progressCurrLength = (int)((progressFullLength * progress) / 100.0f);
-    int progressHeight = (int)(30 * scale.x);
+    int progressHeight = (int)(3 * scale.x); // Reduced from 30 to 3 (10% of original)
     SDL_Rect totalProgressBarRect = { renderRect.w / 4, (int)(renderRect.h * 0.75), progressFullLength, progressHeight };
     SDL_Rect remainingProgressBarRect = { renderRect.w / 4, (int)(renderRect.h * 0.75), progressCurrLength, progressHeight };
 
