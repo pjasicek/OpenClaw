@@ -159,6 +159,10 @@ typedef std::list<std::shared_ptr<ResourceHandle>> ResourceHandleList;
 typedef std::list<std::shared_ptr<IResourceLoader>> ResourceLoaderList;
 typedef std::map<std::string, std::shared_ptr<ResourceHandle>> ResourceHandleMap;
 
+// Returns false if the path contains ".." components or embedded null bytes,
+// which could be used to escape the resource archive root (directory traversal).
+bool IsValidResourcePath(const std::string& path);
+
 class ResourceCache
 {
 public:

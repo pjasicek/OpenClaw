@@ -9,7 +9,7 @@
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See 
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
 // http://www.gnu.org/licenses/lgpl-3.0.txt for more details.
 //
 // You should have received a copy of the GNU Lesser GPL v3
@@ -190,6 +190,16 @@ bool ZipFile::Init(const std::string &resFileName)
         {
             pfh += sizeof(fh);
 
+            // Security fix: reject ZIP entries with filenames that would overflow
+            // a _MAX_PATH-sized buffer. fnameLen is a uint16 (max 65535) read
+            // directly from the archive, so a malformed ZIP could previously
+            // cause a stack-buffer overflow here.
+            if (fh.fnameLen >= _MAX_PATH)
+            {
+                success = false;
+                break;
+            }
+
             char fileName[_MAX_PATH];
             memcpy(fileName, pfh, fh.fnameLen);
             fileName[fh.fnameLen] = 0;
@@ -273,7 +283,7 @@ std::vector<std::string>  ZipFile::GetAllFilesInDirectory(const std::string& dir
 // --------------------------------------------------------------------------
 // Function:      End
 // Purpose:       Finish the object
-// Parameters:    
+// Parameters:
 // --------------------------------------------------------------------------
 void ZipFile::End()
 {
@@ -292,10 +302,12 @@ std::string ZipFile::GetFilename(int i)  const
     std::string fileName = "";
     if (i >= 0 && i < m_nEntries)
     {
-        char pszDest[_MAX_PATH];
-        memcpy(pszDest, m_papDir[i]->GetName(), m_papDir[i]->fnameLen);
-        pszDest[m_papDir[i]->fnameLen] = '\0';
-        fileName = pszDest;
+        // Security fix: use std::string constructor with explicit length instead
+        // of copying into a fixed _MAX_PATH stack buffer. The old code wrote
+        // pszDest[fnameLen] = '\0' which was an out-of-bounds write whenever
+        // fnameLen >= _MAX_PATH (260), since fnameLen is a uint16 read from the
+        // untrusted ZIP archive and can be up to 65535.
+        fileName = std::string(m_papDir[i]->GetName(), m_papDir[i]->fnameLen);
 
         if (fileName.size() > 0 && fileName[0] != '/')
         {
