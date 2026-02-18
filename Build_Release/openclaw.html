@@ -376,27 +376,31 @@
         r.parentNode.insertBefore(script, r);
     }
     
-    // Choose aspect ratio mode
-    var MAINTAIN_4_3_ASPECT = false; // Set to true for letterbox/pillarbox, false for true widescreen
-
+    // Widescreen resolution calculation (based on claw_widescreen patch approach)
+    // Keep height near original 480-486, extend width for widescreen
     var windowWidth = window.innerWidth;
     var windowHeight = window.innerHeight;
-    var detectedWidth, detectedHeight;
 
-    if (MAINTAIN_4_3_ASPECT) {
-        // Maintain 4:3 aspect ratio (letterbox/pillarbox on widescreen)
-        var targetAspect = 4 / 3;
-        if (windowWidth / windowHeight > targetAspect) {
-            detectedHeight = windowHeight;
-            detectedWidth = Math.round(windowHeight * targetAspect);
-        } else {
-            detectedWidth = windowWidth;
-            detectedHeight = Math.round(windowWidth / targetAspect);
-        }
-    } else {
-        // True widescreen - use full window dimensions
-        detectedWidth = windowWidth;
-        detectedHeight = windowHeight;
+    var baseWidth = 640;
+    var baseHeight = 480;
+    var targetHeight = 486; // Slightly taller than original for modern displays
+
+    // Calculate aspect ratio
+    var windowAspect = windowWidth / windowHeight;
+
+    // Calculate width based on window aspect ratio but keep height fixed
+    var detectedHeight = targetHeight;
+    var detectedWidth = Math.round(targetHeight * windowAspect);
+
+    // Ensure minimum width (at least original 4:3)
+    if (detectedWidth < baseWidth) {
+        detectedWidth = baseWidth;
+    }
+
+    // For ultra-wide, cap at reasonable maximum (32:9 equivalent)
+    var maxWidth = Math.round(targetHeight * (32/9));
+    if (detectedWidth > maxWidth) {
+        detectedWidth = maxWidth;
     }
 
     CheatCodeManager.winsize = detectedWidth + " " + detectedHeight;
