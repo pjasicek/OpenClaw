@@ -194,11 +194,11 @@
     <div class="canvas-wrapper" id="gameContainer">
         <span id="loading"></span>
         <canvas id="canvas" width="640" height="480" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
-    </div>
 
-    <!-- Bottom controls (just fullscreen) -->
-    <div class="bottom-controls">
-        <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
+        <!-- Bottom controls (just fullscreen) - inside gameContainer so it's visible in fullscreen -->
+        <div class="bottom-controls">
+            <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶</button>
+        </div>
     </div>
 </div>
 <div class="debug_panel" style="display:none">
