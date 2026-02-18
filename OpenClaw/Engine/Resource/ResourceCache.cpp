@@ -1,10 +1,26 @@
 #include <algorithm>
 #include <cctype>
+#include <string>
 
 #include <libwap.h>
 
 #include "ResourceCache.h"
 #include "../Util/StringUtil.h"
+
+// --------------------------------------------------------------------------
+// Function:      IsValidResourcePath
+// Purpose:       Reject resource paths that contain ".." components or
+//                embedded null bytes, blocking directory traversal attacks
+//                via crafted archive filenames.
+// --------------------------------------------------------------------------
+bool IsValidResourcePath(const std::string& path)
+{
+    if (path.find("..") != std::string::npos)
+        return false;
+    if (path.find('\0') != std::string::npos)
+        return false;
+    return true;
+}
 
 //
 // Resource::Resource
@@ -51,6 +67,12 @@ bool ResourceRezArchive::VOpen()
 
 int32 ResourceRezArchive::VGetRawResourceSize(Resource* r)
 {
+    if (!IsValidResourcePath(r->GetName()))
+    {
+        LOG_ERROR("Blocked unsafe resource path: " + r->GetName());
+        return -1;
+    }
+
     RezFile* rezFile = WAP_GetRezFileFromRezArchive(_rezArchive, r->GetName().c_str());
     if (rezFile == NULL)
     {
@@ -64,6 +86,12 @@ int32 ResourceRezArchive::VGetRawResourceSize(Resource* r)
 // Remark: outBuffer is valid heap pointer
 int32 ResourceRezArchive::VGetRawResource(Resource* r, char* outBuffer)
 {
+    if (!IsValidResourcePath(r->GetName()))
+    {
+        LOG_ERROR("Blocked unsafe resource path: " + r->GetName());
+        return -1;
+    }
+
     assert(outBuffer != NULL);
 
     RezFile* rezFile = WAP_GetRezFileFromRezArchive(_rezArchive, r->GetName().c_str());
