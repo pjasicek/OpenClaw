@@ -11,7 +11,9 @@ COPY . /app
 WORKDIR /app
 
 RUN cmake -B /build -GNinja /app -DCMAKE_POLICY_VERSION_MINIMUM=3.5 && \
-    cmake --build /build
+    cmake --build /build && \
+    ls -la /build/ && \
+    find /build -name "openclaw" -type f
 
 FROM ubuntu:22.04
 
@@ -23,7 +25,7 @@ RUN apt-get update && apt-get install -y \
     libsdl2-ttf-2.0-0 libsdl2-gfx-1.0-0 \
     xvfb x11vnc novnc websockify
 
-COPY --from=builder /build/Build_Release /game
+COPY --from=builder /build /build
 
 EXPOSE 6080
 
@@ -31,4 +33,4 @@ CMD Xvfb :99 -screen 0 1024x768x24 & \
     sleep 1 && \
     x11vnc -display :99 -forever -nopw -shared & \
     websockify --web /usr/share/novnc 6080 localhost:5900 & \
-    cd /game && ./openclaw
+    cd /build && find . -name "openclaw" -type f -exec {} \;
