@@ -18,11 +18,10 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DISPLAY=:99
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y \
     libsdl2-2.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 \
     libsdl2-ttf-2.0-0 libsdl2-gfx-1.0-0 \
-    xvfb x11vnc novnc websockify \
-    && rm -rf /var/lib/apt/lists/*
+    xvfb x11vnc novnc websockify
 
 COPY --from=builder /build/Build_Release /game
 
