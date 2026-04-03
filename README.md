@@ -2,7 +2,7 @@
 
  - This project is a multiplatform C++ reimplementation of original Captain Claw (1997) platformer game
  - Whole codebase was written from scratch
- - Game uses assets from original game archive (CLAW.REZ)
+ - Game uses assets from the original game's archive (CLAW.REZ)
 
 **Level 1 youtube playthrough:**
 
@@ -29,7 +29,7 @@
   - Tinyxml library for data-driven approach
 
 # Building and running
-For all platforms you will need original `CLAW.REZ` game archive in `Build_Release` directory from original game
+For all platforms you will need the `CLAW.REZ` game archive in `Build_Release` directory from the original game
 
 Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
 
@@ -59,22 +59,22 @@ Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
   
   **Compilation:**
   - `git clone https://github.com/pjasicek/OpenClaw.git`
-  - CLAW.REZ iz required from original game in the OpenClaw/Build_Release folder
-  - Use `cmake` to build fresh Makefile. There is no need specific arguments.
-  - `make` (it's going to use all threads to compile, edit Makefile in Build_Release folder to whatever number of simultaneous threads you want it on your machine to run)
+  - CLAW.REZ iz required from the original game in the OpenClaw/Build_Release folder
+  - Use `cmake` to build fresh Makefile. There is no need for specific arguments.
+  - `make` (it's going to use all threads to compile, otherwise edit Makefile in Build_Release folder to whatever number of simultaneous threads you want your machine to use)
 
  **Remarks:**
 
-  - For hearing background music play, you need to install **timidity (or timidity++)** and **freepats**. Some linux distributions come with it by default, some do not (fedora, archlinux)
-  - Does not work with SDL 2.0.6 - if you have the latest one from repository, you should be fine
+  - To hear background music play, you need to install **timidity (or timidity++)** and **freepats**. Some linux distributions come with it by default, some do not (fedora, archlinux)
+  - Does not work with SDL 2.0.6 - if you have the latest repository's one, you should be fine
   
 ### Android
   
-  - Compilation / Deployment steps will be updated in near future, game itself is successfully running on Android
+  - Compilation / Deployment steps will be updated in near future, but the game itself successfully runs on Android
   
 ### WebAssembly (Emscripten)
   
-  The project can be compiled as wasm code. This code is executed by modern web browsers without any additional runtime dependencies. Compiled once this code can work on any devices with different operation systems.
+  The project can be compiled as wasm code. This code is executed by modern web browsers without any additional runtime dependencies. Once compiled this code can work on any devices with different operating systems.
   
   **Compilation:**
   - Install [Emscripten SDK](https://emscripten.org/docs/getting_started/downloads.html) from official website. I'm not sure that compilation will be successful on a Windows platform. If you use Windows then don't show off, enable Windows Subsystem for Linux (WSL), download Linux-like system (for example, Ubuntu) from Windows Store and install Emscripten SDK. It should be something like:
@@ -88,7 +88,7 @@ Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
     # If it doesn't work the project was successfully compiled on 1.39.11 version.
     ```
   - Make sure you have *python* and *cmake* packages. Ubuntu: `sudo apt install python cmake`.
-  - Make sure you have fresh `ASSETS.ZIP` and `CLAW.REZ` files in `Build_Release` directory.
+  - Make sure you have fresh `ASSETS.ZIP` and `CLAW.REZ` files in the `Build_Release` directory.
   - Compile:
     ```shell script
     mkdir build
@@ -112,24 +112,26 @@ Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
   **Remarks:**
   
   There are some limitations:
-  - Some old web browsers does not support WebAssembly code. *Hi Internet Explorer!*
-  - Some web browsers does not support `.wav` file formats. *Microsoft? Again?*
-  - All web browsers does not support `.xmi` (MIDI) file formats. This files should be converted to another compatible formats. **All MIDI audio are disabled for now**.
+  - _Some_ old web browsers do not support WebAssembly code. *Hi Internet Explorer!*
+  - _Some_ web browsers do not support `.wav` file formats. *Microsoft? Again?*
+  - _All_ web browsers do not support `.xmi` (MIDI) file formats. This files should be converted to another compatible formats. **All MIDI audio are disabled for now**.
   - Some specific `SDL_Mixer` audio functions aren't implemented (*you can find it by `TODO: [EMSCRIPTEN]` search query*) but the game is playable.
-  - Death and teleport fade in effects are broken. Emscripten erases graphic buffer after each draw call. Do not use buffer from previous calls.
-  - There is a [FireFox bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1292053) with a very long story which doesn't allow to prevent ALT default actions. ALT key presses will open window menu. Workarounds:
-    - Contribute to Mozilla and finally close this bug.
+  - Death and teleport fade-in effects are broken. Emscripten erases graphic buffer after each draw call. Do not use buffer from previous calls.
+
+***Archived remarks***
+  - In old Firefox versions, there was a [FireFox bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1292053) with a very long story which doesn't allow to prevent ALT default actions. ALT key presses will open window menu. Workarounds were:
+    - ~~Contribute to Mozilla and finally close this bug~~.
     - Use fullscreen mode.
-    - Disable default ALT actions in FireFox `about:config` properties.
+    - Disable default ALT actions in FireFox' `about:config` properties.
  
 # In-game images
   -  **TODO** - add screenshots
 
 # Claw Launcher
 
-  - Precompiled for Windows natively and for Linux use through Mono runtime
-  - Locates Claw binary and corresponding config.xml file
-  - Provides GUI to modify configuration (Video/Audio/Assets)
+  - Precompiled for Windows natively and for Linux usage through Mono runtime
+  - Locates Claw's binary and corresponding config.xml file
+  - Provides a GUI to modify configuration (Video/Audio/Assets)
 
 ### For Linux
 
