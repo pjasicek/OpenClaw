@@ -59,8 +59,8 @@ Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
   
   **Compilation:**
   - `git clone https://github.com/pjasicek/OpenClaw.git`
-  - CLAW.REZ iz required from original game in the OpenClaw/Build_Release folder
-  - Use `cmake` to build fresh Makefile. There is no need specific arguments.
+  - CLAW.REZ is required from original game in the OpenClaw/Build_Release folder
+  - Use `cmake` to build fresh Makefile. There is no need for specific arguments.
   - `make` (it's going to use all threads to compile, edit Makefile in Build_Release folder to whatever number of simultaneous threads you want it on your machine to run)
 
  **Remarks:**
@@ -112,10 +112,10 @@ Zip all content inside `Build_Release/ASSETS` directory to `ASSETS.ZIP` file.
   **Remarks:**
   
   There are some limitations:
-  - Some old web browsers does not support WebAssembly code. *Hi Internet Explorer!*
-  - Some web browsers does not support `.wav` file formats. *Microsoft? Again?*
-  - All web browsers does not support `.xmi` (MIDI) file formats. This files should be converted to another compatible formats. **All MIDI audio are disabled for now**.
-  - Some specific `SDL_Mixer` audio functions aren't implemented (*you can find it by `TODO: [EMSCRIPTEN]` search query*) but the game is playable.
+  - Some old web browsers do not support WebAssembly code. *Hi Internet Explorer!*
+  - Some web browsers do not support `.wav` file formats. *Microsoft? Again?*
+  - All web browsers do not support `.xmi` (MIDI) file formats. These files should be converted to another compatible format. **All MIDI audio is disabled for now**.
+  - Some specific `SDL_Mixer` audio functions aren't implemented (*you can find them by `TODO: [EMSCRIPTEN]` search query*) but the game is playable.
   - Death and teleport fade in effects are broken. Emscripten erases graphic buffer after each draw call. Do not use buffer from previous calls.
   - There is a [FireFox bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1292053) with a very long story which doesn't allow to prevent ALT default actions. ALT key presses will open window menu. Workarounds:
     - Contribute to Mozilla and finally close this bug.
