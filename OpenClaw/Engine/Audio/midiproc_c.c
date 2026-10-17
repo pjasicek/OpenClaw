@@ -64,9 +64,10 @@ static RPC_SYNTAX_IDENTIFIER  _RpcTransferSyntax =
 {{0x8A885D04,0x1CEB,0x11C9,{0x9F,0xE8,0x08,0x00,0x2B,0x10,0x48,0x60}},{2,0}};
 
 
-extern const midiproc_MIDL_TYPE_FORMAT_STRING midiproc__MIDL_TypeFormatString;
-extern const midiproc_MIDL_PROC_FORMAT_STRING midiproc__MIDL_ProcFormatString;
-extern const midiproc_MIDL_EXPR_FORMAT_STRING midiproc__MIDL_ExprFormatString;
+/* OpenClaw: forward declarations are 'static' (MIDL generates 'extern') - GCC/MinGW rejects static definition after extern declaration */
+static const midiproc_MIDL_TYPE_FORMAT_STRING midiproc__MIDL_TypeFormatString;
+static const midiproc_MIDL_PROC_FORMAT_STRING midiproc__MIDL_ProcFormatString;
+static const midiproc_MIDL_EXPR_FORMAT_STRING midiproc__MIDL_ExprFormatString;
 
 #define GENERIC_BINDING_TABLE_SIZE   0            
 
@@ -91,7 +92,7 @@ static const RPC_CLIENT_INTERFACE MidiRPC___RpcClientInterface =
     };
 RPC_IF_HANDLE MidiRPC_v1_0_c_ifspec = (RPC_IF_HANDLE)& MidiRPC___RpcClientInterface;
 
-extern const MIDL_STUB_DESC MidiRPC_StubDesc;
+static const MIDL_STUB_DESC MidiRPC_StubDesc;
 
 static RPC_BINDING_HANDLE MidiRPC__MIDL_AutoBindHandle;
 
