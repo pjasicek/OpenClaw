@@ -175,6 +175,10 @@ typedef unsigned char mz_validate_uint64[sizeof(mz_uint64) == 8 ? 1 : -1];
 #endif
 
 #ifdef __cplusplus
+// Include system headers outside extern "C": on MinGW <sys/stat.h> pulls in <io.h>,
+// which can resolve to libwap/IO.h (C++) on case-insensitive filesystems.
+#include <stdio.h>
+#include <sys/stat.h>
 extern "C" {
 #endif
 
