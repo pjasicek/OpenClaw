@@ -1,3 +1,4 @@
+#include <cstring>
 #include <memory.h>
 #include "StringUtil.h"
 
