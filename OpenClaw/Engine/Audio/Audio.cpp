@@ -9,7 +9,7 @@
 #include <iostream>
 
 #ifdef _WIN32
-#include <Windows.h>
+#include <windows.h>
 #include "../../../MidiProc/midiproc.h"
 #endif
 

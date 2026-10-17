@@ -3,8 +3,8 @@
 
 // For memory profiler
 #ifdef _WIN32
-#include <Windows.h>
-#include <Psapi.h>
+#include <windows.h>
+#include <psapi.h>
 #endif
 
 #include <string>

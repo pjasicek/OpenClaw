@@ -85,7 +85,7 @@ else (Emscripten)
             )
     if (WIN32)
         list(APPEND TARGET_LIBS
-                Rpcrt4
+                rpcrt4
                 )
     else (WIN32)
         # TODO: Is it really important???
