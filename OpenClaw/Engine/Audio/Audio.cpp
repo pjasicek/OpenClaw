@@ -11,6 +11,15 @@
 #ifdef _WIN32
 #include <windows.h>
 #include "../../../MidiProc/midiproc.h"
+#ifdef __GNUC__
+// MinGW has no SEH (__try/__except), so run the RPC calls without exception handling.
+#undef RpcTryExcept
+#undef RpcExcept
+#undef RpcEndExcept
+#define RpcTryExcept if (1) {
+#define RpcExcept(expr) } else {
+#define RpcEndExcept }
+#endif // __GNUC__
 #endif
 
 #ifdef PlaySound
