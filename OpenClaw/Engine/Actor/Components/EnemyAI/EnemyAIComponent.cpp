@@ -388,7 +388,7 @@ bool EnemyAIComponent::TryPlaySpeechSound(int chance, const SoundList& speechSou
 {
     if (Util::RollDice(chance) && (m_TimeSinceLastSpeechSound > m_MinTimeIntervalForSpeechSound))
     {
-        std::string playedSound = Util::PlayRandomSoundFromList(speechSounds);
+        std::string playedSound = Util::PlayRandomSoundFromList(speechSounds, 100, SoundCategory_Voice);
         m_TimeSinceLastSpeechSound = 0;
 
         // Exclamation mark

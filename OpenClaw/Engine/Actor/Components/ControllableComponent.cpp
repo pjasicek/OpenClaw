@@ -241,6 +241,7 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
             }
 
             SoundInfo soundInfo(m_IdleQuoteSoundList[idleQuoteSoundIdx]);
+            soundInfo.category = SoundCategory_Voice;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
 
@@ -850,6 +851,7 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
                 {
                     SoundInfo soundInfo(SOUND_CLAW_KILL_PISTOL1);
                     soundInfo.soundVolume = 200;
+                    soundInfo.category = SoundCategory_Voice;
                     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                         new EventData_Request_Play_Sound(soundInfo)));
                     m_pExclamationMark->Activate(Util::GetSoundDurationMs(SOUND_CLAW_KILL_PISTOL1));
@@ -858,6 +860,7 @@ void ClawControllableComponent::VOnAnimationFrameChanged(Animation* pAnimation, 
                 {
                     SoundInfo soundInfo(SOUND_CLAW_SCREW_ALL_THIS);
                     soundInfo.soundVolume = 200;
+                    soundInfo.category = SoundCategory_Voice;
                     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                         new EventData_Request_Play_Sound(soundInfo)));
                     m_pExclamationMark->Activate(Util::GetSoundDurationMs(SOUND_CLAW_SCREW_ALL_THIS));
@@ -1210,7 +1213,7 @@ void ClawControllableComponent::OnClawKilledEnemy(DamageType killDamageType, Act
         !m_pExclamationMark->IsActive() &&
         Util::RollDice(soundPlayChance))
     {
-        std::string snd = Util::PlayRandomSoundFromList(s_OnEnemyKillSoundList, 260);
+        std::string snd = Util::PlayRandomSoundFromList(s_OnEnemyKillSoundList, 260, SoundCategory_Voice);
         m_pExclamationMark->Activate(Util::GetSoundDurationMs(snd));
     }
 }

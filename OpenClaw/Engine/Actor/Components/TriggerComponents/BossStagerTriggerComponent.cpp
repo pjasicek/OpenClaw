@@ -100,6 +100,7 @@ void BossStagerTriggerComponent::VUpdate(uint32 msDiff)
             m_pCamera->SetCameraOffsetX((double)m_BossDistance);
             m_CurrentDelay = Util::GetSoundDurationMs(m_BossDialogSound);
             SoundInfo sound(m_BossDialogSound);
+            sound.category = SoundCategory_Voice;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(sound)));
 
             m_State = BossStagerState_PlayingBossDialogSound;
@@ -122,6 +123,7 @@ void BossStagerTriggerComponent::VUpdate(uint32 msDiff)
             m_pCamera->SetCameraOffsetX(0);
             m_CurrentDelay = Util::GetSoundDurationMs(m_ClawDialogSound);
             SoundInfo sound(m_ClawDialogSound);
+            sound.category = SoundCategory_Voice;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(new EventData_Request_Play_Sound(sound)));
 
             // Display Claw's exclamation speech image

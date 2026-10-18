@@ -18,6 +18,19 @@
 #include "../../../Events/Events.h"
 
 const char* PickupComponent::g_Name = "PickupComponent";
+
+// Claw's own lines (e.g. when he picks up magic sword) are voice, all other pickup sounds are effects
+static SoundInfo CreatePickupSoundInfo(const std::string& pickupSound)
+{
+    SoundInfo soundInfo(pickupSound);
+    if (pickupSound.find("/CLAW/SOUNDS/") == 0)
+    {
+        soundInfo.category = SoundCategory_Voice;
+    }
+
+    return soundInfo;
+}
+
 const char* TreasurePickupComponent::g_Name = "TreasurePickupComponent";
 const char* LifePickupComponent::g_Name = "LifePickupComponent";
 const char* HealthPickupComponent::g_Name = "HealthPickupComponent";
@@ -100,7 +113,7 @@ void PickupComponent::VOnActorEnteredTrigger(Actor* pActorWhoEntered, FixtureTyp
         // Play pickup sound if applicable
         if (m_PickupSound.length() > 0)
         {
-            SoundInfo soundInfo(m_PickupSound);
+            SoundInfo soundInfo = CreatePickupSoundInfo(m_PickupSound);
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
         }
@@ -360,7 +373,7 @@ bool TeleportPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
     // HACK: ...
     if (m_bIsBossWarp)
     {
-        SoundInfo soundInfo(m_PickupSound);
+        SoundInfo soundInfo = CreatePickupSoundInfo(m_PickupSound);
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
 
@@ -549,7 +562,7 @@ bool EndLevelPickupComponent::VOnApply(Actor* pActorWhoPickedThis)
 
     // Play sound here
     assert(!m_PickupSound.empty());
-    SoundInfo soundInfo(m_PickupSound);
+    SoundInfo soundInfo = CreatePickupSoundInfo(m_PickupSound);
     IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
         new EventData_Request_Play_Sound(soundInfo)));
 

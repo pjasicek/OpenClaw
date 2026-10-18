@@ -209,13 +209,13 @@ void GabrielAIStateComponent::VUpdate(uint32 msDiff)
             case GabrielActionType_ThrowBombs:
             {
                 m_pAnimationComponent->SetAnimation(m_ThrowBombAnim);
-                playedSound = Util::PlayRandomSoundFromList(m_ThrowBombSoundList);
+                playedSound = Util::PlayRandomSoundFromList(m_ThrowBombSoundList, 100, SoundCategory_Voice);
                 break;
             }
 
             case GabrielActionType_SummonPirate:
                 m_pAnimationComponent->SetAnimation(m_SpawnPirateAnim);
-                playedSound = Util::PlayRandomSoundFromList(m_SpawnPirateSoundList);
+                playedSound = Util::PlayRandomSoundFromList(m_SpawnPirateSoundList, 100, SoundCategory_Voice);
                 
                 ActorTemplates::CreateActor(ActorPrototype_Level8_GabrielPirate, pirateSpawnPos);
 
@@ -228,7 +228,7 @@ void GabrielAIStateComponent::VUpdate(uint32 msDiff)
                 };
 
                 m_pAnimationComponent->SetAnimation(m_FireCannonAnim);
-                playedSound = Util::PlayRandomSoundFromList(m_FireCannonSoundList);
+                playedSound = Util::PlayRandomSoundFromList(m_FireCannonSoundList, 100, SoundCategory_Voice);
                 break;
 
             default:
