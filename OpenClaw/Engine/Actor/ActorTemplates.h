@@ -200,6 +200,7 @@ namespace ActorTemplates
     StrongActorPtr CreateActorPickup(PickupType pickupType, const Point& position, bool isStatic = false);
     StrongActorPtr CreatePowerupSparkleActor(int cycleDuration);
     StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, const Point& position, int sourceActorId, const Point& initialImpulse);
+    StrongActorPtr CreateThrownPowderKeg(const std::string& imageSet, const Point& imagePosition, const Point& speed, int sourceActorId);
     StrongActorPtr CreateProjectile(const std::string &imageSet, uint32 damage, DamageType damageType, Direction direction, const Point& position, CollisionFlag collisionFlag, uint32 collisionMask, int sourceActorId);
     StrongActorPtr CreateAreaDamage(const Point& position, const Point& size, int32 damage, CollisionFlag collisionFlag, const std::string& shape, DamageType damageType, Direction hitDirection, int sourceActorId, const Point& positionOffset = Point(0, 0), const std::string& imageSet = "", zIndexes zCoord = zIndexes::MinIndex);
     StrongActorPtr CreateGlitter(const std::string& glitterType, const Point& position, zIndexes zCoord = zIndexes::Glitter);
