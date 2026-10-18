@@ -2398,30 +2398,40 @@ public:
     {
         m_bIsEnabled = false;
         m_bIsMusic = false;
+        m_Category = SoundCategory_Effect;
     }
 
-    EventData_Sound_Enabled_Changed(bool isEnabled, bool isMusic)
+    // Music, or sounds of given category (SoundCategory_Effect = the general "Sound" option)
+    EventData_Sound_Enabled_Changed(bool isEnabled, bool isMusic, SoundCategory category = SoundCategory_Effect)
     {
         m_bIsEnabled = isEnabled;
         m_bIsMusic = isMusic;
+        m_Category = category;
     }
 
     virtual const EventType& VGetEventType(void) const { return sk_EventType; }
     virtual IEventDataPtr VCopy() const
     {
-        return IEventDataPtr(new EventData_Sound_Enabled_Changed(m_bIsEnabled, m_bIsMusic));
+        return IEventDataPtr(new EventData_Sound_Enabled_Changed(m_bIsEnabled, m_bIsMusic, m_Category));
     }
-    virtual void VSerialize(std::ostringstream& out) const { out << m_bIsEnabled << m_bIsMusic; }
-    virtual void VDeserialize(std::istringstream& in) { in >> m_bIsEnabled >> m_bIsMusic; }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_bIsEnabled << m_bIsMusic << (int)m_Category; }
+    virtual void VDeserialize(std::istringstream& in)
+    {
+        int category = 0;
+        in >> m_bIsEnabled >> m_bIsMusic >> category;
+        m_Category = (SoundCategory)category;
+    }
 
     bool GetIsEnabled() { return m_bIsEnabled; }
     bool GetIsMusic() { return m_bIsMusic; }
+    SoundCategory GetCategory() { return m_Category; }
 
     virtual const char* GetName(void) const { return "EventData_Sound_Enabled_Changed"; }
 
 private:
     bool m_bIsEnabled;
     bool m_bIsMusic;
+    SoundCategory m_Category;
 };
 
 //---------------------------------------------------------------------------------------------------------------------

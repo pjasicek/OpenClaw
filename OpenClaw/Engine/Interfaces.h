@@ -246,6 +246,14 @@ enum DamageType
     DamageType_Max
 };
 
+// Which audio option (Audio menu: Sound / Voice / Ambient) controls the sound
+enum SoundCategory
+{
+    SoundCategory_Effect,   // Everything else - controlled only by "Sound" option
+    SoundCategory_Voice,    // Spoken lines of Claw, enemies and bosses
+    SoundCategory_Ambient   // Ambient sounds of the level (e.g. water, birds)
+};
+
 enum AnimationType
 {
     AnimationType_Explosion,

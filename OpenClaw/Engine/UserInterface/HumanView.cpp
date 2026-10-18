@@ -573,6 +573,7 @@ void HumanView::RequestPlaySoundDelegate(IEventDataPtr pEventData)
             SoundProperties soundProperties;
             soundProperties.volume = pSoundInfo->soundVolume;
             soundProperties.loops = pSoundInfo->loops;
+            soundProperties.category = pSoundInfo->category;
 
             Point soundSourcePos = pSoundInfo->soundSourcePosition;
             if (pSoundInfo->setPositionEffect)
@@ -805,6 +806,14 @@ void HumanView::SoundEnabledChangedDelegate(IEventDataPtr pEventData)
         if (pCastEventData->GetIsMusic())
         {
             g_pApp->GetAudio()->SetMusicActive(pCastEventData->GetIsEnabled());
+        }
+        else if (pCastEventData->GetCategory() == SoundCategory_Voice)
+        {
+            g_pApp->GetAudio()->SetVoiceActive(pCastEventData->GetIsEnabled());
+        }
+        else if (pCastEventData->GetCategory() == SoundCategory_Ambient)
+        {
+            g_pApp->GetAudio()->SetAmbientActive(pCastEventData->GetIsEnabled());
         }
         else
         {

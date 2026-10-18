@@ -35,7 +35,9 @@ Audio::Audio()
     m_SoundVolume(0),
     m_MusicVolume(0),
     m_bSoundOn(true),
-    m_bMusicOn(true)
+    m_bMusicOn(true),
+    m_bVoiceOn(true),
+    m_bAmbientOn(true)
 {
 
 }
@@ -60,7 +62,8 @@ bool Audio::Initialize(const GameOptions& config)
         return false;
     }
 
-    Mix_AllocateChannels(config.mixingChannels);
+    int numChannels = Mix_AllocateChannels(config.mixingChannels);
+    m_ChannelCategories.assign(numChannels > 0 ? numChannels : 0, SoundCategory_Effect);
 
     int reservedChannels = Mix_ReserveChannels(16);
 #ifndef __EMSCRIPTEN__
@@ -71,6 +74,12 @@ bool Audio::Initialize(const GameOptions& config)
     }
 
     Mix_GroupChannels(0, 15, 1);
+
+    // Reserved channels of group 1 are used only by LocalAmbientSoundComponent
+    for (int channel = 0; channel < 16 && channel < (int)m_ChannelCategories.size(); channel++)
+    {
+        m_ChannelCategories[channel] = SoundCategory_Ambient;
+    }
 #else
     // Mix_ReserveChannels returns nothing.
     if (reservedChannels != 0)
@@ -85,6 +94,8 @@ bool Audio::Initialize(const GameOptions& config)
     m_MusicVolume = config.musicVolume;
     m_bSoundOn = config.soundOn;
     m_bMusicOn = config.musicOn;
+    m_bVoiceOn = config.voiceOn;
+    m_bAmbientOn = config.ambientOn;
 
 #ifdef _WIN32
     m_bIsMidiRpcInitialized = InitializeMidiRPC(config.midiRpcServerPath);
@@ -278,6 +289,11 @@ bool Audio::PlaySound(const char* soundData, size_t soundSize, const SoundProper
 
 bool Audio::PlaySound(Mix_Chunk* sound, const SoundProperties& soundProperties)
 {
+    if (soundProperties.category == SoundCategory_Voice && !m_bVoiceOn)
+    {
+        return true;
+    }
+
 #ifndef __EMSCRIPTEN__
     int chunkVolume = (int)((((float)soundProperties.volume) / 100.0f) * (float)m_SoundVolume);
 
@@ -299,6 +315,12 @@ bool Audio::PlaySound(Mix_Chunk* sound, const SoundProperties& soundProperties)
         LOG_ERROR("Failed to play chunk: " + std::string(Mix_GetError()));
         return false;
     }
+
+    if (channel < (int)m_ChannelCategories.size())
+    {
+        m_ChannelCategories[channel] = soundProperties.category;
+    }
+    ApplyChannelVolume(channel);
 
 #ifndef __EMSCRIPTEN__
     if (!Mix_SetPosition(channel, soundProperties.angle, soundProperties.distance))
@@ -329,7 +351,7 @@ void Audio::SetSoundVolume(int volumePercentage)
 
     if (m_bSoundOn)
     {
-        Mix_Volume(-1, m_SoundVolume);
+        ApplyAllChannelVolumes();
     }
 }
 
@@ -370,7 +392,7 @@ void Audio::SetSoundActive(bool active)
     if (active)
     {
         Mix_Resume(-1);
-        Mix_Volume(-1, m_SoundVolume);
+        ApplyAllChannelVolumes();
     }
     else
     {
@@ -397,6 +419,49 @@ void Audio::SetMusicActive(bool active)
     }
 
     m_bMusicOn = active; 
+}
+
+void Audio::SetVoiceActive(bool active)
+{
+    m_bVoiceOn = active;
+    if (active)
+    {
+        return;
+    }
+
+    // Stop spoken lines which are being played right now
+    for (int channel = 0; channel < (int)m_ChannelCategories.size(); channel++)
+    {
+        if (m_ChannelCategories[channel] == SoundCategory_Voice && Mix_Playing(channel))
+        {
+            Mix_HaltChannel(channel);
+        }
+    }
+}
+
+void Audio::SetAmbientActive(bool active)
+{
+    m_bAmbientOn = active;
+    ApplyAllChannelVolumes();
+}
+
+void Audio::ApplyChannelVolume(int channel)
+{
+    if (channel < 0 || channel >= (int)m_ChannelCategories.size())
+    {
+        return;
+    }
+
+    bool isMuted = (m_ChannelCategories[channel] == SoundCategory_Ambient) && !m_bAmbientOn;
+    Mix_Volume(channel, isMuted ? 0 : m_SoundVolume);
+}
+
+void Audio::ApplyAllChannelVolumes()
+{
+    for (int channel = 0; channel < (int)m_ChannelCategories.size(); channel++)
+    {
+        ApplyChannelVolume(channel);
+    }
 }
 
 #ifdef _WIN32

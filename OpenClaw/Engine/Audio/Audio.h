@@ -2,6 +2,7 @@
 #define AUDIO_H_
 
 #include <stdint.h>
+#include <vector>
 #include <SDL2/SDL_mixer.h>
 
 #include "../GameApp/BaseGameApp.h"
@@ -32,9 +33,15 @@ public:
 
     bool IsSoundActive() { return m_bSoundOn; }
     bool IsMusicActive() { return m_bMusicOn; }
+    bool IsVoiceActive() { return m_bVoiceOn; }
+    bool IsAmbientActive() { return m_bAmbientOn; }
 
     void SetSoundActive(bool active);
     void SetMusicActive(bool active);
+    // Voice off: new spoken lines are not played and currently playing ones are stopped
+    void SetVoiceActive(bool active);
+    // Ambient off: ambient sounds keep playing muted, so that looping ones continue when turned back on
+    void SetAmbientActive(bool active);
 
     int GetSoundVolume();
     int GetMusicVolume();
@@ -48,6 +55,10 @@ private:
 
     void TerminateMidiRPC();
 
+    // Sets channel's volume - muted when it plays ambient sound while ambient is off
+    void ApplyChannelVolume(int channel);
+    void ApplyAllChannelVolumes();
+
     //##### Members #####//
     bool m_bIsServerInitialized;
     bool m_bIsClientInitialized;
@@ -58,6 +69,11 @@ private:
     int m_MusicVolume;
     bool m_bSoundOn;
     bool m_bMusicOn;
+    bool m_bVoiceOn;
+    bool m_bAmbientOn;
+
+    // Category of the sound last played on each mixing channel
+    std::vector<SoundCategory> m_ChannelCategories;
 };
 
 #endif

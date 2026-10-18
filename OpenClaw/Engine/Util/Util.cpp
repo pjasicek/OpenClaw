@@ -398,7 +398,7 @@ namespace Util
         return (GetRandomNumber(0, 100) < chanceToSucceed);
     }
 
-    std::string PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume)
+    std::string PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume, SoundCategory category)
     {
         if (!sounds.empty())
         {
@@ -406,6 +406,7 @@ namespace Util
 
             SoundInfo soundInfo(sounds[soundIdx]);
             soundInfo.soundVolume = volume;
+            soundInfo.category = category;
             IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
 

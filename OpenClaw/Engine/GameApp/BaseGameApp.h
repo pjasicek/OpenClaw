@@ -36,6 +36,8 @@ struct GameOptions
         musicVolume = 50; // In percents
         soundOn = true;
         musicOn = true;
+        voiceOn = true;
+        ambientOn = true;
         midiRpcServerPath = "MidiProc.exe";
 
         fontNames.push_back("clacon.ttf");
@@ -76,6 +78,8 @@ struct GameOptions
     int musicVolume;
     bool soundOn;
     bool musicOn;
+    bool voiceOn;
+    bool ambientOn;
     std::string midiRpcServerPath;
 
     // Font

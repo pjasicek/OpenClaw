@@ -772,6 +772,7 @@ struct SoundInfo
     SoundInfo()
     {
         isMusic = false;
+        category = SoundCategory_Effect;
         soundVolume = 100;
         loops = 0;
         setPositionEffect = false;
@@ -787,6 +788,7 @@ struct SoundInfo
 
     std::string soundToPlay;
     bool isMusic;
+    SoundCategory category;
     int soundVolume;
     int loops;
     bool setPositionEffect;
@@ -804,9 +806,11 @@ struct SoundProperties
         loops = 0;
         angle = 0;
         distance = 0;
+        category = SoundCategory_Effect;
     }
 
     int volume;
+    SoundCategory category;
     int loops;
     int angle;
     int distance;
