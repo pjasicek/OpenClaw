@@ -47,6 +47,8 @@ public:
     virtual bool CanMove() = 0;
     virtual bool IsActorFrozen() = 0;
     virtual bool IsDucking() = 0;
+    virtual bool CanDuck() { return true; }
+    virtual bool CanStartJump() { return true; }
 
     virtual bool IsDying() = 0;
     virtual bool InPhysicsCapableState() = 0;
