@@ -4,6 +4,9 @@
 #include "Engine/Events/Events.h"
 #include "ClawEvents.h"
 #include "Engine/GameApp/BaseGameApp.h"
+#include "Engine/GameApp/BaseGameLogic.h"
+#include "Engine/Actor/Actor.h"
+#include "Engine/Actor/Components/ControllableComponent.h"
 #include "Engine/UserInterface/Touch/TouchRecognizers/TapRecognizer.h"
 #include "Engine/UserInterface/Touch/TouchRecognizers/JoystickRecognizer.h"
 #include "Engine/UserInterface/Touch/TouchRecognizers/SwipeRecognizer.h"
@@ -44,6 +47,28 @@ void ActorController::HandleAction(ActionType actionType)
         {
             shared_ptr<EventData_Request_Change_Ammo_Type> pEvent(new EventData_Request_Change_Ammo_Type(m_pControlledObject->VGetProperties()->GetActorId()));
             IEventMgr::Get()->VTriggerEvent(pEvent);
+            break;
+        }
+        case ActionType_Lift:
+        case ActionType_Lift_Released:
+        {
+            StrongActorPtr pActor = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(m_pControlledObject->VGetProperties()->GetActorId()));
+            if (pActor)
+            {
+                shared_ptr<ClawControllableComponent> pClaw =
+                    MakeStrongPtr(pActor->GetComponent<ClawControllableComponent>(ClawControllableComponent::g_Name));
+                if (pClaw)
+                {
+                    if (actionType == ActionType_Lift)
+                    {
+                        pClaw->OnLiftPressed();
+                    }
+                    else
+                    {
+                        pClaw->OnLiftReleased();
+                    }
+                }
+            }
             break;
         }
     }
@@ -164,6 +189,13 @@ bool ActorController::VOnKeyDown(SDL_Keycode key)
         }
     }
 
+    // Lift powder kegs and enemies, holding the key and releasing it throws them
+    if (key == SDLK_z)
+    {
+        HandleAction(ActionType_Lift);
+        return true;
+    }
+
     m_InputKeys[key] = true;
 
     return false;
@@ -184,6 +216,12 @@ bool ActorController::VOnKeyUp(SDL_Keycode key)
 
             return true;
         }
+    }
+
+    if (key == SDLK_z)
+    {
+        HandleAction(ActionType_Lift_Released);
+        return true;
     }
 
     m_InputKeys[key] = false;

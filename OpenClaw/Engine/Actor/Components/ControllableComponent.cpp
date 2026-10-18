@@ -11,6 +11,8 @@
 #include "ControllerComponents/HealthComponent.h"
 #include "ControllerComponents/LifeComponent.h"
 #include "FollowableComponent.h"
+#include "EnemyAI/EnemyAIComponent.h"
+#include "../../Graphics2D/Image.h"
 
 #include "../../GameApp/BaseGameApp.h"
 #include "../../GameApp/BaseGameLogic.h"
@@ -86,6 +88,12 @@ ClawControllableComponent::ClawControllableComponent()
     m_TakeDamageTimeLeftMs = 0;
     m_bIsInBossFight = false;
     m_ThrowingTime = 0;
+    m_CarriedActorId = INVALID_ACTOR_ID;
+    m_bIsCarryingEnemy = false;
+    m_bIsLifting = false;
+    m_bIsThrowing = false;
+    m_bIsChargingThrow = false;
+    m_ThrowChargeTime = 0;
 
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &ClawControllableComponent::BossFightStartedDelegate), EventData_Boss_Fight_Started::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(this, &ClawControllableComponent::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
@@ -209,6 +217,21 @@ void ClawControllableComponent::VPostInit()
         assert(pHighFallAnim);
         DO_AND_CHECK(m_pClawAnimationComponent->AddAnimation("highfall", pHighFallAnim));
     }
+
+    // No existing animation for leaning back while charging the throw of carried keg / enemy.
+    // Frame 44 is not used by any of Claw's animations, it is the pose between holding (43) and throwing (45)
+    {
+        AnimationFrame frame;
+        frame.idx = 0;
+        frame.imageId = 44;
+        frame.imageName = "frame044";
+        frame.duration = 500;
+        std::vector<AnimationFrame> liftChargeAnimFrames = {frame};
+
+        std::shared_ptr<Animation> pLiftChargeAnim = Animation::CreateAnimation(liftChargeAnimFrames, "liftcharge", m_pClawAnimationComponent);
+        assert(pLiftChargeAnim);
+        DO_AND_CHECK(m_pClawAnimationComponent->AddAnimation("liftcharge", pLiftChargeAnim));
+    }
 }
 
 void ClawControllableComponent::VPostPostInit()
@@ -246,7 +269,7 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
 
             m_pExclamationMark->Activate(2000);
 
-            m_pClawAnimationComponent->SetAnimation("idle");
+            SetClawAnimation("idle");
 
             m_State = ClawState_Idle;
             m_IdleTime = 0;
@@ -291,7 +314,7 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
             double cameraOffsetSpeed = -1.0 * (g_pApp->GetGlobalOptions()->lookUpOrDownSpeed / 1000.0);
             pCamera->AddCameraOffsetY(cameraOffsetSpeed * msDiff);
         }
-        m_pClawAnimationComponent->SetAnimation("lookup");
+        SetClawAnimation("lookup");
     }
     else
     {
@@ -332,7 +355,7 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
 
     if (m_bFrozen)
     {
-        m_pClawAnimationComponent->SetAnimation("stand");
+        SetClawAnimation("stand");
         m_IdleTime = 0;
         m_LookingUpTime = 0;
         m_DuckingTime = 0;
@@ -349,7 +372,7 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_pClawAnimationComponent->GetCurrentAnimationName() == "fall" &&
         m_pPhysicsComponent->GetFallHeight() > g_pApp->GetGlobalOptions()->clawMinFallHeight)
     {
-        m_pClawAnimationComponent->SetAnimation("highfall");
+        SetClawAnimation("highfall");
     }
 
     if (m_pClawAnimationComponent->GetCurrentAnimationName().find("predynamite") != std::string::npos ||
@@ -376,6 +399,13 @@ void ClawControllableComponent::VUpdate(uint32 msDiff)
         m_ThrowingTime = 0;
     }
 
+    if (m_bIsChargingThrow)
+    {
+        m_ThrowChargeTime += msDiff;
+    }
+
+    UpdateCarriedActorPosition();
+
     //LOG("State: " + ToStr((int)m_State));
 
     m_LastState = m_State;
@@ -390,7 +420,7 @@ void ClawControllableComponent::VOnStartFalling()
         return;
     }
 
-    m_pClawAnimationComponent->SetAnimation("fall");
+    SetClawAnimation("fall");
     m_State = ClawState_Falling;
 }
 
@@ -398,11 +428,11 @@ void ClawControllableComponent::VOnLandOnGround(float fromHeight)
 {
     if (fromHeight > g_pApp->GetGlobalOptions()->clawMinFallHeight)
     {
-        m_pClawAnimationComponent->SetAnimation("land");
+        SetClawAnimation("land");
     }
     else
     {
-        m_pClawAnimationComponent->SetAnimation("stand");
+        SetClawAnimation("stand");
 
         SoundInfo soundInfo(SOUND_CLAW_LAND_SHORT);
         soundInfo.soundVolume = 150;
@@ -422,7 +452,7 @@ void ClawControllableComponent::VOnStartJumping()
         return;
     }
 
-    m_pClawAnimationComponent->SetAnimation("jump");
+    SetClawAnimation("jump");
     m_State = ClawState_Jumping;
 }
 
@@ -450,7 +480,7 @@ void ClawControllableComponent::VOnStopMoving()
 
     if (m_pClawAnimationComponent->GetCurrentAnimationName() != "land")
     {
-        m_pClawAnimationComponent->SetAnimation("stand");
+        SetClawAnimation("stand");
     }
     
     m_State = ClawState_Standing;
@@ -463,7 +493,7 @@ void ClawControllableComponent::VOnRun()
     {
         return;
     }
-    m_pClawAnimationComponent->SetAnimation("walk");
+    SetClawAnimation("walk");
     m_LookingUpTime = 0;
     m_DuckingTime = 0;
     m_State = ClawState_Walking;
@@ -471,6 +501,8 @@ void ClawControllableComponent::VOnRun()
 
 void ClawControllableComponent::VOnClimb(bool bIsClimbingUp, bool bIsOnTopEdge)
 {
+    DropCarried();
+
     // TODO: Decide whether to keep it
     static bool useAlternativeClimbAnim = true;
     if (bIsOnTopEdge && useAlternativeClimbAnim)
@@ -507,6 +539,12 @@ void ClawControllableComponent::VOnStopClimbing()
 
 void ClawControllableComponent::OnAttack()
 {
+    if (IsCarrying() || m_bIsLifting || m_bIsThrowing)
+    {
+        OnQuickThrow();
+        return;
+    }
+
     if (IsAttackingOrShooting() ||
         m_State == ClawState_Climbing ||
         m_State == ClawState_TakingDamage ||
@@ -582,6 +620,12 @@ void ClawControllableComponent::OnAttack()
 
 void ClawControllableComponent::OnFire(bool outOfAmmo)
 {
+    if (IsCarrying() || m_bIsLifting || m_bIsThrowing)
+    {
+        OnQuickThrow();
+        return;
+    }
+
     if (IsAttackingOrShooting() ||
         m_State == ClawState_Climbing ||
         m_State == ClawState_Dying || 
@@ -725,7 +769,9 @@ void ClawControllableComponent::OnFireEnded()
 
 bool ClawControllableComponent::CanMove()
 {
-    if ((m_State == ClawState_Shooting && m_pClawAnimationComponent->GetCurrentAnimationName() != "predynamite") ||
+    if (m_bIsLifting ||
+        m_bIsThrowing ||
+        (m_State == ClawState_Shooting && m_pClawAnimationComponent->GetCurrentAnimationName() != "predynamite") ||
         m_State == ClawState_Attacking ||
         m_State == ClawState_Dying ||
         m_State == ClawState_DuckAttacking ||
@@ -761,22 +807,22 @@ void ClawControllableComponent::SetCurrentPhysicsState()
 {
     if (m_pPhysicsComponent->IsFalling())
     {
-        m_pClawAnimationComponent->SetAnimation("fall");
+        SetClawAnimation("fall");
         m_State = ClawState_Falling;
     }
     else if (m_pPhysicsComponent->IsJumping())
     {
-        m_pClawAnimationComponent->SetAnimation("jump");
+        SetClawAnimation("jump");
         m_State = ClawState_Jumping;
     }
     else if (IsDucking())
     {
-        m_pClawAnimationComponent->SetAnimation("duck");
+        SetClawAnimation("duck");
         m_State = ClawState_Ducking;
     }
     else if (m_pPhysicsComponent->IsOnGround())
     {
-        m_pClawAnimationComponent->SetAnimation("stand");
+        SetClawAnimation("stand");
         m_State = ClawState_Standing;
     }
     else if (m_State == ClawState_HoldingRope)
@@ -787,7 +833,7 @@ void ClawControllableComponent::SetCurrentPhysicsState()
     }
     else
     {
-        m_pClawAnimationComponent->SetAnimation("fall");
+        SetClawAnimation("fall");
         m_State = ClawState_Standing;
         //LOG_ERROR("Unknown physics state. Assume falling");
     }
@@ -992,7 +1038,27 @@ void ClawControllableComponent::VOnAnimationLooped(Animation* pAnimation)
     }
     else if (animName == "land")
     {
-        m_pClawAnimationComponent->SetAnimation("stand");
+        SetClawAnimation("stand");
+    }
+    else if (animName == "lift" && m_bIsLifting)
+    {
+        m_bIsLifting = false;
+        SetCurrentPhysicsState();
+
+        if (m_bIsCarryingEnemy)
+        {
+            StrongActorPtr pEnemy = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(m_CarriedActorId));
+            shared_ptr<EnemyAIComponent> pEnemyAI = pEnemy ? MakeStrongPtr(pEnemy->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name)) : nullptr;
+            if (pEnemyAI)
+            {
+                pEnemyAI->OnLiftedAboveHead();
+            }
+        }
+    }
+    else if (animName == "throw" && m_bIsThrowing)
+    {
+        m_bIsThrowing = false;
+        SetCurrentPhysicsState();
     }
 }
 
@@ -1017,6 +1083,8 @@ void ClawControllableComponent::VOnHealthBelowZero(DamageType damageType, int so
     {
         return;
     }
+
+    DropCarried();
 
     IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Claw_Health_Below_Zero(m_pOwner->GetGUID())));
 
@@ -1062,6 +1130,11 @@ void ClawControllableComponent::VOnHealthChanged(int32 oldHealth, int32 newHealt
     if (newHealth <= 0) {
         return;
     } 
+
+    if (oldHealth > newHealth || damageType == DamageType_SirenProjectile)
+    {
+        DropCarried();
+    }
 
     if (damageType == DamageType_SirenProjectile) {
         m_pClawAnimationComponent->SetAnimation("freeze");
@@ -1138,7 +1211,7 @@ void ClawControllableComponent::OnDuck()
 {
     if (!IsDucking())
     {
-        m_pClawAnimationComponent->SetAnimation("duck");
+        SetClawAnimation("duck");
         m_State = ClawState_Ducking;
     }
 }
@@ -1157,6 +1230,8 @@ bool ClawControllableComponent::IsClimbing()
 
 void ClawControllableComponent::VOnAttachedToRope()
 {
+    DropCarried();
+
     m_pClawAnimationComponent->SetAnimation("swing");
     m_pPhysicsComponent->SetGravityScale(0.0f);
 
@@ -1213,4 +1288,351 @@ void ClawControllableComponent::OnClawKilledEnemy(DamageType killDamageType, Act
         std::string snd = Util::PlayRandomSoundFromList(s_OnEnemyKillSoundList, 260);
         m_pExclamationMark->Activate(Util::GetSoundDurationMs(snd));
     }
+}
+//=====================================================================================================================
+// Lifting and throwing powder kegs and enemies
+//
+// Mimics the original game:
+//  1) Lift key (Z) pressed while standing next to a powder keg / liftable enemy -> TryLift()
+//     Claw plays "lift" animation, the lifted actor's Box2D body is deactivated (so it stops colliding,
+//     falling and dealing aura damage) and every frame it is teleported above Claw's head
+//     (UpdateCarriedActorPosition()). Enemy AI is put on hold (EnemyAIComponent::OnLifted()).
+//  2) While carrying, Claw walks with "liftwalk" / stands with "lift2" (see SetClawAnimation()),
+//     he cannot duck, jump, attack or shoot.
+//  3) Lift key pressed again starts charging the throw (Claw leans back - "liftcharge" animation),
+//     releasing it throws (Throw()). The longer it was held, the further it flies.
+//     Attack / fire key throws immediately with the shortest distance.
+//     - Keg is replaced by a projectile actor (ActorTemplates::CreateThrownPowderKeg()) which explodes upon impact.
+//     - Enemy's body is reactivated with initial speed, EnemyAIComponent takes care of the impact.
+//  4) When Claw takes damage / climbs / grabs a rope, he drops what he carries (DropCarried()).
+//=====================================================================================================================
+
+// Keg images which the original game uses while keg is held above Claw's head / flying
+static const int KEG_LIFTED_IMAGE_ID = 14;
+
+// Horizontal speed of the furthest throw. Vertical speed is always the same so the throw distance is linear to this.
+static const double MAX_THROW_SPEED_X = 7.0;
+static const double THROW_SPEED_Y = -3.0;
+
+static AnimationComponent* GetAnimationComponent(Actor* pActor)
+{
+    return MakeStrongPtr(pActor->GetComponent<AnimationComponent>(AnimationComponent::g_Name)).get();
+}
+
+void ClawControllableComponent::SetClawAnimation(const std::string& animName)
+{
+    // Lift and throw animations have to finish first
+    if (m_bIsLifting || m_bIsThrowing)
+    {
+        return;
+    }
+
+    if (IsCarrying())
+    {
+        const bool isMovementAnim = (animName == "walk" || animName == "jump" || animName == "fall" ||
+            animName == "highfall" || animName == "stand" || animName == "idle" || animName == "land" || animName == "lookup");
+
+        if (isMovementAnim && m_bIsChargingThrow)
+        {
+            m_pClawAnimationComponent->SetAnimation("liftcharge");
+            return;
+        }
+        else if (animName == "walk")
+        {
+            m_pClawAnimationComponent->SetAnimation("liftwalk");
+            return;
+        }
+        else if (isMovementAnim)
+        {
+            m_pClawAnimationComponent->SetAnimation("lift2");
+            return;
+        }
+    }
+
+    m_pClawAnimationComponent->SetAnimation(animName);
+}
+
+void ClawControllableComponent::OnLiftPressed()
+{
+    if (m_bIsLifting ||
+        m_bIsThrowing ||
+        m_bFrozen ||
+        m_State == ClawState_Dying ||
+        m_State == ClawState_TakingDamage ||
+        m_State == ClawState_Frozen)
+    {
+        return;
+    }
+
+    if (IsCarrying())
+    {
+        // Claw leans back while the key is held
+        m_bIsChargingThrow = true;
+        m_ThrowChargeTime = 0;
+        m_pClawAnimationComponent->SetAnimation("liftcharge");
+        return;
+    }
+
+    // Kegs / enemies can only be lifted when Claw stands on ground and is not busy
+    if ((m_State != ClawState_Standing &&
+         m_State != ClawState_Walking &&
+         m_State != ClawState_Idle) ||
+        !m_pPhysicsComponent->IsOnGround())
+    {
+        return;
+    }
+
+    TryLift();
+}
+
+void ClawControllableComponent::OnLiftReleased()
+{
+    if (!m_bIsChargingThrow)
+    {
+        return;
+    }
+
+    m_bIsChargingThrow = false;
+    if (IsCarrying() && !m_bIsLifting && !m_bIsThrowing)
+    {
+        Throw(m_ThrowChargeTime);
+    }
+}
+
+void ClawControllableComponent::OnQuickThrow()
+{
+    if (IsCarrying() && !m_bIsLifting && !m_bIsThrowing && !m_bFrozen)
+    {
+        m_bIsChargingThrow = false;
+        Throw(0);
+    }
+}
+
+bool ClawControllableComponent::TryLift()
+{
+    shared_ptr<IGamePhysics> pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
+
+    // Look for keg or enemy in front of Claw
+    const Point clawPos = m_pPositionComponent->GetPosition();
+    const double dir = (m_Direction == Direction_Left) ? -1.0 : 1.0;
+    const double rayOffsetsY[] = { 20.0, 45.0 };
+    const uint32 liftableFlags[] = { CollisionFlag_PowderKeg, CollisionFlag_DynamicActor };
+
+    for (uint32 flag : liftableFlags)
+    {
+        for (double offsetY : rayOffsetsY)
+        {
+            RaycastResult result = pPhysics->VRayCast(
+                Point(clawPos.x - 20.0 * dir, clawPos.y + offsetY),
+                Point(clawPos.x + 75.0 * dir, clawPos.y + offsetY),
+                flag);
+            if (!result.foundIntersection || result.actorId == INVALID_ACTOR_ID)
+            {
+                continue;
+            }
+
+            StrongActorPtr pActor = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(result.actorId));
+            if (!pActor)
+            {
+                continue;
+            }
+
+            shared_ptr<EnemyAIComponent> pEnemyAI = MakeStrongPtr(pActor->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
+            if (flag == CollisionFlag_DynamicActor && (!pEnemyAI || !pEnemyAI->CanBeLifted()))
+            {
+                continue;
+            }
+
+            // Lifted actor's body stops being simulated while Claw holds it
+            pPhysics->VDeactivate(result.actorId);
+
+            m_CarriedActorId = result.actorId;
+            m_bIsCarryingEnemy = (pEnemyAI != nullptr);
+            if (pEnemyAI)
+            {
+                pEnemyAI->OnLifted();
+            }
+
+            m_bIsLifting = true;
+            m_State = ClawState_Standing;
+            m_pClawAnimationComponent->SetAnimation("lift");
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void ClawControllableComponent::UpdateCarriedActorPosition()
+{
+    if (!IsCarrying())
+    {
+        return;
+    }
+
+    StrongActorPtr pCarried = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(m_CarriedActorId));
+    if (!pCarried)
+    {
+        // Carried actor is gone (e.g. destroyed by explosion)
+        m_CarriedActorId = INVALID_ACTOR_ID;
+        m_bIsChargingThrow = false;
+        return;
+    }
+
+    // While Claw bends down to grab it, it stays where it is
+    if (m_bIsLifting && m_pClawAnimationComponent->GetCurrentAnimation()->GetCurrentAnimationFrame()->idx == 0)
+    {
+        return;
+    }
+
+    // Lifted keg is shown lying on its side
+    if (!m_bIsCarryingEnemy)
+    {
+        AnimationComponent* pKegAnimComp = GetAnimationComponent(pCarried.get());
+        std::string liftedAnim = "lifted";
+        if (pKegAnimComp && !pKegAnimComp->HasAnimation(liftedAnim))
+        {
+            AnimationFrame frame;
+            frame.idx = 0;
+            frame.imageId = KEG_LIFTED_IMAGE_ID;
+            frame.imageName = "frame" + Util::ConvertToThreeDigitsString(KEG_LIFTED_IMAGE_ID);
+            frame.duration = 1000;
+            std::vector<AnimationFrame> frames = { frame };
+            std::shared_ptr<Animation> pLiftedAnim = Animation::CreateAnimation(frames, liftedAnim.c_str(), pKegAnimComp);
+            if (pLiftedAnim)
+            {
+                pKegAnimComp->AddAnimation(liftedAnim, pLiftedAnim);
+            }
+        }
+        if (pKegAnimComp && pKegAnimComp->HasAnimation(liftedAnim))
+        {
+            pKegAnimComp->SetAnimation(liftedAnim);
+        }
+    }
+
+    // Held above Claw's head - bottom of the image is right above Claw's hands.
+    // Image is drawn centered at its body position + image offset, so compensate it.
+    Point carriedPos(m_pPositionComponent->GetX(), m_pPositionComponent->GetY() - 44);
+    shared_ptr<ActorRenderComponent> pRenderComponent = MakeStrongPtr(pCarried->GetComponent<ActorRenderComponent>());
+    if (pRenderComponent)
+    {
+        if (shared_ptr<Image> pImage = MakeStrongPtr(pRenderComponent->GetCurrentImage()))
+        {
+            carriedPos.Set(
+                carriedPos.x - pImage->GetOffsetX(),
+                carriedPos.y - pImage->GetHeight() / 2 - pImage->GetOffsetY());
+        }
+    }
+
+    g_pApp->GetGameLogic()->VGetGamePhysics()->VSetPosition(m_CarriedActorId, carriedPos);
+}
+
+void ClawControllableComponent::Throw(int chargeTimeMs)
+{
+    StrongActorPtr pCarried = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(m_CarriedActorId));
+    const uint32 carriedId = m_CarriedActorId;
+    const bool isEnemy = m_bIsCarryingEnemy;
+    m_CarriedActorId = INVALID_ACTOR_ID;
+    m_bIsCarryingEnemy = false;
+    if (!pCarried)
+    {
+        return;
+    }
+
+    // The longer the lift key was held, the further it flies
+    //  Keg:   < 1s = 1/2, 1-2s = 3/4, > 2s = full distance
+    //  Enemy: < 2s = 1/2, > 2s = 3/4 of full distance
+    double distanceFactor = 0.5;
+    if (isEnemy)
+    {
+        distanceFactor = (chargeTimeMs >= 2000) ? 0.75 : 0.5;
+    }
+    else
+    {
+        if (chargeTimeMs >= 2000) { distanceFactor = 1.0; }
+        else if (chargeTimeMs >= 1000) { distanceFactor = 0.75; }
+    }
+
+    const double dir = (m_Direction == Direction_Left) ? -1.0 : 1.0;
+    const Point throwSpeed(MAX_THROW_SPEED_X * distanceFactor * dir, THROW_SPEED_Y);
+
+    shared_ptr<IGamePhysics> pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
+    if (isEnemy)
+    {
+        // Enemy flies on his own and dies upon impact
+        pPhysics->VActivate(carriedId);
+        pPhysics->VSetLinearSpeed(carriedId, throwSpeed);
+
+        shared_ptr<EnemyAIComponent> pEnemyAI = MakeStrongPtr(pCarried->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
+        if (pEnemyAI)
+        {
+            pEnemyAI->OnThrown(m_pOwner->GetGUID());
+        }
+    }
+    else
+    {
+        // Visible keg is replaced by a projectile which explodes upon impact
+        Point kegImagePos = pCarried->GetPositionComponent()->GetPosition();
+        shared_ptr<ActorRenderComponent> pKegRenderComponent = MakeStrongPtr(pCarried->GetComponent<ActorRenderComponent>());
+        if (pKegRenderComponent)
+        {
+            if (shared_ptr<Image> pKegImage = MakeStrongPtr(pKegRenderComponent->GetCurrentImage()))
+            {
+                kegImagePos.Set(kegImagePos.x + pKegImage->GetOffsetX(), kegImagePos.y + pKegImage->GetOffsetY());
+            }
+        }
+        const std::string kegImageSet = pCarried->GetName();
+
+        pPhysics->VRemoveActor(carriedId);
+        IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Destroy_Actor(carriedId)));
+
+        ActorTemplates::CreateThrownPowderKeg(
+            kegImageSet,
+            Point(kegImagePos.x + 15.0 * dir, kegImagePos.y),
+            throwSpeed,
+            m_pOwner->GetGUID());
+    }
+
+    m_bIsThrowing = true;
+    m_pClawAnimationComponent->SetAnimation("throw");
+}
+
+void ClawControllableComponent::DropCarried()
+{
+    m_bIsLifting = false;
+    m_bIsThrowing = false;
+    m_bIsChargingThrow = false;
+
+    if (!IsCarrying())
+    {
+        return;
+    }
+
+    // Falls down from Claw's hands - keg lands as an ordinary keg, enemy continues as usual
+    shared_ptr<IGamePhysics> pPhysics = g_pApp->GetGameLogic()->VGetGamePhysics();
+    pPhysics->VActivate(m_CarriedActorId);
+    pPhysics->VSetLinearSpeed(m_CarriedActorId, Point(0, 0));
+
+    StrongActorPtr pCarried = MakeStrongPtr(g_pApp->GetGameLogic()->VGetActor(m_CarriedActorId));
+    if (pCarried)
+    {
+        if (m_bIsCarryingEnemy)
+        {
+            shared_ptr<EnemyAIComponent> pEnemyAI = MakeStrongPtr(pCarried->GetComponent<EnemyAIComponent>(EnemyAIComponent::g_Name));
+            if (pEnemyAI)
+            {
+                pEnemyAI->OnDropped();
+            }
+        }
+        else if (AnimationComponent* pKegAnimComp = GetAnimationComponent(pCarried.get()))
+        {
+            // Back to the paused first frame of the explode animation, as at the level start
+            pKegAnimComp->SetAnimation("explode");
+            pKegAnimComp->PauseAnimation();
+        }
+    }
+
+    m_CarriedActorId = INVALID_ACTOR_ID;
+    m_bIsCarryingEnemy = false;
 }
