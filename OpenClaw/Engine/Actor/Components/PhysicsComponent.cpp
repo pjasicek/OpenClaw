@@ -338,6 +338,12 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
         m_MaxJumpHeight = m_pControllableComponent->GetMaxJumpHeight();
     }
 
+    // Jump key is ignored when controlled actor cannot jump (e.g. Claw carrying keg / enemy)
+    if (!m_IsJumping && m_CurrentSpeed.y < 0 && !m_pControllableComponent->CanStartJump())
+    {
+        m_CurrentSpeed.y = 0;
+    }
+
     if (m_bIsForcedUp)
     {
         if (m_IsFalling || m_pControllableComponent->VIsAttachedToRope() || m_pControllableComponent->IsClimbing())
@@ -526,7 +532,8 @@ void PhysicsComponent::VUpdate(uint32 msDiff)
     if (m_pControllableComponent)
     {
         if (!m_IsClimbing && !IsInAir() && m_ClimbingSpeed.y > DBL_EPSILON &&
-            (GetVelocity().y < 0.1 || IsOnGround()))
+            (GetVelocity().y < 0.1 || IsOnGround()) &&
+            m_pControllableComponent->CanDuck())
         {
             m_pControllableComponent->OnDuck();
             // TODO: HACK: one of the biggest hacks so far

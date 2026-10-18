@@ -51,6 +51,14 @@ public:
 
     BaseEnemyAIStateComponent* GetCurrentState();
 
+    // Being lifted and thrown by Claw
+    bool CanBeLifted();
+    void OnLifted();
+    void OnLiftedAboveHead();
+    void OnDropped();
+    void OnThrown(int throwerActorId);
+    bool IsLiftedOrThrown() const { return m_bLifted || m_bThrown; }
+
 private:
     void LeaveAllStates(BaseEnemyAIStateComponent* pNextState);
     bool HasState(const std::string &stateName);
@@ -61,9 +69,22 @@ private:
     void AcquireStateLock(BaseEnemyAIStateComponent* pNewState);
     BaseEnemyAIStateComponent* GetState(EnemyAIState state);
 
+    bool HasAnimation(const std::string& animName);
+    void SetAnimationIfExists(const std::string& animName);
+    std::string GetLiftedAboveHeadAnimation();
+    bool IsBoss();
+    void UpdateThrown(uint32 msDiff);
+    void OnThrowImpact();
+
     bool m_bInitialized;
     bool m_bDead;
     bool m_bHasStateLock;
+
+    bool m_bLifted;
+    bool m_bThrown;
+    int m_ThrownTime;
+    int m_ThrowerActorId;
+    double m_LastThrownVelocityY;
     EnemyStateMap m_StateMap;
 
     int m_TimeSinceLastSpeechSound;

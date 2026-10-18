@@ -62,15 +62,16 @@ typedef struct _midiproc_MIDL_EXPR_FORMAT_STRING
 static RPC_SYNTAX_IDENTIFIER  _RpcTransferSyntax = 
 {{0x8A885D04,0x1CEB,0x11C9,{0x9F,0xE8,0x08,0x00,0x2B,0x10,0x48,0x60}},{2,0}};
 
-extern const midiproc_MIDL_TYPE_FORMAT_STRING midiproc__MIDL_TypeFormatString;
-extern const midiproc_MIDL_PROC_FORMAT_STRING midiproc__MIDL_ProcFormatString;
-extern const midiproc_MIDL_EXPR_FORMAT_STRING midiproc__MIDL_ExprFormatString;
+/* OpenClaw: forward declarations are 'static' (MIDL generates 'extern') - GCC/MinGW rejects static definition after extern declaration */
+static const midiproc_MIDL_TYPE_FORMAT_STRING midiproc__MIDL_TypeFormatString;
+static const midiproc_MIDL_PROC_FORMAT_STRING midiproc__MIDL_ProcFormatString;
+static const midiproc_MIDL_EXPR_FORMAT_STRING midiproc__MIDL_ExprFormatString;
 
 /* Standard interface: MidiRPC, ver. 1.0,
    GUID={0x2d4dc2f9,0xce90,0x4080,{0x8a,0x00,0x1c,0xb8,0x19,0x08,0x69,0x70}} */
 
 
-extern const MIDL_SERVER_INFO MidiRPC_ServerInfo;
+static const MIDL_SERVER_INFO MidiRPC_ServerInfo;
 
 extern RPC_DISPATCH_TABLE MidiRPC_v1_0_DispatchTable;
 
@@ -88,7 +89,7 @@ static const RPC_SERVER_INTERFACE MidiRPC___RpcServerInterface =
     };
 RPC_IF_HANDLE MidiRPC_v1_0_s_ifspec = (RPC_IF_HANDLE)& MidiRPC___RpcServerInterface;
 
-extern const MIDL_STUB_DESC MidiRPC_StubDesc;
+static const MIDL_STUB_DESC MidiRPC_StubDesc;
 
 
 #if !defined(__RPC_WIN32__)

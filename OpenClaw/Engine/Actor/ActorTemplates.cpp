@@ -3,6 +3,8 @@
 #include "../GameApp/BaseGameLogic.h"
 #include "../Events/EventMgr.h"
 #include "../Events/Events.h"
+#include "Components/AnimationComponent.h"
+#include "../Util/Util.h"
 
 #include <time.h>
 
@@ -1547,7 +1549,8 @@ namespace ActorTemplates
 
     TiXmlElement* CreateXmlData_PowderKegActor(const std::string& imageSet, const Point& position, int32 damage, int32 zCoord)
     {
-        // TODO: create xml actor prototype and implement lift-throw logic
+        // TODO: create xml actor prototype
+        // Lifting / throwing by Claw: see ClawControllableComponent::TryLift() and CreateThrownPowderKeg()
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", imageSet.c_str());
 
@@ -1594,6 +1597,52 @@ namespace ActorTemplates
         pActor->LinkEndChild(CreateDestroyableComponent(true, "explode", { SOUND_LEVEL1_KEG_EXPLODE }));
         pActor->LinkEndChild(CreateHealthComponent(1, 1));
         pActor->LinkEndChild(CreateExplodeableComponent(Point(140, 140), damage));
+
+        return pActor;
+    }
+
+    // Powder keg thrown by Claw - explodes as soon as it hits ground, wall, enemy, crate or other keg
+    TiXmlElement* CreateXmlData_ThrownPowderKegActor(const std::string& imageSet, const Point& imagePosition, const Point& speed, int sourceActorId)
+    {
+        // Body is placed at position + offset of the first keg image (46px) and spinning keg images
+        // are drawn 44px below the body, so shift spawn position and fixture to have both at imagePosition
+        const Point position(imagePosition.x, imagePosition.y - 46 - 44);
+        const Point fixtureOffset(0, 44);
+
+        TiXmlElement* pActor = new TiXmlElement("Actor");
+        pActor->SetAttribute("Type", imageSet.c_str());
+
+        pActor->LinkEndChild(CreatePositionComponent(position.x, position.y));
+        pActor->LinkEndChild(CreateActorRenderComponent(imageSet, (int32) zIndexes::ClawProjectile));
+        pActor->LinkEndChild(CreatePhysicsComponent(
+            "Dynamic",  // Type - "Dynamic", "Kinematic", "Static"
+            false,      // Has foot sensor ?
+            false,      // Has capsule shape ?
+            true,       // Has bullet behaviour ?
+            true,       // Has sensor behaviour ?
+            "Projectile",  // Fixture type
+            position,      // Position
+            fixtureOffset, // Offset - where to move the body upon its placement
+            "Rectangle",   // Body shape - "Rectangle" or "Circle"
+            Point(0, 0),   // Size - Leave blank if you want size to be determined by its default image
+            1.0f,          // Gravity scale - set to 0.0f if no gravity is desired
+            true,          // Has any initial speed ?
+            false,         // Has initial impulse ?
+            speed,         // If it does, specify it here
+            CollisionFlag_Explosion,  // Collision flag - e.g. What is this actor ?
+            (CollisionFlag_Solid | CollisionFlag_Ground | CollisionFlag_DynamicActor | CollisionFlag_Crate | CollisionFlag_PowderKeg),  // Collision mask - e.g. With what does this actor collide with ?
+            0.0f,  // Friction - with floor and so
+            0.0f,  // Density - determines if this character bounces
+            0.0f)); // Restitution - makes object bounce
+
+        // Paused first frame of the keg, the spinning animation is added in CreateThrownPowderKeg
+        pActor->LinkEndChild(CreateAnimationComponent("/LEVEL1/ANIS/POWDERKEG/EXPLODE.ANI", true));
+
+        TiXmlElement* pProjectileAIComponent = new TiXmlElement("ProjectileAIComponent");
+        XML_ADD_TEXT_ELEMENT("Damage", "25", pProjectileAIComponent);
+        XML_ADD_TEXT_ELEMENT("ProjectileType", "DamageType_Explosion", pProjectileAIComponent);
+        XML_ADD_TEXT_ELEMENT("SourceActorId", ToStr(sourceActorId).c_str(), pProjectileAIComponent);
+        pActor->LinkEndChild(pProjectileAIComponent);
 
         return pActor;
     }
@@ -2522,6 +2571,41 @@ namespace ActorTemplates
     StrongActorPtr CreateClawProjectile(AmmoType ammoType, Direction direction, const Point& position, int sourceActorId, const Point& initialImpulse)
     {
         return CreateAndReturnActor(CreateXmlData_ClawProjectileActor(ammoType, direction, position, sourceActorId, initialImpulse));
+    }
+
+    StrongActorPtr CreateThrownPowderKeg(const std::string& imageSet, const Point& imagePosition, const Point& speed, int sourceActorId)
+    {
+        StrongActorPtr pKeg = CreateAndReturnActor(CreateXmlData_ThrownPowderKegActor(imageSet, imagePosition, speed, sourceActorId));
+        if (!pKeg)
+        {
+            return nullptr;
+        }
+
+        // Spinning keg - same frames as the original POWDERKEG/THROWN.ANI of every level
+        shared_ptr<AnimationComponent> pAnimationComponent = MakeStrongPtr(pKeg->GetComponent<AnimationComponent>());
+        if (pAnimationComponent)
+        {
+            const int spinImageIds[] = { 14, 16, 15, 17 };
+            std::vector<AnimationFrame> spinFrames;
+            for (int imageId : spinImageIds)
+            {
+                AnimationFrame frame;
+                frame.idx = (int) spinFrames.size();
+                frame.imageId = imageId;
+                frame.imageName = "frame" + Util::ConvertToThreeDigitsString(imageId);
+                frame.duration = 150;
+                spinFrames.push_back(frame);
+            }
+
+            std::shared_ptr<Animation> pSpinAnim = Animation::CreateAnimation(spinFrames, "spin", pAnimationComponent.get());
+            if (pSpinAnim && pAnimationComponent->AddAnimation("spin", pSpinAnim))
+            {
+                pAnimationComponent->SetAnimation("spin");
+                pAnimationComponent->ResumeAnimation();
+            }
+        }
+
+        return pKeg;
     }
 
     StrongActorPtr CreateProjectile(

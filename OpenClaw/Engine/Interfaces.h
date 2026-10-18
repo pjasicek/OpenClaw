@@ -32,7 +32,9 @@ enum ActionType
 {
     ActionType_Fire,
     ActionType_Attack,
-    ActionType_Change_Ammo_Type
+    ActionType_Change_Ammo_Type,
+    ActionType_Lift,
+    ActionType_Lift_Released
 };
 
 enum Direction
@@ -243,6 +245,7 @@ enum DamageType
     DamageType_GabrielCannonBall,
     DamageType_Trident,
     DamageType_SirenProjectile,
+    DamageType_Thrown, // Hit by enemy thrown by Claw - cannot be parried
     DamageType_Max
 };
 
@@ -527,12 +530,14 @@ struct RaycastResult
         closestPixelDistance = FLT_MAX;
         deltaX = 0;
         deltaY = 0;
+        actorId = 0; // INVALID_ACTOR_ID
     }
 
     bool foundIntersection;
     float closestPixelDistance;
     float deltaX;
     float deltaY;
+    uint32 actorId; // Actor owning the closest intersected fixture
 };
 
 class Point;

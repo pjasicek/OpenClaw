@@ -47,6 +47,8 @@ public:
     virtual bool CanMove() = 0;
     virtual bool IsActorFrozen() = 0;
     virtual bool IsDucking() = 0;
+    virtual bool CanDuck() { return true; }
+    virtual bool CanStartJump() { return true; }
 
     virtual bool IsDying() = 0;
     virtual bool InPhysicsCapableState() = 0;
@@ -146,6 +148,8 @@ public:
     virtual bool CanMove() override;
     virtual bool IsActorFrozen() override;
     virtual bool IsDucking() override;
+    virtual bool CanDuck() override { return !IsCarrying() && !m_bIsLifting && !m_bIsThrowing; }
+    virtual bool CanStartJump() override { return !IsCarrying() && !m_bIsLifting && !m_bIsThrowing; }
     virtual void OnStand() override;
 
     virtual bool IsDying() override { return m_State == ClawState_Dying; }
@@ -157,6 +161,15 @@ public:
     bool IsHoldingRope() { return m_State == ClawState_HoldingRope; }
 
     void OnClawKilledEnemy(DamageType killDamageType, Actor* pKilledEnemyActor);
+
+    // Powder kegs and enemies:
+    // Lift key pressed lifts the keg / enemy in front of Claw or starts charging the throw of the carried one,
+    // releasing the key throws it - the longer it was held, the further it flies
+    void OnLiftPressed();
+    void OnLiftReleased();
+    // Attack / fire while carrying throws immediately
+    void OnQuickThrow();
+    bool IsCarrying() const { return m_CarriedActorId != INVALID_ACTOR_ID; }
 
     // AnimationObserver API
     virtual void VOnAnimationFrameChanged(Animation* pAnimation, AnimationFrame* pLastFrame, AnimationFrame* pNewFrame) override;
@@ -173,12 +186,27 @@ private:
     void SetCurrentPhysicsState();
     bool IsAttackingOrShooting();
 
+    // Sets Claw's animation, replacing movement animations with their keg-carrying variants
+    void SetClawAnimation(const std::string& animName);
+
+    bool TryLift();
+    void Throw(int chargeTimeMs);
+    void DropCarried();
+    void UpdateCarriedActorPosition();
+
     bool m_bIsInBossFight;
 
     int m_TakeDamageDuration;
     int m_TakeDamageTimeLeftMs;
 
     int m_ThrowingTime;
+
+    uint32 m_CarriedActorId;
+    bool m_bIsCarryingEnemy;
+    bool m_bIsLifting;
+    bool m_bIsThrowing;
+    bool m_bIsChargingThrow;
+    int m_ThrowChargeTime;
 
     ClawState m_State;
     ClawState m_LastState;
