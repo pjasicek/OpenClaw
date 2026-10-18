@@ -1314,6 +1314,9 @@ public:
         {
             m_Fraction = fraction;
             m_RaycastResult.foundIntersection = true;
+
+            Actor* pActor = static_cast<Actor*>(fixture->GetBody()->GetUserData());
+            m_RaycastResult.actorId = pActor ? pActor->GetGUID() : INVALID_ACTOR_ID;
         }
 
         return 1.0f;

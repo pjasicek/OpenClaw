@@ -527,12 +527,14 @@ struct RaycastResult
         closestPixelDistance = FLT_MAX;
         deltaX = 0;
         deltaY = 0;
+        actorId = 0; // INVALID_ACTOR_ID
     }
 
     bool foundIntersection;
     float closestPixelDistance;
     float deltaX;
     float deltaY;
+    uint32 actorId; // Actor owning the closest intersected fixture
 };
 
 class Point;
