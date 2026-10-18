@@ -1549,7 +1549,8 @@ namespace ActorTemplates
 
     TiXmlElement* CreateXmlData_PowderKegActor(const std::string& imageSet, const Point& position, int32 damage, int32 zCoord)
     {
-        // TODO: create xml actor prototype and implement lift-throw logic
+        // TODO: create xml actor prototype
+        // Lifting / throwing by Claw: see ClawControllableComponent::TryLift() and CreateThrownPowderKeg()
         TiXmlElement* pActor = new TiXmlElement("Actor");
         pActor->SetAttribute("Type", imageSet.c_str());
 
