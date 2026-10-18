@@ -7,6 +7,7 @@
 #include <libwap.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include "../Interfaces.h"
 
 struct TileCollisionPrototype;
 struct TileDescription;
@@ -26,7 +27,7 @@ namespace Util
     int GetRandomNumber(int fromRange, int toRange);
     bool RollDice(int chanceToSucceed);
 
-    std::string PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume = 100);
+    std::string PlayRandomSoundFromList(const std::vector<std::string>& sounds, int volume = 100, SoundCategory category = SoundCategory_Effect);
     void PlaySimpleSound(const std::string& sound, int volume = 100);
 
     int GetSoundDurationMs(const std::string& soundPath);

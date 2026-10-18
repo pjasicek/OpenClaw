@@ -99,6 +99,9 @@ void BaseGameApp::Terminate()
 {
     LOG("Terminating...");
 
+    // Has to be saved while audio still exists - it holds the current audio options
+    SaveGameOptions((m_GameOptions.userDirectory + "config.xml").c_str());
+
     RemoveAllDelegates();
 
     SAFE_DELETE(m_pGame);
@@ -117,8 +120,6 @@ void BaseGameApp::Terminate()
         delete actorProto.second;
     }
     m_ActorXmlPrototypeMap.clear();
-
-    SaveGameOptions();
 }
 
 #define STARTUP_TEST(condition, error) \
@@ -545,6 +546,10 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
             audioElem->FirstChildElement("SoundOn"));
         ParseValueFromXmlElem(&m_GameOptions.musicOn,
             audioElem->FirstChildElement("MusicOn"));
+        ParseValueFromXmlElem(&m_GameOptions.voiceOn,
+            audioElem->FirstChildElement("VoiceOn"));
+        ParseValueFromXmlElem(&m_GameOptions.ambientOn,
+            audioElem->FirstChildElement("AmbientOn"));
     }
 
     //-------------------------------------------------------------------------
@@ -728,10 +733,53 @@ bool BaseGameApp::LoadGameOptions(const char* inConfigFile)
     return true;
 }
 
+// Sets text of pParent's child element (creates the element if it does not exist yet)
+static void SetXmlChildText(TiXmlElement* pParent, const char* childName, const std::string& text)
+{
+    TiXmlElement* pChild = pParent->FirstChildElement(childName);
+    if (pChild == NULL)
+    {
+        pChild = new TiXmlElement(childName);
+        pParent->LinkEndChild(pChild);
+    }
+
+    pChild->Clear();
+    pChild->LinkEndChild(new TiXmlText(text.c_str()));
+}
+
+// Saves only the options which can be changed in the game menu (audio), rest of the config file is kept as it is
 void BaseGameApp::SaveGameOptions(const char* outConfigFile)
 {
-    LOG_ERROR("Not implemented yet!");
-    return;
+    if (m_pAudio == NULL)
+    {
+        return;
+    }
+
+    TiXmlDocument xmlConfig;
+    if (!xmlConfig.LoadFile(outConfigFile) || xmlConfig.RootElement() == NULL)
+    {
+        LOG_WARNING("Could not save game options - failed to load: " + std::string(outConfigFile));
+        return;
+    }
+
+    TiXmlElement* pAudioElem = xmlConfig.RootElement()->FirstChildElement("Audio");
+    if (pAudioElem == NULL)
+    {
+        pAudioElem = new TiXmlElement("Audio");
+        xmlConfig.RootElement()->LinkEndChild(pAudioElem);
+    }
+
+    SetXmlChildText(pAudioElem, "SoundVolume", ToStr(m_pAudio->GetSoundVolume()));
+    SetXmlChildText(pAudioElem, "MusicVolume", ToStr(m_pAudio->GetMusicVolume()));
+    SetXmlChildText(pAudioElem, "SoundOn", m_pAudio->IsSoundActive() ? "true" : "false");
+    SetXmlChildText(pAudioElem, "MusicOn", m_pAudio->IsMusicActive() ? "true" : "false");
+    SetXmlChildText(pAudioElem, "VoiceOn", m_pAudio->IsVoiceActive() ? "true" : "false");
+    SetXmlChildText(pAudioElem, "AmbientOn", m_pAudio->IsAmbientActive() ? "true" : "false");
+
+    if (!xmlConfig.SaveFile(outConfigFile))
+    {
+        LOG_WARNING("Could not save game options to: " + std::string(outConfigFile));
+    }
 }
 
 //=====================================================================================================================
@@ -1443,6 +1491,10 @@ TiXmlElement* CreateDefaultAudioConfig()
     XML_ADD_TEXT_ELEMENT("ChunkSize", "2048", audio);
     XML_ADD_TEXT_ELEMENT("SoundVolume", "50", audio);
     XML_ADD_TEXT_ELEMENT("MusicVolume", "50", audio);
+    XML_ADD_TEXT_ELEMENT("SoundOn", "true", audio);
+    XML_ADD_TEXT_ELEMENT("MusicOn", "true", audio);
+    XML_ADD_TEXT_ELEMENT("VoiceOn", "true", audio);
+    XML_ADD_TEXT_ELEMENT("AmbientOn", "true", audio);
     XML_ADD_TEXT_ELEMENT("MusicRpcServerPath", "MidiProc.exe", audio);
 
     return audio;

@@ -67,6 +67,7 @@ bool GlobalAmbientSoundComponent::VInit(TiXmlElement* pData)
         SoundInfo soundInfo(m_Sound);
         soundInfo.loops = -1;
         soundInfo.soundVolume = m_SoundVolume;
+        soundInfo.category = SoundCategory_Ambient;
         IEventMgr::Get()->VQueueEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
     }
@@ -97,6 +98,7 @@ void GlobalAmbientSoundComponent::VUpdate(uint32 msDiff)
         SoundInfo soundInfo(m_Sound);
         soundInfo.loops = soundLoops;
         soundInfo.soundVolume = m_SoundVolume;
+        soundInfo.category = SoundCategory_Ambient;
         IEventMgr::Get()->VTriggerEvent(IEventDataPtr(
             new EventData_Request_Play_Sound(soundInfo)));
 
@@ -126,6 +128,7 @@ void GlobalAmbientSoundComponent::BossFightEndedDelegate(IEventDataPtr pEvent)
             SoundInfo soundInfo(m_Sound);
             soundInfo.loops = -1;
             soundInfo.soundVolume = m_SoundVolume;
+            soundInfo.category = SoundCategory_Ambient;
             IEventMgr::Get()->VQueueEvent(IEventDataPtr(
                 new EventData_Request_Play_Sound(soundInfo)));
         }

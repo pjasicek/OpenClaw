@@ -293,7 +293,20 @@ static IEventDataPtr XmlElemToGeneratedEvent(TiXmlElement* pElem)
         ParseValueFromXmlElem(&isEnabled, pElem->FirstChildElement("IsEnabled"));
         ParseValueFromXmlElem(&isMusic, pElem->FirstChildElement("IsMusic"));
 
-        pEventData.reset(new EventData_Sound_Enabled_Changed(isEnabled, isMusic));
+        // Optional: "Voice" / "Ambient" - without it the event toggles all sounds (or music)
+        std::string soundTypeStr;
+        ParseValueFromXmlElem(&soundTypeStr, pElem->FirstChildElement("SoundType"));
+        SoundCategory category = SoundCategory_Effect;
+        if (soundTypeStr == "Voice")
+        {
+            category = SoundCategory_Voice;
+        }
+        else if (soundTypeStr == "Ambient")
+        {
+            category = SoundCategory_Ambient;
+        }
+
+        pEventData.reset(new EventData_Sound_Enabled_Changed(isEnabled, isMusic, category));
     }
     else if (eventType == "ModifyMenuItemVisibility")
     {
@@ -1112,22 +1125,21 @@ bool ScreenElementMenuItem::Initialize(TiXmlElement* pElem)
                 m_bVisible = true;
             }
         }
-        // TODO: Implement these ones
         else if (conditionTypeStr == "VoiceOn")
         {
-            m_bVisible = true;
+            m_bVisible = g_pApp->GetAudio()->IsVoiceActive();
         }
-        else if (conditionTypeStr == "VoiceOn")
+        else if (conditionTypeStr == "VoiceOff")
         {
-            m_bVisible = false;
+            m_bVisible = !g_pApp->GetAudio()->IsVoiceActive();
         }
         else if (conditionTypeStr == "AmbientOn")
         {
-            m_bVisible = true;
+            m_bVisible = g_pApp->GetAudio()->IsAmbientActive();
         }
         else if (conditionTypeStr == "AmbientOff")
         {
-            m_bVisible = false;
+            m_bVisible = !g_pApp->GetAudio()->IsAmbientActive();
         }
     }
     std::string menuItemTypeStr;

@@ -455,6 +455,12 @@
             <VisibilityCondition>
                 <ConditionType>VoiceOn</ConditionType>
             </VisibilityCondition>
+            <GeneratedEvent>
+                <Type>ChangeSoundEnabled</Type>
+                <IsEnabled>false</IsEnabled>
+                <IsMusic>false</IsMusic>
+                <SoundType>Voice</SoundType>
+            </GeneratedEvent>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/005_VOICEON.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/007_VOICEON.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/032_VOICEON.PCX</DisabledImage>
@@ -488,6 +494,12 @@
             <VisibilityCondition>
                 <ConditionType>VoiceOff</ConditionType>
             </VisibilityCondition>
+            <GeneratedEvent>
+                <Type>ChangeSoundEnabled</Type>
+                <IsEnabled>true</IsEnabled>
+                <IsMusic>false</IsMusic>
+                <SoundType>Voice</SoundType>
+            </GeneratedEvent>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/006_VOICDOFF.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/008_VOICEOFF.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/033_VOICEOFF.PCX</DisabledImage>
@@ -522,6 +534,12 @@
             <VisibilityCondition>
                 <ConditionType>AmbientOn</ConditionType>
             </VisibilityCondition>
+            <GeneratedEvent>
+                <Type>ChangeSoundEnabled</Type>
+                <IsEnabled>false</IsEnabled>
+                <IsMusic>false</IsMusic>
+                <SoundType>Ambient</SoundType>
+            </GeneratedEvent>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/009_AMBIENTON.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/011_AMBIENTON.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/034_AMBIENTON.PCX</DisabledImage>
@@ -555,6 +573,12 @@
             <VisibilityCondition>
                 <ConditionType>AmbientOff</ConditionType>
             </VisibilityCondition>
+            <GeneratedEvent>
+                <Type>ChangeSoundEnabled</Type>
+                <IsEnabled>true</IsEnabled>
+                <IsMusic>false</IsMusic>
+                <SoundType>Ambient</SoundType>
+            </GeneratedEvent>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/010_AMBIENTOFF.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/012_AMBIENTOFF.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/035_AMBIENTOFF.PCX</DisabledImage>
