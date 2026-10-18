@@ -564,7 +564,8 @@ DamageType StringToDamageTypeEnum(const std::string& str)
         { "DamageType_FrostSword", DamageType_FrostSword },
         { "DamageType_GabrielCannonBall", DamageType_GabrielCannonBall },
         { "DamageType_Trident", DamageType_Trident },
-        { "DamageType_SirenProjectile", DamageType_SirenProjectile }
+        { "DamageType_SirenProjectile", DamageType_SirenProjectile },
+        { "DamageType_Thrown", DamageType_Thrown }
     };
 
     auto findIt = s_StringToDamageTypeEnumMap.find(str);

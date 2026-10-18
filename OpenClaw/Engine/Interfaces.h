@@ -243,6 +243,7 @@ enum DamageType
     DamageType_GabrielCannonBall,
     DamageType_Trident,
     DamageType_SirenProjectile,
+    DamageType_Thrown, // Hit by enemy thrown by Claw - cannot be parried
     DamageType_Max
 };
 
