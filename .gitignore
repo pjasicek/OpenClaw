@@ -32,6 +32,7 @@ Build_Release/*.wav
 Build_Release/MOVIES
 Build_Release/MUSIC
 Build_Release/CUSTOM
+Build_Release/OpenClaw.app
 .vs
 *.tlog
 *.iobj

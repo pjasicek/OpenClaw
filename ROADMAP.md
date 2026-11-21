@@ -104,6 +104,13 @@ cd Build_Release && ./openclaw
 
 ### Display on macOS
 
+- Double-click launcher: `Build_Release/OpenClaw.app` (local, gitignored) —
+  a minimal bundle (script + Info.plist + icns converted from
+  `ClawLauncher/launcher_icon.ico`). The script cds into `Build_Release`
+  (the bundle's parent) and execs `./openclaw`, logging to
+  `/tmp/openclaw_last.log`. Regenerate the icns from the .ico if rebuilding
+  the bundle. The fork's C# `ClawLauncher/` is Windows-only (WinForms); the
+  original CD's `AUTORUN.EXE` is a 1997 Windows binary.
 - Fullscreen works: `IsFullscreenDesktop=true` in `Build_Release/config.xml`
   (borderless, fills the screen minus the menu bar). The world view simply
   widens (more horizontal FOV, no stretching); HUD, menus and cutscene
