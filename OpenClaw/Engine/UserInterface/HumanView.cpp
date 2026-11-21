@@ -757,6 +757,12 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         int levelNumber = pCastEventData->GetLevelNumber();
         int checkpointNumber = pCastEventData->GetCheckpointNumber();
 
+        // A fresh playthrough replays the cutscenes from the start.
+        if (isNewGame)
+        {
+            m_VideoPlayedForLevel = -1;
+        }
+
         // Show the level's cutscene first, then re-queue this same load when it ends.
         if (levelNumber != m_VideoPlayedForLevel)
         {

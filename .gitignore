@@ -27,6 +27,11 @@ OpenClaw/Debug/
 OpenClaw.opensdf
 OpenClaw.sdf
 Build_Release/vim.exe.stackdump
+Build_Release/openclaw
+Build_Release/*.wav
+Build_Release/MOVIES
+Build_Release/MUSIC
+Build_Release/CUSTOM
 .vs
 *.tlog
 *.iobj
