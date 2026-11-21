@@ -16,6 +16,7 @@ typedef std::list<shared_ptr<IGameView>> GameViewList;
 class LevelData;
 class Scene;
 class CameraNode;
+class ScreenElementVideo;
 class HumanView : public IGameView
 {
 public:
@@ -56,6 +57,9 @@ public:
     void SetPostponeRenderPresent(bool postpone) { m_bPostponeRenderPresent = postpone; }
 
     void SetCurrentLevelMusic(const std::string& music) { m_CurrentLevelMusic = music; }
+
+    // Starts playing a cutscene. Returns false if the video could not be opened.
+    bool PlayVideo(const std::string& videoPath);
 
 protected:
     virtual bool VLoadGameDelegate(TiXmlElement* pLevelXmlElem, LevelData* pLevelData) { VPushElement(m_pScene); return true; }
@@ -108,6 +112,16 @@ protected:
     bool m_bPostponeRenderPresent;
 
     std::string m_CurrentLevelMusic;
+
+    shared_ptr<ScreenElementVideo> m_pVideo;
+    // Set when a cutscene is playing in front of a level load.
+    bool m_HasPendingLevelLoad;
+    int m_PendingLevelNumber;
+    bool m_PendingIsNewGame;
+    int m_PendingCheckpointNumber;
+    // Level whose cutscene was already shown this session, so it does not
+    // replay after the video finishes and re-queues the level load.
+    int m_VideoPlayedForLevel;
 
 private:
     void RegisterAllDelegates();

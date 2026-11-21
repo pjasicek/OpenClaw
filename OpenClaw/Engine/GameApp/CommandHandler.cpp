@@ -1,6 +1,7 @@
 #include "BaseGameApp.h"
 #include "BaseGameLogic.h"
 #include "../UserInterface/Console.h"
+#include "../UserInterface/HumanView.h"
 
 #include "../Actor/Components/ControllerComponents/PowerupComponent.h"
 
@@ -113,7 +114,40 @@ void CommandHandler::HandleCommand(const char* command, void* userdata)
         wasCommandExecuted = true;
     }
 
-    if (commandStr.find("spawn coin") == 0)
+    if (commandStr.find("video ") == 0)
+    {
+        // Take the argument from the raw command: commandStr is lowercased and
+        // file names are case sensitive on Linux.
+        std::string videoPath = std::string(command).substr(6);
+        videoPath.erase(0, videoPath.find_first_not_of(" \""));
+        videoPath.erase(videoPath.find_last_not_of(" \"") + 1);
+
+        if (g_pApp->GetHumanView()->PlayVideo(videoPath))
+        {
+            pConsole->AddLine("Playing video: " + videoPath, COLOR_GREEN);
+        }
+        else
+        {
+            pConsole->AddLine("Could not play video: " + videoPath, COLOR_RED);
+        }
+        wasCommandExecuted = true;
+    }
+
+    if (commandStr.find("loadlevel ") == 0)
+    {
+        int levelNumber = atoi(commandStr.substr(10).c_str());
+        if (levelNumber >= 1 && levelNumber <= 14)
+        {
+            IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Menu_LoadGame(levelNumber, false, 0)));
+            pConsole->AddLine("Loading level " + ToStr(levelNumber), COLOR_GREEN);
+        }
+        else
+        {
+            pConsole->AddLine("Level must be between 1 and 14", COLOR_RED);
+        }
+        wasCommandExecuted = true;
+    }
+
     {
         if (StrongActorPtr pClaw = g_pApp->GetGameLogic()->GetClawActor())
         {
