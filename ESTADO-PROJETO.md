@@ -51,26 +51,33 @@ Playback real dos clipes MPEG-2 de `MOVIES/*.VOB`:
 comando que enfileire load) em `startup_commands.txt` — vira loop infinito de
 load. No console interativo é seguro.
 
-## Próximo passo imediato: mapear os clipes restantes
+## Cutscenes mapeadas (21/11, commit desta sessão)
 
 Os 9 clipes do DVD (duração medida):
 
-| Clipe | Duração | Fase? |
+| Clipe | Duração | Fase |
 |---|---|---|
-| CLAW0.VOB | 6:55 | Abertura (fase 1, new game) — mapeado |
-| CLAW1.VOB | 1:03 | ? |
-| CLAW2.VOB | 0:33 | ? |
-| CLAW3.VOB | 1:50 | ? |
-| CLAW4.VOB | 0:32 | ? |
-| CLAW5.VOB | 2:26 | ? |
-| CLAW6.VOB | 0:39 | ? |
-| CLAW7.VOB | 1:29 | ? |
-| CLAW8.VOB | 2:16 | ? |
+| CLAW0.VOB | 6:55 | 1 (só em new game) |
+| CLAW1.VOB | 1:03 | 2 Battlements |
+| CLAW2.VOB | 0:33 | 3 |
+| CLAW3.VOB | 1:50 | 5 Town |
+| CLAW4.VOB | 0:32 | 8 Shipyards |
+| CLAW5.VOB | 2:26 | 9 Pirate's Cove |
+| CLAW6.VOB | 0:39 | 10 Cliffs |
+| CLAW7.VOB | 1:29 | 13 Tiger Island |
+| CLAW8.VOB | 2:16 | 14 final |
+| CLAW.FEC | ? | 10º clipe (encerramento) — formato FEC do Monolith, ffmpeg não decodifica |
 
-Assistir cada um (`video MOVIES/CLAWn.VOB`) e adicionar as linhas em `kLevelVideos`
-(`HumanView.cpp`). Clipes intermediários são de fim de fase; o final (CLAW8?)
-deve ser o encerramento. Definir se tocam no fim da fase (antes do ScoreScreen)
-ou na entrada da fase seguinte.
+Mapeamento por **número da fase** (sólido); identificação de conteúdo feita por
+inspeção de frames. O REZ confirma a ordem: o menu "Movies" de replay tem 10
+slots (`001_MOVIEONE`…`030_MOVIETEN`) e a numeração dos VOBs casa 1:1 com eles,
+então `CLAW.FEC` = MOVIETEN = cinematic de encerramento (~9:40 estimado pelo
+tamanho/bitrate dos VOBs). Decodificá-lo exigiria implementar (ou buscar) o
+formato FEC do Monolith — libwap não suporta.
+
+Obs.: os nomes de fase no `GameSaves.h` são aproximações do autor do fork — a
+tela de loading real do nível 3 mostra "The Footpath", não "Thief's Forest".
+O mapeamento usa números, então não é afetado.
 
 ## Restante do jogo (estado medido no código, não no README)
 

@@ -15,10 +15,12 @@ const uint32 g_InvalidGameViewId = 0xFFFFFFFF;
 
 namespace
 {
-    // Which cutscene plays before entering a level. The original game ships nine
-    // clips (MOVIES/CLAW0..8.VOB) but only the intro has been identified for
-    // sure. Verify the others with the "video <file>" console command and add
-    // the matching rows here.
+    // Which cutscene plays before entering a level. The DVD ships nine clips
+    // (MOVIES/CLAW0..8.VOB); the REZ "Movies" replay menu lists ten slots in
+    // narrative order and the VOB numbering matches it, so CLAW.FEC is the
+    // tenth (ending) — Monolith's proprietary FEC format, not decodable by
+    // ffmpeg. Clips identified from frame inspection; "video <file>" replays
+    // any of them.
     struct LevelVideoDef
     {
         int levelNumber;
@@ -28,6 +30,14 @@ namespace
 
     const LevelVideoDef kLevelVideos[] = {
         { 1, true, "MOVIES/CLAW0.VOB" }, // 6:55 opening cinematic
+        { 2, false, "MOVIES/CLAW1.VOB" }, // battlements tower, croc swamp, cavalry leaving the gate
+        { 3, false, "MOVIES/CLAW2.VOB" }, // forest rest, town seen from above at dusk
+        { 5, false, "MOVIES/CLAW3.VOB" }, // night street, tavern meeting with the pirate informant
+        { 8, false, "MOVIES/CLAW4.VOB" }, // night docks, Claw boards the red ship, it sails off
+        { 9, false, "MOVIES/CLAW5.VOB" }, // pirate sea cave, the ruby, volcanic island, crew plan
+        { 10, false, "MOVIES/CLAW6.VOB" }, // beach, cliff cave, ship offshore + rowboat
+        { 13, false, "MOVIES/CLAW7.VOB" }, // beach duel on the volcanic island
+        { 14, false, "MOVIES/CLAW8.VOB" }, // completed amulet, magic portal, Red Tail
     };
 
     std::string GetVideoForLevel(int levelNumber, bool isNewGame)
