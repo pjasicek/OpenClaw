@@ -2211,6 +2211,40 @@ private:
 };
 
 //---------------------------------------------------------------------------------------------------------------------
+// EventData_Menu_PlayVideo
+//---------------------------------------------------------------------------------------------------------------------
+class EventData_Menu_PlayVideo : public BaseEventData
+{
+public:
+    static const EventType sk_EventType;
+
+    EventData_Menu_PlayVideo()
+    {
+
+    }
+
+    EventData_Menu_PlayVideo(std::string videoPath)
+    {
+        m_VideoPath = videoPath;
+    }
+
+    virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+    virtual IEventDataPtr VCopy() const
+    {
+        return IEventDataPtr(new EventData_Menu_PlayVideo(m_VideoPath));
+    }
+    virtual void VSerialize(std::ostringstream& out) const { out << m_VideoPath; }
+    virtual void VDeserialize(std::istringstream& in) { in >> m_VideoPath; }
+
+    std::string GetVideoPath() const { return m_VideoPath; }
+
+    virtual const char* GetName(void) const { return "EventData_Menu_PlayVideo"; }
+
+private:
+    std::string m_VideoPath;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
 // EventData_Menu_Modifiy_Item_Visibility
 //---------------------------------------------------------------------------------------------------------------------
 class EventData_Menu_Modifiy_Item_Visibility : public BaseEventData

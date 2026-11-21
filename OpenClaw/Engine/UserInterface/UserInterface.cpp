@@ -282,6 +282,13 @@ static IEventDataPtr XmlElemToGeneratedEvent(TiXmlElement* pElem)
         pEventData.reset(new EventData_Menu_LoadGame(levelNumber, isNewGame, checkpointNumber));
         //pEventData.reset(new EventData_Finished_Level());
     }
+    else if (eventType == "PlayVideo")
+    {
+        std::string videoPath;
+        ParseValueFromXmlElem(&videoPath, pElem->FirstChildElement("VideoPath"));
+
+        pEventData.reset(new EventData_Menu_PlayVideo(videoPath));
+    }
     else if (eventType == "QuitGame")
     {
         pEventData.reset(new EventData_Quit_Game());

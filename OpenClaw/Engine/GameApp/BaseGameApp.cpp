@@ -796,6 +796,18 @@ bool BaseGameApp::InitializeDisplay(GameOptions& gameOptions)
     else if (gameOptions.isFullscreenDesktop)
     {
         SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        // macOS can silently drop the request while the app is still
+        // activating (e.g. launched from Finder), so retry briefly and
+        // verify the flag actually took.
+        for (int i = 0; i < 40 && !(SDL_GetWindowFlags(m_pWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP); ++i)
+        {
+            SDL_Delay(50);
+            SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        }
+        if (!(SDL_GetWindowFlags(m_pWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP))
+        {
+            LOG_WARNING("Could not switch to fullscreen desktop mode");
+        }
         SDL_GetWindowSize(m_pWindow, &m_GameOptions.windowWidth, &m_GameOptions.windowHeight);
     }
 

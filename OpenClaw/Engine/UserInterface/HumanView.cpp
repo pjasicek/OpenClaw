@@ -8,14 +8,61 @@
 #include "../Resource/Loaders/WavLoader.h"
 #include "../Resource/Loaders/XmlLoader.h"
 #include "../Util/PrimeSearch.h"
+#include "../Video/ScreenElementVideo.h"
 #include "ScoreScreen/EndLevelScoreScreen.h"
 
 const uint32 g_InvalidGameViewId = 0xFFFFFFFF;
 
+namespace
+{
+    // Which cutscene plays before entering a level. The DVD ships nine clips
+    // (MOVIES/CLAW0..8.VOB); the REZ "Movies" replay menu lists ten slots in
+    // narrative order and the VOB numbering matches it, so CLAW.FEC is the
+    // tenth (ending) — Monolith's proprietary FEC format, not decodable by
+    // ffmpeg. Clips identified from frame inspection; "video <file>" replays
+    // any of them.
+    struct LevelVideoDef
+    {
+        int levelNumber;
+        bool onlyOnNewGame;
+        const char* file;
+    };
+
+    const LevelVideoDef kLevelVideos[] = {
+        { 1, true, "MOVIES/CLAW0.VOB" }, // 6:55 opening cinematic
+        { 2, false, "MOVIES/CLAW1.VOB" }, // battlements tower, croc swamp, cavalry leaving the gate
+        { 3, false, "MOVIES/CLAW2.VOB" }, // forest rest, town seen from above at dusk
+        { 5, false, "MOVIES/CLAW3.VOB" }, // night street, tavern meeting with the pirate informant
+        { 8, false, "MOVIES/CLAW4.VOB" }, // night docks, Claw boards the red ship, it sails off
+        { 9, false, "MOVIES/CLAW5.VOB" }, // pirate sea cave, the ruby, volcanic island, crew plan
+        { 10, false, "MOVIES/CLAW6.VOB" }, // beach, cliff cave, ship offshore + rowboat
+        { 13, false, "MOVIES/CLAW7.VOB" }, // beach duel on the volcanic island
+        { 14, false, "MOVIES/CLAW8.VOB" }, // completed amulet, magic portal, Red Tail
+    };
+
+    std::string GetVideoForLevel(int levelNumber, bool isNewGame)
+    {
+        for (const LevelVideoDef& def : kLevelVideos)
+        {
+            if (def.levelNumber == levelNumber && (!def.onlyOnNewGame || isNewGame))
+            {
+                return def.file;
+            }
+        }
+
+        return "";
+    }
+}
+
 HumanView::HumanView(SDL_Renderer* renderer)
     :
     m_bRendering(true),
-    m_bPostponeRenderPresent(false)
+    m_bPostponeRenderPresent(false),
+    m_HasPendingLevelLoad(false),
+    m_PendingLevelNumber(-1),
+    m_PendingIsNewGame(false),
+    m_PendingCheckpointNumber(0),
+    m_VideoPlayedForLevel(-1)
 {
     m_pProcessMgr = new ProcessMgr();
 
@@ -49,6 +96,33 @@ HumanView::~HumanView()
     }
 
     SAFE_DELETE(m_pProcessMgr);
+}
+
+bool HumanView::PlayVideo(const std::string& videoPath)
+{
+    if (m_pVideo)
+    {
+        m_ScreenElements.remove(m_pVideo);
+        m_pVideo.reset();
+    }
+
+    if (!ScreenElementVideo::IsAvailable())
+    {
+        LOG_ERROR("ffmpeg not found, cannot play cutscene: " + videoPath);
+        return false;
+    }
+
+    shared_ptr<ScreenElementVideo> pVideo(new ScreenElementVideo(g_pApp->GetRenderer(), videoPath));
+    if (pVideo->IsFinished())
+    {
+        // Nothing could be decoded, do not block the game on it.
+        return false;
+    }
+
+    m_pVideo = pVideo;
+    m_ScreenElements.push_back(pVideo);
+
+    return true;
 }
 
 void HumanView::RegisterConsoleCommandHandler(void(*handler)(const char*, void*), void* userdata)
@@ -110,6 +184,19 @@ void HumanView::VOnRender(uint32 msDiff)
 
 void HumanView::VOnUpdate(uint32 msDiff)
 {
+    if (m_pVideo && m_pVideo->IsFinished())
+    {
+        m_ScreenElements.remove(m_pVideo);
+        m_pVideo.reset();
+
+        if (m_HasPendingLevelLoad)
+        {
+            m_HasPendingLevelLoad = false;
+            IEventMgr::Get()->VQueueEvent(IEventDataPtr(new EventData_Menu_LoadGame(
+                m_PendingLevelNumber, m_PendingIsNewGame, m_PendingCheckpointNumber)));
+        }
+    }
+
     m_pProcessMgr->UpdateProcesses(msDiff);
 
     m_pConsole->OnUpdate(msDiff);
@@ -323,7 +410,9 @@ void HumanView::RegisterAllDelegates()
         this, &HumanView::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &HumanView::IngameMenuEndGameDelegate), EventData_IngameMenu_End_Game::sk_EventType);
-    
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::PlayVideoDelegate), EventData_Menu_PlayVideo::sk_EventType);
+
 }
 
 void HumanView::RemoveAllDelegates()
@@ -659,6 +748,14 @@ void HumanView::RequestResetLevelDelegate(IEventDataPtr pEventData)
     g_pApp->GetGameLogic()->VResetLevel();
 }
 
+void HumanView::PlayVideoDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Menu_PlayVideo> pCastEventData =
+        static_pointer_cast<EventData_Menu_PlayVideo>(pEventData);
+
+    PlayVideo(pCastEventData->GetVideoPath());
+}
+
 void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
 {
     shared_ptr<EventData_Menu_LoadGame> pCastEventData =
@@ -669,6 +766,30 @@ void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
         bool isNewGame = pCastEventData->GetIsNewGame();
         int levelNumber = pCastEventData->GetLevelNumber();
         int checkpointNumber = pCastEventData->GetCheckpointNumber();
+
+        // A fresh playthrough replays the cutscenes from the start.
+        if (isNewGame)
+        {
+            m_VideoPlayedForLevel = -1;
+        }
+
+        // Show the level's cutscene first, then re-queue this same load when it ends.
+        if (levelNumber != m_VideoPlayedForLevel)
+        {
+            const std::string videoPath = GetVideoForLevel(levelNumber, isNewGame);
+            if (!videoPath.empty())
+            {
+                m_VideoPlayedForLevel = levelNumber;
+                if (PlayVideo(videoPath))
+                {
+                    m_HasPendingLevelLoad = true;
+                    m_PendingLevelNumber = levelNumber;
+                    m_PendingIsNewGame = isNewGame;
+                    m_PendingCheckpointNumber = checkpointNumber;
+                    return;
+                }
+            }
+        }
 
         // Reset Graphical representation of level
         m_ScreenElements.clear();

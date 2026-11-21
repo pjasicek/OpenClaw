@@ -1,6 +1,8 @@
 <GameMenu>
+    <MenuType>MenuType_MainMenu</MenuType>
     <StartingPage>MenuPage_Main</StartingPage>
     <BackgroundImage>/STATES/MENU/SCREENS/MENU.PCX</BackgroundImage>
+    <BackgroundMusic>/STATES/MENU/SOUNDS/MENUBED.WAV</BackgroundMusic>
     
     <!-- MAIN (DEFAULT) PAGE -->
     <MenuPage>
@@ -49,7 +51,7 @@
             <Name>REPLAY_MOVIES_BUTTON</Name>
             <Type>Button</Type>
             <Hotkey>R</Hotkey>
-            <State>Disabled</State>
+            <State>Inactive</State>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/005_REPLAYMOVIES.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/006_REPLAYMOVIES.PCX</ActiveImage>
             <DisabledImage>/STATES/MENU/IMAGES/MAIN/007_REPLAYMOVIES.PCX</DisabledImage>
@@ -97,6 +99,20 @@
                 <Type>SwitchPage</Type>
                 <PageName>MenuPage_Help</PageName>
             </GeneratedEvent>
+            <KeyboardEvent>
+                <KeyType>Space</KeyType>
+                <GeneratedEvent>
+                    <Type>SwitchPage</Type>
+                    <PageName>MenuPage_Main</PageName>
+                </GeneratedEvent>
+            </KeyboardEvent>
+            <KeyboardEvent>
+                <KeyType>Enter</KeyType>
+                <GeneratedEvent>
+                    <Type>SwitchPage</Type>
+                    <PageName>MenuPage_Main</PageName>
+                </GeneratedEvent>
+            </KeyboardEvent>
         </MenuItem>
         <MenuItem>
             <Name>QUIT_BUTTON</Name>
@@ -522,6 +538,62 @@
             <GeneratedEvent>
                 <Type>SwitchPage</Type>
                 <PageName>MenuPage_SinglePlayer</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+
+    <!-- HELP PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_Help</PageName>
+        <BackgroundImage>/STATES/HELP/SCREENS/HELP.PCX</BackgroundImage>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <MenuItem>
+            <Name>TOUCHSCREEN_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/CONTROLS/touchscreen_title.png</InactiveImage>
+            <ActiveImage>/CONTROLS/touchscreen_title.png</ActiveImage>
+            <Position x="325" y="452" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Help_TouchScreen</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+
+    <!-- HELP TOUCHSCREEN PAGE -->
+    <MenuPage>
+        <PageName>MenuPage_Help_TouchScreen</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <MenuItem>
+            <Name>CONTROL_IMAGE</Name>
+            <Type>Text</Type>
+            <State>Disabled</State>
+            <DisabledImage>/CONTROLS/touchscreen_img.png</DisabledImage>
+            <Position x="10" y="135" />
+        </MenuItem>
+        <MenuItem>
+            <Name>BACK_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/SAVE/001_PREVIOUSMENU.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/SINGLEPLAYER/SAVE/002_PREVIOUSMENU.PCX</ActiveImage>
+            <Position x="266" y="420" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
             </GeneratedEvent>
         </MenuItem>
     </MenuPage>
@@ -2088,14 +2160,14 @@
             <Name>CREDITS_IMAGE_PETR</Name>
             <Type>Text</Type>
             <State>Disabled</State>
-            <DisabledImage>/Credits/credits_ja.png</DisabledImage>
+            <DisabledImage>/CREDITS/credits_ja.png</DisabledImage>
             <Position x="44" y="150" />
         </MenuItem>
         <MenuItem>
             <Name>CREDITS_IMAGE_PETR</Name>
             <Type>Text</Type>
             <State>Disabled</State>
-            <DisabledImage>/Credits/credits_pavel.png</DisabledImage>
+            <DisabledImage>/CREDITS/credits_pavel.png</DisabledImage>
             <Position x="340" y="150" />
         </MenuItem>
         <MenuItem>
@@ -2410,13 +2482,6 @@
             </GeneratedEvent>
             <GeneratedEvent>
                 <Type>PlaySound</Type>
-                <SoundName>/STATES/MENU/SOUNDS/MENUBED.WAV</SoundName>
-                <Volume>100</Volume>
-                <IsMusic>false</IsMusic>
-                <Loops>-1</Loops>
-            </GeneratedEvent>
-            <GeneratedEvent>
-                <Type>PlaySound</Type>
                 <SoundName>/STATES/MENU/SOUNDS/SELECT.WAV</SoundName>
                 <Volume>100</Volume>
                 <IsMusic>false</IsMusic>
@@ -2580,7 +2645,7 @@
             <Type>Button</Type>
             <State>Active</State>
             <VisibilityCondition>
-                <ConditionType>SoundOn</ConditionType>
+                <ConditionType>MusicOn</ConditionType>
             </VisibilityCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/013_MUSICON.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/015_MUSICON.PCX</ActiveImage>
@@ -2666,7 +2731,7 @@
             <Type>Button</Type>
             <State>Active</State>
             <VisibilityCondition>
-                <ConditionType>SoundOff</ConditionType>
+                <ConditionType>MusicOff</ConditionType>
             </VisibilityCondition>
             <InactiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/014_MUSICOFF.PCX</InactiveImage>
             <ActiveImage>/STATES/MENU/IMAGES/MAIN/OPTIONS/AUDIO/016_MUSICOFF.PCX</ActiveImage>
@@ -2726,6 +2791,156 @@
             <GeneratedEvent>
                 <Type>SwitchPage</Type>
                 <PageName>MenuPage_Options</PageName>
+            </GeneratedEvent>
+        </MenuItem>
+    </MenuPage>
+    <!-- REPLAY MOVIES PAGE. Button art comes from the REZ
+         (/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES). State order per movie:
+         inactive, active, disabled. MOVIETEN stays disabled because
+         CLAW.FEC is in Monolith's proprietary FEC format. -->
+    <MenuPage>
+        <PageName>MenuPage_ReplayMovies</PageName>
+        <KeyboardEvent>
+            <KeyType>Escape</KeyType>
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
+            </GeneratedEvent>
+        </KeyboardEvent>
+        <MenuItem>
+            <Name>REPLAY_MOVIES_TEXT</Name>
+            <Type>Text</Type>
+            <State>Inactive</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/033_TITLE.PCX</InactiveImage>
+            <Position x="134" y="12" />
+        </MenuItem>
+        <MenuItem>
+            <Name>MOVIEONE_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/001_MOVIEONE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/002_MOVIEONE.PCX</ActiveImage>
+            <Position x="20" y="70" />
+            <GeneratedEvent>
+                <Type>PlayVideo</Type>
+                <VideoPath>MOVIES/CLAW0.VOB</VideoPath>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>MOVIETWO_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/004_MOVIETWO.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/005_MOVIETWO.PCX</ActiveImage>
+            <Position x="20" y="110" />
+            <GeneratedEvent>
+                <Type>PlayVideo</Type>
+                <VideoPath>MOVIES/CLAW1.VOB</VideoPath>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>MOVIETHREE_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/007_MOVIETHREE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/008_MOVIETHREE.PCX</ActiveImage>
+            <Position x="20" y="150" />
+            <GeneratedEvent>
+                <Type>PlayVideo</Type>
+                <VideoPath>MOVIES/CLAW2.VOB</VideoPath>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>MOVIEFOUR_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/010_MOVIEFOUR.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/011_MOVIEFOUR.PCX</ActiveImage>
+            <Position x="20" y="190" />
+            <GeneratedEvent>
+                <Type>PlayVideo</Type>
+                <VideoPath>MOVIES/CLAW3.VOB</VideoPath>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>MOVIEFIVE_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/013_MOVIEFIVE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/014_MOVIEFIVE.PCX</ActiveImage>
+            <Position x="20" y="230" />
+            <GeneratedEvent>
+                <Type>PlayVideo</Type>
+                <VideoPath>MOVIES/CLAW4.VOB</VideoPath>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>MOVIESIX_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/016_MOVIESIX.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/017_MOVIESIX.PCX</ActiveImage>
+            <Position x="350" y="70" />
+            <GeneratedEvent>
+                <Type>PlayVideo</Type>
+                <VideoPath>MOVIES/CLAW5.VOB</VideoPath>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>MOVIESEVEN_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/019_MOVIESEVEN.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/020_MOVIESEVEN.PCX</ActiveImage>
+            <Position x="350" y="110" />
+            <GeneratedEvent>
+                <Type>PlayVideo</Type>
+                <VideoPath>MOVIES/CLAW6.VOB</VideoPath>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>MOVIEEIGHT_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/022_MOVIEEIGHT.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/023_MOVIEEIGHT.PCX</ActiveImage>
+            <Position x="350" y="150" />
+            <GeneratedEvent>
+                <Type>PlayVideo</Type>
+                <VideoPath>MOVIES/CLAW7.VOB</VideoPath>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>MOVIENINE_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/025_MOVIENINE.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/026_MOVIENINE.PCX</ActiveImage>
+            <Position x="350" y="190" />
+            <GeneratedEvent>
+                <Type>PlayVideo</Type>
+                <VideoPath>MOVIES/CLAW8.VOB</VideoPath>
+            </GeneratedEvent>
+        </MenuItem>
+        <MenuItem>
+            <Name>MOVIETEN_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Disabled</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/028_MOVIETEN.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/029_MOVIETEN.PCX</ActiveImage>
+            <DisabledImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/030_MOVIETEN.PCX</DisabledImage>
+            <Position x="350" y="230" />
+        </MenuItem>
+        <MenuItem>
+            <Name>REPLAY_MOVIES_BACK_BUTTON</Name>
+            <Type>Button</Type>
+            <State>Active</State>
+            <InactiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/031_BACK.PCX</InactiveImage>
+            <ActiveImage>/STATES/MENU/IMAGES/MAIN/REPLAYMOVIES/032_BACK.PCX</ActiveImage>
+            <Position x="278" y="300" />
+            <GeneratedEvent>
+                <Type>SwitchPage</Type>
+                <PageName>MenuPage_Main</PageName>
             </GeneratedEvent>
         </MenuItem>
     </MenuPage>
