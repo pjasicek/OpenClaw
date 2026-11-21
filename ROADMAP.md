@@ -96,11 +96,23 @@ cd Build_Release && ./openclaw
 
 ### Cutscenes / media
 
-- **Decode `CLAW.FEC`** (ending cinematic) — Monolith's proprietary FEC
+- **Replay Movies menu is implemented**: the main menu REPLAY MOVIES button
+  is enabled and `MenuPage_ReplayMovies` (added to the menu in
+  `ASSETS.ZIP`'s MENU.xml — the menu the game loads is the one inside the
+  zip, not the loose copy) shows the original REZ button art. A new
+  `PlayVideo` menu event type routes button presses to
+  `HumanView::PlayVideo`. Movie-to-VOB mapping: MOVIEONE=CLAW0 ...
+  MOVIENINE=CLAW8; MOVIETEN (the FEC ending) is intentionally disabled.
+  Original movie titles discovered from the button art: COMBINED
+  CUTSCENES, INTRODUCTION, ESCAPE, OUT OF THE WOODS, THE TAVERN, THE
+  CHASE, REUNION, TIGER ISLAND, WE MEET AGAIN, THE CEREMONY.
+- **`CLAW.FEC`** (ending, "THE CEREMONY") — Monolith's proprietary FEC
   format, ffmpeg and libwap cannot read it. Only worth it when level 14
   exists.
-- CLAW2/CLAW4/CLAW6 placement uncertainties (see table above) — confirm by
-  playing through. (CLAW4 visually confirmed as the docks night scene.)
+- Level-intro placement of CLAW4/CLAW5 needs in-game confirmation: CLAW4's
+  button is titled "THE TAVERN" but its frames look like the docks/ship
+  scene, so it might belong to level 6/7 instead of 8. CLAW5 ("THE CHASE",
+  2:26) is currently placed before level 9 Pirate's Cove. (CLAW4 visually confirmed as the docks night scene.)
 
 ### Display on macOS
 

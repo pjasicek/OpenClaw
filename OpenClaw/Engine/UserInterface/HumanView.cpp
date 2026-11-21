@@ -410,7 +410,9 @@ void HumanView::RegisterAllDelegates()
         this, &HumanView::BossFightEndedDelegate), EventData_Boss_Fight_Ended::sk_EventType);
     IEventMgr::Get()->VAddListener(MakeDelegate(
         this, &HumanView::IngameMenuEndGameDelegate), EventData_IngameMenu_End_Game::sk_EventType);
-    
+    IEventMgr::Get()->VAddListener(MakeDelegate(
+        this, &HumanView::PlayVideoDelegate), EventData_Menu_PlayVideo::sk_EventType);
+
 }
 
 void HumanView::RemoveAllDelegates()
@@ -744,6 +746,14 @@ void HumanView::RequestResetLevelDelegate(IEventDataPtr pEventData)
     //m_pCamera->SetSize(g_pApp->GetWindowSize().x, g_pApp->GetWindowSize().y);
 
     g_pApp->GetGameLogic()->VResetLevel();
+}
+
+void HumanView::PlayVideoDelegate(IEventDataPtr pEventData)
+{
+    shared_ptr<EventData_Menu_PlayVideo> pCastEventData =
+        static_pointer_cast<EventData_Menu_PlayVideo>(pEventData);
+
+    PlayVideo(pCastEventData->GetVideoPath());
 }
 
 void HumanView::LoadGameDelegate(IEventDataPtr pEventData)
