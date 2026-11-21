@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # The project declares cmake_minimum_required(VERSION 3.2), which CMake 4
+  # refuses to configure without an override.
+  CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+
+jobs:
+  linux:
+    name: Linux (${{ matrix.cc }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cc: gcc
+            cxx: g++
+          - cc: clang
+            cxx: clang++
+    env:
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # gfx is not part of the SDL2 core package, the rest comes as deps.
+      - name: Install SDL2
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev \
+            libsdl2-ttf-dev libsdl2-gfx-dev
+
+      - uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: linux-${{ matrix.cc }}
+
+      - name: Configure
+        run: >
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Build
+        run: cmake --build build --parallel
+
+  macos:
+    name: macOS (clang)
+    runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install SDL2
+        run: brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_gfx
+
+      - uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: macos-clang
+
+      # Homebrew is not on the default linker search path and the CMake files
+      # link plain `-lSDL2`, so the keg lib dir has to be passed explicitly.
+      - name: Configure
+        run: >
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          -DCMAKE_EXE_LINKER_FLAGS=-L$(brew --prefix)/lib
+
+      - name: Build
+        run: cmake --build build --parallel
+
+  windows:
+    name: Windows (MSVC)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      # CMake instead of OpenClaw.sln: the solution still targets the v141
+      # toolset and SDK 10.0.16299, neither of which ships on modern runners.
+      # -A Win32 matches the 32-bit SDL2 import libs in ThirdParty/SDL2.
+      - name: Configure
+        run: cmake -S . -B build -A Win32
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
