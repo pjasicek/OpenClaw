@@ -113,17 +113,17 @@ cd Build_Release && ./openclaw
   Log at `/tmp/openclaw_last.log`. Regenerate the icns from the .ico if
   rebuilding the bundle. The fork's C# `ClawLauncher/` is Windows-only
   (WinForms); the original CD's `AUTORUN.EXE` is a 1997 Windows binary.
-- Fullscreen works: `IsFullscreenDesktop=true` in `Build_Release/config.xml`
-  (borderless, fills the screen minus the menu bar). The world view simply
-  widens (more horizontal FOV, no stretching); HUD, menus and cutscene
-  letterboxing all adapt. Verified at 1512x949.
+- Fullscreen works and is on by default: `IsFullscreenDesktop=true` in
+  `Build_Release/config.xml`. macOS silently drops the
+  `SDL_SetWindowFullscreen` request while the app is still activating
+  (e.g. launched from Finder), so `BaseGameApp::InitializeDisplay` retries
+  for up to 2s and verifies the flag took. Result: true fullscreen (menu
+  bar and Dock hidden), world view widens without stretching, HUD, menus
+  and cutscene letterboxing all adapt (verified at 1512x982).
 - Exclusive fullscreen (`IsFullscreen=true`) does NOT stick on macOS for
   apps launched from a background terminal (SDL exclusive mode bounces back).
   Not recommended on Retina anyway — it switches to a scaled non-native
   video mode. Keep it false.
-- Nit: with the menu bar visible the usable height is 949 and the last main
-  menu item (QUIT) sits right at the bottom edge. Minor menu layout tweak if
-  it bothers anyone.
 
 ### Audio (macOS)
 
