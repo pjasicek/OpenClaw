@@ -100,14 +100,30 @@ cd Build_Release && ./openclaw
   format, ffmpeg and libwap cannot read it. Only worth it when level 14
   exists.
 - CLAW2/CLAW4/CLAW6 placement uncertainties (see table above) — confirm by
-  playing through.
+  playing through. (CLAW4 visually confirmed as the docks night scene.)
+
+### Display on macOS
+
+- Fullscreen works: `IsFullscreenDesktop=true` in `Build_Release/config.xml`
+  (borderless, fills the screen minus the menu bar). The world view simply
+  widens (more horizontal FOV, no stretching); HUD, menus and cutscene
+  letterboxing all adapt. Verified at 1512x949.
+- Exclusive fullscreen (`IsFullscreen=true`) does NOT stick on macOS for
+  apps launched from a background terminal (SDL exclusive mode bounces back).
+  Not recommended on Retina anyway — it switches to a scaled non-native
+  video mode. Keep it false.
+- Nit: with the menu bar visible the usable height is 949 and the last main
+  menu item (QUIT) sits right at the bottom edge. Minor menu layout tweak if
+  it bothers anyone.
 
 ### Audio (macOS)
 
-- **Music is dead by design on macOS**: `config.xml` points
-  `MusicRpcServerPath` at `MidiProc.exe` (Windows RPC). Playing the XMI/MIDI
-  soundtrack via FluidSynth/timidity or a native port of MidiProc is separate
-  work.
+- Music is NOT dead by design: the non-Windows path in `Audio::PlayMusic`
+  already feeds the XMI/MIDI data to `Mix_LoadMUS_RW`, and the linked
+  SDL2_mixer has FluidSynth — it fails only with "No SoundFonts have been
+  requested". Providing a `.sf2` soundfont (via `SDL_MIXER_SOUNDFONTS` env
+  var or `Mix_SetSoundFonts`) should make the MIDI soundtrack play. Much
+  smaller task than a MidiProc port.
 - After a `video` console command mid-game, level music is not resumed
   (matters only on platforms where music works).
 

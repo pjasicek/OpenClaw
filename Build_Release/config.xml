@@ -4,7 +4,7 @@
     <Scale>1</Scale>
     <UseVerticalSync>false</UseVerticalSync>
     <IsFullscreen>false</IsFullscreen>
-    <IsFullscreenDesktop>false</IsFullscreenDesktop>
+    <IsFullscreenDesktop>true</IsFullscreenDesktop>
   </Display>
   <Audio>
     <Frequency>44100</Frequency>
