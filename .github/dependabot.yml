@@ -1,0 +1,12 @@
+version: 2
+
+updates:
+  # Actions are pinned to commit SHAs with a `# vX.Y.Z` comment; this keeps
+  # those pins in sync.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"

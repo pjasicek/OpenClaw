@@ -10,6 +10,12 @@
 #include "../GameApp/BaseGameApp.h"
 #include "../Logger/Logger.h"
 
+#ifdef _WIN32
+// MSVC only exposes the POSIX pipe calls with an underscore prefix.
+#define popen _popen
+#define pclose _pclose
+#endif
+
 // All shipped cutscenes are 720x480 MPEG-2 at 29.97 fps. We let ffmpeg do the
 // scaling so the frame size is known up front and no probing is needed.
 static const int kVideoWidth = 720;

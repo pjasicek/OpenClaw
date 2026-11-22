@@ -10,17 +10,13 @@
 
 # Build status
 
-### Windows:
+### Linux (gcc, clang), macOS, Windows:
 
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/pjasicek/OpenClaw?svg=true)](https://ci.appveyor.com/project/pjasicek/captainclaw)
+[![CI](https://github.com/nboliv/OpenClaw/actions/workflows/ci.yml/badge.svg)](https://github.com/nboliv/OpenClaw/actions/workflows/ci.yml)
 
-### Linux (debian), macOS, Windows, Android, Emscripten:
+### Static analysis:
 
-[![Build Status](https://travis-ci.org/pjasicek/OpenClaw.svg?branch=master)](https://travis-ci.org/pjasicek/OpenClaw)
-
-### Static analysis / Code coverage:
-
-[![Static analysis](https://scan.coverity.com/projects/12422/badge.svg?flat=1)](https://scan.coverity.com/projects/pjasicek-captainclaw)
+[![CodeQL](https://github.com/nboliv/OpenClaw/actions/workflows/codeql.yml/badge.svg)](https://github.com/nboliv/OpenClaw/actions/workflows/codeql.yml)
 
 # Tech
 

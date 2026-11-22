@@ -1,8 +1,0 @@
-os: Visual Studio 2017
-configuration: Release
-platform:
-    - Win32
-build:
-  project: OpenClaw.sln
-  parallel: true
-deploy: off
