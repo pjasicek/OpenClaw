@@ -35,7 +35,7 @@ jobs:
       CC: ${{ matrix.cc }}
       CXX: ${{ matrix.cxx }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # gfx is not part of the SDL2 core package, the rest comes as deps.
       - name: Install SDL2
@@ -45,7 +45,7 @@ jobs:
             libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev \
             libsdl2-ttf-dev libsdl2-gfx-dev
 
-      - uses: hendrikmuhs/ccache-action@v1
+      - uses: hendrikmuhs/ccache-action@e91f31892a1d1b8c44424b1a94c0b7f52d337168 # v1.2.26
         with:
           key: linux-${{ matrix.cc }}
 
@@ -66,12 +66,12 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
       HOMEBREW_NO_INSTALL_CLEANUP: 1
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install SDL2
         run: brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_gfx
 
-      - uses: hendrikmuhs/ccache-action@v1
+      - uses: hendrikmuhs/ccache-action@e91f31892a1d1b8c44424b1a94c0b7f52d337168 # v1.2.26
         with:
           key: macos-clang
 
@@ -92,7 +92,7 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # CMake instead of OpenClaw.sln: the solution still targets the v141
       # toolset and SDK 10.0.16299, neither of which ships on modern runners.
