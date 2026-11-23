@@ -102,3 +102,18 @@ jobs:
 
       - name: Build
         run: cmake --build build --config Release --parallel
+
+  # The only required status check. macOS is deliberately not in `needs`: a
+  # hosted-runner capacity blip cancels that job before a single step runs
+  # (actions/runner#4833), which says nothing about the code.
+  check:
+    name: check
+    needs: [linux, windows]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fail unless every required job passed
+        run: |
+          [ "${{ needs.linux.result }}" = success ] || exit 1
+          [ "${{ needs.windows.result }}" = success ] || exit 1
